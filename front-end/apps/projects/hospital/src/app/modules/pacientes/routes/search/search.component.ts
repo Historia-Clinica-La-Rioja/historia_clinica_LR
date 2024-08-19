@@ -9,7 +9,7 @@ import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/ap
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { DateFormat, dateISOParseDate, newDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
@@ -25,11 +25,13 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
 import { differenceInYears } from 'date-fns';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
 const TIME_TO_PREVENT_SCROLL = 100;
+const ROUTE_GUARD = 'guardia/nuevo-episodio/administrativa';
 
 @Component({
 	selector: 'app-search',
@@ -64,6 +66,7 @@ export class SearchComponent implements OnInit {
 	public genderFieldDisabled = false;
 	public identificationTypeFieldDisabled = false;
 	public identificationNumberFieldDisabled = false;
+	fromGuardModule = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -98,6 +101,7 @@ export class SearchComponent implements OnInit {
 			this.back();
 		else {
 			this.route.queryParams.subscribe(params => {
+				this.fromGuardModule = params.fromGuardModule;
 				this.identificationTypeId = params.identificationTypeId;
 				this.identificationNumber = +params.identificationNumber;
 				this.genderId = params.genderId;
@@ -213,7 +217,8 @@ export class SearchComponent implements OnInit {
 	}
 
 	back() {
-		this.router.navigate([this.routePrefix + ROUTE_HOME]);
+		const route = this.fromGuardModule ? ROUTE_GUARD : ROUTE_HOME;
+		this.router.navigate([this.routePrefix + route]);
 	}
 
 	submit() {
@@ -225,7 +230,7 @@ export class SearchComponent implements OnInit {
 				genderId: this.formSearch.controls.genderId.value ? this.formSearch.controls.genderId.value : null,
 				identificationTypeId: this.formSearch.controls.identificationTypeId.value ? this.formSearch.controls.identificationTypeId.value : null,
 				identificationNumber: this.formSearch.controls.identificationNumber.value,
-				birthDate: this.formSearch.controls.birthDate.value?.format(DateFormat.API_DATE),
+				birthDate: this.formSearch.controls.birthDate.value? toApiFormat(this.formSearch.controls.birthDate.value) : null,
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
 				middleNames: this.formSearch.controls.middleNames.value,
 				typeId: PATIENT_TYPE.PERMANENT_INVALID
@@ -327,7 +332,10 @@ export class SearchComponent implements OnInit {
 
 		} else {
 			this.router.navigate([this.routePrefix + ROUTE_NEW], {
-				queryParams: person
+				queryParams: {
+					...person,
+					fromGuardModule: this.fromGuardModule
+				}
 			});
 		}
 	}
@@ -384,24 +392,28 @@ export class SearchComponent implements OnInit {
 	}
 
 	private callRenaperService(): void {
-		this.personService.getRenaperPersonData({
-			identificationNumber: this.identificationNumber,
-			genderId: this.genderId
-		})
-			.pipe(finalize(() => this.isLoading = false))
-			.subscribe(
-				personData => {
-					if (personData && Object.keys(personData).length !== 0) {
-						const personToAdd = this.mapToPerson(personData);
-						personToAdd.identificationTypeId = this.identificationTypeId;
-						personToAdd.identificationNumber = this.identificationNumber;
-						personToAdd.genderId = this.genderId;
-						personToAdd.typeId = PATIENT_TYPE.VALID;
-						this.goToAddPatient(personToAdd);
-					}
-				}, () => {
-					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
-				});
+		if(this.identificationNumber && this.identificationTypeId && this.genderId){
+			this.personService.getRenaperPersonData({
+				identificationNumber: this.identificationNumber,
+				genderId: this.genderId
+			})
+				.pipe(finalize(() => this.isLoading = false))
+				.subscribe(
+					personData => {
+						if (personData && Object.keys(personData).length !== 0) {
+							const personToAdd = this.mapToPerson(personData);
+							personToAdd.identificationTypeId = this.identificationTypeId;
+							personToAdd.identificationNumber = this.identificationNumber;
+							personToAdd.genderId = this.genderId;
+							personToAdd.typeId = PATIENT_TYPE.VALID;
+							this.goToAddPatient(personToAdd);
+						}
+					}, () => {
+						this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
+					});
+		}else {
+			this.isLoading = false;
+		}
 	}
 
 }

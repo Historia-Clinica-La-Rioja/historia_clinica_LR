@@ -57,6 +57,14 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
         return true;
     }
 
+	@Override
+	public boolean hasAdministrativeDischarge(Integer episodeId) {
+		LOG.debug("Input parameters -> episodeId {}", episodeId);
+		Boolean result = emergencyCareEpisodeDischargeRepository.findById(episodeId).map(EmergencyCareDischarge::getAdministrativeDischargeOn).isPresent();
+		LOG.debug("Output -> result {}", result);
+		return result;
+	}
+
 	private void assertHasEvolutionNote(Integer episodeId) {
 		Assert.isTrue(!emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId), "El episodio requiere alta médica debido a que tiene notas de evolución asociadas");
 	}

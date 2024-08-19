@@ -6,7 +6,6 @@
 	.mat-radio-button {
 		@include form-radio-button;
 	}
-	max-width: 35%;
 	padding-top: 10px;
 
 	.in-attention {
@@ -16,4 +15,15 @@
 		margin-left: 10px;
 		font-size: 75%;
 	}
+}
+
+.card-size {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-left: 25px;
+	padding-right: 25px;
+	min-height: 600px;
+	max-height: 1250px;
+	width: 550px;
 }

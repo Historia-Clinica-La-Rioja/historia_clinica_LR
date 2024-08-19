@@ -65,11 +65,11 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 
 		setOtherDiagnostics(newEvolution, oldEvolution);
 		newEvolution.getProcedures().addAll(getDischargedConcepts(newEvolution.getProcedures(), oldEvolution.getProcedures(), ProceduresStatus.ERROR));
-		newEvolution.getPersonalHistories().addAll(getDischargedConcepts(newEvolution.getPersonalHistories(), oldEvolution.getPersonalHistories(), ConditionClinicalStatus.INACTIVE)
+		newEvolution.getPersonalHistories().getContent().addAll(getDischargedConcepts(newEvolution.getPersonalHistories().getContent(), oldEvolution.getPersonalHistories().getContent(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
-		newEvolution.getFamilyHistories().addAll(getDischargedConcepts(newEvolution.getFamilyHistories(), oldEvolution.getFamilyHistories(), ConditionClinicalStatus.INACTIVE)
+		newEvolution.getFamilyHistories().getContent().addAll(getDischargedConcepts(newEvolution.getFamilyHistories().getContent(), oldEvolution.getFamilyHistories().getContent(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId( ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
-		newEvolution.getAllergies().addAll(getDischargedConcepts(newEvolution.getAllergies(), oldEvolution.getAllergies(), AllergyIntoleranceClinicalStatus.INACTIVE)
+		newEvolution.getAllergies().getContent().addAll(getDischargedConcepts(newEvolution.getAllergies().getContent(), oldEvolution.getAllergies().getContent(), AllergyIntoleranceClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(AllergyIntoleranceVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newEvolution.getImmunizations().addAll(getDischargedConcepts(newEvolution.getImmunizations(), oldEvolution.getImmunizations(), InmunizationStatus.ERROR));
 

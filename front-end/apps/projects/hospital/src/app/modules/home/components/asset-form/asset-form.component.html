@@ -1,0 +1,26 @@
+<mat-card>
+	<mat-card-header >
+		<mat-card-title>
+			<span class="capitalize-first-letter">{{icon.name}}</span>
+		</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<img [src]="basePath + icon.path + timestamp" [alt]="icon.name" [width]="icon.width">
+		<div>
+			<span>
+				Imagen {{icon.extension}} de {{icon.width}}x{{icon.height}} pixeles.
+			</span>
+		</div>
+	</mat-card-content>
+	<mat-card-actions align="end">
+		<app-img-uploader
+			buttonLabel="configuracion.logos.UPLOAD_FILE"
+			[validations]="{acceptFormat: icon.extension, width: icon.width, height: icon.height}"
+			icon="attach_file"
+			(selectFiles)="selectFile($event, icon.path)">
+		</app-img-uploader>
+		<button mat-raised-button color="warn"
+			translate="configuracion.logos.RESTORE"
+			(click)="restore(icon.path, icon.name)"></button>
+	</mat-card-actions>
+</mat-card>

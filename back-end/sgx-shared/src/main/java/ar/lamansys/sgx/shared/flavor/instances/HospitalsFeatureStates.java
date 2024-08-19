@@ -76,10 +76,15 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_ACTUALIZACION_AGENDA, false);
 		map.put(AppFeature.HABILITAR_ADMINISTRADOR_DATOS_PERSONALES, false);
 		map.put(AppFeature.HABILITAR_ANEXO_II_MENDOZA, false);
-		map.put(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS, false);
 		map.put(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL, false);
 		map.put(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,false);
+		map.put(AppFeature.HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO, false);
+		map.put(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL, false);
+		map.put(AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA, false);
+		map.put(AppFeature.HABILITAR_SOLAPA_COLA_IMAGENES, false);
+		map.put(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_CUESTIONARIOS, false);
 	}
 

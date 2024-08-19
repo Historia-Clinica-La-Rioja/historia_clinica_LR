@@ -1,34 +1,12 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Collections;
-
-import javax.validation.ConstraintViolationException;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
-import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
-import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
-import net.pladema.establishment.service.InstitutionService;
-import net.pladema.patient.service.PatientService;
-import net.pladema.person.service.PersonService;
-
-import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
-import net.pladema.staff.service.HealthcareProfessionalService;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -36,7 +14,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
+import java.util.Collections;
+import javax.validation.ConstraintViolationException;
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
@@ -45,8 +29,19 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
@@ -106,6 +101,12 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 	@Mock
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
+    @Mock
+    private AnestheticStorage anestheticStorage;
+
+    @Mock
+    private ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -123,7 +124,10 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 				institutionService,
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
-				getLicenseNumberByProfessional);
+				getLicenseNumberByProfessional,
+                anestheticStorage,
+                validateAdministrativeDischarge
+        );
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

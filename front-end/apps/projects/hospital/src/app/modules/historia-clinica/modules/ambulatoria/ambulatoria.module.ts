@@ -31,6 +31,7 @@ import { CardEstudiosComponent } from './components/card-estudios/card-estudios.
 import { CardIndicacionesComponent } from './components/card-indicaciones/card-indicaciones.component';
 import { CarelinesAndSpecialtiesReferenceComponent } from './components/carelines-and-specialties-reference/carelines-and-specialties-reference.component';
 import { ClinicalHistoryActionsComponent } from './components/clinical-history-actions/clinical-history-actions.component';
+import { ControlSelectTemplateComponent } from './components/control-select-template/control-select-template.component';
 import { CompleteStudyComponent } from './dialogs/complete-study/complete-study.component';
 import { CompleteStudyInformationComponent } from './components/complete-study-information/complete-study-information.component';
 import { CompleteInfoComponent } from './components/complete-info/complete-info.component';
@@ -52,6 +53,7 @@ import { ReferenceStudyCloseComponent } from './components/reference-study-close
 import { ReferenceStudyClosureInformationComponent } from './components/reference-study-closure-information/reference-study-closure-information.component';
 import { ReferenceStudyComponent } from './components/reference-study/reference-study.component';
 import { ResumenComponent } from './components/resumen/resumen.component';
+import { SelectTemplateComponent } from './components/select-template/select-template.component';
 import { SuggestedFieldsPopupComponent } from '../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { StudyInformationComponent } from './components/study-information/study-information.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
@@ -64,9 +66,13 @@ import { ViolenceSituationPersonInformationComponent } from './components/violen
 import { ViolenceSituationRelevantInformationSectionComponent } from './components/violence-situation-relevant-information-section/violence-situation-relevant-information-section.component';
 import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
 import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
+//pipes
+import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
+import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from '../../../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 //dialog
 import { AgregarPrescripcionItemComponent } from './dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
@@ -100,12 +106,13 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
 //providers
-import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
 //review
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
+import { LoincFormModule } from '../../../hsi-components/loinc-form/loinc-form.module';
+import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms-template/show-closed-forms-template.component';
 //la-rioja
 import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
 import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
@@ -200,7 +207,12 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
   		NewViolentPersonInfomationComponent,
       	ViolenceSituationImplementedActionsComponent,
       	ViolenceSituationListComponent,
-       ViolenceSituationHistoryFiltersComponent,
+		ViolenceSituationHistoryFiltersComponent,
+		ShowClosedFormsTemplateComponent,
+ 		SelectTemplateComponent,
+ 		ControlSelectTemplateComponent,
+		//pipe
+		TranslateDeviceTextPipe,
 		TablaSapComponent,
 		EstudiosPopupComponent,
 		AdultoMayorComponent,
@@ -212,7 +224,7 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 		InputDesempenoComponent,
 		GetEdmontonComponent,
 		GetPhysicalPerformanceComponent,
-		AlertDialogComponent
+		AlertDialogComponent,
 	],
 	imports: [
 		CommonModule,
@@ -233,13 +245,15 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 		TurnosModule,
 		ClapModule,
 		GuardiaModule,
+		LoincFormModule,
 		//Standalone Component
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
+		ConceptsListComponent,
+		ConceptTypeaheadSearchComponent,
 	],
 	providers: [
-		AmbulatoriaSummaryFacadeService,
-		HistoricalProblemsFacadeService,
+		HistoricalProblemsFacadeService
 	]
 })
 export class AmbulatoriaModule {

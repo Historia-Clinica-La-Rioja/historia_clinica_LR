@@ -145,13 +145,13 @@ export class CardMedicacionesComponent implements OnInit {
 
 	private openNuevaPrescripcion(isNewMedication: boolean, medication?: MedicationInfoDto, patientEmail?: string) {
 		const medicationList = isNewMedication ? null : this.getMedicationList(medication);
-
+		const dialogTitle = this.isHabilitarRecetaDigitalEnabled ? 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE_FF' : 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE';
 		const newMedicationDialog = this.dialog.open(NuevaPrescripcionComponent,
 			{
 				data: {
 					patientId: this.patientId,
 					personId: this.personId,
-					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_TITLE',
+					titleLabel: dialogTitle,
 					addLabel: 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADD_MEDICATION_LABEL',
 					prescriptionType: PrescriptionTypes.MEDICATION,
 					prescriptionItemList: medicationList && medicationList.map(m => this.prescripcionesService.toNewPrescriptionItem(PrescriptionTypes.MEDICATION, m)),
@@ -163,7 +163,7 @@ export class CardMedicacionesComponent implements OnInit {
 						eclTerm: this.isHabilitarRecetaDigitalEnabled ? SnomedECL.MEDICINE_WITH_UNIT_OF_PRESENTATION : SnomedECL.MEDICINE,
 					},
 				},
-				width: '35%',
+				width: '760px',
 			});
 
 			newMedicationDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {

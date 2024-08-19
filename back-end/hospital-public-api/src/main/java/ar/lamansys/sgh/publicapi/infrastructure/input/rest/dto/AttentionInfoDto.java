@@ -27,4 +27,6 @@ public class AttentionInfoDto implements Serializable {
 	private DiagnosesDto diagnoses;
 	private DateTimeDto attentionDateWithTime;
 	private PersonExtendedInfoDto personExtendedInfo;
+	private DateTimeDto emergencyCareAdministrativeDischargeDateTime;
+
 }

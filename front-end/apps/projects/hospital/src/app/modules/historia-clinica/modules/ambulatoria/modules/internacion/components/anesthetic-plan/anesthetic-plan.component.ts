@@ -1,12 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, MasterDataDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { MedicationData, MedicationService } from '../../services/medicationService';
+import { MedicationData } from '../../services/medicationService';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { Observable, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anesthetic-drug.component';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
   selector: 'app-anesthetic-plan',
@@ -15,7 +16,6 @@ import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anestheti
 })
 export class AnestheticPlanComponent implements OnInit {
 
-  @Input() service: MedicationService;
 	searchConceptsLocallyFFIsOn = false;
   viasArray: MasterDataDto[];
   anestheticPlanList$: Observable<MedicationData[]>
@@ -26,13 +26,14 @@ export class AnestheticPlanComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
     readonly internacionMasterDataService: InternacionMasterDataService,
-    private readonly translateService: TranslateService
+    private readonly translateService: TranslateService,
+    readonly service: AnestheticReportService,
     ) { }
 
     ngOnInit(): void {
       this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;
-      this.anestheticPlanList$ = this.service.getMedication()
+      this.anestheticPlanList$ = this.service.anestheticPlanService.getMedication()
 		});
     this.translateService.get(['internaciones.anesthesic-report.anesthetic-plan.ADD_PLAN_TITLE', 'internaciones.anesthesic-report.anesthetic-plan.MEDICATION' ]).subscribe(
       (msg) => {
@@ -47,7 +48,7 @@ export class AnestheticPlanComponent implements OnInit {
     addMedication(){
         this.dialog.open(AnestheticDrugComponent, {
             data: {
-                premedicationService: this.service,
+                premedicationService: this.service.anestheticPlanService,
                 searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
                 vias: this.viasArray,
                 presentationConfig: {

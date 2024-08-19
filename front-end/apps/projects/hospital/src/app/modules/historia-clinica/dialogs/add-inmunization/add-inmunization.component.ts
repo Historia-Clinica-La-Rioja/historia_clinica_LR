@@ -5,10 +5,10 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { DateFormat, newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
+import { newDate } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MIN_DATE } from "@core/utils/date.utils";
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-add-inmunization',
@@ -20,7 +20,7 @@ export class AddInmunizationComponent implements OnInit {
 	snomedConcept: SnomedDto;
 	form: UntypedFormGroup;
 	loading = false;
-	today: Moment = newMoment();
+	today = newDate();
 
 	searching = false;
 	snowstormServiceNotAvailable = false;
@@ -44,24 +44,8 @@ export class AddInmunizationComponent implements OnInit {
 		});
 	}
 
-	chosenYearHandler(newDate: Moment) {
-		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Moment = this.form.controls.date.value;
-			ctrlDate.year(newDate.year());
-			this.form.controls.date.setValue(ctrlDate);
-		} else {
-			this.form.controls.date.setValue(newDate);
-		}
-	}
-
-	chosenMonthHandler(newDate: Moment) {
-		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Moment = this.form.controls.date.value;
-			ctrlDate.month(newDate.month());
-			this.form.controls.date.setValue(ctrlDate);
-		} else {
-			this.form.controls.date.setValue(newDate);
-		}
+	dateChanged(date: Date) {
+		this.form.controls.date.setValue(date);
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
@@ -96,10 +80,6 @@ export class AddInmunizationComponent implements OnInit {
 		}
 	}
 
-	selectedDateIsTodayOrBefore(): boolean {
-		return (this.form.value.date) ? this.today.isSameOrAfter(this.form.value.date, 'day') : true;
-	}
-
 	submit(): void {
 		if (this.snomedConcept) {
 			this.loading = true;
@@ -110,7 +90,7 @@ export class AddInmunizationComponent implements OnInit {
 
 	private buildImmunization(): Immunization {
 		return {
-			administrationDate: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
+			administrationDate: this.form.value.date ? toApiFormat(this.form.value.date) : null,
 			snomed: this.snomedConcept
 		};
 	}

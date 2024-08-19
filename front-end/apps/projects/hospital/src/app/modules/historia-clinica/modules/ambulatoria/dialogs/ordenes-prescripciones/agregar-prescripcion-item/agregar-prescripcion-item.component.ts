@@ -2,6 +2,7 @@ import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, Eleme
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppFeature, CreateOutpatientDto, ERole, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -13,7 +14,6 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { hasError, NUMBER_PATTERN } from '@core/utils/form.utils';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { intervalValidation } from "@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/utils/ordenesyprescrip.utils";
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
@@ -169,16 +169,22 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			chronic: problem.cronico,
 			severity: problem.codigoSeveridad,
 			snomed: problem.snomed,
-			startDate: problem.fechaInicio ? momentFormat(problem.fechaInicio, DateFormat.API_DATE) : undefined,
-			endDate: problem.fechaFin ? momentFormat(problem.fechaFin, DateFormat.API_DATE) : undefined
+			startDate: problem.fechaInicio ? toApiFormat(problem.fechaInicio) : undefined,
+			endDate: problem.fechaFin ? toApiFormat(problem.fechaFin) : undefined
 		}];
 
 		const createOutpatientDto: CreateOutpatientDto = {
-			allergies: [],
+			allergies: {
+				isReferred: null,
+				content: []
+			},
 			anthropometricData: null,
 			clinicalSpecialtyId: null,
 			evolutionNote: null,
-			familyHistories: [],
+			familyHistories: {
+				isReferred: null,
+				content: [],
+			},
 			medications: [],
 			problems: outpatientProblemDto,
 			procedures: [],
@@ -186,6 +192,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			references: [],
 			riskFactors: null,
 			involvedHealthcareProfessionalIds: [],
+			personalHistories: {
+				isReferred: null,
+				content: []			}
 		};
 		return createOutpatientDto;
 	}

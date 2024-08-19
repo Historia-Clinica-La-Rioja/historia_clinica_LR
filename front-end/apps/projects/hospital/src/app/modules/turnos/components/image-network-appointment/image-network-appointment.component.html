@@ -211,7 +211,8 @@
 						</mat-icon>
 					</button>
 
-					<button type="button" disabled
+					<button type="button"
+						[disabled]="(hasRoleToChangeState$ | async) === false || !HABILITAR_ATENDER_TURNO_MANUAL"
 						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }"
 						mat-stroked-button>
 						<mat-icon color="primary" svgIcon="person_check_outlined"

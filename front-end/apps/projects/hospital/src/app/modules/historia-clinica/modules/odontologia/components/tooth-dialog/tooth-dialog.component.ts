@@ -3,8 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { DateFormat, momentFormatDate } from '@core/utils/moment.utils';
-
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
 import { HCEToothRecordDto, OdontologyConceptDto, ToothDto, ToothSurfacesDto } from '@api-rest/api-model';
@@ -21,6 +19,7 @@ import { SurfacesNamesFacadeService, ToothSurfaceNames } from '../../services/su
 import { getSurfaceShortName } from '../../utils/surfaces';
 import { Actions, ToothComponent } from '../tooth/tooth.component';
 import { ScrollableData } from '../hidable-scrollable-data/hidable-scrollable-data.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-tooth-dialog',
@@ -37,7 +36,8 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		@Inject(MAT_DIALOG_DATA) public data: { tooth: ToothDto, quadrantCode: number, currentActions: ToothAction[], records: ToothAction[], patientId: string },
 		private dialogRef: MatDialogRef<ToothDialogComponent>,
 		private conceptsFacadeService: ConceptsFacadeService,
-		private surfacesNamesFacadeService: SurfacesNamesFacadeService
+		private surfacesNamesFacadeService: SurfacesNamesFacadeService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 	}
 	showOlderRecords = false;
@@ -130,7 +130,7 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		this.historicalRecords$ =
 			this.hceGeneralStateService.getToothRecords(parseInt(this.data.patientId), this.data.tooth.snomed.sctid)
 				.pipe(
-					map(this.toScrollableData)
+					map(r => this.toScrollableData(r, this.dateFormatPipe))
 				);
 	}
 
@@ -346,11 +346,11 @@ export class ToothDialogComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	private toScrollableData(toothRecordDtos: HCEToothRecordDto[]): ScrollableData[] {
+	private toScrollableData(toothRecordDtos: HCEToothRecordDto[], dateFormatPipe: DateFormatPipe): ScrollableData[] {
 		const toSingleScrolleableData = (toothRecordDto: HCEToothRecordDto): ScrollableData => {
 			const surfaceText = toothRecordDto.surfaceSctid ? ` ( ${getSurfaceShortName(toothRecordDto.surfaceSctid)} )` : ''
 			return {
-				firstElement: momentFormatDate(dateDtoToDate(toothRecordDto.date), DateFormat.VIEW_DATE),
+				firstElement: dateFormatPipe.transform(dateDtoToDate(toothRecordDto.date), 'date'),
 				secondElement: toothRecordDto.snomed.pt + surfaceText
 			}
 		}

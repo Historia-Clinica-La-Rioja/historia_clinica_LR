@@ -21,4 +21,8 @@ public class EmergencyCareEvolutionNoteDocumentDto {
 
 	private EmergencyCareEvolutionNoteClinicalData emergencyCareEvolutionNoteClinicalData;
 
+	private DateTimeDto editedOn;
+
+	private HealthcareProfessionalDto editor;
+
 }

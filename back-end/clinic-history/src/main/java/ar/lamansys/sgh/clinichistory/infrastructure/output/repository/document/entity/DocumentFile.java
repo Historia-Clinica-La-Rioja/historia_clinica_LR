@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -17,6 +19,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@Where(clause = "deleted=false")
 public class DocumentFile extends SGXAuditableEntity<Long> {
 
 	/**

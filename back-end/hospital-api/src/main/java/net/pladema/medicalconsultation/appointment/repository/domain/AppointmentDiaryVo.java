@@ -49,6 +49,8 @@ public class AppointmentDiaryVo {
 	
 	private final Short recurringAppointmentTypeId;
 
+	private final Integer openingHoursId;
+
 	public AppointmentDiaryVo(
 			Integer diaryId,
 			Integer id,
@@ -71,7 +73,8 @@ public class AppointmentDiaryVo {
 			String middleNames,
 			String otherLastName,
 			String email,
-			DiaryLabel diaryLabel) {
+			DiaryLabel diaryLabel,
+			Integer openingHoursId) {
 		this.diaryId = diaryId;
 		this.id = id;
 		this.patientId = patientId;
@@ -90,6 +93,7 @@ public class AppointmentDiaryVo {
 		this.professionalPersonVo = personId != null ? new ProfessionalPersonVo(personId, firstName, lastName, nameSelfDetermination, middleNames, otherLastName) : null;
 		this.diaryLabel = diaryLabel;
 		this.recurringAppointmentTypeId = null;
+		this.openingHoursId = openingHoursId;
 	}
 
 }

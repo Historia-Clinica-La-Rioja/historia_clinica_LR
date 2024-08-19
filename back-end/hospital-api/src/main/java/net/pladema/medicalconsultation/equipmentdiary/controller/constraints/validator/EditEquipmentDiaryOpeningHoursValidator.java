@@ -50,10 +50,10 @@ public class EditEquipmentDiaryOpeningHoursValidator implements ConstraintValida
 		Comparator<EquipmentDiaryOpeningHoursBo> timeOrder = Comparator
 				.comparing(edoh -> edoh.getOpeningHours().getFrom(), LocalTime::compareTo);
 
-		List<EquipmentDiaryOpeningHoursBo> openingHours = equipmentDiaryBo.getEquipmentDiaryOpeningHours();
+		List<EquipmentDiaryOpeningHoursBo> openingHours = equipmentDiaryBo.getDiaryOpeningHours();
 		openingHours.sort(weekDayOrder.thenComparing(timeOrder));
 
-		if (equipmentDiaryBo.getEquipmentDiaryOpeningHours().isEmpty()) {
+		if (equipmentDiaryBo.getDiaryOpeningHours().isEmpty()) {
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate("{diary.attention.no-opening-hours}")
 					.addConstraintViolation();

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
@@ -61,13 +62,13 @@ public class DocumentBo implements IDocumentBo {
 
     private List<ProcedureBo> procedures = new ArrayList<>();
 
-    private List<PersonalHistoryBo> personalHistories = new ArrayList<>();
+    private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
-    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
+    private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
     private List<MedicationBo> medications = new ArrayList<>();
 
-    private List<AllergyConditionBo> allergies = new ArrayList<>();
+    private ReferableItemBo<AllergyConditionBo> allergies;
 
     private List<ImmunizationBo> immunizations = new ArrayList<>();
 

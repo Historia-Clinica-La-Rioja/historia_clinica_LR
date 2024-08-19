@@ -31,16 +31,27 @@ public class SimplePublishService {
 	public void appointmentCallerPublish(String topic, NotifyPatientDto notifyPatientDto) {
 		String fullTopic = "/HSI/" + namePrefix + "/" + topic + "/" + notifyPatientDto.getTopic();
 		notifyPatientDto.setTopic(fullTopic);
-		mqttCallExternalService.publish(mapTo(notifyPatientDto));
+		mqttCallExternalService.publish(mapTo(notifyPatientDto.getTopic(), getMessage(notifyPatientDto)));
 	}
 
-	private MqttMetadataDto mapTo(NotifyPatientDto notifyPatientDto) {
-		return  MqttDtoUtils.getMqtMetadataDto(notifyPatientDto.getTopic(), getMessage(notifyPatientDto));
+	public void emergencyCareCallerPublish(String topic, EmergencyCareEpisodeNotificationDto emergencyCareEpisodeNotificationDto) {
+		String fullTopic = "HSI/" + namePrefix + "/" + topic + "/" + emergencyCareEpisodeNotificationDto.getTopic();
+		emergencyCareEpisodeNotificationDto.setTopic(fullTopic);
+		mqttCallExternalService.publish(mapTo(emergencyCareEpisodeNotificationDto.getTopic(), getEmergencyCareSchedulerMessage(emergencyCareEpisodeNotificationDto)));
+	}
+
+	private String getEmergencyCareSchedulerMessage(EmergencyCareEpisodeNotificationDto notification) {
+		return String.format("{\"type\":\"%s\"," + "\"data\":{\"id\":%s,\"patient\":\"%s\",\"doctor\":\"%s\",\"place\":\"%s\",\"triageCategory\":{\"name\": \"%s\", \"colorCode\": \"%s\"}}}",
+				MqttTypeBo.ADD.getId(), notification.getEpisodeId(), notification.getPatientName(), notification.getDoctorName(), notification.getPlaceName(), notification.getTriageCategory().getName(), notification.getTriageCategory().getColorCode());
+	}
+
+	private MqttMetadataDto mapTo(String topic, String message) {
+		return  MqttDtoUtils.getMqtMetadataDto(topic, message);
 	}
 
 	protected String getMessage(NotifyPatientDto notifyPatientDto) {
 		return String.format("{\"type\":\"%s\"," +
-				"\"data\":{\"appointmentId\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"doctorsOffice\":\"%s\"}}",MqttTypeBo.ADD.getId(), notifyPatientDto.getAppointmentId(), notifyPatientDto.getPatientName(), notifyPatientDto.getSectorId(), notifyPatientDto.getDoctorName(), notifyPatientDto.getDoctorsOfficeName());
+				"\"data\":{\"id\":%s,\"patient\":\"%s\",\"sector\":%s,\"doctor\":\"%s\",\"place\":\"%s\"}}",MqttTypeBo.ADD.getId(), notifyPatientDto.getAppointmentId(), notifyPatientDto.getPatientName(), notifyPatientDto.getSectorId(), notifyPatientDto.getDoctorName(), notifyPatientDto.getDoctorsOfficeName());
 	}
 
 

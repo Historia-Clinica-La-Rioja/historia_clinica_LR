@@ -20,9 +20,9 @@ export class ComponentEvaluationManagerService {
 		this.mainDiagnosis = anamnesis?.mainDiagnosis;
 		this.diagnosis = anamnesis.diagnosis;
 		this.hospitalizationProcedures = anamnesis?.procedures;
-		this.allergies = anamnesis.allergies;
-		this.familyHistories = anamnesis.familyHistories;
-		this.personalHistories = anamnesis.personalHistories;
+		this.allergies = anamnesis.allergies.content;
+		this.familyHistories = anamnesis.familyHistories.content;
+		this.personalHistories = anamnesis.personalHistories.content;
 		this.vaccines = anamnesis.immunizations;
 		this.medications = anamnesis.medications;
 	}
@@ -31,7 +31,7 @@ export class ComponentEvaluationManagerService {
 		this.mainDiagnosis = anamnesis?.mainDiagnosis;
 		this.diagnosis = anamnesis.diagnosis;
 		this.hospitalizationProcedures = anamnesis?.procedures;
-		this.allergies = anamnesis.allergies;
+		this.allergies = anamnesis.allergies.content;
 		this.vaccines = anamnesis.immunizations;
 	}
 

@@ -19,6 +19,8 @@ import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
+import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
 
+@RequiredArgsConstructor
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
 
@@ -43,11 +46,6 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private final EntityManager entityManager;
 
 	private final LocalDateMapper localDateMapper;
-
-	public ActivityStorageImpl(EntityManager entityManager, LocalDateMapper localDateMapper) {
-		this.entityManager = entityManager;
-		this.localDateMapper = localDateMapper;
-	}
 
 	private static final String JOIN_PATIENT_MEDICAL_COVERAGE = "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id)";
 
@@ -95,7 +93,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"p.other_last_names, " +
 					"p.email, " +
 					"p.name_self_determination, " +
-					"p.gender_self_determination " +
+					"p.gender_self_determination, " +
+					"ecd.administrative_discharge_on " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -116,6 +115,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"LEFT JOIN {h-schema}document_health_condition dhc on dhc.document_id = va.id " +
 					"LEFT JOIN {h-schema}health_condition hc on hc.id = dhc.health_condition_id " +
 					"LEFT JOIN {h-schema}snomed s3 on s3.id = hc.snomed_id " +
+					"LEFT JOIN {h-schema}emergency_care_discharge ecd ON (va.scope_id = 4 AND ecd.emergency_care_episode_id = va.encounter_id) " +
 					"WHERE %s " +
 					"ORDER BY encounter_id DESC";
 
@@ -142,7 +142,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"p.other_last_names, " +
 					"p.email, " +
 					"p.name_self_determination, " +
-					"p.gender_self_determination " +
+					"p.gender_self_determination, " +
+					"ecd.administrative_discharge_on " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -165,6 +166,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"LEFT JOIN {h-schema} document_health_condition dhc ON (dhc.document_id = va.id) " +
 					"LEFT JOIN {h-schema} health_condition hc ON (hc.id = dhc.health_condition_id) " +
 					"LEFT JOIN {h-schema} snomed s3 ON (s3.id = od.snomed_id) " +
+					"LEFT JOIN {h-schema}emergency_care_discharge ecd ON (va.scope_id = 4 AND ecd.emergency_care_episode_id = va.encounter_id) " +
 					"WHERE %s " +
 					"ORDER BY encounter_id DESC";
 
@@ -303,8 +305,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 				buildInternmentBo(rawAttention),
 				buildProfessionalBo(rawAttention),
 				buildDiagnoses(rawAttention),
-				buildDateTimeBo(rawAttention),
-				buildPersonExtendedInfoBo(rawAttention)
+				buildDateTimeBo(rawAttention, 27),
+				buildPersonExtendedInfoBo(rawAttention),
+				buildDateTimeBo(rawAttention, 33)
 		);
 	}
 
@@ -318,16 +321,15 @@ public class ActivityStorageImpl implements ActivityStorage {
 		);
 	}
 
-	private DateTimeBo buildDateTimeBo(Object[] rawAttention) {
-		var localDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[27]).toLocalDateTime());
-		return new DateTimeBo(
-				new DateBo(localDate.toLocalDate().getYear(),
-							localDate.toLocalDate().getMonthValue(),
-							localDate.toLocalDate().getDayOfMonth()),
-				new TimeBo(localDate.getHour(),
-							localDate.getMinute(),
-							localDate.getSecond())
-		);
+	private DateTimeBo buildDateTimeBo(Object[] rawAttention, int arrayIndex) {
+		if (rawAttention[arrayIndex] != null)
+			return getDateTimeBo(rawAttention[arrayIndex]);
+		return null;
+	}
+
+	private DateTimeBo getDateTimeBo(Object rawAttention) {
+		var localDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention).toLocalDateTime());
+		return new DateTimeBo(new DateBo(localDate.toLocalDate().getYear(), localDate.toLocalDate().getMonthValue(), localDate.toLocalDate().getDayOfMonth()), new TimeBo(localDate.getHour(), localDate.getMinute(), localDate.getSecond()));
 	}
 
 	private SingleDiagnosticBo buildDiagnoses(Object[] rawAttention) {

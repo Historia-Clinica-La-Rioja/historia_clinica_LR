@@ -3,9 +3,7 @@ package net.pladema.reports.controller.exceptions;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.hsi.addons.billing.infrastructure.input.exception.BillProceduresExternalServiceException;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
-
+import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.exception.NominalECEDetailReportException;
 import net.pladema.reports.service.exception.AnnexReportException;
 
 import org.springframework.http.HttpStatus;
@@ -25,4 +23,12 @@ public class ReportsExceptionHandler {
 		log.debug("AnnexReportException exception -> {}#{}#{}", ex.getCode(), ex.getReason(), ex.getErrorDetails());
 		return new ApiErrorMessageDto(ex.getCode(), ex.getReason());
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({NominalECEDetailReportException.class})
+	protected ApiErrorMessageDto handleNominalECEDetailReportException(NominalECEDetailReportException ex, Locale locale) {
+		log.debug("NominalECEDetailReportException exception -> {} ", ex.getCode());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }

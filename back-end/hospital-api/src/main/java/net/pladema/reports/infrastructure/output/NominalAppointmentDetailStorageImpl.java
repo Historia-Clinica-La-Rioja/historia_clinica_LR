@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.application.hierarchicalunits.FetchDescendantsByHierarchicalUnitId;
 import net.pladema.reports.application.ports.NominalAppointmentDetailStorage;
 import net.pladema.reports.domain.NominalAppointmentDetailBo;
-import net.pladema.reports.domain.NominalAppointmentDetailFiterlBo;
 
+import net.pladema.reports.domain.ReportSearchFilterBo;
 import net.pladema.reports.service.NominalDetailExcelService;
 
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class NominalAppointmentDetailStorageImpl implements NominalAppointmentDe
 	private final FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId;
 
 	@Override
-	public IWorkbook buildNominalAppointmentsDetailExcelReport(String title, NominalAppointmentDetailFiterlBo filter) {
+	public IWorkbook buildNominalAppointmentsDetailExcelReport(String title, ReportSearchFilterBo filter) {
 
 		var appointmentsDetail = this.fetchNominalAppointmentsDetail(filter);
 
@@ -65,7 +65,7 @@ public class NominalAppointmentDetailStorageImpl implements NominalAppointmentDe
 		return wb;
 	}
 
-	public List<NominalAppointmentDetailBo> fetchNominalAppointmentsDetail(NominalAppointmentDetailFiterlBo filter) {
+	public List<NominalAppointmentDetailBo> fetchNominalAppointmentsDetail(ReportSearchFilterBo filter) {
 
 		String sqlQuery = "SELECT p.description as province, " +
 				"dp.description as department, " +
@@ -97,40 +97,40 @@ public class NominalAppointmentDetailStorageImpl implements NominalAppointmentDe
 				"pe2.name_self_determination AS professionalNameSelfDetermination, " +
 				"problems.description AS problems, " +
 				"p5.first_name, p5.middle_names, p5.last_name, p5.other_last_names, pe3.name_self_determination " +
-				"FROM institution i " +
-				"JOIN address a ON (i.address_id = a.id) " +
-				"JOIN city c ON (a.city_id = c.id)" +
-				"JOIN department dp ON (c.department_id = dp.id) " +
-				"JOIN province p ON (dp.province_id = p.id) " +
-				"JOIN doctors_office dof ON (i.id = dof.institution_id) " +
-				"JOIN diary d2 ON (dof.id = d2.doctors_office_id) " +
-				"JOIN appointment_assn aa ON (d2.id = aa.diary_id) " +
-				"JOIN appointment apt ON (aa.appointment_id = apt.id) " +
-				"LEFT JOIN hierarchical_unit hu ON (d2.hierarchical_unit_id = hu.id) " +
-				"LEFT JOIN hierarchical_unit_type hut ON (hu.type_id = hut.id) " +
-				"JOIN patient p2 ON (apt.patient_id = p2.id) " +
-				"JOIN person p3 ON (p2.person_id = p3.id) " +
-				"JOIN person_extended pe ON (p3.id = pe.person_id) " +
-				"JOIN address a2 ON (pe.address_id = a2.id) " +
-				"LEFT JOIN self_perceived_gender spg ON (pe.gender_self_determination = spg.id) " +
-				"LEFT JOIN identification_type it ON (p3.identification_type_id = it.id) " +
-				"JOIN appointment_state as2 ON (apt.appointment_state_id = as2.id) " +
-				"LEFT JOIN patient_medical_coverage pmc ON (apt.patient_medical_coverage_id  = pmc.id) " +
-				"LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-				"LEFT JOIN clinical_specialty cs ON (d2.clinical_specialty_id = cs.id) " +
-				"JOIN healthcare_professional hp ON (hp.id = d2.healthcare_professional_id) " +
-				"JOIN person p4 ON (hp.person_id = p4.id) " +
-				"JOIN person_extended pe2 ON (p4.id = pe2.person_id) " +
-				"LEFT JOIN document_appointment da ON (da.appointment_id = apt.id) " +
-				"LEFT JOIN document d ON (da.document_id  = d.id) " +
+				"FROM {h-schema}institution i " +
+				"JOIN {h-schema}address a ON (i.address_id = a.id) " +
+				"JOIN {h-schema}city c ON (a.city_id = c.id)" +
+				"JOIN {h-schema}department dp ON (c.department_id = dp.id) " +
+				"JOIN {h-schema}province p ON (dp.province_id = p.id) " +
+				"JOIN {h-schema}doctors_office dof ON (i.id = dof.institution_id) " +
+				"JOIN {h-schema}diary d2 ON (dof.id = d2.doctors_office_id) " +
+				"JOIN {h-schema}appointment_assn aa ON (d2.id = aa.diary_id) " +
+				"JOIN {h-schema}appointment apt ON (aa.appointment_id = apt.id) " +
+				"LEFT JOIN {h-schema}hierarchical_unit hu ON (d2.hierarchical_unit_id = hu.id) " +
+				"LEFT JOIN {h-schema}hierarchical_unit_type hut ON (hu.type_id = hut.id) " +
+				"JOIN {h-schema}patient p2 ON (apt.patient_id = p2.id) " +
+				"JOIN {h-schema}person p3 ON (p2.person_id = p3.id) " +
+				"JOIN {h-schema}person_extended pe ON (p3.id = pe.person_id) " +
+				"JOIN {h-schema}address a2 ON (pe.address_id = a2.id) " +
+				"LEFT JOIN {h-schema}self_perceived_gender spg ON (pe.gender_self_determination = spg.id) " +
+				"LEFT JOIN {h-schema}identification_type it ON (p3.identification_type_id = it.id) " +
+				"JOIN {h-schema}appointment_state as2 ON (apt.appointment_state_id = as2.id) " +
+				"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (apt.patient_medical_coverage_id  = pmc.id) " +
+				"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+				"LEFT JOIN {h-schema}clinical_specialty cs ON (d2.clinical_specialty_id = cs.id) " +
+				"JOIN {h-schema}healthcare_professional hp ON (hp.id = d2.healthcare_professional_id) " +
+				"JOIN {h-schema}person p4 ON (hp.person_id = p4.id) " +
+				"JOIN {h-schema}person_extended pe2 ON (p4.id = pe2.person_id) " +
+				"LEFT JOIN {h-schema}document_appointment da ON (da.appointment_id = apt.id) " +
+				"LEFT JOIN {h-schema}document d ON (da.document_id  = d.id) " +
 				"LEFT JOIN (SELECT dhc.document_id, STRING_AGG(s.pt, ', ') as description " +
-							"FROM document_health_condition dhc " +
-							"JOIN health_condition hc ON (hc.id = dhc.health_condition_id) " +
-							"JOIN snomed s ON (s.id = hc.snomed_id) " +
+							"FROM {h-schema}document_health_condition dhc " +
+							"JOIN {h-schema}health_condition hc ON (hc.id = dhc.health_condition_id) " +
+							"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
 							"GROUP BY dhc.document_id) AS problems ON (problems.document_id = d.id) " +
-				"LEFT JOIN user_person up ON (apt.created_by = up.user_id) " +
-				"LEFT JOIN person p5 ON (up.person_id = p5.id) " +
-				"JOIN person_extended pe3 ON (p5.id = pe3.person_id) " +
+				"LEFT JOIN {h-schema}user_person up ON (apt.created_by = up.user_id) " +
+				"LEFT JOIN {h-schema}person p5 ON (up.person_id = p5.id) " +
+				"JOIN {h-schema}person_extended pe3 ON (p5.id = pe3.person_id) " +
  				"WHERE i.id = :institutionId  " +
 				"AND apt.date_type_id BETWEEN :startDate AND :endDate ";
 
@@ -154,8 +154,8 @@ public class NominalAppointmentDetailStorageImpl implements NominalAppointmentDe
 
 		var nativeQuery = entityManager.createNativeQuery(sqlQuery)
 				.setParameter("institutionId", filter.getInstitutionId())
-				.setParameter("startDate", filter.getStartDate())
-				.setParameter("endDate", filter.getEndDate());
+				.setParameter("startDate", filter.getFromDate())
+				.setParameter("endDate", filter.getToDate());
 
 		if (filter.getHierarchicalUnitId() != null && filter.isIncludeHierarchicalUnitDescendants())
 			nativeQuery.setParameter("hierarchicalUnitIds", getHierarchicalUnitIds(filter.getHierarchicalUnitId()));

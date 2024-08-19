@@ -71,7 +71,7 @@ export class PersonalInformation {
 	identificationType: IdentificationTypeDto;
 	cuil: string;
 	address: AddressDto;
-	birthDate: string;
+	birthDate: Date;
 	email: string;
 	phonePrefix: string;
 	phoneNumber: string;

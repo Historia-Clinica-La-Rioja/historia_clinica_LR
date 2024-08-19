@@ -13,7 +13,7 @@ import { LABELS_RISK_FACTORS, LABELS_RISK_FACTORS_PEDIATRIC } from '../../utils/
 
 export class TriageDetailsComponent implements OnChanges {
 
-	@Input() triage: Triage;
+	@Input() triage: TriageDetails;
 	@Input() emergencyCareType: EmergencyCareTypes;
 	@Input() showRiskFactors = true;
 
@@ -33,7 +33,7 @@ export class TriageDetailsComponent implements OnChanges {
 		return !!this.emergencyCareType && !!this.triage;
 	}
 
-	private mapToRiskFactor(triage: Triage): RiskFactorFull[] {
+	private mapToRiskFactor(triage: TriageDetails): RiskFactorFull[] {
 		const riskFactors = [];
 		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ? LABELS_RISK_FACTORS_PEDIATRIC : LABELS_RISK_FACTORS;
 
@@ -65,13 +65,13 @@ export class TriageDetailsComponent implements OnChanges {
 		}
 	}
 
-	getFullName(triage: Triage): string {
+	getFullName(triage: TriageDetails): string {
 		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)} ${triage.createdBy.lastName}`;
 	}
 
 }
 
-export interface Triage {
+export interface TriageDetails {
 	creationDate: Date;
 	category: TriageCategory;
 	createdBy: {
@@ -143,6 +143,7 @@ export interface Triage {
 		}
 	};
 	notes?: string;
+	reasons?: string[];
 }
 
 export interface RiskFactorFull {

@@ -23,6 +23,7 @@ import { SearchAppointmentCriteria } from '@turnos/components/search-appointment
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { Observable, of, map } from 'rxjs';
+import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
 
 const TEMPORARY_PATIENT_ID = 3;
 
@@ -64,6 +65,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
+	fullDate: Date
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: RegulationNewAppointmentData,
@@ -147,6 +149,9 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 			this.editableStep1 = false;
 		}
 		this.setModalityValidation(this.modalitySelected);
+
+		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date))
+
 	}
 
 	setModalityValidation(modality) {

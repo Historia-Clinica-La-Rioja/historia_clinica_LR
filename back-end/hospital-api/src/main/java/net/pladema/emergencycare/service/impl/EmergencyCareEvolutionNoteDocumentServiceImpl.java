@@ -5,6 +5,8 @@ import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.reason.ReasonService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEvolutionNoteRepository;
@@ -16,11 +18,14 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocume
 import net.pladema.staff.service.ClinicalSpecialtyService;
 import net.pladema.staff.service.HealthcareProfessionalService;
 
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +64,23 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		return result;
 	}
 
+	@Override
+	public Optional<EmergencyCareEvolutionNoteDocumentBo> getByDocumentId(Long documentId) {
+		LOG.debug("Input parameters -> documentId {}", documentId);
+		Optional<EmergencyCareEvolutionNoteDocumentBo> result = emergencyCareEvolutionNoteRepository.findByDocumentId(documentId)
+				.map(this::toEmergencyCareEvolutionNoteBo)
+				.map(this::getEmergencyCareEvolutionNoteDocumentRelatedData);
+		LOG.debug("Output -> result {}", result);
+		return result;
+	}
+
+	@Override
+	public void deleteByDocumentId(Long documentId){
+		LOG.debug("Input parameters -> documentId {}", documentId);
+		emergencyCareEvolutionNoteRepository.deleteByDocumentId(documentId);
+	}
+
+
 	private EmergencyCareEvolutionNoteBo toEmergencyCareEvolutionNoteBo(EmergencyCareEvolutionNote evolutionNote) {
 		EmergencyCareEvolutionNoteBo result = new EmergencyCareEvolutionNoteBo();
 		result.setId(evolutionNote.getId());
@@ -66,12 +88,17 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		result.setDoctorId(evolutionNote.getDoctorId());
 		result.setClinicalSpecialtyId(evolutionNote.getClinicalSpecialtyId());
 		result.setPerformedDate(evolutionNote.getCreatedOn());
+		result.setPatientId(evolutionNote.getPatientId());
+		result.setInstitutionId(evolutionNote.getInstitutionId());
+		result.setPatientMedicalCoverageId(evolutionNote.getPatientMedicalCoverageId());
 		return result;
 	}
 
 	private EmergencyCareEvolutionNoteDocumentBo getEmergencyCareEvolutionNoteDocumentRelatedData(EmergencyCareEvolutionNoteBo evolutionNote) {
 		EmergencyCareEvolutionNoteDocumentBo evolutionNoteBo = new EmergencyCareEvolutionNoteDocumentBo();
 		GeneralHealthConditionBo healthCondition = documentService.getHealthConditionFromDocument(evolutionNote.getDocumentId());
+		evolutionNoteBo.setPatientId(evolutionNote.getPatientId());
+		evolutionNoteBo.setClinicalSpecialtyId(evolutionNote.getClinicalSpecialtyId());
 		evolutionNoteBo.setMainDiagnosis(healthCondition.getMainDiagnosis());
 		evolutionNoteBo.setDiagnosis(healthCondition.getDiagnosis());
 		evolutionNoteBo.setFamilyHistories(healthCondition.getFamilyHistories());
@@ -84,10 +111,25 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		evolutionNoteBo.setEvolutionNote(noteService.getEvolutionNoteDescriptionByDocumentId(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(evolutionNote.getPerformedDate()).toLocalDateTime());
 		evolutionNoteBo.setId(evolutionNote.getDocumentId());
-		evolutionNoteBo.setFileName(documentFileRepository.findById(evolutionNote.getDocumentId()).get().getFilename());
+		evolutionNoteBo.setFileName(documentFileRepository.findById(evolutionNote.getDocumentId())
+				.map(DocumentFile::getFilename).orElse(null));
 		evolutionNoteBo.setProfessional(healthcareProfessionalService.findActiveProfessionalById(evolutionNote.getDoctorId()));
-		evolutionNoteBo.setClinicalSpecialtyName(clinicalSpecialtyService.getClinicalSpecialty(evolutionNote.getClinicalSpecialtyId()).get().getName());
+		evolutionNoteBo.setClinicalSpecialtyName(clinicalSpecialtyService.getClinicalSpecialty(evolutionNote.getClinicalSpecialtyId())
+				.map(ClinicalSpecialtyBo::getName).orElse(null));
+		setEditedOn(evolutionNoteBo);
 		return evolutionNoteBo;
+	}
+
+	private void setEditedOn(EmergencyCareEvolutionNoteDocumentBo evolutionNoteBo) {
+		Long initialDocumentId = documentService.findById(evolutionNoteBo.getId()).map(Document::getInitialDocumentId).orElse(null);
+		if (initialDocumentId != null){
+			documentService.findById(initialDocumentId).ifPresent(initial -> {
+				evolutionNoteBo.setEditedOn(evolutionNoteBo.getPerformedDate());
+				evolutionNoteBo.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(initial.getCreatedOn()).toLocalDateTime());
+				evolutionNoteBo.setEditor(evolutionNoteBo.getProfessional());
+				evolutionNoteBo.setProfessional(healthcareProfessionalService.findProfessionalByUserId(initial.getCreatedBy()));
+			});
+		}
 	}
 
 }

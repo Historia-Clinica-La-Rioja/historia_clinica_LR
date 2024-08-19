@@ -7,6 +7,7 @@
 			<mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
 			<mat-datepicker #datepicker>
 			</mat-datepicker>
+			<mat-error [translate]="_requiredText"></mat-error>
 		</mat-form-field>
 		<ng-container *ngIf="enableDelete">
 			<button type="button" mat-icon-button (click)="delete()">

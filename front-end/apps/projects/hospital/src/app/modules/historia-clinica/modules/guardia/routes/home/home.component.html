@@ -178,11 +178,13 @@
 												{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
 											</span>
 										</mat-card-title>
-										<mat-card-subtitle *ngIf="episode.patient?.id">
-											<span class="mat-small">
+										<mat-card-subtitle class="mat-small" fxLayout="column" fxLayoutGap="2px">
+											<span *ngIf="episode.patient?.id">
 												{{ 'guardia.home.episodes.episode.patient.ID'| translate }}
 												{{ episode.patient?.id }}
 											</span>
+											<app-title-description *ngIf="episode.patient?.patientDescription && episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY" [title]="'guardia.home.episodes.episode.patient.DETAILS'" [text]="episode.patient.patientDescription" limit="20"></app-title-description>
+											<app-title-description *ngIf="episode.reason" [title]="'guardia.home.episodes.episode.patient.REASON'" [text]="episode.reason" limit="20"></app-title-description>
 										</mat-card-subtitle>
 									</mat-card-header>
 									<ng-template #emergency_care_temporary>
@@ -207,8 +209,9 @@
 
 								<div id="triage" fxFlex="25%" fxLayout="column">
 									<div class="triage-chip"
-										[ngStyle]="{'color':episode.triage.id === triages.AMARILLO_NIVEL_3 || episode.triage.id === triages.GRIS_SIN_TRIAGE ? 'black' : 'white' }"
-										[style.background-color]="episode.triage.color">{{ episode.triage.name }}</div>
+										[ngStyle]="{'color':episode.triage.emergencyCareEpisodeListTriageDto.id === triages.AMARILLO_NIVEL_3 || episode.triage.emergencyCareEpisodeListTriageDto.id === triages.GRIS_SIN_TRIAGE ? 'black' : 'white' }"
+										[style.background-color]="episode.triage.emergencyCareEpisodeListTriageDto.color">{{ episode.triage.emergencyCareEpisodeListTriageDto.name }}</div>
+										<span class="mat-small" *ngIf="episode.triage.reasons" matTooltip="{{episode.triage.reasons | stringSeparator }}"> {{ episode.triage.reasons | showMoreConcepts}}</span>	
 									<span class="mat-small">{{ episode.type?.description }}</span>
 								</div>
 
@@ -245,13 +248,19 @@
 											{{ 'guardia.home.episodes.episode.actions.NUEVO_TRIAGE' | translate }}
 										</button>
 
-									<ng-container *appHasRole="rolesToEpisodeAttend">
-										<button id="atender" mat-menu-item
-											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
-											(click)="atender(episode.id)">
-											{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
+										<ng-container *appHasRole="rolesToEpisodeAttend">
+											<button id="atender" mat-menu-item
+												*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
+												(click)="atender(episode.id)">
+												{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
+											</button>
+										</ng-container>
+
+										<button id="editPatientDescription" mat-menu-item
+											*ngIf="episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY"
+											(click)="editPatientDescription(episode.id, episode.patient.patientDescription)">
+											{{ 'guardia.home.episodes.episode.actions.edit_patient_description.TITLE' | translate }}
 										</button>
-									</ng-container>
 
 									</mat-menu>
 								</div>

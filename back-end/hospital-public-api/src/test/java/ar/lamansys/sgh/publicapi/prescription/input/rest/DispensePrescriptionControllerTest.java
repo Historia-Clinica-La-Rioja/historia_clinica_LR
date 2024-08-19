@@ -105,7 +105,7 @@ public class DispensePrescriptionControllerTest {
 				"TestPharmacy",
 				pharmacistName,
 				"TestPharmacistRegistration",
-				LocalDateTime.now(),
+				LocalDateTime.now().toString(),
 				List.of(new ChangePrescriptionStateMedicationDto(
 								1, status,
 								new DispensedMedicationDto(

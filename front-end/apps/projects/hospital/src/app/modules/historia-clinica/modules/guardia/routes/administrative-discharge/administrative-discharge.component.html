@@ -7,30 +7,39 @@
 		<mat-card-content gdColumns="repeat(2, 1fr)" gdGap="20px">
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">
-				<span class="grid-title" translate="guardia.episode.administrative_discharge.medical_discharge_card.DATE_TIME"></span>
-				<span class="content-primary">{{ administrativeDischarge.medicalDischargeOn | viewDateDto : 'localdatetime' | dateFormat: 'datetime' }}</span>
+				<span class="grid-title"
+					translate="guardia.episode.administrative_discharge.medical_discharge_card.DATE_TIME"></span>
+				<span class="content-primary">{{ administrativeDischarge.medicalDischargeOn | viewDateDto :
+					'localdatetime' | dateFormat: 'datetime' }}</span>
 			</div>
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">
-				<span class="grid-title" translate="guardia.episode.administrative_discharge.medical_discharge_card.PROBLEMS"></span>
+				<span class="grid-title"
+					translate="guardia.episode.administrative_discharge.medical_discharge_card.PROBLEMS"></span>
 				<div *ngFor="let problems of administrativeDischarge.snomedPtProblems">
 					<span class="content-primary">{{problems}}</span>
 				</div>
 			</div>
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">
-				<span class="grid-title" translate="guardia.episode.administrative_discharge.medical_discharge_card.DISCHARGE_TYPE"></span>
+				<span class="grid-title"
+					translate="guardia.episode.administrative_discharge.medical_discharge_card.DISCHARGE_TYPE"></span>
 				<span class="content-primary">{{administrativeDischarge.dischargeType.description}}</span>
 			</div>
 
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">
-				<span class="grid-title" translate="guardia.episode.administrative_discharge.medical_discharge_card.AUTHORIZE_AUTOPSY"></span>
-				<span class="content-primary" *ngIf="administrativeDischarge.autopsy === null || administrativeDischarge.autopsy === undefined ; else hasInfo" translate="guardia.episode.administrative_discharge.autopsy.NO_INFORMATION"></span>
+				<span class="grid-title"
+					translate="guardia.episode.administrative_discharge.medical_discharge_card.AUTHORIZE_AUTOPSY"></span>
+				<span class="content-primary"
+					*ngIf="administrativeDischarge.autopsy === null || administrativeDischarge.autopsy === undefined ; else hasInfo"
+					translate="guardia.episode.administrative_discharge.autopsy.NO_INFORMATION"></span>
 				<ng-template #hasInfo>
-					<span *ngIf="administrativeDischarge.autopsy else no" class="content-primary" translate="guardia.episode.administrative_discharge.autopsy.YES"></span>
+					<span *ngIf="administrativeDischarge.autopsy else no" class="content-primary"
+						translate="guardia.episode.administrative_discharge.autopsy.YES"></span>
 					<ng-template #no>
-						<span class="content-primary" translate="guardia.episode.administrative_discharge.autopsy.NO"></span>
+						<span class="content-primary"
+							translate="guardia.episode.administrative_discharge.autopsy.NO"></span>
 					</ng-template>
 				</ng-template>
 			</div>
@@ -43,31 +52,32 @@
 
 	<form [formGroup]="form" (submit)="confirm()">
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
-			<mat-form-field appearance="outline">
-				<input formControlName="date" id="date" matInput [matDatepicker]="initPicker"
-					placeholder="{{'guardia.episode.administrative_discharge.form.DATE' | translate}}" [min]="medicalDischargeOn" [max]="today">
-				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
-				<mat-datepicker #initPicker></mat-datepicker>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED"></mat-error>
-			</mat-form-field>
+			<app-datepicker id="date" [minDate]="medicalDischargeOn" [maxDate]="today" [dateToSetInDatepicker]="today"
+				(selectDate)="dateChanged($event)">
+			</app-datepicker>
 
 
 			<mat-form-field appearance="outline">
 				<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
 					placeholder="{{'guardia.episode.administrative_discharge.form.TIME' | translate}}">
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'pattern', 'time')" translate="forms.TIME_FORMAT"></mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED"></mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')" translate="forms.MAX_TIME_ERROR"></mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')" translate="guardia.episode.administrative_discharge.form.TIME_LIMIT"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'pattern', 'time')"
+					translate="forms.TIME_FORMAT"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')"
+					translate="forms.REQUIRED"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')"
+					translate="forms.MAX_TIME_ERROR"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')"
+					translate="guardia.episode.administrative_discharge.form.TIME_LIMIT"></mat-error>
 			</mat-form-field>
 		</div>
 
 		<div fxLayout="column" style="margin-top: 15px;">
 
-			<mat-form-field appearance="outline" >
+			<mat-form-field appearance="outline">
 				<mat-label translate="Forma de egreso"></mat-label>
 				<mat-select formControlName="hospitalTransportId" name="hospitalTransportId">
-					<mat-option *ngFor="let hospitalTransport of ( hospitalTransports$ | async )" [value]="hospitalTransport.id">
+					<mat-option *ngFor="let hospitalTransport of ( hospitalTransports$ | async )"
+						[value]="hospitalTransport.id">
 						{{hospitalTransport.description}}
 					</mat-option>
 				</mat-select>

@@ -24,6 +24,7 @@ import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -551,19 +552,19 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenThereAreRepeatedPersonalHistories() {
         ConsultationBo consultation = mockBasicConsultation();
 
-        List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+        ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories = new ReferableItemBo<>();
 
         ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory1);
+        personalHistories.getContent().add(personalHistory1);
 
         ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
-        personalHistories.add(personalHistory2);
+        personalHistories.getContent().add(personalHistory2);
 
         ConsultationPersonalHistoryBo personalHistory3 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory3);
+        personalHistories.getContent().add(personalHistory3);
 
         consultation.setPersonalHistories(personalHistories);
 
@@ -593,7 +594,9 @@ class CreateOdontologyConsultationImplTest {
         allergy3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         allergies.add(allergy3);
 
-        consultation.setAllergies(allergies);
+		ReferableItemBo<ConsultationAllergyBo> referableItemBo = new ReferableItemBo<>(allergies, false);
+
+        consultation.setAllergies(referableItemBo);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
@@ -725,15 +728,18 @@ class CreateOdontologyConsultationImplTest {
         ConsultationAllergyBo allergy2 = new ConsultationAllergyBo();
         allergy2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         allergies.add(allergy2);
-        consultation.setAllergies(allergies);
 
-        List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+		ReferableItemBo<ConsultationAllergyBo> referableItemBo = new ReferableItemBo<>(allergies, false);
+
+        consultation.setAllergies(referableItemBo);
+
+        ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories = new ReferableItemBo<>();
         ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory1);
+        personalHistories.getContent().add(personalHistory1);
         ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory2);
+        personalHistories.getContent().add(personalHistory2);
         consultation.setPersonalHistories(personalHistories);
 
         List<ConsultationReasonBo> reasons = new ArrayList<>();

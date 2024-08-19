@@ -1,29 +1,19 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import static java.util.stream.Collectors.toList;
-
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
-import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
@@ -39,64 +29,71 @@ import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
-@Service
+import static java.util.stream.Collectors.toList;
+
+@Slf4j
 @RequiredArgsConstructor
+@Service
 public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DiaryOpeningHoursServiceImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
     private final DiaryOpeningHoursRepository diaryOpeningHoursRepository;
-
     private final OpeningHoursRepository openingHoursRepository;
-
     private final DiaryBoMapper diaryBoMapper;
-
-	private final SharedReferenceCounterReference sharedReferenceCounterReference;
+    private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
     @Override
     public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
         Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
-        diaryOpeningHours.forEach(doh -> {
-            OpeningHoursBo openingHoursBo = doh.getOpeningHours();
-            OpeningHours newOpeningHours = diaryBoMapper.toOpeningHours(openingHoursBo);
-            Integer openingHoursId;
-
-            //Si los horarios de atención definidos para la agenda ya existen en la BBDD
-            // los registros son reutilizados. En caso contrario, son persistidos.
-            Optional<OpeningHours> existingOpeningHours = savedOpeningHours.stream()
-                    .filter(oh -> oh.equals(newOpeningHours)).findAny();
-            if(existingOpeningHours.isPresent())
-                openingHoursId = existingOpeningHours.get().getId();
-            else
-				openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
-            openingHoursBo.setId(openingHoursId);
-            diaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(diaryId, openingHoursId, doh));
-
-        });
+        diaryOpeningHours
+                .forEach(diaryOpeningHoursBo -> updateDiaryWithOpeningHours(diaryId, diaryOpeningHoursBo, savedOpeningHours));
     }
 
-	@Override
-	public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
-		diaryOpeningHoursRepository.deleteAll(diaryId);
-		load(diaryId, diaryOpeningHours);
-	}
-    
-    private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh){
+    private void updateDiaryWithOpeningHours(Integer diaryId, DiaryOpeningHoursBo diaryOpeningHoursBo, List<OpeningHours> savedOpeningHours) {
+        OpeningHoursBo openingHoursBo = diaryOpeningHoursBo.getOpeningHours();
+        OpeningHours newOpeningHours = diaryBoMapper.toOpeningHours(openingHoursBo);
+
+        Integer openingHoursId = savedOpeningHours.stream()
+               .filter(oh -> oh.equals(newOpeningHours))
+               .findFirst()
+               .map(OpeningHours::getId)
+               .orElseGet(() -> openingHoursRepository.save(newOpeningHours).getId());
+        openingHoursBo.setId(openingHoursId);
+
+        DiaryOpeningHours diaryOpeningHoursEntity = createDiaryOpeningHoursInstance(diaryId, openingHoursId, diaryOpeningHoursBo);
+        try {
+            diaryOpeningHoursRepository.save(diaryOpeningHoursEntity);
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("TICKET -> hsi-6586");
+            log.error("DataIntegrityViolationException -> {}", ex.getMessage(), ex);
+            log.debug("Ignore situation because openinghours {}, is already saved with diary {}", openingHoursBo, diaryId);
+        }
+    }
+
+    @Override
+    public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+        diaryOpeningHoursRepository.deleteAll(diaryId);
+        load(diaryId, diaryOpeningHours);
+    }
+
+    private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh) {
         DiaryOpeningHours diaryOpeningHours = new DiaryOpeningHours();
         diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, openingHoursId));
         diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
         diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
         diaryOpeningHours.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
-		diaryOpeningHours.setProtectedAppointmentsAllowed(doh.getProtectedAppointmentsAllowed());
-		diaryOpeningHours.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
-		diaryOpeningHours.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
-		diaryOpeningHours.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
-		diaryOpeningHours.setRegulationProtectedAppointmentsAllowed(doh.getRegulationProtectedAppointmentsAllowed());
+        diaryOpeningHours.setProtectedAppointmentsAllowed(doh.getProtectedAppointmentsAllowed());
+        diaryOpeningHours.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
+        diaryOpeningHours.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
+        diaryOpeningHours.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
+        diaryOpeningHours.setRegulationProtectedAppointmentsAllowed(doh.getRegulationProtectedAppointmentsAllowed());
         return diaryOpeningHours;
     }
 
@@ -105,9 +102,9 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
                                                                    LocalDate newDiaryStart,
                                                                    LocalDate newDiaryEnd,
                                                                    Integer ignoreDiaryId) throws DiaryOpeningHoursException {
-        LOG.debug("Input parameters -> doctorOfficeId {}, startDate {}, endDate {}",
+        log.debug("Input parameters -> doctorOfficeId {}, startDate {}, endDate {}",
                 doctorOfficeId, newDiaryStart, newDiaryEnd);
-        
+
         validations(doctorOfficeId, newDiaryStart, newDiaryEnd);
 
         List<OccupationVo> queryResults = diaryOpeningHoursRepository
@@ -119,7 +116,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         queryResults.stream()
                 .filter(defineFilter(ignoreDiaryId))
                 .collect(Collectors.groupingBy(OccupationVo::getDiaryId))
-                .forEach( (diaryId,occupationTimeOfDiary)->
+                .forEach((diaryId, occupationTimeOfDiary) ->
                         validQueryResults.addAll(
                                 getOnlyDiaryOverlappingDays(occupationTimeOfDiary, newDiaryStart, newDiaryEnd))
                 );
@@ -127,7 +124,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         List<OccupationBo> result = new ArrayList<>();
         validQueryResults.stream()
                 .collect(Collectors.groupingBy(OpeningHours::getDayWeekId))
-                .forEach( (dayWeekId,openingHours)->
+                .forEach((dayWeekId, openingHours) ->
                         result.add(mergeRangeTimeOfOpeningHours(dayWeekId, openingHours))
                 );
         return result;
@@ -141,80 +138,78 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     }
 
     private Predicate<OccupationVo> defineFilter(Integer ignoreDiaryId) {
-        LOG.debug("Input parameters -> ignoreDiaryId {}", ignoreDiaryId);
+        log.debug("Input parameters -> ignoreDiaryId {}", ignoreDiaryId);
         Predicate<OccupationVo> result = (ignoreDiaryId == null) ? e -> true : e -> !e.getDiaryId().equals(ignoreDiaryId);
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 
 
-
     @Override
     public Collection<DiaryOpeningHoursBo> getDiariesOpeningHours(List<Integer> diaryIds) {
-        LOG.debug("Input parameters -> diaryIds {} ", diaryIds);
+        log.debug("Input parameters -> diaryIds {} ", diaryIds);
         Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
         if (!diaryIds.isEmpty()) {
             List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHours(diaryIds);
             result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
         }
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 
-	@Override
-	public Collection<DiaryOpeningHoursBo> getDiaryOpeningHours(Integer diaryId) {
-		LOG.debug("Input parameters -> diaryId {} ", diaryId);
-		Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
-		List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId);
-		result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
+    @Override
+    public Collection<DiaryOpeningHoursBo> getDiaryOpeningHours(Integer diaryId) {
+        log.debug("Input parameters -> diaryId {} ", diaryId);
+        Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
+        List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiaryOpeningHours(diaryId);
+        result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+        log.debug(OUTPUT, result);
+        return result;
+    }
 
-	@Override
-	public boolean hasProtectedAppointments(Integer openingHourId) {
-		LOG.debug("Input parameters -> openingHourId {} ", openingHourId);
-		return sharedReferenceCounterReference.existsProtectedAppointmentInOpeningHour(openingHourId);
-	}
+    @Override
+    public boolean hasProtectedAppointments(Integer openingHourId) {
+        log.debug("Input parameters -> openingHourId {} ", openingHourId);
+        return sharedReferenceCounterReference.existsProtectedAppointmentInOpeningHour(openingHourId);
+    }
 
-	@Override
-	public Collection<DiaryOpeningHoursBo> getDiariesOpeningHoursByMedicalAttentionType(List<Integer> diaryIds, short medicalAttentionTypeId) {
-		LOG.debug("Input parameters -> diaryIds {}, medicalAttentionTypeId {} ", diaryIds, medicalAttentionTypeId);
-		Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
-		if (!diaryIds.isEmpty()) {
-			List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHoursByMedicalAttentionType(diaryIds, medicalAttentionTypeId);
-			result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
-		}
-		LOG.debug(OUTPUT, result);
-		return result;
-	}
+    @Override
+    public Collection<DiaryOpeningHoursBo> getDiariesOpeningHoursByMedicalAttentionType(List<Integer> diaryIds, short medicalAttentionTypeId) {
+        log.debug("Input parameters -> diaryIds {}, medicalAttentionTypeId {} ", diaryIds, medicalAttentionTypeId);
+        Collection<DiaryOpeningHoursBo> result = new ArrayList<>();
+        if (!diaryIds.isEmpty()) {
+            List<DiaryOpeningHoursVo> resultQuery = diaryOpeningHoursRepository.getDiariesOpeningHoursByMedicalAttentionType(diaryIds, medicalAttentionTypeId);
+            result = resultQuery.stream().map(this::createDiaryOpeningHoursBo).collect(Collectors.toList());
+        }
+        log.debug(OUTPUT, result);
+        return result;
+    }
 
-	private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
-        LOG.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
+    private DiaryOpeningHoursBo createDiaryOpeningHoursBo(DiaryOpeningHoursVo diaryOpeningHoursVo) {
+        log.debug("Input parameters -> diaryOpeningHoursVo {} ", diaryOpeningHoursVo);
         DiaryOpeningHoursBo result = new DiaryOpeningHoursBo();
         result.setDiaryId(diaryOpeningHoursVo.getDiaryId());
         result.setMedicalAttentionTypeId(diaryOpeningHoursVo.getMedicalAttentionTypeId());
         result.setOverturnCount(diaryOpeningHoursVo.getOverturnCount());
         result.setOpeningHours(new OpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
         result.setExternalAppointmentsAllowed(diaryOpeningHoursVo.getExternalAppointmentsAllowed());
-		result.setProtectedAppointmentsAllowed(diaryOpeningHoursVo.getProtectedAppointmentsAllowed());
-		result.setOnSiteAttentionAllowed(diaryOpeningHoursVo.getOnSiteAttentionAllowed());
-		result.setPatientVirtualAttentionAllowed(diaryOpeningHoursVo.getPatientVirtualAttentionAllowed());
-		result.setSecondOpinionVirtualAttentionAllowed(diaryOpeningHoursVo.getSecondOpinionVirtualAttentionAllowed());
-		result.setRegulationProtectedAppointmentsAllowed(diaryOpeningHoursVo.getRegulationProtectedAppointmentsAllowed());
-        LOG.debug(OUTPUT, result);
+        result.setProtectedAppointmentsAllowed(diaryOpeningHoursVo.getProtectedAppointmentsAllowed());
+        result.setOnSiteAttentionAllowed(diaryOpeningHoursVo.getOnSiteAttentionAllowed());
+        result.setPatientVirtualAttentionAllowed(diaryOpeningHoursVo.getPatientVirtualAttentionAllowed());
+        result.setSecondOpinionVirtualAttentionAllowed(diaryOpeningHoursVo.getSecondOpinionVirtualAttentionAllowed());
+        result.setRegulationProtectedAppointmentsAllowed(diaryOpeningHoursVo.getRegulationProtectedAppointmentsAllowed());
+        log.debug(OUTPUT, result);
         return result;
     }
 
     /**
-     *
      * @param occupationTimeOfDiary rangos horarios de atención para una agenda particular (preexistente)
-     * @param startDate fecha de inicio definida para nueva agenda
-     * @param endDate fecha de fin definida para nueva agenda
+     * @param startDate             fecha de inicio definida para nueva agenda
+     * @param endDate               fecha de fin definida para nueva agenda
      * @return rangos horarios en los que la nueva agenda se superpone con lo definido por la agenda preexistente
      */
     private List<OpeningHours> getOnlyDiaryOverlappingDays(List<OccupationVo> occupationTimeOfDiary,
-                                                           LocalDate startDate, LocalDate endDate){
+                                                           LocalDate startDate, LocalDate endDate) {
         LocalDate diaryStart = occupationTimeOfDiary.get(0).getStartDate();
         LocalDate diaryEnd = occupationTimeOfDiary.get(0).getEndDate();
         List<Short> overlappingDays = overlappingDays(diaryStart, diaryEnd, startDate, endDate);
@@ -225,38 +220,35 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     }
 
     /**
-     *
      * @param rangeStart1 fecha de comienzo para rango 1
-     * @param rangeEnd1 fecha de fin para rango 1
+     * @param rangeEnd1   fecha de fin para rango 1
      * @param rangeStart2 fecha de comienzo para rango 2
-     * @param rangeEnd2 fecha de fin para rango 2
+     * @param rangeEnd2   fecha de fin para rango 2
      * @return lista con todos los identificadores de días de semana superpuestos entre dos rangos de fecha
      */
     @Override
     public List<Short> overlappingDays(@NotNull LocalDate rangeStart1, @NotNull LocalDate rangeEnd1,
-                                        @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2){
+                                       @NotNull LocalDate rangeStart2, @NotNull LocalDate rangeEnd2) {
         List<Short> validDaysWeek = new ArrayList<>();
         LocalDate start = rangeStart1.isBefore(rangeStart2) ? rangeStart2 : rangeStart1;
         LocalDate end = rangeEnd1.isBefore(rangeStart2) ? rangeEnd1 : rangeEnd2;
         int overlappingDays = end.getDayOfYear() - start.getDayOfYear() + 1;
-        if(overlappingDays < 7){
-            while(!start.isEqual(end)){
-                validDaysWeek.add((short)start.getDayOfWeek().getValue());
+        if (overlappingDays < 7) {
+            while (!start.isEqual(end)) {
+                validDaysWeek.add((short) start.getDayOfWeek().getValue());
                 start = start.plusDays(1L);
             }
-            validDaysWeek.add((short)start.getDayOfWeek().getValue());
-        }
-        else
+            validDaysWeek.add((short) start.getDayOfWeek().getValue());
+        } else
             validDaysWeek.addAll(EDayOfWeek.getAllIds());
         return validDaysWeek;
     }
 
-	/**
-     *
+    /**
      * @param openingHours rangos de horarios para un mismo día de semana ordenados
      * @return lista acotada de {@code openingHours} uniendo rangos de tiempo superpuestos
      */
-    private OccupationBo mergeRangeTimeOfOpeningHours(Short dayWeekId, @NotEmpty List<OpeningHours> openingHours){
+    private OccupationBo mergeRangeTimeOfOpeningHours(Short dayWeekId, @NotEmpty List<OpeningHours> openingHours) {
         Comparator<OpeningHours> ascendingOrder = Comparator
                 .comparing(OpeningHours::getFrom, LocalTime::compareTo)
                 .thenComparing(OpeningHours::getTo, LocalTime::compareTo);
@@ -265,14 +257,13 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         List<TimeRangeBo> timeRanges = new ArrayList<>();
 
         TimeRangeBo lastTimeRange = new TimeRangeBo(openingHours.get(0));
-        for(int index = 1; index < openingHours.size(); index ++){
+        for (int index = 1; index < openingHours.size(); index++) {
             OpeningHours current = openingHours.get(index);
-            if(current.getFrom().isAfter(lastTimeRange.getTo())) {
+            if (current.getFrom().isAfter(lastTimeRange.getTo())) {
                 timeRanges.add(lastTimeRange);
                 lastTimeRange = new TimeRangeBo(current);
-            }
-            else if (current.getTo().isAfter(lastTimeRange.getTo()))
-                    lastTimeRange.setTo(current.getTo());
+            } else if (current.getTo().isAfter(lastTimeRange.getTo()))
+                lastTimeRange.setTo(current.getTo());
         }
         timeRanges.add(lastTimeRange);
 

@@ -1,6 +1,7 @@
 package net.pladema.sgx.exceptions;
 
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -278,6 +279,7 @@ public class RestExceptionHandler {
 				.toArray(String[]::new);
 		return new ApiErrorMessageDto("BindException", String.format("Error al leer el valor de %s", Arrays.toString(fieldsAndValues)));
 	}
+
 
 
 	private ApiErrorMessageDto buildErrorMessage(RuntimeException ex) {

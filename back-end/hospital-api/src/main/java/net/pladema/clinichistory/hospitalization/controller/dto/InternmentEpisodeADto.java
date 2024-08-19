@@ -1,18 +1,19 @@
 package net.pladema.clinichistory.hospitalization.controller.dto;
 
-import static ar.lamansys.sgx.shared.featureflags.AppFeature.RESPONSIBLE_DOCTOR_REQUIRED;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.featureflags.controller.constraints.SGHNotNull;
 
-import javax.annotation.Nullable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import static ar.lamansys.sgx.shared.featureflags.AppFeature.RESPONSIBLE_DOCTOR_REQUIRED;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class InternmentEpisodeADto {
 

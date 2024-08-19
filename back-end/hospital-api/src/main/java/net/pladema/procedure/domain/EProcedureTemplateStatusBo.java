@@ -53,5 +53,8 @@ public enum EProcedureTemplateStatusBo {
 	public boolean isUpdateable() {
 		return this.getAllowsUpdate();
 	}
+	public boolean isActive() {
+		return this.equals(ACTIVE);
+	}
 
 }

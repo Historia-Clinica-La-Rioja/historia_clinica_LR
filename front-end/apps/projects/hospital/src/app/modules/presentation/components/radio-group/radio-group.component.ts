@@ -20,7 +20,8 @@ export class RadioGroupComponent {
             presentation: {
                 title: radioGroupInputData.presentation.title,
                 data: radioGroupInputData.presentation.data || DEFAULT_RADIO_GROUP,
-                color: radioGroupInputData.presentation.color || 'primary'
+                color: radioGroupInputData.presentation.color || 'primary',
+				previousValueId: radioGroupInputData.presentation.previousValueId,
             },
             alignments: {
                 position: radioGroupInputData.alignments.position || Position.ROW,
@@ -45,14 +46,16 @@ export enum Position {
 
 export interface RadioGroupData {
     value: number,
-    description: string
+    description: string,
+	checked?: boolean
 }
 
 export interface RadioGroupInputData {
     presentation: {
         title: string,
         data?: RadioGroupData[],
-        color?: ThemePalette
+        color?: ThemePalette,
+		previousValueId?: number
     },
     alignments: {
         position?: string,
@@ -60,12 +63,13 @@ export interface RadioGroupInputData {
     }
 }
 
-export function generateRadioGroupInputData(title: string, data?: RadioGroupData[], color?: ThemePalette, position?: string, optionsPosition?: string): RadioGroupInputData {
+export function generateRadioGroupInputData(title: string, data?: RadioGroupData[], color?: ThemePalette, previousValueId?: number, position?: string, optionsPosition?: string): RadioGroupInputData {
     return {
         presentation: {
             title,
             data,
             color,
+			previousValueId,
         },
         alignments: {
             position,

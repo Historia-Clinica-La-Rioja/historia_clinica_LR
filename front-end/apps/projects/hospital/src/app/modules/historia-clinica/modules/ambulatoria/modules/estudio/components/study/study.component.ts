@@ -22,6 +22,7 @@ import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/compon
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/complete-study/complete-study.component';
+import { StudyInfo, StudyResultsService } from '@historia-clinica/modules/ambulatoria/services/study-results.service';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -68,6 +69,7 @@ export class StudyComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private featureFlagService: FeatureFlagService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private studyResultsService: StudyResultsService,
 
 	) { }
 
@@ -81,7 +83,7 @@ export class StudyComponent implements OnInit {
 		return {
 			status: {
 				description: prescriptionStatus,
-				cssClass: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? 'red' : 'blue'
+				cssClass: this.setCssClass(prescriptionStatus)
 			},
 			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
 			extra_info: diagnosticReport.healthCondition ? [{
@@ -135,6 +137,8 @@ export class StudyComponent implements OnInit {
 	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
 		let reportOrder = diagnosticReport.serviceRequestId;
 		let newCompleteStudy;
+		let idOrder: number = diagnosticReport.serviceRequestId;
+		let studiesService: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
 		if (diagnosticReport?.referenceRequestDto) {
 
 			newCompleteStudy = this.dialog.open(ReferenceCompleteStudyComponent,
@@ -151,18 +155,19 @@ export class StudyComponent implements OnInit {
 					disableClose: true,
 				});
 		} else {
-				newCompleteStudy = this.dialog.open(CompleteStudyComponent,
-					{
-						data: {
-							diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
-							patientId: this.patientId,
-							order: diagnosticReport.serviceRequestId,
-							creationDate: diagnosticReport.creationDate,
-							status: this.getPrescriptionStatus(diagnosticReport.statusId)
-						},
-						width: '50%',
-						disableClose: true,
-					});
+			newCompleteStudy = this.dialog.open(CompleteStudyComponent,
+				{
+					data: {
+						diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
+						patientId: this.patientId,
+						order: diagnosticReport.serviceRequestId,
+						studies: studiesService,
+						creationDate: diagnosticReport.creationDate,
+						status: this.getPrescriptionStatus(diagnosticReport.statusId)
+					},
+					width: '90%',
+					disableClose: true,
+				});
 		}
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
@@ -176,15 +181,16 @@ export class StudyComponent implements OnInit {
 						});
 					}
 					this.updateCurrentReportsEventEmitter.emit();
-					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
 				}
-				else
-					this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
 			}
 		});
 	}
 
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto): void {
+
+		let idOrder: number = diagnosticReport.serviceRequestId;
+		let studiesService: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
+
 		if (diagnosticReport?.referenceRequestDto) {
 			this.dialog.open(ReferenceCompleteStudyComponent,
 				{
@@ -205,6 +211,7 @@ export class StudyComponent implements OnInit {
 				{
 					data: {
 						diagnosticReport: diagnosticReport,
+						studies: studiesService,
 						patientId: this.patientId,
 						order: diagnosticReport.serviceRequestId,
 						creationDate: diagnosticReport.creationDate,
@@ -302,9 +309,30 @@ export class StudyComponent implements OnInit {
 
 	private getPrescriptionStatus(diagnosticReportStatusId:string): PrescriptionStatus {
 		const prescriptionStatus = this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReportStatusId);
+		this.setCssClass(prescriptionStatus)
 		return {
 			description: prescriptionStatus,
-			color: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? Color.RED : Color.BLUE,
+			color: this.setColor(prescriptionStatus)
+		}
+	}
+
+	private setCssClass(prescriptionStatus: string): string {
+		switch (prescriptionStatus) {
+			case STUDY_STATUS.REGISTERED.description:
+				return Color.RED;
+			case STUDY_STATUS.PARTIAL.description:
+				return Color.YELLOW;
+			default: return Color.BLUE;
+		}
+	}
+
+	private setColor(prescriptionStatus: string): Color {
+		switch (prescriptionStatus) {
+			case STUDY_STATUS.REGISTERED.description:
+				return Color.RED;
+			case STUDY_STATUS.PARTIAL.description:
+				return Color.YELLOW;
+			default: return Color.BLUE;
 		}
 	}
 }

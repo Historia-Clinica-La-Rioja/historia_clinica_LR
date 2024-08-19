@@ -1,10 +1,17 @@
 package ar.lamansys.online.infraestructure.input.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.online.application.FetchIfAppointmentCanBeAssignedAsOverturn;
+import ar.lamansys.online.application.FetchIfAppointmentWereAlreadyAssigned;
+import ar.lamansys.online.application.FetchIfOpeningHoursAllowsWebAppointments;
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingExceptionEnum;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
@@ -49,8 +56,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBooking
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -68,8 +73,12 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchBookingProfessionals fetchBookingProfessionals;
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
+	private final FetchIfOpeningHoursAllowsWebAppointments fetchIfOpeningHoursAllowsWebAppointments;
+	private final FetchIfAppointmentWereAlreadyAssigned fetchIfAppointmentWereAlreadyAssigned;
+	private final FetchIfAppointmentCanBeAssignedAsOverturn fetchIfAppointmentCanBeAssignedAsOverturn;
 
-	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
+	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+		assertValidAppointment(bookingDto.getBookingAppointmentDto());
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),
@@ -77,6 +86,20 @@ public class BookingExternalService implements SharedBookingPort {
 				onlineBooking
 		);
 		return bookAppointment.run(bookingBo);
+	}
+
+	private void assertValidAppointment(BookingAppointmentDto bookingAppointment) throws SaveExternalBookingException {
+		Boolean openingHoursAllowWebAppointments = fetchIfOpeningHoursAllowsWebAppointments.run(bookingAppointment.getDiaryId(), bookingAppointment.getOpeningHoursId());
+		if (openingHoursAllowWebAppointments == null || !openingHoursAllowWebAppointments)
+			throw new SaveExternalBookingException(SaveExternalBookingExceptionEnum.OPENING_HOURS_DOES_NOT_ALLOW_EXTERNAL_APPOINTMENTS, "La franja horaria no admite turnos web");
+		LocalTime appointmentTime = LocalTime.parse(bookingAppointment.getHour());
+		LocalDate appointmentDate = LocalDate.parse(bookingAppointment.getDay());
+		Boolean appointmentAlreadyAssigned = fetchIfAppointmentWereAlreadyAssigned.run(bookingAppointment.getDiaryId(), bookingAppointment.getOpeningHoursId(), appointmentDate, appointmentTime);
+		if (!appointmentAlreadyAssigned)
+			return;
+		boolean canBeOverturn = fetchIfAppointmentCanBeAssignedAsOverturn.run(bookingAppointment.getDiaryId(), bookingAppointment.getOpeningHoursId(), appointmentDate);
+		if (!canBeOverturn)
+			throw new SaveExternalBookingException(SaveExternalBookingExceptionEnum.APPOINTMENT_CANNOT_BE_CREATED, "El turno no puede ser asignado");
 	}
 
 	public void cancelBooking(String uuid) {

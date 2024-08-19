@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
+import { TriageAdultGynecologicalDto, TriageListDto } from '@api-rest/api-model';
 import { FactoresDeRiesgoFormService, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import { Triage } from '../triage/triage.component';
+import { Observable } from 'rxjs';
+
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
@@ -12,20 +15,18 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 })
 export class AdultGynecologicalTriageComponent implements OnInit {
 
-	@Input() confirmLabel = 'Confirmar episodio';
-	@Input() cancelLabel = 'Volver';
-	@Input() disableConfirmButton: boolean;
-	@Input() canAssignNotDefinedTriageLevel: boolean;
-	@Output() confirm = new EventEmitter();
-	@Output() cancel = new EventEmitter();
-
-	private triageCategoryId: number;
-	private doctorsOfficeId: number;
-
+	private triageData: Triage;
 	adultGynecologicalForm: UntypedFormGroup;
 	riskFactorsForm: UntypedFormGroup;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
+	@Input() confirmLabel = 'Confirmar episodio';
+	@Input() cancelLabel = 'Volver';
+	@Input() disableConfirmButton: boolean;
+	@Input() canAssignNotDefinedTriageLevel: boolean;
+	@Input() lastTriage$: Observable<TriageListDto>;
+	@Output() confirm = new EventEmitter();
+	@Output() cancel = new EventEmitter();
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -37,17 +38,13 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.adultGynecologicalForm = this.formBuilder.group({
-			evaluation: [null]
+			observation: [null]
 		});
 		this.riskFactorsForm = this.factoresDeRiesgoFormService.getForm();
 	}
 
-	setTriageCategoryId(triageCategoryId: number): void {
-		this.triageCategoryId = triageCategoryId;
-	}
-
-	setDoctorsOfficeId(doctorsOfficeId: number): void {
-		this.doctorsOfficeId = doctorsOfficeId;
+	setTriageData(triageData: Triage) {
+		this.triageData = triageData;
 	}
 
 	confirmAdultGynecologicalTriage(): void {
@@ -56,10 +53,11 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 			this.disableConfirmButton = true;
 			const riskFactorsValue: RiskFactorsValue = this.factoresDeRiesgoFormService.buildRiskFactorsValue(this.riskFactorsForm);
 			const triage: TriageAdultGynecologicalDto = {
-				categoryId: this.triageCategoryId,
-				doctorsOfficeId: this.doctorsOfficeId,
-				notes: formValue.evaluation,
-				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue)
+				categoryId: this.triageData.triageCategoryId,
+				doctorsOfficeId: this.triageData.doctorsOfficeId,
+				notes: formValue.observation,
+				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue),
+				reasons: this.triageData.reasons
 			};
 			this.confirm.emit(triage);
 		}

@@ -43,15 +43,15 @@
 
         <div data-id="internment">
             <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.internment" (onOptionChange)="handleOptionSelected($event, 'internment')"></app-radio-group>
-            
+
             <div *ngIf="allowOptions">
                 <mat-radio-group class="internment-options" fxLayout="column" fxLayoutGap="8px" (change)="onInternmentOptionsChange($event)">
-                    <mat-radio-button color="primary" [value]="internmentOptions.FLOOR">
+                    <mat-radio-button color="primary" [value]="internmentOptions.FLOOR" [checked]="selectedOption === internmentOptions.FLOOR">
                         <span class="option-title">
                             {{'internaciones.anesthesic-report.end-of-anesthesia-status.sections.goes-inside-options.FLOOR' | translate}}
                         </span>
                     </mat-radio-button>
-                    <mat-radio-button color="primary" [value]="internmentOptions.INTENSIVE_CARE_UNIT">
+                    <mat-radio-button color="primary" [value]="internmentOptions.INTENSIVE_CARE_UNIT" [checked]="selectedOption === internmentOptions.INTENSIVE_CARE_UNIT">
                         <span class="option-title">
                             {{'internaciones.anesthesic-report.end-of-anesthesia-status.sections.goes-inside-options.INTENSIVE_CARE_UNIT' | translate}}
                         </span>

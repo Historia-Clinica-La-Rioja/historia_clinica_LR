@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
@@ -23,6 +25,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrd
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
 
@@ -591,10 +594,28 @@ public class AppointmentsController {
 			@RequestParam(name = "reason", required = false) String reason
 	) {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
-		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), reason);
-		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
-		log.debug(OUTPUT, result);
-		return ResponseEntity.ok().body(result);
+
+		var stateId = Short.parseShort(appointmentStateId);
+		Supplier<Boolean> updateState = () -> appointmentService.updateState(appointmentId, stateId, UserInfo.getCurrentAuditor(), reason);
+
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, stateId, reason);
+
+		if (stateId != 2) {
+			return ResponseEntity.ok().body(updateState.get());
+		}
+
+		try {
+			MqttMetadataBo data = equipmentAppointmentService.publishWorkList(institutionId, appointmentId);
+			if (data != null){
+				mqttClientService.publish(data);
+				return ResponseEntity.ok().body(updateState.get());
+			}
+			log.warn("Not publishWorkList -> institutionId {},appointmentId {}", institutionId, appointmentId);
+			return ResponseEntity.ok().body(false);
+		} catch (AlreadyPublishedWorklistException e) {
+			return ResponseEntity.ok().body(updateState.get());
+		}
+
 	}
 
 
@@ -628,11 +649,6 @@ public class AppointmentsController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId
 	) {
-		log.debug("Input parameters -> institutionId {},appointmentId {}", institutionId, appointmentId);
-		MqttMetadataBo data = equipmentAppointmentService.publishWorkList(institutionId, appointmentId);
-		if (data != null){
-			mqttClientService.publish(data);
-		}
 		return ResponseEntity.ok().body(true);
 	}
 
@@ -950,7 +966,7 @@ public class AppointmentsController {
 	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
 	@ResponseStatus(HttpStatus.CREATED)
 	public SavedBookingAppointmentDto createThirdPartyAppointment(@PathVariable("institutionId") Integer institutionId,
-													  @RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
+													  @RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
 		log.debug("Input parameters -> institutionId {}, bookingDto {}", institutionId, bookingDto);
 		SavedBookingAppointmentDto result = sharedBookingPort.makeBooking(bookingDto, false);
 		log.debug("Output -> {}", result);

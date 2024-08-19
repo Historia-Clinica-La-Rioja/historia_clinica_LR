@@ -21,7 +21,7 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void {
-		this.professional = this.surgicalReport.healthcareProfessionals.find(p => p.type === this.type);
+		this.professional = this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === this.type);
 		this.description = this.professional?.comments;
 	}
 
@@ -44,16 +44,19 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto): DocumentHealthcareProfessionalDto {
 		return {
 			healthcareProfessional: professional,
-			type: this.type,
+			profession: {
+				type: this.type,
+				otherTypeDescription: null
+			}
 		}
 	}
 
 	addProfessional(professional: DocumentHealthcareProfessionalDto, type: EProfessionType): void {
-		professional.type = type;
+		professional.profession.type = type;
 		if (!this.surgicalReport.healthcareProfessionals.length)
 			this.surgicalReport.healthcareProfessionals.push(professional)
 		else {
-			const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.type === type);
+			const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === type);
 			if (professional && index == -1)
 				this.surgicalReport.healthcareProfessionals.push(professional);
 
@@ -66,12 +69,12 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 	}
 
 	deleteProfessional(type: EProfessionType): void {
-		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.type === type);
+		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === type);
 		this.professional = null;
 		this.surgicalReport.healthcareProfessionals.splice(index, 1);
 	}
 
 	isEmpty(): boolean {
-		return !this.surgicalReport.healthcareProfessionals.find(p => p.type === this.type) && !this.description;
+		return !this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === this.type) && !this.description;
 	}
 }

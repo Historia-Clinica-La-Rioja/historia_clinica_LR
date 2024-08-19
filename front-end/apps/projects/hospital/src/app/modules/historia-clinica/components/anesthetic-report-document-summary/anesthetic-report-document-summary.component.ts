@@ -1,40 +1,63 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticReportDto } from '@api-rest/api-model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
+import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
+import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
+import { DocumentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } from '@historia-clinica/services/anesthetic-report-document-summary.service';
-import { Observable, tap } from 'rxjs';
+import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
+import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
-    selector: 'app-anesthetic-report-document-summary',
-    templateUrl: './anesthetic-report-document-summary.component.html',
-    styleUrls: ['./anesthetic-report-document-summary.component.scss']
+	selector: 'app-anesthetic-report-document-summary',
+	templateUrl: './anesthetic-report-document-summary.component.html',
+	styleUrls: ['./anesthetic-report-document-summary.component.scss']
 })
 export class AnestheticReportDocumentSummaryComponent implements OnInit {
-    @Input() set documentId (documentId: number) {
-        this._documentId = documentId;
-        this.anestheticReport = null;
-        if (this.internmentEpisodeId && this._documentId) {
-            this.anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._documentId, this.internmentEpisodeId).pipe(tap(anestheticReport => {
-                this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
-                this.isLoading = false;
-            } ))
-        }
-    };
+    @Input() isPopUpOpen: boolean;
     @Input() internmentEpisodeId: number;
-    anestheticReport: AnestheticReportViewFormat;
-    _documentId: number
-    anestheticReport$: Observable<AnestheticReportDto>;
-    isLoading = true;
+    @Input() set activeDocument (activeDocument: DocumentSearch) {
+        this._activeDocument = activeDocument;
+		this.isDraft = !this._activeDocument.document.confirmed
+        this.fetchSummaryInfo();
+    };
+    @Output() resetActiveDocument = new EventEmitter<boolean>();
 
-    constructor( 
-        private readonly anestheticReportService: AnesthethicReportService,
-        private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
-     ) { }
+    _activeDocument: DocumentSearch;
+    documentSummary$: Observable<{headerDescription: HeaderDescription, anestheticReport: AnestheticReportViewFormat}>;
+	isDraft = false;
+    documentName = '';
+
+	constructor(
+		private readonly anestheticReportService: AnesthethicReportService,
+		private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
+		private readonly documentActions: DocumentActionsService,
+        private readonly documentSummaryService: DocumentsSummaryService,
+        private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
+		private readonly translateService: TranslateService,
+     ) {
+        this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.ANESTHETIC_REPORT');
+    }
 
     ngOnInit(): void {
-        this.anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._documentId, this.internmentEpisodeId).pipe(tap(anestheticReport => {
-            this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
-            this.isLoading = false;
-        } ))
+        this.fetchSummaryInfo();
     }
+
+    private fetchSummaryInfo(){
+        if (this._activeDocument?.document?.id) {
+            let anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._activeDocument.document.id, this.internmentEpisodeId);
+            let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
+
+            this.documentSummary$ = forkJoin([header$, anestheticReport$]).pipe(map(([headerData, anestheticReportData]) => {
+                return {
+                    headerDescription: this.documentSummaryMapperService.mapToHeaderDescription(headerData, this.documentName, this._activeDocument),
+                    anestheticReport: this.anestheticReportDocumentSummaryService.mapToAnestheticReportViewFormat(anestheticReportData),
+            }}));
+        }
+    }
+
+	openEditDraft() {
+		this.documentActions.editAnestheticPartDraft(this._activeDocument.document)
+	}
 }

@@ -3,7 +3,6 @@ import { ControlValueAccessor, UntypedFormBuilder, NG_VALUE_ACCESSOR, Validators
 import { CompleteDiaryDto, DiaryOpeningHoursDto, TimeDto } from '@api-rest/api-model';
 import { stringToTimeDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { MINUTES_IN_HOUR } from '@turnos/constants/appointment';
-import { Moment } from 'moment';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,15 +26,15 @@ export class DateRangeTimeFormComponent implements ControlValueAccessor, OnDestr
 	possibleStartingTime: TimeDto[];
 	possibleEndingTime: TimeDto[];
 
-	initDateFilter = (d: Moment | null): boolean => {
-		const date = (d?.toDate() || new Date());
+	initDateFilter = (d: Date | null): boolean => {
+		const date = d || new Date();
 		date.setHours(0,0,0,0);
 		return this.isPossibleAppointmentDay(date.getDay(), this.selectedAgenda.diaryOpeningHours) && date >= this.today && date <= this.agendaLastDay
 		&& date >= this.agendaFirstDay;
 	}
 
-	endDateFilter = (d: Moment | null): boolean => {
-		const date = (d?.toDate() || new Date());
+	endDateFilter = (d: Date | null): boolean => {
+		const date = d || new Date();
 		date.setHours(0,0,0,0);
 		return this.isPossibleAppointmentDay(date.getDay(), this.selectedAgenda.diaryOpeningHours) && date >= this.form.value.initDate
 		&& date <= this.agendaLastDay;

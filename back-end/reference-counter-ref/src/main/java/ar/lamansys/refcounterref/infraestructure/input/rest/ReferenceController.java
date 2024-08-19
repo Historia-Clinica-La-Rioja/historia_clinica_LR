@@ -57,7 +57,7 @@ public class ReferenceController {
 																		  @RequestParam(name = "careLineId", required = false) Integer careLineId,
 																		  @RequestParam(value = "practiceId", required = false) Integer practiceId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
-		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(patientId, clinicalSpecialtyId, careLineId, practiceId);
+		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(institutionId, patientId, clinicalSpecialtyId, careLineId, practiceId);
 		referenceSummaryBoList = referenceSummaryBoList.stream()
 				.filter(r -> r.getRegulationState().equals(EReferenceRegulationState.APPROVED))
 				.collect(Collectors.toList());

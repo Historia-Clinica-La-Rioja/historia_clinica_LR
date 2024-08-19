@@ -1,18 +1,16 @@
 <app-new-consultation-expansion-section [title]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.TITLE' | translate" icon="cancel">
 
 	<form [formGroup]="form">
-		<mat-form-field appearance="outline" class="full-width">
-			<mat-label [translate]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_1'"></mat-label>
-			<input matInput [matDatepicker]="picker" formControlName="episodeDate">
-			<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-			<mat-datepicker #picker></mat-datepicker>
-			<mat-error *ngIf="hasError(form, 'required', 'episodeDate')" [translate]="'forms.REQUIRED'"></mat-error>
-		</mat-form-field>
+
+		<app-datepicker id="episodeDate" title="ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_1"
+			(selectDate)="dateChanged($event)" requiredText="Fecha requerida" [markAsTouched]="markAsTouched" [maxDate]="todayDate">
+		</app-datepicker>
 
 		<div class="violence-situation">
+			<label>{{'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_2' | translate }}</label>
 			<app-concept-typeahead-search [ecl]="eclType"
 				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_2'"
-				(conceptSelected)="addViolenceSituation($event)">
+				(conceptSelected)="addViolenceSituation($event)" [appearanceOutline]="true">
 			</app-concept-typeahead-search>
 			<mat-error *ngIf="!violenceSituations.length && form.touched"
             [translate]="'forms.REQUIRED'"></mat-error>
@@ -23,9 +21,10 @@
 		</div>
 
 		<div>
+			<label>{{ 'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_3' | translate }}</label>
 			<app-concept-typeahead-search [ecl]="eclModality"
 				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_3'"
-				(conceptSelected)="addViolenceModality($event)">
+				(conceptSelected)="addViolenceModality($event)" [appearanceOutline]="true">
 			</app-concept-typeahead-search>
 			<mat-error *ngIf="!violenceModalities.length && form.touched"
             [translate]="'forms.REQUIRED'"></mat-error>

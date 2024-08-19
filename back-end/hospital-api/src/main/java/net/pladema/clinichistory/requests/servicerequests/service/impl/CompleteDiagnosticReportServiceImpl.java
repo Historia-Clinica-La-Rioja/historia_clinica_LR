@@ -17,9 +17,11 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Referen
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticReportService {
@@ -34,7 +36,8 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
     private final String OUTPUT = "Output -> {}";
 
     public CompleteDiagnosticReportServiceImpl(DiagnosticReportRepository diagnosticReportRepository, DocumentService documentService,
-                                               LoadDiagnosticReports loadDiagnosticReports, SnomedService snomedService, SharedReferencePort sharedReferencePort){
+                                               LoadDiagnosticReports loadDiagnosticReports, SnomedService snomedService,
+                                               SharedReferencePort sharedReferencePort){
         this.diagnosticReportRepository = diagnosticReportRepository;
         this.documentService = documentService;
         this.loadDiagnosticReports = loadDiagnosticReports;
@@ -45,14 +48,17 @@ public class CompleteDiagnosticReportServiceImpl implements CompleteDiagnosticRe
     @Override
     public Integer run(Integer patientId, Integer diagnosticReportId, CompleteDiagnosticReportBo completeDiagnosticReportBo, Integer institutionId) {
         LOG.debug("input -> patientId {}, diagnosticReportId {}, completeDiagnosticReportBo {}", patientId, diagnosticReportId, completeDiagnosticReportBo);
-        Integer result = diagnosticReportRepository.findById(diagnosticReportId).stream().mapToInt(dr -> {
+        var dr = diagnosticReportRepository.findById(diagnosticReportId);
+        Integer result = -1;
+        if (dr.isPresent()){
 			Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
-            assertCompleteDiagnosticReport(dr);
+            assertCompleteDiagnosticReport(dr.get());
 
-            DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr, completeDiagnosticReportBo);
+            DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr.get(), completeDiagnosticReportBo);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
-        }).findFirst().orElse(-1);
+			result = loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, Optional.of(diagnosticReportId), List.of(diagnosticReportBo)).get(0);
+        }
+
 		if (completeDiagnosticReportBo.getReferenceClosure() != null){
 			sharedReferencePort.closeReference(mapToReferenceClosureDto(completeDiagnosticReportBo.getReferenceClosure()), institutionId, patientId);
 		}

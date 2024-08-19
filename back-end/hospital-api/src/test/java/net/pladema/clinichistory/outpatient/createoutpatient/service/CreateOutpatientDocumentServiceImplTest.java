@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
@@ -73,8 +74,9 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
         var outpatientDocumentBo = validOutpatientConsultation(8, 5);
         outpatientDocumentBo.setReasons(List.of(new ReasonBo(new SnomedBo("SCTID", "PT")), new ReasonBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setProblems(List.of(new ProblemBo(new SnomedBo("SCTID", "PT")), new ProblemBo(new SnomedBo("SCTID", "PT"))));
-        outpatientDocumentBo.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("SCTID", "PT")), new FamilyHistoryBo(new SnomedBo("SCTID", "PT"))));
-        outpatientDocumentBo.setAllergies(List.of(new AllergyConditionBo(new SnomedBo("SCTID", "PT")), new AllergyConditionBo(new SnomedBo("SCTID", "PT"))));
+        outpatientDocumentBo.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("SCTID", "PT")), new FamilyHistoryBo(new SnomedBo("SCTID", "PT"))), true));
+		ReferableItemBo<AllergyConditionBo> referableAllergies = getAllergyConditionBoReferableItemBo();
+		outpatientDocumentBo.setAllergies(referableAllergies);
         outpatientDocumentBo.setProcedures(List.of(new ProcedureBo(new SnomedBo("SCTID", "PT")), new ProcedureBo(new SnomedBo("SCTID", "PT"))));
         CreateOutpatientDocumentException exception = Assertions.assertThrows(CreateOutpatientDocumentException.class, () ->
                 createOutpatientDocumentService.execute(outpatientDocumentBo, true)
@@ -86,7 +88,14 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
 
     }
 
-    private OutpatientDocumentBo validOutpatientConsultation(Integer institutionId, Integer encounterId){
+	private ReferableItemBo<AllergyConditionBo> getAllergyConditionBoReferableItemBo() {
+		ReferableItemBo<AllergyConditionBo> referableAllergies = new ReferableItemBo<>();
+		referableAllergies.setIsReferred(false);
+		referableAllergies.setContent(List.of(new AllergyConditionBo(new SnomedBo("SCTID", "PT")), new AllergyConditionBo(new SnomedBo("SCTID", "PT"))));
+		return referableAllergies;
+	}
+
+	private OutpatientDocumentBo validOutpatientConsultation(Integer institutionId, Integer encounterId){
         var result = new OutpatientDocumentBo();
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);

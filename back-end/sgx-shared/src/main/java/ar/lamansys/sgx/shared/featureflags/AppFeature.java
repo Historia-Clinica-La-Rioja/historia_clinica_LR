@@ -197,9 +197,6 @@ public enum AppFeature implements Feature {
 
 	@Label("Habilita el formato Anexo II requerido para Mendoza")
 	HABILITAR_ANEXO_II_MENDOZA,
-
-	@Label("Habilita los gráficos de evoluciones antropométricas")
-	HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO,
 	
 	@Label("Permite la visualización de si un profesional cubre o no la obra social en turnos")
 	HABILITAR_VISTA_COBERTURA_TURNOS,
@@ -209,6 +206,23 @@ public enum AppFeature implements Feature {
 	
 	@Label("Indica si se muestra el botón 'Agregar nota de Evolución' para el rol ENFERMERO en las acciones de guardia")
 	HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,
+
+	@Label("Indica si se encuentra habilitada la api FHIR para dispensar recetas y cargar resultados de laboratorio") HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO,
+
+	@Label("Permite atender un turno manual desde el PopUp del mismo")
+	HABILITAR_ATENDER_TURNO_MANUAL,
+
+	@Label("Habilita la configuracion de formularios")
+	HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO,
+	
+	@Label("Habilita el módulo de responsabilidad sanitaria")
+	HABILITAR_AREA_RESPONSABILIDAD_SANITARIA,
+
+	@Label("Indica si se muestra la seccion cola de imagenes para el rol tecnico")
+	HABILITAR_SOLAPA_COLA_IMAGENES,
+	
+	@Label("Habilita el reporte detalle nominal de atenciones en guardia")
+	HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO,
 
 	@Label("Indica si el módulo de cuestionarios está activo")
 	HABILITAR_CUESTIONARIOS,

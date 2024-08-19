@@ -6,6 +6,7 @@
                 <input matInput data-id="name-filter" formControlName="patientName" (keyup)="applyNameFilter($event)">
             </mat-form-field>
         </div>
+
         <div data-id="patient-identification-filter">
             <mat-form-field appearance="outline">
                 <mat-label>{{'image-network.worklist.filters.FILTER_BY_IDENTIFICATION' | translate }}</mat-label>
@@ -13,6 +14,7 @@
                     (keyup)="applyIdentificationFilter($event)">
             </mat-form-field>
         </div>
+
         <div data-id="states-filter">
             <mat-form-field appearance="outline" id="select">
                 <mat-label>{{'image-network.worklist.filters.FILTER_BY_STATE' | translate }}</mat-label>

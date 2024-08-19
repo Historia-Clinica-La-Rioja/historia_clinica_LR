@@ -9,7 +9,6 @@ import { NursingPatientConsultationService } from '@api-rest/services/nursing-pa
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { newMoment } from '@core/utils/moment.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -27,6 +26,10 @@ import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-n
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { ButtonType } from '@presentation/components/button/button.component';
+import { finalize } from 'rxjs';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -57,7 +60,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	readOnlyProblema = false;
 	apiErrors: string[] = [];
-	today = newMoment();
 	fixedSpecialty = true;
 	fixedProblem = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
@@ -74,7 +76,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	severityTypes: any[];
 	criticalityTypes: any[];
 	healthProblemOptions = [];
-
+	ButtonType = ButtonType;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -90,12 +92,13 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
@@ -234,27 +237,29 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	private createConsultation(nursingConsultationDto: NursingConsultationDto) {
-		this.nursingPatientConsultationService.createNursingPatientConsultation(nursingConsultationDto, this.data.idPaciente).subscribe(
-			_ => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.new-nursing-consultation.messages.SUCCESS');
-				this.dockPopupRef.close(mapToFieldsToUpdate(nursingConsultationDto));
-			},
-			response => {
-				this.disableConfirmButton = false;
-				if (response.errors)
-					response.errors.forEach(val => {
-						this.apiErrors.push(val);
-					});
-				this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
-			},
-			() => {
-				if (this.apiErrors?.length > 0) {
-					setTimeout(() => {
-						this.apiErrorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-					}, 500);
+		this.nursingPatientConsultationService.createNursingPatientConsultation(nursingConsultationDto, this.data.idPaciente)
+			.pipe(finalize(() => this.disableConfirmButton = false))
+			.subscribe(
+				_ => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.new-nursing-consultation.messages.SUCCESS');
+					this.dockPopupRef.close(mapToFieldsToUpdate(nursingConsultationDto));
+				},
+				response => {
+					this.disableConfirmButton = false;
+					if (response.errors)
+						response.errors.forEach(val => {
+							this.apiErrors.push(val);
+						});
+					this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
+				},
+				() => {
+					if (this.apiErrors?.length > 0) {
+						setTimeout(() => {
+							this.apiErrorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}, 500);
+					}
 				}
-			}
-		);
+			);
 
 		function mapToFieldsToUpdate(nuevaConsultaEnfermeriaDto: NursingConsultationDto): FieldsToUpdate {
 			return {
@@ -282,7 +287,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate? toApiFormat(p.performedDate) : null}}),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ViolenceSituationDockPopupComponent } from '../../dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { ActivatedRoute } from '@angular/router';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { VIOLENCE_SITUATION_HISTORY, VIOLENCE_SITUATION_LIST } from '@historia-clinica/constants/summaries';
 import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateToViewDate } from '@core/utils/date.utils';
@@ -13,13 +13,14 @@ import { DetailedInformation } from '@presentation/components/detailed-informati
 import { DateTimeDto, PageDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
 import { ViewDateDtoPipe } from '@presentation/pipes/view-date-dto.pipe';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-
 @Component({
 	selector: 'app-violence-situations',
 	templateUrl: './violence-situations.component.html',
 	styleUrls: ['./violence-situations.component.scss']
 })
 export class ViolenceSituationsComponent implements OnInit {
+
+	@Output() isNewViolenceSituationOpen = new EventEmitter<boolean>();
 
 	constructor(private readonly dockPopupService: DockPopupService,
 		private route: ActivatedRoute,
@@ -52,11 +53,13 @@ export class ViolenceSituationsComponent implements OnInit {
 	}
 
 	openViolenceSituationDockPopUp() {
-		this.dockPopupService.open(ViolenceSituationDockPopupComponent, {
+		this.isNewViolenceSituationOpen.emit(true);
+		let dialogRef = this.dockPopupService.open(ViolenceSituationDockPopupComponent, {
 			data: {
 				patientId: this.patientId,
 			}
 		});
+		dialogRef.afterClosed().pipe(take(1)).subscribe( _ => this.isNewViolenceSituationOpen.emit(false) );
 	}
 
 	setPatientViolenceSituations(mustBeLimited: boolean) {

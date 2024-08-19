@@ -109,7 +109,7 @@ public interface AppointmentService {
 	Boolean hasFutureAppointmentByPatientId(Integer patientId, Integer healthcareProfessionalId);
 	void checkAppointmentEveryWeek(Integer diaryId, LocalTime hour, LocalDate date, Short dayWeekId, Integer appointmentId);
 
-	void checkUpdateType(AppointmentBo currentAppointment, AppointmentBo newAppointment);
+	void updateAppointmentByOptionId(AppointmentBo currentAppointment, AppointmentBo newAppointment);
 
 	CustomRecurringAppointmentBo getCustomAppointment(Integer appointmentId);
 

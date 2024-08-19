@@ -1,0 +1,11 @@
+
+.template-values {
+	display: flex;
+	flex-direction: row;
+
+	column-gap: 15px;
+
+	.form-values {
+		flex-grow: 4; /* default 0 */
+	}
+}

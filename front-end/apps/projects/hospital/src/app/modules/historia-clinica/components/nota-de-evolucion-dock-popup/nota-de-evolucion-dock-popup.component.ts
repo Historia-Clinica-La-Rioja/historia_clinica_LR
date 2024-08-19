@@ -1,28 +1,27 @@
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientRiskFactorDto } from '@api-rest/api-model';
+import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { NewRiskFactorsService } from '@historia-clinica/modules/guardia/services/new-risk-factors.service';
 import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { toOutpatientMedicationDto, toOutpatientAnthropometricDataDto, toOutpatientFamilyHistoryDto, toOutpatientRiskFactorDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
+import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
 	templateUrl: './nota-de-evolucion-dock-popup.component.html',
 	styleUrls: ['./nota-de-evolucion-dock-popup.component.scss'],
-	providers: [
-		ComponentEvaluationManagerService,
-	]
+	providers: [EvolutionNoteEditionService]
 })
 
-export class NotaDeEvolucionDockPopupComponent {
+export class NotaDeEvolucionDockPopupComponent implements OnInit {
 
+	disableConfirmButton = false;
 	readonly header: DockPopUpHeader = {
 		title: 'Nota de evolución'
 	}
@@ -40,31 +39,37 @@ export class NotaDeEvolucionDockPopupComponent {
 		allergies: []
 	});
 
-	disableConfirmButton = false;
 	diagnosis;
+	isAllergyNoRefer: boolean = true;
+	isFamilyHistoriesNoRefer: boolean = true;
+
 	constructor(
 		public dockPopupRef: DockPopupRef,
 		private formBuilder: FormBuilder,
-		@Inject(OVERLAY_DATA) public data: { patientId: number, episodeId: number },
+		@Inject(OVERLAY_DATA) public data: NotaDeEvolucionData,
 		private readonly emergencyCareStateService: EmergencyCareStateService,
 		private readonly emergencyCareEvolutionNoteService: EmergencyCareEvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
-		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly newRiskFactorsService: NewRiskFactorsService,
-	) {
+		private readonly evolutionNoteEditionService: EvolutionNoteEditionService,
+	) { }
+
+	ngOnInit(): void {
+		if (this.data.editMode) {
+			this.setEvolutionNoteDataToEdit();
+			return;
+		}
+
 		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
 			diagnoses => {
 				if (diagnoses.length) {
-					this.diagnosis = {
-						mainDiagnosis: diagnoses.find(d => d.main),
-						diagnosticos: diagnoses.filter(d => !d.main) || [],
-					}
-					this.componentEvaluationManagerService.mainDiagnosis = this.diagnosis.mainDiagnosis;
-					this.componentEvaluationManagerService.diagnosis = this.diagnosis.diagnosticos;
+					const mainDiagnosis = diagnoses.find(d => d.main);
+					const otherDiagnoses = diagnoses.filter(d => !d.main) || [];
+					this.setDiagnosis(mainDiagnosis, otherDiagnoses);
 				}
-			})
+			});
 	}
 
 	ngAfterViewInit() {
@@ -73,33 +78,47 @@ export class NotaDeEvolucionDockPopupComponent {
 
 	save() {
 		this.disableConfirmButton = true;
+		const emergencyCareEvolutionNoteDto = this.buildEmergencyCareEvolutionNoteDto();
+		this.persist(emergencyCareEvolutionNoteDto)
+	}
+
+	private buildEmergencyCareEvolutionNoteDto(): EmergencyCareEvolutionNoteDto {
 		const value = this.form.value;
 		const allDiagnosis = this.getDiagnosis(value.diagnosis);
-		const medications = this.mapMedications(value.medications?.data);
-		const anthropometricData = this.mapAnthropometricData(value.anthropometricData);
-		const dto: EmergencyCareEvolutionNoteDto = {
+		const medications = toOutpatientMedicationDto(value.medications?.data);
+		const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
+		const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
+		const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
+
+		return {
 			clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
 			reasons: value.reasons?.motivo || [],
 			diagnosis: allDiagnosis.diagnosis,
 			mainDiagnosis: allDiagnosis.mainDiagnosis,
 			evolutionNote: value.evolutionNote?.evolucion,
 			anthropometricData,
-			familyHistories: this.mapFamilyHistories(value.familyHistories?.data),
+			familyHistories: {
+				isReferred: (this.isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null: this.isFamilyHistoriesNoRefer,
+				content: familyHistories,
+			},
 			procedures: value.procedures?.data || [],
 			medications,
-			riskFactors: this.toRiskFactors(value.riskFactors),
-			allergies: value.allergies?.data || [],
+			riskFactors,
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && (value.allergies?.data || []).length === 0) ? null: this.isAllergyNoRefer,
+				content: value.allergies?.data || []
+			},
 			patientId: this.data.patientId,
 		}
-		this.persist(dto)
 	}
 
-	persist(dto) {
-		this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, dto).subscribe(
+	private persist(emergencyCareEvolutionNoteDto: EmergencyCareEvolutionNoteDto) {
+		const saveEmergencyCareEvolutionNote$ = this.data.editMode ? this.emergencyCareEvolutionNoteService.updateEmergencyCareEvolutionNote(this.data.episodeId, this.data.documentId, emergencyCareEvolutionNoteDto) : this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, emergencyCareEvolutionNoteDto)
+		saveEmergencyCareEvolutionNote$.subscribe(
 			saved => {
 				this.snackBarService.showSuccess('Nota de evolución guardada correctamente');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
-				if (dto.riskFactors)
+				if (emergencyCareEvolutionNoteDto.riskFactors)
 					this.newRiskFactorsService.newRiskFactors();
 				this.dockPopupRef.close(true)
 			},
@@ -110,67 +129,38 @@ export class NotaDeEvolucionDockPopupComponent {
 		);
 	}
 
-	private toRiskFactors(riskFactors: OutpatientRiskFactorDto): OutpatientRiskFactorDto {
-		if (riskFactors) {
-			let result;
-			Object.keys(riskFactors).forEach(
-				key => {
-					if (riskFactors[key]?.value) {
-						result = { ...result, [key]: riskFactors[key] }
-					}
-				}
-			)
-			return result;
-		}
-		return null;
+	setIsAllergyNoRefer = ($event) => {
+		this.isAllergyNoRefer = $event;
 	}
 
-	private mapFamilyHistories(familyHistories: any[]): OutpatientFamilyHistoryDto[] {
-		return familyHistories?.map(f => {
-			return {
-				snomed: f.snomed,
-				startDate: f.fecha ? momentFormat(f.fecha, DateFormat.API_DATE) : null
-			}
-		}) || []
-	}
-
-	private mapAnthropometricData(anthropometricData): OutpatientAnthropometricDataDto {
-		if (anthropometricData) {
-			return {
-				height: {
-					value: anthropometricData.height?.toString()
-				},
-				weight: {
-					value: anthropometricData.weight?.toString()
-				},
-				bloodType: anthropometricData.bloodType,
-				headCircumference: {
-					value: anthropometricData.headCircumference?.toString()
-				},
-				bmi: {
-					value: null
-				},
-			}
-		}
-		return null;
+	setIsFamilyHistoriesNoRefer = ($event) => {
+		this.isFamilyHistoriesNoRefer = $event;
 	}
 
 	private getDiagnosis(diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } {
 		return {
-			diagnosis: diagnosisFormValue?.otrosDiagnosticos.filter(d => d.isAdded) || [],
+			diagnosis: diagnosisFormValue?.otrosDiagnosticos?.filter(d => d.isAdded) || [],
 			mainDiagnosis: diagnosisFormValue?.mainDiagnostico
 		}
 	}
 
-	private mapMedications(formData: any[]): OutpatientMedicationDto[] {
-		return formData?.map(r => {
-			return {
-				note: r.observaciones,
-				snomed: r.snomed,
-				suspended: r.suspendido
-			}
-		}) || []
+	private setDiagnosis(mainDiagnosis: HealthConditionDto, otherDiagnoses: DiagnosisDto[]) {
+		mainDiagnosis.isAdded = !!mainDiagnosis;
+		this.form.controls.diagnosis.setValue({ mainDiagnostico: mainDiagnosis, otrosDiagnosticos: otherDiagnoses });
+	}
+
+	private setEvolutionNoteDataToEdit() {
+		const evolutionNoteData = this.data.emergencyCareEvolutionNote;
+		this.setDiagnosis(evolutionNoteData.mainDiagnosis, evolutionNoteData.diagnosis);
+		this.evolutionNoteEditionService.loadFormByEvolutionNoteData(this.form, evolutionNoteData);
 	}
 
 }
 
+export interface NotaDeEvolucionData {
+	patientId: number,
+	episodeId: number,
+	editMode: boolean,
+	emergencyCareEvolutionNote: EmergencyCareEvolutionNoteDto,
+	documentId: number,
+}

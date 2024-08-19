@@ -19,19 +19,20 @@ import ar.lamansys.sgh.publicapi.domain.exceptions.ExternalPatientExtendedBoExce
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ExternalPatientExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/public-api/patient")
 @Tag(name = "PublicApi Pacientes", description = "External patient Api")
 public class ExternalPatientController {
 
     private static final String OUTPUT = "Output -> {}";
-
     private final SaveExternalPatient saveExternalPatient;
+
+	public ExternalPatientController(SaveExternalPatient saveExternalPatient) {
+		this.saveExternalPatient = saveExternalPatient;
+	}
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)

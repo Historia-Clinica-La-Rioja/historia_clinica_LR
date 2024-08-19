@@ -1,7 +1,7 @@
 package net.pladema.imagenetwork.derivedstudies.repository;
 
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
-
+import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -121,4 +121,45 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"FROM MoveStudies AS mo " +
 			"WHERE mo.appointmentId = :appointmentId")
 	Optional<Integer> getSizeImageByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT new net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo( " +
+			"	mo.id, " +
+			"	mo.appointmentId, " +
+			"	mo.moveDate, " +
+			"	a.patientId, " +
+			"	e.modalityId, " +
+			" 	e.id, " +
+			"	aoi.orderId, " +
+			"	aoi.studyId, " +
+			"	aoi.transcribedOrderId, " +
+			"	mo.status " +
+			") " +
+			"FROM MoveStudies mo " +
+			"JOIN AppointmentOrderImage aoi ON (aoi.pk.appointmentId = mo.appointmentId) " +
+			"JOIN Appointment a ON (mo.appointmentId = a.id) " +
+			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
+			"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
+			"JOIN Equipment e ON (e.id = ed.equipmentId) " +
+			"WHERE (mo.institutionId = :institutionId) " +
+			"AND (mo.result IS NULL or mo.result != :resultNot) " +
+			"AND (mo.moveDate BETWEEN :from AND :to) " +
+			"ORDER BY mo.id")
+	List<ImageQueueBo> findImagesNotMovedByInstitutionId(
+			@Param("institutionId") Integer institutionId,
+			@Param("from") Date from,
+			@Param("to") Date to,
+			@Param("resultNot") String resultNot
+	);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.status = :status, mo.result= :result, mo.attempsNumber = :attemptsNumbers " +
+			"WHERE mo.id = :idMove")
+	void updateStatusAndResultAndAttemptsNumbre(@Param("idMove") Integer idMove,
+							   @Param("status") String status,
+							   @Param("result") String result,
+							   @Param("attemptsNumbers") Integer attemptsNumbers);
+
 }

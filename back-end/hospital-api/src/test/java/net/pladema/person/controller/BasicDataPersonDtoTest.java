@@ -19,33 +19,33 @@ class BasicDataPersonDtoTest {
         basicDataPersonDto.setLastName("López");
         basicDataPersonDto.setOtherLastNames("Arriaga");
 
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("López Arriaga, Juan José");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("López Arriaga, Juan José");
 
         basicDataPersonDto.setMiddleNames(null);
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("López Arriaga, Juan");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("López Arriaga, Juan");
 
         basicDataPersonDto.setLastName(null);
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("Arriaga, Juan");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("Arriaga, Juan");
 
         basicDataPersonDto.setOtherLastNames(null);
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("Juan");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("Juan");
 
 
         basicDataPersonDto.setFirstName(null);
-        Assertions.assertThat(basicDataPersonDto.completeName()).isNull();
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isNull();
 
         basicDataPersonDto.setLastName("López");
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("López");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("López");
 
         basicDataPersonDto.setOtherLastNames("Arriaga");
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("López Arriaga");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("López Arriaga");
 
 
         basicDataPersonDto.setFirstName("Juan");
         basicDataPersonDto.setMiddleNames("José");
         basicDataPersonDto.setLastName(null);
         basicDataPersonDto.setOtherLastNames(null);
-        Assertions.assertThat(basicDataPersonDto.completeName()).isEqualTo("Juan José");
+        Assertions.assertThat(basicDataPersonDto.completeName(false)).isEqualTo("Juan José");
 
     }
 }

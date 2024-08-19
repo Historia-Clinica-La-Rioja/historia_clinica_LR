@@ -24,7 +24,7 @@ public class ChangePrescriptionStateDto {
 	@NotNull(message = "Este campo no puede ser nulo")
 	private String pharmacistRegistration;
 	@NotNull(message = "Este campo no puede ser nulo")
-	private LocalDateTime changeDate;
+	private String changeDate;
 	@NotNull(message = "Este campo no puede ser nulo")
 	@Valid
 	private	List<@Valid ChangePrescriptionStateMedicationDto> changePrescriptionStateLineMedicationList;

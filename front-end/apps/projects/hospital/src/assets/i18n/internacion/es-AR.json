@@ -214,6 +214,7 @@
 			"TITLE": "Epicrisis",
 			"SUBTITLE": "Completa los siguientes datos.",
 			"MESSAGE-REMEMBER": "Seleccione los datos que desea incluir en la Epicrisis",
+            "CONTINUE_DRAFT": "Seguir editando",
 			"alergias": {
 				"TITLE": "Alergias",
 				"table": {
@@ -325,6 +326,8 @@
 		},
 		"anesthesic-report": {
 			"SUCCESS": "Parte anestésico guardado correctamente",
+			"SUCCESS_DRAFT": "Borrador parte anestésico guardado correctamente",
+			"CONTINUE_DRAFT": "Seguir editando",
 			"diagnosis": {
 				"TITLE": "Diagnósticos",
 				"MAIN_DIAGNOSIS": "Diagnóstico principal",
@@ -543,6 +546,10 @@
 				},
 				"OBSERVATIONS": "Observaciones: ",
 				"ADD_OBSERVATIONS": "Agregar observaciones"
+			},
+			"buttons": {
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
 			}
 		},
 		"clinical-assessment-diagnosis": {
@@ -621,6 +628,82 @@
 			"info": {
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
+            "document-name": {
+				"ANAMNESIS": "Evaluación de ingreso",
+				"EVOLUTION_NOTE": "Nota de evolución",
+				"NURSE_EVOLUTION_NOTE": "Nota de evolución de enfermería",
+                "ANESTHETIC_REPORT": "Parte anestésico",
+                "EPICRISIS": "Epicrisis"
+			},
+            "procedure": {
+				"TITLE": "Procedimientos",
+				"REGISTERED_PROCEDURES": "Procedimientos registrados"
+			},
+			"observations": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+                "INDICATIONS_NOTE": "Indicaciones al alta"
+			},
+			"vital-signs-and-risk-factor": {
+				"TITLE": "Signos vitales y factores de riesgo",
+				"HEART_RATE": "Frecuencia cardíaca",
+				"RESPIRATORY_RATE": "Frecuencia respiratoria",
+				"TEMPERATURE": "Temperatura corporal",
+				"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno",
+				"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica",
+				"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica",
+				"BLOOD_GLUCOSE": "Glucemia",
+                "GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada",
+                "CARDIOVASCULAR_RISK": "Riesgo cardiovascular"
+			},
+            "allergies": {
+                "TITLE": "Alergias",
+                "RECORDED_ALLERGIES": "Alergias registradas"
+            },
+            "vaccines": {
+                "TITLE": "Vacunas",
+                "RECORDED_VACCINES": "Vacunas registradas"
+            },
+            "personal-histories": {
+                "TITLE": "Antecedentes personales",
+                "RECORDED_PERSONAL_HISTORIES": "Antecedentes personales registrados"
+            },
+            "family-histories": {
+                "TITLE": "Antecedentes familiares",
+                "RECORDED_FAMILY_HISTORIES": "Antecedentes familiares registrados"
+            },
+            "usual-medications": {
+                "TITLE": "Medicación habitual",
+                "RECORDED_USUAL_MEDICATIONS": "Medicación habitual registrada"
+            },
+            "other-problems": {
+                "TITLE": "Otras circunstancias que prolongan la internación",
+                "REGISTERED_OTHER_PROBLEMS": "Otras circunstancias que prolongan la internación registradas"
+            },
+            "external-cause": {
+                "TITLE": "Causa externa de traumatismo, envenenamiento y otros efectos adversos",
+                "PRODUCED_BY": "Producido por",
+                "EVENT_LOCATION": "Lugar donde ocurrió",
+				"HOW_IT_HAPPENED": "Cómo se produjo"
+            },
+            "obstetric-event": {
+                "TITLE": "Datos del evento obstétrico",
+                "PREVIOUS_PREGNANCIES": "Gestas anteriores - Número total de nacimientos previos (vaginales y cesáreas), vivos o muertos, antes del presente",
+                "CURRENT_FEAT": "Gesta actual - Fecha de término del embarazo",
+                "GESTATIONAL_AGE": "Edad gestacional",
+				"TERMINATION": "Terminación",
+                "new-born": {
+                    "NEWBORN": "Recién nacido",
+                    "WEIGHT": "Peso al nacer",
+				    "CONDITION": "Condición al nacer",
+				    "GENDER": "Sexo"
+                }
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
@@ -752,8 +835,6 @@
 			"vacunas-summary": {
 				"ADD": "Agregar vacuna",
 				"INMUNIZATION": "Vacuna",
-				"REGISTRY_DATE": "Fecha de vacunación",
-				"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
 				"save": {
 					"SUCCESS": "Una nueva vacuna se guardó exitosamente",
 					"ERROR": "Error al guardar nueva vacuna"
@@ -767,7 +848,6 @@
 			}
 		},
 		"new-internment": {
-			"DATE": "Fecha",
 			"DATE_TIME": "Fecha y hora de ingreso",
 			"TITLE": "Nueva internación",
 			"SUBTITLE": "Complete los siguientes datos",

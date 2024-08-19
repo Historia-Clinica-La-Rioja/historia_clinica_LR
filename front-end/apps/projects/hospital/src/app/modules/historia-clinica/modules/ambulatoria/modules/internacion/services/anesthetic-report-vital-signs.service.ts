@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MeasuringPointDto, TimeDto } from '@api-rest/api-model';
+import { DateDto, MeasuringPointDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { getArrayCopyWithoutElementAtIndex, removeFrom } from '@core/utils/array.utils';
 import { isEqualDate } from '@core/utils/date.utils';
@@ -8,9 +8,32 @@ import { ToFormGroup } from '@core/utils/form.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
-import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
+import { TimePickerData, TimePickerDto } from '@presentation/components/time-picker/time-picker.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
+
+const vitalSignsData: VitalSignsDataWithTimePicker = {
+    anesthesiaStartDate: null,
+    anesthesiaEndDate: null,
+    anesthesiaStartTime: null,
+    anesthesiaEndTime: null,
+    surgeryStartDate: null,
+    surgeryEndDate: null,
+    surgeryStartTime: null,
+    surgeryEndTime: null,
+    anesthesiaStartTimePicker: {
+        hideLabel: true,
+    },
+    anesthesiaEndTimePicker: {
+        hideLabel: true,
+    },
+    surgeryStartTimePicker: {
+        hideLabel: true,
+    },
+    surgeryEndTimePicker: {
+        hideLabel: true,
+    },
+};
 
 @Injectable({
     providedIn: 'root'
@@ -44,8 +67,12 @@ export class AnestheticReportVitalSignsService {
     private endTidalSource = new Subject<string | void>();
 	private _endTidal$ = this.endTidalSource.asObservable();
 
+	private vitalSignsSubject: BehaviorSubject<VitalSignsDataWithTimePicker> = new BehaviorSubject<VitalSignsDataWithTimePicker>(vitalSignsData);
+    vitalSigns$ = this.vitalSignsSubject.asObservable();
+
     private timePickerData: TimePickerData = {
         hideLabel: true,
+        isRequired: true,
     }
 
     constructor(
@@ -53,8 +80,8 @@ export class AnestheticReportVitalSignsService {
         private readonly snackBarService: SnackBarService,
     ) {
         this.form = new FormGroup<MeasuringPointForm>({
-            measuringPointStartDate: new FormControl(null),
-            measuringPointStartTime: new FormControl(null),
+            measuringPointStartDate: new FormControl(null, Validators.required),
+            measuringPointStartTime: new FormControl(null, Validators.required),
             bloodPressureMax: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.bloodPressure), Validators.max(VITAL_SIGNS.MAX.bloodPressure), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
             bloodPressureMin: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.bloodPressure), Validators.max(VITAL_SIGNS.MAX.bloodPressure), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
             pulse: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.pulse), Validators.max(VITAL_SIGNS.MAX.pulse), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
@@ -75,6 +102,7 @@ export class AnestheticReportVitalSignsService {
 
         this.handleFormChanges();
         this.checkSectionEmptyness();
+
     }
 
     private checkSectionEmptyness() {
@@ -128,7 +156,7 @@ export class AnestheticReportVitalSignsService {
 		return this._endTidal$;
 	}
 
-	public handleFormChanges() {
+	private handleFormChanges() {
 		this.handleFormControlChanges('bloodPressureMax', 'bloodPressureMaxSource');
 		this.handleFormControlChanges('bloodPressureMin', 'bloodPressureMinSource');
 		this.handleFormControlChanges('pulse', 'pulseSource');
@@ -222,6 +250,8 @@ export class AnestheticReportVitalSignsService {
     }
 
     private clearForm() {
+        this.form.controls.measuringPointStartDate.setValue(null);
+        this.form.controls.measuringPointStartTime.setValue(null);
         this.form.controls.bloodPressureMax.setValue(null);
         this.form.controls.bloodPressureMin.setValue(null);
         this.form.controls.pulse.setValue(null);
@@ -273,6 +303,115 @@ export class AnestheticReportVitalSignsService {
         data.saturation ? this.form.controls.saturation.setValue(data.saturation) : null ;
         data.endTidal ? this.form.controls.endTidal.setValue(data.endTidal) : null ;
     }
+
+	setMeasuringPoints(data: MeasuringPointDto[]) {
+        data.forEach(point => {
+            let pointData: MeasuringPointData = {
+                measuringPointStartDate: this.convertToDate(point.date),
+                measuringPointStartTime: point.time,
+                bloodPressureMax: point.bloodPressureMax,
+                bloodPressureMin: point.bloodPressureMin,
+                pulse: point.bloodPulse,
+                saturation: point.o2Saturation,
+                endTidal: point.co2EndTidal
+            };
+            this.addAndEmitUpdatedValue({...pointData });
+            this.clearForm();
+        });
+    }
+
+	setDataVitalSigns(vitalSigns: ProcedureDescriptionDto): void {
+		if (vitalSigns) {
+			this.setVitalSigns(vitalSigns)
+			this.mapVitalSigns(vitalSigns)
+		} else {
+			this.vitalSignsSubject.next(this.getVitalSignsData())
+			this.mapToTime(null)
+		}
+	}
+
+	private setVitalSigns(vitalSigns: ProcedureDescriptionDto) {
+		if (vitalSigns.anesthesiaStartDate) {
+			this.setFormDateAttributeValue('anesthesiaStartDate', this.convertToDate(vitalSigns.anesthesiaStartDate));
+		}
+		if (vitalSigns.anesthesiaEndDate) {
+			this.setFormDateAttributeValue('anesthesiaEndDate', this.convertToDate(vitalSigns.anesthesiaEndDate));
+		}
+		if (vitalSigns.anesthesiaStartTime) {
+			this.setFormTimeAttributeValue('anesthesiaStartTime', vitalSigns.anesthesiaStartTime);
+		}
+		if (vitalSigns.anesthesiaEndTime) {
+			this.setFormTimeAttributeValue('anesthesiaEndTime', vitalSigns.anesthesiaEndTime);
+		}
+		if (vitalSigns.surgeryStartDate) {
+			this.setFormDateAttributeValue('surgeryStartDate', this.convertToDate(vitalSigns.surgeryStartDate));
+		}
+		if (vitalSigns.surgeryEndDate) {
+			this.setFormDateAttributeValue('surgeryEndDate', this.convertToDate(vitalSigns.surgeryEndDate));
+		}
+		if (vitalSigns.surgeryStartTime) {
+			this.setFormTimeAttributeValue('surgeryStartTime', vitalSigns.surgeryStartTime);
+		}
+		if (vitalSigns.surgeryEndTime) {
+			this.setFormTimeAttributeValue('surgeryEndTime', vitalSigns.surgeryEndTime);
+		}
+	}
+
+	private mapVitalSigns(vitalSigns: ProcedureDescriptionDto) {
+		this.mapToDate(vitalSigns)
+		this.mapToTime(vitalSigns)
+	}
+
+	private mapToDate(data: ProcedureDescriptionDto) {
+		const updatedVitalSigns: VitalSignsData = { ...this.vitalSignsSubject.getValue() };
+
+		if (data.anesthesiaStartDate)
+			updatedVitalSigns.anesthesiaStartDate = this.convertToDate(data.anesthesiaStartDate);
+
+		if (data.anesthesiaEndDate)
+			updatedVitalSigns.anesthesiaEndDate = this.convertToDate(data.anesthesiaEndDate);
+
+		if (data.surgeryStartDate)
+			updatedVitalSigns.surgeryStartDate = this.convertToDate(data.surgeryStartDate);
+
+		if (data.surgeryEndDate)
+			updatedVitalSigns.surgeryEndDate = this.convertToDate(data.surgeryEndDate);
+
+		this.vitalSignsSubject.next(updatedVitalSigns);
+	}
+
+	private mapToTime(data: ProcedureDescriptionDto) {
+		const updatedVitalSigns: VitalSignsDataWithTimePicker = { ...this.vitalSignsSubject.getValue() };
+
+		updatedVitalSigns.anesthesiaStartTimePicker = data?.anesthesiaStartTime
+			? { defaultTime: this.convertToTimePickerDto(data.anesthesiaStartTime), hideLabel: true }
+			: { hideLabel: true };
+
+		updatedVitalSigns.anesthesiaEndTimePicker = data?.anesthesiaEndTime
+			? { defaultTime: this.convertToTimePickerDto(data.anesthesiaEndTime), hideLabel: true }
+			: { hideLabel: true };
+
+		updatedVitalSigns.surgeryStartTimePicker = data?.surgeryStartTime
+			? { defaultTime: this.convertToTimePickerDto(data.surgeryStartTime), hideLabel: true }
+			: { hideLabel: true };
+
+		updatedVitalSigns.surgeryEndTimePicker = data?.surgeryEndTime
+			? { defaultTime: this.convertToTimePickerDto(data.surgeryEndTime), hideLabel: true }
+			: { hideLabel: true };
+
+		this.vitalSignsSubject.next(updatedVitalSigns);
+	}
+
+	convertToDate(dateDto: DateDto): Date {
+		return new Date(dateDto.year, dateDto.month - 1, dateDto.day);
+	}
+
+	private convertToTimePickerDto(timeDto: TimeDto): TimePickerDto {
+        return {
+            hours: timeDto.hours,
+            minutes: timeDto.minutes
+        };
+    }
 }
 
 export interface MeasuringPointForm {
@@ -306,4 +445,11 @@ export interface VitalSignsData {
     surgeryEndDate?: Date;
     surgeryStartTime?: TimeDto;
     surgeryEndTime?: TimeDto;
+}
+
+export interface VitalSignsDataWithTimePicker extends VitalSignsData {
+    anesthesiaStartTimePicker?: TimePickerData;
+    anesthesiaEndTimePicker?: TimePickerData;
+    surgeryStartTimePicker?: TimePickerData;
+    surgeryEndTimePicker?: TimePickerData;
 }

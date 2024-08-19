@@ -8,9 +8,11 @@ import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import lombok.RequiredArgsConstructor;
+import net.pladema.reports.application.ports.InstitutionReportStorage;
 import net.pladema.reports.application.ports.NominalConsultationDetailStorage;
 import net.pladema.reports.repository.ConsultationDetail;
 
+import net.pladema.reports.repository.InstitutionInfo;
 import net.pladema.reports.service.NominalDetailExcelService;
 
 import org.springframework.stereotype.Service;
@@ -27,8 +29,14 @@ public class NominalConsultationDetailStorageImpl implements NominalConsultation
 
 	private final NominalDetailExcelService nominalDetailExcelService;
 
+	private final InstitutionReportStorage institutionReportStorage;
+
 	@Override
-	public IWorkbook buildNominalExternalConsultationDetailReport(String title, String[] headers, List<ConsultationDetail> result) {
+	public IWorkbook buildNominalExternalConsultationDetailReport(String title, String[] headers, List<ConsultationDetail> result,
+																  Integer institutionId) {
+
+		InstitutionInfo institutionInfo = institutionReportStorage.getInstitutionInfo(institutionId);
+
 		// creo el workbook de excel
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 
@@ -46,7 +54,7 @@ public class NominalConsultationDetailStorageImpl implements NominalConsultation
 		result.forEach(
 				resultData -> {
 					IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
-					fillRowContent(newDataRow, resultData, styleDataRow);
+					fillRowContent(newDataRow, styleDataRow, resultData, institutionInfo);
 				}
 		);
 
@@ -111,26 +119,10 @@ public class NominalConsultationDetailStorageImpl implements NominalConsultation
 		return data;
 	}
 
-	private void fillRowContent(IRow row, ConsultationDetail content, ICellStyle style){
+	private void fillRowContent(IRow row, ICellStyle style, ConsultationDetail content, InstitutionInfo institutionInfo){
 		AtomicInteger rowNumber = new AtomicInteger(0);
-		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getProvince());
-		cell.setCellStyle(style);
-		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getDepartment());
-		cell2.setCellStyle(style);
-		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getSisaCode());
-		cell3.setCellStyle(style);
-		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getInstitution());
-		cell4.setCellStyle(style);
-		ICell cell33 = row.createCell(rowNumber.getAndIncrement());
-		cell33.setCellValue(content.getHierarchicalUnitTypeDescription());
-		cell33.setCellStyle(style);
-		ICell cell34 = row.createCell(rowNumber.getAndIncrement());
-		cell34.setCellValue(content.getHierarchicalUnitAlias());
-		cell34.setCellStyle(style);
+		nominalDetailExcelService.fillNominalDetailCommonColumns(row, rowNumber, style, institutionInfo,
+				content.getHierarchicalUnitTypeDescription(), content.getHierarchicalUnitAlias());
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
 		cell5.setCellValue(content.getPatientSurname());
 		cell5.setCellStyle(style);

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 
 import { isSameOrAfter, newDate } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
-import { MIN_DATE } from '@core/utils/date.utils';
+import { MIN_DATE, datePlusDays } from '@core/utils/date.utils';
 
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
@@ -32,6 +32,7 @@ import { APPOINTMENT_STATES_DESCRIPTION, APPOINTMENT_STATES_ID, AppointmentState
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { fixDate } from '@core/utils/date/format';
 import { isBefore, subMonths } from 'date-fns';
+import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 
 @Component({
 	selector: 'app-home',
@@ -63,9 +64,14 @@ export class HomeComponent implements OnInit {
 	minDate = MIN_DATE;
 	maxEndDate: Date;
 	minEndDate: Date;
+	maxFixedEndDate: Date;
+	oneWeekRange = 7;
 
 	cubeReportData: UIComponentDto;
 
+	hasToShowHierarchicalUnitSection = false;
+	hasToShowAppointmentStateFilter = false;
+	hasDateRangeFilterWithFixedEndDate = false;
 	isLoadingRequestReport = false;
 	private nameSelfDeterminationFF = false;
 	private licensesTypeMasterData: LicenseNumberTypeDto[];
@@ -99,12 +105,16 @@ export class HomeComponent implements OnInit {
 			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
 			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
 		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO).subscribe(isOn => {
+			if (!isOn) this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
+		})
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
 				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.MONTHLY
 					&& report.id != REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT
 					&& report.id != REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL
-					&& report.id != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING);
+					&& report.id != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING
+					&& report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
 		});
 		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
 			this.hierarchicalUnits = hierarchicalUnits;
@@ -117,6 +127,38 @@ export class HomeComponent implements OnInit {
 		});
 
 		this.appointmentStates = this.getAppointmentStates();
+
+		this.setMaxFixedEndDate();
+
+		this.onSelectionReportTypeChange();
+	}
+
+	private onSelectionReportTypeChange() {
+		this.form.controls.reportType.valueChanges.subscribe(
+			reportType => {
+				this.hasToShowHierarchicalUnitSection = this.showHierarchicalUnitSection(reportType);
+				this.hasToShowAppointmentStateFilter = this.showAppointmentStateFilter(reportType);
+				this.hasDateRangeFilterWithFixedEndDate = this.showDateRangeFilterWithFixedEndDate(reportType);
+			});
+	}
+
+	private showHierarchicalUnitSection(reportType: number): boolean {
+		return (reportType === REPORT_TYPES_ID.MONTHLY ||
+			reportType === REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT ||
+			reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
+			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT ||
+			reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL   ||
+			reportType === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING);
+	}
+
+	private showAppointmentStateFilter(reportType: number): boolean {
+		return (reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
+			reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL);
+	}
+
+	private showDateRangeFilterWithFixedEndDate(reportType: number): boolean {
+		return (reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
+			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
 	}
 
 	private firstDayOfThisMonth(): Date {
@@ -127,6 +169,26 @@ export class HomeComponent implements OnInit {
 	private lastDayOfThisMonth(): Date {
 		const today = newDate();
 		return new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0);
+	}
+
+	private setMaxFixedEndDate() {
+		this.maxFixedEndDate = newDate();
+		this.maxFixedEndDate = datePlusDays(newDate(), this.oneWeekRange);
+	}
+
+	getInitialDateRange(): DateRange {
+		const today = newDate();
+		return {start: today, end: this.maxFixedEndDate};
+	}
+
+	onDateRangeChange(dateRange: DateRange) {
+		if (dateRange) {
+		  this.form.patchValue({
+			startDate: dateRange.start,
+			endDate: dateRange.end
+		  });
+		  this.checkValidDates(false);
+		}
 	}
 
 	maxStartDate(endDate) {
@@ -268,7 +330,7 @@ export class HomeComponent implements OnInit {
 	private checkStartDateIsSameOrBeforeToday() {
 		const today = newDate();
 		const startDate = this.form.value.startDate;
-		(isSameOrAfter(today, startDate)) 
+		(isSameOrAfter(today, startDate))
 			? this.form.controls.startDate.setErrors(null)
 			: this.form.controls.startDate.setErrors({ afterToday: true });
 	}
@@ -277,43 +339,32 @@ export class HomeComponent implements OnInit {
 		this.submitted = true;
 		if (this.form.valid) {
 			this.isLoadingRequestReport = true;
-			const params: ReportFilters = this.getReportFilters();
+			const reportFilters = this.getReportFilters();
 			const reportId = this.form.value.reportType;
-			switch (reportId) {
-				case REPORT_TYPES_ID.MONTHLY:
-					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT:
-					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.DIABETIC_PATIENTS:
-					this.reportsService.getDiabetesReport().subscribe(result => {
-						this.cubeReportData = result
-						this.isLoadingRequestReport = false
-					});
-					break;
-				case REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS:
-					this.reportsService.getHypertensionReport().subscribe(result => {
-						this.cubeReportData = result
-						this.isLoadingRequestReport = false
-					});
-					break;
-				case REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT:
-					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => {
-						this.cubeReportData = result
-						this.isLoadingRequestReport = false
-					});
-					break;
-				case REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL:
-					this.reportsService.getNominalAppointmentsDetail(params, `${this.REPORT_TYPES[5].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING:
-					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${this.REPORT_TYPES[6].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				default:
+			const reportDescription = this.REPORT_TYPES.find(reportType => reportType.id === reportId).description;
+
+			const getReportById = {
+				[REPORT_TYPES_ID.MONTHLY]: this.reportsService.getMonthlyReport(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT]: this.reportsService.getOutpatientSummaryReport(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS]:
+					this.reportsService.getMonthlySummaryOfExternalClinicAppointmentsReport(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.DIABETIC_PATIENTS]: this.reportsService.getDiabetesReport(),
+				[REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS]: this.reportsService.getHypertensionReport(),
+				[REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT]: this.reportsService.getEpidemiologicalWeekReport(),
+				[REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL]:
+					this.reportsService.getNominalAppointmentsDetail(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING]:
+					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT]: this.reportsService.getNominalEmergencyCareEpisodeDetail(reportFilters, `${reportDescription}.xls`)
+			};
+
+			const selectedReport = getReportById[reportId];
+			if (selectedReport) {
+				selectedReport.subscribe(() => this.isLoadingRequestReport = false);
 			}
 		}
 	}
+
 
 	resetCubeReport() {
 		this.cubeReportData = null;
@@ -403,10 +454,10 @@ export class HomeComponent implements OnInit {
 
 	private getReportFilters(): ReportFilters {
 		return {
-			startDate: this.form.controls.startDate.value,
-			endDate: this.form.controls.endDate.value,
-			specialtyId: this.form.controls.specialtyId.value,
-			professionalId: this.form.controls.professionalId.value,
+			fromDate: this.form.controls.startDate.value,
+			toDate: this.form.controls.endDate.value,
+			clinicalSpecialtyId: this.form.controls.specialtyId.value,
+			doctorId: this.form.controls.professionalId.value,
 			hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
 			hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
 			includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value,
@@ -428,10 +479,10 @@ interface ReportForm {
 }
 
 export interface ReportFilters {
-	startDate: Date;
-	endDate: Date;
-	specialtyId?: number;
-	professionalId?: number;
+	fromDate: Date;
+	toDate: Date;
+	clinicalSpecialtyId?: number;
+	doctorId?: number;
 	hierarchicalUnitTypeId?: number;
 	hierarchicalUnitId?: number;
 	includeHierarchicalUnitDescendants?: boolean;

@@ -28,4 +28,6 @@ public class AddressVo {
 
 	private Short departmentId;
 
+	private String provinceName;
+
 }

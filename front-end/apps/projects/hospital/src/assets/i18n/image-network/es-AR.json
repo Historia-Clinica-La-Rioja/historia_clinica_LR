@@ -60,6 +60,15 @@
 				"QUESTION": "¿Desea actualizarla ahora?"
 			}
 		},
+        "technical-section": {
+            "WORKLIST":"Lista de trabajo",
+            "QUEUE_IMAGE": "Cola de imágenes"
+        },
+        "queue_list": {
+        "TRY_AGAIN": "Reintentar",
+        "INDEX": "Indexar",
+        "DO_FILTER":"Aplicar filtros"
+        },
         "worklist": {
             "status": {
                 "PENDING": "pendiente",
@@ -68,6 +77,7 @@
             },
             "details_study": {
                 "DETAILS_STUDY": "Detalle de estudio",
+                "VIEW_LOCAL_STUDY": "Ver estudio local",
                 "BACK_TO_WORKLIST": "Volver al listado de informes",
                 "GO_TO_HC": "ver historia clinica",
                 "SAVE_DRAFT": "guardar como borrador",
@@ -127,6 +137,7 @@
             "PATIENT_DOCUMENT": "Documento de paciente",
             "INSTITUTION": "Institución",
             "STATUS": "Estado",
+            "STUDY":"Estudio",
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle",
 			"DERIVE_REPORT": "Derivar informe",

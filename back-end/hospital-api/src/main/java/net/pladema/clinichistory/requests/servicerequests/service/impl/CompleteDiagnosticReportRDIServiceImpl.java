@@ -41,7 +41,7 @@ public class CompleteDiagnosticReportRDIServiceImpl implements CompleteDiagnosti
 
 						DiagnosticReportBo diagnosticReportBo = getCompletedDiagnosticReport(dr);
 						var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(studyId);
-						return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
+						return loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, Optional.of(studyId), List.of(diagnosticReportBo)).get(0);
 					})
 					.findFirst()
 					.orElse(-1);

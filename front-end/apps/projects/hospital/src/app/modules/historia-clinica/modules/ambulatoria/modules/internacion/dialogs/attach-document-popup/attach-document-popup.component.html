@@ -97,7 +97,7 @@
 			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
 		</button>
 
-		<button mat-raised-button color="primary" [disabled]=" ! this.form.valid">
+		<button mat-raised-button color="primary" [disabled]="!this.form.valid || isLoading">
 			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CONTINUE'"></span>
 		</button>
 	</section>

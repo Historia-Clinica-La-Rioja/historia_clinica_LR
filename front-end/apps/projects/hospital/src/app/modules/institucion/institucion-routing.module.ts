@@ -87,6 +87,12 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_FIRMA_CONJUNTA }
 			},
+			{
+				path: 'areas-sanitarias',
+				loadChildren: () => import('../gis/gis.module').then(m => m.GisModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA }
+			},
 
 		],
 		canActivate: [RoleGuard],

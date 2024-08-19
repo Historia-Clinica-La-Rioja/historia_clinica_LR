@@ -152,7 +152,7 @@
 			"SLOT_NOT_AVAILABLE": "Este turno fue ocupado por una reserva online",
 			"CANCEL_BOOKING": "Cancelar turno",
 			"BOOKING_BY": "Reserva online solicitada por:",
-			"PHONE_NUMBER": "Tel: {{phoneNumber}}",
+			"FULL_PHONE_NUMBER": "Tel: {{phonePrefix}}{{phoneNumber}}",
 			"EMAIL": "Mail: {{email}}"
 		},
 		"new-appointment": {

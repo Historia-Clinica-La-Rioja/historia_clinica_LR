@@ -56,5 +56,8 @@ public interface OutpatientConsultationMapper {
     @Named("fromProblemErrorBo")
     ProblemInfoDto fromProblemErrorBo(ProblemErrorBo problemErrorBo);
 
+	@Named("toOutpatientReasonDto")
+	List<OutpatientReasonDto> toOutpatientReasonDto(List<ReasonBo> reasons);
+
 }
 

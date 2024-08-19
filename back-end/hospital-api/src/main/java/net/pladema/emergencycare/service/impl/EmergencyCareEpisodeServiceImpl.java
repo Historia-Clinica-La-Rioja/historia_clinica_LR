@@ -1,18 +1,18 @@
 package net.pladema.emergencycare.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
-import net.pladema.emergencycare.repository.EmergencyCareEpisodeReasonRepository;
+import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeExceptionEnum;
+import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeException;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.PoliceInterventionRepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
-import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
@@ -23,7 +23,7 @@ import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
 import net.pladema.emergencycare.triage.service.TriageService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -34,13 +34,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -60,8 +60,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private PoliceInterventionRepository policeInterventionRepository;
 
     private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
-
-    private EmergencyCareEpisodeReasonRepository emergencyCareEpisodeReasonRepository;
 
     private InstitutionExternalService institutionExternalService;
 
@@ -114,13 +112,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         EmergencyCareVo emergencyCareEpisode = emergencyCareEpisodeRepository.getEpisode(episodeId)
                 .orElseThrow(() -> new NotFoundException(WRONG_CARE_ID_EPISODE, CARE_EPISODE_NOT_FOUND));
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
-
-        //Motivos de consulta
-        List<ReasonBo> reasons = emergencyCareEpisodeReasonRepository.findByEpisodeId(episodeId)
-                .stream()
-                .map(ReasonBo::new)
-                .collect(Collectors.toList());
-        result.setReasons(reasons);
 		result.setRoom(emergencyCareEpisode.getRoom() != null ? new RoomBo(emergencyCareEpisode.getRoom()): null);
         result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
 		log.debug(OUTPUT, result);
@@ -131,7 +122,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     public Boolean validateAndSetPatient(Integer episodeId, Integer patientId, Integer institutionId) {
         log.debug("Input parameters -> episodeId {}, patientId {}",
                 episodeId, patientId);
-        assertPatientValid(patientId, institutionId);
+		assertExistsActiveEpisodeByPatientIdAndInstitutionId(patientId, institutionId);
         emergencyCareEpisodeRepository.updatePatientId(episodeId, patientId);
         return true;
     }
@@ -153,17 +144,23 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
 	@Override
     public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative, null);
+		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative, null);
+		addTriageReasons(emergencyCareBo.getTriage());
+		return emergencyCareBo;
     }
 
     @Override
     public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult, riskFactors);
+		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult, riskFactors);
+		addTriageReasons(emergencyCareBo.getTriage());
+        return emergencyCareBo;
     }
 
     @Override
     public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric, riskFactors);
+		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric, riskFactors);
+		addTriageReasons(emergencyCareBo.getTriage());
+        return emergencyCareBo;
     }
 
 	@Override
@@ -246,30 +243,45 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             e.setEmergencyCareTypeId(newEmergencyCare.getEmergencyCareTypeId());
             e.setEmergencyCareEntranceTypeId(newEmergencyCare.getEmergencyCareEntranceId());
             e.setAmbulanceCompanyId(newEmergencyCare.getAmbulanceCompanyId());
+			e.setReason(newEmergencyCare.getReason());
             if (e.getEmergencyCareStateId() != EmergencyCareState.EN_ATENCION)
                 e.setDoctorsOfficeId(newEmergencyCare.getDoctorsOfficeId());
 
             PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
             updatePoliceIntervention(policeInterventionDetailsBo, e, newEmergencyCare);
             e.setHasPoliceIntervention(newEmergencyCare.getHasPoliceIntervention());
-            updateReasons(newEmergencyCare.getReasons(), e.getId());
             EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
-            log.debug(OUTPUT, saved);;
+            log.debug(OUTPUT, saved);
         return 1;
     }
 
-    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
-        if (episodeToUpdate.getPatient() != null) {
-            if (episodePersisted.getPatientId() == null || (episodePersisted.getPatientId() != null && !episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId())))
-                assertPatientValid(episodeToUpdate.getPatient().getId(), institutionId);
-            episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
-            episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
-        }
-        else{
-            episodePersisted.setPatientId(null);
-            episodePersisted.setPatientMedicalCoverageId(null);
-        }
+	@Override
+	public Optional<LocalDateTime> getCreatedOn(Integer episodeId){
+		log.debug("Input parameters -> episodeId {}", episodeId);
+		Optional<LocalDateTime> result = emergencyCareEpisodeRepository.findById(episodeId).map(EmergencyCareEpisode::getCreatedOn);
+		log.debug("Output -> result {}", result);
+		return result;
+	}
 
+	@Override
+	public Boolean updatePatientDescription(Integer episodeId, String patientDescription) {
+		log.debug("Input parameters -> episodeId {}, patientDescription {}", episodeId, patientDescription);
+		emergencyCareEpisodeRepository.updatePatientDescription(episodeId, patientDescription);
+		var result = Boolean.TRUE;
+		log.debug("Output -> result {}", result);
+		return result;
+	}
+
+    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId) {
+		if (episodeToUpdate.getPatient().getId() == null) {
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_ID_NULL, "Se debe especificar el id del paciente para la edicion del episodio de guardia");
+		}
+
+		if (!episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId()))
+			assertValidPatient(episodeToUpdate.getPatient(), institutionId);
+		episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
+		episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
+		episodePersisted.setPatientDescription(episodeToUpdate.getPatient().getPatientDescription());
     }
 
     private void updatePoliceIntervention(PoliceInterventionDetailsBo policeInterventionDetailsBo, EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate) {
@@ -287,27 +299,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         }
     }
 
-    private void updateReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
-        emergencyCareEpisodeReasonRepository.deleteByEpisodeId(emergencyCareEpisodeId);
-        if (reasons.size() != 0) {
-            log.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
-            reasons.forEach(reason -> {
-                EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getSctid());
-                emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
-            });
-            log.debug(OUTPUT, reasons);
-        }
-    }
-
-    private void validPatient(PatientECEBo patient, Integer institutionId) {
-        if (patient != null)
-            assertPatientValid(patient.getId(), institutionId);
-    }
-
-    private void assertPatientValid(Integer patientId, Integer institutionId) {
-        boolean violatesConstraint = emergencyCareEpisodeRepository.existsActiveEpisodeByPatientIdAndInstitutionId(patientId,institutionId);
-        if (violatesConstraint)
-            throw new ValidationException("care-episode.patient.invalid");
+    private void assertValidPatient(PatientECEBo patient, Integer institutionId) {
+		assertExistsActiveEpisodeByPatientIdAndInstitutionId(patient.getId(), institutionId);
+		assertTemporaryPatient(patient);
     }
 
     private EmergencyCareBo createEpisode(EmergencyCareBo newEmergencyCare, Integer institutionId, Function<SaveTriageArgs, TriageBo> saveTriage, RiskFactorBo riskFactors) {
@@ -322,11 +316,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		setTriageDocumentData(newEmergencyCare, riskFactors);
         TriageBo triageBo = saveTriage.apply(new SaveTriageArgs(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId(), institutionId));
 
-        List<ReasonBo> reasons = saveReasons(newEmergencyCare.getReasons(), emergencyCareEpisodeBo.getId());
 
         emergencyCareEpisodeBo.setPoliceInterventionDetails(policeInterventionDetailsBo);
         emergencyCareEpisodeBo.setTriage(triageBo);
-        emergencyCareEpisodeBo.setReasons(reasons);
 
         log.debug(OUTPUT, emergencyCareEpisodeBo);
         return emergencyCareEpisodeBo;
@@ -361,7 +353,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private EmergencyCareBo saveEmergencyCareEpisode(EmergencyCareBo emergencyCareBo, TriageBo triageBo) {
         log.debug("Input parameters -> emergencyCareBo {}, triageBo {}", emergencyCareBo, triageBo);
-        validPatient(emergencyCareBo.getPatient(), emergencyCareBo.getInstitutionId());
+        assertValidPatient(emergencyCareBo.getPatient(), emergencyCareBo.getInstitutionId());
         EmergencyCareEpisode emergencyCareEpisode = new EmergencyCareEpisode(emergencyCareBo, triageBo);
         emergencyCareEpisode = emergencyCareEpisodeRepository.save(emergencyCareEpisode);
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
@@ -402,16 +394,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		return null;
     }
 
-    private List<ReasonBo> saveReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
-        log.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
-        reasons.forEach(reason -> {
-            EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getSctid());
-            emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
-        });
-        log.debug(OUTPUT, reasons);
-        return reasons;
-    }
-
     private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {
         log.debug("Input parameters -> institutionId {}, date {}", institutionId, date);
         ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
@@ -422,6 +404,11 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         log.debug(OUTPUT, result);
         return result;
     }
+
+	private void addTriageReasons(TriageBo triageBo){
+		if (triageBo != null)
+			triageService.addTriageReasons(triageBo.getReasons(), triageBo.getTriageId());
+	}
 
     class SaveTriageArgs {
         final TriageBo triageBo;
@@ -434,4 +421,18 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             this.institutionId = institutionId;
         }
     }
+
+	private void assertExistsActiveEpisodeByPatientIdAndInstitutionId(Integer patientId, Integer institutionId) {
+		boolean violatesConstraint = emergencyCareEpisodeRepository.existsActiveEpisodeByPatientIdAndInstitutionId(patientId,institutionId);
+		if (violatesConstraint)
+			throw new ValidationException("care-episode.patient.invalid");
+	}
+
+	private void assertTemporaryPatient(PatientECEBo patient) {
+		boolean isATemporaryPatient = patientExternalService.getBasicDataFromPatient(patient.getId()).getTypeId().equals(EPatientType.EMERGENCY_CARE_TEMPORARY.getId());
+		boolean hasNotPatientDescription = patient.getPatientDescription() == null || patient.getPatientDescription().isEmpty();
+		if (isATemporaryPatient && hasNotPatientDescription) {
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_DESCRIPTION, "No se puede editar un episodio de guardia con paciente temporal sin una descripcion identificatoria del paciente");
+		}
+	}
 }

@@ -75,13 +75,3 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_patient_person_id" ON patient(person_id);
-
-    - changeSet:
-        id: createIndexHistoricAppointmentState-historic_appointment_state
-        author: mromero
-        dbms: postgresql
-        changes:
-          - sql:
-              sql: |-
-                CREATE INDEX IF NOT EXISTS "IDX_historic_appointment_state_appointment_state_id" ON historic_appointment_state(appointment_state_id);
-

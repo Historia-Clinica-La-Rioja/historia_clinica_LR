@@ -101,4 +101,11 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 	List<SnomedBo> getAllByDepartmentId(@Param("description") String description,
 										@Param("snomedGroupTypeId") Short snomedGroupTypeId,
 										@Param("departmentId") Short departmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT srg.snomedId " +
+			"FROM SnomedRelatedGroup srg " +
+			"WHERE srg.groupId = :groupId")
+	List<Integer> getConceptsIdsByGroupId(@Param("groupId") Integer groupId);
+
 }

@@ -3,8 +3,6 @@ import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { newMomentLocal } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
 import { CellTemplates } from '@presentation/components/cell-templates/cell-templates.component';
@@ -14,8 +12,8 @@ export interface Problema {
 	snomed: SnomedDto;
 	codigoSeveridad?: string;
 	cronico?: boolean;
-	fechaInicio?: Moment;
-	fechaFin?: Moment;
+	fechaInicio?: Date;
+	fechaFin?: Date;
 }
 
 export class ProblemasService {
@@ -37,7 +35,7 @@ export class ProblemasService {
 			snomed: [null, Validators.required],
 			severidad: [null],
 			cronico: [null],
-			fechaInicio: [newMomentLocal()],
+			fechaInicio: [new Date()],
 			fechaFin: [null]
 		});
 
@@ -132,7 +130,7 @@ export class ProblemasService {
 	}
 
 	resetStartDate(){
-		this.form.controls.fechaInicio.setValue(newMomentLocal());
+		this.form.controls.fechaInicio.setValue(new Date());
 	}
 
 	openSearchDialog(searchValue: string): void {
@@ -146,8 +144,8 @@ export class ProblemasService {
 		}
 	}
 
-	getFechaInicioMax(): Moment {
-		return newMomentLocal();
+	getFechaInicioMax(): Date {
+		return new Date();
 	}
 
 	getForm(): UntypedFormGroup {
@@ -168,26 +166,6 @@ export class ProblemasService {
 
 	remove(index: number): void {
 		this.data = removeFrom<Problema>(this.data, index);
-	}
-
-	// custom validation was required because the [max] input of MatDatepicker
-	// adds the old error when the value is changed dynamically
-	checkValidFechaFin(): void {
-		this.form.controls.fechaFin.setErrors(null);
-		if (this.form.value.fechaFin) {
-			if (this.form.value.fechaInicio) {
-				const today = newMomentLocal();
-				const newFechaFin: Moment = this.form.value.fechaFin;
-				if (newFechaFin.isBefore(this.form.value.fechaInicio, 'day')) {
-					this.form.controls.fechaFin.setErrors({ min: true });
-				}
-				if (newFechaFin.isAfter(today)) {
-					this.form.controls.fechaFin.setErrors({ max: true });
-				}
-			} else {
-				this.form.controls.fechaFin.setErrors({ required_init_date: true });
-			}
-		}
 	}
 
 	hasError(type: string, controlName: string): boolean {

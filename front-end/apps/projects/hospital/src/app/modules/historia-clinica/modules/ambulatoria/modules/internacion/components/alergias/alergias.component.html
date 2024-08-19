@@ -1,32 +1,8 @@
 <div fxLayoutGap="2vh">
-	<app-new-consultation-expansion-section id="alergias"
-		[title]="'internaciones.anamnesis.alergias.TITLE' | translate" icon="library_add"
-		[isEmpty]="allergies?.length === 0" [collapsed]="!allergies?.length" [hideBorder]="false" [isToAddSnomedConcepts]="true"
-		(click)="allergies?.length === 0 ? addAlergies():''">
-
-		<app-titled-content-card *ngIf="allergies?.length"
-			title="{{ 'internaciones.anamnesis.alergias.TITLE' | translate}}">
-			<div fxLayout="column" fxLayoutGap="10px" *ngFor="let allergy of allergies; index as i; last as isLast">
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<div fxLayout="column" fxLayoutGap="6px">
-						<span>{{ allergy.snomed.pt | titlecase}}</span>
-					</div>
-					<button id="delete" type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
-						<mat-icon>delete_outline</mat-icon>
-					</button>
-				</div>
-				<em *ngIf="allergy?.observaciones" class="mat-caption gray-caption">
-					{{ allergy.observaciones }}
-				</em>
-				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-			</div>
-		</app-titled-content-card>
-
-		<div *ngIf="allergies?.length > 0">
-			<button mat-button type="button" id="add-alergias-button" color="primary" class="add-button"
-				(click)="addAlergies()">
-				+ {{ 'internaciones.anamnesis.alergias.ADD' | translate }}
-			</button>
-		</div>
-	</app-new-consultation-expansion-section>
+	<app-concepts-list
+		[hasConcepts]="!alergiasNuevaConsultaService.isEmpty()"
+		[content]="allergyContent"
+		(openEmit)="checkAllergyEvent($event)">
+		<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
+	</app-concepts-list>
 </div>

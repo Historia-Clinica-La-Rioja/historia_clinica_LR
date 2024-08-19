@@ -87,8 +87,9 @@ import { RecurringCustomizePopupComponent } from '../recurring-customize-popup/r
 import { RecurringCancelPopupComponent } from '../recurring-cancel-popup/recurring-cancel-popup.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
-import { timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
+import { sameHourAndMinute, timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { pushIfNotExists } from '@core/utils/array.utils';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -200,6 +201,7 @@ export class AppointmentComponent implements OnInit {
 	coverage: Coverage;
 	HABILITAR_VISTA_COBERTURA_TURNOS: boolean = false;
 	waitingTime: string;
+	HABILITAR_ATENDER_TURNO_MANUAL: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -410,6 +412,7 @@ export class AppointmentComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.HABILITAR_TELEMEDICINA = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO).subscribe((isOn: boolean) => this.isHabilitarRecurrencia = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS).subscribe((isOn: boolean) => this.HABILITAR_VISTA_COBERTURA_TURNOS = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL).subscribe((isOn: boolean) => this.HABILITAR_ATENDER_TURNO_MANUAL = isOn);
 	}
 
 	private checkInputUpdatePermissions() {
@@ -574,14 +577,22 @@ export class AppointmentComponent implements OnInit {
 		appointmentHour.hours = parseInt(partes[0]);
 		appointmentHour.minutes = parseInt(partes[1]);
 		appointmentHour.seconds = parseInt(partes[2]);
-		this.possibleScheduleHours.push(appointmentHour);
+		this.possibleScheduleHours = pushIfNotExists<TimeDto>(this.possibleScheduleHours, appointmentHour, compareHours);
 		this.possibleScheduleHours.sort((a, b) => a.hours - b.hours || a.minutes - b.minutes);
-		this.formDate.controls.hour.setValue(appointmentHour);
+		const hourToSet = this.possibleScheduleHours.find(hours => compareHours(hours, appointmentHour));
+		this.formDate.controls.hour.setValue(hourToSet);
+
+		function compareHours(time1: TimeDto, time2: TimeDto): boolean {
+			const dateTime1 = timeDtoToDate(time1);
+			const dateTime2 = timeDtoToDate(time2);
+			return sameHourAndMinute(dateTime1, dateTime2);
+		}
 	}
 
 	loadAppointmentsHours(date: DateDto, isInitial?: boolean) {
 		this.possibleScheduleHours = [];
 		this.selectedOpeningHourId = null;
+		this.formDate.controls.hour.setValue(null);
 		const searchCriteria = this.prepareSearchCriteria(date);
 		this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id, searchCriteria).subscribe((diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) => {
 			if (diaryOpeningHours.length) {
@@ -671,7 +682,7 @@ export class AppointmentComponent implements OnInit {
 		else {
 			updateAppointmentDate.recurringAppointmentTypeId = this.formDate.get('recurringType').value;
 			if (updateAppointmentDate.recurringAppointmentTypeId == RECURRING_APPOINTMENT_OPTIONS.NO_REPEAT) {
-				if (previousDate.getTime() === dateTimeDtoToDate(dateNow).getTime()) {
+				if (previousDate.getTime() === dateTimeDtoToDate(dateNow).getTime() && this.isParentAppointmentOrHasAppointmentChilds()) {
 					this.openConfirmDialog()
 						.afterClosed()
 						.subscribe((result: boolean) => {
@@ -715,6 +726,10 @@ export class AppointmentComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	private isParentAppointmentOrHasAppointmentChilds = (): boolean => {
+		return (this.appointment.hasAppointmentChilds || this.appointment.parentAppointmentId != undefined);
 	}
 
 	private getDateNow = (): DateTimeDto => {

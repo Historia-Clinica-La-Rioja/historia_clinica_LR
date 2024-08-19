@@ -123,7 +123,9 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 		else {
 			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
 			result.setRequestDate(LocalDate.now());
-			result.setUuid(UUID.randomUUID());
+			UUID randomUuid = UUID.randomUUID();
+			result.setUuid(randomUuid);
+			medicationRequest.setUuid(randomUuid);
 			result = medicationRequestRepository.save(result);
 			medicationRequestIds.put(result.getId(), medicationRequest.getRequestDate());
 		}
@@ -137,7 +139,9 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 			result.setRepetitions(currentRequest == 0 ? medicationRequest.getRepetitions() : 0);
 			result.setIsPostDated(currentRequest == 0);
 			result.setRequestDate(iterationDate);
-			result.setUuid(UUID.randomUUID());
+			UUID randomUuid = UUID.randomUUID();
+			result.setUuid(randomUuid);
+			medicationRequest.setUuid(randomUuid);
 			result = medicationRequestRepository.save(result);
 			originalMedicationRequestId.put(result.getId(), iterationDate);
 			iterationDate = iterationDate.plusDays(30);

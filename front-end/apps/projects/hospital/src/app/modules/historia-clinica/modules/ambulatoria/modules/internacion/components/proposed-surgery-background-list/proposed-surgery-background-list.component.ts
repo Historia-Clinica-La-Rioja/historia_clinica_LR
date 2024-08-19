@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticReportProposedSurgeryService, ProposedSurgery } from '../../services/anesthetic-report-proposed-surgery.service';
+import { Component, OnInit } from '@angular/core';
+import { ProposedSurgery } from '../../services/anesthetic-report-proposed-surgery.service';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-proposed-surgery-background-list',
@@ -8,14 +9,15 @@ import { AnestheticReportProposedSurgeryService, ProposedSurgery } from '../../s
 })
 export class ProposedSurgeryBackgroundListComponent implements OnInit {
 
-    @Input() service: AnestheticReportProposedSurgeryService;
     proposedSurgeries: ProposedSurgery[];
     allCheckedSurgeries = false;
 
-    constructor() { }
+    constructor(
+        readonly service: AnestheticReportService
+    ) { }
 
     ngOnInit(): void {
-        this.service.getProposedSurgeries().subscribe(proposedSurgeries => {
+        this.service.anesthesicReportProposedSurgeryService.getProposedSurgeries().subscribe(proposedSurgeries => {
             this.proposedSurgeries = proposedSurgeries;
             this.updateAll();
         })

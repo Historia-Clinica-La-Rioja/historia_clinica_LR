@@ -1,0 +1,464 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_23
+
+    - changeSet:
+        id: parameter-createTable
+        comment: Create table parameter
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameter
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parameter
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: loinc_code(id)
+                      foreignKeyName: FK_parameter_loinc_id
+                    name: loinc_id
+                    type: int
+                - column:
+                    name: description
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    name: input_count
+                    type: smallint
+                - column:
+                    constraints:
+                      references: snomed_group(id)
+                      foreignKeyName: FK_parameter_snomed_group_id
+                    name: snomed_group_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: parameter_unit_of_measure-createTable
+        comment: creation of parameter_unit_of_measure table
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameter_unit_of_measure
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: parameter(id)
+                      foreignKeyName: FK_parameter_unit_of_measure_parameter_id
+                    name: parameter_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: unit_of_measure(id)
+                      foreignKeyName: FK_parameter_unit_of_measure_unit_of_measure_id
+                    name: unit_of_measure_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: parameter_id, unit_of_measure_id
+              constraintName: PK_parameter_unit_of_measure
+              tableName: parameter_unit_of_measure
+              validate: true
+
+    - changeSet:
+        id: parameter_text_option-createTable
+        comment: Create table parameter_text_option
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameter_text_option
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parameter_text_option
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(255)
+                - column:
+                    constraints:
+                      nullable: false
+                      references: parameter(id)
+                      foreignKeyName: FK_parameter_text_option_parameter_id
+                    name: parameter_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+          id: createIndexHistoricAppointmentState-historic_appointment_state
+          author: mromero
+          dbms: postgresql
+          changes:
+              - sql:
+                    sql: |-
+                        CREATE INDEX IF NOT EXISTS "IDX_historic_appointment_state_appointment_state_id" ON historic_appointment_state(appointment_state_id);
+
+    - changeSet:
+        id: update-document_file-deleted-documents
+        context: "!schema-only"
+        author: fsimaro
+        changes:
+          - sql:
+              sql: |-
+                UPDATE document_file SET deleted = TRUE, deleted_on = NOW(), deleted_by = -1 WHERE id IN (SELECT id FROM document WHERE deleted IS TRUE );
+
+
+    - changeSet:
+        id: addColumn-reason-emergency_care_episode and fillColumn-reason-emergency_care_episode
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    name: reason
+                    type: text
+
+          - sql:
+              sql: |-               
+                WITH ece_reasons AS (
+                  SELECT ecer.emergency_care_episode_id, string_agg(r.description, ', ') AS descriptions
+                FROM
+                  emergency_care_episode_reason ecer
+                JOIN
+                  reasons r ON ecer.reason_id = r.id
+                GROUP BY
+                  ecer.emergency_care_episode_id
+                )
+                UPDATE emergency_care_episode ece
+                SET
+                  reason = ece_r.descriptions
+                FROM
+                  ece_reasons ece_r
+                WHERE
+                  ece.id = ece_r.emergency_care_episode_id;
+                  
+
+    - changeSet:
+        id: createTable-diagnostic_report_observation_group
+        comment: Create table diagnostic_report_observation_group
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: diagnostic_report_observation_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_observation_group
+                - column:
+                    name: diagnostic_report_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_observation_group_diagnostic_report_id
+                      unique: true
+                      uniqueConstraintName: UQ_diagnostic_report_observation_diagnostic_report_observation_group_id
+                - column:
+                    name: procedure_template_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: procedure_template(id)
+                      foreignKeyName: FK_diagnostic_report_observation_procedure_template_id
+                - column:
+                    name: is_partial_upload
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+    - changeSet:
+        id: createTable-diagnostic_report_observation
+        comment: Create table diagnostic_report_observation
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: diagnostic_report_observation
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_observation
+                - column:
+                    name: diagnostic_report_observation_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: diagnostic_report_observation_group(id)
+                      foreignKeyName: FK_diagnostic_report_observation_diagnostic_report_observation_group_id
+                - column:
+                    name: procedure_parameter_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: procedure_parameter(id)
+                      foreignKeyName: FK_diagnostic_report_observation_procedure_parameter_id
+                - column:
+                    name: value
+                    type: text
+                    constraints:
+                      nullable: false
+                    defaultValue: ''
+                - column:
+                    name: unit_of_measure_id
+                    type: smallint
+                    constraints:
+                      nullable: true
+                      references: unit_of_measure(id)
+                      foreignKeyName: FK_diagnostic_report_observation_unit_of_measure_id
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-diagnostic_report_tree
+        comment: Create table diagnostic_report_tree
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: diagnostic_report_tree
+              columns:
+                - column:
+                    name: diagnostic_report_parent_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_tree
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_tree__diagnostic_report_parent_id
+                - column:
+                    name: diagnostic_report_child_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_tree
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_tree__diagnostic_report_child_id
+    - changeSet:
+        id: triage_reason-createTable
+        comment: creation of triage_reason table
+        author: tomasbecher
+        changes:
+              - createTable:
+                    tableName: triage_reason
+                    columns:
+                        - column:
+                              name: triage_id
+                              type: int
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: reason_id
+                              type: varchar(20)
+                              constraints:
+                                  nullable: false
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: triage_id, reason_id
+                    constraintName: PK_triage_reason
+                    tableName: triage_reason
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: triage_id
+                    baseTableName: triage_reason
+                    constraintName: FK_triage_reason__triage
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: triage
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: reason_id
+                    baseTableName: triage_reason
+                    constraintName: FK_triage_reason__reason
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: reasons
+                    validate: true
+
+    - changeSet:
+          id: add-column-local_viewer_url-to-pac_server_image_lvl
+          author: fzudaire
+          comment: se agrego en distintas versiones mediante hotfix (2.23, 2.24 y 2.25), para evitar conflictos
+              se agrega en todas las versiones afectadas pero con precondición
+          preConditions:
+              -   onFail: MARK_RAN
+              -   not:
+                      -   columnExists:
+                              tableName: pac_server_image_lvl
+                              columnName: local_viewer_url
+          changes:
+              - addColumn:
+                    tableName: pac_server_image_lvl
+                    columns:
+                        - column:
+                              name: local_viewer_url
+                              type: varchar(128)
+                              constraints:
+                                  nullable: true

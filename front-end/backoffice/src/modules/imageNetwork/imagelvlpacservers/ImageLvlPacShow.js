@@ -16,6 +16,7 @@ const ImageLvlPacShow = props => (
             <ReferenceField source="sectorId" reference="sectors">
                 <TextField source="description"/>
             </ReferenceField>
+            <TextField source="localViewerUrl" />
         </SimpleShowLayout>
     </Show>
 );

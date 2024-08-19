@@ -6,7 +6,6 @@ import net.pladema.medicalconsultation.diary.repository.OpeningHoursRepository;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo;
 import net.pladema.medicalconsultation.diary.repository.domain.OccupationVo;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
-
 import net.pladema.medicalconsultation.diary.service.domain.OccupationBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryOpeningHoursRepository;
@@ -15,11 +14,8 @@ import net.pladema.medicalconsultation.equipmentdiary.repository.entity.Equipmen
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiaryOpeningHoursPK;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryBoMapper;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryOpeningHoursService;
-
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryOpeningHoursBo;
-
-import net.pladema.medicalconsultation.equipmentdiary.service.domain.OpeningHoursBo;
-
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentOpeningHoursBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.exception.EEquipmentDiaryOpeningHoursEnumException;
 import net.pladema.medicalconsultation.equipmentdiary.service.exception.EquipmentDiaryOpeningHoursException;
 
@@ -33,7 +29,11 @@ import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -63,8 +63,8 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
 		equipmentDiaryOpeningHours.forEach(doh -> {
-            OpeningHoursBo openingHoursBo = doh.getOpeningHours();
-            OpeningHours newOpeningHours = equipmentDiaryBoMapper.toOpeningHours(openingHoursBo);
+            EquipmentOpeningHoursBo equipmentOpeningHoursBo = doh.getOpeningHours();
+            OpeningHours newOpeningHours = equipmentDiaryBoMapper.toOpeningHours(equipmentOpeningHoursBo);
             Integer openingHoursId;
 
             //Si los horarios de atención definidos para la agenda ya existen en la BBDD
@@ -75,7 +75,7 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
                 openingHoursId = existingOpeningHours.get().getId();
             else
 				openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
-            openingHoursBo.setId(openingHoursId);
+            equipmentOpeningHoursBo.setId(openingHoursId);
 			equipmentDiaryOpeningHoursRepository.saveAndFlush(createDiaryOpeningHoursInstance(equipmentDiaryId, openingHoursId, doh));
 
         });
@@ -103,7 +103,7 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 		result.setDiaryId(diaryOpeningHoursVo.getDiaryId());
 		result.setMedicalAttentionTypeId(diaryOpeningHoursVo.getMedicalAttentionTypeId());
 		result.setOverturnCount(diaryOpeningHoursVo.getOverturnCount());
-		result.setOpeningHours(new net.pladema.medicalconsultation.equipmentdiary.service.domain.OpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
+		result.setOpeningHours(new EquipmentOpeningHoursBo(diaryOpeningHoursVo.getOpeningHours()));
 		result.setExternalAppointmentsAllowed(diaryOpeningHoursVo.getExternalAppointmentsAllowed());
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -230,7 +230,7 @@ public class EquipmentDiaryOpeningHoursServiceImpl implements EquipmentDiaryOpen
 		result.setDiaryId(equipmentDiaryOpeningHoursVo.getEquipmentDiaryId());
 		result.setMedicalAttentionTypeId(equipmentDiaryOpeningHoursVo.getMedicalAttentionTypeId());
 		result.setOverturnCount(equipmentDiaryOpeningHoursVo.getOverturnCount());
-		result.setOpeningHours(new net.pladema.medicalconsultation.equipmentdiary.service.domain.OpeningHoursBo(equipmentDiaryOpeningHoursVo.getOpeningHours()));
+		result.setOpeningHours(new EquipmentOpeningHoursBo(equipmentDiaryOpeningHoursVo.getOpeningHours()));
 		result.setExternalAppointmentsAllowed(equipmentDiaryOpeningHoursVo.getExternalAppointmentsAllowed());
 		LOG.debug(OUTPUT, result);
 		return result;

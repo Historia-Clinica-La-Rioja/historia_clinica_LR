@@ -16,7 +16,7 @@ import {
 import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateFormat, dateToMoment, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { map, tap } from 'rxjs/operators';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,7 +26,6 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
-import { Moment } from 'moment';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { dateDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
@@ -37,6 +36,8 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { Position } from '@presentation/components/identifier/identifier.component';
 import { buildProblemHeaderInformation } from '@historia-clinica/mappers/problems.mapper';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { compare } from '@core/utils/date.utils';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -97,6 +98,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private readonly counterreferenceFileService: CounterreferenceFileService,
 		private readonly documentService: DocumentService,
 		private readonly patientNameService: PatientNameService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.contextService = this.injector.get<ContextService>(ContextService);
 		this.internacionMasterDataService = this.injector.get<InternacionMasterDataService>(InternacionMasterDataService);
@@ -143,30 +145,32 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	setActiveProblems$() {
 		this.activeProblems$ = this.ambulatoriaSummaryFacadeService.activeProblems$.pipe(
-			map(this.formatProblemsDates)
+			map(p => this.formatProblemsDates(p,this.dateFormatPipe))
 		);
 	}
 
 	setChronicProblems$() {
 		this.chronicProblems$ = this.ambulatoriaSummaryFacadeService.chronicProblems$.pipe(
-			map(this.formatProblemsDates)
+			map(p => this.formatProblemsDates(p, this.dateFormatPipe))
 		);
 	}
 
 	setSolvedProblems$() {
 		this.solvedProblems$ = this.ambulatoriaSummaryFacadeService.solvedProblems$.pipe(
-			map(this.formatProblemsDates)
+			map(p => this.formatProblemsDates(p, this.dateFormatPipe))
 		);
 	}
 
-	private formatProblemsDates(problemas: HCEHealthConditionDto[]) {
-		return problemas.map((problema: HCEHealthConditionDto) => {
-			return {
-				...problema,
-				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
-				inactivationDate: problema.inactivationDate ? momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE) : undefined
-			};
-		});
+	private formatProblemsDates(problemas: HCEHealthConditionDto[], dateFormatPipe: DateFormatPipe) {
+		return problemas.map(p => this.toProblems(p, dateFormatPipe));
+	}
+
+	private toProblems(problema: HCEHealthConditionDto, dateFormatPipe: DateFormatPipe) {
+		return {
+			...problema,
+			startDate: problema.startDate ? dateFormatPipe.transform(dateISOParseDate(problema.startDate), 'date') : undefined,
+			inactivationDate: problema.inactivationDate ? dateFormatPipe.transform(dateISOParseDate(problema.inactivationDate), 'date') : undefined
+		};
 	}
 
 	loadHospitalizationProblems() {
@@ -184,11 +188,12 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	loadHistoricalProblems() {
 		this.historicalProblems$ = this.historicalProblemsFacadeService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
-		).subscribe(data => {
-			this.historicalProblemsList = data.map(problem => {
+		).subscribe(historicalProblems => {
+			this.historicalProblemsList = historicalProblems ? historicalProblems.map(problem => {
+				problem.consultationDate = dateTimeDtotoLocalDate(dateToDateTimeDto(problem.consultationDate));
 				problem.headerInfoDetails = buildProblemHeaderInformation(problem);
 				return problem;
-			})
+			}) : [];
 		})
 	}
 
@@ -228,7 +233,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			tap((filteredHistories: ExternalClinicalHistorySummaryDto[]) => this.externalClinicalHistoryAmount = filteredHistories ? filteredHistories.length : 0)
 		).subscribe(
 			(filteredHistories: ExternalClinicalHistorySummaryDto[]) =>
-				this.externalClinicalHistoryList = [...filteredHistories].sort(this.compareByDate)
+				this.externalClinicalHistoryList = [...filteredHistories].sort(this.orderDesc)
 		);
 
 		this.externalClinicalHistoryService.hasInformation$().subscribe(
@@ -236,13 +241,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	private compareByDate(h1: ExternalClinicalHistorySummaryDto, h2: ExternalClinicalHistorySummaryDto) {
-		// function used to sort External Clinical Histories by descending date
-		const moment1: Moment = dateToMoment(dateDtoToDate(h1.consultationDate));
-		const moment2: Moment = dateToMoment(dateDtoToDate(h2.consultationDate));
-		if (moment1.isSame(moment2)) return 0;
-		else if (moment1.isBefore(moment2)) return 1;
-		return -1;
+	public orderDesc(h1: ExternalClinicalHistorySummaryDto, h2: ExternalClinicalHistorySummaryDto) {
+		const date1: Date = dateDtoToDate(h1.consultationDate);
+		const date2: Date = dateDtoToDate(h2.consultationDate);
+		return compare(date2, date1)
 	}
 
 	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {

@@ -27,6 +27,6 @@ public class DoctorInfoSummary implements Serializable {
 
 	private String identificationNumber;
 
-
+	private Short genderId;
 
 }

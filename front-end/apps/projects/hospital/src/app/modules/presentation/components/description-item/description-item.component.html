@@ -2,15 +2,9 @@
     <span *ngIf="descriptionData.length > 1" class="bull-elements">&bull;</span>
     <div class="text-container" fxLayout="column">
         <span class="text capitalize-first-letter">{{ descriptionItem.description }}</span>
-        <ng-container *ngIf="descriptionItem.dateOrTime">
-            <span *ngIf="descriptionItem.dateOrTime.date" class="date-text grey">
-                {{ descriptionItem.dateOrTime.date | dateFormat : 'date' }}
-            </span>
-            <span *ngIf="descriptionItem.dateOrTime.time" class="date-text grey">
-                {{ descriptionItem.dateOrTime.time | dateFormat : 'time' }}
-            </span>
-            <span *ngIf="descriptionItem.dateOrTime.dateTime" class="date-text grey">
-                {{ descriptionItem.dateOrTime.dateTime | dateFormat : 'datetime' }}
+        <ng-container *ngIf="descriptionItem.dateToShow">
+            <span class="date-text grey">
+                {{ descriptionItem.dateToShow.date | dateFormat: descriptionItem.dateToShow.format }}
             </span>
         </ng-container>
     </div>

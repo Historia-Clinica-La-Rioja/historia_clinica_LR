@@ -21,23 +21,28 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class EmergencyCareListDto implements Serializable {
 
-	Integer id;
+	private static final long serialVersionUID = -6693505419704202447L;
 
-	DateTimeDto creationDate;
+	private Integer id;
 
-	EmergencyCarePatientDto patient;
+	private DateTimeDto creationDate;
 
-	EmergencyCareEpisodeListTriageDto triage;
+	private EmergencyCarePatientDto patient;
 
-	MasterDataDto type;
+	private EmergencyCareEpisodeListTriageDto triage;
 
-	MasterDataDto state;
+	private MasterDataDto type;
 
-	DoctorsOfficeDto doctorsOffice;
+	private MasterDataDto state;
 
-	ProfessionalPersonDto relatedProfessional;
+	private DoctorsOfficeDto doctorsOffice;
 
-	ShockroomDto shockroom;
+	private ProfessionalPersonDto relatedProfessional;
 
-	BedDto bed;
+	private ShockroomDto shockroom;
+
+	private BedDto bed;
+
+	private String reason;
+
 }

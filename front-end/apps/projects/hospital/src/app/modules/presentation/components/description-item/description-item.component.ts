@@ -13,9 +13,16 @@ export class DescriptionItemComponent {
 
 export interface DescriptionItemData {
     description: string
-    dateOrTime?: {
-        date?: Date,
-        time?: Date,
-        dateTime?: Date,
-    }
+    dateToShow?: DateToShow
+}
+
+export interface DateToShow {
+    date: Date,
+    format: DateFormat,
+}
+   
+export enum DateFormat {
+    DATE = 'date',
+    TIME = 'time',
+    DATE_TIME = 'datetime',
 }

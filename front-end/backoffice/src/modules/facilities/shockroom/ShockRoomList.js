@@ -1,5 +1,5 @@
 import React from 'react';
-import { Datagrid, Filter, List, ReferenceField, TextField, TextInput } from 'react-admin';
+import { Datagrid, Filter, List, ReferenceField, TextField, TextInput, usePermissions } from 'react-admin';
 
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 
@@ -12,6 +12,7 @@ const ShockRoomFilter = props => (
 );
 
 const ShockRoomList = (props) => {
+    const { permissions } = usePermissions();
     return (
         <List {...props} hasCreate={false} filters={<ShockRoomFilter />} filter={{ deleted: false }} >
             <Datagrid rowClick="show">
@@ -25,6 +26,9 @@ const ShockRoomList = (props) => {
                 <ReferenceField source="sectorId" reference="sectors">
                     <TextField source="description" />
                 </ReferenceField>
+
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextField source="topic" />}
+
             </Datagrid>
         </List>
     )

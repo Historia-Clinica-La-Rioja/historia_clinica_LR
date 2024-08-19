@@ -29,4 +29,9 @@ public class DocumentReduceInfoDto implements Serializable {
 
 	private ESignatureStatus signatureStatus;
 
+	private Boolean isConfirmed;
+
+	public boolean isCofirmed() {
+		return isConfirmed;
+	}
 }

@@ -72,9 +72,10 @@
 				</mat-form-field>
 			</div>
 		</form>
+		<app-patient-evolution-charts-button [patientId]="data.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
 	</div>
 	<mat-dialog-actions align="end">
-		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
+		<button mat-stroked-button color="primary" mat-dialog-close (click)="resetAnthropometricPreviewData()"><span [translate]="'buttons.CANCEL'"></span>
 		</button>
 		<button *ngIf="this.form.valid && !formHasNoValues(this.form.value)" mat-raised-button color="primary" (click)="submit()">
 			<span [translate]="'buttons.ADD'"></span>

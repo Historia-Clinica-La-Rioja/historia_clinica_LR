@@ -16,7 +16,7 @@ public interface DocumentHealthcareProfessionalRepository extends JpaRepository<
 	@Query("SELECT new ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo(" +
 			"dhp.id, hp.id, hp.licenseNumber, p.id, p.firstName, p.lastName, p.identificationNumber, pex.nameSelfDetermination," +
 			"p.middleNames, p.otherLastNames, " +
-			"dhp.professionTypeId, dhp.comments) " +
+			"dhp.professionTypeId, dhp.otherProfessionTypeDescription, dhp.comments) " +
 			"FROM DocumentHealthcareProfessional dhp " +
 			"JOIN HealthcareProfessional hp ON (hp.id = dhp.healthcareProfessionalId) " +
 			"JOIN Person p ON (p.id = hp.personId) " +

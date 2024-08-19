@@ -56,6 +56,12 @@ section {
 	text-transform: lowercase;
 }
 
+.vanilla-mat-error {
+	color: #f44336;
+	font-size: 75%;
+	padding: 0 1em;
+}
+
 @media (max-width: $mobile-popups) {
 	div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 		width: 100% !important;
@@ -94,5 +100,11 @@ div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 	mat-dialog-container.mat-dialog-container {
 		padding: 0;
 		margin: 0;
+	}
+}
+
+.background-color-input {
+	.mat-form-field-appearance-outline .mat-form-field-outline {
+		background-color: white;
 	}
 }

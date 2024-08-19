@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticReportProposedSurgeryService } from '../../services/anesthetic-report-proposed-surgery.service';
+import { Component, OnInit } from '@angular/core';
 import { AnesthesicReportAddProposedSurgeryComponent } from '../../dialogs/anesthesic-report-add-proposed-surgery/anesthesic-report-add-proposed-surgery.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-proposed-surgery',
@@ -12,12 +12,12 @@ import { AppFeature } from '@api-rest/api-model';
 })
 export class ProposedSurgeryComponent implements OnInit {
 
-    @Input() service: AnestheticReportProposedSurgeryService;
 	searchConceptsLocallyFFIsOn = false;
 
     constructor(
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
+        readonly service: AnestheticReportService,
     ) { }
 
     ngOnInit(): void {
@@ -29,7 +29,7 @@ export class ProposedSurgeryComponent implements OnInit {
     addProposedSurgery(){
         this.dialog.open(AnesthesicReportAddProposedSurgeryComponent, {
             data: {
-                proposedSurgeryService: this.service,
+                proposedSurgeryService: this.service.anesthesicReportProposedSurgeryService,
                 searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
             },
             autoFocus: false,

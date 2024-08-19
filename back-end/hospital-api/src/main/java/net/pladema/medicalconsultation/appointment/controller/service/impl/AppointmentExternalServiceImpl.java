@@ -23,6 +23,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingA
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.repository.entity.BookingPerson;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
@@ -71,6 +72,7 @@ import net.pladema.medicalconsultation.appointment.service.fetchappointments.dom
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.PatientBo;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class AppointmentExternalServiceImpl implements AppointmentExternalService, SharedAppointmentPort {
 
@@ -90,25 +92,6 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final SharedPersonPort sharedPersonPort;
 	private final PersonService personService;
 	private final FeatureFlagsService featureFlagsService;
-
-	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService,
-										  CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService,
-										  CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService,
-										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper,
-										  SharedPersonPort sharedPersonPort, DiaryService diaryService, PersonService personService, FeatureFlagsService featureFlagsService) {
-		this.appointmentService = appointmentService;
-		this.appointmentValidatorService = appointmentValidatorService;
-		this.createAppointmentService = createAppointmentService;
-		this.bookingPersonService = bookingPersonService;
-		this.createBookingAppointmentService = createBookingAppointmentService;
-		this.documentAppointmentService = documentAppointmentService;
-		this.fetchAppointments = fetchAppointments;
-		this.localDateMapper = localDateMapper;
-		this.sharedPersonPort = sharedPersonPort;
-		this.diaryService = diaryService;
-		this.personService = personService;
-		this.featureFlagsService = featureFlagsService;
-	}
 
 	@Override
 	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
@@ -169,8 +152,8 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		BookingPerson bookingPerson = getBookingPerson(bookingPersonDto, email);
 		assertProfessionalNotAlreadyBooked(bookingPerson, bookingAppointmentDto);
 		AppointmentBo newAppointmentBo = mapTo(bookingAppointmentDto);
-		newAppointmentBo.setPhoneNumber(bookingPerson.getPhoneNumber());
-		newAppointmentBo.setPhonePrefix(bookingPerson.getPhonePrefix());
+		newAppointmentBo.setPhoneNumber(bookingAppointmentDto.getPhoneNumber());
+		newAppointmentBo.setPhonePrefix(bookingAppointmentDto.getPhonePrefix());
 
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer appointmentId = newAppointmentBo.getId();
@@ -201,8 +184,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 
 	private BookingPerson getBookingPerson(BookingPersonDto bookingPersonDto, String requestingBookingPersonEmail) throws BookingPersonMailNotExistsException {
 		BookingPerson bookingPerson;
-		boolean shouldExistsBookingPerson = (bookingPersonDto == null);
-		if(shouldExistsBookingPerson)
+		if(bookingPersonDto == null)
 			bookingPerson = bookingPersonService.findByEmail(requestingBookingPersonEmail)
 					.orElseThrow(BookingPersonMailNotExistsException::new);
 		else
@@ -212,8 +194,9 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 
 	private BookingPerson searchOrSaveBookingPerson(BookingPersonDto bookingPersonDto) {
 		BookingPerson bookingPerson = null;
-		if(bookingPersonDto.getEmail() != null)
-			bookingPerson = bookingPersonService.findByEmail(bookingPersonDto.getEmail()).orElse(null);
+		if(bookingPersonDto.getEmail() != null && bookingPersonDto.getIdNumber() != null)
+			bookingPerson = bookingPersonService.findByEmailAndIdentificationNumber(bookingPersonDto.getEmail(), bookingPersonDto.getIdNumber())
+					.stream().findFirst().orElse(null);
 		if(bookingPerson == null)
 			return bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
 		return bookingPerson;
@@ -289,6 +272,14 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		return result;
 	}
 
+	@Override
+	public boolean appointmentDateAndTimeAlreadyUsed(Integer diaryId, Integer openingHoursId, LocalDate appointmentDate, LocalTime appointmentTime) {
+		log.debug("Input parameters -> diaryId {}, openingHoursId {}, appointmentDate {}, appointmentTime {}", diaryId, openingHoursId, appointmentDate, appointmentTime);
+		boolean result = appointmentService.existAppointment(diaryId, openingHoursId, appointmentDate, appointmentTime);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {
 		List<AppointmentSummaryBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(appointmentIds);
 		List<AppointmentSummaryBo> futureAppointments = appointments.stream()
@@ -344,6 +335,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 						.firstName(doctor.getFirstName())
 						.lastName(doctor.getLastName())
 						.identificationNumber(doctor.getIdentificationNumber())
+						.genderId(doctor.getGenderId())
 						.build()
 		);
 	}

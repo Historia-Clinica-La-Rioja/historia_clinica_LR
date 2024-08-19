@@ -1,22 +1,9 @@
 package net.pladema.renaper.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ForkJoinPool;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.async.DeferredResult;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.renaper.RenaperServicePool;
@@ -24,30 +11,30 @@ import net.pladema.renaper.controller.dto.MedicalCoverageDto;
 import net.pladema.renaper.controller.dto.PersonBasicDataResponseDto;
 import net.pladema.renaper.controller.mapper.RenaperMapper;
 import net.pladema.renaper.services.RenaperService;
-import net.pladema.renaper.services.domain.PersonDataResponse;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
-import net.pladema.renaper.services.domain.RenaperServiceException;
 import net.pladema.sgx.healthinsurance.service.HealthInsuranceService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
+
+@Tag(name = "Renaper", description = "Renaper")
+@RequestMapping("/renaper")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/renaper")
-@Tag(name = "Renaper", description = "Renaper")
 public class RenaperController {
 
 	private static final String SEARCH_PERSON = "/searchPerson";
 	private static final String SEARCH_HEALTH_INSURANCE = "/search-health-insurance";
 
-
 	private final RenaperService renaperService;
-
 	private final RenaperMapper renaperMapper;
-	
 	private final HealthInsuranceService healthInsuranceService;
-
 	private final RenaperServicePool renaperServicePool;
-
 
 	@GetMapping(value = SEARCH_PERSON)
 	public DeferredResult<ResponseEntity<PersonBasicDataResponseDto>> getBasicPerson(

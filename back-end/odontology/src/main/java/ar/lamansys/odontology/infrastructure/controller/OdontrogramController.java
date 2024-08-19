@@ -68,7 +68,7 @@ public class OdontrogramController {
     public List<ToothDrawingsDto> getOdontogramDrawings(@PathVariable(name = "patientId") Integer patientId){
         logger.debug("Input parameter -> patientId {}", patientId);
         List<ToothDrawingsDto> result = this.mapTo(fetchOdontogramDrawingsService.run(patientId));
-        logger.debug("Output -> {}", result);
+		logger.debug("Output -> {}", result);
         return result;
     }
 

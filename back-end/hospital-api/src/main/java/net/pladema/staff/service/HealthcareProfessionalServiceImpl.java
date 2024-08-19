@@ -131,6 +131,16 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
                 .orElse(null);
     }
 
+	@Override
+	public HealthcareProfessionalBo findProfessionalByUserId(Integer userId){
+		LOG.debug("Input parameters -> personId {}", userId);
+		Integer professionalId = healthcareProfessionalRepository.getProfessionalId(userId);
+		HealthcareProfessionalBo result = healthcareProfessionalRepository.findActiveProfessionalById(professionalId)
+						.map(HealthcareProfessionalBo::new).orElse(null);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
     @Override
     public Integer saveProfessional(HealthcareProfessionalCompleteBo professionalBo){
         LOG.debug("Input parameters -> professionalBo {}", professionalBo);

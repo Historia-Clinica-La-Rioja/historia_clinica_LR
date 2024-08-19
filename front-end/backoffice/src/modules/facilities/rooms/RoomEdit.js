@@ -8,10 +8,12 @@ import {
     required, SelectInput,
     SimpleForm,
     TextField,
-    TextInput, useGetOne,
+    TextInput, 
+    useGetOne, 
+    usePermissions,
+    DateInput
 } from 'react-admin';
 import {
-    SgxDateInput,
     CustomToolbar,
     CreateRelatedButton,
     SectionTitle,
@@ -33,37 +35,42 @@ const SectorField = ({ record }) => {
 }
 
 
-const RoomEdit = props => (
-    <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
-            <TextInput source="roomNumber" validate={[required()]} />
-            <TextInput source="description" validate={[required()]} />
-            <TextInput source="type" validate={[required()]} />
-            <SgxDateInput source="dischargeDate" />
-            <SectorField/>
+const RoomEdit = props => {
+    const { permissions } = usePermissions();
+    return (
+        <Edit {...props}>
+            <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
+                <TextInput source="roomNumber" validate={[required()]} />
+                <TextInput source="description" validate={[required()]} />
+                <TextInput source="type" validate={[required()]} />
+                <DateInput source="dischargeDate" />
+                <SectorField/>
 
 
-            <SectionTitle label="resources.rooms.fields.beds"/>
-            <CreateRelatedButton
-                reference="beds"
-                refFieldName="roomId"
-                label="resources.beds.createRelated"
-            />
-            {/*TODO: Aislar esto en un componente. También se usa en show.js*/}
-            <ReferenceManyField
-                addLabel={false}
-                reference="beds"
-                target="roomId"
-                sort={{ field: 'bedNumber', order: 'DESC' }}
-            >
-                <Datagrid rowClick="show">
-                    <TextField source="bedNumber" />
-                    <EditButton />
-                </Datagrid>
-            </ReferenceManyField>
+                <SectionTitle label="resources.rooms.fields.beds"/>
+                <CreateRelatedButton
+                    reference="beds"
+                    refFieldName="roomId"
+                    label="resources.beds.createRelated"
+                />
+                {/*TODO: Aislar esto en un componente. También se usa en show.js*/}
+                <ReferenceManyField
+                    addLabel={false}
+                    reference="beds"
+                    target="roomId"
+                    sort={{ field: 'bedNumber', order: 'DESC' }}
+                >
+                    <Datagrid rowClick="show">
+                        <TextField source="bedNumber" />
+                        <EditButton />
+                    </Datagrid>
+                </ReferenceManyField>
 
-        </SimpleForm>
-    </Edit>
-);
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextInput source="topic" />}
+
+            </SimpleForm>
+        </Edit>
+    )
+};
 
 export default RoomEdit;

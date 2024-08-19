@@ -1,25 +1,26 @@
 package net.pladema.staff.controller.service;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
-import net.pladema.staff.application.FetchProfessionalsByIds;
+import net.pladema.person.controller.service.PersonExternalService;
 
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.MedicineDoctorCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
+import net.pladema.person.service.PersonService;
+import net.pladema.staff.application.FetchProfessionalsByIds;
 import net.pladema.staff.application.fetchprofessionalbyid.FetchProfessionalById;
 import net.pladema.staff.application.fetchprofessionalbyuser.FetchProfessionalByUser;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,6 +38,8 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 	private final FetchProfessionalById fetchProfessionalById;
 
 	private final FetchProfessionalsByIds fetchProfessionalsByIds;
+
+	private final PersonExternalService personExternalService;
 
     @Override
     public HealthCareProfessionalGroupDto addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId) {
@@ -91,6 +94,25 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 	@Override
 	public ProfessionalCompleteDto getProfessionalCompleteInfoById(Integer professionalId) {
 		return healthcareProfessionalMapper.fromProfessionalCompleteBo(fetchProfessionalById.execute(professionalId));
+	}
+
+	@Override
+	public MedicineDoctorCompleteDto getDoctorsCompleteInfo(Integer professionalId) {
+		var professionalInfo = healthcareProfessionalMapper
+				.fromProfessionalCompleteBo(fetchProfessionalById.execute(professionalId));
+		var person = personExternalService.getBasicDataPerson(professionalInfo.getPersonId());
+
+		return MedicineDoctorCompleteDto.builder()
+				.professionalId(professionalId)
+				.firstName(person.getFirstName())
+				.middleNames(person.getMiddleNames())
+				.lastName(person.getLastName())
+				.nameSelfDetermination(person.getNameSelfDetermination())
+				.otherLastNames(person.getOtherLastNames())
+				.identificationType(person.getIdentificationType())
+				.identificationNumber(person.getIdentificationNumber())
+				.professions(professionalInfo.getProfessions())
+				.build();
 	}
 
 	@Override

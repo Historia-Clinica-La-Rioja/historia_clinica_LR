@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
 
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(force = true)
@@ -25,8 +28,8 @@ public class TriagePediatricDto extends TriageNoAdministrativeDto {
 
     @Builder(builderMethodName = "pediatricBuilder")
     public TriagePediatricDto(Short categoryId, Integer doctorsOfficeId, String notes,
-                              AppearanceDto appearance, BreathingDto breathing, CirculationDto circulation){
-        super(categoryId, doctorsOfficeId, notes);
+                              AppearanceDto appearance, BreathingDto breathing, CirculationDto circulation, List<OutpatientReasonDto> reasons){
+        super(categoryId, doctorsOfficeId, notes, reasons);
         this.appearance = appearance;
         this.breathing = breathing;
         this.circulation = circulation;

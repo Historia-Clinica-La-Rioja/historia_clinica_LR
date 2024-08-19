@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { EndOfAnesthesiaStatusData } from '@historia-clinica/services/anesthetic-report-document-summary.service';
+import { EndOfAnesthesiaStatusData } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
     selector: 'app-end-of-anesthesia-status-summary',

@@ -10,6 +10,7 @@ import { PrescriptionStatus } from '../../components/reference-request-data/refe
 import { ButtonType } from '@presentation/components/button/button.component';
 import { ButtonService } from '../../services/button.service';
 import { StudyInformation } from '../../modules/estudio/components/study/study.component';
+import { StudyInfo } from '../../services/study-results.service';
 
 @Component({
 	selector: 'app-complete-study',
@@ -22,7 +23,6 @@ export class CompleteStudyComponent implements OnInit {
 	diagnosticReport: StudyInformation[] | DiagnosticReportInfoDto[];
 	study: StudyData;
 	buttonTypeFlat = ButtonType.FLAT;
-
 	constructor(
 		readonly buttonService: ButtonService,
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
@@ -34,7 +34,6 @@ export class CompleteStudyComponent implements OnInit {
 
 	ngOnInit() {
 		this.diagnosticReport = this.data.diagnosticReport;
-
 		this.setValues();
 	}
 
@@ -42,12 +41,16 @@ export class CompleteStudyComponent implements OnInit {
 		this.buttonService.submit();
 	}
 
+	completePartialStudy() {
+		this.buttonService.submitPartialSave();
+	}
+
+
 	private prescriptionItemDataBuilder(diagnosticReport): StudyData {
 		const prescriptionPt: string = diagnosticReport[0].diagnosticInformation ? diagnosticReport[0].diagnosticInformation.snomed.pt : diagnosticReport[0].snomed.pt;
 		const problemPt: string = diagnosticReport[0].diagnosticInformation ? diagnosticReport[0].diagnosticInformation.healthCondition.snomed.pt : diagnosticReport[0].healthCondition.snomed.pt;
 		const registerEditor: RegisterEditor = diagnosticReport[0].diagnosticInformation ? this.mapRegisterEditor(diagnosticReport[0].diagnosticInformation.doctor, this.data.creationDate) : this.mapRegisterEditor(diagnosticReport[0].doctor, this.data.creationDate);
 		const statusId: string = diagnosticReport[0].diagnosticInformation ? diagnosticReport[0].diagnosticInformation.statusId : diagnosticReport[0].statusId;
-
 		return {
 			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, statusId),
 			prescriptionPt,
@@ -74,10 +77,11 @@ export class CompleteStudyComponent implements OnInit {
 }
 
 
-export interface  CompleteStudy {
+export interface CompleteStudy {
 	diagnosticReport: StudyInformation[] | DiagnosticReportInfoDto[],
 	patientId: number,
 	creationDate: Date,
 	order: number,
 	status: PrescriptionStatus,
+	studies: StudyInfo[],
 }

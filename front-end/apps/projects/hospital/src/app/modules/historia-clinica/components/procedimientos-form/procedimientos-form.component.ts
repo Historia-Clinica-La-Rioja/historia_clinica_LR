@@ -1,11 +1,12 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subscription } from 'rxjs';
 
@@ -21,25 +22,26 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class ProcedimientosFormComponent{
+export class ProcedimientosFormComponent implements ControlValueAccessor {
 
-	procedimientos = this.formBuilder.group({data: []});
+	procedimientos = this.formBuilder.group({ data: [] });
 	onChangeSub: Subscription;
 	searchConceptsLocallyFFIsOn = false;
 
-	procedimientoNuevaConsultaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedimientoNuevaConsultaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.procedimientoNuevaConsultaService.procedimientos$.subscribe(r => this.writeValue({data: r}))
+		this.procedimientoNuevaConsultaService.procedimientos$.subscribe(procedimientos => this.procedimientos.controls.data.setValue(procedimientos));
 	}
 
 	addProcedure(): void {
@@ -58,8 +60,10 @@ export class ProcedimientosFormComponent{
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.procedimientos.setValue(obj);
+			this.procedimientoNuevaConsultaService.setProcedures(obj.data);
+		}
 	}
 
 	registerOnChange(fn: any): void {

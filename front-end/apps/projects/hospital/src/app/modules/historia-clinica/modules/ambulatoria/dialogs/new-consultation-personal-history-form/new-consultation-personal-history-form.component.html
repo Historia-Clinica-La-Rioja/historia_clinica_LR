@@ -50,41 +50,29 @@
                 </mat-form-field>
             </div>
 
-            <div fxLayoutAlign="space-between">
-                <div fxLayout="column" class="half-size-input">
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.START_DATE'"></span>
-                    <mat-form-field appearance="outline">
-                        <input matInput data-id="start-date" [matDatepicker]="historyStartDatePicker"
-                            formControlName="startDate" [min]="minDate" [max]="data.personalHistoryService.getMaxDate()"
-                            placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.START_DATE' | translate}}">
-                        <mat-datepicker-toggle matSuffix [for]="historyStartDatePicker">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #historyStartDatePicker startView="multi-year"></mat-datepicker>
 
-                        <mat-error *ngIf="hasError(form, 'required', 'startDate')"
-                            [translate]="'forms.REQUIRED'"></mat-error>
-                    </mat-form-field>
-                </div>
 
-                <div fxLayout="column" class="half-size-input">
-                    <span [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.END_DATE'"></span>
-                    <mat-form-field appearance="outline">
-                        <input matInput data-id="end-date" [matDatepicker]="historyEndDatePicker"
-                            formControlName="endDate" [min]="data.personalHistoryService.getMinDate() || minDate"
-                            [max]="data.personalHistoryService.getMaxDate()"
-                            placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.END_DATE' | translate}}">
-                        <mat-datepicker-toggle matSuffix [for]="historyEndDatePicker">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #historyEndDatePicker startView="multi-year"></mat-datepicker>
-
-                        <mat-error *ngIf="hasError(form, 'matDatepickerMin', 'endDate')"
-                            [translate]="'forms.MIN_DATE'"></mat-error>
-                    </mat-form-field>
-                </div>
+            <div fxLayout="row">
+                <app-datepicker data-id="start-date"
+                    title="ambulatoria.paciente.nueva-consulta.antecedentes-personales.START_DATE" [minDate]="minDate"
+                    [maxDate]="data.personalHistoryService.getForm().value.endDate || data.personalHistoryService.getMaxDate()" 
+                    (selectDate)="startDateChanged($event)" requiredText='Fecha Requerida'
+                    [markAsTouched]="markAsTouched">
+                </app-datepicker>
+                <app-datepicker data-id="end-date"
+                    title="ambulatoria.paciente.nueva-consulta.antecedentes-personales.END_DATE"
+                    [minDate]="data.personalHistoryService.getMinDate() || minDate"
+                    [maxDate]="data.personalHistoryService.getMaxDate()" 
+                    (selectDate)="endDateChanged($event)"
+                    enableDelete="true">
+                </app-datepicker>
             </div>
 
+
+
             <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.OBSERVATIONS'"></mat-label>
+                <mat-label
+                    [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.OBSERVATIONS'"></mat-label>
                 <textarea matInput type="text" id="observations" formControlName="observations"
                     placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.OBSERVATIONS' | translate }}">
                 </textarea>

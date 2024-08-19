@@ -1,57 +1,8 @@
 <app-new-consultation-expansion-section id="diagnosticos"
 	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-	[title]="'ambulatoria.paciente.surgical-report.diagnosis.TITLE' | translate" icon="error_outlined"
-	[collapsed]="false" [hideBorder]="false" [isEmpty]="isEmpty()">
+	[title]="'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate" icon="error_outlined"
+	[collapsed]="false" [hideBorder]="true" [isEmpty]="isEmpty()">
 
-	<mat-form-field appearance="outline">
-		<mat-select id="diagnosis-select"
-			placeholder="{{'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate}}"
-			(selectionChange)="setDiagnosis($event.value)">
-			<mat-option *ngFor="let diagnose of diagnosis" [value]="diagnose">
-				{{diagnose.snomed.pt}}
-			</mat-option>
-			<mat-option (click)="addDiagnosis()">
-				<button id="clear_identification_type" type="button" mat-button color="primary">
-					{{'ambulatoria.paciente.surgical-report.diagnosis.ADD' | translate}}
-				</button>
-			</mat-option>
-		</mat-select>
-	</mat-form-field>
-
-	<app-titled-content-card *ngIf="surgicalReport?.preoperativeDiagnosis.length"
-		[title]="'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate">
-		<div *ngFor="let diagnose of surgicalReport.preoperativeDiagnosis; index as i; last as isLast">
-			<div fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column">
-					<span>{{ diagnose.snomed.pt }}</span>
-				</div>
-				<button type="button" mat-icon-button color="warn" (click)="deleteDiagnosis(i)">
-					<mat-icon>delete_outline</mat-icon>
-				</button>
-			</div>
-			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-		</div>
-	</app-titled-content-card>
-
-	<div fxLayout="column" fxLayoutGap="20px">
-		<div>
-			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addProcedure()">
-				+ {{ 'ambulatoria.paciente.surgical-report.diagnosis.ADD_SURGERY' | translate }}
-			</button>
-		</div>
-		<app-titled-content-card *ngIf="!procedureService.isEmpty() || surgicalReport.surgeryProcedures.length"
-			[title]="'ambulatoria.paciente.surgical-report.diagnosis.SURGERY'">
-			<div *ngFor="let procedimiento of surgicalReport.surgeryProcedures; index as i; last as isLast">
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<div fxLayout="column">
-						<span>{{ procedimiento.snomed.pt }}</span>
-					</div>
-					<button type="button" mat-icon-button color="warn" (click)="deleteProcedure(i)">
-						<mat-icon>delete_outline</mat-icon>
-					</button>
-				</div>
-				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-			</div>
-		</app-titled-content-card>
-	</div>
+	<app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
+	[(listDiagnosis)]="surgicalReport.preoperativeDiagnosis" [type]="'PARTE QUIRURGICO'"></app-diagnosticos>
 </app-new-consultation-expansion-section>

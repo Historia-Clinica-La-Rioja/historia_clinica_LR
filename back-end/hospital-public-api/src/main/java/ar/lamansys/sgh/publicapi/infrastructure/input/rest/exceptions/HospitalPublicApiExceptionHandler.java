@@ -7,6 +7,8 @@ import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnne
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SharedAppointmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -34,6 +36,8 @@ import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotF
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionRequestException;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+
+import java.time.format.DateTimeParseException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "ar.lamansys.sgh.publicapi")
@@ -217,6 +221,17 @@ public class HospitalPublicApiExceptionHandler {
 		);
 	}
 
+	// Errores de API Pública | Turnos
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ SharedAppointmentException.class })
+	protected ApiErrorMessageDto handleSharedAppointmentException(SharedAppointmentException ex) {
+		logger.debug("SharedAppointmentException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto(
+				"update-appointment-failed",
+				ex.getMessage()
+		);
+	}
+
 	// Errores genéricos de API Pública
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)
@@ -247,6 +262,20 @@ public class HospitalPublicApiExceptionHandler {
 				"fetch-annex-report-by-encounter-" + ex.getCode(),
 				ex.getMessage()
 		);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ DateTimeParseException.class })
+	protected ApiErrorMessageDto handleDateTimeParseException(DateTimeParseException ex) {
+		logger.debug("DateTimeParseException -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto("El formato de la fecha es invalido", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({ SaveExternalBookingException.class })
+	protected ApiErrorMessageDto handleSaveExternalBookingException(SaveExternalBookingException ex) {
+		logger.error("DigitalSignatureCallbackException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 
 }

@@ -17,9 +17,11 @@ describe('EpisodeFilterService', () => {
 		},
 		state: null,
 		triage: {
-			color: 'Rojo',
-			id: 1,
-			name: 'Nivel I'
+			emergencyCareEpisodeListTriageDto: {
+				color: 'Rojo',
+				id: 1,
+				name: 'Nivel I'
+			}
 		},
 		type: {
 			id: 2,

@@ -21,4 +21,6 @@ public interface DocumentFileStorage {
 
 	void updateDigitalSignatureHash(Long documentId, String hash);
 
+	void deleteById(Long id);
+
 }

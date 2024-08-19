@@ -10,6 +10,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "service_request")
@@ -60,6 +61,9 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "observations", columnDefinition = "TEXT")
 	private String observations;
+	
+	@Column(name = "uuid")
+	private UUID uuid;
 
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,

@@ -36,7 +36,7 @@ public class InternmentDocumentModificationValidatorImpl implements InternmentDo
 
 		DocumentReduceInfoDto document = sharedDocumentPort.getDocument(documentId);
 
-		if(!document.getSignatureStatus().equals(ESignatureStatus.PENDING) && !document.getSignatureStatus().equals(ESignatureStatus.CANNOT_BE_SIGNED))
+		if(document.isCofirmed() && !document.getSignatureStatus().equals(ESignatureStatus.PENDING) && !document.getSignatureStatus().equals(ESignatureStatus.CANNOT_BE_SIGNED))
 			throw new InternmentDocumentException(InternmentDocumentEnumException.DOCUMENT_SIGNED, "No es posible llevar a cabo la acción dado que el documento fue firmado digitalmente");
 
 		Integer currentUser = UserInfo.getCurrentAuditor();

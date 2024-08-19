@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AnestheticReportRecordService, PersonalRecordData, RecordForm } from '../../services/anesthetic-report-record.service';
+import { PersonalRecordData, RecordForm } from '../../services/anesthetic-report-record.service';
 import { AnestheticReportAddRecordComponent } from '../../dialogs/anesthetic-report-add-record/anesthetic-report-add-record.component';
 import { FormGroup } from '@angular/forms';
 import { ToFormGroup } from '@core/utils/form.utils';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-anesthetic-report-person-record',
@@ -14,7 +15,6 @@ import { ToFormGroup } from '@core/utils/form.utils';
 })
 export class AnestheticReportPersonRecordComponent implements OnInit {
 
-    @Input() service: AnestheticReportRecordService;
 	searchConceptsLocallyFFIsOn = false;
     form: FormGroup<RecordForm>;
     personalRecordForm: FormGroup<ToFormGroup<PersonalRecordData>>;
@@ -23,20 +23,21 @@ export class AnestheticReportPersonRecordComponent implements OnInit {
     constructor(
         private readonly dialog: MatDialog,
         private readonly featureFlagService: FeatureFlagService,
+        readonly service: AnestheticReportService,
     ) { }
 
     ngOnInit(): void {
         this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
-        this.form = this.service.getForm();
-        this.personalRecordForm = this.service.getPersonalRecordForm();
+        this.form = this.service.anestheticReportRecordService.getForm();
+        this.personalRecordForm = this.service.anestheticReportRecordService.getPersonalRecordForm();
     }
 
     addRecord(){
         this.dialog.open(AnestheticReportAddRecordComponent, {
             data: {
-                anestheticReportRecordService: this.service,
+                anestheticReportRecordService: this.service.anestheticReportRecordService,
                 searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
             },
             autoFocus: false,

@@ -22,7 +22,7 @@ public class DocumentHealthcareProfessionalDto {
 	private HCEHealthcareProfessionalDto healthcareProfessional;
 
 	@NotNull
-	private EProfessionType type;
+	private ProfessionTypeDto profession;
 
 	@Nullable
 	private String comments;

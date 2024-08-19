@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EReferableConcept;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
@@ -44,10 +46,12 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureDescriptionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProsthesisRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReferableConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.domain.ReferableConceptVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAnestheticTechnique;
@@ -66,6 +70,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAnestheticSubstance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProsthesis;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentReferableConcept;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentReferableConceptPK;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.AllergyConditionVo;
@@ -147,6 +153,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentMeasuringPointRepository documentMeasuringPointRepository;
 
     private final DocumentPostAnesthesiaStatusRepository documentPostAnesthesiaStatusRepository;
+
+	private final DocumentReferableConceptRepository documentReferableConceptRepository;
 
     @Override
     public Optional<Document> findById(Long documentId) {
@@ -259,7 +267,8 @@ public class DocumentServiceImpl implements DocumentService {
     public GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId) {
         log.debug(LOGGING_DOCUMENT_ID, documentId);
         List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
-        GeneralHealthConditionBo result = new GeneralHealthConditionBo(resultQuery);
+		List<ReferableConceptVo> referredConcepts = documentReferableConceptRepository.fetchDocumentReferredConcepts(documentId);
+        GeneralHealthConditionBo result = new GeneralHealthConditionBo(resultQuery, referredConcepts);
         log.debug(OUTPUT, result);
         return result;
     }
@@ -274,15 +283,21 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId) {
+    public ReferableItemBo<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId) {
         log.debug(LOGGING_DOCUMENT_ID, documentId);
-        List<AllergyConditionVo> resultQuery = documentAllergyIntoleranceRepository.getAllergyIntoleranceStateFromDocument(documentId);
-        List<AllergyConditionBo> result = resultQuery.stream().map(AllergyConditionBo::new).collect(Collectors.toList());
-        log.debug(OUTPUT, result);
+		ReferableItemBo<AllergyConditionBo> result = getAllergyConditionBoReferableItemBo(documentId);
+		log.debug(OUTPUT, result);
         return result;
     }
 
-    @Override
+	private ReferableItemBo<AllergyConditionBo> getAllergyConditionBoReferableItemBo(Long documentId) {
+		List<AllergyConditionVo> resultQuery = documentAllergyIntoleranceRepository.getAllergyIntoleranceStateFromDocument(documentId);
+		List<AllergyConditionBo> allergies = resultQuery.stream().map(AllergyConditionBo::new).collect(Collectors.toList());
+		Boolean isReferred = documentReferableConceptRepository.isReferredIdByDocumentAndConceptId(documentId, EReferableConcept.ALLERGY.getId());
+		return new ReferableItemBo<>(allergies, isReferred);
+	}
+
+	@Override
     public List<MedicationBo> getMedicationStateFromDocument(Long documentId) {
         log.debug(LOGGING_DOCUMENT_ID, documentId);
         List<MedicationVo> resultQuery = documentMedicamentionStatementRepository.getMedicationStateFromDocument(documentId);
@@ -562,9 +577,13 @@ public class DocumentServiceImpl implements DocumentService {
 	@Override
 	public DocumentHealthcareProfessional createDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional) {
 		log.debug("Input parameters -> documentId {}, professional {}", documentId, professional);
-		DocumentHealthcareProfessional result = documentHealthcareProfessionalRepository.save(new DocumentHealthcareProfessional(professional.getId(), documentId, professional.getHealthcareProfessional().getId(), professional.getType().getId(), professional.getComments()));
+		DocumentHealthcareProfessional result = documentHealthcareProfessionalRepository.save(getDocumentHealthcareProfessional(documentId, professional));
 		log.debug("Output -> {}", result);
 		return result;	}
+
+	private DocumentHealthcareProfessional getDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional) {
+		return new DocumentHealthcareProfessional(professional.getId(), documentId, professional.getHealthcareProfessional().getId(), professional.getProfessionType().getId(), professional.getOtherProfessionTypeDescription(), professional.getComments());
+	}
 
 	@Override
 	public DocumentProsthesis createDocumentProsthesis(Long documentId, String description) {
@@ -660,6 +679,45 @@ public class DocumentServiceImpl implements DocumentService {
         log.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public void createDocumentRefersAllergy(Long documentId, Boolean refersAllergy) {
+		log.debug("Input parameters -> documentId {}, refersAllergy {}", documentId, refersAllergy);
+		saveReferableConcept(documentId, refersAllergy, EReferableConcept.ALLERGY.getId());
+		log.debug("Output -> Value saved successfully");
+	}
+
+	@Override
+	public void createDocumentRefersPersonalHistory(Long documentId, Boolean refersPersonalHistory) {
+		log.debug("Input parameters -> documentId {}, refersPersonalHistory {}", documentId, refersPersonalHistory);
+		saveReferableConcept(documentId, refersPersonalHistory, EReferableConcept.PERSONAL_HISTORY.getId());
+		log.debug("Output -> Value saved successfully");
+	}
+
+	@Override
+	public void createDocumentRefersFamilyHistory(Long documentId, Boolean refersFamilyHistory) {
+		log.debug("Input parameters -> documentId {}, refersPersonalHistory {}", documentId, refersFamilyHistory);
+		saveReferableConcept(documentId, refersFamilyHistory, EReferableConcept.FAMILY_HISTORY.getId());
+		log.debug("Output -> Value saved successfully");
+	}
+
+	@Override
+	public Optional<Document> getDocumentByIdAndTypeId(Long documentId, Short documentTypeId) {
+		log.debug("Input parameters -> documentid {}, documentTypeId {}", documentId, documentTypeId);
+		Optional<Document> result = documentRepository.getDocumentByIdAndTypeId(documentId, documentTypeId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	private void saveReferableConcept(Long documentId, Boolean isReferred, Short referableConceptId) {
+		if (isReferred != null)
+			documentReferableConceptRepository.save(parseDocumentReferableConcept(documentId, referableConceptId, isReferred));
+	}
+
+	private DocumentReferableConcept parseDocumentReferableConcept(Long documentId, Short referableConceptId, boolean isReferred) {
+		DocumentReferableConceptPK resultPK = new DocumentReferableConceptPK(documentId, referableConceptId);
+		return new DocumentReferableConcept(resultPK, isReferred);
+	}
 
 	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
 		var result = new DentalActionBo();

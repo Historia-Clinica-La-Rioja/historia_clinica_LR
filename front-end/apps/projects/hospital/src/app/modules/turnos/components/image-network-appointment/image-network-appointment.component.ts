@@ -98,6 +98,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	patientSummary: PatientSummary;
 	transcribedLabelOrder:string
+	HABILITAR_ATENDER_TURNO_MANUAL: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -122,6 +123,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly patientNameService: PatientNameService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL).subscribe((isOn: boolean) => this.HABILITAR_ATENDER_TURNO_MANUAL = isOn);
 	}
 
 	ngOnInit(): void {

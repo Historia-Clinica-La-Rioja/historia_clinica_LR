@@ -7,6 +7,7 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 	@Input() surgicalReport: SurgicalReportDto;
 	@Input() type: ProcedureTypeEnum;
 
-	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
 	procedures: HospitalizationProcedureDto[];
 	description: string;
@@ -33,7 +34,9 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialog: MatDialog,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly dateFormatPipe: DateFormatPipe
+		
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;

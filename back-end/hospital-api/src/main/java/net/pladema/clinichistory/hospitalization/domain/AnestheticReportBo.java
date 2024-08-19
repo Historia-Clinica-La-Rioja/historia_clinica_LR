@@ -35,6 +35,8 @@ import lombok.ToString;
 @ToString
 public class AnestheticReportBo implements IDocumentBo {
 
+    private Integer anestheticReportId;
+
     private Long id;
 
     private Integer patientId;
@@ -90,6 +92,10 @@ public class AnestheticReportBo implements IDocumentBo {
     private PostAnesthesiaStatusBo postAnesthesiaStatus;
 
     private String anestheticChart;
+
+    private boolean confirmed = false;
+
+    private Long previousDocumentId;
 
     @Override
     public Integer getPatientId() {

@@ -28,6 +28,10 @@ export class NewConsultationFamilyHistoryFormComponent {
     this.dialogRef.close()
   }
 
+  dateChanged(selectedDate: Date) {
+    this.data.familyHistoryService.getForm().controls.fecha.setValue(selectedDate);
+  }
+
 }
 
 interface FamilyHistoryData {

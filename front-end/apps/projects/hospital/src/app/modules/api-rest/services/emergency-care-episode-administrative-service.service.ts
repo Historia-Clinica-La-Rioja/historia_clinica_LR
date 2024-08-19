@@ -26,4 +26,9 @@ export class EmergencyCareEpisodeAdministrativeDischargeService {
 		const url = this.URL_PREFIX + episodeId + `/administrative-discharge/absence`;
 		return this.http.post<boolean>(url, {});
 	}
+
+	hasAdministrativeDischarge(episodeId: number): Observable<boolean> {
+		const url = `${this.URL_PREFIX}${episodeId}/administrative-discharge`;
+		return this.http.get<boolean>(url);
+	}
 }

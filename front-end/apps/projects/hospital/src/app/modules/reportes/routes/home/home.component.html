@@ -26,8 +26,7 @@
 					</mat-form-field>
 				</div>
 			</div>
-			<div
-				*ngIf="form.value.reportType === REPORT_TYPES_ID.MONTHLY || form.value.reportType === REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT || form.value.reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL   || form.value.reportType === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING">
+			<div *ngIf="hasToShowHierarchicalUnitSection">
 				<ng-container *ngIf="form.value.reportType != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING">
 					<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
 						<div fxFlex="50%" fxLayoutGap="5px">
@@ -61,53 +60,72 @@
 				</ng-container>
 
 				<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
-					<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
-						<div>
-							<mat-label [translate]="'reportes.form.START_DATE'"></mat-label>
-							<mat-label class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></mat-label>
+					<ng-container *ngIf="!hasDateRangeFilterWithFixedEndDate; else fixedEndDateRangePicker">
+						<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
+							<div>
+								<mat-label [translate]="'reportes.form.START_DATE'"></mat-label>
+								<mat-label class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></mat-label>
+							</div>
+							<mat-form-field appearance="outline">
+								<input formControlName="startDate" id="startDatePicker" matInput
+									[matDatepicker]="startDatePicker"
+									placeholder="{{'reportes.form.START_DATE_PLACEHOLDER' | translate}}" [min]="minDate"
+									[max]="maxStartDate(this.form.controls.endDate.value)" (dateChange)="checkValidDates(true)">
+								<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+								<mat-datepicker #startDatePicker></mat-datepicker>
+								<mat-error *ngIf="this.form.controls.startDate.hasError('required')"
+									[translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error *ngIf="this.form.controls.startDate.hasError('max')"
+									[translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_FECHA_FIN'">
+								</mat-error>
+								<mat-error *ngIf="this.form.controls.startDate.hasError('afterToday')"
+									[translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_HOY'">
+								</mat-error>
+							</mat-form-field>
 						</div>
-						<mat-form-field appearance="outline">
-							<input formControlName="startDate" id="startDatePicker" matInput
-								[matDatepicker]="startDatePicker"
-								placeholder="{{'reportes.form.START_DATE_PLACEHOLDER' | translate}}" [min]="minDate"
-								[max]="maxStartDate(this.form.controls.endDate.value)" (dateChange)="checkValidDates(true)">
-							<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-							<mat-datepicker #startDatePicker></mat-datepicker>
-							<mat-error *ngIf="this.form.controls.startDate.hasError('required')"
-								[translate]="'forms.REQUIRED'">
-							</mat-error>
-							<mat-error *ngIf="this.form.controls.startDate.hasError('max')"
-								[translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_FECHA_FIN'">
-							</mat-error>
-							<mat-error *ngIf="this.form.controls.startDate.hasError('afterToday')"
-								[translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_HOY'">
-							</mat-error>
-						</mat-form-field>
-					</div>
 
-					<div id="end-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
-						<div>
-							<mat-label [translate]="'reportes.form.END_DATE'"></mat-label>
-							<span class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></span>
+						<div id="end-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
+							<div>
+								<mat-label [translate]="'reportes.form.END_DATE'"></mat-label>
+								<span class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></span>
+							</div>
+							<mat-form-field appearance="outline">
+								<input formControlName="endDate" id="endDatePicker" matInput [matDatepicker]="endDatePicker"
+									placeholder="{{'reportes.form.END_DATE_PLACEHOLDER' | translate}}"
+									(dateChange)="checkValidDates(false)" [max]="maxEndDate" [min]="minEndDate">
+								<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+								<mat-datepicker #endDatePicker></mat-datepicker>
+								<mat-error *ngIf="this.form.controls.endDate.hasError('required')"
+									[translate]="'forms.REQUIRED'">
+								</mat-error>
+								<mat-error *ngIf="this.form.controls.endDate.hasError('min')"
+									[translate]="'reportes.form.errors.FECHA_FIN_MIN'">
+								</mat-error>
+							</mat-form-field>
 						</div>
-						<mat-form-field appearance="outline">
-							<input formControlName="endDate" id="endDatePicker" matInput [matDatepicker]="endDatePicker"
-								placeholder="{{'reportes.form.END_DATE_PLACEHOLDER' | translate}}"
-								(dateChange)="checkValidDates(false)" [max]="maxEndDate" [min]="minEndDate">
-							<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-							<mat-datepicker #endDatePicker></mat-datepicker>
-							<mat-error *ngIf="this.form.controls.endDate.hasError('required')"
-								[translate]="'forms.REQUIRED'">
-							</mat-error>
-							<mat-error *ngIf="this.form.controls.endDate.hasError('min')"
-								[translate]="'reportes.form.errors.FECHA_FIN_MIN'">
-							</mat-error>
-						</mat-form-field>
-					</div>
+					</ng-container>
+
+					<ng-template #fixedEndDateRangePicker>
+						<div fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
+							<div>
+								<mat-label [translate]="'reportes.form.DAYS_RANGE'"></mat-label>
+								<span class="required-field" [translate]="'reportes.form.REQUIRED_FIELD'"></span>
+							</div>
+							<div>
+								<app-date-range-picker appearance="outline" [min]="minDate" [max]="maxFixedEndDate"
+									[dateRange]="getInitialDateRange()" [fixedRangeDays]="oneWeekRange" (dateRangeChange)="onDateRangeChange($event)">
+								</app-date-range-picker>
+								<mat-error *ngIf="this.form.controls.startDate.hasError('afterToday')"
+									[translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_HOY'">
+								</mat-error>
+							</div>
+						</div>
+					</ng-template>
 				</div>
 
 				<div fxLayout="row" fxLayoutGap="30px">
-					<div id="specialty" fxFlex="50%" fxLayoutGap="5px">
+					<div *ngIf="form.value.reportType !== REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT" id="specialty" fxFlex="50%" fxLayoutGap="5px">
 						<mat-label [translate]="'reportes.form.SPECIALTY'"></mat-label>
 
 						<app-typeahead [placeholder]="'reportes.form.SPECIALTY_PLACEHOLDER'"
@@ -125,7 +143,7 @@
 					</div>
 				</div>
 
-				<div *ngIf="form.value.reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL" fxLayout="row"
+				<div *ngIf="hasToShowAppointmentStateFilter" fxLayout="row"
 					fxLayoutGap="30px" class="padding-top">
 					<div id="appointment-state" fxFlex="50%" fxLayout="column">
 						<div>

@@ -50,19 +50,19 @@ public class DocumentDto {
 
     private List<DiagnosisDto> diagnosis = new ArrayList<>();
 
-    private List<PersonalHistoryDto> personalHistories = new ArrayList<>();
+    private ReferableItemDto<PersonalHistoryDto> personalHistories;
 
     private List<ProblemDto> problems = new ArrayList<>();
 
     private List<ProcedureDto> procedures = new ArrayList<>();
 
-    private List<HealthHistoryConditionDto> familyHistories = new ArrayList<>();
+    private ReferableItemDto<HealthHistoryConditionDto> familyHistories;
 
     private  List<MedicationDto> medications = new ArrayList<>();
 
     private List<ImmunizationDto> immunizations= new ArrayList<>();
 
-    private List<AllergyConditionDto> allergies = new ArrayList<>();
+    private ReferableItemDto<AllergyConditionDto> allergies;
 
     private List<DiagnosticReportDto>  diagnosticReports = new ArrayList<>();
 

@@ -14,7 +14,7 @@ import { map, Observable, of, Subscription, switchMap, take } from 'rxjs';
 import { StudyAppointment } from '../../models/models';
 import { toStudyAppointment } from '../../utils/mapper.utils';
 import { AddConclusionFormComponent } from '../../dialogs/add-conclusion-form/add-conclusion-form.component';
-import { ConceptTypeaheadSearchComponent } from '@historia-clinica/components/concept-typeahead-search/concept-typeahead-search.component';
+import { ConceptTypeaheadSearchComponent } from 'projects/hospital/src/app/modules/hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SaveTemplateComponent, TemplateData } from '../../dialogs/save-template/save-template.component';
 import { AccountService } from '@api-rest/services/account.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
@@ -29,7 +29,7 @@ import { DeleteTemplateComponent } from '../../dialogs/delete-template/delete-te
 	styleUrls: ['./report-study.component.scss']
 })
 export class ReportStudyComponent implements OnInit, OnDestroy {
-	
+
 	@ViewChild(ConceptTypeaheadSearchComponent) child:ConceptTypeaheadSearchComponent;
 	form: FormGroup;
 	submitted = false;

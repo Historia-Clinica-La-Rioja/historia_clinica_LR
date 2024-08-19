@@ -46,6 +46,7 @@ const PAGE_MIN_SIZE = 10;
 export class WorklistByTechnicalComponent implements OnInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(WorklistFiltersComponent) worklistFiltersComponent: WorklistFiltersComponent;
+
 	equipments: EquipmentDto[] = [];
 	modalities$: Observable<ModalityDto[]>;
 	allEquipments: EquipmentDto[] = [];
@@ -98,6 +99,9 @@ export class WorklistByTechnicalComponent implements OnInit {
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(isOn => {
 			this.permission = isOn;
+		})
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn;
 		})
 	}
 
@@ -191,8 +195,10 @@ export class WorklistByTechnicalComponent implements OnInit {
 
 	setSelectedDate() {
 		this.startPage = 0;
-		this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
-		this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
+		const startDate = this.filtersForm.get('datePicker').get('start').value;
+		this.startDate = startDate ? toApiFormat(startDate) : null;
+		const endDate = this.filtersForm.get('datePicker').get('end').value
+		this.endDate = endDate ? toApiFormat(endDate) : null
 		if (this.startDate && this.endDate && this.equipmentId) {
 			this.getAppointments(this.equipmentId);
 		}
@@ -310,21 +316,21 @@ export class WorklistByTechnicalComponent implements OnInit {
 		this.pageSlice = this.detailedAppointments.slice(this.startPage, this.endPage);
 	}
 
-	finishStudy(appointment: EquipmentAppointmentListDto, patientFullName: string ) {
+	finishStudy(appointment: EquipmentAppointmentListDto, patientFullName: string) {
 		this.selectedAppointment = appointment;
 		this.openFinishStudyDialog(appointment, patientFullName);
 	}
 
 	private openFinishStudyDialog(appointment: EquipmentAppointmentListDto, patientFullName: string) {
-        const data: StudyInfo = {
-            appointmentId: this.selectedAppointment.id,
-            patientId: this.selectedAppointment.patient.id,
-            studyName: appointment.studyName,
-            isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
-            hasOrder: !!appointment.serviceRequestId,
-            patient: patientFullName,
+		const data: StudyInfo = {
+			appointmentId: this.selectedAppointment.id,
+			patientId: this.selectedAppointment.patient.id,
+			studyName: appointment.studyName,
+			isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
+			hasOrder: !!appointment.serviceRequestId,
+			patient: patientFullName,
 			studies: appointment.studies.join(', ')
-        }
+		}
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
 			width: '38%',
 			autoFocus: false,

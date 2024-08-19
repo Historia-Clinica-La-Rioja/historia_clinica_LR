@@ -10,6 +10,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
@@ -68,6 +69,7 @@ public class CreateServiceRequestPdf {
 	private final CreateDeliveryOrderBaseForm createDeliveryOrderBaseForm;
 	private final CreateDeliveryOrderFormContext createDeliveryOrderFormContext;
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
+	private final FeatureFlagsService featureFlagsService;
 
     public GeneratedBlobBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
@@ -238,6 +240,7 @@ public class CreateServiceRequestPdf {
         ctx.put("institution", institutionDto);
         var date = serviceRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         ctx.put("requestDate", date);
+		ctx.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 
         log.trace("Output -> {}", ctx);
         return ctx;

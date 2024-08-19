@@ -1,0 +1,10 @@
+package net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository;
+
+import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository.entity.TranscribedServiceRequestDiagnosticReport;
+import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository.entity.TranscribedServiceRequestDiagnosticReportPK;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TranscribedServiceRequestDiagnosticReportRepository extends JpaRepository<TranscribedServiceRequestDiagnosticReport, TranscribedServiceRequestDiagnosticReportPK> {
+}

@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
@@ -80,6 +81,8 @@ public class AuditableContextBuilder {
 	
 	private final DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder;
 
+	private final SharedAddressPort sharedAddressPort;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -100,7 +103,8 @@ public class AuditableContextBuilder {
 			RoomFinder roomFinder,
 			DoctorsOfficeFinder doctorsOfficeFinder,
 			ShockRoomFinder shockRoomFinder,
-			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder) {
+			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder,
+			SharedAddressPort sharedAddressPort) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -121,6 +125,7 @@ public class AuditableContextBuilder {
 		this.doctorsOfficeDescriptionFunction = doctorsOfficeFinder::getDoctorsOfficeDescription;
 		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
 		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
+		this.sharedAddressPort = sharedAddressPort;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -154,6 +159,7 @@ public class AuditableContextBuilder {
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId, Short documentType) {
 		var patientDto = basicDataFromPatientLoader.apply(patientId);
 		contextMap.put("patient", patientDto);
+		contextMap.put("patientCompleteName", patientDto.getCompletePersonName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 		contextMap.put("patientAge", calculatePatientAge(patientDto));
 
 		contextMap.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
@@ -238,8 +244,10 @@ public class AuditableContextBuilder {
 	}
 
 	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
-
-		ctx.put("diagnosticReportList", document.getDiagnosticReports());
+		var diagnosticReportList = document.getDiagnosticReports().stream()
+				.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+				.collect(Collectors.joining(", "));
+		ctx.put("diagnosticReportList", diagnosticReportList);
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionDataById(document.getInstitutionId()));
 		ctx.put("institutionAddress",sharedInstitutionPort.fetchInstitutionAddress(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
@@ -286,6 +294,11 @@ public class AuditableContextBuilder {
 		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
 		ctx.put("recipeNumber", recipeNumberWithDomain);
 
+		var recipeUuidWithDomain = completeDomain(recipeDomain.toString()) + "-" + document.getUuid().toString();
+		var recipeUuidBarCode = generateDigitalRecipeBarCode(recipeUuidWithDomain);
+		ctx.put("recipeUuidBarCode", recipeUuidBarCode);
+		ctx.put("recipeUuid", recipeUuidWithDomain);
+
 		var professionalInformation = authorFromDocumentFunction.apply(document.getId());
 		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(document.getClinicalSpecialtyId()))).findFirst();
 
@@ -310,6 +323,8 @@ public class AuditableContextBuilder {
 		ctx.put("logo", generatePdfImage("pdf/digital_recipe_logo.png"));
 		ctx.put("headerLogos", generatePdfImage("pdf/digital_recipe_header_logo.png"));
 		ctx.put("isArchived", document.getIsArchived());
+		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
+		ctx.put("patientAddress", sharedAddressPort.fetchPatientCompleteAddress(document.getPatientId()));
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {
@@ -370,5 +385,9 @@ public class AuditableContextBuilder {
 		return personAge.getMonths() + (personAge.getMonths() == 1 ? " mes " : " meses ") + personAge.getDays() + (personAge.getDays() == 1 ? " día" : " días" );
 	}
 
+	private String completeDomain(String domain) {
+		return String.format("%0" + (11 - domain.length()) + "d%s", 0, domain);
+
+	}
 }
 

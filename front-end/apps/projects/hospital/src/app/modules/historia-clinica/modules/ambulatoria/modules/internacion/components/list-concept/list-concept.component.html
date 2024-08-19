@@ -3,7 +3,7 @@
 		<ng-container *ngFor="let item of concepts; index as i; last as isLast">
 			<div fxLayout="row" fxLayoutGap="15px" id="add">
 				<mat-checkbox [checked]="item.isAdded" (change)="updateAllChecked(item)">
-					<span class="capitalize">{{ item.concept.snomed.pt | titlecase}}</span>
+					<span class="capitalize snomed-item">{{ item.concept.snomed.pt | titlecase}}</span>
 					<em *ngIf="item.concept?.administrationDate" class="mat-caption gray-caption">
 						{{ item.concept.administrationDate | date: 'shortDate' }}
 					</em>

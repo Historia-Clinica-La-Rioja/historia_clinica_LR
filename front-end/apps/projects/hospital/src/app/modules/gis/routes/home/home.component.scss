@@ -1,0 +1,54 @@
+.space-between {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.container {
+    display: flex;
+}
+
+.institution-address-container {
+    width: 45%;
+}
+
+.m-top {
+    margin-top: 1rem;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-stepper {
+    padding: 2rem;
+}
+
+.map-container {
+    width: 100%;
+    height: auto;
+}
+
+app-loading {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+}
+
+app-hide-show-toggle {
+    min-width: 12%;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.institution-description {
+    padding: 3.5rem;
+    background-color: white;
+    height: fit-content;
+}

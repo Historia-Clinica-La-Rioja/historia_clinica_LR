@@ -4,7 +4,7 @@ import { TableModel } from '@presentation/components/table/table.component';
 import { ImmunizationDto, EvolutionNoteDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AddInmunizationComponent, Immunization } from '../../../../dialogs/add-inmunization/add-inmunization.component';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
@@ -12,6 +12,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-vacunas-summary',
@@ -34,7 +35,8 @@ export class VacunasSummaryComponent implements OnChanges {
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly snackBarService: SnackBarService,
 		private readonly permissionsService: PermissionsService,
-		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService
+		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.isNursingEvolutionNote = !anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD]) && anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
@@ -91,7 +93,7 @@ export class VacunasSummaryComponent implements OnChanges {
 				{
 					columnDef: 'fecha',
 					header: 'Fecha de vacunación',
-					text: (row) => row.administrationDate ? momentFormat(momentParseDate(row.administrationDate), DateFormat.VIEW_DATE) : undefined
+					text: (row) => row.administrationDate ? this.dateFormatPipe.transform(dateISOParseDate(row.administrationDate), 'date') : undefined
 				}
 			],
 			data

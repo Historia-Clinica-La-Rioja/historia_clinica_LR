@@ -13,6 +13,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
 const REGULAR_DOCUMENT: number = 1;
@@ -41,8 +42,9 @@ export class AttachDocumentPopupComponent implements OnInit {
 	showSurgicalInfo = false;
 	isAdministrative: boolean = false;
 	hasConsentDocumentError: string;
-	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
+	isLoading = false;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -54,6 +56,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private readonly dialog: MatDialog,
+		private readonly dateFormatPipe: DateFormatPipe,
 		@Inject(MAT_DIALOG_DATA) public data
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
@@ -145,18 +148,21 @@ export class AttachDocumentPopupComponent implements OnInit {
 
 	save() {
 		if (!this.form.valid) return;
-
+		this.isLoading = true;
 		const formDataFile: FormData = new FormData();
 		formDataFile.append('file', this.file);
 		const consentId: number =  this.consentSelectedType?.consentId ? this.consentSelectedType.consentId : REGULAR_DOCUMENT;
 		this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value, consentId)
 			.subscribe(resp => {
-				if (resp)
+				if (resp) {
 					this.dialogRef.close()
-				}, (error: ApiErrorMessageDto) => {
-					this.form.controls.type.setErrors({invalid: true});
-					this.hasConsentDocumentError = error.text;
-				});
+				}
+				this.isLoading = false;
+			}, (error: ApiErrorMessageDto) => {
+				this.form.controls.type.setErrors({invalid: true});
+				this.hasConsentDocumentError = error.text;
+				this.isLoading = false;
+			});
 	}
 
 	setControlTouched(control) {

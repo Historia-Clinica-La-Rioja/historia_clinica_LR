@@ -11,6 +11,7 @@ import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
+import net.pladema.emergencycare.triage.application.fetchlasttriagebyemergencycareepisodeid.FetchLastTriageByEmergencyCareEpisodeId;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
@@ -31,12 +32,14 @@ public class GetAllEpisodeListByFilter {
 	private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
 
 	private InstitutionExternalService institutionExternalService;
+	private FetchLastTriageByEmergencyCareEpisodeId fetchLastTriageByEmergencyCareEpisodeId;
 
 	public Page<EmergencyCareBo> run(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		log.debug("Input parameters -> institutionId {}, filter {}, pageable {}", institutionId, filter, pageable);
 		Page<EmergencyCareBo> result = emergencyCareEpisodeListStorage.getAllEpisodeListByFilter(institutionId, filter, pageable);
 		result.forEach(ec -> {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
+			ec.setTriage(fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId()));
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);

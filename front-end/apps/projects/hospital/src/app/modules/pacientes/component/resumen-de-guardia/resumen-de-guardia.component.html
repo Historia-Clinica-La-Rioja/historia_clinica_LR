@@ -17,13 +17,15 @@
             <div fxLayout="row" fxLayoutGap="5px">
                 <strong>{{ 'ambulatoria.paciente.guardia.REASONS' | translate }}:</strong>
                 <div fxLayout="column" fxLayoutGap="1px">
-                    <div *ngIf="responseEmergencyCare?.reasons?.length else noInfo">
-                        <div class="content-primary" *ngFor="let reason of responseEmergencyCare.reasons; index as i">
-                            <span id="{{ 'reason_' + i }}">{{ reason.pt }}</span>
-                        </div>
-                    </div>
+					<div class="content-primary" *ngIf="responseEmergencyCare?.reason else noInfo">
+						<span id="reason" class="wrap-reason">{{ responseEmergencyCare?.reason }}</span>
+					</div>
                 </div>
             </div>
+
+            <app-title-description *ngIf="responseEmergencyCare?.patient?.typeId === TEMPORARY_EMERGENCY_CARE && responseEmergencyCare?.patient?.patientDescription" 
+                [title]="'ambulatoria.paciente.guardia.IDENTIFYNG_DETAIL'"
+                [text]="responseEmergencyCare.patient.patientDescription"></app-title-description>
 
             <mat-divider inset></mat-divider>
 

@@ -51,7 +51,7 @@
 								</div>
 								<div fxFlex="10" class="padding-to-align-chip">
 									<ng-container *ngIf="vaccine.administrationDate">
-										<span>{{vaccine.administrationDate | viewDate }}</span>
+										<span>{{vaccine.administrationDate | isoToDate | dateFormat: 'date' }}</span>
 									</ng-container>
 								</div>
 								<div fxFlex="5">

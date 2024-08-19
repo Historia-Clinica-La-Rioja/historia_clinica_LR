@@ -17,11 +17,11 @@ import org.mapstruct.Named;
 public interface EquipmentDiaryMapper {
 
 	@Named("toEquipmentDiaryBo")
-	@Mapping(target = "equipmentDiaryOpeningHours", source = "equipmentDiaryOpeningHours")
+	@Mapping(target = "diaryOpeningHours", source = "equipmentDiaryOpeningHours")
 	EquipmentDiaryBo toEquipmentDiaryBo(EquipmentDiaryADto equipmentDiaryADto);
 
 	@Named("toCompleteEquipmentDiaryDto")
-	@Mapping(target = "equipmentDiaryOpeningHours", source = "equipmentDiaryOpeningHours")
+	@Mapping(target = "equipmentDiaryOpeningHours", source = "diaryOpeningHours")
 	CompleteEquipmentDiaryDto toCompleteEquipmentDiaryDto(CompleteEquipmentDiaryBo completeEquipmentDiaryBo);
 
 }

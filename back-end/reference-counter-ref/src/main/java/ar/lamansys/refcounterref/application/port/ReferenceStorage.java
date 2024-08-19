@@ -19,7 +19,7 @@ public interface ReferenceStorage {
 
     List<ReferenceProblemBo> getReferencesProblems(Integer patientId, List<Short> loggedUserRoleIds);
 
-    List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId);
+    List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId, List<Short> userRoleIds);
 
 	Optional<ReferenceDataBo> getReferenceData(Integer referenceId);
 

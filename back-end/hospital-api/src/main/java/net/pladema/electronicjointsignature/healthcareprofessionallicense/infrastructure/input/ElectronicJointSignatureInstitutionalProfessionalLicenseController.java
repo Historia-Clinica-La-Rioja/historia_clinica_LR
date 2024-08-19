@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "Joint signature professionals licenses", description = "This controller is meant to be used to obtain professionals license information")
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR, ENFERMERO')")
 @RequestMapping("/institution/{institutionId}/electronic-joint-signature/get-current-institution-professionals")
 @RestController
 public class ElectronicJointSignatureInstitutionalProfessionalLicenseController {

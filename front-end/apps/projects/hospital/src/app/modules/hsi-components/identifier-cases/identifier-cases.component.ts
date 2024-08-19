@@ -49,7 +49,10 @@ export enum IDENTIFIER_CASES {
 	SERVICE = 'Servicio',
 	SECTOR = 'Sector',
 	ROOM = 'Sala',
-	HIERARCHICAL_UNIT = 'Unidad jerárquica'
+	BED = 'Cama', 
+	HIERARCHICAL_UNIT = 'Unidad jerárquica',
+	SCOPE = 'Ambito',
+	PATIENT = 'Paciente'
 }
 
 const institution: IconLegend = {
@@ -68,7 +71,7 @@ const problem: IconLegend = {
 }
 
 const professional: IconLegend = {
-	icon: 'person',
+	icon: 'medical_information',
 	legend: 'Profesional',
 }
 
@@ -122,11 +125,25 @@ const room: IconLegend = {
 	legend: 'Sala',
 }
 
+const bed: IconLegend = {
+	icon: 'hotel',
+	legend: 'Cama',
+}
+
 const hierarchicalUnit: IconLegend = {
 	icon: 'lan',
 	legend: 'Unidad jerárquica',
 }
 
+const scope: IconLegend = {
+	icon: 'add_box',
+	legend: 'Ámbito',
+}
+
+const patient: IconLegend = {
+	icon: 'person',
+	legend: 'Paciente',
+}
 
 const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.INSTITUTION]: institution,
@@ -143,5 +160,8 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.SERVICE]: service,
 	[IDENTIFIER_CASES.SECTOR]: sector,
 	[IDENTIFIER_CASES.ROOM]: room,
+	[IDENTIFIER_CASES.BED]: bed,
 	[IDENTIFIER_CASES.HIERARCHICAL_UNIT]: hierarchicalUnit,
+	[IDENTIFIER_CASES.SCOPE]: scope,
+	[IDENTIFIER_CASES.PATIENT]: patient,
 }

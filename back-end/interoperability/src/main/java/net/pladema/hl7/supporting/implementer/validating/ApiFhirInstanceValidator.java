@@ -16,8 +16,11 @@ import net.pladema.hl7.supporting.terminology.support.DeviceProfile;
 import net.pladema.hl7.supporting.terminology.support.DocumentReferenceProfile;
 import net.pladema.hl7.supporting.terminology.support.GeneralProfile;
 import net.pladema.hl7.supporting.terminology.support.ImmunizationProfile;
+import net.pladema.hl7.supporting.terminology.support.MedicationRequestProfile;
 import net.pladema.hl7.supporting.terminology.support.MedicationStatementProfile;
 import net.pladema.hl7.supporting.terminology.support.PatientProfile;
+import net.pladema.hl7.supporting.terminology.support.ServiceRequestProfile;
+
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
@@ -63,6 +66,8 @@ public class ApiFhirInstanceValidator extends FhirInstanceValidator {
         profiles.addStructureDefinition(MedicationStatementProfile.structureDefinition());
         profiles.addStructureDefinition(PatientProfile.structureDefinition());
         profiles.addStructureDefinition(DocumentReferenceProfile.structureDefinition());
+		profiles.addStructureDefinition(MedicationRequestProfile.structureDefinition());
+		profiles.addStructureDefinition(ServiceRequestProfile.structureDefinition());
 
         return profiles;
     }

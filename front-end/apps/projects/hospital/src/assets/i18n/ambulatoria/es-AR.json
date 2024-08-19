@@ -50,6 +50,7 @@
                         "NURSING": "Enfermería",
                         "EPICRISIS_DRAFT": "Continuar epicrisis",
                         "ANESTHETIC_REPORT": "Parte anestésico",
+						"ANESTHETIC_REPORT_DRAFT": "Continuar parte anestésico",
 						"SURGICAL_REPORT": "Parte quirúrgico"
                     }
                 },
@@ -209,6 +210,7 @@
                     "ADD": "Agregar alergia",
                     "ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
+                    "NO_REFER": "No refiere",
                     "form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },
@@ -301,16 +303,18 @@
 				},
 				"surgical-team": {
 					"TITLE": "Equipo Quirófano",
+                    "TITLE_POPUP": "Agregar integrante al equipo",
+					"CARD_TITLE": "Otros integrantes del equipo registrados",
 					"CIRUJANO": "Cirujano",
-					"AYUDANTE": "Ayudante",
-					"ANESTESIOLOGO": "Anestesiólogo",
-					"CARDIOLOGO": "Cardiólogo",
-					"INSTRUMENTADOR": "Instrumentador",
-					"OBSTETRA": "Obstetra",
-					"PEDIATRA": "Pediatra",
 					"DNI": "DNI",
 					"MATRICULA": "Matrícula",
-					"ADD_AYUDANTE": "+ Agregar ayudante"
+					"ADD_PROFESSIONAL": "+ Agregar otro integrante al equipo",
+                    "PROFESSION_TYPE": "Tipo de integrante",
+                    "LABEL_PROFESSION_TYPE": "Seleccione tipo de integrante",
+                    "OTHER_PROFESSION": "Otro tipo de integrante",
+                    "PROFESSIONAL": "Profesional",
+                    "LABEL_SEARCH_PROFESSIONAL":"Buscar por nombre y apellido",
+                    "ERROR_PROFESSIONAL_REPEATED":"Este profesional ya es miembro del equipo"
 				},
 				"procedures": {
 					"TITLE": "Procedimientos",
@@ -320,12 +324,18 @@
 					"SKIN_CLOSURE": "Cierre de piel",
 					"ADD_PROCEDURE": "Agregar procedimiento",
 					"REGISTERED_PROCEDURES": "Procedimientos registrados",
-					"ADD_ANESTHESIA": "Agregar anestesia",
-					"ADDED_ANESTHESIAS": "Anestesias agregadas",
-					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada",
-					"ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
-					"DIAGNOSIS": "Diagnóstico Post-Operatorio"
+					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada"
 				},
+               "post-diagnosis": {
+                    "TITLE":"Diagnósticos Post-Operatorios",
+                    "ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
+					"DIAGNOSIS": "Diagnósticos Post-Operatorios"
+                },
+                "anesthesia": {
+                    "TITLE": "Técnica anestésica",
+                    "ADD_ANESTHESIA": "Agregar técnica anestésica",
+					"ADDED_ANESTHESIAS": "Anestesias agregadas"
+                },
 				"exam": {
 					"TITLE": "Examen Anatomopatológico",
 					"PATOLOGO": "Patólogo"
@@ -526,10 +536,18 @@
                 },
                 "new_prescription_dialog": {
                     "MEDICATION_TITLE": "Nueva medicación",
+                    "MEDICATION_TITLE_FF": "Crear receta electrónica",
+                    "PATIENT_LABEL": "Paciente",
+                    "PRESCRIPTION_LABEL": "Receta",
+                    "MEDICATION_LABEL": "Medicación",
+                    "PATIENT_DATA": "Datos del paciente",
+                    "PRESCRIPTION_DATA": "Datos de la receta",
                     "ADD_MEDICATION_LABEL": "Agregar medicación",
                     "STUDY_TITLE": "Nueva orden",
                     "ADD_STUDY_LABEL": "Agregar estudio",
+                    "MEDICAL_COVERAGE_LABEL": "Cobertura médica",
                     "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+                    "SELECT_SPECIALTY": "Seleccione especialidad",
                     "WITHOUT_RECIPE": "Sin receta",
                     "UPDATE_COVERAGE": "Actualizar cobertura",
                     "ADMINISTRATION_TIME_DAYS": "Durante: {{days}} días",
@@ -543,18 +561,22 @@
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",
                     "PROLONGED_TREATMENT": "Tratamiento prolongado",
                     "ARCHIVED": "Archivada",
-                    "POSDATADAS_LABEL": "Repeticiones (posdatadas)",
+                    "POSDATADAS_LABEL": "Repeticiones (Posdatadas)",
                     "POSDATADAS_HINT_SINGULAR": "Se generará {{posdatadas}} receta posdatada, adicional a la original",
                     "POSDATADAS_HINT_PLURAL": "Se generarán {{posdatadas}} recetas posdatadas, adicionales a la original",
                     "POSDATADAS_ERROR": "Las posdatadas deben ir entre {{min}} y {{max}}",
+                    "POSDATADAS_EXAMPLE": "1",
                     "SPECIALTY": "Especialidad",
                     "SPECIALTY_REQUIRED": "El profesional no tiene especialidades asociadas",
+                    "PHONE": "Teléfono*",
                     "PHONE_PREFIX": "Prefijo",
-                    "PHONE_NUMBER": "Teléfono del paciente",
-                    "COUNTRY": "País",
-					"PROVINCE": "Provincia",
-					"LOCALITY": "Localidad",
-                    "CITY": "Ciudad",
+                    "PHONE_NUMBER": "Número",
+                    "SELECT": "Seleccione",
+                    "COUNTRY": "País*",
+					"PROVINCE": "Provincia*",
+					"LOCALITY": "Localidad*",
+                    "CITY": "Ciudad*",
+                    "ADDRESS": "Domicilio*",
 					"STREET": "Calle",
                     "STREET_NUMBER": "Número",
                     "MEDICAL_COVERAGE_SUGGESTION": "Atención: no está cargado el número de afiliado",
@@ -586,6 +608,7 @@
                 "complete_study_dialog": {
                     "TITLE": "Completar estudio",
                     "COMPLETE_BUTTON": "Completar",
+					"COMPLETE_PARTIAL_BUTTON": "Completar parcialmente",
                     "OBSERVATIONS_LABEL": "Observaciones",
                     "OBSERVATIONS_PLACEHOLDER": "Descripción de los resultados",
                     "UPLOAD_FILES": "Adjuntar archivos"
@@ -663,6 +686,7 @@
                 "INTERNMENT_MEDICAL_STUDY": "Estudio solicitado durante internación",
                 "study_state": {
                     "PENDING": "Pendiente",
+                    "PARTIAL": "Completado Parcialmente",
                     "COMPLETED": "Completo"
                 },
                 "sections": {
@@ -675,6 +699,9 @@
                     "ADVICE": "Asesoramiento",
                     "EDUCATION": "Educación"
                 },
+				"select_template": {
+                    "TITLE": "Plantilla de resultados"
+				},
                 "dialog": {
                     "TITLE_DELETE_STUDY_CONFIRM": "¿Seguro que desea eliminar el estudio?"
                 }
@@ -686,7 +713,7 @@
                 "TAB_LABEL": "Guardia",
                 "SUMMARY_TOOLTIP": "Resumen de guardia",
                 "ID": "ID",
-                "REASONS": "Motivos de consulta",
+                "REASONS": "Motivo de ingreso",
                 "ENTRANCE": "Ingreso",
                 "POLICE_INTERVENTION": "Intervención policial",
                 "UBICACION": "Ubicación",
@@ -703,7 +730,8 @@
                 "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
                 "HISTORIAL_TRIAGE": "Historial de triages",
                 "NUEVO_TRIAGE": "Nuevo triage",
-                "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo"
+                "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo",
+                "IDENTIFYNG_DETAIL": "Detalle identificatorio"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
@@ -915,7 +943,7 @@
                 },
                 "dialog": {
                     "TEXT_FREE_LABEL":"Texto libre",
-                    "SAVE": "Guardar situación de violencia",
+                    "CONFIRM": "Confirmar",
                     "SUCCESS": "Episodio de violencia cargado exitosamente",
                     "ERROR_FORM": "Faltan completar campos",
                     "expanded-person-information": {
@@ -940,6 +968,9 @@
                             "QUESTION_7": "¿En qué institución?",
                             "QUESTION_8": "¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que lo requiera?",
                             "QUESTION_9": "¿En qué sector?"
+                        },
+                        "placeholders": {
+                            "WRITE_INSTITUTIONS_NAME": "Escriba nombre de institución"
                         }
                     },
                     "new-violence-episode": {
@@ -960,6 +991,7 @@
                         "TITLE": "Acciones implementadas",
                         "SUBTITLE_1": "Articulación al interior del sistema de salud",
                         "SUBTITLE_2": "Articulación al interior del establecimiento de salud",
+                        "MORE_DEVICES": "(+{{ amountOfDevices }} más)",
                         "questions": {
                             "QUESTION_1": "¿Ante qué área/organismo?",
                             "QUESTION_2": "Nombre de área/organismo",
@@ -974,12 +1006,22 @@
                             "QUESTION_11": "Nombre de autoridad/organismo",
                             "QUESTION_12": "¿Se registra violencia sexual?",
                             "QUESTION_13": "Acciones implementadas"
+                        },
+                        "placeholders": {
+                            "SELECT_WHICH_AREA_ORGANISM": "Seleccione ante que área/organismo",
+                            "SELECT_WICH_ESTABLISHMENT": "Seleccione que establecimiento",
+                            "SELECT_WICH_ORGANIZATION": "Seleccione ante que organismo",
+                            "SELECT_WICH_AUTHORITY_ORGANISM": "Seleccione ante que autoridad/organismo",
+                            "SELECT_DEVICES": "Seleccione dispositivo/s"
                         }
                     },
                     "relevant-information": {
                         "TITLE": "Información relevante",
                         "questions": {
                             "QUESTION_1": "Observaciones"
+                        },
+                        "placeholders": {
+                            "WRITE_OBSERVATIONS_CONSIDERED_NECESSARY": "Escriba observaciones que considere necesarias"
                         }
                     },
                     "violent-person-information":{
@@ -1081,6 +1123,7 @@
 			"ERROR": "La referencia asociada al estudio está esperando ser aprobada",
 			"ERROR_TITLE": "No se pudo completar el estudio",
 			"COMPLETE_BUTTON": "Completar",
+			"COMPLETE_PARTIAL_BUTTON": "Completar parcialmente",
 			"UPLOAD_FILES": "Adjuntar archivos",
 			"OK_BUTTON": "Aceptar",
             "SPECIALTIES": "Especialidades",
@@ -1092,6 +1135,15 @@
 		},
 		"reference-request-data": {
 			"TITLE": "Datos de referencia"
+		},
+	    "complete-info": {
+		    "RESULTS_TEMPLATE": "Plantillas de resultados",
+		    "SUCCESS": "Estudio parcialmente completado",
+		    "ERROR": "Error al completar un estudio parcialmente",
+			"TITLE": "Observaciones y archivos adjuntos no se guardarán",
+			"CONTENT": "Si “completa parcialmente” el estudio las observaciones y los archivos adjuntos no quedarán guardados. ¿Desea completar parcialmente de todos modos?",
+			"OK_BUTTON" : "Si, completar",
+			"CANCEL": "No, cancelar"
 		}
     }
 }

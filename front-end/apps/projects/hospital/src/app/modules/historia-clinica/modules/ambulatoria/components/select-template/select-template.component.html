@@ -1,0 +1,25 @@
+<div class="template-values" fxLayout="column">
+	<span mat-line class="mat-h3 capitalize-first-letter">
+		{{template.name}}
+	</span>
+
+	<mat-form-field appearance="outline" id="procedure-templates">
+		<mat-label>{{ 'ambulatoria.paciente.studies.select_template.TITLE' | translate}} </mat-label>
+		<mat-select [disabled]="template.preloadValues" [(value)]="template.preloadedSelectedTemplate"
+			(selectionChange)="onSelect($event.value, template.id)">
+			<mat-option *ngFor="let t of template.form" [value]="t">
+				{{ t.description }}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<ng-container *ngIf="(selectedTemplate$ | async) as s">
+
+		<mat-card-content>
+			<app-procedure-template-form [preload]="template.preloadValues" [template]="s"
+				(valueChange)="changeValues($event,template.id)">
+			</app-procedure-template-form>
+		</mat-card-content>
+
+	</ng-container>
+</div>

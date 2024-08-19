@@ -8,6 +8,8 @@ import java.util.List;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +49,7 @@ public class BookingByInstitutionPublicController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public SavedBookingAppointmentDto bookPreappointment(@RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
+	public SavedBookingAppointmentDto bookPreappointment(@RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
 		return bookAppointmentPort.makeBooking(bookingDto, true);
 	}
 

@@ -2,64 +2,18 @@
     margin-bottom: 25px;
 }
 
-div h3 {
+.no-margin {
     margin: 0;
 }
 
-h3#prescriptionItemName {
-    font-weight: 500;
+.margin-top-10 {
+    margin-top: 10px;
 }
 
-.item-information {
-    margin: 15px 0;
-}
-
-.item-container {
-    margin-bottom: 25px;
-}
-
-.gray {
-    color: gray;
-}
-
-.mb-1 {
-    margin-bottom: 1rem;
-}
-
-.phone-container, .provinces-departments-container, .street-container, .countries-container {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.phone-container {
-	.prefix {
-		width: 33%;
-	}
-
-	.number {
-		width: 60%;
-	}
-}
-
-.street, .streetNumber {
-    width: 45%;
-}
-
-.province, .locality, .city {
-    width: 30%;
-}
-
-.country {
+.fullWidth {
     width: 100%;
 }
 
-@media (max-width: 360px) {
-    .phone-container, .provinces-departments-container, .street-container, .countries-container {
-        flex-direction: column;
-
-        .prefix, .number, .province, .locality, .city, .street, .streetNumber {
-            width: 100%;
-        }
-    }
+section {
+    margin: 0;
 }

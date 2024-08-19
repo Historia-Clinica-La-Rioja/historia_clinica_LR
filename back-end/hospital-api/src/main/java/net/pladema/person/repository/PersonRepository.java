@@ -7,6 +7,8 @@ import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
 import net.pladema.address.repository.entity.Address;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
 
+import net.pladema.user.domain.PersonBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -105,6 +107,17 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 	Optional<Person> findPersonByPatientId(@Param("patientId") Integer patientId);
 
 	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.user.domain.PersonBo (p.id, p.firstName, p.middleNames, p.lastName, p.otherLastNames, p.identificationTypeId, i.description, p.identificationNumber, p.genderId, g.description, p.birthDate, pe.cuil, pe.nameSelfDetermination, pe.genderSelfDeterminationId, s.description) " +
+			"FROM Person p " +
+			"JOIN Patient pa ON pa.personId = p.id " +
+			"LEFT JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN IdentificationType i ON p.identificationTypeId = i.id " +
+			"LEFT JOIN SelfPerceivedGender s ON pe.genderSelfDeterminationId = s.id " +
+			"LEFT JOIN Gender g ON p.genderId = g.id  " +
+			"WHERE pa.id = :patientId ")
+	Optional<PersonBo> findPersonExtendedByPatientId(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
 	@Query("SELECT p.id " +
 			"FROM Person p " +
 			"JOIN Patient pa ON pa.personId = p.id " +
@@ -118,4 +131,13 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 			"JOIN PersonExtended pe ON (pe.id = p.id) " +
 			"WHERE p.id IN :personIds")
 	List<CompletePersonNameVo> getCompletePersonNameByIds(@Param("personIds") List<Integer> personIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.person.repository.domain.CompletePersonNameBo(p, pe.nameSelfDetermination, hp.id) " +
+			"FROM Person p " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
+			"JOIN HealthcareProfessional hp ON (hp.personId = p.id) " +
+			"WHERE hp.id = :healthcareProfessionalId")
+	CompletePersonNameBo findByHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

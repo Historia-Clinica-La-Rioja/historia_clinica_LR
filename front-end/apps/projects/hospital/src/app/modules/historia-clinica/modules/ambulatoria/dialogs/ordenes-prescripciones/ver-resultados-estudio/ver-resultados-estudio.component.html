@@ -7,7 +7,7 @@
 	</button>
 </div>
 
-<div mat-dialog-content fxLayout="row" fxLayoutGap="22px">
+<div mat-dialog-content fxLayout="column" fxLayoutGap="22px">
 
 	<app-complete-study-information id="estudio" fxFlex="45%" [order]="order" [registerEditor]="study.registerEditor"
 		[titleContent]="study.problemPt" [descriptionState]="study.problemPt" [status]="status">
@@ -16,9 +16,19 @@
 	<mat-divider [vertical]="true"></mat-divider>
 
 	<div fxLayout="column" fxLayoutGap="15px">
+		<mat-divider></mat-divider>
+
 		<h2>
 			{{ 'ambulatoria.paciente.ordenes_prescripciones.show_study_results_dialog.STUDY_RESULTS' | translate}}
 		</h2>
+
+		<div *ngFor="let rp of resultsPractices" fxLayoutGap="10px">
+
+			<app-show-closed-forms-template [result]="rp">
+			</app-show-closed-forms-template>
+
+			<mat-divider></mat-divider>
+		</div>
 
 		<app-title-description [title]="observationsConst" [text]="observations">
 		</app-title-description>

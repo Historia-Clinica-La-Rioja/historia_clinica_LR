@@ -8,13 +8,13 @@
 
 			<mat-divider></mat-divider>
 
-			<app-diagnosticos-form formControlName="diagnosis" [diagnosis]="diagnosis"></app-diagnosticos-form>
+			<app-diagnosticos-form formControlName="diagnosis"></app-diagnosticos-form>
 
 			<app-evolucion-form formControlName="evolutionNote"></app-evolucion-form>
 
 			<app-datos-antropometricos-form formControlName="anthropometricData" [patientId]="data.patientId"> </app-datos-antropometricos-form>
 
-			<app-antecedentes-familiares-form formControlName="familyHistories"></app-antecedentes-familiares-form>
+			<app-antecedentes-familiares-form formControlName="familyHistories" (isFamilyHistoriesNoRefer)="setIsFamilyHistoriesNoRefer($event)"></app-antecedentes-familiares-form>
 
 			<app-medicaciones-form formControlName="medications"></app-medicaciones-form>
 
@@ -22,7 +22,7 @@
 
 			<app-factores-de-riesgo-form-v2 formControlName="riskFactors"></app-factores-de-riesgo-form-v2>
 
-			<app-alergias-form formControlName="allergies"></app-alergias-form>
+			<app-alergias-form formControlName="allergies" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias-form>
 
 		</form>
 	</div>

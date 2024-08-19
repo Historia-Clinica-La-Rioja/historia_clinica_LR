@@ -49,4 +49,7 @@ public class StudyAppointmentDto {
     @Nullable
     private String imageId;
 
+    @Nullable
+    private String localViewerUrl;
+
 }

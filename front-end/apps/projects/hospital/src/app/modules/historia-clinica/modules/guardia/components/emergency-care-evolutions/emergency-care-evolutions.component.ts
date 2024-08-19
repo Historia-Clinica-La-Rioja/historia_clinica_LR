@@ -14,7 +14,6 @@ import { SummaryHeader } from '@presentation/components/summary-card/summary-car
 import { EmergencyCareDocumentSearchService } from '@api-rest/services/emergency-care-document-search.service';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
-import { DocumentService } from '@api-rest/services/document.service';
 import { NewEmergencyCareEvolutionNoteService } from '../../services/new-emergency-care-evolution-note.service';
 
 @Component({
@@ -27,7 +26,8 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 
 	readonly HEADER: SummaryHeader = { matIcon: 'assignment', title: 'Evoluciones de guardia' }
 
-	@Input('emergencyCareId') emergencyCareId: number
+	@Input('emergencyCareId') emergencyCareId: number;
+	@Input() patientId: number;
 
 	documentHistoric: Item[];
 	selectedTriage;
@@ -47,7 +47,6 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly emergencyCareDocumentSearchService: EmergencyCareDocumentSearchService,
 		private readonly newTriageService: NewTriageService,
-		private readonly documentService: DocumentService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
 	) {
 	}
@@ -74,10 +73,6 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		})
 
 		this.newEmergencyCareEvolutionNoteService.new$.subscribe( _ => this.getHistoric())
-	}
-
-	downloadDocument() {
-		this.documentService.downloadFile({ filename: this.activeDocument.summary.docFileName, id: this.activeDocument.summary.docId });
 	}
 
 	setActive(d: Item) {
@@ -131,7 +126,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 	}
 }
 
-interface Item {
+export interface Item {
 	summary: {
 		icon: string,
 		title: string,

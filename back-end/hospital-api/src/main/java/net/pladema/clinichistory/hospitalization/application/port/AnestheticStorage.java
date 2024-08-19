@@ -7,4 +7,6 @@ public interface AnestheticStorage {
     Integer save(AnestheticReportBo anestheticReport);
 
     Optional<AnestheticReportBo> get(Long documentId);
+
+    Long getDocumentIdFromLastAnestheticReportDraft(Integer internmentEpisodeId);
 }

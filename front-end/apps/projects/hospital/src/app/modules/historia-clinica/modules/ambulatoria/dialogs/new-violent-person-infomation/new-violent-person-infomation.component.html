@@ -9,64 +9,72 @@
 <div mat-dialog-content fxLayoutAlign="start" fxLayout="column">
     <form [formGroup]="form">
         <div fxLayout="column" fxFlex="70">
-            <mat-form-field appearance="outline">
-                <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LASTNAME' |
-                    translate}}</mat-label>
-                <input matInput formControlName="lastname">
-                <mat-error *ngIf="hasError(form, 'required', 'lastname')" [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
+            <div class="inputLabel">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LASTNAME' | translate}}</label>
+                <mat-form-field appearance="outline">
+                    <input onlyAlphabeticCharacters matInput formControlName="lastname">
+                    <mat-error *ngIf="hasError(form, 'required', 'lastname')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-                <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.NAME' |
-                    translate}}</mat-label>
-                <input matInput formControlName="name">
-                <mat-error *ngIf="hasError(form, 'required', 'name')" [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
+            <div class="inputLabel">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.NAME' | translate}}</label>
+                <mat-form-field appearance="outline">
+                    <input onlyAlphabeticCharacters matInput formControlName="name">
+                    <mat-error *ngIf="hasError(form, 'required', 'name')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-                <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.AGE' |
-                    translate}}</mat-label>
-                <input matInput formControlName="age" (keypress)="includesEventCodeNumber($event)">
-                <mat-error *ngIf="hasError(form, 'required', 'age')" [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
+            <div class="inputLabel">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.AGE' | translate}}</label>
+                <mat-form-field appearance="outline">
+                    <input onlyNumericCharacters matInput formControlName="age">
+                    <mat-error *ngIf="hasError(form, 'required', 'age')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-                <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.ADDRESS' |
-                    translate}}</mat-label>
-                <input matInput formControlName="address">
-                <mat-error *ngIf="hasError(form, 'required', 'address')" [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
+            <div class="inputLabel">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.ADDRESS' | translate}}</label>
+                <mat-form-field appearance="outline">
+                    <input matInput formControlName="address">
+                    <mat-error *ngIf="hasError(form, 'required', 'address')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-                <mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId"
-                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.PROVINCE' | translate}}">
-                    <mat-option *ngFor="let province of provinces$ | async" [value]="province.id"
-                        (click)="setDepartments()">
-                        {{province.description}}
-                    </mat-option>
-                </mat-select>
-                <button id="clear_address_province" type="button" mat-button *ngIf="form.value.addressProvinceId"
-                    matSuffix color="warn" mat-icon-button (click)="resetAllLocaltyControls($event)">
-                    <mat-icon>close</mat-icon>
-                </button>
-                <mat-error *ngIf="hasError(form, 'required', 'addressProvinceId')"
-                    [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
+            <div class="inputLabel">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.PROVINCE' | translate}}</label>
+                <mat-form-field appearance="outline">
+                    <mat-select id="addressProvinceId" name="addressProvinceId" formControlName="addressProvinceId">
+                        <mat-option *ngFor="let province of provinces$ | async" [value]="province.id"
+                            (click)="setDepartments()">
+                            {{province.description}}
+                        </mat-option>
+                    </mat-select>
+                    <button id="clear_address_province" type="button" mat-button *ngIf="form.value.addressProvinceId"
+                        matSuffix color="warn" mat-icon-button (click)="resetAllLocaltyControls($event)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="hasError(form, 'required', 'addressProvinceId')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-                <mat-select id="addressDepartment" name="addressDepartment" formControlName="addressDepartment"
-                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.DEPARTMENT' | translate}}">
-                    <mat-option *ngFor="let department of departments$ | async" [value]="department">
-                        {{department.description}}
-                    </mat-option>
-                </mat-select>
-                <button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartment"
-                    matSuffix color="warn" mat-icon-button (click)="resetDepartmentControl($event)">
-                    <mat-icon>close</mat-icon>
-                </button>
-                <mat-error *ngIf="hasError(form, 'required', 'addressDepartment')"
-                    [translate]="'forms.REQUIRED'"></mat-error>
-            </mat-form-field>
+            <div class="inputLabel">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.DEPARTMENT' | translate}}</label>
+                <mat-form-field appearance="outline">
+                    <mat-select id="addressDepartment" name="addressDepartment" formControlName="addressDepartment">
+                        <mat-option *ngFor="let department of departments$ | async" [value]="department">
+                            {{department.description}}
+                        </mat-option>
+                    </mat-select>
+                    <button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartment"
+                        matSuffix color="warn" mat-icon-button (click)="resetDepartmentControl($event)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="hasError(form, 'required', 'addressDepartment')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
             <mat-radio-group class="basic-options" aria-labelledby="has-a-firearm-label" formControlName="hasAfirearm"
                 color="primary">

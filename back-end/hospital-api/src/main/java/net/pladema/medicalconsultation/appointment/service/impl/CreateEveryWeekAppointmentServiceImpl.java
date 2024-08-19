@@ -36,7 +36,7 @@ public class CreateEveryWeekAppointmentServiceImpl implements CreateEveryWeekApp
 
 		if (currentAppointment.isPresent()) {
 			if (newAppointment.getAppointmentOptionId() != null) {
-				appointmentService.checkUpdateType(currentAppointment.get(), newAppointment);
+				appointmentService.updateAppointmentByOptionId(currentAppointment.get(), newAppointment);
 			} else {
 				for (LocalDate initDate = newAppointment.getDate().plusDays(WEEK_DAYS); !initDate.isAfter(diaryEndDate); initDate = initDate.plusDays(WEEK_DAYS)) {
 					validateAppointmentOverturnLimit.checkFutureAvailableOverturn(newAppointment, initDate);

@@ -24,9 +24,9 @@ public interface DocumentMapper {
     @Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataDto")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationBo")
     @Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationBo")
-    @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionBo")
-    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListPersonalHistoryBoFromPersonalHistoryDto")
-    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListFamilyHistoryBoFromHealthHistory")
+    @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toAllergyConditionReferableItemBo")
+    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toReferablePersonalHistoryBoFromPersonalHistoryDto")
+    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toReferableFamilyHistoryBoFromHealthHistory")
 	@Mapping(target = "healthcareProfessionals", source = "healthcareProfessionals", qualifiedByName = "toDocumentHealthcareProfessionalBoList")
     DocumentBo fromDto(DocumentDto documentDto);
 
@@ -35,8 +35,8 @@ public interface DocumentMapper {
 	@Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
 	@Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
 	@Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationDto")
-	@Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionDto")
-	@Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toPersonalHistoryDto")
-	@Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toHealthHistoryConditionDto")
+	@Mapping(target = "allergies", source = "allergies", qualifiedByName = "toAllergyConditionReferableItemDto")
+	@Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toReferablePersonalHistoryDto")
+	@Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toReferableFamilyHistoryConditionDto")
 	DocumentDto fromBo(DocumentBo documentBo);
 }

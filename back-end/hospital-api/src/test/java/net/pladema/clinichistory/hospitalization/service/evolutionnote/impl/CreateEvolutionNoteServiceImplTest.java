@@ -12,10 +12,11 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
@@ -52,6 +53,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
@@ -66,8 +68,11 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
-
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
@@ -131,6 +136,12 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	@Mock
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
+    @Mock
+    private AnestheticStorage anestheticStorage;
+
+    @Mock
+    private ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
 	@BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -148,7 +159,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 				institutionService,
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
-				getLicenseNumberByProfessional);
+				getLicenseNumberByProfessional,
+                anestheticStorage,
+                validateAdministrativeDischarge);
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
@@ -409,20 +422,20 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setDiagnosis(Lists.emptyList());
         result.setImmunizations(Lists.emptyList());
-        result.setAllergies(Lists.emptyList());
+        result.setAllergies(new ReferableItemBo<>());
         return result;
     }
 
     private RiskFactorBo newRiskFactors(String value, LocalDateTime time) {
         var vs = new RiskFactorBo();
-        vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time));
+        vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time, null));
         return vs;
     }
 
     private AnthropometricDataBo newAnthropometricData(String value, LocalDateTime time) {
         var adb = new AnthropometricDataBo();
-        adb.setBloodType(new ClinicalObservationBo(null, value, time));
-        adb.setWeight(new ClinicalObservationBo(null, value, time));
+        adb.setBloodType(new ClinicalObservationBo(null, value, time, null));
+        adb.setWeight(new ClinicalObservationBo(null, value, time, null));
         return adb;
     }
 

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.procedure.domain.ProcedureParameterBo;
+import net.pladema.procedure.domain.ProcedureParameterTypeBo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,11 +25,6 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProcedureParameterType {
-
-	public static final Short NUMERIC = 1;
-	public static final Short FREE_TEXT = 2;
-	public static final Short SNOMED_ECL = 3;
-	public static final Short TEXT_OPTION = 4;
 
 	@Id
 	@Column(name = "id")

@@ -12,7 +12,7 @@ export class FeatureFlagService {
 
 	constructor(
 		private publicService: PublicService
-	) {}
+	) { }
 
 	public isActive(feature: AppFeature): Observable<boolean> {
 		return this.publicService.getInfo()
@@ -26,14 +26,24 @@ export class FeatureFlagService {
 	 * La lista debe contener objetos que tengan el atributo featureFlag de tipo AppFeature.
 	 */
 	public filterItems$<T extends { featureFlag?: AppFeature[] }>(items: T[]): Observable<T[]> {
-		return this.publicService.getInfo().pipe(map(info => {
-			return items.filter(item => {
-				if (item.featureFlag) {
-					return info.features.some(ffActive => item.featureFlag.includes(ffActive));
-				}
-				return true;
-			});
-		}));
+		return this.publicService.getInfo().pipe(
+			map(info => {
+				return items
+					.map(item => {
+						if (!item.featureFlag) {
+							return item;
+						}
+						const filteredFeatureFlag = item.featureFlag.filter(ff => info.features.includes(ff));
+						if (filteredFeatureFlag.length > 0) {
+							return {
+								...item,
+								featureFlag: filteredFeatureFlag,
+							};
+						}
+						
+					}).filter(item => item !== undefined);
+			})
+		);
 	}
 
 }

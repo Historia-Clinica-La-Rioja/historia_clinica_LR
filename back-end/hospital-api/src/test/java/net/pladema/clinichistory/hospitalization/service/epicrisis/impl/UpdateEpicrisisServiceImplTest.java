@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 
 import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
@@ -174,10 +175,10 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		epicrisisBo.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		epicrisisBo.setDiagnosis(Collections.emptyList());
 		epicrisisBo.setImmunizations(Collections.emptyList());
-		epicrisisBo.setFamilyHistories(Collections.emptyList());
-		epicrisisBo.setPersonalHistories(Collections.emptyList());
+		epicrisisBo.setFamilyHistories(new ReferableItemBo<>());
+		epicrisisBo.setPersonalHistories(new ReferableItemBo<>());
 		epicrisisBo.setMedications(Collections.emptyList());
-		epicrisisBo.setAllergies(Collections.emptyList());
+		epicrisisBo.setAllergies(new ReferableItemBo<>());
 		return epicrisisBo;
 	}
 
@@ -202,6 +203,7 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -212,6 +214,7 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now().minusDays(1).minusHours(1));
 		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -222,6 +225,7 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.SIGNED);
+		result.setIsConfirmed(true);
 		return result;
 	}
 

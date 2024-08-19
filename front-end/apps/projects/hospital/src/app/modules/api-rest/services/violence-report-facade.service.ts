@@ -18,6 +18,7 @@ export class ViolenceReportFacadeService {
     evolutions$ = new Subject<ViolenceReportSituationEvolutionDto[]>();
     detailedInformation$ = new Subject<DetailedInformation>();
     filters$ = new Subject<ViolenceReportFilterOptionDto>();
+	isNewViolenceSituation$: Subject<any> = new BehaviorSubject<boolean>(false);
 
     constructor(private readonly violenceReportService: ViolenceReportService) {}
 
@@ -54,6 +55,10 @@ export class ViolenceReportFacadeService {
                 this.filters$.next(result)
             });
     }
+
+	setIsNewViolenceSituationOpen(isNewViolenceSituationOpen: boolean){
+		this.isNewViolenceSituation$.next(isNewViolenceSituationOpen);
+	}
 
 	download(patientId: number, situationId: number, evolutionId: number) {
 		this.violenceReportService.download(patientId, situationId, evolutionId);

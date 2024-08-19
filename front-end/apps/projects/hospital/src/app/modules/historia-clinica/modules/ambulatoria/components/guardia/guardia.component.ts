@@ -34,6 +34,7 @@ export class GuardiaComponent implements OnInit {
 
 	showEmergencyCareSummary = false;
 	withoutMedicalDischarge: boolean;
+	patientId: number;
 
 	constructor(
 		private readonly router: Router,
@@ -51,6 +52,7 @@ export class GuardiaComponent implements OnInit {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.episodeId = Number(params.get('episodeId'));
+				this.patientId = Number(params.get('idPaciente'));
 
 				if (params.get('episodeId')) {
 					this.episodeId = Number(params.get('episodeId'));

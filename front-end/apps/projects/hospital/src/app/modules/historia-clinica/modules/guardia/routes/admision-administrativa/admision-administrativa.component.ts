@@ -1,90 +1,79 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import {
-	BasicPatientDto, DoctorsOfficeDto,
+	DoctorsOfficeDto,
 	MasterDataInterface,
-	PatientMedicalCoverageDto,
-	PersonPhotoDto,
 } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
-import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { MedicalCoverageComponent } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { MapperService } from '@core/services/mapper.service';
-import { MapperService as PatientMapperService } from '@presentation/services/mapper.service';
-import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
-import { PatientBasicData } from '@presentation/utils/patient.utils';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable } from 'rxjs';
+import { hasError, NON_WHITESPACE_REGEX, TIME_PATTERN } from '@core/utils/form.utils';
+import { Observable, Subscription } from 'rxjs';
 import { AdministrativeAdmission } from '../../services/new-episode.service';
-import { PatientService } from '@api-rest/services/patient.service';
 import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
-import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
+import { ButtonType } from '@presentation/components/button/button.component';
+import { EmergencyCarePatient } from '../../components/emergency-care-patient/emergency-care-patient.component';
+import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-admision-administrativa',
 	templateUrl: './admision-administrativa.component.html',
 	styleUrls: ['./admision-administrativa.component.scss']
 })
-export class AdmisionAdministrativaComponent implements OnInit {
+export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 
-	hasError = hasError;
-	TIME_PATTERN = TIME_PATTERN;
-	patientCardInfo: {
-		photo: PersonPhotoDto,
-		basicData: PatientBasicData
-	};
+
+	private patientDescriptionSubscription: Subscription;
+	readonly POLICE_OFFICER = POLICE_OFFICER;
+	readonly PERSON = PERSON;
+	readonly AMBULANCE = AMBULANCE;
+	readonly EMERGENCY_CARE_ENTRANCE_TYPE = EmergencyCareEntranceType;
+	readonly minDate = MIN_DATE;
+	readonly buttonType = ButtonType;
+	readonly buttonThemeWarn = 'warn';
+	readonly hasError = hasError;
+	readonly TIME_PATTERN = TIME_PATTERN;
+	readonly today: Date = new Date();
+
+	emergencyCareEntranceType$: Observable<MasterDataInterface<number>[]>;
+	emergencyCareType$: Observable<MasterDataInterface<number>[]>;
+	form: UntypedFormGroup;
+
+	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
+	emergencyCarePatientData: EmergencyCarePatient;
 
 	@Input() initData: AdministrativeAdmission;
 	@Input() isDoctorOfficeEditable = true;
 	@Input() isEmergencyCareTypeEditable = true;
-	@Output() confirm = new EventEmitter();
-	@Output() cancel = new EventEmitter();
+	@Input() isEpisodeCreation = true;
+	@Output() confirm = new EventEmitter<AdministrativeAdmission>();
+	@Output() cancel = new EventEmitter<void>();
 	@Input() submitLabel = 'buttons.CONTINUE';
 
-	readonly POLICE_OFFICER = POLICE_OFFICER;
-	readonly PERSON = PERSON;
-	readonly AMBULANCE = AMBULANCE;
-
-	patientMedicalCoverages: PatientMedicalCoverageDto[];
-	emergencyCareEntranceType$: Observable<MasterDataInterface<number>[]>;
-	emergencyCareType$: Observable<MasterDataInterface<number>[]>;
-	form: UntypedFormGroup;
-	today: Date = new Date();
-
-	motivoNuevaConsultaService: MotivoNuevaConsultaService;
-	readonly EMERGENCY_CARE_ENTRANCE_TYPE = EmergencyCareEntranceType;
-
-	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
-
-	private selectedPatient;
-
-	minDate = MIN_DATE;
-
 	constructor(
-		private readonly dialog: MatDialog,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly emergencyCareMasterData: EmergencyCareMasterDataService,
 		private formBuilder: UntypedFormBuilder,
-		private readonly mapperService: MapperService,
-		private readonly patientMapperService: PatientMapperService,
-		private readonly snackBarService: SnackBarService,
-		private readonly snomedService: SnomedService,
-		private readonly patientService: PatientService,
-		private readonly doctorsOfficeService: DoctorsOfficeService
-	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
+		private readonly doctorsOfficeService: DoctorsOfficeService,
+		private route: ActivatedRoute,
+		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
+	) { }
+
+	ngOnDestroy(): void {
+		this.patientDescriptionSubscription?.unsubscribe();
 	}
 
 	ngOnInit(): void {
-
+		this.route.queryParams
+			.subscribe(params => {
+				if(params.patientId){
+					this.emergencyCarePatientData = {
+						patientId : params.patientId
+					}
+				}
+		});
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
 		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
@@ -101,67 +90,32 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
-			reasons: [null],
-			patientId: [null]
+			reason: [null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]],
+			patientId: [null],
+			patientDescription: [null]
 		});
-
 
 		this.setExistingInfo();
 	}
 
-	searchPatient(): void {
-		const dialogRef = this.dialog.open(SearchPatientDialogComponent);
-
-		dialogRef.afterClosed()
-			.subscribe((foundPatient: Patient) => {
-				if (foundPatient) {
-					this.setPatientAndMedicalCoverages(foundPatient.basicData, foundPatient.photo);
-				}
-			});
-
-	}
-
-	openMedicalCoverageDialog(): void {
-		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
-			data: {
-				genderId: this.selectedPatient.genderId,
-				identificationNumber: this.selectedPatient.identificationNumber,
-				identificationTypeId: this.selectedPatient.identificationTypeId,
-				initValues: this.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverage(s)),
-				patientId: this.selectedPatient.id
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(values => {
-			if (values) {
-				const patientCoverages: PatientMedicalCoverageDto[] =
-					values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-
-				this.patientMedicalCoverageService.addPatientMedicalCoverages(this.selectedPatient.id, patientCoverages).subscribe(
-					_ => {
-						this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
-						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.selectedPatient.id).subscribe(updatedCoverages => {
-							this.patientMedicalCoverages = updatedCoverages;
-						});
-					},
-					_ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas')
-				);
-			}
-		});
-	}
-
-	clearSelectedPatient(): void {
-		this.selectedPatient = null;
-		this.patientCardInfo = null;
-		this.form.controls.patientId.setValue(null);
-		this.form.controls.patientMedicalCoverageId.setValue(null);
+	dateChanged(date: Date) {
+		this.form.controls.callDate.setValue(date);
 	}
 
 	continue(): void {
-		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
 		const formValue: AdministrativeAdmission = this.form.getRawValue();
+
+		if (!formValue.patientId && !formValue.patientDescription) {
+			this.openTemporaryPatientDialog();
+			return;
+		}
+
 		if (this.form.valid) {
 			this.confirm.emit(formValue);
+		}
+		else {
+			this.form.markAllAsTouched();
+			this.form.updateValueAndValidity();
 		}
 	}
 
@@ -186,46 +140,44 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		}
 	}
 
-	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
-
-		this.form.controls.patientId.setValue(basicData.id);
-		this.patientCardInfo = {
-			basicData: this.patientMapperService.toPatientBasicData(basicData),
-			photo
-		};
-		this.selectedPatient = {
-			id: basicData.id,
-			genderId: basicData.person?.gender.id,
-			identificationNumber: basicData.person?.identificationNumber,
-			identificationTypeId: basicData.person?.identificationTypeId,
-		};
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(basicData.id).subscribe(coverages => {
-			this.patientMedicalCoverages = coverages;
-		});
-	}
-
-	private loadPatient(patientId: number): void {
-		this.patientService.getPatientBasicData(patientId).subscribe((basicData: BasicPatientDto) => {
-			this.patientService.getPatientPhoto(patientId).subscribe((photo: PersonPhotoDto) => {
-				this.setPatientAndMedicalCoverages(basicData, photo);
-			});
-		});
-
-	}
-
 	private setExistingInfo(): void {
 		if (this.initData) {
-			this.form.setValue(this.initData);
-
-			if (this.initData.patientId) {
-				this.loadPatient(this.initData.patientId);
-			}
-
-			this.form.value.reasons.forEach(reason => this.motivoNuevaConsultaService.add(reason));
+			this.setInitDataInForm();
+			const { patientId, patientMedicalCoverageId, patientDescription, patientTypeId } = this.initData;
+			this.emergencyCarePatientData = { patientId, patientMedicalCoverageId, patientDescription, patientTypeId };
 		}
 	}
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	private setInitDataInForm() {
+		const { patientTypeId, ...formData } = this.initData
+		this.form.setValue(formData);
+		this.form.markAllAsTouched();
+		this.form.updateValueAndValidity();
+	}
+
+	setPatientData(emergencyCarePatient: EmergencyCarePatient) {
+		const { patientId, patientMedicalCoverageId, patientDescription } = emergencyCarePatient;
+		this.form.controls.patientId.setValue(patientId);
+		this.form.controls.patientMedicalCoverageId.setValue(patientMedicalCoverageId);
+		this.form.controls.patientDescription.setValue(patientDescription);
+	}
+
+	private openTemporaryPatientDialog() {
+		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
+			if (patientDescription) {
+				this.updatePatientDescription(patientDescription);
+			}
+		});
+
+		this.emergencyCareTemporaryPatientService.openTemporaryPatient();
+	}
+
+	private updatePatientDescription(patientDescription: string) {
+		this.form.controls.patientDescription.setValue(patientDescription);
+		this.continue();
 	}
 }

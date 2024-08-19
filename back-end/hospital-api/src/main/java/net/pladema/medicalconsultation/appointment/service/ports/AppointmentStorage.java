@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentFilterBo;
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.AppointmentInfoBo;

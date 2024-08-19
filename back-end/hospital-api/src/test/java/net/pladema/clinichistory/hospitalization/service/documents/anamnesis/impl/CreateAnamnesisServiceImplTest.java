@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
@@ -25,8 +26,9 @@ import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
@@ -119,6 +121,12 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
+	@Mock
+	private AnestheticStorage anestheticStorage;
+
+	@Mock
+	private ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -136,7 +144,9 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 				institutionService,
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
-				getLicenseNumberByProfessional);
+				getLicenseNumberByProfessional,
+				anestheticStorage,
+				validateAdministrativeDischarge);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
 						new AnamnesisValidator(featureFlagsService));
@@ -275,18 +285,18 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		);
 		Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
-		anamnesis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("", ""))));
+		anamnesis.setPersonalHistories(new ReferableItemBo<>(List.of(new PersonalHistoryBo(new SnomedBo("", ""))), true));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo(null, null))));
+		anamnesis.setPersonalHistories(new ReferableItemBo<>(List.of(new PersonalHistoryBo(new SnomedBo(null, null))), true));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
-				new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
+		anamnesis.setPersonalHistories(new ReferableItemBo<>(List.of(new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+				new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED"))), true));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 				createAnamnesisServiceImpl.execute(anamnesis)
 		);
@@ -308,18 +318,18 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		);
 		Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
-		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("", ""))));
+		anamnesis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("", ""))), true));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo(null, null))));
+		anamnesis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo(null, null))), true));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
-				new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
+		anamnesis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+				new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))), true));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 				createAnamnesisServiceImpl.execute(anamnesis)
 		);
@@ -459,24 +469,24 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		anamnesis.setDiagnosis(Collections.emptyList());
-		anamnesis.setPersonalHistories(Collections.emptyList());
-		anamnesis.setFamilyHistories(Collections.emptyList());
+		anamnesis.setPersonalHistories(new ReferableItemBo<>());
+		anamnesis.setFamilyHistories(new ReferableItemBo<>());
 		anamnesis.setMedications(Collections.emptyList());
 		anamnesis.setImmunizations(Collections.emptyList());
-		anamnesis.setAllergies(Collections.emptyList());
+		anamnesis.setAllergies(new ReferableItemBo<>());
 		return anamnesis;
 	}
 
 	private RiskFactorBo newRiskFactors(String value, LocalDateTime time) {
 		var vs = new RiskFactorBo();
-		vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time));
+		vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time, null));
 		return vs;
 	}
 
 	private AnthropometricDataBo newAnthropometricData(String value, LocalDateTime time) {
 		var adb = new AnthropometricDataBo();
-		adb.setBloodType(new ClinicalObservationBo(null, value, time));
-		adb.setWeight(new ClinicalObservationBo(null, value, time));
+		adb.setBloodType(new ClinicalObservationBo(null, value, time, null));
+		adb.setWeight(new ClinicalObservationBo(null, value, time, null));
 		return adb;
 	}
 

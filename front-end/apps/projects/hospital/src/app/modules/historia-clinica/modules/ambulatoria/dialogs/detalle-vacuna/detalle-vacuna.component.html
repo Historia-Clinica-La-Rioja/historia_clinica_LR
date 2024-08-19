@@ -24,7 +24,7 @@
 				</app-colored-label>
 			</div>
 			<div fxFlex="33%">
-				<ng-container *ngIf="data.applicationDate else noInfo"><span >{{data.applicationDate | viewDate }}</span>
+				<ng-container *ngIf="data.applicationDate else noInfo"><span >{{data.applicationDate | isoToDate | dateFormat: 'date' }}</span>
 				</ng-container>
 			</div>
 			<div fxFlex="33%" class="capitalize-first-letter">

@@ -9,22 +9,27 @@
 </div>
 
 <mat-dialog-content>
-	<mat-dialog-content fxLayout="row" fxLayoutGap="22px">
-		<app-complete-study-information fxFlex="55%" [order]="data.order" [registerEditor]="study.registerEditor"
+	<mat-dialog-content fxLayout="column" fxLayoutGap="22px">
+		<app-complete-study-information fxFlex="35%" [order]="data.order" [registerEditor]="study.registerEditor"
 			[titleContent]="study.problemPt" [descriptionState]="study.problemPt" [status]="data.status">
 		</app-complete-study-information>
 
-		<mat-divider [vertical]="true"></mat-divider>
+		<mat-divider></mat-divider>
 
-		<app-study-information fxFlex="45%" [patientId]="data.patientId" [diagnosticReport]="diagnosticReport">
-
+		<app-study-information [patientId]="data.patientId" [diagnosticReport]="diagnosticReport"
+			[studies]="data.studies">
 		</app-study-information>
 	</mat-dialog-content>
 </mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
 
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+	<app-button *ngIf="buttonService.activatePartialSaveButton$ | async" [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_PARTIAL_BUTTON'
+		[isLoading]="buttonService.isLoadingPartialSave$ | async" (clicked)="completePartialStudy()">
+	</app-button>
+
 	<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
 		[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
 		(clicked)="completeStudy()">
 	</app-button>
+
 </mat-dialog-actions>

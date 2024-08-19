@@ -4,17 +4,9 @@
 	<form [formGroup]="form" (submit)="confirm()">
 
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
-			<mat-form-field appearance="outline">
-				<input formControlName="date" id="date" matInput [matDatepicker]="datePicker" [min]="episodeCreatedOn" [max]="today"
-					placeholder="{{'guardia.episode.medical_discharge.form.DATE' | translate}}">
-				<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-				<mat-datepicker #datePicker></mat-datepicker>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'date') else invalidDate" translate="forms.REQUIRED"></mat-error>
-				<ng-template #invalidDate>
-					<mat-error translate="guardia.episode.medical_discharge.form.INVALID_DATE"></mat-error>
-				</ng-template>
-
-			</mat-form-field>
+			<app-datepicker id="date" [minDate]="episodeCreatedOn"
+				[maxDate]="today" [dateToSetInDatepicker]="today" (selectDate)="dischargedDateChanged($event)">
+			</app-datepicker>
 
 
 			<mat-form-field appearance="outline">
@@ -24,8 +16,10 @@
 				</mat-error>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED">
 				</mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')" translate="forms.MAX_TIME_ERROR"></mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')" translate="guardia.episode.medical_discharge.form.INVALID_TIME">
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')"
+					translate="forms.MAX_TIME_ERROR"></mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')"
+					translate="guardia.episode.medical_discharge.form.INVALID_TIME">
 				</mat-error>
 			</mat-form-field>
 		</div>
@@ -69,36 +63,18 @@
 							<span translate="guardia.episode.medical_discharge.problems.CRONICO"></span>
 						</mat-checkbox>
 
-						<mat-form-field appearance="outline">
-							<mat-label translate="guardia.episode.medical_discharge.problems.FECHA_INICIO">
-							</mat-label>
-							<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker"
-								formControlName="fechaInicio" [min]="minDate" [max]="problemasService.getFechaInicioMax()"
-								(dateChange)="problemasService.checkValidFechaFin()">
-							<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
-							<mat-datepicker #inicioDatePicker></mat-datepicker>
-							<mat-error *ngIf="problemasService.hasError('required', 'fechaInicio')"
-								translate="forms.REQUIRED">
-							</mat-error>
-							<mat-error *ngIf="problemasService.hasError('matDatepickerMax', 'fechaInicio')"
-								translate="forms.MAX_DATE_TODAY">
-							</mat-error>
-						</mat-form-field>
+						<div fxLayout="row">
 
-						<mat-form-field appearance="outline">
-							<mat-label translate="guardia.episode.medical_discharge.problems.FECHA_FIN">
-							</mat-label>
-							<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-								[max]="today" (dateChange)="problemasService.checkValidFechaFin()">
-							<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
-							<mat-datepicker #finDatePicker></mat-datepicker>
-							<mat-error *ngIf="problemasService.hasError('min', 'fechaFin')"
-								translate="guardia.episode.medical_discharge.problems.errors.FECHA_FIN_MIN">
-							</mat-error>
-							<mat-error *ngIf="problemasService.hasError('matDatepickerMax', 'fechaFin')"
-								translate="forms.MAX_DATE_TODAY">
-							</mat-error>
-						</mat-form-field>
+							<app-datepicker id="fecha_inicio"
+								title="guardia.episode.medical_discharge.problems.FECHA_INICIO"
+								[minDate]="minDate" [maxDate]="problemasService.getFechaInicioMax()" [dateToSetInDatepicker]="today"
+								(selectDate)="problemStartDateChanged($event)">
+							</app-datepicker>
+	
+							<app-datepicker id="fecha_fin" title="guardia.episode.medical_discharge.problems.FECHA_FIN" [minDate]="problemasService.getForm().controls.fechaInicio.value"
+								[maxDate]="today" (selectDate)="problemEndDateChanged($event)">
+							</app-datepicker>
+						</div>
 
 						<div align="end">
 							<button id="submit_problema" class="uppercase" mat-raised-button color="primary"
@@ -110,9 +86,9 @@
 					</form>
 				</ng-template>
 
-				<app-document-section-table data-display tableTitle="guardia.episode.medical_discharge.problems.TABLE_TITLE"
-											[columns]="problemasService.getColumns()"
-											[data]="problemasService.getProblemas()">
+				<app-document-section-table data-display
+					tableTitle="guardia.episode.medical_discharge.problems.TABLE_TITLE"
+					[columns]="problemasService.getColumns()" [data]="problemasService.getProblemas()">
 				</app-document-section-table>
 			</app-new-document-section>
 		</div>
@@ -152,7 +128,7 @@
 			<button mat-stroked-button class="uppercase" type="button" (click)="goToEpisodeDetails()">
 				<span translate="buttons.BACK"></span>
 			</button>
-			<button mat-raised-button class="uppercase" color="primary">
+			<button mat-raised-button [disabled]="isLoading" class="uppercase" color="primary">
 				<span translate="buttons.CONFIRM"></span>
 			</button>
 		</div>

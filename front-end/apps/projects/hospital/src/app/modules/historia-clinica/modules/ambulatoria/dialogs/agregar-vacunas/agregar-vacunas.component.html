@@ -62,7 +62,7 @@
 							[description]="vaccine.dose?.description | translate | uppercase"
 							[color]="Color.BLUE">
 						</app-colored-label>
-                        <div class="date"> {{ this.displayDate(vaccine.administrationDate) }}</div>
+                        <div class="date"> {{ vaccine.administrationDate | isoToDate | dateFormat:'date' }}</div>
                     </div>
 
                     <mat-divider></mat-divider>

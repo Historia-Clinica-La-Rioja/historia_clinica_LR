@@ -95,4 +95,6 @@ public class AnestheticReportDto {
 
     @Nullable
     private String anestheticChart;
+
+    private boolean confirmed = false;
 }

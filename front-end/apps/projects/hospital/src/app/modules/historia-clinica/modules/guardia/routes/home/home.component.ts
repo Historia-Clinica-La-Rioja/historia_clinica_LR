@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import {
@@ -10,7 +10,7 @@ import {
 	PatientPhotoDto,
 	ProfessionalPersonDto,
 	PageDto,
-	EmergencyCareEpisodeFilterDto
+	EmergencyCareEpisodeFilterDto,
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -24,7 +24,7 @@ import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/con
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { map, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
@@ -37,6 +37,7 @@ import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
 import { UntypedFormBuilder } from '@angular/forms';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -46,8 +47,9 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 	styleUrls: ['./home.component.scss'],
 	providers: [TriageDefinitionsService]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
+	private patientDescriptionSubscription: Subscription;
 	getError = getError;
 	hasError = hasError;
 
@@ -93,9 +95,14 @@ export class HomeComponent implements OnInit {
 		private readonly patientNameService: PatientNameService,
 		private readonly permissionsService: PermissionsService,
 		private readonly guardiaRouterService: GuardiaRouterService,
-		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService
+		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
+		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
+	}
+
+	ngOnDestroy(): void {
+		this.patientDescriptionSubscription?.unsubscribe();
 	}
 
 	ngOnInit(): void {
@@ -113,7 +120,7 @@ export class HomeComponent implements OnInit {
 			.pipe(
 				tap(result => this.elementsAmount = result.totalElementsAmount),
 				map((episodes: PageDto<EmergencyCareListDto>) =>
-					episodes.content.map(episode => this.setWaitingTime(episode))
+					episodes.content.map(episode => this.mapToEpisode(episode))
 				)
 			)
 			.subscribe((episodes: Episode[]) => {
@@ -238,13 +245,18 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	private setWaitingTime(episode: EmergencyCareListDto): Episode {
+	private mapToEpisode(episode: EmergencyCareListDto): Episode {
 		const minWaitingTime = episode.state.id === this.estadosEpisodio.EN_ESPERA ?
 			HomeComponent.calculateWaitingTime(episode.creationDate) : undefined;
 		return {
 			...episode,
+			triage: {
+				emergencyCareEpisodeListTriageDto: episode.triage,
+				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) } )
+			},
 			waitingTime: minWaitingTime,
-			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined
+			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined,
+			
 		};
 	}
 
@@ -264,6 +276,25 @@ export class HomeComponent implements OnInit {
 		this.loadEpisodes(event.pageIndex);
 	}
 
+	editPatientDescription(episodeId: number, preloadedReason: string) {
+		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
+			if (patientDescription) 
+				this.updatePatientDescription(episodeId, patientDescription);
+		});
+		this.emergencyCareTemporaryPatientService.openTemporaryPatient(preloadedReason);	
+	}
+
+	private updatePatientDescription(episodeId: number, patientDescription: string) {
+		this.emergencyCareEpisodeService.updatePatientDescription(episodeId, patientDescription).subscribe({
+			next: () => {
+				this.snackBarService.showSuccess('guardia.home.episodes.episode.actions.edit_patient_description.SUCCESS');
+				const updatedEpisode = this.episodes.find(episode => episode.id === episodeId);
+				updatedEpisode.patient.patientDescription = patientDescription;					
+			},
+			error: () => this.snackBarService.showError('guardia.home.episodes.episode.actions.edit_patient_description.ERROR')
+		});
+	}
+
 }
 
 export interface Episode {
@@ -275,9 +306,15 @@ export interface Episode {
 	id: number;
 	patient: EmergencyCarePatientDto;
 	state: MasterDataDto;
-	triage: EmergencyCareEpisodeListTriageDto;
+	triage: EpisodeListTriage;
 	type: MasterDataDto;
 	relatedProfessional: ProfessionalPersonDto;
+	reason?: string;
+}
+
+export interface EpisodeListTriage {
+	emergencyCareEpisodeListTriageDto: EmergencyCareEpisodeListTriageDto,
+	reasons: string[],
 }
 
 export interface AttendPlace {

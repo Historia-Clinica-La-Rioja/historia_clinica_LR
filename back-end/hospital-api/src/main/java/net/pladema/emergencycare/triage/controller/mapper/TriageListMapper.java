@@ -1,22 +1,27 @@
 package net.pladema.emergencycare.triage.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
 import lombok.AllArgsConstructor;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.triage.controller.dto.TriageBreathingDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageCirculationDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.mapper.TriageMapper;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.domain.TriageCategoryBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
 import net.pladema.user.controller.dto.UserDto;
 import net.pladema.user.controller.service.UserPersonExternalService;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +40,7 @@ public class TriageListMapper {
 	private TriageMasterDataMapper triageMasterDataMapper;
 
 	private RiskFactorExternalService riskFactorExternalService;
+	private OutpatientConsultationMapper outpatientConsultationMapper;
 
 	public TriageListDto toTriageListDto(TriageBo triageBo) {
 		TriageListDto result = triageMapper.toTriageListDto(triageBo);
@@ -55,6 +61,9 @@ public class TriageListMapper {
 			else if (triageBo.isPediatric())
 				setRiskFactorAsPediatric(result, riskFactorObservationDto);
 		});
+		List<ReasonBo> reasons = triageBo.getReasons();
+		if(reasons != null && !reasons.isEmpty())
+			result.setReasons(outpatientConsultationMapper.toOutpatientReasonDto(reasons));
 		return result;
 	}
 

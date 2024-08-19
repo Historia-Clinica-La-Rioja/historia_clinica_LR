@@ -124,11 +124,9 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 	public List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId) {
 		List<Integer> result = new ArrayList<>();
 		coverages.forEach((coverage) -> {
-			MedicalCoverage medicalCoverageSaved = Optional.ofNullable(coverage.getMedicalCoverage().getId())
-					.map(medicalCoverageId -> medicalCoverageRepository.findById(medicalCoverageId)
-							.orElse(null))
-					.orElseGet(() -> medicalCoverageRepository.findByCUIT(coverage.getMedicalCoverage().getCuit())
-							.orElseThrow(() -> new NotFoundException("medical-coverage-not-exists", String.format("La cobertura médica con cuit %s no existe", coverage.getMedicalCoverage().getCuit()))));
+			MedicalCoverage medicalCoverageSaved =
+					medicalCoverageRepository.findByCUIT(coverage.getMedicalCoverage().getCuit())
+							.orElseThrow(() -> new NotFoundException("medical-coverage-not-exists", String.format("La cobertura médica con cuit %s no existe", coverage.getMedicalCoverage().getCuit())));
 			coverage.getMedicalCoverage().setId(medicalCoverageSaved.getId());
 			Integer pmcId = patientMedicalCoverageRepository.getByPatientAndMedicalCoverage(patientId, coverage.getMedicalCoverage().getId())
 					.map(PatientMedicalCoverageAssn::getId)

@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 import java.util.List;
 
-@RestController
 @AllArgsConstructor
-@RequestMapping("/address/masterdata")
 @Tag(name = "Address Master Data", description = "Address Master Data")
+@RequestMapping("/address/masterdata")
+@RestController
 public class AddressMasterDataController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AddressMasterDataController.class);
@@ -59,6 +59,12 @@ public class AddressMasterDataController {
 	public ResponseEntity<Collection<AddressProjection>> getCitiesByDepartment(@PathVariable("departmentId") Short departmentId) {
 		LOG.debug("{}", "All cities by department");
 		return ResponseEntity.ok().body(addressMasterDataService.findCitiesByDepartment(departmentId, AddressProjection.class));
+	}
+
+	@GetMapping(value = "/department/{departmentId}/get-all-cities")
+	public ResponseEntity<Collection<AddressProjection>> getAllCitiesByDepartment(@PathVariable("departmentId") Short departmentId) {
+		LOG.debug("{}", "All cities by department");
+		return ResponseEntity.ok().body(addressMasterDataService.findAllCitiesByDepartment(departmentId, AddressProjection.class));
 	}
 
 	@GetMapping(value = "/department/{departmentId}")

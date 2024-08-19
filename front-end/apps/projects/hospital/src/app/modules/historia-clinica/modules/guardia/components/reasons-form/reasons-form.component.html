@@ -1,0 +1,10 @@
+<div class="motive-section" fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="!(motivoNuevaConsultaService.isEmpty$ | async)"
+        title="{{ 'guardia.triage.LIST_CARD_TITLE' }}">
+        <app-reason-list [service]="motivoNuevaConsultaService"></app-reason-list>
+    </app-titled-content-card>
+
+    <div>
+        <app-button id="add-reason" buttonType="" text="guardia.triage.ADD_REASON" (clicked)="addReason()"></app-button>
+    </div>
+</div>

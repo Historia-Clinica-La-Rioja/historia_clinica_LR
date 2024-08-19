@@ -70,7 +70,7 @@ public class EquipmentDiaryOpeningHoursValidatorServiceImpl implements Equipment
         List<EquipmentDiaryBo> overlapDiaries = diaryService.getAllOverlappingDiary(equipmentDiaryBo.getEquipmentId(), equipmentDiaryBo.getStartDate(),
 				equipmentDiaryBo.getEndDate(), Optional.ofNullable(equipmentDiaryBo.getId()));
         boolean overlap = overlapDiaries.stream().anyMatch(od ->
-				equipmentDiaryBo.getEquipmentDiaryOpeningHours().stream().anyMatch(doh -> overlapWithOthers(equipmentDiaryBo, od, doh)));
+				equipmentDiaryBo.getDiaryOpeningHours().stream().anyMatch(doh -> overlapWithOthers(equipmentDiaryBo, od, doh)));
         LOG.debug(OUTPUT, overlap);
         return overlap;
     }

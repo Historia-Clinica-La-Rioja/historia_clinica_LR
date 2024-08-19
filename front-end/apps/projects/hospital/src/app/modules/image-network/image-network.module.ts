@@ -31,8 +31,16 @@ import { WorklistComponent } from './components/worklist/worklist.component';
 import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 //pipes
 import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
+import { TechnicalWorklistHomeComponent } from './routes/technical-worklist-home/technical-worklist-home.component';
+import { QueueImageTechnicalComponent } from './components/queue-image-technical/queue-image-technical.component';
+import { ImageTableTechnicalComponent } from './components/image-table-technical/image-table-technical.component';
+import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
+import { ImageQueueFiltersComponent } from './components/image-queue-filters/image-queue-filters.component';
+import { ImageQueuePaginatorComponent } from './components/image-queue-paginator/image-queue-paginator.component';
+import { QueueImageListComponent } from './components/queue-image-list/queue-image-list.component';
 
 @NgModule({
     declarations: [
@@ -60,13 +68,22 @@ import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
         OrderImageDetailComponent,
         ImageOrderColoredIconTextCasesComponent,
         ProfessionalFullNamePipe,
+        TechnicalWorklistHomeComponent,
+        QueueImageTechnicalComponent,
+        ImageTableTechnicalComponent,
+        ImageQueueFiltersComponent,
+        ImageQueuePaginatorComponent,
+        QueueImageListComponent,
     ],
     imports: [
         CommonModule,
         PresentationModule,
         ImageNetworkRoutingModule,
         HistoriaClinicaModule,
-        IdentifierCasesComponent
+		//standalone
+        IdentifierCasesComponent,
+		ConceptTypeaheadSearchComponent,
+        PatientSummaryComponent
     ],
     exports: [
         ViewStudyComponent,

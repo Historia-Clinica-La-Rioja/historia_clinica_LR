@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.domain.consultation;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +35,9 @@ public class OdontologyDocumentBo {
 
     private List<ConsultationProcedureBo> procedures;
 
-    private List<ConsultationPersonalHistoryBo> personalHistories;
+    private ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories;
 
-    private List<ConsultationAllergyBo> allergies;
+    private ReferableItemBo<ConsultationAllergyBo> allergies;
 
     private List<ConsultationMedicationBo> medications;
 

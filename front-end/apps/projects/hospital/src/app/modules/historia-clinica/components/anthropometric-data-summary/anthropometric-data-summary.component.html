@@ -1,14 +1,14 @@
 <div data-id="anthropometric-data-section">
-    <app-iconed-titled-section icon="assignment"
+    <app-iconed-titled-section icon="accessibility"
         title="internaciones.anesthesic-report.anthropometric-data.TITLE"></app-iconed-titled-section>
-    <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-        <app-title-description-list *ngIf="anthropometricData.bloodType"
+    <div class="section-description">
+        <app-title-description-list class="list-item" *ngIf="anthropometricData.bloodType"
             title="internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE"
             [descriptionData]="anthropometricData.bloodType"></app-title-description-list>
-        <app-title-description-list *ngIf="anthropometricData.height"
+        <app-title-description-list class="list-item" *ngIf="anthropometricData.height"
             title="internaciones.anesthesic-report.anthropometric-data.detail.HEIGHT"
             [descriptionData]="anthropometricData.height"></app-title-description-list>
-        <app-title-description-list *ngIf="anthropometricData.weight"
+        <app-title-description-list class="list-item" *ngIf="anthropometricData.weight"
             title="internaciones.anesthesic-report.anthropometric-data.detail.WEIGHT"
             [descriptionData]="anthropometricData.weight"></app-title-description-list>
     </div>

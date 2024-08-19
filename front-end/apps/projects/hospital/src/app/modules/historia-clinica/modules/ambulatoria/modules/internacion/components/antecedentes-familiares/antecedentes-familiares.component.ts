@@ -1,9 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HealthHistoryConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model';
 import { pushTo, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
+import { AntecedentesFamiliaresNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 
 @Component({
 	selector: 'app-antecedentes-familiares',
@@ -17,13 +22,31 @@ export class AntecedentesFamiliaresComponent{
 
 	@Input() familyHistories: HealthHistoryConditionDto[] = [];
 
+	@Output() isFamilyHistoriesNoRefer = new EventEmitter<boolean>();
 
+	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
+
+	familyHistoriesContent: ConceptsList = {
+		id: 'family-histories-checkbox-concepts-list',
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
+			icon: 'report'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.LIST_CARD_TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
 
 	constructor(
+		private readonly formBuilder: FormBuilder,
 		private readonly dialog: MatDialog,
-
-
+		private readonly snackBarService: SnackBarService,
+		private readonly snomedService: SnomedService,
 	) {
+		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
+
 	}
 
 	addSnomedConcept(snomedConcept: SnomedDto) {
@@ -61,9 +84,18 @@ export class AntecedentesFamiliaresComponent{
 		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(snomedConcept => {
-			if (snomedConcept)
+			if (snomedConcept) {
 				this.addSnomedConcept(snomedConcept)
+				this.antecedentesFamiliaresNuevaConsultaService.add({snomed: snomedConcept, fecha: null});
+			}
 		});
+	}
+
+	checkFamilyHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addFamilyHistories();
+		}
+		this.isFamilyHistoriesNoRefer.emit(!$event.checkboxSelected);
 	}
 
 }

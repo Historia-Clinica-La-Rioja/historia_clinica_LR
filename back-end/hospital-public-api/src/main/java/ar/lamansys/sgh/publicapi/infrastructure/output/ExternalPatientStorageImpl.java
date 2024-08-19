@@ -4,10 +4,13 @@ import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientBo;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientCoverageBo;
 import ar.lamansys.sgh.publicapi.domain.ExternalPatientExtendedBo;
+import ar.lamansys.sgh.publicapi.patient.domain.PersonBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.RequiredPatientDataDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
     private final ExternalPatientRepository externalPatientRepository;
 
     private final SharedPatientPort sharedPatientPort;
+
+	private final SharedPersonPort sharedPersonPort;
 
     @Override
     public Optional<ExternalPatientBo> findByExternalId(String externalId) {
@@ -72,6 +77,27 @@ public class ExternalPatientStorageImpl implements ExternalPatientStorage {
         log.debug("Input parameter externalPatientExtended -> {}", epeBo);
         sharedPatientPort.saveMedicalCoverages(mapToExternalPatientCoverageListDto(epeBo.getMedicalCoverages()), epeBo.getPatientId());
     }
+
+	@Override
+	public Optional<PersonBo> getPersonDataById(String patientId) {
+		return sharedPersonPort.getPersonData(Integer.valueOf(patientId))
+		.map(result -> new PersonBo(
+						result.getFirstName(),
+						result.getMiddleNames(),
+						result.getLastName(),
+						result.getOtherLastNames(),
+						result.getIdentificationTypeId(),
+						result.getIdentificationTypeDescription(),
+						result.getIdentificationNumber(),
+						result.getGenderId(),
+						result.getGenderDescription(),
+						result.getBirthDate(),
+						result.getCuil(),
+						result.getSelfDeterminationName(),
+						result.getSelfDeterminationGender(),
+						result.getSelfDeterminationGenderDescription()
+				));
+	}
 
 	private List<ExternalPatientCoverageDto> mapToExternalPatientCoverageListDto(List<ExternalPatientCoverageBo> medicalCoverageListBo) {
         List<ExternalPatientCoverageDto> result = new ArrayList<>();

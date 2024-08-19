@@ -1,6 +1,13 @@
 package net.pladema.establishment.service.impl;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
@@ -13,55 +20,33 @@ import net.pladema.establishment.repository.entity.HistoricInchargeNurseBed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
 import net.pladema.person.service.PersonService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class BedServiceImpl implements BedService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(BedServiceImpl.class);
 
 	private static final boolean AVAILABLE = true;
 	public static final String OUTPUT = "Output -> {}";
 
 	private final BedRepository bedRepository;
-
 	private final BedSummaryRepository bedSummaryRepository;
-
 	private final HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository;
-
 	private final InternmentEpisodeExternalService internmentEpisodeExtService;
-
 	private final PersonService personService;
-
 	private final HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository;
-
-	public BedServiceImpl(BedRepository bedRepository, HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository,
-			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository, PersonService personService,
-			HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository) {
-		this.bedRepository = bedRepository;
-		this.bedSummaryRepository = bedSummaryRepository;
-		this.historicPatientBedRelocationRepository = historicPatientBedRelocationRepository;
-		this.internmentEpisodeExtService = internmentEpisodeExtService;
-		this.personService = personService;
-		this.historicInchargeNurseBedRepository = historicInchargeNurseBedRepository;
-	}
+	private final LocalDateMapper localDateMapper;
 
 	@Override
 	public Bed updateBedStatusOccupied(Integer id) {
-		LOG.debug("Input parameters -> BedId {}", id);
+		log.debug("Input parameters -> BedId {}", id);
 		return bedRepository.findById(id).map(bedToUpdate -> {
 			bedToUpdate.setFree(false);
 			Bed result = bedRepository.save(bedToUpdate);
-			LOG.debug(OUTPUT, result);
+			log.debug(OUTPUT, result);
 			return result;
 		}).get();
 	}
@@ -79,17 +64,17 @@ public class BedServiceImpl implements BedService {
 
 	@Override
 	public List<Bed> getFreeBeds(Integer institutionId, Integer clinicalSpecialtyId) {
-		LOG.debug("BedService::getFreeBedsByClinicalSpecialty-> input parameters -> institutionId {} , BedId {}",
+		log.debug("BedService::getFreeBedsByClinicalSpecialty-> input parameters -> institutionId {} , BedId {}",
 				institutionId, clinicalSpecialtyId);
 		List<Bed> result = bedRepository.getFreeBedsByClinicalSpecialty(institutionId, clinicalSpecialtyId);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	@Transactional
 	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation) {
-		LOG.debug("BedService::addPatientBedRelocation-> input parameters -> PatientBedRelocation{} ", patientBedRelocation);
+		log.debug("BedService::addPatientBedRelocation-> input parameters -> PatientBedRelocation{} ", patientBedRelocation);
 		if (patientBedRelocation.getOriginBedId() != null) {
 			internmentEpisodeExtService.relocatePatientBed(patientBedRelocation.getInternmentEpisodeId(),
 					patientBedRelocation.getDestinationBedId());
@@ -99,45 +84,69 @@ public class BedServiceImpl implements BedService {
 		}
 		updateBedStatusOccupied(patientBedRelocation.getDestinationBedId());
 		HistoricPatientBedRelocation result = historicPatientBedRelocationRepository.save(patientBedRelocation);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 
 		return result;
 	}
 
-	@Transactional(readOnly = true)
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId) {
-		LOG.debug("BedService::getLastPatientBedRelocation-> input parameters -> internmentEpisodeId{}", internmentEpisodeId);
+		log.debug("BedService::getLastPatientBedRelocation-> input parameters -> internmentEpisodeId{}", internmentEpisodeId);
 		Optional<HistoricPatientBedRelocation> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId).findFirst();
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<HistoricPatientBedRelocation> getBedIdByDateTime(Integer internmentEpisodeId, LocalDateTime requestDateTime) {
+		log.debug("Input parameters -> internmentEpisodeId {} requestDateTime {}", internmentEpisodeId, requestDateTime);
+		var patientBedRelocations = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId)
+				.collect(Collectors.toList());
+
+		if (patientBedRelocations.isEmpty()) {
+			log.debug(OUTPUT, "No bed relocation yet");
+			return Optional.empty();
+		}
+
+		var result = patientBedRelocations.stream()
+				.filter(historicPatientBedRelocation -> requestDateTime.isAfter(historicPatientBedRelocation.getRelocationDate()))
+				.findFirst()
+				.or(() -> {
+                    Integer firstBedId = patientBedRelocations.get(patientBedRelocations.size() - 1).getOriginBedId();
+					return Optional.of(new HistoricPatientBedRelocation(null, firstBedId));
+				});
+
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<BedInfoVo> getBedInfo(Integer bedId) {
-		LOG.debug("input parameters -> bedId {}", bedId);
+		log.debug("input parameters -> bedId {}", bedId);
 		Optional<BedInfoVo> result = bedRepository.getBedInfo(bedId).findFirst();
 		if (result.isPresent() && result.get().getBedNurse() != null) {
 			BedInfoVo r = result.get();
 			r.getBedNurse().setFullName(personService.getCompletePersonNameById(r.getBedNurse().getPersonId()));
 		}
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	@Override
 	public List<BedSummaryVo> getBedSummary(Integer institutionId, Short[] sectorsType) {
-		LOG.debug("input parameters -> institutionId {}, sectorsType {}", institutionId, sectorsType);
+		log.debug("input parameters -> institutionId {}, sectorsType {}", institutionId, sectorsType);
 		List<BedSummaryVo> result = bedSummaryRepository.execute(institutionId, sectorsType);
-		LOG.trace(OUTPUT, result);
-		LOG.debug("Result size {}", result.size());
+		log.trace(OUTPUT, result);
+		log.debug("Result size {}", result.size());
 		return result;
 	}
 
 	@Override
 	public void updateBedNurse(Integer userId, Integer bedId) {
-		LOG.debug("input parameters -> userId {}, bedId {}", userId, bedId);
+		log.debug("input parameters -> userId {}, bedId {}", userId, bedId);
 		Bed bed = bedRepository.getById(bedId);
 		bed.setInchargeNurseId(userId);
 		bedRepository.save(bed);

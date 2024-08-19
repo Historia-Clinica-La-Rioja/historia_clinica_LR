@@ -284,6 +284,7 @@ const SectorShow = props => (
                     <TextField source="aetitle" />
                     <TextField source="domain" />
                     <TextField source="port" />
+                    <TextField source="localViewerUrl" />
                     <EditButton />
                 </Datagrid>
             </ReferenceManyField>

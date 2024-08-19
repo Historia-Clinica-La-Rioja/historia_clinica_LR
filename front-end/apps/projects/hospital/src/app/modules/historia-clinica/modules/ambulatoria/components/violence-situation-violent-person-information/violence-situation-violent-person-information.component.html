@@ -1,12 +1,13 @@
 <app-new-consultation-expansion-section
    [title]="'ambulatoria.paciente.violence-situations.dialog.violent-person-information.TITLE' | translate"
    icon="cancel">
-   <app-titled-content-card
+   <app-titled-content-card [ngClass]="showError && !aggressorsList.length? 'contentCard' : ''"
       title="{{ 'ambulatoria.paciente.violence-situations.dialog.violent-person-information.SUBTITLE' }}">
       <app-violent-person-list></app-violent-person-list>
    </app-titled-content-card>
+   <mat-error class="errorMessage" *ngIf="showError && !aggressorsList.length" [translate]="'forms.REQUIRED'"></mat-error>
 
-   <div aling="start" fxFlex="40">
+   <div aling="start">
       <button mat-button color="primary" (click)="openNewViolentPerson()"> +
          {{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.ADD_BUTTON' |
          translate}}</button>

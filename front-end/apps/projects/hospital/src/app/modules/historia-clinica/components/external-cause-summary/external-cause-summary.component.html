@@ -1,0 +1,9 @@
+<div data-id="external-cause-section">
+    <app-iconed-titled-section icon="event_available" title="internaciones.documents-summary.external-cause.TITLE"></app-iconed-titled-section>
+    <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+        <ng-container *ngFor="let itemSummary of externalCause">
+            <app-title-description-list *ngIf="itemSummary.descriptionData" data-id="{{itemSummary.dataId}}"
+                title="{{itemSummary.title}}" [descriptionData]="itemSummary.descriptionData"></app-title-description-list>
+        </ng-container>
+    </div>
+</div>

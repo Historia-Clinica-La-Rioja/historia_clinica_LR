@@ -111,6 +111,60 @@ public class ServerAuthInterceptor extends AuthorizationInterceptor {
 
 ![Auth-Interceptor](https://hapifhir.io/hapi-fhir/docs/images/hapi_authorizationinterceptor_read_normal.svg)
 
+##### Filtro authorization
+Al integrar la dispensa de recetas y carga de resultados de laboratorio (hsi-852) se introdujeron cambios en el flujo de autorización y autenticación.
+
+Se agregó el filtro FHIRApiAuthenticationFilter que funciona así:
+ * Solo se aplica para las urls /fhir/*.
+ * Si hay un header Authorization con un token, intenta validarlo con federar. 
+   * Cuando el token es válido se modifica el security context cargando el rol 'FHIR_ACCESS_ALL_RESOURCES' para el usuario -1. Esto de usar un usuario no existente es un poco raro. Es lo que hablábamos ayer sobre que no tenemos un vínculo entre el token y un usuario real de nuestro sistema.
+ * Si no hay header Authorization, llama al filtro PublicApiAuthenticationFilter (este no se llamaría de otra forma ya que solo aplica para las urls /public-api)
+  * En este camino el usuario puede tener el rol 'FHIR_ACCESS_ALL_RESOURCES' si se lo asignaron.
+
+El ServerAuthInterceptor es el encargado de dar acceso o no a los endpoints de fhir vía la configuración de reglas que
+provee hapi fhir. Por ahora, lo que hace es permitir el acceso a cualquier endpoint fhir si se cuenta con al menos un
+rol de los listados más abajo en 'Roles'. Después, cada endpoint es responsable de limitar el acceso según corresponda.
+
+**Roles**
+
+* API_RECETAS
+    * Este rol se usa para proteger los endpoints fhir de dispensa de medicamentos
+* FHIR_POST_DIAGNOSTIC_REPORT
+    * Nuevo rol para proteger endpoint fhir: carga resultados laboratorio
+* FHIR_ACCESS_ALL_RESOURCES
+    * Nuevo rol para proteger endpoints fhir que ya existen (listados más abajo)
+    * Se asigna en el filtro FHIRApiAuthenticationFilter si el usr manda un token que es valido en federar. También se le puede asignar el rol a un usr común que use login via api pública.
+
+**Roles usados en los endpoints**
+
+* POST /Bundle
+    * Nuevo endpoint que se agregó en hsi-852 para dispensa de medicamentos y carga de resultados de laboratorio
+    * Solo habilitada si HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO está activo
+    * Hay 2 casos
+    * MedicationRequest (dispensa receta)
+        * Rol: API_RECETAS
+    * DiagnosticReport (carga resultados laboratorio)
+        * Rol: FHIR_POST_DIAGNOSTIC_REPORT
+* GET /Bundle/{id}
+    * Endpoint que ya existía
+    * Rol: FHIR_ACCESS_ALL_RESOURCES
+* GET /DocumentReference
+    * Endpoint que ya existía
+    * Rol: FHIR_ACCESS_ALL_RESOURCES
+* GET /MedicationRequest
+    * Endpoint que ya existía
+    * Rol: FHIR_ACCESS_ALL_RESOURCES
+* GET /masterfile-federacion-service/Patient/patient-location
+    * Endpoint que ya existía
+    * Rol: FHIR_ACCESS_ALL_RESOURCES
+* GET /masterfile-federacion-service/Patient
+    * Endpoint que ya existía
+    * Rol: FHIR_ACCESS_ALL_RESOURCES
+* GET /ServiceRequest
+    * Endpoint que ya existía
+    * Rol: FHIR_ACCESS_ALL_RESOURCES
+
+
 #### 📌 Validator  
 
 En cada respuesta del servidor, los recursos Fhir son validados respecto a las reglas de validación oficial de Fhir, éstas incluyen validación del contenido según la especificación de cada recurso, cardinalidad para cada propiedad, chequeo de referencias, codificación apropiada para cada dominio, etc. 

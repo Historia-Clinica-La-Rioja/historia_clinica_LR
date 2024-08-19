@@ -27,29 +27,28 @@ public class ClinicalObservationBo extends SelfValidating<ClinicalObservationBo>
 
     private LocalDateTime effectiveTime;
 
+    private String statusId;
+
     public ClinicalObservationBo(ClinicalObservationVo clinicalObservationVo) {
         super();
         this.id = clinicalObservationVo.getId();
         this.value = clinicalObservationVo.getValue();
         this.effectiveTime = clinicalObservationVo.getEffectiveTime();
+        this.statusId = clinicalObservationVo.getStatusId();
     }
 
-    public LocalDateTime getEffectiveTime(){
+    public LocalDateTime getEffectiveTime() {
         if (effectiveTime == null)
             return LocalDateTime.now();
         return effectiveTime;
     }
 
-    public void setEffectiveTime(LocalDateTime effectiveTime){
-        this.effectiveTime = effectiveTime;
-    }
-
-    public void setEffectiveTime(String effectiveTime){
+    public void setEffectiveTime(String effectiveTime) {
         if (effectiveTime == null) {
             this.effectiveTime = null;
             return;
         }
-        this.effectiveTime = LocalDateTime.parse(effectiveTime, DateTimeFormatter.ofPattern( JacksonDateFormatConfig.DATE_TIME_FORMAT ));
+        this.effectiveTime = LocalDateTime.parse(effectiveTime, DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_TIME_FORMAT));
     }
 
 }

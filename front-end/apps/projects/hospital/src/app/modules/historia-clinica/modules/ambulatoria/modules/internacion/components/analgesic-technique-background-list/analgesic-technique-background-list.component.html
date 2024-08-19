@@ -15,6 +15,9 @@
                 <span *ngIf="analgesicTechnique.cateter" > {{ 'internaciones.anesthesic-report.analgesic-technique.OPTION_YES' | translate }}</span>
                 <span *ngIf="!analgesicTechnique.cateter" > {{ 'internaciones.anesthesic-report.analgesic-technique.OPTION_NO' | translate }}</span>
             </span>
+            <span *ngIf="analgesicTechnique?.cateterNote" class="break-text grey">
+                {{ analgesicTechnique.cateterNote }}
+            </span>
         </div>
         <ng-container>
             <button mat-icon-button color="warn" (click)="service.remove(i)">

@@ -44,6 +44,9 @@ public class DocumentHealthcareProfessional implements Serializable {
 	@Column(name = "profession_type_id", nullable = false)
 	private Short professionTypeId;
 
+	@Column(name = "other_profession_type_description")
+	private String otherProfessionTypeDescription;
+
 	@Column(name = "comments", columnDefinition = "TEXT")
 	private String comments;
 }
