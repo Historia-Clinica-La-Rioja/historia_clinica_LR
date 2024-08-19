@@ -26,8 +26,10 @@ import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { InternmentActionsService } from './internment-actions.service';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
 const TIME_OUT = 5000;
+const MAIN_DIAGNOSIS_POSITION = 0;
 
 @Injectable({
     providedIn: 'root'
@@ -142,7 +144,7 @@ export class AnestheticReportService {
     
     private loadMainDiagnosis() {
         this.internmentStateService.getDiagnosesGeneralState(this.internmentActions.internmentEpisodeId).subscribe(diagnoses => {
-			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			this.internmentActions.mainDiagnosis = getElementAtPosition(diagnoses.filter(diagnosis => diagnosis.main), MAIN_DIAGNOSIS_POSITION);
 			if (this.internmentActions.mainDiagnosis)
 				this.internmentActions.mainDiagnosis.isAdded = true;
             this.mainDiagnosisSource.next(this.internmentActions.mainDiagnosis);
@@ -289,7 +291,8 @@ export class AnestheticReportService {
                 });
             },
             _ => {
-                this.snackBarService.showError('internaciones.anesthesic-report.ERROR')
+                this.snackBarService.showError('internaciones.anesthesic-report.ERROR');
+                this.setIsLoading(false);
             });
     }
 

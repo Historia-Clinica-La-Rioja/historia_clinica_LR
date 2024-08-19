@@ -24,6 +24,8 @@ export class AnestheticReportRecordService {
 
 	private isEmptySource = new BehaviorSubject<boolean>(true);
 	isEmpty$ = this.isEmptySource.asObservable();
+    private isEmptyRecordSource = new BehaviorSubject<boolean>(true);
+	isEmptyRecord$ = this.isEmptyRecordSource.asObservable();
 
     constructor(
         private readonly snomedService: SnomedService,
@@ -44,6 +46,7 @@ export class AnestheticReportRecordService {
         this.recordList = pushIfNotExists<any>(this.recordList, record, this.compareRecord);
         this.dataEmitter.next(this.recordList);
 		this.isEmptySource.next(this.isEmpty());
+		this.isEmptyRecordSource.next(this.hasRecords());
         return currentItems === this.recordList.length;
     }
 
@@ -82,6 +85,7 @@ export class AnestheticReportRecordService {
 		this.recordList = removeFrom<SnomedDto>(this.recordList, index);
 		this.dataEmitter.next(this.recordList);
 		this.isEmptySource.next(this.isEmpty());
+		this.isEmptyRecordSource.next(this.hasRecords());
 	}
 
     getRecord(): Observable<SnomedDto[]> {
@@ -146,6 +150,7 @@ export class AnestheticReportRecordService {
 		}
 
         this.isEmptySource.next(this.isEmpty());
+		this.isEmptyRecordSource.next(this.hasRecords());
     }
 }
 

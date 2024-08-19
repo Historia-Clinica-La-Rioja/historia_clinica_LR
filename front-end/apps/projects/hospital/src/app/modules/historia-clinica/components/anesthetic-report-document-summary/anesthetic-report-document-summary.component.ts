@@ -8,6 +8,7 @@ import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } fr
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
 import { TranslateService } from '@ngx-translate/core';
+import { ButtonType } from '@presentation/components/button/button.component';
 import { Observable, forkJoin, map } from 'rxjs';
 
 const ACTION_TRIGGERED = true;
@@ -29,6 +30,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
     _activeDocument: DocumentSearch;
     documentSummary$: Observable<{headerDescription: HeaderDescription, anestheticReport: AnestheticReportViewFormat}>;
 	isDraft = false;
+    ButtonType = ButtonType.FLAT;
     documentName = '';
 
 	constructor(
@@ -38,7 +40,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
 		private readonly translateService: TranslateService,
-        private internmentSummaryFacadeService: InternmentSummaryFacadeService,
+        private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
      ) {
         this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.ANESTHETIC_REPORT');
     }

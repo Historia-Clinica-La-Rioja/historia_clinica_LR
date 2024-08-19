@@ -1,11 +1,11 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, PostCloseAnestheticReportDto, TimeDto } from '@api-rest/api-model';
 import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { AnestheticReportService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
+import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 @Component({
 	selector: 'app-anesthetic-report-dock-popup',
@@ -25,7 +25,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
 		private readonly el: ElementRef,
-		private readonly dialog: MatDialog,
+        private readonly dialogService: DialogService<DocumentActionReasonComponent>,
         readonly anesthethicReportHandlerService: AnestheticReportService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
     ) {
@@ -70,15 +70,12 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 	}
 
     private openEditReason(anestheticReport: AnestheticReportDto) {
-		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
-			data: {
-				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
-				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
-			},
-			width: "50vh",
-			autoFocus: false,
-			disableClose: true
-		});
+        const dialogRef = this.dialogService.open(DocumentActionReasonComponent, 
+            { dialogWidth: DialogWidth.SMALL }, 
+            {
+                title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+                subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
+            })
 		dialogRef.afterClosed().subscribe(reason => {
 			if (reason) {
                 let postAnestheticReport: PostCloseAnestheticReportDto = {

@@ -16,7 +16,6 @@ export class DeleteDocumentActionService {
 
 	updateFieldsSubject = new Subject<InternmentFields>();
 	updateFields$ = this.updateFieldsSubject.asObservable();
-
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly anamnesisService: AnamnesisService,
@@ -39,26 +38,15 @@ export class DeleteDocumentActionService {
 		});
 		dialogRef.afterClosed().subscribe(reason => {
 			if (reason) {
-				switch (document.documentType) {
-					case "Anamnesis":
-						this.deleteAnamnesis(document.id, internmentEpisodeId, reason);
-						break;
-					case "Nota de evolución":
-						this.deleteEvolutionNote(document.id, internmentEpisodeId, reason);
-						break;
-					case "Nota de evolución de enfermería":
-						this.deleteEvolutionNote(document.id, internmentEpisodeId, reason);
-						break;
-					case "Epicrisis":
-						this.deleteEpicrisis(document.id, internmentEpisodeId, reason);
-						break;
-					case "Parte quirúrgico de internación":
-						this.deleteSurgicalReport(document.id, internmentEpisodeId, reason);
-						break;
-                    case "Parte anestésico":
-                        this.deleteAnestheticReport(document.id, reason);
-                        break;
-				}
+                const DELETE_DOCUMENT_TYPES = {
+                    [DocumentTypes.ANAMNESIS]: (documentId: number, internmentEpisodeId: number, reason: string) => this.deleteAnamnesis(documentId, internmentEpisodeId, reason),
+                    [DocumentTypes.EVOLUTION_NOTE]: (documentId: number, internmentEpisodeId: number, reason: string) => this.deleteEvolutionNote(documentId, internmentEpisodeId, reason),
+                    [DocumentTypes.NURSE_EVOLUTION_NOTE]: (documentId: number, internmentEpisodeId: number, reason: string) => this.deleteEvolutionNote(documentId, internmentEpisodeId, reason),
+                    [DocumentTypes.EPICRISIS]: (documentId: number, internmentEpisodeId: number, reason: string) => this.deleteEpicrisis(documentId, internmentEpisodeId, reason),
+                    [DocumentTypes.SURGICAL_REPORT]: (documentId: number, internmentEpisodeId: number, reason: string) => this.deleteSurgicalReport(documentId, internmentEpisodeId, reason),
+                    [DocumentTypes.ANESTHETIC_REPORT]: (documentId: number, internmentEpisodeId: number, reason: string) => this.deleteAnestheticReport(documentId, reason),
+                }
+				DELETE_DOCUMENT_TYPES[document.documentType](document.id, internmentEpisodeId, reason);
 			}
 		})
 	}
@@ -109,4 +97,13 @@ export class DeleteDocumentActionService {
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
+}
+
+enum DocumentTypes {
+    ANESTHETIC_REPORT = 'Parte anestésico',
+    EVOLUTION_NOTE = 'Nota de evolución',
+    NURSE_EVOLUTION_NOTE = 'Nota de evolución de enfermería',
+    ANAMNESIS = 'Anamnesis',
+    EPICRISIS = 'Epicrisis',
+	SURGICAL_REPORT = 'Parte quirúrgico de internación',
 }
