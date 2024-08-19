@@ -100,7 +100,7 @@ public class GeneralReportsController {
 			String[] headers = {"Fecha", "Apellido de prestador", "Nombre de prestador", "DNI de prestador", "Apellido de paciente", "Nombre de paciente", "DNI de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Motivos", "Problema", "Presión arterial (mmHg)", "Medicación"};
 
 			logger.debug("building hypertensives excel report");
-			IWorkbook wb = excelService.buildDiabeticsOrHypertensivesExcel(title, headers, queryFactory.queryDiabetics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+			IWorkbook wb = excelService.buildDiabeticsOrHypertensivesExcel(title, headers, queryFactory.queryHypertensives(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
 			String filename = "Hipertensos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
