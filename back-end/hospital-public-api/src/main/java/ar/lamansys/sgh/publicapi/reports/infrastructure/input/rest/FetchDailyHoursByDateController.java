@@ -24,7 +24,7 @@ public class FetchDailyHoursByDateController {
 	private FetchDailyHoursByDate fetchDailyHours;
 
 	@GetMapping
-	public @ResponseBody List<DayReportBo> FetchDailyHoursByDate(
+	public @ResponseBody List<DayReportBo> fetchDailyHoursByDate(
 			@RequestParam(name = "dateFrom") String dateFrom,
 			@RequestParam(name = "dateUntil") String dateUntil,
 			@RequestParam(name = "institutionRefsetCode", required = false) String institutionRefsetCode,
