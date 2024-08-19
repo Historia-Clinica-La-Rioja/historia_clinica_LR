@@ -26,9 +26,6 @@ public class MedicationStatementCommercialPrescription implements Serializable {
 	@Column(name = "medication_statement_id")
 	private Integer medicationStatementId;
 
-	@Column(name = "suggested_commercial_medication_sctid")
-	private String suggestedCommercialMedicationSctid;
-
 	@Column(name = "presentation_unit_quantity", nullable = false)
 	private Short presentationUnitQuantity;
 

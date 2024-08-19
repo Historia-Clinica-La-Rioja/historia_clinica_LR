@@ -882,7 +882,6 @@ export interface CommercialMedicationDto {
 export interface CommercialMedicationPrescriptionDto {
     medicationPackQuantity: number;
     presentationUnitQuantity: number;
-    suggestedCommercialMedicationSctid?: string;
 }
 
 export interface Comparable<T> {
@@ -3960,6 +3959,7 @@ export interface PrescriptionItemDto extends Serializable {
     observations?: string;
     prescriptionLineNumber: number;
     snomed: SnomedDto;
+    suggestedCommercialMedication?: SnomedDto;
 }
 
 export interface PrivateHealthInsuranceDetailsDto {

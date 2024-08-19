@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.CommercialMedicationPrescription
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementCommercialPrescriptionRepository;
@@ -44,8 +45,7 @@ public class LoadMedication {
         log.debug("Input parameters -> patientId {}, documentId {}, medicationBo {}", patientId, medicationBo, medicationBo);
         this.assertRequiredFields(documentId, medicationBo);
         if (medicationBo.getId() == null) {
-            Integer snomedId = snomedService.getSnomedId(medicationBo.getSnomed())
-                    .orElseGet(() -> snomedService.createSnomedTerm(medicationBo.getSnomed()));
+            Integer snomedId = getSnomedId(medicationBo.getSnomed());
             MedicationStatement medicationStatement = this.saveMedicationStatement(patientId, medicationBo, snomedId);
             medicationBo.setId(medicationStatement.getId());
             medicationBo.setStatusId(medicationStatement.getStatusId());
@@ -62,8 +62,12 @@ public class LoadMedication {
         return medicationBo;
     }
 
+	private Integer getSnomedId(SnomedBo medication) {
+		return snomedService.getSnomedId(medication).orElseGet(() -> snomedService.createSnomedTerm(medication));
+	}
 
-    private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId) {
+
+	private MedicationStatement saveMedicationStatement(Integer patientId, MedicationBo medicationBo, Integer snomedId) {
         log.debug("Input parameters -> patientId {}, medication {}, snomedId {}", patientId, medicationBo, snomedId);
         Long quantityId = createQuantity(medicationBo.getDosage());
         Dosage newDosage = createDosage(medicationBo.getDosage(), quantityId);
@@ -82,6 +86,8 @@ public class LoadMedication {
         medicationStatement = medicationStatementRepository.save(medicationStatement);
 		if (medicationBo.getCommercialMedicationPrescription() != null)
 			saveCommercialMedicationPrescription(medicationStatement.getId(), medicationBo.getCommercialMedicationPrescription());
+		if (medicationBo.getSuggestedCommercialMedication() != null)
+			medicationStatement.setSuggestedCommercialMedicationSnomedId(getSnomedId(medicationBo.getSuggestedCommercialMedication()));
         log.debug("medicationStatement saved -> {}", medicationStatement.getId());
         log.debug(OUTPUT, medicationStatement);
         return medicationStatement;
@@ -91,7 +97,6 @@ public class LoadMedication {
 													  CommercialMedicationPrescriptionBo commercialMedicationPrescription) {
 		MedicationStatementCommercialPrescription entity = new MedicationStatementCommercialPrescription();
 		entity.setMedicationStatementId(medicationStatementId);
-		entity.setSuggestedCommercialMedicationSctid(commercialMedicationPrescription.getSuggestedCommercialMedicationSctid());
 		entity.setPresentationUnitQuantity(commercialMedicationPrescription.getPresentationUnitQuantity());
 		entity.setMedicationPackQuantity(commercialMedicationPrescription.getMedicationPackQuantity());
 		medicationStatementCommercialPrescriptionRepository.save(entity);

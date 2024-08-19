@@ -9,8 +9,6 @@ import lombok.Setter;
 @Builder
 public class CommercialMedicationPrescriptionBo {
 
-	private String suggestedCommercialMedicationSctid;
-
 	private Short presentationUnitQuantity;
 
 	private Short medicationPackQuantity;

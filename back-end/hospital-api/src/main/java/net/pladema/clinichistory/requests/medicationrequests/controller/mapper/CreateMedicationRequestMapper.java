@@ -69,6 +69,7 @@ public class CreateMedicationRequestMapper {
 		result.setPrescriptionLineNumber(pid.getPrescriptionLineNumber());
 		result.setIsDigital(featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL));
 		result.setCommercialMedicationPrescription(parseTopidCommercialMedicationPrescriptionBo(pid.getCommercialMedicationPrescription()));
+		result.setSuggestedCommercialMedication(parseTo(pid.getSuggestedCommercialMedication()));
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -76,7 +77,6 @@ public class CreateMedicationRequestMapper {
 	private CommercialMedicationPrescriptionBo parseTopidCommercialMedicationPrescriptionBo(CommercialMedicationPrescriptionDto commercialMedicationPrescription) {
 		if (commercialMedicationPrescription != null)
 			return CommercialMedicationPrescriptionBo.builder()
-					.suggestedCommercialMedicationSctid(commercialMedicationPrescription.getSuggestedCommercialMedicationSctid())
 					.presentationUnitQuantity(commercialMedicationPrescription.getPresentationUnitQuantity())
 					.medicationPackQuantity(commercialMedicationPrescription.getMedicationPackQuantity())
 					.build();

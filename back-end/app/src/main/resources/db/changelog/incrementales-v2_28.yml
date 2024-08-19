@@ -251,9 +251,6 @@ databaseChangeLog:
                     name: medication_statement_id
                     type: int
                 - column:
-                    name: suggested_commercial_medication_sctid
-                    type: varchar
-                - column:
                     constraints:
                       nullable: false
                     name: presentation_unit_quantity
@@ -272,3 +269,14 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: medication_statement
               validate: true
+
+    - changeSet:
+        id: addColumn-suggested_commercial_medication_snomed_id-medication_statement
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: suggested_commercial_medication_snomed_id
+                    type: int
