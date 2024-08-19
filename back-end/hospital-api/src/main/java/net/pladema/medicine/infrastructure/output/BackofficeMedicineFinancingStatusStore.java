@@ -1,5 +1,7 @@
 package net.pladema.medicine.infrastructure.output;
 
+import net.pladema.medicine.application.port.MedicineFinancingStatusSearchStorage;
+import net.pladema.medicine.domain.MedicineFinancingStatusFilterBo;
 import net.pladema.medicine.infrastructure.output.repository.MedicineFinancingStatusRepository;
 import lombok.AllArgsConstructor;
 import net.pladema.medicine.infrastructure.input.rest.dto.MedicineFinancingStatusDto;
@@ -25,16 +27,13 @@ import java.util.stream.Collectors;
 public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<MedicineFinancingStatusDto, Integer> {
 
 	private final MedicineFinancingStatusRepository repository;
+	private final MedicineFinancingStatusSearchStorage medicineFinancingStatusSearchStorage;
 
 	
 	@Override
 	public Page<MedicineFinancingStatusDto> findAll(MedicineFinancingStatusDto example, Pageable pageable) {
-		List<MedicineFinancingStatusDto> result = repository.getAll().stream().map(this::mapToDto).collect(Collectors.toList());
-		result = filterResult(example, result);
-		sortResult(pageable, result);
-		int minIndex = pageable.getPageNumber()*pageable.getPageSize();
-		int maxIndex = minIndex + pageable.getPageSize();
-		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
+		MedicineFinancingStatusFilterBo filter = new MedicineFinancingStatusFilterBo(example.getConceptSctid(), example.getConceptPt(), example.getFinanced(), null);
+		return medicineFinancingStatusSearchStorage.findAllByFilter(filter, pageable).map(this::mapToDto);
 	}
 
 	@Override
@@ -76,35 +75,6 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 		result.setConceptSctid(medicineBo.getConceptSctid());
 		result.setFinanced(medicineBo.getFinanced());
 		return result;
-	}
-
-	private List<MedicineFinancingStatusDto> filterResult(MedicineFinancingStatusDto example, List<MedicineFinancingStatusDto> medicines){
-		if (example.getConceptPt() != null)
-			medicines = medicines.stream().filter(medicine -> normalizeString(medicine.getConceptPt()).contains(normalizeString(example.getConceptPt()))).collect(Collectors.toList());
-		if (example.getConceptSctid() != null)
-			medicines = medicines.stream().filter(medicine -> medicine.getConceptSctid().contains(example.getConceptSctid())).collect(Collectors.toList());
-		if (example.getFinanced() != null)
-			medicines = medicines.stream().filter(medicine -> medicine.getFinanced().equals(example.getFinanced())).collect(Collectors.toList());
-		return medicines;
-	}
-
-	private void sortResult(Pageable pageable, List<MedicineFinancingStatusDto> medicines){
-		if (pageable.getSort().getOrderFor("conceptPt") != null){
-			if (pageable.getSort().getOrderFor("conceptPt").isDescending())
-				medicines.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt()), Comparator.reverseOrder()));
-			else
-				medicines.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt())));
-		}
-		if (pageable.getSort().getOrderFor("conceptSctid") != null){
-			if (pageable.getSort().getOrderFor("conceptSctid").isDescending())
-				medicines.sort(Comparator.comparing(MedicineFinancingStatusDto::getConceptSctid, Comparator.reverseOrder()));
-			else
-				medicines.sort(Comparator.comparing(MedicineFinancingStatusDto::getConceptSctid));
-		}
-	}
-
-	private static String normalizeString(String string){
-		return StringUtils.stripAccents(string).toLowerCase();
 	}
 
 }

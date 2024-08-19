@@ -1,7 +1,9 @@
 package net.pladema.medicine.infrastructure.output;
 
 import lombok.AllArgsConstructor;
+import net.pladema.medicine.application.port.MedicineFinancingStatusSearchStorage;
 import net.pladema.medicine.domain.InstitutionMedicineFinancingStatusBo;
+import net.pladema.medicine.domain.MedicineFinancingStatusFilterBo;
 import net.pladema.medicine.infrastructure.input.rest.dto.InstitutionMedicineFinancingStatusDto;
 import net.pladema.medicine.infrastructure.input.rest.dto.MedicineFinancingStatusDto;
 import net.pladema.medicine.infrastructure.output.repository.InstitutionMedicineFinancingStatusRepository;
@@ -24,22 +26,18 @@ import java.util.stream.Collectors;
 public class BackofficeInstitutionMedicineFinancingStatusStore implements BackofficeStore<InstitutionMedicineFinancingStatusDto, Integer> {
 
 	private final InstitutionMedicineFinancingStatusRepository repository;
+	private final MedicineFinancingStatusSearchStorage medicineFinancingStatusSearchStorage;
 
 	@Override
 	public Page<InstitutionMedicineFinancingStatusDto> findAll(InstitutionMedicineFinancingStatusDto example, Pageable pageable) {
-		List<InstitutionMedicineFinancingStatusDto> result = repository.getByInstitutionId(example.getInstitutionId())
-				.stream().map(this::mapToDto).collect(Collectors.toList());
-
-		result = filterResult(example, result);
-		sortResult(pageable, result);
-		int minIndex = pageable.getPageNumber()*pageable.getPageSize();
-		int maxIndex = minIndex + pageable.getPageSize();
-		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
+		Integer institutionId = example.getInstitutionId();
+		MedicineFinancingStatusFilterBo filter = new MedicineFinancingStatusFilterBo(example.getConceptSctid(), example.getConceptPt(), example.getFinancedByDomain(), example.getFinancedByInstitution());
+		return medicineFinancingStatusSearchStorage.findAllByFilter(institutionId, filter, pageable).map(this::mapToDto);
 	}
 
 	@Override
 	public List<InstitutionMedicineFinancingStatusDto> findAll() {
-		return repository.getAll().stream().map(this::mapToDto).collect(Collectors.toList());
+		return List.of();
 	}
 
 	@Override
@@ -82,37 +80,6 @@ public class BackofficeInstitutionMedicineFinancingStatusStore implements Backof
 		result.setConceptPt(bo.getConceptPt());
 		result.setConceptSctid(bo.getConceptSctid());
 		return result;
-	}
-
-	private List<InstitutionMedicineFinancingStatusDto> filterResult(InstitutionMedicineFinancingStatusDto example, List<InstitutionMedicineFinancingStatusDto> medicines){
-		if (example.getConceptPt() != null)
-			medicines = medicines.stream().filter(medicine -> normalizeString(medicine.getConceptPt()).contains(normalizeString(example.getConceptPt()))).collect(Collectors.toList());
-		if (example.getConceptSctid() != null)
-			medicines = medicines.stream().filter(medicine -> medicine.getConceptSctid().contains(example.getConceptSctid())).collect(Collectors.toList());
-		if (example.getFinancedByDomain() != null)
-			medicines = medicines.stream().filter(medicine -> medicine.getFinancedByDomain().equals(example.getFinancedByDomain())).collect(Collectors.toList());
-		if (example.getFinancedByInstitution() != null)
-			medicines = medicines.stream().filter(medicine -> medicine.getFinancedByInstitution().equals(example.getFinancedByInstitution())).collect(Collectors.toList());
-		return medicines;
-	}
-
-	private void sortResult(Pageable pageable, List<InstitutionMedicineFinancingStatusDto> medicines){
-		if (pageable.getSort().getOrderFor("conceptPt") != null){
-			if (pageable.getSort().getOrderFor("conceptPt").isDescending())
-				medicines.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt()), Comparator.reverseOrder()));
-			else
-				medicines.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt())));
-		}
-		if (pageable.getSort().getOrderFor("conceptSctid") != null){
-			if (pageable.getSort().getOrderFor("conceptSctid").isDescending())
-				medicines.sort(Comparator.comparing(InstitutionMedicineFinancingStatusDto::getConceptSctid, Comparator.reverseOrder()));
-			else
-				medicines.sort(Comparator.comparing(InstitutionMedicineFinancingStatusDto::getConceptSctid));
-		}
-	}
-
-	private static String normalizeString(String string){
-		return StringUtils.stripAccents(string).toLowerCase();
 	}
 
 }

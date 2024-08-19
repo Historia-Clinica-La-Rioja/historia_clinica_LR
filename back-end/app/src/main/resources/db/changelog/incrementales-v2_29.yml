@@ -41,3 +41,13 @@ databaseChangeLog:
                         	FROM document_prosthesis dp
                         	WHERE dp.document_id = surgical_report.document_id
                         );
+
+    - changeSet:              
+        id: createIndexInstitutionId-institution-medicine_group
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_instutiton_medicine_group_institution_id" ON institution_medicine_group (institution_id);
+
