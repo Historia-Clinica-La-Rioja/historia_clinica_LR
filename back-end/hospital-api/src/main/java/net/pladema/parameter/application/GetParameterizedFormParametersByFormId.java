@@ -20,6 +20,7 @@ import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,14 +43,15 @@ public class GetParameterizedFormParametersByFormId {
 
 		List<ParameterCompleteDataBo> result = parameterStorage.findAllByIds(parameterIds)
 				.stream()
-				.map(this::completeParameterData)
+				.map(parameter -> completeParameterData(parameter, formId))
+				.sorted(Comparator.comparing(ParameterCompleteDataBo::getOrderNumber, Comparator.nullsLast(Comparator.naturalOrder())))
 				.collect(Collectors.toList());
 		
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private ParameterCompleteDataBo completeParameterData (ParameterBo parameter){
+	private ParameterCompleteDataBo completeParameterData (ParameterBo parameter, Integer formId){
 		ParameterCompleteDataBo result = new ParameterCompleteDataBo();
 		result.setId(parameter.getId());
 		result.setType(EParameterType.map(parameter.getTypeId()));
@@ -67,6 +69,7 @@ public class GetParameterizedFormParametersByFormId {
 			result.setTextOptions(parameterTextOptionStorage.getAllByParameterId(parameter.getId()));
 		if (parameter.getTypeId().equals(EParameterType.NUMERIC.getId()))
 			result.setUnitOfMeasure(parameterUnitOfMeasureStorage.getByParameterId(parameter.getId()).orElse(null));
+		result.setOrderNumber(parameterizedFormParameterStorage.getOrderNumberByFormIdAndParameterId(formId, parameter.getId()).orElse(null));
 		return result;
 	}
 

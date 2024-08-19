@@ -20,6 +20,8 @@ public class ParameterizedFormParameterStorageImpl implements ParameterizedFormP
 
 	private final ParameterizedFormParameterRepository parameterizedFormParameterRepository;
 
+	private static final String OUTPUT = "Output -> result {}";
+
 	@Override
 	public Optional<ParameterizedFormParameter> findById(Integer id) {
 		return parameterizedFormParameterRepository.findById(id);
@@ -49,4 +51,13 @@ public class ParameterizedFormParameterStorageImpl implements ParameterizedFormP
 		});
 		parameterizedFormParameterRepository.saveAll(parameters);
 	}
+
+	@Override
+	public Optional<Short> getOrderNumberByFormIdAndParameterId(Integer formId, Integer parameterId){
+		log.debug("Input parameters -> formId {}, parameterId {}", formId, parameterId);
+		Optional<Short> result = parameterizedFormParameterRepository.findByParameterizedFormIdAndParameterId(formId, parameterId).map(ParameterizedFormParameter::getOrderNumber);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 }

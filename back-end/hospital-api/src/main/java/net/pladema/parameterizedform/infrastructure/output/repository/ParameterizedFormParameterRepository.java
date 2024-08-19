@@ -60,4 +60,7 @@ public interface ParameterizedFormParameterRepository extends JpaRepository<Para
 			"WHERE pfp.parameterId = :parameterId ")
 	Boolean isAssociatedAnActiveParameterizedForm(@Param("parameterId") Integer parameterId);
 
+	@Transactional(readOnly = true)
+	Optional<ParameterizedFormParameter> findByParameterizedFormIdAndParameterId(Integer parameterizedFormId, Integer parameterId);
+
 }

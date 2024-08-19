@@ -25,5 +25,6 @@ public class ParameterCompleteDataBo {
 	private SnomedECL ecl;
 	private List<ParameterTextOptionBo> textOptions;
 	private ParameterUnitOfMeasureBo unitOfMeasure;
+	private Short orderNumber;
 
 }

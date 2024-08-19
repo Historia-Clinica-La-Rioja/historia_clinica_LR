@@ -15,4 +15,6 @@ public interface ParameterizedFormParameterStorage {
 
 	List<Integer> findParameterIdsByFormId(Integer formId);
 
+	Optional<Short> getOrderNumberByFormIdAndParameterId(Integer formId, Integer parameterId);
+
 }
