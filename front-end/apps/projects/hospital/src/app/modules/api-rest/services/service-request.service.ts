@@ -12,6 +12,8 @@ import {
 	StudyWithoutOrderReportInfoDto,
 	TranscribedServiceRequestDto,
 	TranscribedServiceRequestSummaryDto,
+	AddDiagnosticReportObservationsCommandDto,
+	GetDiagnosticReportObservationGroupDto,
 } from '@api-rest/api-model';
 
 import { switchMap } from 'rxjs/operators';
@@ -102,6 +104,11 @@ export class ServiceRequestService {
 			return this.http.put<void>(completeUrl, completeRequestDto);
 	}
 
+	addObservations(patientId: number, diagnosticReportId: number, diagnosticReport: AddDiagnosticReportObservationsCommandDto): Observable<void> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/observations`;
+		return this.http.put<void>(url, diagnosticReport);
+	}
+
 	completeByRdi(patientId: number, appointmentId: number): Observable<void> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${appointmentId}/completeByRDI`
 		return this.http.put<void>(url, {})
@@ -115,6 +122,11 @@ export class ServiceRequestService {
 	get(patientId: number, diagnosticReportId: number): Observable<DiagnosticReportInfoWithFilesDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}`;
 		return this.http.get<DiagnosticReportInfoWithFilesDto>(url);
+	}
+
+	getObservations(patientId: number, diagnosticReportId: number): Observable<GetDiagnosticReportObservationGroupDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/observations`;
+		return this.http.get<GetDiagnosticReportObservationGroupDto>(url);
 	}
 
 	download(patientId: number, fileId: number, fileName: string) {

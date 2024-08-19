@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
+	AddDiagnosticReportObservationsCommandDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto,
 	DiagnosticReportInfoWithFilesDto,
 	DocumentRequestDto,
+	GetDiagnosticReportObservationGroupDto,
 	MedicationInfoDto,
 	PrescriptionDto,
 	ProfessionalLicenseNumberValidationResponseDto,
@@ -14,7 +16,7 @@ import { DocumentService } from '@api-rest/services/document.service';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { ServiceRequestService } from '@api-rest/services/service-request.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { MedicationStatusChange, MEDICATION_STATUS, PRESCRIPTION_STATES, STUDY_STATUS } from '../constants/prescripciones-masterdata';
 import { NewPrescriptionItem } from '../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescriptionLineState } from '../modules/indicacion/components/item-prescripciones/item-prescripciones.component';
@@ -31,7 +33,7 @@ export class PrescripcionesService {
 	constructor(
 		private medicationRequestService: MedicationRequestService,
 		private serviceRequestService: ServiceRequestService,
-		private readonly documentService: DocumentService
+		private readonly documentService: DocumentService,
 	) { }
 
 	createPrescription(prescriptionType: PrescriptionTypes, newPrescription: PrescriptionDto, patientId: number): Observable<DocumentRequestDto[] | number[]> {
@@ -64,7 +66,7 @@ export class PrescripcionesService {
 	}
 
 	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string,
-		 healthCondition: string, study?: string, categoryId?: string, categoryExcluded?: string): Observable<any> {
+		healthCondition: string, study?: string, categoryId?: string, categoryExcluded?: string): Observable<any> {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
@@ -74,7 +76,7 @@ export class PrescripcionesService {
 	}
 
 	getPrescriptionByRoles(patientId: number, statusId: string, medicationStatement: string, healthCondition: string): Observable<any> {
-			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
+		return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
 
@@ -124,12 +126,29 @@ export class PrescripcionesService {
 		return this.serviceRequestService.complete(patientId, diagnosticReportId, completeRequestDto, files);
 	}
 
+	completeStudyTemplateWhithForm(patientId: number, diagnosticReportId: number, completeRequestDto: CompleteRequestDto, files: File[], reportObservations: AddDiagnosticReportObservationsCommandDto):
+		Observable<void> {
+		return this.serviceRequestService.addObservations(patientId, diagnosticReportId, reportObservations).pipe
+			(switchMap(fileIds => {
+				return this.completeStudy(patientId, diagnosticReportId, completeRequestDto, files)}
+			));
+	}
+
+	partialStudyTemplateWhithForm(patientId: number, diagnosticReportId: number, reportObservations: AddDiagnosticReportObservationsCommandDto):
+		Observable<void> {
+		return this.serviceRequestService.addObservations(patientId, diagnosticReportId, reportObservations);
+	}
+
 	completeStudyByRdi(patientId: number, appointmentId: number): Observable<void> {
 		return this.serviceRequestService.completeByRdi(patientId, appointmentId);
 	}
 
 	showStudyResults(patientId: number, diagnosticReportId: number): Observable<DiagnosticReportInfoWithFilesDto> {
 		return this.serviceRequestService.get(patientId, diagnosticReportId);
+	}
+
+	showStudyResultsWithFormTempalte(patientId: number, diagnosticReportId: number): Observable<GetDiagnosticReportObservationGroupDto> {
+		return this.serviceRequestService.getObservations(patientId, diagnosticReportId);
 	}
 
 	downloadStudyFile(patientId: number, fileId: number, fileName: string) {
@@ -218,6 +237,8 @@ export class PrescripcionesService {
 		switch (statusId) {
 			case this.STUDY_STATUS.REGISTERED.id:
 				return this.STUDY_STATUS.REGISTERED.description;
+			case this.STUDY_STATUS.PARTIAL.id:
+				return this.STUDY_STATUS.PARTIAL.description;
 			case this.STUDY_STATUS.FINAL.id:
 				return this.STUDY_STATUS.FINAL.description;
 			case this.STUDY_STATUS.FINAL_RDI.id:

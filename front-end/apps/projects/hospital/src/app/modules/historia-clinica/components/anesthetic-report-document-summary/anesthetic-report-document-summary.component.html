@@ -1,65 +1,96 @@
 <div class="anesthesic-report-content">
-    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="80%" FxLayoutAlign="start"
-        fxLayout="column" fxLayoutGap="36px">
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="20px">
 
-        <app-diagnosis-summary *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis"
-            [diagnosis]="anestheticReport.diagnosis"
-            [mainDiagnosis]="anestheticReport.mainDiagnosis"></app-diagnosis-summary>
+        <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
+            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+        <mat-divider></mat-divider>
 
-        <app-proposed-surgery-summary *ngIf="anestheticReport.proposedSurgeries"
-            [proposedSurgeries]="anestheticReport.proposedSurgeries"></app-proposed-surgery-summary>
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-diagnosis-summary data-id="diagnosis-summary"
+                *ngIf="summary.anestheticReport.mainDiagnosis || summary.anestheticReport.diagnosis"
+                [diagnosis]="summary.anestheticReport.diagnosis"
+                [mainDiagnosis]="summary.anestheticReport.mainDiagnosis"></app-diagnosis-summary>
 
-        <app-anthropometric-data-summary *ngIf="anestheticReport.anthropometricData"
-            [anthropometricData]="anestheticReport.anthropometricData"></app-anthropometric-data-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.proposedSurgeries"
+                data-id="proposed-surgery-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.proposedSurgeries"></app-description-item-data-summary>
 
-        <app-anesthesic-clinical-evaluation-summary *ngIf="anestheticReport.anesthesicClinicalEvaluation"
-            [anesthesicClinicalEvaluation]="anestheticReport.anesthesicClinicalEvaluation"></app-anesthesic-clinical-evaluation-summary>
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary"
+                *ngIf="summary.anestheticReport.anthropometricData"
+                [anthropometricData]="summary.anestheticReport.anthropometricData"></app-anthropometric-data-summary>
 
-        <app-anesthetic-history-summary *ngIf="anestheticReport.anestheticHistory"
-            [anestheticHistory]="anestheticReport.anestheticHistory"></app-anesthetic-history-summary>
+            <app-anesthesic-clinical-evaluation-summary data-id="anesthesic-clinical-evaluation-summary"
+                *ngIf="summary.anestheticReport.anesthesicClinicalEvaluation"
+                [anesthesicClinicalEvaluation]="summary.anestheticReport.anesthesicClinicalEvaluation"></app-anesthesic-clinical-evaluation-summary>
 
-        <app-usual-medication-summary *ngIf="anestheticReport.usualMedication"
-            [usualMedication]="anestheticReport.usualMedication"></app-usual-medication-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.anestheticHistory"
+                data-id="anesthetic-history-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.anestheticHistory"></app-description-item-data-summary>
 
-        <app-premedication-and-food-intake-summary
-            *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake"
-            [premedicationList]="anestheticReport.premedicationList"
-            [lastFoodIntake]="anestheticReport.lastFoodIntake"></app-premedication-and-food-intake-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.usualMedication"
+                data-id="usual-medication-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.usualMedication"></app-description-item-data-summary>
 
-        <app-histories-summary *ngIf="anestheticReport.histories"
-            [histories]="anestheticReport.histories"></app-histories-summary>
+            <app-premedication-and-food-intake-summary data-id="premedication-and-food-intake-summary"
+                *ngIf="summary.anestheticReport.premedicationList || summary.anestheticReport.lastFoodIntake"
+                [premedicationList]="summary.anestheticReport.premedicationList"
+                [lastFoodIntake]="summary.anestheticReport.lastFoodIntake"></app-premedication-and-food-intake-summary>
 
-        <app-anesthetic-plan-summary *ngIf="anestheticReport.anestheticPlanList"
-            [anestheticPlanList]="anestheticReport.anestheticPlanList"></app-anesthetic-plan-summary>
+            <app-histories-summary data-id="histories-summary" *ngIf="summary.anestheticReport.histories"
+                [histories]="summary.anestheticReport.histories"></app-histories-summary>
 
-        <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques"
-            [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.anestheticPlanList"
+                data-id="anesthetic-plan-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.anestheticPlanList"></app-description-item-data-summary>
 
-        <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques"
-            [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.analgesicTechniques"
+                data-id="analgesic-technique-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.analgesicTechniques"></app-description-item-data-summary>
 
-        <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations"
-            [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.anestheticTechniques"
+                data-id="anesthetic-technique-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.anestheticTechniques"></app-description-item-data-summary>
 
-        <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents"
-            [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.fluidAdministrations"
+                data-id="fluid-administration-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.fluidAdministrations"></app-description-item-data-summary>
 
-        <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs"
-            [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.anestheticAgents"
+                data-id="anesthetic-agents-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.anestheticAgents"></app-description-item-data-summary>
 
-        <app-intrasurgical-anesthetic-procedures-summary
-            [procedures]="anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.nonAnestheticDrugs"
+                data-id="non-anesthetic-drugs-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.nonAnestheticDrugs"></app-description-item-data-summary>
 
-        <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis"
-            [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
+            <app-intrasurgical-anesthetic-procedures-summary data-id="intrasurgical-anesthesic-procedures-summary"
+                [procedures]="summary.anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
 
-        <app-vital-signs-summary *ngIf="anestheticReport.vitalSigns"
-            [vitalSigns]="anestheticReport.vitalSigns"></app-vital-signs-summary>
+            <app-description-item-data-summary *ngIf="summary.anestheticReport.antibioticProphylaxis"
+                data-id="antibiotic-prophylaxis-summary"
+                [descriptionItemDataSummary]="summary.anestheticReport.antibioticProphylaxis"></app-description-item-data-summary>
 
-        <app-end-of-anesthesia-status-summary
-            [endOfAnesthesiaStatus]="anestheticReport.endOfAnesthesiaStatus"></app-end-of-anesthesia-status-summary>
+            <app-vital-signs-summary data-id="vital-signs-summary" *ngIf="summary.anestheticReport.vitalSigns"
+                [vitalSigns]="summary.anestheticReport.vitalSigns"></app-vital-signs-summary>
+
+            <app-end-of-anesthesia-status-summary data-id="end-of-anesthesia-status-summary"
+                [endOfAnesthesiaStatus]="summary.anestheticReport.endOfAnesthesiaStatus"></app-end-of-anesthesia-status-summary>
+				<div class="additional-sections">
+					<button *ngIf="isDraft" id="edit-anesthetic-part-button" class="draft-button" type="button" mat-flat-button
+						color="primary" (click)="openEditDraft()">
+						<span [translate]="'internaciones.anesthesic-report.CONTINUE_DRAFT'"></span>
+					</button>
+					<section *ngIf="isDraft && _activeDocument.document.editedOn" class="edited-section">
+						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+							<span>{{ _activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+						</div>
+					</section>
+				</div>
+        </div>
     </div>
     <ng-template #loader>
-        <mat-spinner color="primary" style="margin: auto"></mat-spinner>
+        <mat-spinner color="primary" class="loader"></mat-spinner>
     </ng-template>
 </div>

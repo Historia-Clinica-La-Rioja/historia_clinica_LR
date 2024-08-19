@@ -7,10 +7,15 @@ export class ButtonService {
 
 	private formDisabled = new BehaviorSubject<boolean>(true);
 	private submitForm = new BehaviorSubject<boolean>(false);
+	private _submitPartialSave = new BehaviorSubject<boolean>(false);
+	private activatePartialSave = new BehaviorSubject<boolean>(false);
 
 	formDisabled$ = this.formDisabled.asObservable();
 	submit$ = this.submitForm.asObservable();
+	submitPartialSave$ = this._submitPartialSave.asObservable();
 	isLoading$ = this.submitForm.asObservable();
+	isLoadingPartialSave$ = this._submitPartialSave.asObservable();
+	activatePartialSaveButton$ = this.activatePartialSave.asObservable();
 
 	updateFormStatus(isValid: boolean) {
 		this.formDisabled.next(isValid);
@@ -23,4 +28,17 @@ export class ButtonService {
 	resetLoading() {
 		this.submitForm.next(false);
 	}
+
+	submitPartialSave() {
+		this._submitPartialSave.next(true);
+	}
+
+	resetLoadingPartialSave() {
+		this._submitPartialSave.next(false);
+	}
+
+	activatePartialSaveButton() {
+		this.activatePartialSave.next(true);
+	}
+
 }

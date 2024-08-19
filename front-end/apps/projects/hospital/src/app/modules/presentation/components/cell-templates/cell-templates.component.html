@@ -68,10 +68,10 @@
 	<div class="mat-small grayText">
 		<span *ngIf="rowData.fechaInicio"
 			translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO"></span>
-		{{formatDate(rowData.fechaInicio)}}
+		{{rowData.fechaInicio | dateFormat: 'date'}}
 	</div>
 	<div class="mat-small grayText" *ngIf="rowData.fechaFin">
 		<span translate="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN_PREFIJO"></span>
-		{{formatDate(rowData.fechaFin)}}
+		{{rowData.fechaFin | dateFormat: 'date'}}
 	</div>
 </ng-template>

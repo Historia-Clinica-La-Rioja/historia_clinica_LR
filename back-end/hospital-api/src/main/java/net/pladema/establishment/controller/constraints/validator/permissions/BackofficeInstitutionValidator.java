@@ -1,12 +1,11 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import net.pladema.establishment.repository.InstitutionRepository;
-import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
-import net.pladema.sgx.backoffice.rest.ItemsAllowed;
-import net.pladema.sgx.exceptions.PermissionDeniedException;
-import net.pladema.user.controller.BackofficeAuthoritiesValidator;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.access.PermissionEvaluator;
@@ -15,10 +14,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
+import net.pladema.sgx.backoffice.rest.ItemsAllowed;
+import net.pladema.sgx.exceptions.PermissionDeniedException;
+import net.pladema.sgx.session.application.port.UserSessionStorage;
+import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
 @Component
 public class BackofficeInstitutionValidator implements BackofficePermissionValidator<Institution, Integer> {
@@ -30,24 +33,34 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 
 	private final PermissionEvaluator permissionEvaluator;
 
-	public BackofficeInstitutionValidator(InstitutionRepository repository,
-										  BackofficeAuthoritiesValidator backofficeAuthoritiesValidator,
-										  PermissionEvaluator permissionEvaluator) {
+	private final Supplier<Boolean> userCanView;
+
+	public BackofficeInstitutionValidator(
+			InstitutionRepository repository,
+			BackofficeAuthoritiesValidator backofficeAuthoritiesValidator,
+			UserSessionStorage userSessionStorage,
+			PermissionEvaluator permissionEvaluator
+	) {
 		this.repository = repository;
 		this.authoritiesValidator = backofficeAuthoritiesValidator;
 		this.permissionEvaluator = permissionEvaluator;
+		this.userCanView = userSessionStorage.hasAnyRole(
+				// quien puede ver las instituciones
+				ERole.ROOT,
+				ERole.ADMINISTRADOR,
+				ERole.API_IMAGENES
+		);
 	}
 
-
 	@Override
-	@PreAuthorize("hasPermission(#entity.id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#entity.id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'API_IMAGENES')")
 	public void assertGetList(Institution entity) {
 		// nothing to do
 	}
 
 	@Override
 	public List<Integer> filterIdsByPermission(List<Integer> ids) {
-		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+		if (userCanView.get())
 			return ids;
 		return ids.stream().filter(id -> {
 			try {
@@ -60,7 +73,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	}
 
 	@Override
-	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'API_IMAGENES')")
 	public void assertGetOne(Integer id) {
 		// Do nothing
 	}
@@ -85,7 +98,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 
 	@Override
 	public ItemsAllowed itemsAllowedToList(Institution entity) {
-		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+		if (userCanView.get())
 			return new ItemsAllowed<>();
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
@@ -98,7 +111,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 
 	@Override
 	public ItemsAllowed itemsAllowedToList() {
-		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
+		if (userCanView.get())
 			return new ItemsAllowed<>();
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())

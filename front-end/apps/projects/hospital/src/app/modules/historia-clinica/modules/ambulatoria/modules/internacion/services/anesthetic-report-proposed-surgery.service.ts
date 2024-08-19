@@ -43,6 +43,15 @@ export class AnestheticReportProposedSurgeryService {
         return proposedSurgery.snomed.sctid === proposedSurgery2.snomed.sctid;
     }
 
+	setData(surgeryProcedures: HospitalizationProcedureDto[]) {
+		this.proposedSurgeries = surgeryProcedures.map(procedure => ({
+			snomed: procedure.snomed,
+			isAdded: true,
+		}));
+		this.dataEmitter.next(this.proposedSurgeries);
+		this.isEmptySource.next(this.isEmpty());
+	}
+
     addToList(): boolean {
         if (this.form.valid && this.snomedConcept) {
             const proposedSurgery: ProposedSurgery = {

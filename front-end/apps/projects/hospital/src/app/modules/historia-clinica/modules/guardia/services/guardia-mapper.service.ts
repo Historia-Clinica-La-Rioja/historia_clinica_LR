@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Triage } from '../components/triage-details/triage-details.component';
+import { TriageDetails } from '../components/triage-details/triage-details.component';
 import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateDtoToDate, timeDtoToDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import {
 	AdministrativeDischargeDto,
@@ -13,12 +13,13 @@ import {
 } from '@api-rest/api-model';
 import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas.service';
-import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
 import { EffectiveObservation, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TriageReduced } from '@pacientes/component/resumen-de-guardia/resumen-de-guardia.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { toHourMinute } from '@core/utils/date.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,7 +27,7 @@ import { TriageReduced } from '@pacientes/component/resumen-de-guardia/resumen-d
 
 export class GuardiaMapperService {
 
-	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
+	triageListDtoToTriage: (triageListDto: TriageListDto) => TriageDetails = GuardiaMapperService._mapTriageListDtoToTriage;
 	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
 	riskFactorsValuetoNewRiskFactorsObservationDto: (v: RiskFactorsValue) => NewRiskFactorsObservationDto = GuardiaMapperService._mapRiskFactorsValuetoNewRiskFactorsObservationDto;
 	formToAMedicalDischargeDto: (s: MedicalDischargeForm) => AMedicalDischargeDto = GuardiaMapperService._mapFormToAMedicalDischargeDto;
@@ -36,7 +37,7 @@ export class GuardiaMapperService {
 	constructor() {
 	}
 
-	public static _mapTriageListDtoToTriage(triageListDto: TriageListDto): Triage {
+	public static _mapTriageListDtoToTriage(triageListDto: TriageListDto): TriageDetails {
 		return {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
@@ -50,7 +51,8 @@ export class GuardiaMapperService {
 			appearance: mapAppearance(triageListDto.appearance),
 			breathing: mapBreathing(triageListDto.breathing),
 			circulation: mapCirculation(triageListDto.circulation),
-			notes: triageListDto.notes
+			notes: triageListDto.notes,
+			reasons: triageListDto.reasons.map(reason => reason.snomed.pt),
 		};
 
 		function mapAppearance(appearance) {
@@ -163,9 +165,9 @@ export class GuardiaMapperService {
 					return {
 						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
-						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
+						endDate: problema.fechaFin ? toApiFormat(problema.fechaFin) : undefined,
 						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
+						startDate: problema.fechaInicio ? toApiFormat(problema.fechaInicio) : undefined
 					};
 				}
 			),
@@ -191,7 +193,7 @@ export class GuardiaMapperService {
 		};
 
 		function getDateTime(dateTime): Date {
-			const date: Date = dateTime.date.toDate();
+			const date: Date = dateTime.date
 			const time = dateTime.time.split(":");
 			date.setHours(+time[0], +time[1]);
 			return date;
@@ -230,8 +232,8 @@ export class GuardiaMapperService {
 		const callTime = dto.policeInterventionDetails?.callTime ? timeDtoToDate(dto.policeInterventionDetails.callTime) : null;
 		return {
 			ambulanceCompanyId: dto.ambulanceCompanyId ? dto.ambulanceCompanyId : null,
-			callDate: callDate ? dateToMoment(callDate) : null,
-			callTime: callTime ? momentFormat(dateToMoment(callTime), DateFormat.HOUR_MINUTE) : null,
+			callDate,
+			callTime: callTime ? toHourMinute(callTime) : null,
 			doctorsOfficeId: dto.doctorsOffice ? dto.doctorsOffice.id : null,
 			emergencyCareEntranceTypeId: dto.entranceType?.id ? dto.entranceType.id : null,
 			emergencyCareTypeId: dto.emergencyCareType?.id ? dto.emergencyCareType.id : null,
@@ -241,7 +243,9 @@ export class GuardiaMapperService {
 			patientId: dto.patient ? dto.patient.id : null,
 			patientMedicalCoverageId: dto.patient?.patientMedicalCoverageId ? dto.patient.patientMedicalCoverageId : null,
 			plateNumber: dto.policeInterventionDetails?.plateNumber ? dto.policeInterventionDetails.plateNumber : null,
-			reasons: dto.reasons.map(s => ({ snomed: s })),
+			reason: dto.reason || null,
+			patientDescription: dto.patient.patientDescription || null,
+			patientTypeId: dto.patient.typeId || null,
 		};
 	}
 
@@ -252,9 +256,10 @@ export class GuardiaMapperService {
 		const newEmergencyCareDto: NewEmergencyCareDto = {
 			patient: {
 				id: administrativeAdmission.patientId,
-				patientMedicalCoverageId: administrativeAdmission.patientMedicalCoverageId
+				patientMedicalCoverageId: administrativeAdmission.patientMedicalCoverageId,
+				...(administrativeAdmission.patientDescription && { patientDescription: administrativeAdmission.patientDescription })
 			},
-			reasons: administrativeAdmission.reasons.map(s => s.snomed),
+			reason: administrativeAdmission.reason,
 			emergencyCareTypeId: administrativeAdmission.emergencyCareTypeId,
 			entranceTypeId: administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: administrativeAdmission.ambulanceCompanyId,
@@ -269,7 +274,7 @@ export class GuardiaMapperService {
 				firstName: administrativeAdmission.firstName,
 				lastName: administrativeAdmission.lastName,
 				plateNumber: administrativeAdmission.plateNumber,
-				callDate: administrativeAdmission.callDate ? dateToDateDto(administrativeAdmission.callDate.toDate()) : null,
+				callDate: administrativeAdmission.callDate ? dateToDateDto(administrativeAdmission.callDate) : null,
 				callTime: administrativeAdmission.callTime ? dateToTimeDto(parse(administrativeAdmission.callTime, 'HH:mm', new Date())) : null,
 			} : null;
 		}

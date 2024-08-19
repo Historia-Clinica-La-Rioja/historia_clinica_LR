@@ -2,35 +2,37 @@ package net.pladema.staff.infrastructure.input.shared;
 
 import java.util.List;
 import java.util.Optional;
-
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-
-import lombok.extern.slf4j.Slf4j;
-
-import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
-import net.pladema.establishment.service.RoomService;
-import net.pladema.establishment.service.SectorService;
-
-import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
-
-import net.pladema.medicalconsultation.shockroom.application.FetchShockRoomDescription;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.MedicineDoctorCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.service.RoomService;
+import net.pladema.establishment.service.SectorService;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
+import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
+import net.pladema.medicalconsultation.shockroom.application.FetchShockRoomDescription;
 import net.pladema.staff.controller.mapper.ClinicalSpecialtyMapper;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import net.pladema.staff.service.ClinicalSpecialtyService;
+import net.pladema.staff.service.HealthcareProfessionalService;
 
-@Service
+@AllArgsConstructor
 @Slf4j
+@Service
 public class SharedStaffImpl implements SharedStaffPort {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+
+	private final HealthcareProfessionalService healthcareProfessionalService;
 
     private final ClinicalSpecialtyService clinicalSpecialtyService;
 
@@ -45,24 +47,6 @@ public class SharedStaffImpl implements SharedStaffPort {
 	private DoctorsOfficeService doctorsOfficeService;
 
 	private FetchShockRoomDescription fetchShockRoomDescription;
-
-    public SharedStaffImpl(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                           ClinicalSpecialtyService clinicalSpecialtyService,
-                           ClinicalSpecialtyMapper clinicalSpecialtyMapper,
-						   FeatureFlagsService featureFlagsService,
-						   SectorService sectorService,
-						   RoomService roomService,
-						   DoctorsOfficeService doctorsOfficeService,
-						   FetchShockRoomDescription fetchShockRoomDescription) {
-        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-        this.clinicalSpecialtyService = clinicalSpecialtyService;
-        this.clinicalSpecialtyMapper = clinicalSpecialtyMapper;
-		this.sectorService = sectorService;
-		this.roomService = roomService;
-		this.doctorsOfficeService = doctorsOfficeService;
-		this.fetchShockRoomDescription = fetchShockRoomDescription;
-		this.featureFlagsService = featureFlagsService;
-    }
 
     @Override
     public Integer getProfessionalId(Integer userId) {
@@ -101,6 +85,13 @@ public class SharedStaffImpl implements SharedStaffPort {
 	@Override
 	public List<ProfessionalCompleteDto> getProfessionalsCompleteByIds(List<Integer> professionalIds) {
 		return healthcareProfessionalExternalService.getProfessionalsCompleteInfoByIds(professionalIds);
+	}
+
+	@Override
+	public List<MedicineDoctorCompleteDto> getProfessionalsCompleteByInstitutionId(Integer institutionId) {
+		return healthcareProfessionalService.getAllByInstitution(institutionId).stream()
+				.map(prof -> healthcareProfessionalExternalService.getDoctorsCompleteInfo(prof.getId()))
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -81,13 +81,6 @@
             font-size: 13.21px;
         }
 
-        .section-title {
-            font-weight: 500;
-            font-family: 'Roboto', sans-serif;
-            font-size: 13.21px;
-            padding-bottom: 5px;
-        }
-
         .data-title {
             font-weight: 400;
             font-family: 'Roboto', sans-serif;
@@ -146,16 +139,14 @@
                     <div class="row-content">
                         <div class="data-title">Nombre y apellido del paciente</div>
                         <div style="float: left; margin-right: 3px;">
-                            <div class="data-text" style="text-transform: uppercase;" th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null || patient.person.nameSelfDetermination == ''}" th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></div>
-                            <div class="data-text" style="text-transform: uppercase;" th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null && patient.person.nameSelfDetermination != ''}" th:text="${patient.person.nameSelfDetermination}"></div>
-                        </div>
-                        <div style="float: left;">
-                            <div class="data-text" style="text-transform: uppercase;" th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></div>
+                            <div class="data-text" th:if="${patientCompleteName != null}" style="text-transform: uppercase;" th:text="${patientCompleteName}"></div>
+                            <div class="data-text" th:if="${patientCompleteName == null}">Sin información</div>
                         </div>
                     </div>
                     <div class="row-content">
                         <div class="data-title">Documento</div>
-                        <div class="data-text" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                        <div class="data-text" th:if="${patient.identificationNumber != null}" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                        <div class="data-text" th:if="${patient.identificationNumber == null}">Sin información</div>
                     </div>
                     <div class="row-content">
                         <div class="data-title">N° HC</div>
@@ -222,7 +213,7 @@
                     </div>
                 </div>
                 <div style="clear: both; margin-bottom: 10px;">
-                    <div class="row-content">
+                    <div style="overflow-wrap: break-word; width: 40%" class="row-content">
                         <div class="data-title">Cobertura</div>
                         <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
                         <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
@@ -531,7 +522,7 @@
         <div th:if="${not #lists.isEmpty(healthcareProfessionals)}">
             <dl th:each="professional,iter: ${healthcareProfessionals}">
                 <dl>
-                    <dd><strong>Rol: </strong><label  th:text="${professional.type.description}"></label></dd>
+                    <dd><strong>Rol: </strong><label  th:text="${professional.professionType.getDescription() + ( professional.otherProfessionTypeDescription != null ? ( ' - ' + professional.otherProfessionTypeDescription ) : '' )}"></label></dd>
                 </dl>
                 <dd><strong>Profesional: </strong> <p  th:text="${professional.healthcareProfessional.person.fullName}"></p></dd>
                 <div th:if="${professional.comments != null}">
@@ -645,10 +636,13 @@
 
     <!-- Antecedentes personales -->
 
-    <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories)}">
+    <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories.content) || personalHistories.isReferred != null}">
         <p class="section-title">Antecedentes personales</p>
-        <div>
-            <dl class="section-data" th:each="personalHistory,iter: ${personalHistories}">
+        <div th:if="${personalHistories.isReferred != null && personalHistories.isReferred == false}">
+            <p class="section-data">No refiere</p>
+        </div>
+        <div th:if="${(personalHistories.isReferred == null && not #lists.isEmpty(personalHistories.content)) || personalHistories.isReferred == true}">
+            <dl class="section-data" th:each="personalHistory,iter: ${personalHistories.content}">
                 <dd><p th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
             </dl>
         </div>
@@ -656,10 +650,13 @@
 
     <!-- Antecedentes familiares -->
 
-    <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories)}">
+    <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories.content) || familyHistories.isReferred != null}">
         <p class="section-title">Antecedentes familiares</p>
-        <div>
-            <dl class="section-data" th:each="familyHistory,iter: ${familyHistories}">
+        <div th:if="${personalHistories.isReferred != null && familyHistories.isReferred == false}">
+            <p class="section-data">No refiere</p>
+        </div>
+        <div th:if="${(familyHistories.isReferred == null && not #lists.isEmpty(familyHistories.content)) || familyHistories.isReferred == true}">
+            <dl class="section-data" th:each="familyHistory,iter: ${familyHistories.content}">
                 <dd><p th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
             </dl>
         </div>
@@ -667,10 +664,13 @@
 
     <!-- Alergias -->
 
-    <div th:fragment="allergies" th:if="${not #lists.isEmpty(allergies)}">
+    <div th:fragment="allergies" th:if="${allergies != null && (not #lists.isEmpty(allergies.content) || allergies.isReferred != null)}">
         <p class="section-title">Alergias</p>
-        <div class="section-data">
-            <dl class="lista" th:each="allergy,iter: ${allergies}">
+        <div th:if="${allergies.isReferred != null && allergies.isReferred == false}">
+            <p class="section-data">No refiere</p>
+        </div>
+        <div th:if="${(allergies.isReferred == null && not #lists.isEmpty(allergies.content)) || allergies.isReferred == true}" class="section-data">
+            <dl class="lista" th:each="allergy,iter: ${allergies.content}">
                 <dd><p th:text="${'- ' + allergy.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${allergy.status}"></label></dd>

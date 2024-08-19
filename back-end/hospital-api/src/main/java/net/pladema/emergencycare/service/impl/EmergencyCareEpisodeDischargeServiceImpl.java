@@ -89,12 +89,17 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         EmergencyCareVo emergencyCareVo = assertExistEmergencyCareEpisode(medicalDischarge.getSourceId(),institutionId);
         //TODO validar que el episodio este en atencion
         LocalDateTime medicalDischargeOn = medicalDischarge.getMedicalDischargeOn();
+        assertNotAlreadyDischarged(emergencyCareVo.getId());
         assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn());
         assertMedicalDischargeIsBeforeToday(medicalDischargeOn);
 		assertHasEvolutionNote(medicalDischarge.getEncounterId());
     }
 
-	private void assertHasEvolutionNote(Integer emergencyCareEpisodeId) {
+    private void assertNotAlreadyDischarged(Integer episodeId) {
+        Assert.isTrue(!hasMedicalDischarge(episodeId),"El episodio ya fue dado de alta");
+    }
+
+    private void assertHasEvolutionNote(Integer emergencyCareEpisodeId) {
 		Assert.isTrue(emergencyCareEpisodeService.hasEvolutionNote(emergencyCareEpisodeId), "El episodio debe contar con una nota de evolución para iniciar el alta médica");
 	}
 

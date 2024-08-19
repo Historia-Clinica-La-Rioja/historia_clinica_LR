@@ -3,14 +3,14 @@
 <head th:replace="fragments/header :: header"></head>
 <body>
     <p>Esta receta corresponde a:</p>
-    <p>
+    <p th:if="${args.patient}">
         <strong>Paciente:</strong>
-        <span th:text="${args.patient.person.completeName()}">Juan Perez</span>
+        <span th:text="${args.patient.person.completeName(args.selfPerceivedFF)}">Juan Perez</span>
     </p>
 
 
-    <p th:if="${args.patient.identificationNumber}">
-        <strong th:if="${args.patient.identificationType + ': '}">DNI:</strong>
+    <p th:if="${args.patient != null && args.patient.identificationNumber != null}">
+        <strong th:text="${args.patient.identificationType + ': '}">:</strong>
         <span th:text="${args.patient.identificationNumber}">99.999.999</span>
     </p>
 
@@ -19,14 +19,11 @@
         <span th:text="${args.recipeIdWithDomain}">1058</span>
     </p>
     <p>
-        Presentá esta receta junto con tu <strong>documento</strong> en cualquier farmacia de la Provincia de Buenos Aires.
+        Presentá esta receta junto con tu <strong>documento</strong> en cualquier farmacia de tu provincia.
     </p>
     <strong>
-        ¡Gracias por utilizar la Receta Electrónica Bonaerense!
+        ¡Gracias por utilizar la Receta Electrónica!
     </strong>
-    <p>
-        Seguimos mejorando tu atención y ampliando tus derechos.
-    </p>
 
 </body>
 </html>

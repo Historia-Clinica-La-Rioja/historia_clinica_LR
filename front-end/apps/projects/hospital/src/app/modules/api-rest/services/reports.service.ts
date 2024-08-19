@@ -22,13 +22,13 @@ export class ReportsService {
 
 	private getReport(params: ReportFilters, fileName: string, url: any): Observable<any> {
 		let requestParams: HttpParams = new HttpParams();
-		requestParams = requestParams.append('fromDate', toApiFormat(params.startDate));
-		requestParams = requestParams.append('toDate', toApiFormat(params.endDate));
-		if (params.specialtyId) {
-			requestParams = requestParams.append('clinicalSpecialtyId', params.specialtyId);
+		requestParams = requestParams.append('fromDate', toApiFormat(params.fromDate));
+		requestParams = requestParams.append('toDate', toApiFormat(params.toDate));
+		if (params.clinicalSpecialtyId) {
+			requestParams = requestParams.append('clinicalSpecialtyId', params.clinicalSpecialtyId);
 		}
-		if (params.professionalId) {
-			requestParams = requestParams.append('doctorId', params.professionalId);
+		if (params.doctorId) {
+			requestParams = requestParams.append('doctorId', params.doctorId);
 		}
 		if (params.hierarchicalUnitTypeId) {
 			requestParams = requestParams.append('hierarchicalUnitTypeId', params.hierarchicalUnitTypeId);
@@ -55,6 +55,11 @@ export class ReportsService {
 		return this.getReport(params, fileName, url);
 	}
 
+	getMonthlySummaryOfExternalClinicAppointmentsReport(searchFilter: ReportFilters, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/appointment-consultation-summary`;
+		const filters = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
+		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
+	}
 
 	getDiabetesReport(): Observable<UIComponentDto> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/diabetes`;
@@ -74,6 +79,12 @@ export class ReportsService {
 	getNominalAppointmentsDetail(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-appointment-detail`;
 		return this.getReport(params, fileName, url);
+	}
+
+	getNominalEmergencyCareEpisodeDetail(searchFilter: ReportFilters, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-emergency-care-episode-detail`;
+		const filters = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
+		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
 	}
 
 	getImageNetworkProductivityReport(searchCriteria: ImageNetworkProductivityFilterDto, fileName: string){

@@ -1,31 +1,45 @@
 package net.pladema.establishment.controller;
 
+import static net.pladema.sgx.NewStoreBuilder.fromJpa;
+import static net.pladema.sgx.backoffice.permissions.NewBackofficePermissionBuilder.permitIf;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgx.auth.twoWayEncryption.infrastructure.output.TwoWayEncryptionService;
 import net.pladema.establishment.repository.PacServerRepository;
 import net.pladema.establishment.repository.entity.PacServer;
-import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.permissions.repository.enums.ERole;
+import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
+import net.pladema.sgx.backoffice.rest.NewAbstractBackofficeController;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
+import net.pladema.sgx.session.application.port.UserSessionStorage;
 
 @RestController
 @RequestMapping("backoffice/pacservers")
-@PreAuthorize("hasAnyAuthority('ROOT')")
-public class BackofficePacServerController extends AbstractBackofficeController<PacServer, Integer> {
+public class BackofficePacServerController extends NewAbstractBackofficeController<PacServer, Integer> {
 
 	private final int SERVIDOR_CENTRAL = 1;
 
 	private final int CENTRO_DE_DIAGNOSTICO = 2;
 
-	public BackofficePacServerController(PacServerRepository repository, @Value("${authentication.username.pattern:.+}") String pattern, TwoWayEncryptionService twoWayEncryptionService) {
-		super(repository);
+	public BackofficePacServerController(
+			PacServerRepository repository,
+			@Value("${authentication.username.pattern:.+}") String pattern,
+			UserSessionStorage userSessionStorage
+	) {
+		super(
+				fromJpa(repository),
+				permitIf(userSessionStorage.hasAnyRole(
+						ERole.ROOT,
+						ERole.ADMINISTRADOR,
+						ERole.API_IMAGENES
+				)),
+				new BackofficeEntityValidatorAdapter<>());
 	}
 
 	@Override

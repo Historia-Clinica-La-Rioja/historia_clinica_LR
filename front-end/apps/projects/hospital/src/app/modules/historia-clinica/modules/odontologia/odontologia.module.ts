@@ -17,6 +17,9 @@ import { ToothDialogComponent } from './components/tooth-dialog/tooth-dialog.com
 import { NewConsultationAddDiagnoseFormComponent } from './dialogs/new-consultation-add-diagnose-form/new-consultation-add-diagnose-form.component';
 // services
 import { ConceptsFacadeService } from './services/concepts-facade.service';
+//standalone
+import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from '../../../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 
 @NgModule({
 	declarations: [
@@ -38,6 +41,9 @@ import { ConceptsFacadeService } from './services/concepts-facade.service';
 		// deps
 		HistoriaClinicaModule,
 		PresentationModule,
+		// standalone
+		ConceptsListComponent,
+		ConceptTypeaheadSearchComponent,
 	],
 	exports: [
 		ToothComponent,

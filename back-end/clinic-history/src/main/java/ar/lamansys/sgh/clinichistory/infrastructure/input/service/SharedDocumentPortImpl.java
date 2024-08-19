@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -34,6 +35,7 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 	public void deleteDocument(Long documentId, String newDocumentStatus) {
 		log.debug("Input parameter documentId {}, newDocumentStatus {}", documentId, newDocumentStatus);
 		documentService.deleteById(documentId, newDocumentStatus);
+		documentFileStorage.deleteById(documentId);
 	}
 
 	@Override
@@ -47,14 +49,17 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		log.debug("Input parameter documentId {}", documentId);
 		Document document = documentService.findById(documentId)
 				.orElseThrow(() -> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
-		DocumentFileBo file = documentFileStorage.findById(documentId)
-				.orElseThrow(() -> new NotFoundException("file-not-exists", String.format("No existe el documento con id %s", documentId)));
 		DocumentReduceInfoDto result = new DocumentReduceInfoDto();
 		result.setSourceId(document.getSourceId());
 		result.setCreatedBy(document.getCreatedBy());
 		result.setCreatedOn(document.getCreatedOn());
 		result.setTypeId(document.getTypeId());
-		result.setSignatureStatus(ESignatureStatus.map(file.getSignatureStatusId()));
+		result.setIsConfirmed(document.isConfirmed());
+		if (document.isConfirmed()) {
+			DocumentFileBo file = documentFileStorage.findById(documentId)
+					.orElseThrow(() -> new NotFoundException("file-not-exists", String.format("No existe el documento con id %s", documentId)));
+			result.setSignatureStatus(ESignatureStatus.map(file.getSignatureStatusId()));
+		}
 		return result;
 	}
 
@@ -95,6 +100,21 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		log.debug("Input parameters -> documentId {}",documentId);
 		return documentFileStorage.findById(documentId).map(DocumentFileBo::getDigitalSignatureHash)
 				.orElseThrow(()-> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
+	}
+
+	@Override
+	public Optional<Long> getInitialDocumentId(Long documentId) {
+		log.debug("Input parameters -> documentId {}",documentId);
+		return documentService.findById(documentId).map(Document::getInitialDocumentId);
+	}
+
+	@Override
+	public void updateInitialDocumentId(Long documentId, Long initialDocumentId) {
+		log.debug("Input parameters -> documentId {}, initialDocumentId {}", documentId, initialDocumentId);
+		documentService.findById(documentId).ifPresent(document -> {
+			document.setInitialDocumentId(initialDocumentId);
+			documentService.save(document);
+		});
 	}
 
 	private DigitalSignatureCallbackBo mapToDigitalSignatureBo(DigitalSignatureCallbackRequestDto dto){

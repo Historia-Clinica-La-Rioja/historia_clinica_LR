@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.triage.repository;
 
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
-import net.pladema.emergencycare.triage.repository.entity.Triage;
+import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -120,6 +120,7 @@
 		"evolution-charts-popup": {
 			"TITLE": "Información antropométrica | Gráficos de evolución {{gender}}",
 			"MESSAGE": "Seleccione un gráfico para visualizar su evolución",
+			"MESSAGE_GRAPHS_OF_ONLY_FULL_TERM_PATIENTS": "Los gráficos presentados están destinados a pacientes nacidos a término y no incluyen casos de nacimientos prematuros.",
 			"evolution-charts-select": {
 				"INPUT_TITLE": "Gráfico",
 				"PLACEHOLDER": "Ej: Talla para la edad"

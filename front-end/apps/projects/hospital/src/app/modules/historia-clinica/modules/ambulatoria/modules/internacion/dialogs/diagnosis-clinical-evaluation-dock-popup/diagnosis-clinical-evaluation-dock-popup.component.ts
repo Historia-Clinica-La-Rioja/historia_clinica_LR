@@ -1,7 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { PermissionsService } from '@core/services/permissions.service';
@@ -9,20 +8,16 @@ import { TableService } from '@core/services/table.service';
 
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
-import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 import {
 	DiagnosesGeneralStateDto,
 	EvolutionDiagnosisDto,
-	InternmentSummaryDto,
 	MasterDataInterface
 } from '@api-rest/api-model';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { TableCheckbox } from '@material/model/table.model';
 import { OVERLAY_DATA } from "@presentation/presentation-model";
@@ -41,7 +36,6 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 
 	verifications: MasterDataInterface<string>[];
 	form: UntypedFormGroup;
-	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics: TableCheckbox<DiagnosesGeneralStateDto> = {
 		data: [],
 		columns: [
@@ -76,11 +70,9 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
-		private readonly internmentService: InternacionService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly evolutionNoteService: EvolutionNoteService,
-		private readonly mapperService: MapperService,
 		private readonly tableService: TableService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snackBarService: SnackBarService,
@@ -90,9 +82,6 @@ export class DiagnosisClinicalEvaluationDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.data.diagnosisInfo.internmentEpisodeId).pipe(
-			map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
-		);
 
 		const diagnosesGeneralState$ = this.internmentStateService.getDiagnosesGeneralState(this.data.diagnosisInfo.internmentEpisodeId).pipe(
 			map(diagnostics => diagnostics.filter(od => od.statusId === HEALTH_CLINICAL_STATUS.ACTIVO))

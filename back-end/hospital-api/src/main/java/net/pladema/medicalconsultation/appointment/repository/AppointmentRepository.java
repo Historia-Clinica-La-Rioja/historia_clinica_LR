@@ -109,7 +109,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
             "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, aa.pk.openingHoursId) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId) " +
@@ -129,7 +129,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 			"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 			"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, eaa.pk.openingHoursId) " +
 			"FROM Appointment AS a " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"JOIN EquipmentDiaryOpeningHours AS edoh ON (edoh.pk.equipmentDiaryId = eaa.pk.equipmentDiaryId) " +
@@ -575,15 +575,17 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, p.personId, " +
-			"doi.completedOn, doi.observations, i.id, i.name) " +
+			"doi.completedOn, doi.observations, i.id, i.name, psil.localViewerUrl, pe.identificationNumber) " +
 			"FROM DetailsOrderImage doi " +
 			"JOIN EquipmentAppointmentAssn eaa ON eaa.pk.appointmentId = doi.appointmentId " +
 			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"LEFT JOIN PacServerImageLvl psil on (e.pacServerId = psil.id) " +
 			"JOIN Sector s ON s.id = e.sectorId " +
 			"JOIN Institution i ON i.id = s.institutionId " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
 			"JOIN Patient p ON a.patientId = p.id " +
+			"LEFT JOIN Person pe ON (p.personId = pe.id) " +
 			"WHERE a.id = :appointmentId " +
 			"AND a.appointmentStateId = " + AppointmentState.SERVED + " " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL)" )
@@ -929,4 +931,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			" AND a.deleteable.deleted IS NOT TRUE" +
 			" ORDER BY a.id")
 	List<Appointment> getAllAssignedAppointmentsFromDiary(@Param("diaryId") Integer diaryId);
+
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Appointment AS a " +
+			"SET a.isOverturn = :overturn " +
+			"WHERE a.id = :appointmentId ")
+	void updateOverturnCharacteristic(@Param("appointmentId") Integer appointmentId,
+									  @Param("overturn") boolean overturn);
+
 }

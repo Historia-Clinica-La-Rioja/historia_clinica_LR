@@ -10,6 +10,7 @@ import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 
@@ -188,11 +189,11 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		anamnesis.setDiagnosis(Collections.emptyList());
-		anamnesis.setPersonalHistories(Collections.emptyList());
-		anamnesis.setFamilyHistories(Collections.emptyList());
+		anamnesis.setPersonalHistories(new ReferableItemBo<>());
+		anamnesis.setFamilyHistories(new ReferableItemBo<>());
 		anamnesis.setMedications(Collections.emptyList());
 		anamnesis.setImmunizations(Collections.emptyList());
-		anamnesis.setAllergies(Collections.emptyList());
+		anamnesis.setAllergies(new ReferableItemBo<>());
 		return anamnesis;
 	}
 
@@ -215,6 +216,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -225,6 +227,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now().minusDays(1).minusHours(1));
 		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -235,6 +238,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.SIGNED);
+		result.setIsConfirmed(true);
 		return result;
 	}
 

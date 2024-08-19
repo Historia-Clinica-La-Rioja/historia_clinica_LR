@@ -41,4 +41,7 @@ public class PacServerImageLvl {
 
 	@Column(name = "sector_id", nullable = false)
 	private Integer sectorId;
+
+	@Column(name= "local_viewer_url", nullable = true)
+	private String localViewerUrl;
 }

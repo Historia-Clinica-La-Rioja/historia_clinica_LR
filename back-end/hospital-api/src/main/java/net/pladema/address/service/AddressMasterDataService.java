@@ -17,6 +17,8 @@ public interface AddressMasterDataService {
 
 	<T> Collection<T> findCitiesByDepartment(Short departmentId, Class<T> clazz);
 
+	<T> Collection<T> findAllCitiesByDepartment(Short departmentId, Class<T> clazz);
+
 	boolean existProvinceInCountry(Short countryId, Short provinceId);
 
 	boolean existDepartmentInProvince(Short provinceId, Short departmentId);

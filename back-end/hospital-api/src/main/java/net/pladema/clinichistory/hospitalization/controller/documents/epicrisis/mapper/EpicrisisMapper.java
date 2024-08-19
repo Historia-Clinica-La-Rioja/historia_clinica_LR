@@ -10,14 +10,21 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Anthro
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(uses = {RiskFactorMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class})
 public interface EpicrisisMapper {
 
+	@Mapping(target = "familyHistories.content", source = "familyHistories")
+	@Mapping(target = "personalHistories.content", source = "personalHistories")
+	@Mapping(target = "allergies.content", source = "allergies")
     @Named("fromEpicrisisDto")
     EpicrisisBo fromEpicrisisDto(EpicrisisDto epicrisisDto);
 
+	@Mapping(target = "familyHistories", source = "familyHistories.content")
+	@Mapping(target = "personalHistories", source = "personalHistories.content")
+	@Mapping(target = "allergies", source = "allergies.content")
     @Named("fromEpicrisis")
     ResponseEpicrisisDto fromEpicrisis(EpicrisisBo epicrisisBo);
 

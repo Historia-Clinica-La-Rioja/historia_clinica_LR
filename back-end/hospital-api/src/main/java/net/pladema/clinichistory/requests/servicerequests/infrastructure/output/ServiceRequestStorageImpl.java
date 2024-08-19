@@ -2,48 +2,38 @@ package net.pladema.clinichistory.requests.servicerequests.infrastructure.output
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
 import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
-import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
+import net.pladema.clinichistory.requests.transcribed.application.port.TranscribedServiceRequestStorage;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 
 	private final ServiceRequestRepository serviceRequestRepository;
-	private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
 	private final DeleteDiagnosticReportService deleteDiagnosticReportService;
 	private final DiagnosticReportRepository diagnosticReportRepository;
+	private final TranscribedServiceRequestStorage transcribedServiceRequestStorage;
 
 	@Override
 	public List<ServiceRequestProcedureInfoBo> getProceduresByServiceRequestIds(List<Integer> serviceRequestIds) {
 		log.debug("Input parameter -> serviceRequestIds {} ", serviceRequestIds);
 		return serviceRequestRepository.getServiceRequestsProcedures(serviceRequestIds);
-	}
-
-	@Override
-	public TranscribedServiceRequestBo getTranscribedServiceRequest(Integer transcribedServiceRequestId) {
-		log.debug("Input parameter -> transcribedServiceRequestId {} ", transcribedServiceRequestId);
-		return transcribedServiceRequestRepository.getTranscribedServiceRequest(transcribedServiceRequestId)
-				.map(transcribedServiceRequestBo -> {
-					transcribedServiceRequestBo.setDiagnosticReports(transcribedServiceRequestRepository.getDiagnosticReports(transcribedServiceRequestId));
-					return transcribedServiceRequestBo;
-				})
-				.orElse(null);
 	}
 
 	@Override
@@ -59,22 +49,28 @@ public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 	}
 
 	@Override
-	public List<String> getDiagnosticReportsFrom(EquipmentAppointmentBo equipmentAppointmentBo) {
-		log.debug("Input parameters -> equipmentAppointmentBo {} ", equipmentAppointmentBo);
+	public List<String> getDiagnosticReportsFrom(Integer diagnosticReportId, Integer transcribedServiceRequestId) {
+		log.debug("Input parameters -> diagnosticReportId {}, transcribedServiceRequestId {} ",
+				diagnosticReportId, transcribedServiceRequestId);
+		List<String> result = new ArrayList<>();
 
-		Integer diagnosticReportFromOrder = equipmentAppointmentBo.getDiagnosticReportId();
-		if (diagnosticReportFromOrder != null)
-			return diagnosticReportRepository.getDiagnosticReportById(diagnosticReportFromOrder)
-					.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
-					.map(Arrays::asList)
-					.orElse(List.of());
-
-		Integer transcribedServiceRequestId = equipmentAppointmentBo.getTranscribedServiceRequestId();
-		if (transcribedServiceRequestId != null)
-			return this.getTranscribedServiceRequest(transcribedServiceRequestId)
-					.getStudies();
-
-		return List.of();
+		if (diagnosticReportId != null) {
+			result.addAll(
+					diagnosticReportRepository.getDiagnosticReportById(diagnosticReportId)
+							.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+							.map(Arrays::asList)
+							.orElse(List.of())
+			);
+		}
+		else if (transcribedServiceRequestId != null) {
+			result.addAll(
+					this.transcribedServiceRequestStorage.get(transcribedServiceRequestId)
+							.getStudies()
+			);
+		}
+		log.debug("Output -> {}",result);
+		return result;
 	}
+
 
 }

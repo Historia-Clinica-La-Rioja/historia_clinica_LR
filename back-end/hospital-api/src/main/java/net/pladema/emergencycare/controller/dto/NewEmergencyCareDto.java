@@ -4,10 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 @Getter
 @ToString
@@ -18,10 +16,10 @@ public class NewEmergencyCareDto extends AEmergencyCareDto {
     private Integer doctorsOfficeId;
 
     @Builder(builderMethodName = "newAdministrativeBuilder")
-    public NewEmergencyCareDto(List<SnomedDto> reasons, Short emergencyCareTypeId,
+    public NewEmergencyCareDto(String reason, Short emergencyCareTypeId,
                                Short entranceTypeId, PoliceInterventionDetailsDto policeIntervention, Boolean hasPoliceIntervention,
                                String ambulanceCompanyId, AEmergencyCarePatientDto patient, Integer doctorsOfficeId){
-        super(reasons, emergencyCareTypeId, entranceTypeId, policeIntervention, hasPoliceIntervention, ambulanceCompanyId, patient);
+        super(reason, emergencyCareTypeId, entranceTypeId, policeIntervention, hasPoliceIntervention, ambulanceCompanyId, patient);
         this.doctorsOfficeId = doctorsOfficeId;
     }
 }

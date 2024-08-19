@@ -15,6 +15,7 @@ export class ButtonComponent implements AfterViewInit {
 	@Input() text = '';
 	@Input() buttonType? = ButtonType.STOKED
 	@Input() disabled? = false;
+	@Input() matIcon?: string;
 
 	@Output() clicked = new EventEmitter();
 

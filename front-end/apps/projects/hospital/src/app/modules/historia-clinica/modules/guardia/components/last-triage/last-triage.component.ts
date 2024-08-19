@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { EmergencyCareTypes } from '../../constants/masterdata';
-import { Triage } from '../triage-details/triage-details.component';
+import { TriageDetails } from '../triage-details/triage-details.component';
 
 @Component({
 	selector: 'app-last-triage',
@@ -9,7 +9,7 @@ import { Triage } from '../triage-details/triage-details.component';
 })
 export class LastTriageComponent {
 
-	@Input() triage: Triage;
+	@Input() triage: TriageDetails;
 	@Input() emergencyCareType: EmergencyCareTypes;
 
 	constructor() { }

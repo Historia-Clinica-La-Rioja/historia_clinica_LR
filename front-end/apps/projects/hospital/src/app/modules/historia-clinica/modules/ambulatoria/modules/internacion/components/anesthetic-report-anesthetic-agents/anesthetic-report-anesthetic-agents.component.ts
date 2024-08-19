@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, MasterDataDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anesthetic-drug.component';
-import { MedicationService } from '../../services/medicationService';
 import { TranslateService } from '@ngx-translate/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { take } from 'rxjs';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-anesthetic-report-anesthetic-agents',
@@ -15,7 +15,6 @@ import { take } from 'rxjs';
 })
 export class AnestheticReportAnestheticAgentsComponent implements OnInit {
 
-    @Input() service: MedicationService;
     searchConceptsLocallyFFIsOn = false;
     private viasArray: MasterDataDto[];
     private title: string;
@@ -26,6 +25,7 @@ export class AnestheticReportAnestheticAgentsComponent implements OnInit {
         private readonly translateService: TranslateService,
         private readonly featureFlagService: FeatureFlagService,
         readonly internacionMasterDataService: InternacionMasterDataService,
+        readonly service: AnestheticReportService,
     ) { }
 
     ngOnInit(): void {
@@ -46,7 +46,7 @@ export class AnestheticReportAnestheticAgentsComponent implements OnInit {
     addAnestheticAgent() {
         this.dialog.open(AnestheticDrugComponent, {
             data: {
-                premedicationService: this.service,
+                premedicationService: this.service.anestheticReportAnestheticAgentService,
                 searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
                 vias: this.viasArray,
                 presentationConfig: {

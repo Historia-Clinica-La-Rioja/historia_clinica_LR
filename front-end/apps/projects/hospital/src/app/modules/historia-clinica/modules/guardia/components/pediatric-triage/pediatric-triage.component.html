@@ -2,8 +2,8 @@
 	<form [formGroup]="pediatricForm">
 
 		<section id="triage">
-			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
-				(doctorsOfficeIdChange)="setDoctorsOfficeId($event)"
+			<app-triage (triageData)="setTriageData($event)"
+				[lastTriage]="lastTriage$ | async"
 				[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
 			</app-triage>
 		</section>
@@ -11,9 +11,9 @@
 		<section id="details" fxLayout="column">
 
 			<section id="evaluation" fxLayout="column">
-				<h4 [translate]="'guardia.triage.EVALUATION'"></h4>
+				<h4 [translate]="'guardia.triage.OBSERVATIONS'"></h4>
 				<mat-form-field fxFlex="100%" appearance="outline">
-					<textarea matInput placeholder="Descripción" name="notes" formControlName="notes"></textarea>
+					<textarea matInput placeholder="{{'guardia.triage.SET_OBSERVATIONS' | translate}}" name="observation" formControlName="observation"></textarea>
 				</mat-form-field>
 			</section>
 

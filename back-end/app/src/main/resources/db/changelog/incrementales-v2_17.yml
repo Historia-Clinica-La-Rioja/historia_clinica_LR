@@ -363,3 +363,18 @@ databaseChangeLog:
                 - column:
                     name: phone_prefix
                     type: varchar(10)
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='booking_person' and column_name='phone_prefix'
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT COUNT(column_name)
+                FROM information_schema.columns
+                WHERE table_name='booking_person' AND column_name='phone_number'

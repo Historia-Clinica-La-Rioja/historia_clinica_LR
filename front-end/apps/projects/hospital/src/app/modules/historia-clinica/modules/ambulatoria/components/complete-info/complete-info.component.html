@@ -1,3 +1,7 @@
+
+<app-control-select-template [studies]="studies" [patientId]="patientId">
+</app-control-select-template>
+
 <form [formGroup]="formStudyClosure" fxLayout="column">
 	<mat-form-field appearance="outline">
 		<mat-label>
@@ -5,8 +9,8 @@
 		</mat-label>
 		<textarea matInput type="text" id="description" formControlName="description"></textarea>
 		<mat-error>
-			 {{'forms.REQUIRED' | translate}}
-		 </mat-error>
+			{{'forms.REQUIRED' | translate}}
+		</mat-error>
 	</mat-form-field>
 </form>
 

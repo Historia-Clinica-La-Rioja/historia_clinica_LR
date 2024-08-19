@@ -1,5 +1,7 @@
 package ar.lamansys.sgx.shared.i18n;
 
+import ar.lamansys.sgx.shared.validation.CustomLocalValidatorFactoryBean;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +45,7 @@ public class CustomMessageSourceConfiguration implements WebMvcConfigurer {
     @Bean
     @Override
     public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        LocalValidatorFactoryBean bean = new CustomLocalValidatorFactoryBean();
         bean.setValidationMessageSource(messageSource());
         return bean;
     }

@@ -5,6 +5,8 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.procedure.domain.ProcedureTemplateVo;
 import net.pladema.procedure.infrastructure.input.rest.dto.ProcedureTemplateDto;
 
+import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTemplate;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,4 +28,6 @@ public interface ProcedureTemplateMapper {
 	@Named("toListProcedureTemplateDto")
 	@IterableMapping(qualifiedByName = "toProcedureTemplateDto")
 	List<ProcedureTemplateDto> toListProcedureTemplateDto(List<ProcedureTemplateVo> procedureTemplateVoList);
+
+	ProcedureTemplateVo toProcedureTemplateVo(ProcedureTemplate procedureTemplate);
 }

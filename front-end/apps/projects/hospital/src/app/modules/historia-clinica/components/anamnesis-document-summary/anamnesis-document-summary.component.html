@@ -1,0 +1,52 @@
+<div class="anamnesis-container" data-id="anamnesis-summary">
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="20px">
+        <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
+            [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
+        <mat-divider></mat-divider>
+
+        <ng-container *ngIf="_activeDocument?.document?.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _activeDocument.document?.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
+
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="summary.anamnesis.mainDiagnosis || summary.anamnesis.diagnosis"
+                [diagnosis]="summary.anamnesis.diagnosis" [mainDiagnosis]="summary.anamnesis.mainDiagnosis"></app-diagnosis-summary>
+
+            <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="summary.anamnesis.clinicalEvaluation"
+                [clinicalEvaluation]="summary.anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
+
+            <app-description-item-data-summary *ngIf="summary.anamnesis.procedures" data-id="procedures-summary"
+                [descriptionItemDataSummary]="summary.anamnesis.procedures"></app-description-item-data-summary>
+
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="summary.anamnesis.anthropometricData"
+                [anthropometricData]="summary.anamnesis.anthropometricData"></app-anthropometric-data-summary>
+
+            <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+                *ngIf="summary.anamnesis.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="summary.anamnesis.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+
+            <app-description-item-data-summary *ngIf="summary.anamnesis.allergies" data-id="allergies-summary"
+                [descriptionItemDataSummary]="summary.anamnesis.allergies"></app-description-item-data-summary>
+
+            <app-description-item-data-summary *ngIf="summary.anamnesis.vaccines" data-id="vaccines-summary"
+                [descriptionItemDataSummary]="summary.anamnesis.vaccines"></app-description-item-data-summary>
+
+            <app-description-item-data-summary *ngIf="summary.anamnesis.personalHistories" data-id="personal-histories-summary"
+                [descriptionItemDataSummary]="summary.anamnesis.personalHistories"></app-description-item-data-summary>
+
+            <app-description-item-data-summary *ngIf="summary.anamnesis.familyHistories" data-id="family-histories-summary"
+                [descriptionItemDataSummary]="summary.anamnesis.familyHistories"></app-description-item-data-summary>
+
+            <app-description-item-data-summary *ngIf="summary.anamnesis.medications" data-id="usual-medication-summary"
+                [descriptionItemDataSummary]="summary.anamnesis.medications"></app-description-item-data-summary>
+        </div>
+    </div>
+    <ng-template #loader>
+        <mat-spinner color="primary" class="loader"></mat-spinner>
+    </ng-template>
+</div>

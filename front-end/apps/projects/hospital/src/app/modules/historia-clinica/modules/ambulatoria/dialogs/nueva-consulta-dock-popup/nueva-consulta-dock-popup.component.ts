@@ -7,7 +7,6 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService, SEVERITY_CODES } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { TranslateService } from '@ngx-translate/core';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -39,7 +38,7 @@ import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
-import { forkJoin, Observable, of } from 'rxjs';
+import { finalize, forkJoin, Observable, of } from 'rxjs';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
 import { HCEPersonalHistory } from '../reference/reference.component';
@@ -51,7 +50,10 @@ import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
-import * as _ from 'lodash';
+import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const TIME_OUT = 5000;
 
@@ -75,13 +77,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	apiErrors: string[] = [];
-	public today = newMoment();
+	public today = new Date();
 	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
 	public hasError = hasError;
-	momentFormat = momentFormat;
-	DateFormat = DateFormat;
 	severityTypes: any[];
 	criticalityTypes: any[];
 	public reportFFIsOn: boolean;
@@ -99,6 +99,47 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	episodeData: EpisodeData;
 	touchedConfirm = false;
 	referenceSituationViolence = null;
+	allergyContent: ConceptsList = {
+		id: 'allergy-checkbox-concepts-list',
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
+			icon: 'cancel'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.alergias.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isAllergyNoRefer: boolean = true;
+	personalHistoriesContent: ConceptsList = {
+		id: 'personal-histories-checkbox-concepts-list',
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TITLE',
+			icon: 'report'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.REGISTERED_PERSONAL_HISTORIES',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.buttons.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isPersonalHistoriesNoRefer: boolean = true;
+	familyHistoriesContent: ConceptsList = {
+		id: 'family-histories-checkbox-concepts-list',
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
+			icon: 'report'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.LIST_CARD_TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isFamilyHistoriesNoRefer: boolean = true;
+	ButtonType = ButtonType;
+	isSaving = false;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -122,11 +163,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 		private readonly snowstormService: SnowstormService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
@@ -237,7 +279,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if(!this.touchedConfirm && this.showWarningViolenceSituation){
 			this.touchedConfirm = true;
 		}
-			this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
+		this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems)
+			.pipe(finalize(() => this.isSaving = false))
+			.subscribe(res => {
 				if (res.length) {
 					this.dataName = res.map(p=> ` "${p.pt}"`);
 					this.showWarningViolenceSituation = true;
@@ -255,6 +299,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	confirmForm(){
+		this.isSaving = true;
 		if(this.referenceSituationViolence === null){
 			this.previousAlertReference();
 		}else if(this.referenceSituationViolence || !this.referenceSituationViolence){
@@ -263,48 +308,46 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
+		this.previousDataIsConfirmed()
+			.pipe(finalize(() => this.isSaving = false))
+			.subscribe((answerPreviousData: boolean) => {
+				const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+				const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
+				this.apiErrors = [];
 
-			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
-			const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
-
-			this.apiErrors = [];
-
-			if (answerPreviousData) {
-				if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
-					if (!fieldsService.nonCompletedFields.length) {
-						this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
-					}
-					else {
-						(this.isEnablePopUpConfirm)
-							? this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta)
-							: this.uploadReferencesFileAndCreateConsultation(nuevaConsulta)
-					}
-				} else {
-					this.disableConfirmButton = false;
-					if (!this.isValidConsultation()) {
-						if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
-							this.collapsedAnthropometricDataSection = false;
-							setTimeout(() => {
-								scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
-							}, 300);
+				if (answerPreviousData) {
+					if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
+						if (!fieldsService.nonCompletedFields.length) {
+							this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
 						}
-						else if (this.factoresDeRiesgoFormService.getForm().invalid) {
-							this.collapsedRiskFactorsSection = false;
-							setTimeout(() => {
-								scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
-							}, 300);
+						else {
+							(this.isEnablePopUpConfirm)
+								? this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta)
+								: this.uploadReferencesFileAndCreateConsultation(nuevaConsulta)
 						}
-						if (this.hierarchicalUnitFormService.isValidForm()) {
-							setTimeout(() => {
-								scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
-							}, 300);
+					} else {
+						this.disableConfirmButton = false;
+						if (!this.isValidConsultation()) {
+							if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
+								this.collapsedAnthropometricDataSection = false;
+								setTimeout(() => {
+									scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
+								}, 300);
+							}
+							else if (this.factoresDeRiesgoFormService.getForm().invalid) {
+								this.collapsedRiskFactorsSection = false;
+								setTimeout(() => {
+									scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
+								}, 300);
+							}
+							if (this.hierarchicalUnitFormService.isValidForm()) {
+								setTimeout(() => {
+									scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+								}, 300);
+							}
 						}
 					}
-
 				}
-			}
-
 		});
 	}
 
@@ -430,9 +473,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
-				allergies: !!nuevaConsultaDto.allergies?.length,
-				personalHistories: !!nuevaConsultaDto.personalHistories?.length,
-				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
+				allergies: !!nuevaConsultaDto.allergies?.content.length,
+				personalHistories: !!nuevaConsultaDto.personalHistories?.content.length,
+				familyHistories: !!nuevaConsultaDto.familyHistories?.content.length,
 				riskFactors: !!nuevaConsultaDto.riskFactors,
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
@@ -468,37 +511,43 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		return true;
 	}
 
-	private buildProblema(p: HealthConditionNewConsultationDto) {
+	private buildProblema(p: HealthConditionNewConsultationDto): Problema {
 		const problema: Problema = {
 			snomed: p.snomed,
 			codigoSeveridad: p.severity,
 			cronico: p.isChronic,
-			fechaInicio: p.startDate ? dateToMomentTimeZone(p.startDate) : newMoment(),
-			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
+			fechaInicio: p.startDate || new Date(),
+			fechaFin: p.inactivationDate || undefined
 		};
 		return problema;
 	}
 
 	private buildCreateOutpatientDto(): CreateOutpatientDto {
 		return {
-			allergies: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
-				return {
-					categoryId: null,
-					snomed: alergia.snomed,
-					startDate: null,
-					statusId: null,
-					verificationId: null,
-					criticalityId: alergia.criticalityId,
-				};
-			}),
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.alergiasNuevaConsultaService.getAlergias().length === 0) ? null: this.isAllergyNoRefer,
+				content: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
+					return {
+						categoryId: null,
+						snomed: alergia.snomed,
+						startDate: null,
+						statusId: null,
+						verificationId: null,
+						criticalityId: alergia.criticalityId,
+					};
+				}),
+			},
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
-			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
-				return {
-					snomed: antecedente.snomed,
-					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined
-				};
-			}),
+			familyHistories: {
+				isReferred: (this.isFamilyHistoriesNoRefer && this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().length === 0) ? null: this.isFamilyHistoriesNoRefer,
+				content: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
+					return {
+						snomed: antecedente.snomed,
+						startDate: antecedente.fecha ? toApiFormat(antecedente.fecha) : undefined
+					};
+				}),
+			},
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
 					note: medicacion.observaciones,
@@ -508,27 +557,30 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}
 			),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
-			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
-				return {
-					inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
-					note: personalHistory.observations,
-					snomed: personalHistory.snomed,
-					startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
-					typeId: personalHistory.type.id,
-				}
-			}),
+			personalHistories: {
+				isReferred: (this.isPersonalHistoriesNoRefer && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null: this.isPersonalHistoriesNoRefer,
+				content: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
+					return {
+						inactivationDate: personalHistory.endDate ? toApiFormat(personalHistory.endDate) : null,
+						note: personalHistory.observations,
+						snomed: personalHistory.snomed,
+						startDate: toApiFormat(personalHistory.startDate),
+						typeId: personalHistory.type.id,
+					}
+				}),
+			},
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
-				(problema: Problema) => {
+				(problema: AmbulatoryConsultationProblem) => {
 					return {
 						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
-						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
+						endDate: problema.fechaFin ? toApiFormat(problema.fechaFin) : undefined,
 						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
+						startDate: problema.fechaInicio ? toApiFormat(problema.fechaInicio) : undefined
 					};
 				}
 			),
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
@@ -657,7 +709,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '30%',
+			width: '40',
 			disableClose: true,
 		});
 	}
@@ -708,6 +760,27 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+	}
+
+	checkAllergyEvent($event) {
+		if ($event.addPressed) {
+			this.addAllergy();
+		}
+		this.isAllergyNoRefer = !$event.checkboxSelected;
+	}
+
+	checkPersonalHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addPersonalHistory();
+		}
+		this.isPersonalHistoriesNoRefer = !$event.checkboxSelected;
+	}
+
+	checkFamilyHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addFamilyHistory();
+		}
+		this.isFamilyHistoriesNoRefer = !$event.checkboxSelected;
 	}
 
 }

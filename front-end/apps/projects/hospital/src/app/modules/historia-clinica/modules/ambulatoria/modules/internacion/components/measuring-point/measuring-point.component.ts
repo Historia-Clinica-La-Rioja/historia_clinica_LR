@@ -14,6 +14,7 @@ export class MeasuringPointComponent implements OnInit {
     @Input() service: AnestheticReportVitalSignsService;
     form: FormGroup;
     timePickerData: TimePickerData;
+    submitted = false;
 
     constructor() { }
 
@@ -28,6 +29,7 @@ export class MeasuringPointComponent implements OnInit {
 
     registerMeasuringPoint() {
         this.service.handleMeasuringPointRegister();
+        this.submitted = true;
     }
 
     setMeasuringPointStartTime(time: TimeDto) {

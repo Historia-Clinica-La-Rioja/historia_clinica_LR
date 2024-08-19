@@ -1,10 +1,10 @@
 <div fxLayout="column" fxLayoutGap="1vh">
-    <app-titled-content-card *ngIf="!service.isEmpty()"
+    <app-titled-content-card *ngIf="!service.anestheticReportRecordService.isEmpty()"
         title="{{ 'internaciones.anesthesic-report.record.REGISTERED_RECORDS' }}">
-        <div *ngFor="let record of (service.getRecord() | async); index as i; last as isLast">
+        <div *ngFor="let record of (service.anestheticReportRecordService.getRecord() | async); index as i; last as isLast">
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <span>{{ record.pt | titlecase }}</span>
-                <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+                <button type="button" mat-icon-button color="warn" (click)="service.anestheticReportRecordService.remove(i)">
                     <mat-icon>delete_outline</mat-icon>
                 </button>
             </div>

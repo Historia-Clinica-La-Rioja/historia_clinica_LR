@@ -64,27 +64,14 @@ public class BasicDataPersonDto implements Serializable {
 
 	private String email;
 
-	/*public BasicDataPersonDto(Integer id, String firstName, String middleNames, String lastName, String otherLastNames, Short identificationTypeId, String identificationType, String identificationNumber, GenderDto gender, String selfPerceivedGender, Short age, LocalDate birthDate, String nameSelfDetermination, List<PersonFileDto> files) {
-		this.id = id;
-		this.firstName = firstName;
-		this.middleNames = middleNames;
-		this.lastName = lastName;
-		this.otherLastNames = otherLastNames;
-		this.identificationTypeId = identificationTypeId;
-		this.identificationType = identificationType;
-		this.identificationNumber = identificationNumber;
-		this.gender = gender;
-		this.selfPerceivedGender = selfPerceivedGender;
-		this.age = age;
-		this.birthDate = birthDate;
-		this.nameSelfDetermination = nameSelfDetermination;
-		this.files = files;
-	}*/
-
-	public String completeName(){
+	public String completeName(boolean selfPerceivedFeatureFlag){
         if (lastName == null && firstName == null && middleNames == null && otherLastNames==null) {
             return null;
         }
+
+		if (selfPerceivedFeatureFlag && nameSelfDetermination != null)
+			return nameSelfDetermination;
+
         String completeFirsName = (firstName != null && middleNames != null)
                 ? firstName + " " + middleNames
                 : firstName == null ?

@@ -13,7 +13,8 @@
 			"CIRCULATION": "Circulación",
 			"CONFIRM": "Confirmar triage",
 			"CRYING_EXCESSIVE": "Llanto sin consuelo",
-			"EVALUATION": "Evaluación",
+			"OBSERVATIONS": "Observaciones",
+			"SET_OBSERVATIONS": "Ingresar observaciones",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"LEVEL": "Nivel de urgencia",
 			"MUSCLE_HYPERTONIA": "Tono muscular",
@@ -27,26 +28,21 @@
 			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
 			"STRIDOR": "Respiración con estridor",
 			"TEMPERATURE": "Temperatura",
-			"TITLE": "Nuevo triage"
+			"TITLE": "Nuevo triage",
+			"REASON": "Motivo de consulta",
+			"LIST_CARD_TITLE": "Motivos registrados",
+			"ADD_REASON": "+ agregar motivo"
 		},
 		"administrative_admision": {
 			"TITLE": "Nuevo episodio",
-			"SUBTITLE": "Complete datos solicitados para continuar",
 			"PATIENT": "Paciente",
-			"SEARCH_PATIENT": "Buscar Paciente",
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
-			"motivo": {
-				"TITLE": "Detalle del episodio",
-				"MOTIVO": "motivo",
-				"ADD": "Agregar motivo",
-				"table": {
-					"TITLE": "Motivos registrados",
-					"columns": {
-						"MOTIVO": "Motivos"
-					}
-				},
-				"DIAGNOSIS": "Diagnóstico"
+			"EPISODE_DETAILS": "Detalle del episodio",
+			"TEMPORARY": "Temporal",
+			"reasons": {
+				"TITLE": "Motivo de ingreso",
+				"PLACEHOLDER": "Descripción del paciente"
 			},
 			"form": {
 				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
@@ -58,7 +54,6 @@
 				},
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
-					"DATE": "Fecha",
 					"TIME": "Hora",
 					"police_officer": {
 						"TITLE": "Detalle del oficial policial",
@@ -66,6 +61,11 @@
 						"NAME": "Nombre",
 						"LAST_NAME": "Apellido"
 					}
+				},
+				"temporary_patient_popup": {
+					"TITLE": "Paciente temporal",
+					"SUBTITLE": "Detalles identificatorios",
+					"PLACEHOLDER": "Agregar..."
 				}
 			}
 		},
@@ -84,13 +84,20 @@
 							"SUCCESS": "Episodio con paciente en espera",
 							"ERROR": "Error al cambiar el estado del episodio"
 						},
+						"edit_patient_description": {
+							"TITLE": "Editar identificación",
+							"SUCCESS": "Se actualizo la identificacion del paciente correctamente",
+							"ERROR": "Hubo un error al actualizar la identificacion del paciente"
+						},
 						"NUEVO_TRIAGE": "Nuevo triage"
 					},
 					"patient": {
 						"ID": "ID Paciente",
+						"REASON": "Motivo de ingreso",
 						"NO_INFO": "Sin información",
 						"TEMPORAL": "Paciente temporal",
-						"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia"
+						"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia",
+						"DETAILS": "Detalle"
 					}
 				},
 				"filters": {
@@ -120,7 +127,6 @@
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"administrative": {
 				"EPISODE": "Episodio",
-				"REASONS": "Motivos de consulta",
 				"ENTRANCE": "Ingreso",
 				"POLICE_INTERVENTION": "Intervención policial",
 				"UBICACION": "Ubicación"
@@ -197,7 +203,7 @@
 					"RESPIRACION_ESTRIDOR": "Respiración con estridor",
 					"PERFUSION": "Perfusión",
 					"FACTORES_DE_RIESGO": "Signos vitales y factores de riesgo",
-					"EVALUACION": "Evaluación",
+					"OBSERVATIONS": "Observaciones",
 					"SI": "Si",
 					"NO": "No"
 				}
@@ -245,6 +251,11 @@
 		},
 		"NO_INFO": "Sin información",
 		"NO": "No",
-		"SI": "Si"
+		"SI": "Si",
+		"no_refer": {
+			"ALLERGIES": "No refiere alergias",
+			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
+		},
+		"EDITED": "(Editado) -"
 	}
 }

@@ -1,7 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { EmergencyCareEvolutionNoteDocumentDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
+import { DateTimeDto, EmergencyCareEvolutionNoteDocumentDto, HealthcareProfessionalDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { HEALTH_VERIFICATIONS } from '../../../ambulatoria/modules/internacion/constants/ids';
+import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { PatientNameService } from '@core/services/patient-name.service';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+
 @Component({
 	selector: 'app-emergency-care-evolution-note',
 	templateUrl: './emergency-care-evolution-note.component.html',
@@ -15,6 +19,8 @@ export class EmergencyCareEvolutionNoteComponent {
 			c => {
 				this.criticalityTypes = c;
 				this.alergiasContent = this.toAlergias(newContent.emergencyCareEvolutionNoteClinicalData.allergies);
+				if (newContent.emergencyCareEvolutionNoteClinicalData.allergies.isReferred === false)
+					this.alergiasContent = ['guardia.no_refer.ALLERGIES'];
 			}
 		)
 		this.especialidadContent = [newContent.clinicalSpecialtyName];
@@ -25,7 +31,13 @@ export class EmergencyCareEvolutionNoteComponent {
 		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
 		this.procedimientosContent = this.toProcedimientos(newContent.emergencyCareEvolutionNoteClinicalData.procedures);
 		this.factoresContent = this.toRiskFactors(newContent.emergencyCareEvolutionNoteClinicalData.riskFactors);
-		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares(newContent.emergencyCareEvolutionNoteClinicalData.familyHistories)
+		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares(newContent.emergencyCareEvolutionNoteClinicalData.familyHistories);
+
+		if (!!newContent.editor) {
+			this.setRegisterEvolutionNoteEdition(newContent.editedOn, newContent.editor);
+		}
+		else
+			this.registerEvolutionNoteEdition = null;
 	}
 
 	private criticalityTypes: any[];
@@ -40,16 +52,21 @@ export class EmergencyCareEvolutionNoteComponent {
 	factoresContent;
 	alergiasContent;
 	antecedentesFamiliaresContent;
+	registerEvolutionNoteEdition: RegisterEditor;
+	REGISTER_EDITOR_CASE = REGISTER_EDITOR_CASES.DATE_HOUR;
 
 	constructor(
 		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly patientNameService: PatientNameService,
 	) { }
 
 	private toAntecedentesFamiliares(familyHistories): string[] {
-		return familyHistories.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
+		if (familyHistories.isReferred === false)
+			this.antecedentesFamiliaresContent = ['guardia.no_refer.FAMILY_HISTORIES'];
+		return familyHistories.content?.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
 
 		function map(m: OutpatientFamilyHistoryDto): string[] {
-			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}`: null]
+			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}` : null]
 		}
 	}
 
@@ -134,7 +151,7 @@ export class EmergencyCareEvolutionNoteComponent {
 	}
 
 	private toAlergias(allergies): string[] {
-		return allergies.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
+		return allergies.content.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
 	}
 
 	private toDiagnostico(mainDiagnosis, otherDiagnosis): string[] {
@@ -151,6 +168,20 @@ export class EmergencyCareEvolutionNoteComponent {
 			} else if (verificationId === HEALTH_VERIFICATIONS.PRESUNTIVO)
 				verification = 'Presuntivo';
 			return verification;
+		}
+	}
+
+	private setRegisterEvolutionNoteEdition(performedDate: DateTimeDto, professional: HealthcareProfessionalDto) {
+		const { firstName, lastName } = professional.person;
+		const nameSelfDetermination = professional.nameSelfDetermination;
+		const professionalFullName = this.patientNameService.completeName(firstName, nameSelfDetermination, lastName);
+		this.registerEvolutionNoteEdition = this.toRegisterEditorInformation(performedDate, professionalFullName);
+	}
+
+	private toRegisterEditorInformation(performedDate: DateTimeDto, professionalFullName: string): RegisterEditor {
+		return {
+			date: dateTimeDtoToDate(performedDate),
+			createdBy: professionalFullName,
 		}
 	}
 }

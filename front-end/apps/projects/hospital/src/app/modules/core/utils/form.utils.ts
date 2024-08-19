@@ -1,10 +1,7 @@
 import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn, FormControl} from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { Moment } from 'moment';
-import { momentFormat, newMoment } from './moment.utils';
-import { DateFormat } from './date.utils';
+import { DateFormat, toHourMinute } from './date.utils';
 import { format } from 'date-fns';
-import { EVENT_CODE_NUMBERS } from './core.utils';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -21,6 +18,8 @@ export const NUMBER_PATTERN = /^[0-9]\d*$/;
 export const DEFAULT_COUNTRY_ID = 14;
 export const NON_WHITESPACE_REGEX = /\S/;
 export const STRING_PATTERN = /^[a-zA-Z\s]+$/;
+export const BACKSPACE = 'Backspace';
+export const WHITESPACE = '';
 
 export function hasError(form: AbstractControl, type: string, control: string): boolean {
 	return form.get(control).hasError(type);
@@ -54,9 +53,9 @@ export function atLeastOneValueInFormGroup(form: UntypedFormGroup): boolean {
 
 export function futureTimeValidation(control: UntypedFormControl): ValidationErrors | null {
 	const time: string = control.value;
-	const today: Moment = newMoment();
+	const today: Date = new Date();
 	if (isValidTime(time)) {
-		if (time > momentFormat(today, DateFormat.HOUR_MINUTE)) {
+		if (time > toHourMinute(today)) {
 			return {
 				futureTime: true
 			};
@@ -75,11 +74,11 @@ export function futureTimeValidationDate(control: UntypedFormControl): Validatio
 	return null;
 }
 
-export function beforeTimeValidation(moment: Moment) {
+export function beforeTimeValidation(date: Date) {
 	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
 		if (isValidTime(time)) {
-			if (time < momentFormat(moment, DateFormat.HOUR_MINUTE)) {
+			if (time < toHourMinute(date)) {
 				return {
 					beforeTime: true
 				};
@@ -119,12 +118,12 @@ function isValidTime(time: string) {
 }
 
 export class MinTimeValidator {
-	constructor(private readonly minDateTime: Moment) { }
+	constructor(private readonly minDateTime: Date) { }
 
 	minTimeValidation(control: UntypedFormControl): ValidationErrors | null {
 		const time: string = control.value;
 		if (isValidTime(time)) {
-			if (time <= momentFormat(this.minDateTime, DateFormat.HOUR_MINUTE)) {
+			if (time <= toHourMinute(this.minDateTime)) {
 				return {
 					previousTime: true
 				};
@@ -190,11 +189,6 @@ export function NoWhitespaceValidator(): ValidatorFn {
 	  const isValid = !isWhitespace;
 	  return isValid ? null : { 'whitespace': true };
 	};
-}
-
-export function includesEventCodeNumber(event: KeyboardEvent) {
-	const code = event.code;
-	return EVENT_CODE_NUMBERS.includes(code);
 }
 
 export type ToFormGroup<T> = {[P in keyof T]: FormControl<T[P]>; };

@@ -35,17 +35,7 @@ export class AnestheticReportClinicalEvaluationService {
 			this.isEmptySource.next(this.isEmpty());
 		});
 
-        this.form.controls.maxBloodPressure.valueChanges.subscribe(_ => {
-			this.checkMaxBloodPressureErrors();
-		});
-
-		this.form.controls.minBloodPressure.valueChanges.subscribe(_ => {
-			this.checkMinBloodPressureErrors();
-		});
-
-		this.form.controls.hematocrit.valueChanges.subscribe(_ => {
-			this.checkHematocritErrors();
-		});
+        this.handleFormChanges();
     }
 
     get maxBloodPressureError$(): Observable<string | void> {
@@ -60,68 +50,40 @@ export class AnestheticReportClinicalEvaluationService {
 		return this._hematocrit$;
 	}
 
-    checkMinBloodPressureErrors() {
-        if (this.form.controls.minBloodPressure.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: CLINICAL_EVALUATION.MIN.bloodPressure }).subscribe(
-                (errorMsg: string) => this.minBloodPressureSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.minBloodPressure.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: CLINICAL_EVALUATION.MAX.bloodPressure }).subscribe(
-                (errorMsg: string) => this.minBloodPressureSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.minBloodPressure.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.minBloodPressureSource.next(errorMsg)
-            );
-        }
-        else {
-            this.minBloodPressureSource.next();
-        }
-    }
+    private handleFormChanges() {
+		this.handleFormControlChanges('minBloodPressure', 'minBloodPressureSource');
+		this.handleFormControlChanges('maxBloodPressure', 'maxBloodPressureSource');
+		this.handleFormControlChanges('hematocrit', 'hematocritSource');
 
-    checkMaxBloodPressureErrors() {
-        if (this.form.controls.maxBloodPressure.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: CLINICAL_EVALUATION.MIN.bloodPressure }).subscribe(
-                (errorMsg: string) => this.maxBloodPressureSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.maxBloodPressure.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: CLINICAL_EVALUATION.MAX.bloodPressure }).subscribe(
-                (errorMsg: string) => this.maxBloodPressureSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.maxBloodPressure.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.maxBloodPressureSource.next(errorMsg)
-            );
-        }
-        else {
-            this.maxBloodPressureSource.next();
-        }
-    }
+	}
 
-    checkHematocritErrors() {
-        if (this.form.controls.hematocrit.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: CLINICAL_EVALUATION.MIN.hematocrit }).subscribe(
-                (errorMsg: string) => this.hematocritSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.hematocrit.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: CLINICAL_EVALUATION.MAX.hematocrit }).subscribe(
-                (errorMsg: string) => this.hematocritSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.hematocrit.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.hematocritSource.next(errorMsg)
-            );
-        }
-        else {
-            this.hematocritSource.next();
-        }
-    }
+	private handleFormControlChanges(controlName: string, errorSource: string) {
+		this.form.controls[controlName].valueChanges.subscribe(_ => {
+			this.checkErrors(controlName, errorSource);
+		});
+	}
+
+	private checkErrors(controlName: string, errorSource: string) {
+		const control = this.form.controls[controlName];
+		if (control.hasError('min')) {
+			this.translateService.get('forms.MIN_ERROR', { min: CLINICAL_EVALUATION.MIN[controlName] }).subscribe(
+				(errorMsg: string) => { this[errorSource].next(errorMsg); }
+			);
+		}
+		else if (control.hasError('max')) {
+			this.translateService.get('forms.MAX_ERROR', { max: CLINICAL_EVALUATION.MAX[controlName] }).subscribe(
+				(errorMsg: string) => { this[errorSource].next(errorMsg); }
+			);
+		}
+		else if (control.hasError('pattern')) {
+			this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
+				(errorMsg: string) => { this[errorSource].next(errorMsg); }
+			);
+		}
+		else {
+			this[errorSource].next();
+		}
+	}
 
     getForm(): FormGroup {
         return this.form;
@@ -134,6 +96,20 @@ export class AnestheticReportClinicalEvaluationService {
     getClinicalEvaluationData(): RiskFactorDto {
         return this.mapToRiskFactorDto();
     }
+
+	setData(riskFactorData: RiskFactorDto) {
+		if (riskFactorData) {
+			if (riskFactorData.systolicBloodPressure?.value) {
+				this.form.get('maxBloodPressure').setValue(riskFactorData.systolicBloodPressure.value);
+			}
+			if (riskFactorData.diastolicBloodPressure?.value) {
+				this.form.get('minBloodPressure').setValue(riskFactorData.diastolicBloodPressure.value);
+			}
+			if (riskFactorData.hematocrit?.value) {
+				this.form.get('hematocrit').setValue(riskFactorData.hematocrit.value);
+			}
+		}
+	}
 
     private mapToRiskFactorDto(): RiskFactorDto {
         return {

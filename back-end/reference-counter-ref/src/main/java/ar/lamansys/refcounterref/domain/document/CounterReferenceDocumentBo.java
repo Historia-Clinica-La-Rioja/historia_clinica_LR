@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.domain.allergy.CounterReferenceAllergyBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceBo;
 import ar.lamansys.refcounterref.domain.medication.CounterReferenceMedicationBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -32,7 +33,7 @@ public class CounterReferenceDocumentBo {
 
     private final List<CounterReferenceMedicationBo> medications;
 
-    private final List<CounterReferenceAllergyBo> allergies;
+    private final ReferableItemBo<CounterReferenceAllergyBo> allergies;
 
     private final LocalDate performedDate;
 

@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.service;
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
 
 import java.util.Optional;
 
@@ -14,6 +15,6 @@ public interface EquipmentAppointmentService {
 
     AppointmentBo updateEquipmentAppointment(UpdateAppointmentBo appointmentDto);
 
-    MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId);
+    MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId) throws AlreadyPublishedWorklistException;
 
 }

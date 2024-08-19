@@ -23,7 +23,8 @@
 			"TELEMEDICINE":"TeleSalud",
 			"ACCESS_MANAGEMENT": "Gestión de accesos",
 			"CALL_CENTER": "Centro de llamadas",
-			"SIGNATURES": "Firmas"
+			"SIGNATURES": "Firmas",
+			"SANITARY_AREAS": "Áreas sanitarias"
 		}
 	},
 	"buttons": {
@@ -51,7 +52,7 @@
 		"ACCEPT": "Aceptar",
 		"SAVE": "Guardar",
 		"CSV_DOWNLOAD": "DESCARGAR .CSV",
-		"ELECTRONIC_FIRM": "Firmar electrónicamente",
+		"FINISH": "Finalizar",
 		"ALL": "Todos",
 		"RETRY":"Reintentar",
 		"YES_CONTINUE":"Si, continuar",

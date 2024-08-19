@@ -9,6 +9,7 @@ import net.pladema.person.repository.domain.PersonSearchResultVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.user.domain.PersonBo;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,9 +51,15 @@ public interface PersonService {
 
     String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
 
-    String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
+	String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName);
+
+	String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
 
     ContactInfoBo getContactInfoById(Integer personId);
 
     List<String> getCompletePersonNameByIds(List<Integer> personIds);
+    
+    CompletePersonNameBo findByHealthcareProfessionalId(Integer healthcareProfessionalId);
+
+	Optional<PersonBo> getPersonData(Integer patientId);
 }

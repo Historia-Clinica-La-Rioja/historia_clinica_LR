@@ -194,25 +194,25 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		);
 	}
 
-	setMunicipalDevices(mdev: string) {
-		this.pushOrRemove(
-			mdev,
+	setMunicipalDevices(mdevs: [string]) {
+		this.updateDevicesForm(
+			mdevs,
 			this.selectedMunicipalDevices,
 			this.form.controls.municipalDevices
 		);
 	}
 
-	setProvincialDevices(pdev: string) {
-		this.pushOrRemove(
-			pdev,
+	setProvincialDevices(pdevs: [string]) {
+		this.updateDevicesForm(
+			pdevs,
 			this.selectedProvincialDevices,
 			this.form.controls.provincialDevices
 		);
 	}
 
-	setNationalDevices(ndev: string) {
-		this.pushOrRemove(
-			ndev,
+	setNationalDevices(ndevs: [string]) {
+		this.updateDevicesForm(
+			ndevs,
 			this.selectedNationalDevices,
 			this.form.controls.nationalDevices
 		);
@@ -224,6 +224,14 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 			this.selectedDevices,
 			this.form.controls.devices
 		);
+	}
+
+	private updateDevicesForm(newDevices: [string], selectedDevicesList: string[], formControl: FormControl) {
+		selectedDevicesList = newDevices;
+		newDevices.map(value => {
+			this.setDevicesValidators(value, true);
+		})
+		formControl.setValue(selectedDevicesList);
 	}
 
 	private pushOrRemove(value: string, array: string[], formControl: FormControl) {

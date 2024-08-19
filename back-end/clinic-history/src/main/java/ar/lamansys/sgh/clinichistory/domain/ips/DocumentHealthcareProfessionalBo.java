@@ -24,7 +24,9 @@ public class DocumentHealthcareProfessionalBo {
 	private HealthcareProfessionalBo healthcareProfessional;
 
 	@NotNull
-	private EProfessionType type;
+	private EProfessionType professionType;
+
+	private String otherProfessionTypeDescription;
 
 	@Nullable
 	private String comments;
@@ -32,17 +34,18 @@ public class DocumentHealthcareProfessionalBo {
 	public DocumentHealthcareProfessionalBo(Integer id, Integer healthcareProfessionalId, EProfessionType type, String comments){
 		this.id = id;
 		this.healthcareProfessional = new HealthcareProfessionalBo(healthcareProfessionalId);
-		this.type = type;
+		this.professionType = type;
 		this.comments = comments;
 	}
 
 	public DocumentHealthcareProfessionalBo(Integer id, Integer healthcareProfessionalId, String licenceNumber,
 											Integer personId, String firstName, String lastName, String identificationNumber,
 											String nameSelfDetermination,String middleNames,String otherLastNames, Short type,
-											String comments){
+											String otherProfessionTypeDescription, String comments){
 		this.id = id;
 		this.healthcareProfessional = new HealthcareProfessionalBo(healthcareProfessionalId, licenceNumber, personId, firstName, lastName, identificationNumber, nameSelfDetermination, middleNames, otherLastNames);
-		this.type = EProfessionType.map(type);
+		this.professionType = EProfessionType.map(type);
+		this.otherProfessionTypeDescription = otherProfessionTypeDescription;
 		this.comments = comments;
 	}
 

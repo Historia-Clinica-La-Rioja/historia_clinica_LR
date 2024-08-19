@@ -6,28 +6,35 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import net.pladema.patient.controller.dto.AuditPatientSearch;
+import net.pladema.person.repository.domain.CompletePersonNameBo;
+import net.pladema.person.repository.domain.DuplicatePersonVo;
+
+import net.pladema.person.repository.domain.PersonSearchResultVo;
+
+import net.pladema.user.domain.PersonBo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonHistoryRepository;
 import net.pladema.person.repository.PersonRepository;
-import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.CompletePersonVo;
-import net.pladema.person.repository.domain.DuplicatePersonVo;
-import net.pladema.person.repository.domain.PersonSearchResultVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.repository.entity.PersonHistory;
 import net.pladema.person.service.PersonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -146,6 +153,19 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
+	public CompletePersonNameBo findByHealthcareProfessionalId(Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+		CompletePersonNameBo result = personRepository.findByHealthcareProfessionalId(healthcareProfessionalId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<PersonBo> getPersonData(Integer patientId) {
+		return personRepository.findPersonExtendedByPatientId(patientId);
+	}
+
+	@Override
 	public String getCompletePersonNameById(Integer personId) {
 		LOG.debug("Input parameters -> personId {}", personId);
 		CompletePersonNameVo personName = personRepository.getCompletePersonNameByIds(List.of(personId)).get(0);
@@ -164,6 +184,14 @@ public class PersonServiceImpl implements PersonService {
 		String finalFirstName = this.getFinalFirstName(firstName, middleNames, selfDeterminateName);
 		String finalLastName = this.getFinalLastName(lastName, otherLastNames);
 		return String.join(" ", finalFirstName, finalLastName);
+	}
+
+	@Override
+	public String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName) {
+		String finalFirstName = getFinalFirstName(givenName, selfDeterminateName);
+		return Stream.of(finalFirstName, familyNames)
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
 	}
 
 	@Override
@@ -204,6 +232,10 @@ public class PersonServiceImpl implements PersonService {
 
 	private String getFinalFirstName(String firstName, String middleNames, String selfDeterminateName) {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName != null ? firstName : "", middleNames != null ? middleNames : "") : firstName != null ? firstName : "";
+	}
+
+	private String getFinalFirstName(String givenName, String selfDeterminateName) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName :  givenName;
 	}
 
 	private String getFinalLastName(String lastName, String otherLastNames) {

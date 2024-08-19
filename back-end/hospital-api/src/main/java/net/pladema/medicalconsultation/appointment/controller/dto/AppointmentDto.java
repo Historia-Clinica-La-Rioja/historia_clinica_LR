@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedServiceRequestSummaryDto;
+import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 
 @Getter

@@ -44,6 +44,7 @@ import { FiltersSelectV2Component } from './components/filters-select-v2/filters
 import { FiltersTypeaheadComponent } from '../presentation/components/filters-typeahead/filters-typeahead.component';
 import { FloatingDivComponent } from './components/floating-div/floating-div.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { HideShowToggleComponent } from './components/hide-show-toggle/hide-show-toggle.component';
 import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
 import { IconedTitledSectionComponent } from './components/iconed-titled-section/iconed-titled-section.component';
 import { IdentifierComponent } from './components/identifier/identifier.component';
@@ -80,6 +81,7 @@ import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
+import { TextEllipsisTooltipComponent } from './components/text-ellipsis-tooltip/text-ellipsis-tooltip.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
@@ -92,14 +94,20 @@ import { TypeaheadV2Component } from './components/typeahead-v2/typeahead-v2.com
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogV2Component } from './dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
+import { DialogPresentationComponent } from './components/dialog-presentation/dialog-presentation.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
 import { FileDownloadComponent } from './dialogs/view-pdf/file-download/file-download.component';
 import { FileDownloadCardComponent } from './dialogs/view-pdf/file-download-card/file-download-card.component';
 import { FileViewerPdfComponent } from './dialogs/view-pdf/file-viewer-pdf/file-viewer-pdf.component';
+import { OpenStorybookDialogComponent } from './components/open-storybook-dialog/open-storybook-dialog.component';
+import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
+import { OnlyNumericCharactersDirective } from './directives/only-numeric-characters.directive';
+import { OnlyAlphabeticCharactersDirective } from './directives/only-alphabetic-characters.directive';
 // pipes
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
@@ -112,8 +120,6 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
-import { ViewDatePipe } from './pipes/view-date.pipe';
-import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 
 @NgModule({
 	declarations: [
@@ -154,6 +160,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FiltersTypeaheadComponent,
 		FloatingDivComponent,
 		FooterComponent,
+		HideShowToggleComponent,
 		IconedTextComponent,
 		IconedTitledSectionComponent,
 		IdentifierComponent,
@@ -190,6 +197,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
+		TextEllipsisTooltipComponent,
 		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
@@ -203,14 +211,20 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		UserBadgeComponent,
 		// dialogs
 		ConfirmDialogComponent,
+		ConfirmDialogV2Component,
 		DatePickerComponent,
+		DialogPresentationComponent,
 		DiscardWarningComponent,
 		FileDownloadComponent,
 		FileDownloadCardComponent,
 		FileViewerPdfComponent,
+		OpenStorybookDialogComponent,
+		ReasonPopUpComponent,
 		ViewPdfComponent,
 		// directives
 		CtrlTemplateDirective,
+		OnlyNumericCharactersDirective,
+		OnlyAlphabeticCharactersDirective,
 		// pipes
 		DateFormatPipe,
 		DayTimeRangePipe,
@@ -223,8 +237,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
-		ViewDatePipe,
-		ViewHourMinutePipe
 	],
 	imports: [
 		CommonModule,
@@ -278,6 +290,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FiltersSelectComponent,
 		FiltersSelectV2Component,
 		FloatingDivComponent,
+		HideShowToggleComponent,
 		IconedTextComponent,
 		IconedTitledSectionComponent,
 		IdentifierComponent,
@@ -321,9 +334,13 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TypeaheadComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
-		// dialogs
+		//dialogs
+		ConfirmDialogV2Component,
+		OpenStorybookDialogComponent,
 		// directives
 		CtrlTemplateDirective,
+		OnlyNumericCharactersDirective,
+		OnlyAlphabeticCharactersDirective,
 		// pipes
 		DateFormatPipe,
 		DayTimeRangePipe,
@@ -336,8 +353,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
-		ViewDatePipe,
-		ViewHourMinutePipe,
 	],
 	entryComponents: [
 		DockPopupComponent,

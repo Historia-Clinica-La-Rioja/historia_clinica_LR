@@ -4,7 +4,9 @@ import {
 	differenceInHours,
 	differenceInMinutes,
 	formatISO,
-	format
+	format,
+	isSameHour,
+	isSameMinute
 } from 'date-fns'
 
 const WAITING_TIME = 'En espera desde hace';
@@ -133,3 +135,5 @@ export function sameDayMonthAndYear(date1: Date, date2: Date): boolean {
 		date1.getDate() === date2.getDate()
 	);
 }
+
+export const sameHourAndMinute = (date: Date, dateToCompare: Date): boolean => isSameHour(date, dateToCompare) && isSameMinute(date, dateToCompare);

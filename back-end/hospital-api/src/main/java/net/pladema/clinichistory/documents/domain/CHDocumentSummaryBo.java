@@ -34,4 +34,6 @@ public class CHDocumentSummaryBo {
 
 	private String problems;
 
+	private Short typeId;
+
 }

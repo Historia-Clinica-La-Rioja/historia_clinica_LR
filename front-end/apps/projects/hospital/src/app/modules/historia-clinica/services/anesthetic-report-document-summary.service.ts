@@ -1,25 +1,26 @@
 import { Injectable } from '@angular/core';
-import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, EInternmentPlace, HospitalizationProcedureDto, MasterDataDto, MeasuringPointDto, MedicationDto, PostAnesthesiaStatusDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
-import { dateDtoAndTimeDtoToDate, dateDtoToDate, dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, EInternmentPlace, HospitalizationProcedureDto, MasterDataDto, MeasuringPointDto, PostAnesthesiaStatusDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
+import { dateDtoAndTimeDtoToDate, dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { capitalize } from '@core/utils/core.utils';
-import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { take } from 'rxjs';
+import { DocumentsSummaryMapperService } from './documents-summary-mapper.service';
+import { AnesthesicClinicalEvaluationData, AnthropometricData, EndOfAnesthesiaStatusData, IntrasurgicalAnestheticProceduresData, MeasuringPointData, PersonalHistoriesData, ProceduresDateTimeData, VitalSignsData } from '@historia-clinica/utils/document-summary.model';
+import { ANALGESIC_TECHNIQUE_DESCRIPTION_ITEM, ANESTHESIC_CLINICAL_EVALUATION, ANESTHETIC_AGENTS_DESCRIPTION_ITEM, ANESTHETIC_HISTORY_DESCRIPTION_ITEM, ANESTHETIC_PLAN_DESCRIPTION_ITEM, ANESTHETIC_TECHNIQUE_DESCRIPTION_ITEM, ANTIBIOTIC_PROPHYLAXIS_DESCRIPTION_ITEM, FLUID_ADMINISTRATION_DESCRIPTION_ITEM, NON_ANESTHETIC_DRUGS_DESCRIPTION_ITEM, PROPOSED_SURGERIES_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
+import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
-const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
-const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 const INFO_DIVIDER = ' | ';
+const UNIQUE_PROCEDURE_INDEX = 0;
 
 @Injectable({
     providedIn: 'root'
 })
 export class AnestheticReportDocumentSummaryService {
 
-    private confirmedStatus: string = '';
-    private presumptiveStatus: string = '';
     private premedicationViasArray: MasterDataDto[];
     private anestheticPlanViasArray: MasterDataDto[];
     private anestheticAgentViasArray: MasterDataDto[];
@@ -33,9 +34,8 @@ export class AnestheticReportDocumentSummaryService {
     constructor(
         private readonly translateService: TranslateService,
         readonly internacionMasterDataService: InternacionMasterDataService,
+        private readonly documentsSummaryService: DocumentsSummaryMapperService,
     ) {
-        this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
-        this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
         this.loadMasterData();
     }
 
@@ -51,74 +51,48 @@ export class AnestheticReportDocumentSummaryService {
         this.internacionMasterDataService.getCircuitTypes().pipe(take(1)).subscribe(circuitTypes => this.circuitTypes = circuitTypes);
     }
 
-    getAnestheticReportAsViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
+    mapToAnestheticReportViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
         return {
-            mainDiagnosis: anestheticReport.mainDiagnosis ? [{ description: this.getDescriptionAndStatus(anestheticReport.mainDiagnosis) }] : null,
-            diagnosis: anestheticReport.diagnosis.length ? this.getDiagnosisAsStringArray(anestheticReport.diagnosis) : null,
-            proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null,
-            anthropometricData: anestheticReport.anthropometricData ? this.getAnthropometricDataAsStrings(anestheticReport.anthropometricData) : null,
-            anesthesicClinicalEvaluation: anestheticReport.riskFactors ? this.getAnesthesicClinicalEvaluationAsStrings(anestheticReport.riskFactors) : null,
-            anestheticHistory: this.getAnesthesiaHistoryAsStrings(anestheticReport.anestheticHistory),
-            usualMedication: anestheticReport.medications.length ? this.getMedicationsAsStringArray(anestheticReport.medications) : null,
-            premedicationList: anestheticReport.preMedications.length ? this.getAnestheticSubstanceDescription(anestheticReport.preMedications, this.premedicationViasArray) : null,
-            lastFoodIntake: anestheticReport.foodIntake?.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
-            histories: this.hasHistories(anestheticReport) ? this.getHistoriesAsPersonalHistoriesData(anestheticReport) : null,
-            anestheticPlanList: anestheticReport.anestheticPlans.length ? this.getAnestheticSubstanceDescription(anestheticReport.anestheticPlans, this.anestheticPlanViasArray) : null,
-            analgesicTechniques: anestheticReport.analgesicTechniques.length ? this.getAnalgesicTechniques(anestheticReport.analgesicTechniques) : null,
-            anestheticTechniques: anestheticReport.anestheticTechniques.length ? this.getAnestheticTechniques(anestheticReport.anestheticTechniques) : null,
-            fluidAdministrations: anestheticReport.fluidAdministrations.length ? this.getFluidAdministrations(anestheticReport.fluidAdministrations) : null,
-            anestheticAgents: anestheticReport.anestheticAgents.length ? this.getAnestheticSubstanceDescription(anestheticReport.anestheticAgents, this.anestheticAgentViasArray) : null,
-            nonAnestheticDrugs: anestheticReport.nonAnestheticDrugs.length ? this.getAnestheticSubstanceDescription(anestheticReport.nonAnestheticDrugs, this.nonAnestheticDrugsViasArray) : null,
-            intrasurgicalAnestheticProcedures: this.getIntrasurgicalAnestheticProcedures(anestheticReport.procedureDescription),
-            antibioticProphylaxis: anestheticReport.antibioticProphylaxis.length ? this.getAnestheticSubstanceDescription(anestheticReport.antibioticProphylaxis, this.antibioticProphylaxisViasArray) : null,
-            vitalSigns: !this.isVitalSignsEmpty(anestheticReport) ? this.getVitalSignsData(anestheticReport.procedureDescription, anestheticReport.measuringPoints, anestheticReport.anestheticChart) : null,
+            ...(anestheticReport.mainDiagnosis && { mainDiagnosis: [{ description: this.documentsSummaryService.mapDescriptionAndStatusToString(anestheticReport.mainDiagnosis) }] }),
+            ...(anestheticReport.diagnosis.length && { diagnosis: this.documentsSummaryService.mapDiagnosisToDescriptionItemData(anestheticReport.diagnosis) }),
+            ...(anestheticReport.surgeryProcedures.length && { proposedSurgeries: this.mapProposedSurgeriesToDescriptionItemDataSummary(anestheticReport.surgeryProcedures) }),
+            ...(anestheticReport.anthropometricData && { anthropometricData: this.documentsSummaryService.mapToAnthropometricData(anestheticReport.anthropometricData) }),
+            ...(anestheticReport.riskFactors && { anesthesicClinicalEvaluation: this.mapToAnesthesicClinicalEvaluation(anestheticReport.riskFactors) }),
+            ...(anestheticReport.anestheticHistory && {anestheticHistory: this.mapAnesthesiaHistoryToDescriptionItemDataSummary(anestheticReport.anestheticHistory)}),
+            ...(anestheticReport.medications.length && { usualMedication: this.documentsSummaryService.mapMedicationsToDescriptionItemDataSummary(anestheticReport.medications) }),
+            ...(anestheticReport.preMedications.length && { premedicationList: this.mapAnestheticSubstanceToDescriptionItemData(anestheticReport.preMedications, this.premedicationViasArray) }),
+            ...(anestheticReport.foodIntake?.clockTime && { lastFoodIntake: timeDtoToDate(anestheticReport.foodIntake.clockTime) }),
+            ...(this.hasHistories(anestheticReport) && { histories: this.mapToPersonalHistoriesData(anestheticReport) }),
+            ...(anestheticReport.anestheticPlans.length && { anestheticPlanList: this.mapAnestheticPlansToDescriptionItemDataSummary(anestheticReport.anestheticPlans) }),
+            ...(anestheticReport.analgesicTechniques.length && { analgesicTechniques: this.mapAnalgesicTechniqueToDescriptionItemDataSummary(anestheticReport.analgesicTechniques) }),
+            ...(anestheticReport.anestheticTechniques.length && { anestheticTechniques: this.mapAnestheticTechniqueToDescriptionItemDataSummary(anestheticReport.anestheticTechniques) }),
+            ...(anestheticReport.fluidAdministrations.length && { fluidAdministrations: this.mapFluidAdministrationToDescriptionItemDataSummary(anestheticReport.fluidAdministrations) }),
+            ...(anestheticReport.anestheticAgents.length && { anestheticAgents: this.mapAnestheticAgentsToDescriptionItemDataSummary(anestheticReport.anestheticAgents) }),
+            ...(anestheticReport.nonAnestheticDrugs.length && { nonAnestheticDrugs: this.mapNonAnestheticDrugsToDescriptionItemDataSummary(anestheticReport.nonAnestheticDrugs) }),
+            intrasurgicalAnestheticProcedures: this.mapToIntrasurgicalAnestheticProceduresData(anestheticReport.procedureDescription),
+            ...(anestheticReport.antibioticProphylaxis.length && { antibioticProphylaxis: this.mapAntibioticProphylaxisToDescriptionItemDataSummary(anestheticReport.antibioticProphylaxis) }),
+            ...(!this.isVitalSignsEmpty(anestheticReport) && { vitalSigns: this.mapToVitalSignsData(anestheticReport.procedureDescription, anestheticReport.measuringPoints, anestheticReport.anestheticChart) }),
             endOfAnesthesiaStatus: this.getEndOfAnesthesiaStatusDescription(anestheticReport.postAnesthesiaStatus),
         }
     }
 
-    private getDiagnosisAsStringArray(diagnosis: DiagnosisDto[]): DescriptionItemData[] {
-        return diagnosis.map(diag => {
-            return { description: this.getDescriptionAndStatus(diag) };
-        })
+    private mapProposedSurgeriesToDescriptionItemData(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
+        return proposedSurgeries.map(proposedSurgery => this.documentsSummaryService.toDescriptionItemData(proposedSurgery.snomed.pt))
     }
 
-    private getDescriptionAndStatus(diagnosis: DiagnosisDto): string {
-        if (diagnosis.verificationId === CONFIRMED) {
-            return diagnosis.snomed.pt + ' ' + this.confirmedStatus
-        }
-        if (diagnosis.verificationId === PRESUMPTIVE) {
-            return diagnosis.snomed.pt + ' ' + this.presumptiveStatus
-        }
-        return diagnosis.snomed.pt
-    }
-
-    private getProposedSurgeriesAsStringArray(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
-        return proposedSurgeries.map(proposedSurgery => {
-            return { description: proposedSurgery.snomed.pt }
-        })
-    }
-
-    private getAnthropometricDataAsStrings(antropometricData: AnthropometricDataDto): AnthropometricData {
+    private mapToAnesthesicClinicalEvaluation(anesthesicClinicalEvaluation: RiskFactorDto): AnesthesicClinicalEvaluationData {
         return {
-            bloodType: antropometricData.bloodType ? [{ description: antropometricData.bloodType.value }] : null,
-            height: antropometricData.height ? [{ description: antropometricData.height.value }] : null,
-            weight: antropometricData.weight ? [{ description: antropometricData.weight.value + 'Kg' }] : null,
+            ...(anesthesicClinicalEvaluation.systolicBloodPressure && { maxBloodPressure: [this.documentsSummaryService.toDescriptionItemData(anesthesicClinicalEvaluation.systolicBloodPressure.value)] }),
+            ...(anesthesicClinicalEvaluation.diastolicBloodPressure && { minBloodPressure: [this.documentsSummaryService.toDescriptionItemData(anesthesicClinicalEvaluation.diastolicBloodPressure.value)] }),
+            ...(anesthesicClinicalEvaluation.hematocrit && { hematocrit: [this.documentsSummaryService.toDescriptionItemData(`${anesthesicClinicalEvaluation.hematocrit.value} ${ANESTHESIC_CLINICAL_EVALUATION.PERCENTAJE}`)] }),
         }
     }
 
-    private getAnesthesicClinicalEvaluationAsStrings(anesthesicClinicalEvaluation: RiskFactorDto): AnesthesicClinicalEvaluationData {
-        return {
-            maxBloodPressure: anesthesicClinicalEvaluation.systolicBloodPressure ? [{ description: anesthesicClinicalEvaluation.systolicBloodPressure.value }] : null,
-            minBloodPressure: anesthesicClinicalEvaluation.diastolicBloodPressure ? [{ description: anesthesicClinicalEvaluation.diastolicBloodPressure.value }] : null,
-            hematocrit: anesthesicClinicalEvaluation.hematocrit ? [{ description: anesthesicClinicalEvaluation.hematocrit.value + ' %' }] : null,
-        }
-    }
-
-    private getAnesthesiaHistoryAsStrings(anesthesiaHistory: AnestheticHistoryDto): DescriptionItemData[] {
+    private mapAnesthesiaHistoryToDescriptionItemData(anesthesiaHistory: AnestheticHistoryDto): DescriptionItemData[] {
         return anesthesiaHistory?.stateId
             ? (anesthesiaHistory.zoneId
-                ? [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId) }]
-                : [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId) }])
+                ? [this.documentsSummaryService.toDescriptionItemData(this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId))]
+                : [this.documentsSummaryService.toDescriptionItemData(this.getAnesthesiaStateDescription(anesthesiaHistory.stateId))])
             : null
     }
 
@@ -128,23 +102,17 @@ export class AnestheticReportDocumentSummaryService {
                 let stateDescription = this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.YES')
                 switch (zoneId) {
                     case ANESTHESIA_ZONE_ID.REGIONAL:
-                        return stateDescription + ' ' + '(' + this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.REGIONAL') + ')'
+                        return `${stateDescription} (${this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.REGIONAL')})`
                     case ANESTHESIA_ZONE_ID.GENERAL:
-                        return stateDescription + ' ' + '(' + this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.GENERAL') + ')'
+                        return `${stateDescription} (${this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.GENERAL')})`
                     default:
-                        return stateDescription + ' ' + '(' + this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.BOTH') + ')'
+                        return `${stateDescription} (${this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.BOTH')})`
                 }
             case PREVIOUS_ANESTHESIA_STATE_ID.NO:
                 return this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.NO')
             default:
                 return this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.CANT_ANSWER')
         }
-    }
-
-    private getMedicationsAsStringArray(medications: MedicationDto[]): DescriptionItemData[] {
-        return medications.map(medication => {
-            return { description: medication.note ? medication.snomed.pt + INFO_DIVIDER + medication.note : medication.snomed.pt };
-        })
     }
 
     private getViaTranslate(): string {
@@ -163,51 +131,55 @@ export class AnestheticReportDocumentSummaryService {
         return (!!anestheticReport.histories.length || !!anestheticReport.procedureDescription?.note || !!anestheticReport.procedureDescription?.asa)
     }
 
-    private getHistoriesAsPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
+    private mapToPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
         return {
-            recordList: anestheticReport.histories?.map(history => { return { description: capitalize(history.snomed.pt) } }),
-            observations: anestheticReport.procedureDescription?.note ? [{ description: anestheticReport.procedureDescription.note }] : null,
-            asa: anestheticReport.procedureDescription?.asa ? [{ description: anestheticReport.procedureDescription.asa.toString() }] : null,
+            recordList: anestheticReport.histories?.map(history => this.documentsSummaryService.toDescriptionItemData(capitalize(history.snomed.pt))),
+            ...(anestheticReport.procedureDescription?.note && { observations: [this.documentsSummaryService.toDescriptionItemData(anestheticReport.procedureDescription.note)] }),
+            ...(anestheticReport.procedureDescription?.asa && { asa: [this.documentsSummaryService.toDescriptionItemData(anestheticReport.procedureDescription.asa.toString())] }),
         }
     }
 
-    private getAnestheticReportViaDescription(viasArray: MasterDataDto[], viaId: number): string {
+    getAnestheticReportViaDescription(viasArray: MasterDataDto[], viaId: number): string {
         return viasArray.filter(via => via.id == viaId)[0].description;
     }
 
-    private getAnalgesicTechniques(analgesicTechniques: AnalgesicTechniqueDto[]): DescriptionItemData[] {
-        return analgesicTechniques.map(analgesicTechnique => {
-            return {
-                description: analgesicTechnique.snomed.pt + INFO_DIVIDER + analgesicTechnique.injectionNote + INFO_DIVIDER + this.getDoseTranslate() + analgesicTechnique.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate()
-                    + this.getCatetherValue(analgesicTechnique.catheter),
-            }
-        })
+    private mapAnalgesicTechniquesToDescriptionItemData(analgesicTechniques: AnalgesicTechniqueDto[]): DescriptionItemData[] {
+        return analgesicTechniques.map(analgesicTechnique => this.documentsSummaryService.toDescriptionItemData(this.getAnalgesicTechniqueDescription(analgesicTechnique)));
+    }
+
+    private getAnalgesicTechniqueDescription(analgesicTechnique: AnalgesicTechniqueDto): string {
+        return `${analgesicTechnique.snomed.pt} ${INFO_DIVIDER} ${analgesicTechnique.injectionNote} ${INFO_DIVIDER} ${this.getDoseTranslate()} ${analgesicTechnique.dosage.quantity.value}
+            ${INFO_DIVIDER} ${this.getUnitTranslate()} ${this.getCatetherValue(analgesicTechnique.catheter)} ${this.getCatetherNote(analgesicTechnique.catheterNote)}`;
     }
 
     private getCatetherValue(catether: boolean): string {
         return catether ? this.translateService.instant('historia-clinica.anesthetic-report.summary.YES') : this.translateService.instant('historia-clinica.anesthetic-report.summary.NO');
     }
 
-    private getAnestheticTechniques(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemData[] {
-        return anestheticTechniques.map(anestheticTechnique => {
-            return {
-                description: anestheticTechnique.snomed.pt
-                    + this.getAnestheticTechniqueDescription(anestheticTechnique.techniqueId, this.translateService.instant('historia-clinica.anesthetic-report.summary.TECHNIQUE') , this.anestheticTechniquesTypes)
-                    + this.getTrachealIntubationDescription(anestheticTechnique)
-                    + this.getAnestheticTechniqueDescription(anestheticTechnique.breathingId, this.translateService.instant('historia-clinica.anesthetic-report.summary.BREATHING'), this.breathingTypes)
-                    + this.getAnestheticTechniqueDescription(anestheticTechnique.circuitId, this.translateService.instant('historia-clinica.anesthetic-report.summary.CIRCUIT'), this.circuitTypes)
-            }
-        })
+    private getCatetherNote(catetherNote: string): string {
+        return catetherNote ? `${INFO_DIVIDER} ${catetherNote}` : '';
     }
 
-    private mapToMasterData(typesData: MasterDataDto[], itemId: number): string {
+    private getAnestheticTechniques(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemData[] {
+        return anestheticTechniques.map(anestheticTechnique => this.documentsSummaryService.toDescriptionItemData(this.getAnestheticTechnique(anestheticTechnique)));
+    }
+
+    private getAnestheticTechnique(anestheticTechnique: AnestheticTechniqueDto): string {
+        return `${anestheticTechnique.snomed.pt}
+                 ${this.getAnestheticTechniqueDescription(anestheticTechnique.techniqueId, this.translateService.instant('historia-clinica.anesthetic-report.summary.TECHNIQUE'), this.anestheticTechniquesTypes)}
+                 ${this.getTrachealIntubationDescription(anestheticTechnique)}
+                 ${this.getAnestheticTechniqueDescription(anestheticTechnique.breathingId, this.translateService.instant('historia-clinica.anesthetic-report.summary.BREATHING'), this.breathingTypes)}
+                 ${this.getAnestheticTechniqueDescription(anestheticTechnique.circuitId, this.translateService.instant('historia-clinica.anesthetic-report.summary.CIRCUIT'), this.circuitTypes)}`
+    }
+
+    mapToMasterData(typesData: MasterDataDto[], itemId: number): string {
         return typesData.filter(item => item.id == itemId)[0].description;
     }
 
     private getAnestheticTechniqueDescription(attributeId: number, prefix: string, types: MasterDataDto[]): string {
         let description = '';
         if (attributeId) {
-            description = INFO_DIVIDER + prefix + this.mapToMasterData(types, attributeId);
+            description = `${INFO_DIVIDER} ${prefix} ${this.mapToMasterData(types, attributeId)}`;
         }
         return description
     }
@@ -215,7 +187,8 @@ export class AnestheticReportDocumentSummaryService {
     private getTrachealIntubationDescription(anestheticTechnique: AnestheticTechniqueDto): string {
         let description = '';
         if (anestheticTechnique.trachealIntubation) {
-            description = INFO_DIVIDER + this.translateService.instant('historia-clinica.anesthetic-report.summary.TRACHEAL_INTUBATION') + this.getTrachealIntubationIdsDescription(anestheticTechnique.trachealIntubationMethodIds);
+            description = `${INFO_DIVIDER} ${this.translateService.instant('historia-clinica.anesthetic-report.summary.TRACHEAL_INTUBATION')}
+                ${this.getTrachealIntubationIdsDescription(anestheticTechnique.trachealIntubationMethodIds)}`;
         }
         return description
     }
@@ -224,80 +197,86 @@ export class AnestheticReportDocumentSummaryService {
         let description = '';
         trachealIntubationIds.map(id => {
             description = description.length ?
-                description + ', ' + this.mapToMasterData(this.trachealIncubationTypes, id)
+                `${description} , ${this.mapToMasterData(this.trachealIncubationTypes, id)}`
                 : this.mapToMasterData(this.trachealIncubationTypes, id);
         })
         return description;
     }
 
-    private getFluidAdministrations(fluidAdministrations: AnestheticSubstanceDto[]): DescriptionItemData[] {
-        return fluidAdministrations.map(fluidAdministration => {
-            return {
-                description: fluidAdministration.dosage.quantity.value ?
-                    fluidAdministration.snomed.pt + INFO_DIVIDER + this.translateService.instant('historia-clinica.anesthetic-report.summary.QUANTITY_USED') + fluidAdministration.dosage.quantity.value + fluidAdministration.dosage.quantity.unit
-                    : fluidAdministration.snomed.pt,
-            }
-        })
+    private mapFluidAdministrationsToDescriptionItemData(fluidAdministrations: AnestheticSubstanceDto[]): DescriptionItemData[] {
+        return fluidAdministrations.map(fluidAdministration => this.documentsSummaryService.toDescriptionItemData(this.getFluidAdministration(fluidAdministration)));
     }
 
-    private getIntrasurgicalAnestheticProcedures(procedures: ProcedureDescriptionDto): IntrasurgicalAnestheticProceduresData {
+    private getFluidAdministration(fluidAdministration: AnestheticSubstanceDto): string {
+        return fluidAdministration.dosage.quantity.value ?
+            `${fluidAdministration.snomed.pt} ${INFO_DIVIDER} ${this.translateService.instant('historia-clinica.anesthetic-report.summary.QUANTITY_USED')}
+            ${fluidAdministration.dosage.quantity.value} ${fluidAdministration.dosage.quantity.unit}`
+            : fluidAdministration.snomed.pt
+    }
+
+    private mapToIntrasurgicalAnestheticProceduresData(procedures: ProcedureDescriptionDto): IntrasurgicalAnestheticProceduresData {
         return {
-            venousAccess: procedures ? this.getProcedureValue(procedures.venousAccess) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            nasogastricTube: procedures ? this.getProcedureValue(procedures.nasogastricTube) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            urinaryCatheter: procedures ? this.getProcedureValue(procedures.urinaryCatheter) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            venousAccess: procedures ? this.getProcedureValue(procedures.venousAccess)
+                : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            nasogastricTube: procedures ? this.getProcedureValue(procedures.nasogastricTube)
+                : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            urinaryCatheter: procedures ? this.getProcedureValue(procedures.urinaryCatheter)
+                : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
         }
     }
 
-    private getProcedureValue(procedure: boolean): DescriptionItemData[]{
-        return procedure != undefined ? 
-                (procedure ? 
-                    [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.YES') }] 
-                    : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO') }])
-                : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }]
+    private getProcedureValue(procedure: boolean): DescriptionItemData[] {
+        return procedure != undefined ?
+            (procedure ?
+                [ this.documentsSummaryService.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.YES')) ]
+                : [ this.documentsSummaryService.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.NO')) ])
+            : [ this.documentsSummaryService.getNoInformationAsDescriptionItemData() ]
     }
 
-    private getAnestheticSubstanceDescription(itemArray: AnestheticSubstanceDto[], viasList: MasterDataDto[]):  DescriptionItemData[] {
-        return itemArray.map(item => {
-            return {
-                description: item.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(viasList, item.viaId) + INFO_DIVIDER + this.getDoseTranslate() + item.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + item.dosage.quantity.unit,
-                dateOrTime: { dateTime: dateTimeDtoToDate(item.dosage.startDateTime) }
-            }
-        })
+    private mapAnestheticSubstanceToDescriptionItemData(itemArray: AnestheticSubstanceDto[], viasList: MasterDataDto[]): DescriptionItemData[] {
+        return itemArray.map(item => this.documentsSummaryService.toDescriptionItemData(
+            this.getAnestheticSubstanceDescription(item, viasList), this.documentsSummaryService.mapDateTimeDtoToDateToShow(item.dosage.startDateTime)
+        ))
+    }
+
+    private getAnestheticSubstanceDescription(item: AnestheticSubstanceDto, viasList: MasterDataDto[]): string {
+        return `${item.snomed.pt} ${INFO_DIVIDER} ${this.getViaTranslate()} ${this.getAnestheticReportViaDescription(viasList, item.viaId)} ${INFO_DIVIDER} ${this.getDoseTranslate()}
+            ${item.dosage.quantity.value} ${INFO_DIVIDER} ${this.getUnitTranslate()} ${item.dosage.quantity.unit}`
     }
 
     private isVitalSignsEmpty(anestheticReport: AnestheticReportDto): boolean {
         return !(!!anestheticReport.measuringPoints?.length || this.hasStartAndEndDateTimes(anestheticReport.procedureDescription))
     }
 
-    private getVitalSignsData(procedureDescription: ProcedureDescriptionDto, measuringPoints: MeasuringPointDto[], chart: string): VitalSignsData {
+    private mapToVitalSignsData(procedureDescription: ProcedureDescriptionDto, measuringPoints: MeasuringPointDto[], vitalSignsChart: string): VitalSignsData {
         return {
-            startAndEndProceduresDateTime: this.hasStartAndEndDateTimes(procedureDescription) ? this.getDateTimes(procedureDescription) : null,
-            chart: chart ? [chart] : null,
+            ...(this.hasStartAndEndDateTimes(procedureDescription) && { startAndEndProceduresDateTime: this.getDateTimes(procedureDescription) }),
+            ...(vitalSignsChart && { vitalSignsChart: [vitalSignsChart] }),
             measuringPoints: this.mapToMeasuringPointData(measuringPoints),
         }
     }
 
     private hasStartAndEndDateTimes(procedureDescription: ProcedureDescriptionDto): boolean {
-        return !!procedureDescription?.anesthesiaEndDate 
-            || !!procedureDescription?.anesthesiaEndTime 
-            || !!procedureDescription?.anesthesiaStartDate 
-            || !!procedureDescription?.anesthesiaStartTime 
-            || !!procedureDescription?.surgeryEndDate 
-            || !!procedureDescription?.surgeryEndTime 
-            || !!procedureDescription?.surgeryStartDate 
-            || !!procedureDescription?.surgeryStartTime 
+        return !!procedureDescription?.anesthesiaEndDate
+            || !!procedureDescription?.anesthesiaEndTime
+            || !!procedureDescription?.anesthesiaStartDate
+            || !!procedureDescription?.anesthesiaStartTime
+            || !!procedureDescription?.surgeryEndDate
+            || !!procedureDescription?.surgeryEndTime
+            || !!procedureDescription?.surgeryStartDate
+            || !!procedureDescription?.surgeryStartTime
     }
 
-    private getDateTimes(procedureDescription: ProcedureDescriptionDto): StartAndEndProceduresDateTimeData {
+    private getDateTimes(procedureDescription: ProcedureDescriptionDto): ProceduresDateTimeData {
         return {
-            anesthesiaEndDate: procedureDescription?.anesthesiaEndDate ? dateDtoToDate(procedureDescription.anesthesiaEndDate) : null,
-            anesthesiaEndTime: procedureDescription?.anesthesiaEndTime ? timeDtoToDate(procedureDescription.anesthesiaEndTime) : null,
-            anesthesiaStartDate: procedureDescription?.anesthesiaStartDate ? dateDtoToDate(procedureDescription.anesthesiaStartDate) : null,
-            anesthesiaStartTime: procedureDescription?.anesthesiaStartTime ? timeDtoToDate(procedureDescription.anesthesiaStartTime) : null,
-            surgeryEndDate: procedureDescription?.surgeryEndDate ? dateDtoToDate(procedureDescription.surgeryEndDate) : null,
-            surgeryEndTime: procedureDescription?.surgeryEndTime ? timeDtoToDate(procedureDescription.surgeryEndTime) : null,
-            surgeryStartDate: procedureDescription?.surgeryStartDate ? dateDtoToDate(procedureDescription.surgeryStartDate) : null,
-            surgeryStartTime: procedureDescription?.surgeryStartTime ? timeDtoToDate(procedureDescription.surgeryStartTime) : null,
+            ...(procedureDescription?.anesthesiaEndDate && { anesthesiaEndDate: dateDtoToDate(procedureDescription.anesthesiaEndDate) }),
+            ...(procedureDescription?.anesthesiaEndTime && { anesthesiaEndTime: timeDtoToDate(procedureDescription.anesthesiaEndTime) }),
+            ...(procedureDescription?.anesthesiaStartDate && { anesthesiaStartDate: dateDtoToDate(procedureDescription.anesthesiaStartDate) }),
+            ...(procedureDescription?.anesthesiaStartTime && { anesthesiaStartTime: timeDtoToDate(procedureDescription.anesthesiaStartTime) }),
+            ...(procedureDescription?.surgeryEndDate && { surgeryEndDate: dateDtoToDate(procedureDescription.surgeryEndDate) }),
+            ...(procedureDescription?.surgeryEndTime && { surgeryEndTime: timeDtoToDate(procedureDescription.surgeryEndTime) }),
+            ...(procedureDescription?.surgeryStartDate && { surgeryStartDate: dateDtoToDate(procedureDescription.surgeryStartDate) }),
+            ...(procedureDescription?.surgeryStartTime && { surgeryStartTime: timeDtoToDate(procedureDescription.surgeryStartTime) }),
         }
     }
 
@@ -312,26 +291,24 @@ export class AnestheticReportDocumentSummaryService {
 
     private getEndOfAnesthesiaStatusDescription(postAnesthesiaStatus: PostAnesthesiaStatusDto): EndOfAnesthesiaStatusData {
         return {
-            intentionalSensitivity: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.intentionalSensitivity) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            cornealReflex: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.cornealReflex) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            obeyOrders: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.obeyOrders) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            talk: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.talk) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            respiratoryDepression: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.respiratoryDepression) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            circulatoryDepression: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.circulatoryDepression) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            vomiting: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.vomiting) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            curated: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.curated) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            trachealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.trachealCannula) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            pharyngealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.pharyngealCannula) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            internment: postAnesthesiaStatus ? this.getIntermentDescription(postAnesthesiaStatus.internment, postAnesthesiaStatus.internmentPlace) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            note: postAnesthesiaStatus && postAnesthesiaStatus.note ? [{ description: postAnesthesiaStatus.note }] : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            intentionalSensitivity: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.intentionalSensitivity) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            cornealReflex: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.cornealReflex) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            obeyOrders: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.obeyOrders) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            talk: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.talk) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            respiratoryDepression: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.respiratoryDepression) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            circulatoryDepression: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.circulatoryDepression) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            vomiting: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.vomiting) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            curated: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.curated) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            trachealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.trachealCannula) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            pharyngealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.pharyngealCannula) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            internment: postAnesthesiaStatus ? this.mapIntermentDescriptionToDescriptionItemData(postAnesthesiaStatus.internment, postAnesthesiaStatus.internmentPlace) : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
+            note: postAnesthesiaStatus && postAnesthesiaStatus.note ? [this.documentsSummaryService.toDescriptionItemData(postAnesthesiaStatus.note)] : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
         }
     }
 
-    private getIntermentDescription(interment: boolean, internmentPlace: EInternmentPlace): DescriptionItemData[] {
-        let intermentPlaceDescription = interment ? ' - ' + this.getInternmentPlaceDescription(internmentPlace) : '';
-        return [{
-            description: this.getProcedureValue(interment)[0].description + intermentPlaceDescription
-        }]
+    private mapIntermentDescriptionToDescriptionItemData(interment: boolean, internmentPlace: EInternmentPlace): DescriptionItemData[] {
+        let intermentPlaceDescription = interment ? `- ${this.getInternmentPlaceDescription(internmentPlace)}` : '';
+        return [ this.documentsSummaryService.toDescriptionItemData(`${getElementAtPosition(this.getProcedureValue(interment), UNIQUE_PROCEDURE_INDEX).description} ${intermentPlaceDescription}`) ]
     }
 
     private getInternmentPlaceDescription(internmentPlace: EInternmentPlace): string {
@@ -339,92 +316,106 @@ export class AnestheticReportDocumentSummaryService {
         if (internmentPlace === EInternmentPlace.INTENSIVE_CARE_UNIT) return this.translateService.instant('historia-clinica.anesthetic-report.summary.INTENSIVE_CARE_UNIT')
         return this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION')
     }
+
+    mapProposedSurgeriesToDescriptionItemDataSummary(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapProposedSurgeriesToDescriptionItemData(proposedSurgeries),
+            ...PROPOSED_SURGERIES_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapAnesthesiaHistoryToDescriptionItemDataSummary(anesthesiaHistory: AnestheticHistoryDto): DescriptionItemDataSummary {
+        return {
+            summary: this.mapAnesthesiaHistoryToDescriptionItemData(anesthesiaHistory),
+            ...ANESTHETIC_HISTORY_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapAnestheticPlansToDescriptionItemDataSummary(itemArray: AnestheticSubstanceDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapAnestheticSubstanceToDescriptionItemData(itemArray, this.anestheticPlanViasArray),
+            ...ANESTHETIC_PLAN_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapAnalgesicTechniqueToDescriptionItemDataSummary(analgesicTechniques: AnalgesicTechniqueDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapAnalgesicTechniquesToDescriptionItemData(analgesicTechniques),
+            ...ANALGESIC_TECHNIQUE_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapAnestheticTechniqueToDescriptionItemDataSummary(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.getAnestheticTechniques(anestheticTechniques),
+            ...ANESTHETIC_TECHNIQUE_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapFluidAdministrationToDescriptionItemDataSummary(fluidAdministrations: AnestheticTechniqueDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapFluidAdministrationsToDescriptionItemData(fluidAdministrations),
+            ...FLUID_ADMINISTRATION_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapAnestheticAgentsToDescriptionItemDataSummary(itemArray: AnestheticSubstanceDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapAnestheticSubstanceToDescriptionItemData(itemArray, this.anestheticAgentViasArray),
+            ...ANESTHETIC_AGENTS_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapNonAnestheticDrugsToDescriptionItemDataSummary(itemArray: AnestheticSubstanceDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapAnestheticSubstanceToDescriptionItemData(itemArray, this.nonAnestheticDrugsViasArray),
+            ...NON_ANESTHETIC_DRUGS_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapAntibioticProphylaxisToDescriptionItemDataSummary(itemArray: AnestheticSubstanceDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapAnestheticSubstanceToDescriptionItemData(itemArray, this.antibioticProphylaxisViasArray) ,
+            ...ANTIBIOTIC_PROPHYLAXIS_DESCRIPTION_ITEM,
+        }
+    }
+
+	getDataAnestheticTechniquesDraft(): AnestheticTechnicsDraft{
+        return {
+			circuitTypes: this.circuitTypes,
+			breathingTypes: this.breathingTypes,
+			trachealIntubationTypes: this.trachealIncubationTypes,
+			anestheticTechniqueTypes: this.anestheticTechniquesTypes
+		}
+	}
 }
 
 export interface AnestheticReportViewFormat {
     mainDiagnosis: DescriptionItemData[],
     diagnosis: DescriptionItemData[],
-    proposedSurgeries: DescriptionItemData[],
+    proposedSurgeries: DescriptionItemDataSummary,
     anthropometricData: AnthropometricData,
     anesthesicClinicalEvaluation: AnesthesicClinicalEvaluationData,
-    anestheticHistory: DescriptionItemData[],
-    usualMedication: DescriptionItemData[],
+    anestheticHistory: DescriptionItemDataSummary,
+    usualMedication: DescriptionItemDataSummary,
     premedicationList: DescriptionItemData[],
     lastFoodIntake: Date,
     histories: PersonalHistoriesData,
-    anestheticPlanList: DescriptionItemData[],
-    analgesicTechniques: DescriptionItemData[],
-    anestheticTechniques: DescriptionItemData[],
-    fluidAdministrations: DescriptionItemData[],
-    anestheticAgents: DescriptionItemData[],
-    nonAnestheticDrugs: DescriptionItemData[],
+    anestheticPlanList: DescriptionItemDataSummary,
+    analgesicTechniques: DescriptionItemDataSummary,
+    anestheticTechniques: DescriptionItemDataSummary,
+    fluidAdministrations: DescriptionItemDataSummary,
+    anestheticAgents: DescriptionItemDataSummary,
+    nonAnestheticDrugs: DescriptionItemDataSummary,
     intrasurgicalAnestheticProcedures: IntrasurgicalAnestheticProceduresData,
-    antibioticProphylaxis: DescriptionItemData[],
+    antibioticProphylaxis: DescriptionItemDataSummary,
     vitalSigns: VitalSignsData,
-    endOfAnesthesiaStatus: EndOfAnesthesiaStatusData, 
+    endOfAnesthesiaStatus: EndOfAnesthesiaStatusData,
 }
 
-export interface AnthropometricData {
-    bloodType: DescriptionItemData[],
-    height: DescriptionItemData[],
-    weight: DescriptionItemData[],
-}
-
-export interface AnesthesicClinicalEvaluationData {
-    maxBloodPressure: DescriptionItemData[],
-    minBloodPressure: DescriptionItemData[],
-    hematocrit: DescriptionItemData[],
-}
-
-export interface PersonalHistoriesData {
-    recordList: DescriptionItemData[],
-    observations: DescriptionItemData[],
-    asa: DescriptionItemData[]
-}
-
-export interface IntrasurgicalAnestheticProceduresData {
-    venousAccess: DescriptionItemData[],
-    nasogastricTube: DescriptionItemData[],
-    urinaryCatheter: DescriptionItemData[],
-}
-
-export interface VitalSignsData {
-    startAndEndProceduresDateTime: StartAndEndProceduresDateTimeData,
-    chart: string[],
-    measuringPoints: MeasuringPointData[],
-}
-
-export interface StartAndEndProceduresDateTimeData {
-    anesthesiaEndDate?: Date;
-    anesthesiaEndTime?: Date;
-    anesthesiaStartDate?: Date;
-    anesthesiaStartTime?: Date;
-    surgeryEndDate?: Date;
-    surgeryEndTime?: Date;
-    surgeryStartDate?: Date;
-    surgeryStartTime?: Date;
-}
-
-export interface MeasuringPointData {
-    bloodPressureMax?: number;
-    bloodPressureMin?: number;
-    bloodPulse?: number;
-    co2EndTidal?: number;
-    dateTime: Date;
-    o2Saturation?: number;
-}
-
-export interface EndOfAnesthesiaStatusData {
-    intentionalSensitivity?: DescriptionItemData[];
-    cornealReflex?: DescriptionItemData[];
-    obeyOrders?: DescriptionItemData[];
-    talk?: DescriptionItemData[];
-    respiratoryDepression?: DescriptionItemData[];
-    circulatoryDepression?: DescriptionItemData[];
-    vomiting?: DescriptionItemData[];
-    curated?: DescriptionItemData[];
-    trachealCannula?: DescriptionItemData[];
-    pharyngealCannula?: DescriptionItemData[];
-    internment?: DescriptionItemData[];
-    note?: DescriptionItemData[];
+export interface AnestheticTechnicsDraft {
+	circuitTypes: MasterDataDto[],
+	breathingTypes: MasterDataDto[],
+	trachealIntubationTypes: MasterDataDto[],
+	anestheticTechniqueTypes: MasterDataDto[],
 }

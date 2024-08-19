@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
@@ -53,7 +54,7 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
     private List<@Valid ImmunizationBo> immunizations;
 
     @Nullable
-    private List<@Valid AllergyConditionBo> allergies;
+    private ReferableItemBo<@Valid AllergyConditionBo> allergies;
 
     @Nullable
     private List<@Valid ProcedureBo> procedures;

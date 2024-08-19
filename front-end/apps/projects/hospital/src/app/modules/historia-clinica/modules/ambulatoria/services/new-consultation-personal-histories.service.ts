@@ -4,14 +4,13 @@ import { SnomedDto, SnomedECL } from "@api-rest/api-model";
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
 import { Subject } from 'rxjs';
 
 export interface PersonalHistory {
     snomed: SnomedDto;
     type: PersonalHistoryType;
-    startDate: Moment;
-    endDate?: Moment;
+    startDate: Date;
+    endDate?: Date;
     observations?: string;
 }
 
@@ -57,7 +56,7 @@ export class NewConsultationPersonalHistoriesService {
         this.form.controls.snomed.setValue(pt);
     }
 
-    private add(personalHistory: PersonalHistory): boolean {
+    add(personalHistory: PersonalHistory): boolean {
         const currentItems = this.data.length;
         this.data = pushIfNotExists<any>(this.data, personalHistory, this.comparePersonalHistory);
         this.dataEmitter.next(this.data);
@@ -116,7 +115,7 @@ export class NewConsultationPersonalHistoriesService {
         return new Date();
     }
 
-    getMinDate(): Moment {
+    getMinDate(): Date {
         return this.form.value.startDate;
     }
 
@@ -132,8 +131,8 @@ export class NewConsultationPersonalHistoriesService {
 export interface PersonalHistoriesForm {
     snomed: FormControl<SnomedDto>;
     type: FormControl<PersonalHistoryType>;
-    startDate: FormControl<Moment>;
-    endDate?: FormControl<Moment>;
+    startDate: FormControl<Date>;
+    endDate?: FormControl<Date>;
     observations: FormControl<string>;
 }
 

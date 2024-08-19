@@ -26,9 +26,6 @@
         }
 
         .wide_wrapped_text {
-  /*          max-width: 90%;
-            display: flex;*/
-            /*margin-left: 3px;*/
             word-wrap: break-word;
         }
 
@@ -173,7 +170,7 @@
             <div class="section-title_row">
                 <h2  th:text="${institutionHeader.name}"></h2>
                 <span class="data-text">
-                    <span  th:if="${institutionAddress.street != null}" th:text="${institutionAddress.street + ', '}"></span>
+                    <span th:if="${institutionAddress.street != null}" th:text="${institutionAddress.street + ', '}"></span>
                     <span th:if="${institutionAddress.number != null}" th:text="${institutionAddress.number + ', '}"></span>
                     <span th:if="${institutionAddress.floor != null}" th:text="${institutionAddress.floor + ', '}"></span>
                     <span th:if="${institutionAddress.apartment != null}" th:text="${institutionAddress.apartment + ', '}"></span>
@@ -187,7 +184,7 @@
                 </div>
             </div>
             <div style="width: 35%; float: right">
-                <img style="height: 70px" th:src="@{classpath:/static/images/sponsor-logo-512x128.png}" alt="Logo"></img>
+                <img style="height: 70px" th:src="@{classpath:/static/images/sponsor-logo-512x128.png}" alt="Logo"/>
             </div>
         </div>
         <div class="section-title">
@@ -204,16 +201,7 @@
                 </div>
                 <div class="row-content width-row">
                     <div class="data-title-span">Estudios :</div>
-                    <div th:if="${not #lists.isEmpty(diagnosticReportList)}">
-                        <div class="comma-list width-row">
-                              <span  th:each="diagnosticReport,iter: ${diagnosticReportList}">
-                                <span class="data-text wide_wrapped_text" th:text="${diagnosticReport.snomed.pt}"></span>
-                             </span>
-                        </div>
-                    </div>
-                    <div th:if="${#lists.isEmpty(diagnosticReportList)}">
-                        <span class="data-text" th:text="${' - '}"></span>
-                    </div>
+                    <div class="data-text wide_wrapped_text" th:text="${#strings.length(diagnosticReportList) > 0} ? ${diagnosticReportList} : ' - '"/>
                 </div>
             </div>
             <div style="clear: both;padding-top: 1px">

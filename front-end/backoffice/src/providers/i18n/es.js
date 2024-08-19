@@ -1,5 +1,4 @@
 
-
 const sectorMessages = {
     name: 'Sector |||| Sectores',
     fields: {
@@ -145,7 +144,8 @@ const messages = {
                 sectorId: 'Sector',
                 clinicalSpecialtySectorId: 'Especialidad | Sector',
                 roomNumber: 'Nro. habitación',
-                beds: 'Camas'
+                beds: 'Camas',
+                topic: 'Tópico'
             },
             createRelated: 'Crear Habitación'
         },
@@ -179,6 +179,7 @@ const messages = {
             createRelated: 'Crear Shockroom',
             fields: {
                 description: 'Nombre',
+                topic: 'Tópico'
             }
         },
         addresses: {
@@ -777,6 +778,7 @@ const messages = {
                 domain: 'Dominio',
                 port: 'Puerto',
                 sectorId: 'Sector',
+                localViewerUrl: 'URL del visualizador local'
             },
             createRelated: 'Crear Servidor PACS'
         },
@@ -1054,6 +1056,58 @@ const messages = {
                 responseCode:'Código de respuesta',
                 date:'Fecha'
             }
+        },
+        parameters: {
+            name: 'Parametros de formularios',
+            fields: {
+                loincRadioButton: {
+                    title: "Código LOINC asociado",
+                    option_1: "Si",
+                    option_2: "No",
+                },
+                loincId: 'Código LOINC',
+                loincDescription: 'Descripción código LOINC',
+                description: 'Descripción',
+                type: 'Tipo',
+                units: 'Unidades',
+                unitsOfMeasureIds: 'Unidades de medida',
+                inputCount: 'Cantidad de valores a ingresar',
+                eclId: 'ECL',
+                snomedGroupId: 'ECL',
+                option: 'Opción',
+                textOptions: 'Opciones'
+            },
+            typeChoices: {
+                numeric: 'Numérico',
+                options: 'Lista de opciones',
+                snomed: 'SNOMED (ECL)',
+                text: 'Texto libre'
+            },
+            errors: {
+                inputCountLte0: 'El número de valores a ingresar debe ser mayor a 0',
+                inputCountGtUomCount: 'La cantidad de valores a ingresar debe ser menor o igual al número de unidades de medida',
+                optionsMinLength: 'El número de opciones debe ser mayor o igual a 2',
+                uniqueUoms: 'Las unidades de medida no pueden repetirse'
+            },
+        },
+        medicinefinancingstatus: {
+            name: "Fármaco |||| Fármacos",
+            fields: {
+                conceptPt: "Fármaco de uso clínico",
+                conceptSctid: "COD Snomed",
+                financed: "Financiado"
+            }
+        },
+        medicinegroups: {
+            name: "Grupo de fármacos |||| Grupos de fármacos",
+            fields: {
+                name: "Nombre del grupo",
+                requiresAudit: "Requiere auditoría",
+                outpatient: "Ambulatoria",
+                emergencyCare: "Guardia", 
+                internment: "Internación"
+            },
+            createRelated: 'Crear Grupo de fármacos'
         }
     }
 };

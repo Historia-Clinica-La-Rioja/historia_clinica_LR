@@ -23,6 +23,13 @@ const meta: Meta<ButtonComponent> = {
 			},
 			description: 'Usar enum ButtonType',
 		},
+		matIcon: {
+			options: ['person_search', 'delete'],
+			control: {
+				type: 'select',
+			},
+			description: "Usar mat icons",
+		}
 	}
 };
 
@@ -38,6 +45,38 @@ export const readyToUse: Story = {
 		disabled: false,
 	},
 };
+
+export const ButtonTypeIcon: Story = {
+	args: {
+		color: 'warn',
+		matIcon: 'delete',
+		buttonType: ButtonType.ICON,
+		isLoading: false,
+		disabled: false,
+	},
+};
+
+
+export const ButtonTypeFlat: Story = {
+	args: {
+		color: 'primary',
+		text: 'nueva consulta',
+		buttonType: ButtonType.FLAT,
+		isLoading: false,
+		disabled: false,
+	},
+};
+
+export const ButtonTypeStroked: Story = {
+	args: {
+		color: 'primary',
+		text: 'nueva consulta',
+		buttonType: ButtonType.STOKED,
+		isLoading: false,
+		disabled: false,
+	},
+};
+
 
 export const Loading: Story = {
 	args: {
@@ -55,5 +94,16 @@ export const disabledBeforeUse: Story = {
 		buttonType: ButtonType.RAISED,
 		isLoading: false,
 		disabled: true,
+	},
+};
+
+export const WithMatIcon: Story = {
+	args: {
+		color: 'primary',
+		text: 'buscar',
+		buttonType: ButtonType.RAISED,
+		isLoading: false,
+		disabled: false,
+		matIcon: 'person_search'
 	},
 };

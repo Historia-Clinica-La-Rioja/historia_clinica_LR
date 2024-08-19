@@ -1,30 +1,18 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
-
-import lombok.AllArgsConstructor;
-import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
-import net.pladema.establishment.service.EquipmentService;
-import net.pladema.establishment.service.OrchestratorService;
-import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-
-import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
-
-import net.pladema.modality.service.ModalityService;
-
-import net.pladema.patient.controller.service.PatientExternalService;
-
-import org.springframework.stereotype.Service;
-
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.transcribed.application.getbyappointmentid.GetTranscribedServiceRequestByAppointmentId;
+import net.pladema.establishment.service.EquipmentService;
+import net.pladema.establishment.service.OrchestratorService;
 import net.pladema.establishment.service.domain.EquipmentBO;
 import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
@@ -34,8 +22,13 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
+import net.pladema.modality.service.ModalityService;
 import net.pladema.modality.service.domain.ModalityBO;
+import net.pladema.patient.controller.service.PatientExternalService;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @AllArgsConstructor
@@ -64,7 +57,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 
 	private final DiagnosticReportInfoService diagnosticReportInfoService;
 
-	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
+	private final GetTranscribedServiceRequestByAppointmentId getTranscribedServiceRequestByAppointmentId;
 
 	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
 
@@ -78,7 +71,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 					Integer diaryId = appointmentBo.getDiaryId();
 					setIsAppointmentProtected(appointmentBo, diaryId);
 					appointmentBo.setOrderData(diagnosticReportInfoService.getByAppointmentId(appointmentId));
-					appointmentBo.setTranscribedOrderData(listTranscribedDiagnosticReportInfoService.getByAppointmentId(appointmentId).orElse(null));
+					appointmentBo.setTranscribedOrderData(getTranscribedServiceRequestByAppointmentId.run(appointmentId).orElse(null));
                     return appointmentBo;
                 })
 				.orElse(null);
@@ -103,46 +96,53 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 	}
 
 	@Override
-	public MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId) {
+	public MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId) throws AlreadyPublishedWorklistException {
 
 		AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
 		if (appointment == null){
+			log.warn("publishWorkList appointment is NULL institutionId: {}, appointmentId: {} ", institutionId, appointmentId);
 			return null;
 		}
 
 		Integer diaryId = appointment.getDiaryId();
 		CompleteEquipmentDiaryBo equipmentDiary = equipmentDiaryService.getEquipmentDiary(diaryId).orElse(null);
 		if (equipmentDiary == null){
+			log.warn("publishWorkList equipmentDiary is NULL diaryId: {}, institutionId {}, appointmentId {} ", diaryId, institutionId, appointmentId);
 			return null;
 		}
 
 		Integer equipmentId = equipmentDiary.getEquipmentId();
 		EquipmentBO equipmentBO =equipmentService.getEquipment(equipmentId);
 		if (equipmentBO == null){
+			log.warn("publishWorkList equipmentBO is NULL equipmentId: {}, institutionId: {}, appointmentId: {}", equipmentId, institutionId, appointmentId);
 			return null;
 		}
 
 		Integer orchestratorId = equipmentBO.getOrchestratorId();
 		OrchestratorBO orchestrator = orchestratorService.getOrchestrator(orchestratorId);
 		if (orchestrator == null){
+			log.warn("publishWorkList orchestratorBO is NULL orchestratorId: {}, institutionId: {}, appointmentId: {}", orchestratorId, institutionId, appointmentId);
 			return null;
 		}
 
-		ModalityBO modalityBO = modalityService.getModality(equipmentBO.getModalityId());
+		Integer modalityId = equipmentBO.getModalityId();
+		ModalityBO modalityBO = modalityService.getModality(modalityId);
 		if (modalityBO == null){
+			log.warn("publishWorkList modalityBO is NULL modalityId: {}, institutionId: {}, appointmentId: {}", modalityId, institutionId, appointmentId);
 			return null;
 		}
 
 		Integer patientId =appointment.getPatientId();
 		BasicPatientDto basicDataPatient = patientExternalService.getBasicDataFromPatient(patientId);
 		if (basicDataPatient == null){
+			log.warn("publishWorkList basicDataPatient NULL patientId: {}, institutionId: {}, appointmentId: {}", patientId, institutionId, appointmentId);
 			return null;
 		}
 
 		boolean hasAlreadyPublishedWorkList = historicAppointmentStateRepository.hasHistoricallyConfirmedAtLeastOnes(appointmentId);
 		if (hasAlreadyPublishedWorkList) {
 			log.debug("Already published worklist from appointmentId {}", appointmentId);
-			return null;
+			throw  new AlreadyPublishedWorklistException();
 		}
 
 		String identificationNumber = basicDataPatient.getIdentificationNumber();

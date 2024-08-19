@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -46,7 +47,9 @@ public class MedicationRequestBo implements IDocumentBo {
 
 	private Boolean isArchived;
 
-    public short getDocumentType() {
+	private UUID uuid;
+
+	public short getDocumentType() {
         return DocumentType.RECIPE;
     }
 

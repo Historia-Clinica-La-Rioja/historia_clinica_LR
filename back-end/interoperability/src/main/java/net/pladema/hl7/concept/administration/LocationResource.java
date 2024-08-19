@@ -2,24 +2,33 @@ package net.pladema.hl7.concept.administration;
 
 import net.pladema.hl7.dataexchange.ISingleResourceFhir;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirNarrative;
+import net.pladema.hl7.dataexchange.model.domain.LocationVo;
 import net.pladema.hl7.dataexchange.model.domain.OrganizationVo;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
+import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
 import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
+
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.CanonicalType;
 import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
 public class LocationResource extends ISingleResourceFhir {
-
-
+	
     public LocationResource(FhirPersistentStore store) {
         super(store);
     }
@@ -44,4 +53,32 @@ public class LocationResource extends ISingleResourceFhir {
     public ResourceType getResourceType() {
         return ResourceType.Location;
     }
+
+	public Location fetchByOrganization(OrganizationVo organizationVo) {
+		Location resource = new Location();
+
+		resource.setMeta(new Meta().setProfile(List.of(new CanonicalType(CodingProfile.Location.BASEURL))));
+
+		resource.setId(organizationVo.getId());
+		resource.addIdentifier(newIdentifier(CodingSystem.REFES_RDI, organizationVo.getId()));
+		resource.setName(organizationVo.getName());
+		resource.setText(FhirNarrative.buildNarrativeAdditional(organizationVo.getName()));
+		if(organizationVo.hasAddress())
+			resource.setAddress(newAddress(organizationVo.getFullAddress()));
+
+		return resource;
+	}
+    
+	public static LocationVo encode(IBaseResource baseResource) {
+		LocationVo data = new LocationVo();
+		Location resource = (Location) baseResource;
+
+		Optional<Identifier> identifier = resource.getIdentifier().stream().filter(i -> i.getSystem().equals(CodingSystem.REFES_RDI)).findAny();
+		identifier.ifPresent(value -> data.setId(value.getValue()));
+
+		data.setName(resource.getName());
+		if(resource.hasAddress())
+			data.setFullAddress(decodeAddress(resource.getAddress()));
+		return data;
+	}
 }

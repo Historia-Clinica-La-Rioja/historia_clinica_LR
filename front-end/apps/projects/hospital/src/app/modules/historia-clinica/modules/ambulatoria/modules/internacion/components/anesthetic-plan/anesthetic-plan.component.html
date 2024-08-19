@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutGap="2vh">
     <app-titled-content-card *ngIf="(anestheticPlanList$ | async ).length > 0"
         title="{{ 'internaciones.anesthesic-report.anesthetic-plan.PLAN_RECORDS' }}">
-        <app-medication-background-list [service]="service"></app-medication-background-list>
+        <app-medication-background-list [service]="service.anestheticPlanService"></app-medication-background-list>
     </app-titled-content-card>
 
     <div>

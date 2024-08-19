@@ -29,6 +29,11 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getAllCitiesByDepartment(departmentId: number): Observable<AddressProjection[]> {
+		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}/get-all-cities`;
+		return this.http.get<AddressProjection[]>(url);
+	}
+
 	getCitiesByDepartment(departmentId: number): Observable<any[]> {
 		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}/cities`;
 		return this.http.get<any[]>(url);

@@ -67,6 +67,7 @@ class DeleteEpicrisisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.SIGNED);
+		result.setIsConfirmed(true);
 		return result;
 	}
 

@@ -5,10 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.service.ReasonExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,11 +13,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.application.GetAllEpisodeListByFilter;
+import net.pladema.emergencycare.controller.dto.AEmergencyCarePatientDto;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
+import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeExceptionEnum;
+import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeException;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
@@ -72,13 +72,9 @@ public class EmergencyCareEpisodeController {
 
     private final EmergencyCareMapper emergencyCareMapper;
 
-    private final ReasonExternalService reasonExternalService;
-
     private final RiskFactorExternalService riskFactorExternalService;
 
 	private final PatientService patientService;
-
-    private final SnomedMapper snomedMapper;
 
     private final TriageRiskFactorMapper triageRiskFactorMapper;
 
@@ -116,10 +112,10 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Add emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
-        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
-        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+		if (newEmergencyCare.getPatient().getId() == null) {
+			PatientECEBo temporaryPatient = createEmergencyCareEpisodeTemporaryPatient(body.getAdministrative().getPatient());
+			newEmergencyCare.setPatient(temporaryPatient);
+		}
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -135,8 +131,6 @@ public class EmergencyCareEpisodeController {
             @Valid @RequestBody NewEmergencyCareDto body) {
         LOG.debug("Update emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.emergencyCareDtoToEmergencyCareBo(body);
-        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.getReasons());
-        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
         newEmergencyCare.setInstitutionId(institutionId);
         newEmergencyCare.setId(emergencyCareEpisodeId);
         Integer result = emergencyCareEpisodeService.updateAdministrative(newEmergencyCare, institutionId);
@@ -154,15 +148,14 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+		if (newEmergencyCare.getPatient().getId() == null) {
+			PatientECEBo temporaryPatient = createEmergencyCareEpisodeTemporaryPatient(body.getAdministrative().getPatient());
+			newEmergencyCare.setPatient(temporaryPatient);
+		}
 
         NewRiskFactorsObservationDto riskFactorsObservationDto =
                 riskFactorExternalService.saveRiskFactors(newEmergencyCare.getPatient().getId(), body.riskFactorsObservation());
         newEmergencyCare.setTriageRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
-
-        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
-        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
 		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
 		riskFactorExternalService.formatRiskFactors(riskFactors);
@@ -181,15 +174,14 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+		if (newEmergencyCare.getPatient().getId() == null) {
+			PatientECEBo temporaryPatient = createEmergencyCareEpisodeTemporaryPatient(body.getAdministrative().getPatient());
+			newEmergencyCare.setPatient(temporaryPatient);
+		}
 
         NewRiskFactorsObservationDto riskFactorsObservationDto = triageRiskFactorMapper.fromTriagePediatricDto(body.getTriage());
         riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(newEmergencyCare.getPatient().getId(), riskFactorsObservationDto);
         newEmergencyCare.setTriageRiskFactorIds(getRiskFactorIds(riskFactorsObservationDto));
-
-        List<SnomedDto> reasons = reasonExternalService.addSnomedReasons(body.reasons());
-        newEmergencyCare.setReasons(snomedMapper.toListReasonBo(reasons));
 
 		RiskFactorBo riskFactors = riskFactorMapper.fromRiskFactorsObservationDto(riskFactorsObservationDto);
 		riskFactorExternalService.formatRiskFactors(riskFactors);
@@ -232,6 +224,18 @@ public class EmergencyCareEpisodeController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@PutMapping("/{emergencyCareEpisodeId}/updatePatientDescription")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<Boolean> updatePatientDescription(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
+			@RequestBody String patientDescription) {
+		LOG.debug("Update emergency care patient description -> institutionId {}, emergencyCareEpisodeId {}, patientDescription {}", institutionId, emergencyCareEpisodeId, patientDescription);
+		Boolean result = emergencyCareEpisodeService.updatePatientDescription(emergencyCareEpisodeId, patientDescription);
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
     private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){
         LOG.debug("Input parameter -> riskFactorsObservationDto {}", riskFactorsObservationDto);
         List<Integer> result = new ArrayList<>();
@@ -257,11 +261,18 @@ public class EmergencyCareEpisodeController {
         return result;
     }
 
-	private PatientECEBo createEmergencyCareEpisodePatient() {
+	private PatientECEBo createEmergencyCareEpisodeTemporaryPatient(AEmergencyCarePatientDto patient) {
+		assertTemporaryPatient(patient.getPatientDescription());
 		PatientECEBo result = new PatientECEBo();
 		Integer patientId = patientService.addPatient(new Patient(EPatientType.EMERGENCY_CARE_TEMPORARY.getId(), EAuditType.UNAUDITED.getId())).getId();
 		result.setId(patientId);
+		result.setPatientDescription(patient.getPatientDescription());
 		return result;
 	}
 
+	private void assertTemporaryPatient(String patientDescription) {
+		boolean hasNotDescription = patientDescription == null || patientDescription.isEmpty();
+		if (hasNotDescription)
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_DESCRIPTION,"No se puede crear un episodio de guardia con paciente temporal sin una descripcion identificatoria del paciente");
+	}
 }

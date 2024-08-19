@@ -1,9 +1,14 @@
 .anesthesic-report-content {
-	overflow-y: auto; 
-	overflow-x: hidden; 
+	overflow-y: auto;
+	overflow-x: hidden;
 	height: 90%;
-	margin: 24px;
+	margin: 0 24px;
 	font-size: 16px;
+}
+
+.draft-button {
+	width: fit-content;
+	padding: 0 16px;
 }
 
 .section-description {
@@ -16,4 +21,8 @@
 
 .date-text {
 	font-size: 14px;
+}
+
+.loader {
+    margin: auto;
 }

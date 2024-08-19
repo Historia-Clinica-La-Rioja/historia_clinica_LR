@@ -33,6 +33,15 @@ databaseChangeLog:
                       nullable: false
                     name: description
                     type: varchar(100)
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='diary_label' and column_name='id'   
 
     - changeSet:
         id: add-label_id
@@ -48,6 +57,15 @@ databaseChangeLog:
                       foreignKeyName: FK_diary_label_appointment
                     name: diary_label_id
                     type: int
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='appointment' and column_name='diary_label_id'            
         
     - changeSet:
         id: addColumn-classified-care_line

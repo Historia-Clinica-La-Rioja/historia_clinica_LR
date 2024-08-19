@@ -22,6 +22,9 @@ import hierarchicalunittypes from './hierarchicalunittypes';
 import episodesDocumentTypes from './episode-document-type';
 import medicalcoverageplans from './medicalcoverageplans';
 import institutionpracticesrelatedgroups from './institutionpracticesrelatedgroups';
+import parameters from './parameters';
+import medicineFinancingStatus from './medicinefinancingstatus';
+import medicineGroups from './medicinegroups';
 
 const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="episodedocumenttypes" {...episodesDocumentTypes(permissions)} />,
@@ -37,6 +40,7 @@ const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="rules" {...rules(permissions)} />,
     <Resource name="proceduretemplates" {...procedureTemplates(permissions)}/>,
     <Resource name="proceduretemplatesnomeds" {...procedureTemplateSnomeds(permissions)}/>,
+    <Resource name="proceduretemplatesnomedgroup"/>,
     <Resource name="units-of-measure" {...unitsOfMeasure(permissions)} />,
     <Resource name="proceduretemplateparameters" {...procedureTemplateParameters(permissions)} />,
     <Resource name="institutionpractices" {...institutionpractices(permissions)} />,
@@ -44,6 +48,9 @@ const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="medicalcoveragetypes" />,
     <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
     <Resource name="medicalcoveragesmerge" />,
+    <Resource name="parameters" {...parameters(permissions)} />,
+    <Resource name="medicinefinancingstatus" {...medicineFinancingStatus(permissions)} />,
+    <Resource name="medicinegroups" {...medicineGroups(permissions)} />
 ];
 
 export default resourcesMasterData;

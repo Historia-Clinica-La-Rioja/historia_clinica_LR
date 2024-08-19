@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { DatosAntropometricosNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class DatosAntropometricosFormComponent {
+export class DatosAntropometricosFormComponent implements ControlValueAccessor {
 
 	datosAntropometricosNuevaConsultaService =
 		new DatosAntropometricosNuevaConsultaService(this.formBuilder, this.hceGeneralStateService,
@@ -40,8 +40,10 @@ export class DatosAntropometricosFormComponent {
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.antropometricos.setValue(obj);
+			this.datosAntropometricosNuevaConsultaService.setAnthropometricData(obj);
+		}
 	}
 
 	registerOnChange(fn: any): void {

@@ -37,7 +37,7 @@ public class DashboardStorageImpl implements DashboardStorage {
 	) throws Exception {
         this.reverseProxy = new RestTemplateReverseProxy(
 				cubejsAutoConfiguration.getApiUrl(),
-				configuration,
+				configuration.withTimeout(60000),
 				cubejsAutoConfiguration.getHeaders()
 		);
 		this.userPermissionStorage = userPermissionStorage;

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -67,20 +69,20 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default List<PersonalHistoryBo> getPersonalHistories() {
-        return Collections.emptyList();
+    default ReferableItemBo<PersonalHistoryBo> getPersonalHistories() {
+        return new ReferableItemBo<>();
     }
 
-    default List<FamilyHistoryBo> getFamilyHistories() {
-        return Collections.emptyList();
+    default ReferableItemBo<FamilyHistoryBo> getFamilyHistories() {
+        return new ReferableItemBo<>();
     }
 
     default List<MedicationBo> getMedications() {
         return Collections.emptyList();
     }
 
-    default List<AllergyConditionBo> getAllergies() {
-        return Collections.emptyList();
+    default ReferableItemBo<AllergyConditionBo> getAllergies() {
+        return new ReferableItemBo<>();
     }
 
     default List<ImmunizationBo> getImmunizations() {
@@ -217,7 +219,18 @@ public interface IDocumentBo {
     default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
 
     default String getAnestheticChart() { return null; }
-	
+
 	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
 
+	default UUID getUuid() {return null;}
+
+    default Long getPreviousDocumentId() { return null; }
+
+    default void setInitialDocumentId(Long initialDocumentId) {}
+
+    default void setPreviousDocumentId(Long lastDocumentId) {}
+
+    default void setPatientInfo(PatientInfoBo patientInfo) {};
+
+    default void setPatientId(Integer patientId) {};
 }

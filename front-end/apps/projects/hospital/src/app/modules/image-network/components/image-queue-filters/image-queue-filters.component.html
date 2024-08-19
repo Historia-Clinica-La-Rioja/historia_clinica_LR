@@ -1,0 +1,75 @@
+<form [formGroup]="filterForm" name="modalities-form" fxLayout="column">
+    <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div data-id="modality-filter" class="background-color-input">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'image-network.worklist.MODALITIES'"></mat-label>
+                <mat-select id="modalities" (selectionChange)="onModalityChange()" fxFlex="98%"
+                    formControlName="modality">
+                    <mat-option *ngFor="let modality of modalities$ | async" [value]="modality.id">
+                        {{modality.description}}
+                    </mat-option>
+                </mat-select>
+                <button *ngIf="filterForm.value.modality" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="cleanModalities(); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div data-id="equipment-filter" class="background-color-input">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'image-network.equipment-diary-setup.EQUIPMENT_SELECT'"></mat-label>
+                <mat-select formControlName="equipment" id="equipment"
+                    fxFlex="98%">
+                    <ng-container *ngIf="equipments$ | async as equipments">
+                        <mat-option *ngFor="let equipment of equipments" id="equipment.name" [value]="equipment">
+                            {{equipment.name}}
+                        </mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div data-id="date-filter" class="background-color-input">
+            <app-date-range-picker [min]="minDay" [max]="today" [label]="'image-network.worklist.DATE_RANGE'" (dateRangeChange)="selectDate($event)"
+                [dateRange]="dateRange">
+            </app-date-range-picker>
+        </div>
+        <div data-id="status-filter" class="background-color-input">
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'image-network.worklist.STATUS'"></mat-label>
+                <mat-select #select formControlName="status"  multiple>
+                    <mat-option *ngFor="let status of status$ | async" (click)="checkSelection()"
+                        [value]="status.description">{{status.label}}</mat-option>
+                    <mat-divider class="dropdown-divider"></mat-divider>
+                    <div class="select-all">
+                        <mat-checkbox [(ngModel)]="allSelected" [ngModelOptions]="{standalone: true}"
+                            (change)="toggleAllSelection()" color="primary">{{'buttons.ALL' | translate
+                            }}</mat-checkbox>
+                    </div>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <app-filter-button class="filter-button" data-id="filter-button" (isExpandedEmitter)="this.enableMoreFilters = !this.enableMoreFilters">
+        </app-filter-button>
+    </div>
+    <ng-container *ngIf="enableMoreFilters">
+        <form [formGroup]="secundaryFilterForm" name="secundary-form">
+            <div fxLayout="row wrap" fxLayoutGap="10px" class="background-color-input">
+                <mat-form-field appearance="outline">
+                    <mat-label [translate]="'image-network.worklist.PATIENT_NAME'"></mat-label>
+                    <input matInput formControlName="patientName">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label [translate]="'image-network.worklist.PATIENT_DOCUMENT'"></mat-label>
+                    <input matInput formControlName="patientDocument">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label [translate]="'image-network.worklist.STUDY'"></mat-label>
+                    <input matInput formControlName="study">
+                </mat-form-field>
+            </div>
+        </form>
+        <app-button fxFlex="70" [buttonType]="ButtonTypeRaised" [text]="'image-network.queue_list.DO_FILTER'"
+            (clicked)="applyFilter()">
+        </app-button>
+    </ng-container>
+</form>

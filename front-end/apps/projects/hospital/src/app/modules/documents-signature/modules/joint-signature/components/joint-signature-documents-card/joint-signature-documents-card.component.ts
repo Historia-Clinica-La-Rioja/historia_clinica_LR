@@ -170,4 +170,12 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	selectedIds(ids: number[]) {
 		this.selectedDocumentsId = ids;
 	}
+
+	downloadPdf(): void {
+        this.selectedDocumentsId.forEach(selectedId => this.download({id: selectedId}));
+    }
+	
+	download(ids: SelectableCardIds): void {
+        this.documentService.downloadUnnamedFile(ids.id);
+    }
 }

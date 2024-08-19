@@ -13,13 +13,10 @@ public class NotificationTemplateInput<T> {
 	public final T args;
 	public final AppFeature feature;
 	public final List<StoredFileBo> attachments;
-	public String subject;
+	public final String subject;
 
 	public NotificationTemplateInput(String templateId, T args, AppFeature feature) {
-		this.templateId = templateId;
-		this.args = args;
-		this.feature = feature;
-		attachments = Collections.emptyList();
+		this(templateId, args, feature, Collections.emptyList(), null);
 	}
 
 	public NotificationTemplateInput<T> withPrefixId(String prefix) {

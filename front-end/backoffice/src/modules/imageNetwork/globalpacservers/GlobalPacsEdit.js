@@ -6,13 +6,11 @@ import {
     required,
     maxLength,
     FormDataConsumer,
-    usePermissions,
     ReferenceInput,
     SelectInput,
     BooleanInput
 } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
-import { ROOT } from '../../roles';
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 
 const CENTRO_DE_DIAGNOSTICO = 2;
@@ -28,9 +26,7 @@ const InstitutionField = ({formData, ...res}) => {
 }
 
 const GlobalPacsEdit = props => {
-    const { permissions } = usePermissions();
-    const userIsRoot = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ROOT.role)).length > 0;
-    return (<Edit {...props} hasEdit={userIsRoot}>
+    return (<Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true} />}>
 
             {/* Name */}

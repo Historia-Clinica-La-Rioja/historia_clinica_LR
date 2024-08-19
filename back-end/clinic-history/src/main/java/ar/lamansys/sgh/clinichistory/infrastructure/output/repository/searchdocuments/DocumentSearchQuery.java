@@ -80,17 +80,20 @@ public class DocumentSearchQuery {
 
     public QueryPart where() {
         return new QueryPart("document.sourceId = :internmentEpisodeId \n" +
-                "and document.sourceTypeId = " + SourceType.HOSPITALIZATION +" \n"+
-				"and document.typeId NOT IN ('" + DocumentType.INDICATION + "') \n" +
-				"and not document.statusId = '" + DocumentStatus.ERROR +"' \n"+
-				"and not exists (select 1 \n" +
-				"					from HealthCondition hc2 \n" +
-				"					where hc.id = hc2.id \n" +
-				"					and (hc2.problemId = '" + ProblemType.FAMILY_HISTORY +"' \n"+
-				"					or hc2.problemId = '" + ProblemType.PROBLEM +"' \n"+
-				"					or hc2.problemId = '" + ProblemType.OTHER +"' \n"+
-				"					or hc2.problemId = '" + ProblemType.OTHER_HISTORY +"' \n"+
-				"					or hc2.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n))");
+                "and document.sourceTypeId = " + SourceType.HOSPITALIZATION + " \n" +
+                "and document.typeId NOT IN ('" + DocumentType.INDICATION + "') \n" +
+                "and not document.statusId = '" + DocumentStatus.ERROR + "' \n" +
+                "and not document.statusId = '" + DocumentStatus.DRAFT_DISCARDED + "' \n" +
+                "and not exists (select 1 \n" +
+                "					from HealthCondition hc2 \n" +
+                "					where hc.id = hc2.id \n" +
+                "					and (hc2.problemId = '" + ProblemType.FAMILY_HISTORY + "' \n" +
+                "					or hc2.problemId = '" + ProblemType.PROBLEM + "' \n" +
+                "					or hc2.problemId = '" + ProblemType.OTHER + "' \n" +
+                "					or hc2.problemId = '" + ProblemType.OTHER_HISTORY + "' \n" +
+                "					or hc2.verificationStatusId = '" + ConditionVerificationStatus.ERROR + "' \n" +
+                "					or hc2.verificationStatusId = '" + ConditionVerificationStatus.DISCARDED + "' \n" +
+                "))");
     }
 
     public QueryPart orderBy(){

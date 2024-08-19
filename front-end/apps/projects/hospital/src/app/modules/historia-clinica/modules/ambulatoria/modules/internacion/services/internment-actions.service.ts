@@ -160,7 +160,7 @@ export class InternmentActionsService {
 		});
 	}
 
-	openAnestheticReport() {
+	openAnestheticReport(id?: number, isDraft?: boolean) {
 		if (!this.dialogRef) {
 			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {
 				autoFocus: false,
@@ -169,6 +169,8 @@ export class InternmentActionsService {
 				internmentEpisodeId: this.internmentEpisodeId,
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosis: this.diagnosticos,
+				anestheticPartId: id,
+				isDraft: !!isDraft
 			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRefSubject.next(this.dialogRef);
@@ -193,6 +195,8 @@ export class InternmentActionsService {
 				surgicalReportId: id,
 				autoFocus: false,
 				disableClose: true,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosis: this.diagnosticos,
 			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRefSubject.next(this.dialogRef);

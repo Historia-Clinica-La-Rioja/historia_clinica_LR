@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("backoffice/proceduretemplatesnomeds")
 public class BackofficeProcedureTemplateSnomedController extends AbstractBackofficeController<ProcedureTemplateDto, Integer> {
 
-	BackofficeProcedureTemplateStore procedureTemplateStore;
+	BackofficeProcedureTemplateSnomedStore procedureTemplateStore;
 	BackofficeProcedureTemplateEntityValidator procedureTemplateEntityValidator;
 
-	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateStore store,
+	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateSnomedStore store,
 													   BackofficeProcedureTemplateSnomedValidator procedureTemplateSnomedValidator,
 													   BackofficeProcedureTemplateEntityValidator procedureTemplateEntityValidator
 	) {

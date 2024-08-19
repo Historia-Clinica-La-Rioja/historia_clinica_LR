@@ -19,3 +19,8 @@
 
 <app-titled-content *ngIf="alergiasContent?.length" icon="cancel" title="Alergias" [content]="alergiasContent"></app-titled-content>
 
+<div *ngIf="!!registerEvolutionNoteEdition" fxLayout="row" fxLayoutGap="5px">
+    <span class="grey" [translate]="'guardia.EDITED'"></span>
+    <app-register-editor-info class="register-editor-width" [registerEditor]="registerEvolutionNoteEdition"
+        registerEditorCase="REGISTER_EDITOR_CASE"></app-register-editor-info>
+</div>

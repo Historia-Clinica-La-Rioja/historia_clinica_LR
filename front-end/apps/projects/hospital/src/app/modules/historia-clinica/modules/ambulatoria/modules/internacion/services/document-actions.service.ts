@@ -45,7 +45,8 @@ export class DocumentActionsService {
 		this.patientDocument = {
 			hasAnamnesis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Anamnesis"),
 			evolutionNotes: documents.filter((document: DocumentSearchDto) => document.documentType === "Nota de evolución" || document.documentType === "Nota de evolución de enfermería"),
-			hasEpicrisis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Epicrisis")
+			hasEpicrisis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Epicrisis"),
+			hasAnestheticPart: !!documents.find((document: DocumentSearchDto) => document.documentType === "Parte anestésico"),
 		}
 	}
 
@@ -97,6 +98,9 @@ export class DocumentActionsService {
 		this.editDocumentAction.editDraftEpicrisis(document, this.isCreatorDocumnt(document));
 	}
 
+	editAnestheticPartDraft(document: DocumentSearchDto) {
+		this.editDocumentAction.editDraftAnesthetic(document, this.isCreatorDocumnt(document));
+	}
 }
 
 export interface DocumentSearch {
@@ -113,4 +117,5 @@ interface PatientDocument {
 	hasAnamnesis: boolean;
 	evolutionNotes: DocumentSearchDto[];
 	hasEpicrisis: boolean;
+	hasAnestheticPart: boolean;
 }

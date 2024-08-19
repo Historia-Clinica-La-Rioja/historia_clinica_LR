@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutGap="2vh">
     <app-titled-content-card *ngIf="(fluidAdministrationList$ | async ).length > 0"
         title="{{ 'internaciones.anesthesic-report.fluid-administration.FLUID_RECORDS' }}">
-        <app-fluid-administration-list [service]="service"></app-fluid-administration-list>
+        <app-fluid-administration-list [service]="service.fluidAdministrationService"></app-fluid-administration-list>
     </app-titled-content-card>
     <div>
         <button id="add-fluidAdministration" mat-button color="primary" class="medication-button"

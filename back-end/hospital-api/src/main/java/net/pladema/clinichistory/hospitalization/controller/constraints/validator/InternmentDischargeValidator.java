@@ -2,28 +2,23 @@ package net.pladema.clinichistory.hospitalization.controller.constraints.validat
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+@Slf4j
+@RequiredArgsConstructor
 public class InternmentDischargeValidator implements ConstraintValidator<InternmentDischargeValid, Integer> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(InternmentDischargeValidator.class);
 
     private static final String INTERNMENT_EPISODE_PROPERTY = "internmentEpisodeId";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
     
     private final FeatureFlagsService featureFlagService;
-    
-    public InternmentDischargeValidator(InternmentEpisodeRepository internmentEpisodeRepository, FeatureFlagsService featureFlagService){
-        this.internmentEpisodeRepository = internmentEpisodeRepository;
-        this.featureFlagService = featureFlagService;
-    }
 
     @Override
     public void initialize(InternmentDischargeValid constraintAnnotation) {
@@ -36,15 +31,17 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
      */
     @Override
     public boolean isValid(Integer internmentEpisodeId, ConstraintValidatorContext context) {
-        LOG.debug("Going to Validate with InternmentDischargeValid");
+        log.debug("Going to Validate with InternmentDischargeValid");
         boolean valid = true;
 
         if (!featureFlagService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
             valid = internmentEpisodeRepository.hasFinalEpicrisis(internmentEpisodeId);
         }
+
         if (!valid) {
-            setResponse(context, "{internmentdischarge.invalid}", INTERNMENT_EPISODE_PROPERTY);
+            setResponse(context, "{internmentdischarge.invalid.no-epicrisis}", INTERNMENT_EPISODE_PROPERTY);
         }
+
         return valid;
     }
 

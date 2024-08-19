@@ -1,36 +1,29 @@
 package net.pladema.reports.repository.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import javax.persistence.EntityManager;
-
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import lombok.RequiredArgsConstructor;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo;
 import net.pladema.reports.repository.entity.AnnexIIOdontologyVo;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 import net.pladema.reports.repository.entity.AnnexIIReportDataVo;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Repository
 public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 
     private final EntityManager entityManager;
-
-    public AnnexReportRepositoryImpl(EntityManager entityManager){
-        this.entityManager = entityManager;
-    }
 
 	private static AnnexIIOutpatientVo toAnnexIIOutpatientVo(Object[] a) {
 		return new AnnexIIOutpatientVo(
@@ -58,7 +51,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 
 	/**
 	 * The created_on column is stored as UTC.
-	 * @param created_on column value at UTC.
+	 * @param o column value at UTC.
 	 * @return the created_on date time at UTC-3.
 	 */
 	private static LocalDateTime mapCreatedOn(Object o) {
@@ -98,6 +91,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     }
 
     @Override
+	@Transactional(readOnly = true)
     public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
         String query = "WITH t AS (" +
                 "       SELECT oc.id, d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
@@ -151,6 +145,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     }
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<AnnexIIOutpatientVo> getOdontologyConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
 				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
@@ -182,6 +177,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<AnnexIIOdontologyVo> getOdontologyConsultationAnnexSpecialityAndHasProcedures(Long documentId) {
 		String query = "select cs.name, " +
 				"		case when count(s3.pt) > 0 or count(s4.pt) > 0 then true else false end " +
@@ -210,6 +206,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<AnnexIIOdontologyDataVo> getOdontologyConsultationAnnexDataInfo(Long documentId) {
 		String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo(s.pt, od.cie10Codes) " +
 				"		FROM Document AS d " +
@@ -226,6 +223,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<AnnexIIOdontologyDataVo> getOdontologyConsultationAnnexOtherDataInfo(Long documentId) {
 		String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIOdontologyDataVo(s.pt, hc.cie10Codes) " +
 				"		FROM Document AS d " +
@@ -242,6 +240,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<AnnexIIOutpatientVo> getNursingConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
 				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
@@ -273,6 +272,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<AnnexIIReportDataVo> getNursingConsultationAnnexDataInfo(Long documentId) {
 		String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIReportDataVo(cs.name, " +
 				"			CASE WHEN hc.cie10Codes IS NULL THEN s.pt ELSE CONCAT(s.pt, ' (',hc.cie10Codes, ')') END, " +

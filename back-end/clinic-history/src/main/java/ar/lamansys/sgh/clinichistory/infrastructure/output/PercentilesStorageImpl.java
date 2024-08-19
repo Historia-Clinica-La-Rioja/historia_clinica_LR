@@ -39,6 +39,7 @@ public class PercentilesStorageImpl implements PercentilesStorage {
 
 	private PercentilesBo mapToBo(Percentiles entity){
 		PercentilesBo result = new PercentilesBo();
+		result.setId(entity.getId());
 		result.setXValue(entity.getXValue());
 		result.setP3(entity.getP3());
 		result.setP10(entity.getP10());

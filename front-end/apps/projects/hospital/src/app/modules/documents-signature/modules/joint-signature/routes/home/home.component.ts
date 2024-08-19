@@ -19,14 +19,10 @@ export class HomeComponent {
 		private readonly contextService: ContextService,
 		private readonly featureFlagService: FeatureFlagService,
 	) {
-		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'
-		this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_DIGITAL).subscribe(isEnabledDigital =>{
-			this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_CONJUNTA).subscribe(isEnabledConjunta =>{
-			  if(isEnabledConjunta && isEnabledDigital){
-				this.buttonBack = true;
-			  }
-			})
-		  })
+		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+		this.featureFlagService.filterItems$([{featureFlag:[AppFeature.HABILITAR_FIRMA_DIGITAL,AppFeature.HABILITAR_FIRMA_CONJUNTA]}]).subscribe(isActive =>{
+			this.buttonBack= isActive[0]?.featureFlag.length > 1;
+		});
 	}
 
 	goToBackDocumentsSignature(): void {

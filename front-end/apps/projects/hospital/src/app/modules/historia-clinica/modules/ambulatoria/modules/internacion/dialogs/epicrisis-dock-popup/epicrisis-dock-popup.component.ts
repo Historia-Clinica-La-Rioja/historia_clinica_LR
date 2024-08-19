@@ -103,8 +103,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		readonly problemEpicrisisService: ProblemEpicrisisService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS).subscribe(isOn => this.cipresEpicrisisFF = isOn);
+		this.setFeatureFlags();
 	}
 
 	ngOnInit(): void {
@@ -506,6 +505,11 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	getObservations$(): Observable<boolean> {
 		return this.observationsSubject.asObservable();
+	}
+
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS).subscribe(isOn => this.cipresEpicrisisFF = isOn);
 	}
 }
 

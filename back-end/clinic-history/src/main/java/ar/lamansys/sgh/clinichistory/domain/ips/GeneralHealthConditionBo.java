@@ -1,6 +1,9 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EReferableConcept;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.domain.ReferableConceptVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
 import lombok.AllArgsConstructor;
@@ -38,9 +41,9 @@ public class GeneralHealthConditionBo implements Serializable {
 
     private List<DiagnosisBo> diagnosis = new ArrayList<>();
 
-    private List<PersonalHistoryBo> personalHistories = new ArrayList<>();
+    private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
-    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
+    private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
 	private List<ProblemBo> problems = new ArrayList<>();
 
@@ -53,46 +56,50 @@ public class GeneralHealthConditionBo implements Serializable {
     private List<HealthConditionBo> otherHistories = new ArrayList<>();
 
 	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
-        setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
-        setDiagnosis(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isSecondaryDiagnosis,
-                this::mapDiagnosis)
-        );
-        setPersonalHistories(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isPersonalHistory,
-                this::mapPersonalHistoryBo)
-        );
-        setFamilyHistories(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isFamilyHistory,
-                this::mapFamilyHistoryBo));
-		setProblems(buildGeneralState(
-				healthConditionVos,
+		setHealthConditions(healthConditionVos, new ArrayList<>());
+	}
+
+	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
+		setHealthConditions(healthConditionVos, referredConcepts);
+	}
+
+	private void setHealthConditions(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
+		setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
+		setDiagnosis(buildGeneralState(healthConditionVos,
+				HealthConditionVo::isSecondaryDiagnosis,
+				this::mapDiagnosis)
+		);
+		setPersonalHistories(buildReferableGeneralState(healthConditionVos,
+				HealthConditionVo::isPersonalHistory,
+				this::mapPersonalHistoryBo, referredConcepts,
+				EReferableConcept.PERSONAL_HISTORY.getId())
+		);
+		setFamilyHistories(buildReferableGeneralState(healthConditionVos,
+				HealthConditionVo::isFamilyHistory,
+				this::mapFamilyHistoryBo,
+				referredConcepts,
+				EReferableConcept.FAMILY_HISTORY.getId()));
+		setProblems(buildGeneralState(healthConditionVos,
 				HealthConditionVo::isProblem,
 				this::buildProblem));
-		setOtherProblems(buildGeneralState(
-				healthConditionVos,
+		setOtherProblems(buildGeneralState(healthConditionVos,
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.OTHER),
 				this::mapToHealthConditionBo
 		));
-		setPreoperativeDiagnosis(buildGeneralState(
-				healthConditionVos,
+		setPreoperativeDiagnosis(buildGeneralState(healthConditionVos,
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS),
 				this::mapDiagnosis
 		));
-		setPostoperativeDiagnosis(buildGeneralState(
-				healthConditionVos,
+		setPostoperativeDiagnosis(buildGeneralState(healthConditionVos,
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS),
 				this::mapDiagnosis
 		));
-        setOtherHistories(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isOtherHistory,
-                this::mapToHealthConditionBo
-        ));;
-    }
+		setOtherHistories(buildGeneralState(healthConditionVos,
+				HealthConditionVo::isOtherHistory,
+				this::mapToHealthConditionBo
+		));
+	}
+
 	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
                                                                     Predicate<? super HealthConditionVo> filterFunction,
                                                                     Function<? super HealthConditionVo, ? extends T> mapFunction){
@@ -102,6 +109,20 @@ public class GeneralHealthConditionBo implements Serializable {
                 .collect(Collectors.toList());
 
     }
+
+	private <T extends HealthConditionBo> ReferableItemBo<T> buildReferableGeneralState(List<HealthConditionVo> data,
+																						Predicate<? super HealthConditionVo> filterFunction,
+																						Function<? super HealthConditionVo, ? extends T> mapFunction,
+																						List<ReferableConceptVo> referredConcepts,
+																						Short referableConceptId) {
+		Optional<Boolean> isReferred = referredConcepts.stream().filter(referableConcept -> referableConcept.getReferableConceptId().equals(referableConceptId))
+				.map(ReferableConceptVo::isReferred).findFirst();
+		List<T> resultList = data.stream()
+				.filter(filterFunction)
+				.map(mapFunction)
+				.collect(Collectors.toList());
+		return new ReferableItemBo<>(resultList, isReferred.orElse(null));
+	}
 
     private DiagnosisBo mapDiagnosis(HealthConditionVo healthConditionVo){
         log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);

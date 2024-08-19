@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface NominalConsultationDetailStorage {
 
-	IWorkbook buildNominalExternalConsultationDetailReport(String title, String[] headers, List<ConsultationDetail> result);
+	IWorkbook buildNominalExternalConsultationDetailReport(String title, String[] headers, List<ConsultationDetail> result, Integer institutionId);
 
 }

@@ -1,5 +1,8 @@
 {
 	"view-medical-history-button": {
 		"TITLE": "Ver historia clínica"
+	},
+	"temporary-patient": {
+		"TITLE": "Paciente temporal"
 	}
 }

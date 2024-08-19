@@ -30,6 +30,8 @@ import javax.persistence.Table;
 @Entity
 public class AnestheticReport extends SGXAuditableEntity<Integer> implements SGXDocumentEntity {
 
+    private static final long serialVersionUID = -2181037283416289956L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

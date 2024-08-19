@@ -18,6 +18,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -57,6 +58,9 @@ public class DiagnosticReport extends SGXAuditableEntity<Integer> implements SGX
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "uuid")
+	private UUID uuid;
+
 	public DiagnosticReport(Integer patientId, Integer snomedId, String cie10Codes,
 							Long noteId, Integer healthConditionId) {
 		super();
@@ -91,5 +95,9 @@ public class DiagnosticReport extends SGXAuditableEntity<Integer> implements SGX
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, patientId);
+	}
+
+	public boolean isFinal() {
+		return Objects.equals(this.getStatusId(), DiagnosticReportStatus.FINAL);
 	}
 }

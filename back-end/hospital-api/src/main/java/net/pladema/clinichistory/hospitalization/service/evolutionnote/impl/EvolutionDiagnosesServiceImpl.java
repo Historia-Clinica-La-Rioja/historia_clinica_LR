@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionDiagnosesService;
@@ -38,7 +39,7 @@ public class EvolutionDiagnosesServiceImpl implements EvolutionDiagnosesService 
     public Long execute(EvolutionNoteBo evolutionNote) {
         LOG.debug("Input parameters -> evolutionNote {}", evolutionNote);
 		evolutionNote.getDiagnosis().forEach(diagnosisBo -> diagnosisBo.setId(null));
-		evolutionNote.setAllergies(Collections.emptyList());
+		evolutionNote.setAllergies(new ReferableItemBo<>());
 		evolutionNote.setImmunizations(Collections.emptyList());
 		evolutionNote.setProcedures(Collections.emptyList());
 		evolutionNote.setPerformedDate(dateTimeProvider.nowDateTime());

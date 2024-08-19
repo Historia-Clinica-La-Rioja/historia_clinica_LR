@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AnthropometricDataDto, EvolutionNoteDto, MasterDataInterface } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -9,13 +9,14 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { anyMatch } from "@core/utils/array.utils";
 import { PermissionsService } from "@core/services/permissions.service";
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 
 @Component({
 	selector: 'app-add-anthropometric',
 	templateUrl: './add-anthropometric.component.html',
 	styleUrls: ['./add-anthropometric.component.scss']
 })
-export class AddAnthropometricComponent implements OnInit {
+export class AddAnthropometricComponent implements OnInit,OnDestroy {
 
 	getError = getError;
 	hasError = hasError;
@@ -23,6 +24,7 @@ export class AddAnthropometricComponent implements OnInit {
 	form: UntypedFormGroup;
 	loading = false;
 	bloodTypes: MasterDataInterface<string>[];
+	anthropometricData: AnthropometricData;
 
 	isNursingEvolutionNote: boolean;
 
@@ -49,6 +51,21 @@ export class AddAnthropometricComponent implements OnInit {
 
 		const bloodTypes$ = this.internacionMasterDataService.getBloodTypes();
 		bloodTypes$.subscribe(bloodTypes => this.bloodTypes = bloodTypes);
+
+		this.form.valueChanges.subscribe(values => {
+			const evolutionNote = this.buildEvolutionNote(values);
+			if (evolutionNote) {
+				this.anthropometricData = {
+					bmi: evolutionNote.anthropometricData?.bmi?.value || null,
+					height: evolutionNote.anthropometricData?.height?.value || null,
+					weight: evolutionNote.anthropometricData?.weight?.value || null
+				};
+			}
+		});
+	}
+
+	ngOnDestroy(): void {
+		this.resetAnthropometricPreviewData();
 	}
 
 	submit(): void {
@@ -66,6 +83,14 @@ export class AddAnthropometricComponent implements OnInit {
 			);
 		}
 	}
+
+	resetAnthropometricPreviewData() {
+        this.anthropometricData = {
+            bmi: null,
+            height: null,
+            weight: null
+        };
+    }
 
 	formHasNoValues(formGroupValues: any): boolean {
 		return Object.values(formGroupValues).every(el => el === null);

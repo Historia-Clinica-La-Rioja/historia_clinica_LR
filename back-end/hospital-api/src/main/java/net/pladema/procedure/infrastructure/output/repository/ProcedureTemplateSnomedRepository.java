@@ -1,6 +1,7 @@
 package net.pladema.procedure.infrastructure.output.repository;
 
 import net.pladema.procedure.domain.SnomedPracticeVo;
+import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTemplate;
 import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTemplateSnomed;
 
 import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTemplateSnomedPK;
@@ -22,4 +23,12 @@ public interface ProcedureTemplateSnomedRepository extends JpaRepository<Procedu
 			"JOIN Snomed s ON pts.pk.snomedId = s.id " +
 			"WHERE pts.pk.procedureTemplateId = :procedureTemplateId")
 	List<SnomedPracticeVo> getAllPracticesByProcedureTemplateId(@Param("procedureTemplateId") Integer procedureTemplateId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT pt " +
+			"FROM ProcedureTemplateSnomed pts " +
+			"JOIN ProcedureTemplate pt ON pts.pk.procedureTemplateId = pt.id "+
+			"WHERE pts.pk.snomedId = :snomedId")
+	List<ProcedureTemplate> findProcedureTemplateBySnomedId(@Param("snomedId") Integer snomedId);
+
 }

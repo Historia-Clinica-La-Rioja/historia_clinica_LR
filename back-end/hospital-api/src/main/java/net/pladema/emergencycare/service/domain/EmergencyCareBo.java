@@ -6,12 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;
@@ -49,7 +48,7 @@ public class EmergencyCareBo {
 
     private LocalDateTime createdOn;
 
-    private List<ReasonBo> reasons;
+    private String reason;
 
     private TriageBo triage;
 
@@ -91,6 +90,7 @@ public class EmergencyCareBo {
 		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), null) : null;
 		this.endDate = emergencyCareVo.getEndDate();
 		this.institutionName = emergencyCareVo.getInstitutionName();
+		this.reason = emergencyCareVo.getReason();
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
@@ -125,10 +125,6 @@ public class EmergencyCareBo {
 
 	public String getBedNumber() {
 		return bed != null ? bed.getBedNumber(): null;
-	}
-
-	public String getRoomDescription() {
-		return room != null ? room.getDescription(): null;
 	}
 
 }

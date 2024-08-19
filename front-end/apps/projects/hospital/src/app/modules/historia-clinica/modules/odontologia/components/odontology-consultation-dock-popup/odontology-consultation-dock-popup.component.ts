@@ -8,7 +8,6 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { MIN_DATE } from "@core/utils/date.utils";
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { newMoment } from "@core/utils/moment.utils";
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
@@ -43,6 +42,8 @@ import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical
 import { ConfirmarPrescripcionComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -72,10 +73,36 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	episodeData: EpisodeData;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
-	public today = newMoment();
 	minDate = MIN_DATE;
 
 	disableConfirmButton = false;
+
+	isAllergyNoRefer: boolean = true;
+	allergyContent: ConceptsList = {
+		id: 'allergy-checkbox-concepts-list',
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
+			icon: 'cancel'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.alergias.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	personalHistoriesContent: ConceptsList = {
+		id: 'personal-histories-checkbox-concepts-list',
+		header: {
+			text: 'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY',
+			icon: 'cancel'
+		},
+		titleList: 'odontologia.odontology-consultation-dock-popup.REGISTERED_PERSONAL_HISTORY',
+		actions: {
+			button: 'odontologia.odontology-consultation-dock-popup.ADD_PERSONAL_HISTORY',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isPersonalHistories: boolean = true;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
@@ -93,6 +120,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
 		this.reasonNewConsultationService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -102,7 +130,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.otherDiagnosticsNewConsultationService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 		this.diagnosticsNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.DIAGNOSTIC, this.conceptsFacadeService);
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
-		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService);
 	}
 
@@ -196,7 +224,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				severityTypes: this.severityTypes
 			},
 			autoFocus: false,
-			width: '35%',
+			width: '40%',
 			disableClose: true,
 		});
 	}
@@ -220,7 +248,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '30%',
+			width: '40',
 			disableClose: true,
 		});
 	}
@@ -235,6 +263,20 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+	}
+
+	checkAllergyEvent($event) {
+		if ($event.addPressed) {
+			this.addAllergy();
+		}
+		this.isAllergyNoRefer = !$event.checkboxSelected;
+	}
+
+	checkPersonalHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addPersonalHistory();
+		}
+		this.isPersonalHistories = !$event.checkboxSelected;
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {
@@ -289,15 +331,15 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
 
-		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length || !!odontologyDto.personalHistories.length;
+		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length || !!odontologyDto.personalHistories.content.length;
 
 		if (odontologyDto.references.length) {
 			problemsToUpdate = !!this.problemsToUpdate(odontologyDto).length || !!odontologyDto.dentalActions.length;
 		}
 
 		return {
-			allergies: !!odontologyDto.allergies?.length,
-			personalHistories: !!odontologyDto.personalHistories?.length,
+			allergies: !!odontologyDto.allergies?.content.length,
+			personalHistories: !!odontologyDto.personalHistories?.content.length,
 			medications: !!odontologyDto.medications?.length,
 			problems: problemsToUpdate,
 		};
@@ -309,7 +351,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.odontogramService.actionedTeeth.forEach((a: ActionedTooth) => dentalActions = dentalActions.concat(toDentalAction(a, allConcepts)));
 
 		return {
-			allergies: this.allergiesNewConsultationService.getAlergias().map(toOdontologyAllergyConditionDto),
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.allergiesNewConsultationService.getAlergias().length === 0) ? null: this.isAllergyNoRefer,
+				content: this.allergiesNewConsultationService.getAlergias().map(toOdontologyAllergyConditionDto)
+			},
 			evolutionNote: this.form.value.evolution,
 			medications: this.medicationsNewConsultationService.getMedicaciones().map(toOdontologyMedicationDto),
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
@@ -317,7 +362,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,
-			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map(toOdontologyPersonalHistoryDto),
+			personalHistories: {
+				isReferred: (this.isPersonalHistories && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null: this.isPersonalHistories,
+				content: this.personalHistoriesNewConsultationService.getPersonalHistories().map(toOdontologyPersonalHistoryDto),
+			},
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),
@@ -337,18 +385,23 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		const referencesToUpdate: Observable<number[]>[] = [];
 
 		references.forEach((reference, index) => {
-			const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, reference.referenceFiles);
-			referencesToUpdate.push(obs);
+			if (reference.referenceFiles?.length) {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, reference.referenceFiles);
+				referencesToUpdate.push(obs);
+			}
+
 			if (referencesToUpdate.length) {
-				forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
-					const filesAmount = reference.referenceFiles.length;
-					for(let i = 0; i < filesAmount; i++ ){
-						this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
-					}
-					this.createConsultation(odontologyDto);
-				}, _ => {
-					this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
-				});
+					forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
+						const filesAmount = reference.referenceFiles.length;
+						for(let i = 0; i < filesAmount; i++ ){
+							if (referenceFileIds[index]?.[i]) {
+								this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
+							}
+						}
+						this.createConsultation(odontologyDto);
+					}, _ => {
+						this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
+					});
 			} else {
 				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
 				this.createConsultation(odontologyDto);

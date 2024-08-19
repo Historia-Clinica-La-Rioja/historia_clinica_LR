@@ -12,6 +12,8 @@ import { ViolenceReportAggressorDto } from '@api-rest/api-model';
 })
 export class ViolenceSituationViolentPersonInformationComponent {
 	aggressorsList: ViolenceReportAggressorDto[];
+	showError = false;
+
 	@Input() confirmForm: Observable<boolean>;
 	@Output() aggressorsListInfo = new EventEmitter<any>();
 	constructor(private readonly dialog: MatDialog, 
@@ -22,6 +24,7 @@ export class ViolenceSituationViolentPersonInformationComponent {
 	ngOnChanges(changes: SimpleChanges) {
 		if(!changes.confirmForm.isFirstChange()){
 			this.aggressorsListInfo.emit(this.aggressorsList);
+			if(!this.aggressorsList.length) this.showError = true;
 		}
 	}
 	

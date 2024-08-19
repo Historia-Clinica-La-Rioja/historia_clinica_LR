@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.dto.counterreference;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,7 +32,7 @@ public class CounterReferenceDto implements Serializable {
 
     private List<@Valid CounterReferenceMedicationDto> medications = new ArrayList<>();
 
-    private List<@Valid CounterReferenceAllergyDto> allergies = new ArrayList<>();
+    private ReferableItemDto<@Valid CounterReferenceAllergyDto> allergies;
 
     private List<Integer> fileIds = new ArrayList<>();
 

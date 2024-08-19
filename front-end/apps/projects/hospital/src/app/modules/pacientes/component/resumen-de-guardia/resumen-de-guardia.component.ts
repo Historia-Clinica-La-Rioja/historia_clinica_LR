@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ERole } from '@api-rest/api-model.d';
+import { ERole, ApiErrorMessageDto } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
@@ -10,10 +10,10 @@ import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
-import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { GUARDIA, PatientType } from '@historia-clinica/constants/summaries';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
-import { Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
+import { TriageDetails } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
@@ -54,13 +54,14 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	triagesHistory: TriageReduced[];
 	fullNamesHistoryTriage: string[];
-	lastTriage: Triage;
+	lastTriage: TriageDetails;
 
 	private hasEmergencyCareRelatedRole: boolean;
 	private hasNurseRole: boolean;
 	private hasRoleAdministrative: boolean;
 
 	availableActions: ActionInfo[] = [];
+	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
 
 	constructor(
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
@@ -135,8 +136,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		ref.afterClosed().subscribe(
 			closed => {
 				if (closed) {
-					this.episodeStateService.pasarAEspera(this.episodeId).subscribe(
-						changed => {
+					this.episodeStateService.pasarAEspera(this.episodeId).subscribe({
+						next: (changed) => {
 							if (changed) {
 								this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.en_espera.SUCCESS`);
 								this.episodeState = EstadosEpisodio.EN_ESPERA;
@@ -149,8 +150,12 @@ export class ResumenDeGuardiaComponent implements OnInit {
 							else {
 								this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.en_espera.ERROR`);
 							}
+						},
+						error: (err: ApiErrorMessageDto) => {
+							this.snackBarService.showError(err.text);
 						}
-					)
+					})
+					
 				}
 			}
 		)

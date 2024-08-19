@@ -135,51 +135,52 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     }
 
 	@Override
-	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId, List<Short> userRoleIds) {
     	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {}, practiceId {} ", patientId, clinicalSpecialtyId, careLineId, practiceId);
-		List<ReferenceSummaryBo> queryResult = getReferencesSummaryBySearchCriteria(patientId, clinicalSpecialtyId, careLineId, practiceId);
+		List<ReferenceSummaryBo> queryResult = getReferencesSummaryBySearchCriteria(patientId, clinicalSpecialtyId, careLineId, practiceId, userRoleIds);
 		boolean featureFlagNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 		queryResult.forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
 		log.debug("Output -> references {} ", queryResult);
 		return queryResult;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryBySearchCriteria(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+	private List<ReferenceSummaryBo> getReferencesSummaryBySearchCriteria(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId, List<Short> userRoleIds) {
+
 		if (clinicalSpecialtyId != null && practiceId == null)
-			return getReferencesSummaryByClinicalSpecialty(patientId, clinicalSpecialtyId, careLineId);
+			return getReferencesSummaryByClinicalSpecialty(patientId, clinicalSpecialtyId, careLineId, userRoleIds);
 
 		if (clinicalSpecialtyId == null && practiceId != null)
-			return  getReferencesSummaryByPractice(patientId, practiceId, careLineId);
+			return  getReferencesSummaryByPractice(patientId, practiceId, careLineId, userRoleIds);
 
-		return getReferencesSummaryByClinicalSpecialtyAndPractice(patientId, clinicalSpecialtyId, practiceId, careLineId);
+		return getReferencesSummaryByClinicalSpecialtyAndPractice(patientId, clinicalSpecialtyId, practiceId, careLineId, userRoleIds);
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialty(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialty(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, List<Short> userRoleIds) {
 		List<ReferenceSummaryBo> queryResult;
 		if (careLineId != null){
-			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId);
+			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, userRoleIds);
 		} else {
-			queryResult = getReferencesSummaryByClinicalSpecialtyId(patientId, clinicalSpecialtyId);
+			queryResult = getReferencesSummaryByClinicalSpecialtyId(patientId, clinicalSpecialtyId, userRoleIds);
 		}
 		return queryResult;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByPractice(Integer patientId, Integer practiceId, Integer careLineId) {
+	private List<ReferenceSummaryBo> getReferencesSummaryByPractice(Integer patientId, Integer practiceId, Integer careLineId, List<Short> userRoleIds) {
 		List<ReferenceSummaryBo> queryResult;
 		if(careLineId != null) {
-			queryResult = getReferencesSummaryByPracticeIdAndCareLineId(patientId, practiceId, careLineId);
+			queryResult = getReferencesSummaryByPracticeIdAndCareLineId(patientId, practiceId, careLineId, userRoleIds);
 		} else {
-			queryResult = getReferencesSummaryByPracticeId(patientId, practiceId);
+			queryResult = getReferencesSummaryByPracticeId(patientId, practiceId, userRoleIds);
 		}
 		return queryResult;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyAndPractice(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId) {
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyAndPractice(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId, List<Short> userRoleIds) {
 		List<ReferenceSummaryBo> queryResult;
 		if (careLineId != null) {
-			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, practiceId, careLineId);
+			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, practiceId, careLineId, userRoleIds);
 		} else {
-			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId);
+			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId, userRoleIds);
 		}
 		return queryResult;
 	}
@@ -241,45 +242,45 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		return referenceRepository.getReferenceRegulationStateId(referenceId).get(0);
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId){
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, List<Short> userRoleIds){
 		List<ReferenceSummaryBo> result;
-		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId);
-		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId));
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, userRoleIds);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, userRoleIds));
 		return result;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyId(Integer patientId, Integer clinicalSpecialtyId){
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyId(Integer patientId, Integer clinicalSpecialtyId, List<Short> userRoleIds){
 		List<ReferenceSummaryBo> result;
-		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId);
-		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId));
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId, userRoleIds);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId, userRoleIds));
 		return result;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeIdAndCareLineId(Integer patientId, Integer practiceId, Integer careLineId){
+	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeIdAndCareLineId(Integer patientId, Integer practiceId, Integer careLineId, List<Short> userRoleIds){
 		List<ReferenceSummaryBo> result;
-		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeIdAndCareLineId(patientId, practiceId, careLineId);
-		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeIdAndCareLineId(patientId, practiceId, careLineId));
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeIdAndCareLineId(patientId, practiceId, careLineId, userRoleIds);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeIdAndCareLineId(patientId, practiceId, careLineId, userRoleIds));
 		return result;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeId(Integer patientId, Integer practiceId){
+	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeId(Integer patientId, Integer practiceId, List<Short> userRoleIds){
 		List<ReferenceSummaryBo> result;
-		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeId(patientId, practiceId);
-		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeId(patientId, practiceId));
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeId(patientId, practiceId, userRoleIds);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeId(patientId, practiceId, userRoleIds));
 		return result;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId){
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId, List<Short> userRoleIds){
 		List<ReferenceSummaryBo> result;
-		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, practiceId);
-		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, practiceId));
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, practiceId, userRoleIds);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, practiceId, userRoleIds));
 		return result;
 	}
 
-	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId){
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, List<Short> userRoleIds){
 		List<ReferenceSummaryBo> result;
-		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId);
-		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId));
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId, userRoleIds);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId, userRoleIds));
 		return result;
 	}
 

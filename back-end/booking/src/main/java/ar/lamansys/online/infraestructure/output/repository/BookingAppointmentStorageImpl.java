@@ -8,6 +8,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingA
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookingAppointmentStorage;
@@ -16,16 +18,12 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedApp
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 
+@RequiredArgsConstructor
 @Service
 public class BookingAppointmentStorageImpl implements BookingAppointmentStorage {
 
     private final SharedAppointmentPort sharedAppointmentPort;
 	private final SharedInstitutionPort sharedInstitutionPort;
-
-    public BookingAppointmentStorageImpl(SharedAppointmentPort sharedAppointmentPort, SharedInstitutionPort sharedInstitutionPort) {
-        this.sharedAppointmentPort = sharedAppointmentPort;
-		this.sharedInstitutionPort = sharedInstitutionPort;
-    }
 
     @Override
     public SavedBookingAppointmentDto save(BookingBo bookingBo) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {

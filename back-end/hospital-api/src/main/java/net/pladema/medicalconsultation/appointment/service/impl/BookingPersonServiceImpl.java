@@ -117,6 +117,12 @@ public class BookingPersonServiceImpl implements BookingPersonService {
         return a.map(completePersonNameBo -> completePersonNameBo.getPersonFullName());
     }
 
+	@Override
+	public List<BookingPerson> findByEmailAndIdentificationNumber(String email, String identificationNumber){
+		List<BookingPerson> result = bookingPersonRepository.findByEmailAndIdentificationNumber(email, identificationNumber);
+		return result;
+	}
+
     private BookingPerson mapTo(BookingPersonBo bookingPersonBo) {
         return BookingPerson.fromBookingPersonBo(bookingPersonBo);
     }

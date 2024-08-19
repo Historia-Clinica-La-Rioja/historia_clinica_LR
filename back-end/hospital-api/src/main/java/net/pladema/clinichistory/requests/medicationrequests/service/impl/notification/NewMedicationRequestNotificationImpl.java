@@ -30,9 +30,9 @@ public class NewMedicationRequestNotificationImpl implements NewMedicationReques
 	public void run(NewMedicationRequestNotificationArgs args, String... patientEmail) {
 		log.debug("Input parameters -> args {}", args);
 		String email = Stream.of(patientEmail).findFirst().orElse(null);
-		LocalDate requestDate = getMedicationRequestInfoService.execute(args.getRecipeId()).getRequestDate();
+		LocalDate requestDate = getMedicationRequestInfoService.execute(args.recipeId).getRequestDate();
 		String subject = digitalRecipeSubject + String.format(" %s hasta %s", formatStringDate(requestDate), formatStringDate(requestDate.plusDays(30)));
-		this.patientNotificationSender.send(new PatientRecipient(args.getPatient().getId(), email), new NewMedicationRequestTemplateInput(args, subject));
+		this.patientNotificationSender.send(new PatientRecipient(args.patient.getId(), email), new NewMedicationRequestTemplateInput(args, subject));
 	}
 
 	private String formatStringDate(LocalDate date){

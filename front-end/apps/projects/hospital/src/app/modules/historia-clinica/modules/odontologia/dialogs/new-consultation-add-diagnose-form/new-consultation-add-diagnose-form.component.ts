@@ -25,6 +25,14 @@ export class NewConsultationAddDiagnoseFormComponent {
     }
   }
 
+  startDateChanged(date: Date){
+    this.data.diagnosesService.getForm().controls.fechaInicio.setValue(date)
+  }
+
+  endDateChanged(date: Date){
+    this.data.diagnosesService.getForm().controls.fechaFin.setValue(date)
+  }
+
   close(): void {
     this.data.diagnosesService.resetForm();
     this.dialogRef.close()

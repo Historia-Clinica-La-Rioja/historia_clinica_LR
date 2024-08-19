@@ -2,6 +2,7 @@ package ar.lamansys.sgh.shared.infrastructure.input.service.appointment;
 
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,5 +55,7 @@ public interface SharedAppointmentPort {
 	Integer getDiaryId(Integer appointmentId);
 
 	Integer getInstitutionId(Integer diaryId);
+
+	boolean appointmentDateAndTimeAlreadyUsed(Integer diaryId, Integer openingHoursId, LocalDate appointmentDte, LocalTime appointmentTime);
 
 }

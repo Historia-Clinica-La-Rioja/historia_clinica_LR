@@ -50,6 +50,8 @@ import { MedicalDischargeComponent } from './dialogs/medical-discharge/medical-d
 import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/select-main-diagnosis.component';
 //standalone
 import { SearchCasesComponent } from 'projects/hospital/src/app/modules/hsi-components/search-cases/search-cases.component';
+import { ConceptsListComponent } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from 'projects/hospital/src/app/modules/hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 //providers
 import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 //review
@@ -100,7 +102,7 @@ import { EditMeasuringPointComponent } from './dialogs/edit-measuring-point/edit
 		AnesthesicReportAddProposedSurgeryComponent,
 		AnestheticReportAddRecordComponent,
 		AnestheticDrugComponent,
-  EditMeasuringPointComponent,
+  		EditMeasuringPointComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,
@@ -117,7 +119,10 @@ import { EditMeasuringPointComponent } from './dialogs/edit-measuring-point/edit
 		PresentationModule,
 		LazyMaterialModule,
 		TurnosModule,
+		//standalone
 		SearchCasesComponent,
+		ConceptsListComponent,
+		ConceptTypeaheadSearchComponent,
 	],
 	providers: [
 		ComponentEvaluationManagerService,

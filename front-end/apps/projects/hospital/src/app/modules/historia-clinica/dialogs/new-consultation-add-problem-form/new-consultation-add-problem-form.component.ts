@@ -29,6 +29,14 @@ export class NewConsultationAddProblemFormComponent implements OnInit {
         }
     }    
 
+    fechaInicioChanged(date: Date) {
+        this.data.ambulatoryConsultationProblemsService.getForm().controls.fechaInicio.setValue(date);
+    }
+
+    fechaFinChanged(date: Date) {
+        this.data.ambulatoryConsultationProblemsService.getForm().controls.fechaFin.setValue(date);
+    }
+
     editProblem(): void {
         this.data.ambulatoryConsultationProblemsService.editProblem(this.data.editIndex);
         this.dialogRef.close();

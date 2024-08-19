@@ -4,10 +4,11 @@
     <form [formGroup]="form">
         <div fxLayout="column" fxLayoutGap="16px" class="measuring-point-form">
             <div fxLayout="row wrap" fxLayoutGap="24px" data-id="measure-point">
-                <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_DATE'" (selectDate)="setSelectedDate($event)"></app-datepicker>
+                <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_DATE'" [requiredText]="'forms.REQUIRED' | translate"
+                    [markAsTouched]="submitted" (selectDate)="setSelectedDate($event)"></app-datepicker>
                 <div fxLayout="column" fxLayoutGap="10px">
                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_TIME'"></mat-label>
-                    <app-time-picker data-id="measuring-point-start-time" [timePickerData]="timePickerData" (timeSelected)="setMeasuringPointStartTime($event)"></app-time-picker>
+                    <app-time-picker data-id="measuring-point-start-time" [timePickerData]="timePickerData" [submitted]="submitted" (timeSelected)="setMeasuringPointStartTime($event)"></app-time-picker>
                 </div>
             </div>
 

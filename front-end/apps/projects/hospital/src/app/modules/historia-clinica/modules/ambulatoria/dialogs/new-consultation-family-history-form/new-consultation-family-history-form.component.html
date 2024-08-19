@@ -37,15 +37,14 @@
                 </button>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'">
-                </mat-label>
-                <input matInput id="fecha_antecedente" [matDatepicker]="antecedenteDatePicker" formControlName="fecha"
-                    [min]="minDate" [max]="data.familyHistoryService.getMaxFecha()">
-                <mat-datepicker-toggle matSuffix [for]="antecedenteDatePicker">
-                </mat-datepicker-toggle>
-                <mat-datepicker #antecedenteDatePicker></mat-datepicker>
-            </mat-form-field>
+            <app-datepicker
+                id="fecha_antecedente"
+                title="{{'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'}}"
+                [minDate]="minDate"
+                [maxDate]="data.familyHistoryService.getMaxFecha()"
+                (selectDate)="dateChanged($event)"
+                >        
+            </app-datepicker>
 
             <div align="end">
                 <button id="submit_antecedentes_familiares" mat-raised-button color="primary" type="submit">

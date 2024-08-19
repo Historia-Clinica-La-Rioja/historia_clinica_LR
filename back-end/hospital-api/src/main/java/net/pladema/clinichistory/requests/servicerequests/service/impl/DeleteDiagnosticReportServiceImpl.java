@@ -46,7 +46,7 @@ public class DeleteDiagnosticReportServiceImpl implements DeleteDiagnosticReport
 			Assert.notNull(patientId, "El código identificador del paciente es obligatorio");
             DiagnosticReportBo diagnosticReportBo = getCancelledDiagnosticReport(dr);
             var documentDiagnosticReport = documentService.getDocumentFromDiagnosticReport(diagnosticReportId);
-            Integer result = loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, List.of(diagnosticReportBo)).get(0);
+            Integer result = loadDiagnosticReports.run(documentDiagnosticReport.getDocumentId(), patientId, Optional.of(diagnosticReportId), List.of(diagnosticReportBo)).get(0);
             LOG.trace(OUTPUT, result);
             return result;
         }

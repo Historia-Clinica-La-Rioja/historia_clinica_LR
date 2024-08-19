@@ -1,7 +1,7 @@
-<div *ngFor="let person of aggressorsList; index as i; last as isLast" fxLayout="column">
+<div *ngFor="let person of aggressorsList; index as i; last as isLast" fxLayout="column" class="violent-person-information">
     <div fxLayout="row" fxLayoutAlign="space-between center">
-        <p>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.PERSON_LABEL' | translate}}
-            {{i+1}}</p>
+        <p><strong>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.PERSON_LABEL' | translate}}
+            {{i+1}}</strong></p>
         <button type="button" mat-icon-button color="warn" (click)="removeAggressor(i)" [disabled]="!person.canBeDeleted">
             <mat-icon>delete_outline</mat-icon>
         </button>
@@ -72,7 +72,7 @@
         <span> {{ getDescriptionHasPreviousEpisodes(person.hasPreviousEpisodes) }}</span>
     </div>
 
-    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+    <mat-divider class="separation" *ngIf="!isLast"></mat-divider>
 </div>
 <div *ngIf="!aggressorsList.length">
     <p class="grey">{{'ambulatoria.medical-coverage-summary-view.NO_INFO' | translate}}</p>

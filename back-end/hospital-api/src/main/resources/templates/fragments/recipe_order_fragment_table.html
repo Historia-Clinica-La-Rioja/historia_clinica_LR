@@ -116,9 +116,9 @@
                     <label th:text="${patient.person.identificationNumber}"></label>
                 </div>
             </div>
-            <div th:with="nameIsPresent = ${patient.person != null && patient.person.completeName() != null}">
+            <div th:with="nameIsPresent = ${patient.person != null && patient.person.completeName(selfPerceivedFF) != null}">
                 <strong> Apellido y nombre: </strong>
-                <label th:if="${nameIsPresent}" th:text="${patient.person.completeName()}"></label>
+                <label th:if="${nameIsPresent}" th:text="${patient.person.completeName(selfPerceivedFF)}"></label>
                 <label th:unless="${nameIsPresent}"> Sin información </label>
             </div>
             <br/>

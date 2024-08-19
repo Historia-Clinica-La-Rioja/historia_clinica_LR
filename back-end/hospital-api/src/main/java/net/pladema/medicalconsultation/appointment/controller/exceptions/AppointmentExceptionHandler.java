@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.NotifyPatientException;
@@ -17,8 +18,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Locale;
 import java.util.Map;
 
-@RestControllerAdvice(basePackages = "net.pladema.medicalconsultation.appointment")
 @Slf4j
+@RequiredArgsConstructor
+@RestControllerAdvice(basePackages = "net.pladema.medicalconsultation.appointment")
 public class AppointmentExceptionHandler {
 
 	@ExceptionHandler({ DiaryNotFoundException.class })

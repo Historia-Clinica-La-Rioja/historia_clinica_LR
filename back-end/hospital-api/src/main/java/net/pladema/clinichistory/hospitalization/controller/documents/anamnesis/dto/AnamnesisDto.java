@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.anamnesis.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,13 +34,13 @@ public class AnamnesisDto implements Serializable {
     private List<@Valid DiagnosisDto> diagnosis = new ArrayList<>();
 
     @NotNull
-    private List<@Valid HealthHistoryConditionDto> personalHistories = new ArrayList<>();
+    private ReferableItemDto<@Valid HealthHistoryConditionDto> personalHistories;
 
     @Nullable
     private List<@Valid HospitalizationProcedureDto> procedures = new ArrayList<>();
 
     @NotNull
-    private List<@Valid HealthHistoryConditionDto> familyHistories = new ArrayList<>();
+    private ReferableItemDto<@Valid HealthHistoryConditionDto> familyHistories;
 
     @NotNull
     private  List<@Valid MedicationDto> medications = new ArrayList<>();
@@ -48,7 +49,7 @@ public class AnamnesisDto implements Serializable {
     private List<@Valid ImmunizationDto> immunizations= new ArrayList<>();
 
     @NotNull
-    private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
+    private ReferableItemDto<@Valid AllergyConditionDto> allergies;
 
     @Valid
     @Nullable

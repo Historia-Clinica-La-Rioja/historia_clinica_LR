@@ -50,7 +50,7 @@
 				</div>
 			</form>
 
-			<div class="results" fxFlex=100%>
+			<div *ngIf="!showAddPatient; else patientNotFoundTemplate" class="results" fxFlex=100%>
 				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
 					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo" size="small"
@@ -82,7 +82,7 @@
 				</div>
 			</form>
 
-			<div class="results" fxFlex=100%>
+			<div *ngIf="!showAddPatient; else patientNotFoundTemplate" class="results" fxFlex=100%>
 				<span translate="pacientes.search_patient.SELECT_PATIENT"></span>
 				<div *ngIf="cardPatient" class="patient-cards">
 					<app-patient-card [patient]="cardPatient.basicData" [personPhoto]="cardPatient.photo" size="small"
@@ -92,5 +92,17 @@
 			</div>
 		</div>
 
+		<ng-template #patientNotFoundTemplate>
+			<div class="results" *appHasRole="['ADMINISTRATIVO']">
+				<div *ngIf="isFormSubmitted && showAddPatient">
+					<span [innerHTML]="'pacientes.search_patient.PATIENT_NOT_FOUND_MESSAGE' | translate"></span>
+					<div class="patient-cards">
+						<button patient-cards id="add-patient" mat-flat-button [mat-dialog-close]="-1" color="primary" (click)="goCreatePatient()">
+							<span translate="pacientes.search_patient.CREATE_NEW_PATIENT"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</ng-template>
 	</mat-tab>
 </mat-tab-group>

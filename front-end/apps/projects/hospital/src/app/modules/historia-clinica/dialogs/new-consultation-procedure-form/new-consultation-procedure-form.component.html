@@ -35,14 +35,8 @@
                 </button>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" *ngIf="!data.hideDate">
-                <mat-label [translate]="'historia-clinica.new-consultation-procedure-form.DATE'">
-                </mat-label>
-                <input matInput id="fecha_procedimiento" [matDatepicker]="datePicker" formControlName="performedDate"
-                    [min]="minDate" [max]="data.procedureService.getFechaMax()">
-                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-                <mat-datepicker #datePicker></mat-datepicker>
-            </mat-form-field>
+            <app-datepicker *ngIf="!data.hideDate" id="fecha_procedimiento" [minDate]="minDate"
+                [maxDate]="data.procedureService.getFechaMax()" (selectDate)="dateChanged($event)"></app-datepicker>
 
             <div align="end">
                 <button id="submit_procedimiento" mat-raised-button color="primary" type="submit">

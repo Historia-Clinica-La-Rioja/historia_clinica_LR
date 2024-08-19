@@ -28,9 +28,9 @@ export class NewEpisodeAdmissionComponent implements OnInit {
 
 	}
 
-	confirm(data): void {
-		this.newEpisodeService.setAdministrativeAdmission(data);
-		this.goToTriage(data);
+	confirm(administrativeAdmission: AdministrativeAdmission): void {
+		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
+		this.goToTriage(administrativeAdmission);
 	}
 
 	goToTriage(administrativeAdmission: AdministrativeAdmission): void {

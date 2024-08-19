@@ -28,6 +28,10 @@ export class NewConsultationProcedureFormComponent {
     this.dialogRef.close()
   }
 
+  dateChanged(date: Date) {
+    this.data.procedureService.getForm().controls.performedDate.setValue(date)
+  }
+
 }
 
 interface ProcedureData {

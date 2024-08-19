@@ -1,30 +1,30 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { AnthropometricDataDto, AppFeature, HCEAnthropometricDataDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
+import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-antropometricos-summary',
 	templateUrl: './antropometricos-summary.component.html',
 	styleUrls: ['./antropometricos-summary.component.scss']
 })
-export class AntropometricosSummaryComponent implements OnInit {
+export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 
 	@Input() internmentEpisodeId: number;
 	@Input() anthropometricDataList$: Observable<HCEAnthropometricDataDto[]> | Observable<AnthropometricDataDto[]>;
 	@Input() editable = false;
 
 	details: DetailBoxExtended[] = [];
-	isEvolutionChartsFFActive = false;
 	readonly antropometricosSummary = ANTROPOMETRICOS;
+	subscriptionAnthropometricData: Subscription;
+	patientId: number;
 
 	private readonly LABELS = {
 		height: 'Talla (cm)',
@@ -35,22 +35,22 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	constructor(
 		public dialog: MatDialog,
+		readonly patientEvolutionChartService: PatientEvolutionChartsService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly patientEvolutionChartService: PatientEvolutionChartsService,
-		private readonly activatedRoute: ActivatedRoute,
-		private readonly featureFlagService: FeatureFlagService,
+		private readonly activatedRoute: ActivatedRoute
 	) { }
 
+	ngOnDestroy(): void {
+		this.subscriptionAnthropometricData.unsubscribe();
+	}
+
 	ngOnInit(): void {
-		this.patientEvolutionChartService.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
-		this.anthropometricDataList$.subscribe(list => {
+		this.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
+		this.patientEvolutionChartService.patientId = this.patientId;
+		this.subscriptionAnthropometricData = this.anthropometricDataList$.subscribe(list => {
 			this.updateAnthropometricData(list);
 			this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
 		});
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO).subscribe(
-			isEvolutionChartsFFActive => this.isEvolutionChartsFFActive = isEvolutionChartsFFActive
-		);
 	}
 
 	openDialog(): void {
@@ -58,7 +58,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 			disableClose: true,
 			width: '25%',
 			data: {
-				internmentEpisodeId: this.internmentEpisodeId
+				internmentEpisodeId: this.internmentEpisodeId,
+				patientId : this.patientId
 			}
 		});
 

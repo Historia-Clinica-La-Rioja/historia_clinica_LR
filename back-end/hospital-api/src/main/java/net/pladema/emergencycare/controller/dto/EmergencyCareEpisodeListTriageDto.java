@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,4 +19,5 @@ public class EmergencyCareEpisodeListTriageDto {
 	private String name;
 	//colorCode
 	private String color;
+	private List<OutpatientReasonDto> reasons;
 }

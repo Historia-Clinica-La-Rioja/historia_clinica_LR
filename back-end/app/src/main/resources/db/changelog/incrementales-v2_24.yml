@@ -1,0 +1,291 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_24
+
+    - changeSet:
+        id: update_view_v_appointment_summary
+        comment: Se actualiza la vista v_appointment_summary para agregar el atributo gender al doctor
+        author: lvenere
+        changes:
+          - createView:
+              viewName: v_appointment_summary
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                (SELECT a.id,
+                      a.date_type_id,
+                      a.hour,
+                      a.appointment_state_id,
+                      ass.description AS status_description,
+                      a.is_overturn,
+                      a.phone_number,
+                      a.phone_prefix,
+                      a.patient_id,
+                      p1.first_name            AS patient_first_name,
+                      p1.last_name             AS patient_last_name,
+                      p1.identification_number AS patient_identification_number,
+                      p1.gender_id             AS patient_gender_id,
+                      hp.license_number,
+                      p2.first_name            AS doctor_name,
+                      p2.last_name             AS doctor_last_name,
+                      P2.identification_number AS doctor_identification_number,
+                      mc.name AS medical_coverage_name,
+                      mc.cuit,
+                      pmc.affiliate_number,
+                      cs.sctid_code,
+                      cs.name AS clinical_specialty_name,
+                      doff.institution_id,
+                      i.cuit                   AS institution_cuit,
+                      i.sisa_code,
+                      cs.id as clinical_specialty_id,
+                      p2.gender_id             AS doctor_gender_id
+                FROM appointment AS a
+                INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
+                INNER JOIN appointment_assn aa on aa.appointment_id = a.id
+                INNER JOIN patient pa1 on a.patient_id = pa1.id
+                INNER JOIN person p1 ON pa1.person_id = p1.id
+                INNER JOIN diary d ON aa.diary_id = d.id
+                INNER JOIN doctors_office doff ON d.doctors_office_id = doff.id
+                INNER JOIN institution i ON doff.institution_id = i.id
+                INNER JOIN clinical_specialty cs ON d.clinical_specialty_id = cs.id
+                INNER JOIN healthcare_professional hp ON d.healthcare_professional_id = hp.id
+                INNER JOIN person p2 ON hp.person_id = p2.id
+                LEFT JOIN patient_medical_coverage AS pmc ON a.patient_medical_coverage_id = pmc.id
+                LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id = mc.id
+                WHERE a.appointment_state_id != 6)
+                UNION ALL
+                (SELECT a.id,
+                      a.date_type_id,
+                      a.hour,
+                      a.appointment_state_id ,
+                      ass.description AS status_description,
+                      a.is_overturn,
+                      a.phone_number,
+                      a.phone_prefix,
+                      a.patient_id,
+                      bp.first_name            AS patient_first_name,
+                      bp.last_name             AS patient_last_name,
+                      bp.identification_number AS patient_identification_number,
+                      bp.gender_id             AS patient_gender_id,
+                      hp.license_number,
+                      p2.first_name            AS doctor_name,
+                      p2.last_name             AS doctor_last_name,
+                      P2.identification_number AS doctor_identification_number,
+                      null AS medical_coverage_name,
+                      null AS cuit,
+                      null AS affiliate_number,
+                      cs.sctid_code,
+                      cs.name AS clinical_specialty_name,
+                      doff.institution_id,
+                      i.cuit                   AS institution_cuit,
+                      i.sisa_code,
+                      cs.id as clinical_specialty_id,
+                      p2.gender_id             AS doctor_gender_id
+                FROM appointment AS a
+                INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
+                INNER JOIN appointment_assn aa on aa.appointment_id = a.id
+                INNER JOIN booking_appointment ba on a.id = ba.appointment_id
+                INNER JOIN booking_person bp ON ba.booking_person_id = bp.id
+                INNER JOIN diary d ON aa.diary_id = d.id
+                INNER JOIN doctors_office doff ON d.doctors_office_id = doff.id
+                INNER JOIN institution i ON doff.institution_id = i.id
+                INNER JOIN clinical_specialty cs ON d.clinical_specialty_id = cs.id
+                INNER JOIN healthcare_professional hp ON d.healthcare_professional_id = hp.id
+                INNER JOIN person p2 ON hp.person_id = p2.id
+                WHERE a.appointment_state_id = 6)
+
+    - changeSet:
+        id: medicine_financing_status-createTable
+        comment: Create table medicine_financing_status
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: medicine_financing_status
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medicine_financing_status
+                      references: snomed(id)
+                      foreignKeyName: FK_medicine_financing_status_snomed
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: financed
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: medicine_financing_status-metadata
+        comment : Populate table medicine_financing_status
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  row_data RECORD;
+                BEGIN
+                  FOR row_data IN ( 
+                    SELECT srg.snomed_id as id
+                    FROM snomed_related_group srg
+                    WHERE srg.group_id IN (SELECT id from snomed_group sg WHERE description = 'MEDICINE' AND institution_id = -1)
+                  ) LOOP
+                    INSERT INTO medicine_financing_status (id) VALUES (row_data.id);
+                  END LOOP;
+                END $$;
+
+    - changeSet:
+        id: addColumn-patient_description-emergency_care_episode
+        author: jvaldez
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    name: patient_description
+                    type: text
+
+    - changeSet:
+        id: medicine_group-createTable
+        comment: Create table medicine_group
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: medicine_group
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medicine_group
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: requires_audit
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: outpatient
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: internment
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: emergency_care
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: message
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+          id: add-column-local_viewer_url-to-pac_server_image_lvl
+          author: fzudaire
+          comment: se agrego en distintas versiones mediante hotfix (2.23, 2.24 y 2.25), para evitar conflictos
+              se agrega en todas las versiones afectadas pero con precondición
+          preConditions:
+              - onFail: MARK_RAN
+              - not:
+                    - columnExists:
+                          tableName: pac_server_image_lvl
+                          columnName: local_viewer_url
+          changes:
+              - addColumn:
+                    tableName: pac_server_image_lvl
+                    columns:
+                        - column:
+                              name: local_viewer_url
+                              type: varchar(128)
+                              constraints:
+                                  nullable: true

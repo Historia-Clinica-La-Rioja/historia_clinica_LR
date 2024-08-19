@@ -37,61 +37,46 @@ export class AnestheticReportAnthropometricDataService {
 			this.isEmptySource.next(this.isEmpty());
 		});
 
-		this.form.controls.height.valueChanges.subscribe(_ => {
-			this.checkHeightErrors();
-		});
-
-		this.form.controls.weight.valueChanges.subscribe(_ => {
-			this.checkWeightErrors();
-		});
-
+		this.handleFormChanges();
 
         this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
 			this.bloodTypes = bloodTypes;
 		});
     }
 
-    private checkHeightErrors() {
-        if (this.form.controls.height.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.height }).subscribe(
-                (errorMsg: string) => this.heightErrorSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.height.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: DATOS_ANTROPOMETRICOS.MAX.height }).subscribe(
-                (errorMsg: string) => this.heightErrorSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.height.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.heightErrorSource.next(errorMsg)
-            );
-        }
-        else {
-            this.heightErrorSource.next();
-        }
-    }
+    private handleFormChanges() {
+		this.handleFormControlChanges('height', 'heightErrorSource');
+		this.handleFormControlChanges('weight', 'weightErrorSource');
 
-    private checkWeightErrors() {
-        if (this.form.controls.weight.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.weight }).subscribe(
-                (errorMsg: string) => this.weightErrorSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.weight.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: DATOS_ANTROPOMETRICOS.MAX.weight }).subscribe(
-                (errorMsg: string) => this.weightErrorSource.next(errorMsg)
-            );
-        }
-        else if (this.form.controls.weight.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC').subscribe(
-                (errorMsg: string) => this.weightErrorSource.next(errorMsg)
-            );
-        }
-        else {
-            this.weightErrorSource.next();
-        }
-    }
+	}
+
+	private handleFormControlChanges(controlName: string, errorSource: string) {
+		this.form.controls[controlName].valueChanges.subscribe(_ => {
+			this.checkErrors(controlName, errorSource);
+		});
+	}
+
+	private checkErrors(controlName: string, errorSource: string) {
+		const control = this.form.controls[controlName];
+		if (control.hasError('min')) {
+			this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN[controlName] }).subscribe(
+				(errorMsg: string) => { this[errorSource].next(errorMsg); }
+			);
+		}
+		else if (control.hasError('max')) {
+			this.translateService.get('forms.MAX_ERROR', { max: DATOS_ANTROPOMETRICOS.MAX[controlName] }).subscribe(
+				(errorMsg: string) => { this[errorSource].next(errorMsg); }
+			);
+		}
+		else if (control.hasError('pattern')) {
+			this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
+				(errorMsg: string) => { this[errorSource].next(errorMsg); }
+			);
+		}
+		else {
+			this[errorSource].next();
+		}
+	}
 
     getForm(): FormGroup {
         return this.form;
@@ -129,6 +114,16 @@ export class AnestheticReportAnthropometricDataService {
 		if (bloodDescription != null)
 			this.form.get('bloodType').setValue(this.bloodTypes?.find(b => b.description === bloodDescription));
 	}
+
+	setData(anthropometricData: AnthropometricDataDto) {
+		if (anthropometricData) {
+			this.setAnthropometric(
+				anthropometricData.weight?.value,
+				anthropometricData.height?.value,
+				anthropometricData.bloodType?.value
+			);
+		}
+    }
 
     isEmpty(): boolean {
         return !(this.form.get("bloodType").value || this.form.get("height").value || this.form.get("weight").value)

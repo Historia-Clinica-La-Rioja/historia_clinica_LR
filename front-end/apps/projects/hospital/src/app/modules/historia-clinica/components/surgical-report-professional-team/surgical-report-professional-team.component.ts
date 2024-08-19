@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { MatDialog } from '@angular/material/dialog';
+import { DocumentHealthcareProfessionalDto, EProfessionType, GenericMasterDataDto, HCEHealthcareProfessionalDto, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+import { AddMemberMedicalTeam, AddMemberMedicalTeamComponent } from '@historia-clinica/dialogs/add-member-medical-team/add-member-medical-team.component';
 
 @Component({
 	selector: 'app-surgical-report-professional-team',
@@ -11,89 +14,95 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 	@Input() professionals: ProfessionalDto[];
 	@Input() surgicalReport: SurgicalReportDto;
-	ayudanteCount: number = 1;
 
-	healthcareProfessionals: DocumentHealthcareProfessionalDto[] = [];
-
-	SURGEON = EProfessionType.SURGEON;
-	SURGEON_ASSISTANT = EProfessionType.SURGEON_ASSISTANT;
-	ANESTHESIOLOGIST = EProfessionType.ANESTHESIOLOGIST;
-	CARDIOLOGIST = EProfessionType.CARDIOLOGIST;
-	SURGICAL_INSTRUMENT_TECHNICIAN = EProfessionType.SURGICAL_INSTRUMENT_TECHNICIAN;
-	OBSTETRICIAN = EProfessionType.OBSTETRICIAN;
-	PEDIATRICIAN = EProfessionType.PEDIATRICIAN;
-
+	healthcareProfessionals: AddMemberMedicalTeam[] = [];
 	surgeon: DocumentHealthcareProfessionalDto;
-	surgeonAssistant: DocumentHealthcareProfessionalDto;
-	anesthesiologist: DocumentHealthcareProfessionalDto;
-	cardiologist: DocumentHealthcareProfessionalDto;
-	surgicalInstrumentTechnician: DocumentHealthcareProfessionalDto;
-	obstetrician: DocumentHealthcareProfessionalDto;
-	pediatrician: DocumentHealthcareProfessionalDto;
+	readonly OTHER = EProfessionType.OTHER;
+	professions: GenericMasterDataDto<EProfessionType>[];
+	showErrorProfessionalRepeated = false;
 
-	constructor() {	}
+	constructor(private dialog: MatDialog, private requestMasterDataService: RequestMasterDataService) { }
 
 	ngOnInit(): void {
-		this.surgicalReport?.healthcareProfessionals.forEach(p => {
-			switch (p.type) {
-				case EProfessionType.SURGEON:
-					this.surgeon = p;
-					break;
-				case EProfessionType.SURGEON_ASSISTANT:
-					this.surgeonAssistant = p;
-					break;
-				case EProfessionType.ANESTHESIOLOGIST:
-					this.anesthesiologist = p;
-					break;
-				case EProfessionType.CARDIOLOGIST:
-					this.cardiologist = p;
-					break;
-				case EProfessionType.SURGICAL_INSTRUMENT_TECHNICIAN:
-					this.surgicalInstrumentTechnician = p;
-					break;
-				case EProfessionType.OBSTETRICIAN:
-					this.obstetrician = p;
-					break;
-				case EProfessionType.PEDIATRICIAN:
-					this.pediatrician = p;
-					break;
+		this.surgeon = this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === EProfessionType.SURGEON)
+		this.requestMasterDataService.getSurgicalReportProfessionTypes().subscribe(professions => {
+			professions.shift();
+			this.professions = professions;
+			this.setHealthcareProfessionals();
+		})
+	}
+
+	addProfessional(): void {
+		const dialogRef = this.dialog.open(AddMemberMedicalTeamComponent, {
+			data: {
+				professionals: this.professionals,
+				professions: this.professions,
+				idProfessionalSelected: this.surgeon.healthcareProfessional.id,
+			}
+		})
+		dialogRef.afterClosed().subscribe((professional: AddMemberMedicalTeam) => {
+			if (professional) {
+				this.surgicalReport.healthcareProfessionals.push(professional.professionalData);
+				this.healthcareProfessionals.push(professional);
 			}
 		})
 	}
 
-	addAyudante() {
-		this.ayudanteCount++;
+	setHealthcareProfessionals() {
+		this.healthcareProfessionals = this.surgicalReport.healthcareProfessionals
+			.filter(hp => hp.profession.type !== EProfessionType.SURGEON)
+			.map(hp => {
+				let professional = {
+					professionalData: hp,
+					descriptionType: null,
+				};
+				const profession = this.professions.find(profession => hp.profession.type === profession.id);
+				if (profession && profession.id !== this.OTHER) {
+					professional.descriptionType = profession.description;
+				}
+				return professional;
+			});
 	}
 
-	professionalChange(professional: HCEHealthcareProfessionalDto, type: EProfessionType): void {
-		const index = this.healthcareProfessionals.findIndex(p => p.type === type);
-		if (professional && index == -1)
-			this.healthcareProfessionals.push(this.mapToDocumentHealthcareProfessionalDto(professional, type));
+	deleteProfessional(index: number): void {
+		this.healthcareProfessionals.splice(index, 1);
+		this.surgicalReport.healthcareProfessionals.splice(index, 1);
+	}
 
-		if (professional && index != -1)
-			this.healthcareProfessionals.splice(index, 1, this.mapToDocumentHealthcareProfessionalDto(professional, type));
-
-		if (!professional && index != -1)
-			this.healthcareProfessionals.splice(index, 1);
-		this.surgicalReport.healthcareProfessionals = this.healthcareProfessionals;
+	selectSurgeon(professional: HCEHealthcareProfessionalDto): void {
+		const indexRemove = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === EProfessionType.SURGEON);
+		this.showErrorProfessionalRepeated = false;
+		if (!professional) {
+			if (indexRemove !== -1) {
+				this.surgicalReport.healthcareProfessionals.splice(indexRemove, 1);
+				this.surgeon = null;
+			}
+			return;
+		}
+		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.healthcareProfessional.id === professional.id);
+		this.surgeon = this.mapToDocumentHealthcareProfessionalDto(professional, EProfessionType.SURGEON);
+		
+		if (index === -1) {
+			this.surgicalReport.healthcareProfessionals.push(this.surgeon);
+		} else {
+			if (indexRemove !== -1) {
+				this.surgicalReport.healthcareProfessionals.splice(indexRemove, 1);
+			}
+			this.showErrorProfessionalRepeated = true;
+		}
 	}
 
 	isEmpty(): boolean {
-		return !this.surgicalReport.healthcareProfessionals.find(p =>
-			p.type === EProfessionType.SURGEON ||
-			p.type === EProfessionType.SURGEON_ASSISTANT ||
-			p.type === EProfessionType.ANESTHESIOLOGIST ||
-			p.type === EProfessionType.CARDIOLOGIST ||
-			p.type === EProfessionType.SURGICAL_INSTRUMENT_TECHNICIAN ||
-			p.type === EProfessionType.OBSTETRICIAN ||
-			p.type === EProfessionType.PEDIATRICIAN
-		);
+		return !this.surgicalReport.healthcareProfessionals.length;
 	}
 
-	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto, type: EProfessionType): DocumentHealthcareProfessionalDto {
+	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto, type: EProfessionType, description?: string): DocumentHealthcareProfessionalDto {
 		return {
 			healthcareProfessional: professional,
-			type: type
+			profession: {
+				type: type,
+				otherTypeDescription: description
+			}
 		}
 	}
 }

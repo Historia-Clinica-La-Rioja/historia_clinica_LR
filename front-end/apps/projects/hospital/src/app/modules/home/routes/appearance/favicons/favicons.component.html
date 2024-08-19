@@ -1,0 +1,21 @@
+<app-content width="full-back">
+	<app-route-back></app-route-back>
+	<section fxLayout="column" fxLayoutGap="20px">
+		<div fxLayout="column" fxLayoutGap="10px">
+			<h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_2'"></h2>
+			<span mat-line class="mat-body" [translate]="'configuracion.logos.icono_pagina.DESCRIPTION'"></span>
+			<app-asset-form [icon]="favicon" basePath="assets/custom/"></app-asset-form>
+		</div>
+
+		<div fxLayout="column" fxLayoutGap="10px">
+			<h2 class="mat-title" [translate]="'configuracion.logos.SUBTITLE_3'"></h2>
+			<span mat-line class="mat-body" [translate]="'configuracion.logos.icono_escritorio.DESCRIPTION'"></span>
+
+			<div *ngFor="let icon of icons" >
+				<app-asset-form [icon]="icon" basePath="assets/custom/"></app-asset-form>
+			</div>
+
+		</div>
+
+	</section>
+</app-content>

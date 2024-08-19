@@ -38,7 +38,7 @@ export class EpisodeFilterService {
 	private form: UntypedFormGroup;
 
 	static filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.triage ? episode.triage.id === filters.triage : true);
+		return (filters.triage ? episode.triage.emergencyCareEpisodeListTriageDto.id === filters.triage : true);
 	}
 
 	static filterByEmergencyCareType(episode: Episode, filters: EpisodeFilters): boolean {

@@ -28,7 +28,8 @@ public class BackofficeRolesFilter {
 			ERole.API_USERS,
 			ERole.API_IMAGENES,
 			ERole.API_ORQUESTADOR,
-			ERole.API_ANEXO
+			ERole.API_ANEXO,
+			ERole.API_REPORTES
 	);
 
 	private final List<ERole> rolesToHide;

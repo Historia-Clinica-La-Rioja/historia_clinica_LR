@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
+import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 	templateUrl: './diagnosticos-form.component.html',
 	styleUrls: ['./diagnosticos-form.component.scss'],
 	providers: [
+		ComponentEvaluationManagerService,
 		{
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: forwardRef(() => DiagnosticosFormComponent),
@@ -16,20 +17,7 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class DiagnosticosFormComponent implements OnChanges {
-
-	@Input() diagnosis: {
-		mainDiagnosis: HealthConditionDto,
-		diagnosticos: DiagnosisDto[]
-	}
-
-	ngOnChanges(changes: SimpleChanges): void {
-		if ( this.diagnosis?.mainDiagnosis ) {
-			this.diagnosis.mainDiagnosis.isAdded = this.diagnosis?.mainDiagnosis ? true : false;
-		}
-		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(this.diagnosis?.diagnosticos || []);
-		this.formDiagnosticos.controls.mainDiagnostico.setValue(this.diagnosis?.mainDiagnosis);
-	}
+export class DiagnosticosFormComponent {
 
 	formDiagnosticos = this.formBuilder.group({
 		mainDiagnostico: new FormControl<HealthConditionDto | null>(null),
@@ -43,19 +31,22 @@ export class DiagnosticosFormComponent implements OnChanges {
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 	) { }
 
-	diagnosisChange(event) {
-		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(event)
+	diagnosisChange(event: DiagnosisDto[]) {
+		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(event);
 	}
 
-	mainDiagnosisChange(event) {
-		this.formDiagnosticos.controls.mainDiagnostico.setValue(event)
+	mainDiagnosisChange(event: HealthConditionDto) {
+		this.formDiagnosticos.controls.mainDiagnostico.setValue(event);
 	}
 
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.formDiagnosticos.setValue(obj);
+			this.componentEvaluationManagerService.mainDiagnosis = obj.mainDiagnostico;
+			this.componentEvaluationManagerService.diagnosis = obj.otrosDiagnosticos;
+		}
 	}
 
 	registerOnChange(fn: any): void {

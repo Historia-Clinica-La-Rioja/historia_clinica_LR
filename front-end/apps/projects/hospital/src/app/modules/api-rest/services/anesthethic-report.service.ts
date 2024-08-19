@@ -6,24 +6,29 @@ import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root'
 })
 export class AnesthethicReportService {
 
-    private readonly BASIC_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments`;
-    constructor(
-        private http: HttpClient,
-        private contextService: ContextService,
-    ) { }
+	private readonly BASIC_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments`;
+	constructor(
+		private http: HttpClient,
+		private contextService: ContextService,
+	) { }
 
 
-    createAnestheticReport(anesthethicReport: AnestheticReportDto, internmentEpisodeId: number): Observable<AnestheticReportDto> {
-        const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report`;
-        return this.http.post<AnestheticReportDto>(url, anesthethicReport);
-    }
+	createAnestheticReport(anesthethicReport: AnestheticReportDto, internmentEpisodeId: number): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/close`;
+		return this.http.post<AnestheticReportDto>(url, anesthethicReport);
+	}
 
-    getAnestheticReport(documentId: number, internmentEpisodeId: number): Observable<AnestheticReportDto> {
-        const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/${documentId}`;
-        return this.http.get<AnestheticReportDto>(url)
-    }
+	createAnestheticReportDraft(anesthethicReportDraft: AnestheticReportDto, internmentEpisodeId: number): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/draft`;
+		return this.http.post<AnestheticReportDto>(url, anesthethicReportDraft);
+	}
+
+	getAnestheticReport(documentId: number, internmentEpisodeId: number): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/${documentId}`;
+		return this.http.get<AnestheticReportDto>(url)
+	}
 }

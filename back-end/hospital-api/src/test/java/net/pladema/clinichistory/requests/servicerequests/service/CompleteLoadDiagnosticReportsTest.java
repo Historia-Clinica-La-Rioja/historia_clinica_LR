@@ -62,9 +62,9 @@ class CompleteLoadDiagnosticReportsTest extends UnitRepository {
         Integer diagnosticReportId = save(new DiagnosticReport(patientId, ibuprofenoId, "", null, 9, DiagnosticReportStatus.CANCELLED)).getId();
 
         CompleteDiagnosticReportBo completeDiagnosticReportBo = new CompleteDiagnosticReportBo(
-                "Sospecho Inmunodeficiencia cronica",
-                "linkaunlink.link",
-					requestClosure
+			"Sospecho Inmunodeficiencia cronica",
+			"linkaunlink.link",
+			requestClosure
         );
 
         Exception exception = Assertions.assertThrows(IllegalArgumentException.class, () ->

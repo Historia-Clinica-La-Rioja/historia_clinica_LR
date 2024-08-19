@@ -42,13 +42,13 @@ header {
 }
 
 .cards-container {
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
+    max-height: 500px;
 }
 
 mat-selection-list {
     border-right: 1px solid #d3d3d3;
-
 	mat-list-option {
 		height: auto;
 		border-bottom: 1px solid #d3d3d3;

@@ -58,6 +58,12 @@ public class DocumentFileStorageImpl implements DocumentFileStorage {
 		return result;
 	}
 
+	@Override
+	public void deleteById(Long id){
+		log.debug("Input parameters -> id {}", id);
+		documentRepository.deleteById(id);
+	}
+
 	private DocumentFileBo mapToDocumentFileBo(DocumentFile documentFile) {
         return new DocumentFileBo(
                 documentFile.getId(),

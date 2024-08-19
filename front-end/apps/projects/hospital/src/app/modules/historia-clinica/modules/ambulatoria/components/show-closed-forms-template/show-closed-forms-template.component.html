@@ -1,0 +1,15 @@
+<h3 class="title capitalize-first-letter">
+	{{templateResult.practice }}
+</h3>
+<div fxLayout="column" fxLayoutGap="10px">
+	<div *ngFor="let i of templateResult.templateResult">
+		 <div>
+			<span>{{i.description}}</span>
+			<div>
+				<strong>
+					{{i.value }}
+				</strong>
+			</div>
+		</div>
+	</div>
+</div>

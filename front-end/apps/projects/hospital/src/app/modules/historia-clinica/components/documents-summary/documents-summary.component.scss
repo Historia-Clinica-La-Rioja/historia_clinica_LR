@@ -8,7 +8,7 @@ form {
 
 mat-selection-list {
 	overflow: auto;
-	width: 45%;
+	width: 25vw;
 }
 
 .content {
@@ -22,7 +22,7 @@ mat-selection-list {
 }
 
 .selection-documents {
-	min-width: 30vw;
+	min-width: 25vw;
 }
 
 .selection-documents mat-list-option {
@@ -54,7 +54,7 @@ mat-selection-list {
 	color: #A8A8A8;
 }
 
-.empicrisis-draft{
+.elements-draft{
 	font-weight: 500;
 	color: #a8a8a8;
 }
@@ -80,6 +80,16 @@ mat-selection-list {
 	padding: 0;
 }
 
-.anesthetic-report {
+.document-summary {
 	width: 100%;
+}
+
+@media (max-width: 1000px) {
+    mat-selection-list {
+        width: 30vw;
+    }
+    
+    .selection-documents {
+        min-width: 30vw;
+    }
 }

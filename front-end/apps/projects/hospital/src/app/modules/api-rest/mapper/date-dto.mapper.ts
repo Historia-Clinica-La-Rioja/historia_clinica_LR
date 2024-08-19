@@ -39,7 +39,7 @@ export const convertDateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 
 
 export const dateTimeDtotoLocalDate = (dateTimeDto: DateTimeDto): Date => {
-	return new Date(dateTimeDtoToStringDate(dateTimeDto));
+	return dateTimeDto ? new Date(dateTimeDtoToStringDate(dateTimeDto)) : undefined;
 }
 
 export const dateTimeDtoToStringDate = (dateTimeDto: DateTimeDto): string => {

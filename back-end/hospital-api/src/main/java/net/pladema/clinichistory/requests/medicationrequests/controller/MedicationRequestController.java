@@ -355,6 +355,7 @@ public class MedicationRequestController {
         ctx.put("patientCoverage", patientCoverageDto);
         var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         ctx.put("requestDate", date);
+		ctx.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 
 		LOG.debug("Output -> {}", ctx);
         return ctx;
@@ -371,12 +372,12 @@ public class MedicationRequestController {
 	private NewMedicationRequestNotificationArgs mapToMedicationRequestNotificationBo(
 			Integer recipeId, BasicPatientDto patientDto, StoredFileBo resource) {
 		LOG.debug("Input parameters -> recipeId {}, patientDto {}, resource {}", recipeId, patientDto, resource);
-		NewMedicationRequestNotificationArgs result = new NewMedicationRequestNotificationArgs();
-		String repiceIdWithDomain = recipeDomain + "-" + recipeId;
-		result.setRecipeIdWithDomain(repiceIdWithDomain);
-		result.setRecipeId(recipeId);
-		result.setPatient(patientDto);
-		result.setResources(List.of(resource));
+		NewMedicationRequestNotificationArgs result = NewMedicationRequestNotificationArgs.builder()
+				.recipeId(recipeId)
+				.patient(patientDto)
+				.resources(List.of(resource))
+				.recipeIdWithDomain(recipeDomain + "-" + recipeId)
+				.build();
 		return result;
 	}
 }

@@ -1997,3 +1997,4 @@ databaseChangeLog:
                     UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
                  END IF;
                 END $$; 
+

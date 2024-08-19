@@ -16,6 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PercentilesBo {
 
+	private Integer id;
 	private Double xValue;
 	private Double p3;
 	private Double p10;

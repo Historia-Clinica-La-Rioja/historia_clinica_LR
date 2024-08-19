@@ -19,6 +19,7 @@ export class NewConsultationPersonalHistoryFormComponent {
     minDate = MIN_DATE;
 	hasError = hasError;
     historyTypeList: MasterDataDto[];
+    markAsTouched = false;
 
     constructor(
         public dialogRef: MatDialogRef<NewConsultationPersonalHistoryFormComponent>,
@@ -34,6 +35,7 @@ export class NewConsultationPersonalHistoryFormComponent {
     }
 
     addPersonalHistory(): void {
+        this.markAsTouched = true;
         if (this.data.personalHistoryService.addToList()) {
             this.dialogRef.close();
         }
@@ -42,6 +44,13 @@ export class NewConsultationPersonalHistoryFormComponent {
     close(): void {
         this.data.personalHistoryService.resetForm();
         this.dialogRef.close()
+    }
+
+    startDateChanged(date: Date) {
+        this.data.personalHistoryService.getForm().controls.startDate.setValue(date);
+    }
+    endDateChanged(date: Date) {
+        this.data.personalHistoryService.getForm().controls.endDate.setValue(date);
     }
 }
 

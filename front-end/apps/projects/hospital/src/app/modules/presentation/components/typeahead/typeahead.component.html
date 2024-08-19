@@ -1,6 +1,6 @@
 <form [formGroup]="form">
 	<mat-form-field fxFlex=100% appearance="outline" class="typeahead-input" [hideRequiredMarker]="true">
-		<mat-label>{{titleInput}}</mat-label>
+		<mat-label>{{titleInput | translate}}</mat-label>
 		<input type="text" placeholder="{{ placeholder | translate }}" formControlName="searchValue"
 			#trigger="matAutocompleteTrigger" matInput [matAutocomplete]="auto" (keyup.backspace)="clear($event)">
 		<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">

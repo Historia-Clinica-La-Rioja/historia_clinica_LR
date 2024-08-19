@@ -1,0 +1,32 @@
+<div [formGroup]="form">
+	<div [ngSwitch]="loincInput.controlType" [attr.data-id]="loincInput.key">
+		<div *ngSwitchCase="'textbox'" id="textbox">
+			<app-loinc-input-text-box [title]="loincInput.label" [preload]="loincInput.preload"
+				(valueSelected)="setValue(loincInput.key, $event)">
+			</app-loinc-input-text-box>
+		</div>
+
+		<div *ngSwitchCase="'numeric'" fxLayout="column" fxLayoutGap="8px" id="numeric">
+			<app-loinc-input-number [title]="loincInput.label" [preloadValue]="loincInput.preload"
+				[preloadUnit]="loincInput.preloadUnitOfMeasureId" [listOptionsUnits]="loincInput.param.unitsOfMeasure"
+				(valueSelected)="emitValueNumber($event)">
+			</app-loinc-input-number>
+		</div>
+
+		<div *ngSwitchCase="'snomed'" id="snomed">
+			<app-loinc-input-snomed [title]="loincInput.label" [ecl]="loincInput.param.snomedGroupDescription"
+				[preload]="loincInput.preload" (valueSelected)="setValue(loincInput.key, $event)">
+			</app-loinc-input-snomed>
+		</div>
+
+		<div *ngSwitchCase="'dropdown'" id="dropdown">
+			<app-loinc-input-dropdown [title]="loincInput.label" [options]="loincInput.options"
+				[preload]="loincInput.preload" (valueSelected)="setValue(loincInput.key, $event)">
+			</app-loinc-input-dropdown>
+		</div>
+
+		<mat-error *ngFor="let validationError of validationErrors | keyvalue">
+			{{ validationError.key }}: <code>{{ validationError.value }}</code>
+		</mat-error>
+	</div>
+</div>

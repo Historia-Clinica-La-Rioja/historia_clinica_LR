@@ -1,0 +1,13 @@
+<mat-card class="image-list-card">
+    <mat-list>
+        <ng-container *ngIf="imageList$ | async as imageList, else loading">
+            <app-queue-image-list [queueList]="imageList" [paginationAmount]="elementsAmount"></app-queue-image-list>
+        </ng-container>
+    </mat-list>
+</mat-card>
+
+<ng-template #loading >
+    <div class="spinner">
+        <mat-spinner color="primary"></mat-spinner>
+    </div>
+</ng-template>

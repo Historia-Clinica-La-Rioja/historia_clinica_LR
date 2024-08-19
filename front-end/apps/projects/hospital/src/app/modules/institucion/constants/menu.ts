@@ -148,6 +148,16 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: [AppFeature.HABILITAR_FIRMA_CONJUNTA, AppFeature.HABILITAR_FIRMA_DIGITAL]
 	},
 	{
+		text: 'app.menu.SANITARY_AREAS',
+		icon: 'map',
+		id: 'sanitaryAreas',
+		url: './areas-sanitarias',
+		permissions: [
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+		],
+		featureFlag: [AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA]
+	},
+	{
 		text: 'app.menu.RUTAS_PROVINCIALES',
 		icon: 'swap_calls',
 		id: 'rutas-larioja',

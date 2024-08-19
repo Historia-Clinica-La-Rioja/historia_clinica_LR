@@ -1,7 +1,8 @@
 import React from 'react';
-import { ReferenceField, Show, SimpleShowLayout, TextField } from 'react-admin';
+import { ReferenceField, Show, SimpleShowLayout, TextField, usePermissions } from 'react-admin';
 
 const ShockRoomShow = (props) => {
+    const { permissions } = usePermissions();
     return (
         <Show  {...props}>
             <SimpleShowLayout>
@@ -13,6 +14,7 @@ const ShockRoomShow = (props) => {
                 <ReferenceField source="institutionId" reference="institutions">
                     <TextField source="name" />
                 </ReferenceField>
+                {permissions && permissions.isOn('HABILITAR_LLAMADO') && <TextField source="topic" />}
             </SimpleShowLayout>
         </Show>
     )

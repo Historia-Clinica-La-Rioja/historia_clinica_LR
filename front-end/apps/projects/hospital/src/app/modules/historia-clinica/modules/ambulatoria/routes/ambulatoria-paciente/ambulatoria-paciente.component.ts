@@ -44,6 +44,7 @@ import { Patient } from '@pacientes/component/search-patient/search-patient.comp
 import { PatientValidatorPopupComponent } from '../../dialogs/patient-validator-popup/patient-validator-popup.component';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
+import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -106,6 +107,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	canOnlyViewSelfAddedProblems = false;
 	rolesThatCanOnlyViewSelfAddedProblems = [ERole.PRESCRIPTOR];
 	isNewConsultationOpen: boolean;
+	isNewViolenceSituationOpen= false;
 	isEmergencyCareTemporalPatient = false;
 	patientType: number;
 	isTemporaryPatient: boolean = false;
@@ -142,6 +144,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		private readonly wcExtensionsService: WCExtensionsService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly patientToMergeService: PatientToMergeService,
+		private readonly violenceReportFacadeService: ViolenceReportFacadeService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
@@ -238,10 +241,13 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe((event: boolean) => {
 			this.isNewConsultationOpen = event;
 		});
+		this.violenceReportFacadeService.isNewViolenceSituation$.subscribe((event: boolean) => {
+			this.isNewViolenceSituationOpen = event;
+		});
 	}
 
 	canDeactivate(): Observable<boolean> | boolean {
-		return this.isNewConsultationOpen || this.isOpenOdontologyConsultation || this.odontogramService.existActionedTeeth();
+		return this.isNewConsultationOpen || this.isOpenOdontologyConsultation || this.odontogramService.existActionedTeeth() || this.isNewViolenceSituationOpen;
 	};
 
 	openValidatorDialog() {
@@ -432,6 +438,10 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 
 	setStateConsultationOdontology(isOpenOdontologyConsultation: boolean): void {
 		this.isOpenOdontologyConsultation = isOpenOdontologyConsultation;
+	}
+
+	setStateNewViolenceSituationOpen(isViolenceSituationOpen: boolean) {
+		this.isNewViolenceSituationOpen = isViolenceSituationOpen;
 	}
 
 	getSummaryCoverageInfo(): SummaryCoverageInformation {

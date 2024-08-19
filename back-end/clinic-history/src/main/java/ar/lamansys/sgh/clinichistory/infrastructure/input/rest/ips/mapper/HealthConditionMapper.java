@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
@@ -11,7 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthCon
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PersonalHistoryDto;
-import jdk.jfr.Name;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -61,7 +62,7 @@ public interface HealthConditionMapper {
     @Named("toDiagnosesGeneralStateDto")
     DiagnosesGeneralStateDto toDiagnosesGeneralStateDto(HealthConditionBo healthConditionBo);
 
-    @Name("toHealthConditionNewConsultationDto")
+    @Named("toHealthConditionNewConsultationDto")
     HealthConditionNewConsultationDto toHealthConditionNewConsultationDto(HealthConditionNewConsultationBo bo);
 
     @Named("toListPersonalHistoryBoFromPersonalHistoryDto")
@@ -87,5 +88,17 @@ public interface HealthConditionMapper {
     @Named("toListHealthConditionBo")
     @IterableMapping(qualifiedByName = "toHealthConditionBo")
     List<HealthConditionBo> toListHealthConditionBo(List<HealthConditionDto> healthConditions);
+
+	@Named("toReferablePersonalHistoryBoFromPersonalHistoryDto")
+	ReferableItemBo<PersonalHistoryBo> toReferablePersonalHistoryBoFromPersonalHistoryDto(ReferableItemDto<PersonalHistoryDto> personalHistories);
+
+	@Named("toReferablePersonalHistoryDto")
+	ReferableItemDto<PersonalHistoryDto> toReferablePersonalHistoryDto(ReferableItemBo<PersonalHistoryBo> personalHistory);
+
+	@Named("toReferableFamilyHistoryBoFromHealthHistory")
+	ReferableItemBo<FamilyHistoryBo> toReferableFamilyHistoryBoFromHealthHistory(ReferableItemDto<HealthHistoryConditionDto> healthHistoryConditionDto);
+
+	@Named("toReferableFamilyHistoryConditionDto")
+	ReferableItemDto<HealthHistoryConditionDto> toReferableFamilyHistoryConditionDto(ReferableItemBo<FamilyHistoryBo> familyHistory);
 
 }

@@ -60,6 +60,9 @@
 			"@charts/*": [
 				"projects/hospital/src/app/modules/charts/*"
 			],
+			"@hsi-components/*": [
+				"projects/hospital/src/app/modules/hsi-components/*"
+			],
 		},
 		"importHelpers": true,
 		"target": "es2020",

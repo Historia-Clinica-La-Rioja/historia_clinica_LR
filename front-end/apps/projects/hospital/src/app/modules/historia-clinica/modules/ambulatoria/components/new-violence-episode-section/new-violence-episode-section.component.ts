@@ -38,6 +38,9 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 	riskLevels = RiskLevels;
 
 	basicOptions = BasicOptions;
+	markAsTouched = false;
+
+	todayDate = new Date();
 
 	constructor(private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
 				private readonly violenceModalityService: ViolenceModalityNewConsultationService) {}
@@ -57,9 +60,14 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 			if(this.form.valid){
 				this.violenceEpisodeInfo.emit(this.mapViolenceEpisode());
 			}else{
+				this.markAsTouched = true
 				this.form.markAllAsTouched();
 			}
 		}
+	}
+
+	dateChanged(date: Date){
+		this.form.controls.episodeDate.setValue(date)
 	}
 
 	addViolenceSituation(violenceConcept: SnomedDto) {

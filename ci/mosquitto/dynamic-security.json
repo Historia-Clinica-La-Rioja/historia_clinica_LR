@@ -49,6 +49,8 @@
 			"textname":	"Usuario llamador de turnos",
 			"textdescription":	"",
 			"roles":	[{
+					"rolename":	"R_EmergencyCareScheduleCall"
+				}, {
 					"rolename":	"R_LlamadoTurno"
 				}],
 			"password":	"5m1+EQRGbBLNCoNCTHVUDwYVSIEHroxvUpZhBDFAfqpItvF42LWkttOPI7dtaMCzKx9rrEDnPdxayZ2TkvkXdA==",
@@ -83,6 +85,16 @@
 			"acls":	[{
 					"acltype":	"publishClientReceive",
 					"topic":	"/HSI/VIRTUAL-CONSULTATION/#",
+					"priority":	0,
+					"allow":	true
+				}]
+		}, {
+			"rolename":	"R_EmergencyCareScheduleCall",
+			"textname":	"",
+			"textdescription":	"Rol para publicación del turnero de guardia",
+			"acls":	[{
+					"acltype":	"publishClientReceive",
+					"topic":	"HSI/HOSPITAL_API/EMERGENCY_CARE_CALL/#",
 					"priority":	0,
 					"allow":	true
 				}]

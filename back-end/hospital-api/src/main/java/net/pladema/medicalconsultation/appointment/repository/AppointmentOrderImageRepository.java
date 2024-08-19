@@ -67,6 +67,13 @@ public interface AppointmentOrderImageRepository extends JpaRepository<Appointme
 			"WHERE aoi.pk.appointmentId = :appointmentId")
 	void deleteByAppointment(@Param("appointmentId") Integer appointmentId);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE AppointmentOrderImage aoi " +
+			"SET aoi.active = true " +
+			"WHERE aoi.pk.appointmentId = :appointmentId")
+	void activateAppointment(@Param("appointmentId") Integer appointmentId);
+
 	@Transactional(readOnly = true)
 	@Query("SELECT aoi.documentId " +
 			"FROM AppointmentOrderImage aoi " +

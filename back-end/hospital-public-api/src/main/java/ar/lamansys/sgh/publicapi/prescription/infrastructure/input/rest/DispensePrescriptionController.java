@@ -52,15 +52,11 @@ public class DispensePrescriptionController {
 		}
 
 		log.debug(INPUT + "prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
-
-		try {
+		
 			var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
 			assertDomainNumber(prescriptionIdentifier.domain);
 			assertSamePrescriptionId(prescriptionId, changePrescriptionLineDto);
 			changePrescriptionState.run(changePrescriptionLineDto, prescriptionIdentifier, identificationNumber);
-		} catch (RuntimeException e) {
-			throw new PrescriptionDispenseException(e.getMessage(), e);
-		}
 
 		log.debug(OUTPUT + "changePrescriptionLineDto {}", changePrescriptionLineDto);
 		return changePrescriptionLineDto;

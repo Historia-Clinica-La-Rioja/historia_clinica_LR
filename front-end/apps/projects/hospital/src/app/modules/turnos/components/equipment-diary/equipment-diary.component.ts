@@ -201,9 +201,8 @@ export class EquipmentDiaryComponent implements OnInit {
 			this.dialog.open(ConfirmBookingComponent, {
 				width: '30%',
 				data: {
-					date: toApiFormat(date),
+					date: date,
 					diaryId: this.diary.id,
-					hour: toHourMinuteSecond(date),
 					openingHoursId: this.openingHoursService.getOpeningHoursId(this.diary.startDate, this.diary.endDate, date),
 					overturnMode: false,
 					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,

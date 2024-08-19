@@ -1,4 +1,4 @@
-import { Component, Input, } from '@angular/core';
+import { Component, Input, OnInit, } from '@angular/core';
 import { Chart } from '@charts/components/chart/chart.component';
 import { toChart } from '@historia-clinica/mappers/evolution-charts.mapper';
 import { EVOLUTION_CHARTS } from '@historia-clinica/constants/evolution-charts.constants';
@@ -7,22 +7,41 @@ import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 import { AnthropometricDataKey } from '@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
 import { getValuesOfEnum } from '@core/utils/core.utils';
+import { BoxMessageInformation } from '../box-message/box-message.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-patient-evolution-charts',
 	templateUrl: './patient-evolution-charts.component.html',
 	styleUrls: ['./patient-evolution-charts.component.scss']
 })
-export class PatientEvolutionChartsComponent {
+export class PatientEvolutionChartsComponent implements OnInit{
 
 	chart: Chart;
 	loadChart = false;
+	boxMessageInfo: BoxMessageInformation;
+
 	@Input() patientId: number;
 	@Input() anthropometricData: AnthropometricData;
 
 	constructor(
 		private readonly anthropometricGraphicService: AnthropometricGraphicService,
+		private readonly translateService: TranslateService
 	) { }
+
+	ngOnInit() {
+		this.setBoxMessageInfo();
+	}
+
+	private setBoxMessageInfo() {
+		this.boxMessageInfo = {
+			message: '',
+			showButtons: false
+		};
+
+		this.translateService.get('historia-clinica.evolution-charts-popup.MESSAGE_GRAPHS_OF_ONLY_FULL_TERM_PATIENTS')
+			.subscribe( message => this.boxMessageInfo.message = message );
+	}
 
 	buildChart(chartOptions: EvolutionChartOptions) {
 		this.loadChart = true;

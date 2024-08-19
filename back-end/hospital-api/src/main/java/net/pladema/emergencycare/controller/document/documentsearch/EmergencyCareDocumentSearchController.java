@@ -15,7 +15,7 @@ import net.pladema.emergencycare.triage.controller.dto.TriageDocumentDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageListMapper;
 import net.pladema.emergencycare.triage.service.TriageService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

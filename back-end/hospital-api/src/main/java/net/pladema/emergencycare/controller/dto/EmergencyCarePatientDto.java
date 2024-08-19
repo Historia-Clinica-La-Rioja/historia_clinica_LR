@@ -19,6 +19,8 @@ public class EmergencyCarePatientDto implements Serializable {
 
 	Integer patientMedicalCoverageId;
 
+	String patientDescription;
+
 	Short typeId;
 
 	EmergencyCarePersonDto person;

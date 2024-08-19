@@ -1,31 +1,6 @@
-<div fxLayoutGap="2vh">
-	<app-new-consultation-expansion-section id="alergias" [title]="'internaciones.anamnesis.antecedentes-personales.TITLE' | translate"
-		icon="library_add" [isEmpty]="personalHistories?.length === 0" [collapsed]="!personalHistories?.length" [hideBorder]="false"
-		[isToAddSnomedConcepts]="true" (click)="personalHistories?.length === 0 ? addPersonalHistory():''">
-		<app-titled-content-card *ngIf="personalHistories?.length"
-			title="{{ 'internaciones.anamnesis.antecedentes-personales.LIST_CARD_TITLE' }}">
-			<div fxLayout="column" fxLayoutGap="10px"
-				*ngFor="let personalHistory of personalHistories; index as i; last as isLast">
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<div fxLayout="column" fxLayoutGap="6px">
-						<span>{{ personalHistory.snomed.pt | titlecase}}</span>
-					</div>
-					<button id="delete" type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
-						<mat-icon>delete_outline</mat-icon>
-					</button>
-				</div>
-				<em *ngIf="personalHistory?.observaciones" class="mat-caption gray-caption">
-					{{ personalHistory.observaciones }}
-				</em>
-				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-			</div>
-		</app-titled-content-card>
-
-		<div *ngIf="personalHistories?.length > 0">
-			<button mat-button type="button" id="add-antecedentes-personales-button" color="primary" class="add-button"
-				(click)="addPersonalHistory()">
-				+ {{ 'internaciones.anamnesis.antecedentes-personales.ADD' | translate }}
-			</button>
-		</div>
-	</app-new-consultation-expansion-section>
-</div>
+<app-concepts-list
+	[hasConcepts]="!personalHistoriesNewConsultationService.isEmpty()"
+	[content]="personalHistoriesContent"
+	(openEmit)="checkPersonalHistoriesEvent($event)">
+	<app-personal-histories-background-list [service]="personalHistoriesNewConsultationService"></app-personal-histories-background-list>
+</app-concepts-list>

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto, AppFeature } from '@api-rest/api-model';
+import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto, AppFeature, AnestheticReportSummaryDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -51,6 +51,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 	anamnesisDoc: AnamnesisSummaryDto;
 	epicrisisDoc: EpicrisisSummaryDto;
+	anestheticDoc: AnestheticReportSummaryDto;
 	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	hasMedicalDischarge: boolean;
 	hasInternmentEpisodeInThisInstitution = false;
@@ -59,10 +60,11 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
+	documentAnestheticPartDraft: DocumentSearchDto;
 	enableReports = false
 
 	isEmergencyCareTemporaryPatient = false;
-	isAnestheticPartEnabled: boolean;
+	isAnestheticReportEnabledFF: boolean;
 	isEvolutionNoteEnabled: boolean;
 
 	@Input() patientId: number;
@@ -120,7 +122,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
-			this.isAnestheticPartEnabled = isEnabled
+			this.isAnestheticReportEnabledFF = isEnabled
 		);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO).subscribe(isEnabled =>
 			this.hasNurseRoleEvolutionNoteEnabled = isEnabled
@@ -157,17 +159,21 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		const anamnesis$ = this.internmentSummaryFacadeService.anamnesis$;
 		const evolutionNote$ = this.internmentSummaryFacadeService.evolutionNote$;
 		const epicrisis$ = this.internmentSummaryFacadeService.epicrisis$;
+		const anestheticPart$ = this.internmentSummaryFacadeService.anestheticPart$;
 		const hasMedicalDischarge$ = this.internmentSummaryFacadeService.hasMedicalDischarge$;
 
-		combineLatest([anamnesis$, evolutionNote$, epicrisis$, hasMedicalDischarge$]).subscribe(
-			([anamnesis, evolutionNote, epicrisis, medicalDischarge]) => {
+		combineLatest([anamnesis$, evolutionNote$, epicrisis$, hasMedicalDischarge$, anestheticPart$]).subscribe(
+			([anamnesis, evolutionNote, epicrisis, medicalDischarge, anestheticPart]) => {
 				this.anamnesisDoc = anamnesis;
 				this.lastEvolutionNoteDoc = evolutionNote;
 				this.epicrisisDoc = epicrisis;
+				this.anestheticDoc = anestheticPart
 				this.hasMedicalDischarge = medicalDischarge;
 				this.hasToDoInternmentAction();
 				if (this.epicrisisDoc?.confirmed === false)
 					this.getEpicrisisDraft();
+				if(this.anestheticDoc?.confirmed === false)
+					this.getAnestheticPartDraft()
 			});
 	}
 
@@ -290,6 +296,21 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
 	}
 
+	openAnestheticReportDraft() {
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.documentActions.editAnestheticPartDraft(this.documentAnestheticPartDraft)
+			this.internmentActions.anestheticReport$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
+	}
+
 	openAnestheticReport() {
 		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
 			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
@@ -297,7 +318,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			if (this.internmentActions.mainDiagnosis)
 				this.internmentActions.mainDiagnosis.isAdded = true;
 			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
-			this.internmentActions.openAnestheticReport();
+			this.internmentActions.openAnestheticReport()
 			this.internmentActions.anestheticReport$.subscribe(fieldsToUpdate => {
 				if (fieldsToUpdate)
 					this.updateInternmentSummary(fieldsToUpdate);
@@ -306,19 +327,26 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	}
 
 	openSurgicalReport() {
-		this.internmentActions.openSurgicalReport();
-		this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
-			if (fieldsToUpdate)
-				this.updateInternmentSummary(fieldsToUpdate);
-		});
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.internmentActions.openSurgicalReport();
+			this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
 	}
 
 	newTriage() {
-		this.dialog.open(this.triageComponent, { data: this.episode.id })
-	}
+			this.dialog.open(this.triageComponent, { data: this.episode.id })
+		}
 
 	private hasToDoInternmentAction() {
-		if (this.hasMedicalDischarge) {
+			if(this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
 			this.enableReports = true
 			return;
@@ -328,6 +356,14 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			return;
 		}
 		if (!this.epicrisisDoc?.confirmed && !this.hasMedicalRole) {
+			this.hasInternmentActionsToDo = true;
+			return;
+		}
+		if (this.anestheticDoc?.confirmed && !this.hasMedicalRole) {
+			this.hasInternmentActionsToDo = false;
+			return;
+		}
+		if (!this.anestheticDoc?.confirmed && !this.hasMedicalRole) {
 			this.hasInternmentActionsToDo = true;
 			return;
 		}
@@ -360,6 +396,13 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.internmentSummaryFacadeService.clinicalEvaluation$.subscribe((documentHistoric: DocumentHistoricDto) => {
 			if (documentHistoric?.documents?.length)
 				this.documentEpicrisisDraft = documentHistoric.documents.find(document => document.documentType === "Epicrisis" && !document.confirmed);
+		});
+	}
+
+	private getAnestheticPartDraft() {
+		this.internmentSummaryFacadeService.clinicalEvaluation$.subscribe((documentHistoric: DocumentHistoricDto) => {
+			if (documentHistoric?.documents?.length)
+				this.documentAnestheticPartDraft = documentHistoric.documents.find(document => document.documentType === "Parte anestésico" && !document.confirmed);
 		});
 	}
 

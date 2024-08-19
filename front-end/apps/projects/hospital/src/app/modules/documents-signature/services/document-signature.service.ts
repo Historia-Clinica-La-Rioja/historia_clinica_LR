@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, MedicationDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, MedicationDto, PersonalHistoryDto, ProcedureDto, ReasonDto, ReferableItemDto, RiskFactorDto } from '@api-rest/api-model';
 import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 import { getDocumentType } from '@core/constants/summaries';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
@@ -57,7 +57,7 @@ export class DocumentSignatureService {
                 {
                     icon: 'report',
                     title: 'digital-signature.detailed-documents.FAMILY_HISTORIES',
-                    value: this.buildDataWithDate(document.familyHistories)
+                    value: this.buildDataWithDate(document.familyHistories.content)
                 },
                 {
                     icon: 'event_available',
@@ -67,7 +67,7 @@ export class DocumentSignatureService {
                 {
                     icon: 'report_outlined',
                     title: 'digital-signature.detailed-documents.PERSONAL_HISTORIES',
-                    value: this.buildDataWithDate(document.personalHistories)
+                    value: this.buildDataWithDate(document.personalHistories.content)
                 },
                 {
                     icon: 'library_add',
@@ -173,8 +173,9 @@ export class DocumentSignatureService {
 		return anthropometricDataFiltered;
 	}
 
-	private buildAllergies(allergies: AllergyConditionDto[]): string[] {
-		return allergies.map(data => data.snomed.pt);
+	private buildAllergies(allergies: ReferableItemDto<AllergyConditionDto>): string[] {
+		const allergiesFiltered: string[] = allergies.content.map(data => data.snomed.pt);
+		return allergiesFiltered;
 	}
 
 	private buildDataWithDate(data: HealthHistoryConditionDto[] | PersonalHistoryDto[]): string [] {

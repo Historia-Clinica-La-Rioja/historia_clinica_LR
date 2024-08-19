@@ -65,6 +65,7 @@ import { ShowAppointmentOverTurnPipe } from './pipes/show-appointment-over-turn.
 import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 import { TranscribedStudyComponent } from './dialogs/transcribed-study/transcribed-study.component';
 import { StudyListTranscribedComponent } from './components/study-list-transcribed/study-list-transcribed.component';
+import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 
 @NgModule({
 	declarations: [
@@ -134,7 +135,8 @@ import { StudyListTranscribedComponent } from './components/study-list-transcrib
 		AvailableAppointmentDataComponent,
 		PatientSummaryComponent,
 		ReferenceStateLabelComponent,
-		ToAvailableAppointmentDataPipe
+		ToAvailableAppointmentDataPipe,
+		ConceptTypeaheadSearchComponent,
 	],
 	exports: [
 		CalendarProfessionalViewComponent,

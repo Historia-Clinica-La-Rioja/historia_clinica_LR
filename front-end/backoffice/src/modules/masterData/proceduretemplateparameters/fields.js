@@ -122,7 +122,7 @@ export const UnitsOfMeasure = (props) => {
 export const SnomedECL = (props) => {
     return (
         <ReferenceInput
-            reference="snomedgroups"
+            reference="proceduretemplatesnomedgroup"
             source="snomedGroupId"
             sort={{ field: 'description', order: 'ASC' }}
             filterToQuery={searchText => ({description: searchText ? searchText : ''})}

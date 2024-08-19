@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.document.map
 
 import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -28,7 +29,7 @@ public interface CounterReferenceDocumentMapper {
         if (target.getMedications() == null)
             target.setMedications(new ArrayList<>());
         if (target.getAllergies() == null)
-            target.setAllergies(new ArrayList<>());
+            target.setAllergies(new ReferableItemDto<>());
     }
 
 }

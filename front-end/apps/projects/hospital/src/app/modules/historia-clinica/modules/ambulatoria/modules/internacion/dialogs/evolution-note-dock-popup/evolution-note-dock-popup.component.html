@@ -169,14 +169,14 @@
 									</mat-form-field>
 								</div>
 							</div>
-							<app-patient-evolution-charts-button *ngIf="isEvolutionChartsFFActive" [patientId]="data.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
+							<app-patient-evolution-charts-button [patientId]="data.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
 						</ng-container>
 					</app-document-section>
 				</div>
 			</app-new-consultation-expansion-section>
 
 
-			<app-alergias id="allergies" [(allergies)]="allergies"></app-alergias>
+			<app-alergias id="allergies" [(allergies)]="allergies" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias>
 
 
 			<app-vacunas id="immunizations" [(immunizations)]="immunizations"></app-vacunas>

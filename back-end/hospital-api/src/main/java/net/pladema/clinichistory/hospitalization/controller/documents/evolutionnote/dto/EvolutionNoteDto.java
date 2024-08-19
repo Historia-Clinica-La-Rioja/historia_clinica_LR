@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.controller.documents.evolutionnote.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.*;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,7 +35,7 @@ public class EvolutionNoteDto implements Serializable {
     private List<@Valid ImmunizationDto> immunizations = new ArrayList<>();
 
     @Nullable
-    private List<@Valid AllergyConditionDto> allergies = new ArrayList<>();
+    private ReferableItemDto<@Valid AllergyConditionDto> allergies;
 
     @Nullable
     private List<@Valid HospitalizationProcedureDto> procedures = new ArrayList<>();

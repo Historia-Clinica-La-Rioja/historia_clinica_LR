@@ -58,34 +58,18 @@
                 </mat-checkbox>
             </div>
 
-            <mat-form-field appearance="outline">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'">
-                </mat-label>
-                <input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker" formControlName="fechaInicio"
-                    [min]="minDate" [max]="data.ambulatoryConsultationProblemsService.getFechaInicioMax()"
-                    (dateChange)="data.ambulatoryConsultationProblemsService.checkValidFechaFin()">
-                <mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
-                <mat-datepicker #inicioDatePicker></mat-datepicker>
-            </mat-form-field>
 
-            <mat-form-field appearance="outline" *ngIf="! this.data.isFromRecetaDigital">
-                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">
-                </mat-label>
-                <input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-                    [min]="minDate" [max]="today"
-                    (dateChange)="data.ambulatoryConsultationProblemsService.checkValidFechaFin()">
-                <mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
-                <mat-datepicker #finDatePicker></mat-datepicker>
-                <mat-error *ngIf="data.ambulatoryConsultationProblemsService.hasError('min', 'fechaFin')"
-                    [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
-                </mat-error>
-                <mat-error *ngIf="data.ambulatoryConsultationProblemsService.hasError('matDatepickerMax', 'fechaFin')"
-                    [translate]="'forms.MAX_DATE_TODAY'">
-                </mat-error>
-                <mat-error *ngIf="data.ambulatoryConsultationProblemsService.hasError('required_init_date', 'fechaFin')"
-                    [translate]="'forms.REQUIRED_INIT_DATE'">
-                </mat-error>
-            </mat-form-field>
+            <app-datepicker title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO" id="fecha_inicio"
+                [minDate]="minDate" [maxDate]="data.ambulatoryConsultationProblemsService.getFechaInicioMax()"
+                [dateToSetInDatepicker]="today" (selectDate)="fechaInicioChanged($event)" enableDelete="true">
+            </app-datepicker>
+
+            <app-datepicker *ngIf="!this.data.isFromRecetaDigital"
+                title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN" id="fecha_fin"
+                [minDate]="data.ambulatoryConsultationProblemsService.getForm().value.fechaInicio" [maxDate]="today"
+                (selectDate)="fechaFinChanged($event)" enableDelete="true">
+            </app-datepicker>
+
 
             <div align="end" *ngIf="!data?.editing">
                 <button id="submit_problema" class="uppercase" mat-raised-button color="primary" type="submit">

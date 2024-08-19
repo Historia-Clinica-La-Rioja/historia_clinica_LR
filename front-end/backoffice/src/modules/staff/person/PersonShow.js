@@ -16,7 +16,7 @@ import {
     SgxDateField,
     CreateRelatedButton,
 } from '../../components';
-import { ADMINISTRADOR, ADMINISTRADOR_DE_DATOS_PERSONALES, ROOT } from '../../roles';
+import { ADMINISTRADOR, ADMINISTRADOR_DE_DATOS_PERSONALES, ROOT, ADMINISTRADOR_DE_ACCESO_DOMINIO } from '../../roles';
 import { usePermissions } from 'react-admin';
 
 const redirect = (personId) => {
@@ -60,12 +60,11 @@ const PersonShow = props =>{
         <TabbedShowLayout>
             {personalInformationTab()}
 
-			{permissions?.hasAnyAssignment(ROOT, ADMINISTRADOR) && 
-				[
-					userTab(personId),
-					professionsTab(personId)
-				]
-			}
+			{
+            (permissions?.hasAnyAssignment(ROOT, ADMINISTRADOR) && [userTab(personId), professionsTab(personId)]) 
+            || 
+            (permissions?.hasAnyAssignment(ADMINISTRADOR_DE_ACCESO_DOMINIO) && userTab(personId))
+            }
             
 
         </TabbedShowLayout>

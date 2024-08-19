@@ -22,11 +22,14 @@ public class PatientECEBo {
 
 	private PersonECEBo person;
 
+	private String patientDescription;
+
 	public PatientECEBo(PatientECEVo patient){
 		this.id = patient.getId();
 		this.patientMedicalCoverageId = patient.getPatientMedicalCoverageId();
 		this.typeId = patient.getTypeId();
 		this.person = patient.getPerson() != null ? new PersonECEBo(patient.getPerson()) : null;
+		this.patientDescription = patient.getPatientDescription();
 	}
 
 	public PatientECEBo(Integer patientId, Integer patientMedicalCoverageId) {

@@ -2,7 +2,10 @@ package net.pladema.reports.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import net.pladema.reports.repository.InstitutionInfo;
 
 import org.springframework.stereotype.Service;
 
@@ -102,7 +105,6 @@ public class NominalDetailExcelServiceImpl implements NominalDetailExcelService 
 	}
 
 	private void createCell(ISheet sheet, IRow row, int nRow, CellContent data){
-
 		int nColumn = data.getColumn();
 
 		ICell cell = row.createCell(data.getColumn());
@@ -113,4 +115,27 @@ public class NominalDetailExcelServiceImpl implements NominalDetailExcelService 
 			sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
 	}
 
+
+	@Override
+	public void fillNominalDetailCommonColumns(IRow row, AtomicInteger rowNumber, ICellStyle style, InstitutionInfo institutionInfo,
+											   String hierarchicalUnitType, String hierarchicalUnit) {
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(institutionInfo.getProvince());
+		cell.setCellStyle(style);
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(institutionInfo.getDepartment());
+		cell2.setCellStyle(style);
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(institutionInfo.getSisaCode());
+		cell3.setCellStyle(style);
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(institutionInfo.getInstitution());
+		cell4.setCellStyle(style);
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(hierarchicalUnitType);
+		cell5.setCellStyle(style);
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(hierarchicalUnit);
+		cell6.setCellStyle(style);
+	}
 }

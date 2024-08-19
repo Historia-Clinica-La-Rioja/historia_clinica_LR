@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { VitalSignsData } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { VitalSignsChartPopupComponent } from '../vital-signs-chart-popup/vital-signs-chart-popup.component';
+import { VitalSignsData } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
     selector: 'app-vital-signs-summary',
@@ -21,7 +21,7 @@ export class VitalSignsSummaryComponent {
             width: '50%',
             autoFocus: false,
             data: {
-                imgList: this.vitalSigns.chart,
+                imgList: this.vitalSigns.vitalSignsChart,
             }
         });
     }

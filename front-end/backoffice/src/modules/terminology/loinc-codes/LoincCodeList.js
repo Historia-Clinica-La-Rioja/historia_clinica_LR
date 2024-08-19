@@ -5,8 +5,18 @@ import {
     TextField,
     ReferenceField,
     EditButton,
-    FunctionField
+    FunctionField,
+    TextInput,
+    Filter
 } from 'react-admin';
+
+const LoincCodeFilter = (props) => (
+    <Filter {...props}>
+        <TextInput source="code"/>
+        <TextInput source="description"/>
+        <TextInput source="customDisplayName"/>
+    </Filter>
+);
 
 const LoincCodeList = props => (
     <List 
@@ -14,6 +24,7 @@ const LoincCodeList = props => (
         exporter={false}
         bulkActionButtons={false}
         sort={{ field: 'code', order: 'ASC' }}
+        filters={<LoincCodeFilter/>}
     >
         <Datagrid rowClick="show">
             <TextField source="code"/>

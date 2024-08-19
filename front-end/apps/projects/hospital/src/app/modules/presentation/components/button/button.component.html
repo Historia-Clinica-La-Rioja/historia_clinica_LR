@@ -2,6 +2,9 @@
     (click)="onClicked()">
     <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" style="margin: 0.25rem;"></mat-spinner>
     <ng-template #showContent>
-        <span>{{text | translate | uppercase}}</span>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <mat-icon *ngIf="matIcon" fontSet="material-icons-outlined">{{ matIcon }}</mat-icon>
+            <span>{{text | translate | uppercase}}</span>
+        </div>
     </ng-template>
 </button>

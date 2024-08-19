@@ -1,0 +1,14 @@
+package net.pladema.hl7.dataexchange.exceptions;
+
+public enum DiagnosticReportExceptionEnum {
+
+	REQUEST_NOT_MATCH,
+	PATIENT_NOT_MATCH,
+	PRACTITIONER_NOT_NULL,
+	PRACTITIONER_NOT_MATCH,
+	COVERAGE_NOT_MATCH,
+	COVERAGE_AFFILIATE_NUMBER_NOT_MATCH,
+	TRANSITION_STATE_INVALID,
+
+
+}

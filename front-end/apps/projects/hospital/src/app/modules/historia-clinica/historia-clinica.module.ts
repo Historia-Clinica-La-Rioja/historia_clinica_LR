@@ -9,41 +9,40 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { AlergiasFormComponent } from './components/alergias-form/alergias-form.component';
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
+import { AnamnesisDocumentSummaryComponent } from './components/anamnesis-document-summary/anamnesis-document-summary.component';
 import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
-import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
 import { AnesthesicClinicalEvaluationSummaryComponent } from './components/anesthesic-clinical-evaluation-summary/anesthesic-clinical-evaluation-summary.component';
-import { AnestheticAgentsSummaryComponent } from './components/anesthetic-agents-summary/anesthetic-agents-summary.component';
-import { AnestheticHistorySummaryComponent } from './components/anesthetic-history-summary/anesthetic-history-summary.component';
-import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
-import { AnestheticPlanSummaryComponent } from './components/anesthetic-plan-summary/anesthetic-plan-summary.component';
-import { AntibioticProphylaxisSummaryComponent } from './components/antibiotic-prophylaxis-summary/antibiotic-prophylaxis-summary.component';
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
 import { AnthropometricDataSummaryComponent } from './components/anthropometric-data-summary/anthropometric-data-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { BackgroundListComponent } from './components/background-list/background-list.component';
+import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
-import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
+import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
+import { DocumentSummaryHeaderComponent } from './components/document-summary-header/document-summary-header.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
+import { EpicrisisDocumentSummaryComponent } from './components/epicrisis-document-summary/epicrisis-document-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
 import { EvolucionFormComponent } from './components/evolucion-form/evolucion-form.component';
 import { EvolutionChartOptionsComponent } from './components/evolution-chart-options/evolution-chart-options.component';
 import { EvolutionChartSelectComponent } from './components/evolution-chart-select/evolution-chart-select.component';
 import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-type-select/evolution-chart-type-select.component';
+import { EvolutionNoteDocumentSummaryComponent } from './components/evolution-note-document-summary/evolution-note-document-summary.component';
+import { ExternalCauseSummaryComponent } from './components/external-cause-summary/external-cause-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
-import { FluidAdministrationSummaryComponent } from './components/fluid-administration-summary/fluid-administration-summary.component';
 import { HierarchicalUnitConsultationComponent } from './components/hierarchical-unit-consultation/hierarchical-unit-consultation.component';
 import { HistoriesSummaryComponent } from './components/histories-summary/histories-summary.component';
 import { BoxMessageComponent } from './components/box-message/box-message.component';
@@ -56,8 +55,8 @@ import { MedicacionesFormComponent } from './components/medicaciones-form/medica
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
 import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
-import { NonAnestheticDrugsSummaryComponent } from './components/non-anesthetic-drugs-summary/non-anesthetic-drugs-summary.component';
 import { NotaDeEvolucionDockPopupComponent } from './components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { ObstetricEventSummaryComponent } from './components/obstetric-event-summary/obstetric-event-summary.component';
 import { PatientEvolutionChartsButtonComponent } from './components/patient-evolution-charts-button/patient-evolution-charts-button.component';
 import { PatientEvolutionChartsComponent } from './components/patient-evolution-charts/patient-evolution-charts.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
@@ -70,25 +69,28 @@ import { ProcedureListComponent } from './components/procedure-list/procedure-li
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
 import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
-import { ProposedSurgerySummaryComponent } from './components/proposed-surgery-summary/proposed-surgery-summary.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
+import { SurgicalReportAnesthesiaComponent } from './components/surgical-report-anesthesia/surgical-report-anesthesia.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { SurgicalReportPostDiagnosisComponent } from './components/surgical-report-post-diagnosis/surgical-report-post-diagnosis.component';
 import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
 import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
 import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
 import { SurgicalReportProsthesisComponent } from './components/surgical-report-prosthesis/surgical-report-prosthesis.component';
+import { SurgicalReportSurgeryProceduresComponent } from './components/surgical-report-surgery-procedures/surgical-report-surgery-procedures.component';
 import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
-import { UsualMedicationSummaryComponent } from './components/usual-medication-summary/usual-medication-summary.component';
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
+import { VitalSignsAndRiskFactorsSummaryComponent } from './components/vital-signs-and-risk-factors-summary/vital-signs-and-risk-factors-summary.component';
 import { VitalSignsSummaryComponent } from './components/vital-signs-summary/vital-signs-summary.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
 import { AddInmunizationComponent } from './dialogs/add-inmunization/add-inmunization.component';
+import { AddMemberMedicalTeamComponent } from './dialogs/add-member-medical-team/add-member-medical-team.component';
 import { AddRiskFactorsComponent } from './dialogs/add-risk-factors/add-risk-factors.component';
 import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
@@ -141,6 +143,8 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 @NgModule({
 	declarations: [
 		// components
@@ -148,10 +152,8 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AllergyListComponent,
 		AnalgesicTechniqueBackgroundListComponent,
 		AnalgesicTechniqueComponent,
-		AnalgesicTechniqueSummaryComponent,
+		AnamnesisDocumentSummaryComponent,
 		AnesthesicClinicalEvaluationSummaryComponent,
-		AnestheticAgentsSummaryComponent,
-		AnestheticHistorySummaryComponent,
 		AnestheticPlanComponent,
 		AnestheticReportAnestheticAgentsComponent,
 		AnestheticReportAnestheticHistoryComponent,
@@ -168,29 +170,57 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnestheticReportVitalSignsComponent,
 		AnestheticTechniqueComponent,
 		AnestheticTechniqueListComponent,
-		AnestheticTechniqueSummaryComponent,
-		AnestheticPlanSummaryComponent,
-		AntibioticProphylaxisSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
 		AnthropometricDataSummaryComponent,
 		AntropometricosSummaryComponent,
 		BackgroundListComponent,
 		BoxMessageComponent,
+        ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
-		ConceptTypeaheadSearchComponent,
+        DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
+		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
 		EndOfAnesthesiaStatusSummaryComponent,
+        EpicrisisDocumentSummaryComponent,
 		EpisodeDataComponent,
 		EvolutionChartSelectComponent,
 		EvolutionChartTypeSelectComponent,
 		EvolutionChartOptionsComponent,
+        EvolutionNoteDocumentSummaryComponent,
+        ExternalCauseSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
+		BoxMessageComponent,
+		TemplateConceptTypeaheadSearchComponent,
+		NewConsultationExpansionSectionComponent,
+		ProcedureListComponent,
+		ReasonListComponent,
+		ProblemListComponent,
+		AllergyListComponent,
+		BackgroundListComponent,
+		MedicationListComponent,
+		ReferenceRequestListComponent,
+		EpisodeDataComponent,
+		PatientEvolutionChartsComponent,
+		ProposedSurgeryComponent,
+		ProposedSurgeryBackgroundListComponent,
+		AnestheticReportAnthropometricDataComponent,
+		AnestheticReportClinicalEvaluationComponent,
+		AnestheticReportAnestheticHistoryComponent,
+		AnestheticReportUsualMedicationComponent,
+		AnestheticReportPremedicationAndFoodIntakeComponent,
+		MedicationBackgroundListComponent,
+		AnestheticReportPersonRecordComponent,
+		AnestheticPlanComponent,
+		AnalgesicTechniqueBackgroundListComponent,
+		AnalgesicTechniqueComponent,
+		AnestheticTechniqueComponent,
+		AnestheticTechniqueListComponent,
+		FluidAdministrationListComponent,
 		FluidAdministrationComponent,
 		FluidAdministrationListComponent,
-		FluidAdministrationSummaryComponent,
 		HierarchicalUnitConsultationComponent,
 		HistoriesSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
@@ -204,8 +234,9 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		MeasuringPointItemComponent,
 		MedicacionSummaryComponent,
 		NewConsultationExpansionSectionComponent,
-		NonAnestheticDrugsSummaryComponent,
-		PatientEvolutionChartsButtonComponent, 
+        ObstetricEventSummaryComponent,
+		PatientEvolutionChartsButtonComponent,
+		PatientEvolutionChartsButtonComponent,
 		PatientEvolutionChartsComponent,
 		PatientProblemsSummaryComponent,
 		PremedicationAndFoodIntakeSummaryComponent,
@@ -213,17 +244,17 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ProcedureListComponent,
 		ProposedSurgeryBackgroundListComponent,
 		ProposedSurgeryComponent,
-		ProposedSurgerySummaryComponent,
 		ProfessionalListComponent,
 		ReasonListComponent,
 		ReferenceRequestListComponent,
 		TemplateConceptTypeaheadSearchComponent,
-		UsualMedicationSummaryComponent,
+        VitalSignsAndRiskFactorsSummaryComponent,
 		VitalSignsSummaryComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
 		AddInmunizationComponent,
+		AddMemberMedicalTeamComponent,
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
 		EffectiveTimeDialogComponent,
@@ -254,11 +285,14 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ProblemConceptSearchDialogComponent,
 		PersonalHistoriesBackgroundListComponent,
 		PersonalHistoriesSummaryComponent,
+		SurgicalReportAnesthesiaComponent,
 		SurgicalReportDockPopupComponent,
 		SurgicalReportDiagnosisComponent,
+		SurgicalReportPostDiagnosisComponent,
 		SurgicalReportProfessionalTeamComponent,
 		SurgicalReportProfessionalInfoComponent,
 		SurgicalReportProceduresComponent,
+		SurgicalReportSurgeryProceduresComponent,
 		ProfessionalAndDescriptionComponent,
 		ProcedureAndDescriptionComponent,
 		SurgicalReportProsthesisComponent,
@@ -283,7 +317,10 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		InstitucionModule,
 		LazyMaterialModule,
 		PresentationModule,
+		//standalone
 		IdentifierCasesComponent,
+		ConceptTypeaheadSearchComponent,
+		ConceptsListComponent
 	],
 	exports: [
 		// components
@@ -294,13 +331,11 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
-
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
 		BoxMessageComponent,
-		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
 		ProcedureListComponent,
@@ -319,6 +354,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ProfessionalListComponent,
 		PatientEvolutionChartsButtonComponent,
 		// dialogs
+		AddMemberMedicalTeamComponent,
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,

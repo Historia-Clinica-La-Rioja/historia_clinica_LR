@@ -5,11 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -27,5 +22,9 @@ public class ProcedureParameterBo {
 	private Short typeId;
 
 	private Short inputCount;
+
+	public boolean isNumeric() {
+		return ProcedureParameterTypeBo.NUMERIC.equals(this.typeId);
+	}
 
 }

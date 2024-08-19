@@ -88,4 +88,10 @@ export class EmergencyCareEpisodeService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId + BASIC_URL_SUFIX}/episodes/${episodeId}/general/riskFactors`;
 		return this.http.get<RiskFactorDto>(url);
 	}
+
+	updatePatientDescription(episodeId: number, patientDescription: string): Observable<boolean> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/${episodeId}/updatePatientDescription`;
+		return this.http.put<boolean>(url, patientDescription);
+	}
 }

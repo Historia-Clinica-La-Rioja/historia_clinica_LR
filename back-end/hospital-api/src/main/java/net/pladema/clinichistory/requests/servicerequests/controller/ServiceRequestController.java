@@ -1,71 +1,12 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
-import ar.lamansys.sgh.clinichistory.application.fetchorderimagefile.FetchOrderImageFileById;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
-import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
-import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
-import net.pladema.clinichistory.requests.servicerequests.application.CreateAndReplaceTranscribedOrder;
-import net.pladema.clinichistory.requests.servicerequests.application.CreateServiceRequestPdf;
-import net.pladema.clinichistory.requests.servicerequests.application.CreateTranscribedServiceRequestPdf;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyTranscribedOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedServiceRequestSummaryDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyOrderReportInfoMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
-import net.pladema.clinichistory.requests.servicerequests.controller.mapper.TranscribedDiagnosticReportInfoMapper;
-import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
-import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
-import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
-import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
-import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
-import net.pladema.clinichistory.requests.servicerequests.service.UploadTranscribedOrderFileService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
-import net.pladema.events.EHospitalApiTopicDto;
-import net.pladema.events.HospitalApiPublisher;
-import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
-import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.patient.service.PatientMedicalCoverageService;
-import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-import net.pladema.staff.controller.dto.ProfessionalDto;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -85,11 +26,70 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
-@Slf4j
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
+import net.pladema.clinichistory.requests.servicerequests.application.AddDiagnosticReportObservations;
+import net.pladema.clinichistory.requests.servicerequests.application.CreateServiceRequestPdf;
+import net.pladema.clinichistory.requests.servicerequests.application.GetDiagnosticReportObservationGroup;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationsCommandDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.GetDiagnosticReportObservationGroupDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportObservationsMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.FileMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyOrderReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.GetDiagnosticReportObservationGroupBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.InvalidProcedureTemplateChangeException;
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
+import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
+import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
+import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.CompleteDiagnosticReportBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+import net.pladema.events.EHospitalApiTopicDto;
+import net.pladema.events.HospitalApiPublisher;
+import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
+import net.pladema.staff.controller.dto.ProfessionalDto;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+
+
 @Tag(name = "Service request", description = "Service request")
-@RequiredArgsConstructor
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/service-requests")
+@Slf4j
+@RequiredArgsConstructor
+@RestController
 public class ServiceRequestController {
     private static final String OUTPUT = "create result -> {}";
     private static final String COMMON_INPUT = "Input parameters -> institutionId {} patientId {}, diagnosticReportId {}";
@@ -101,12 +101,9 @@ public class ServiceRequestController {
     private final StudyMapper studyMapper;
     private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
 	private final ListStudyOrderReportInfoService listStudyOrderReportInfoService;
-	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
 	private final ListStudyWithoutOrderReportInfoService listStudyWithoutOrderReportInfoService;
     private final DiagnosticReportInfoMapper diagnosticReportInfoMapper;
-	private final UploadTranscribedOrderFileService uploadTranscribedOrderFileService;
 	private final StudyOrderReportInfoMapper studyOrderReportInfoMapper;
-	private final TranscribedDiagnosticReportInfoMapper transcribedDiagnosticReportInfoMapper;
 	private final StudyWithoutOrderReportInfoMapper studyWithoutOrderReportInfoMapper;
     private final DeleteDiagnosticReportService deleteDiagnosticReportService;
     private final CompleteDiagnosticReportService completeDiagnosticReportService;
@@ -115,16 +112,15 @@ public class ServiceRequestController {
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
     private final DiagnosticReportInfoService diagnosticReportInfoService;
-	private final DeleteTranscribedOrderService deleteTranscribedOrderService;
     private final FileMapper fileMapper;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
-	private final FetchOrderImageFileById fetchOrderImageFileById;
 	private final CreateServiceRequestPdf createServiceRequestPdf;
 	private final SharedReferenceCounterReference sharedReferenceCounterReference;
-	private final CreateTranscribedServiceRequestPdf createTranscribedServiceRequestPdf;
-	private final CreateAndReplaceTranscribedOrder createAndReplaceTranscribedOrder;
+	private final GetDiagnosticReportObservationGroup getDiagnosticReportObservationGroup;
+	private final AddDiagnosticReportObservations addDiagnosticReportObservations;
+	private final DiagnosticReportObservationsMapper diagnosticReportObservationsMapper;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -161,58 +157,6 @@ public class ServiceRequestController {
         return result;
     }
 
-	@PostMapping("/transcribed")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public Integer createTranscribed(@PathVariable(name = "institutionId") Integer institutionId,
-									 @PathVariable(name = "patientId") Integer patientId,
-									 @Valid @RequestBody TranscribedServiceRequestDto transcribedServiceRequest) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequest {}", institutionId, patientId, transcribedServiceRequest);
-		TranscribedServiceRequestBo transcribedServiceRequestBo = studyMapper.toTranscribedServiceRequestBo(transcribedServiceRequest);
-
-		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-		PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
-		transcribedServiceRequestBo.setPatientInfo(patientInfoBo);
-		Integer serviceRequestId = createAndReplaceTranscribedOrder.run(transcribedServiceRequestBo, Optional.ofNullable(transcribedServiceRequest.getOldTranscribedOrderId()));
-
-		log.debug(OUTPUT, serviceRequestId);
-		return serviceRequestId;
-	}
-
-	@DeleteMapping("/{orderId}/delete-transcribed")
-	@ResponseStatus(code = HttpStatus.OK)
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public void deleteTranscribedOrder(@PathVariable(name = "institutionId") Integer institutionId,
-					   	@PathVariable(name = "patientId") Integer patientId,
-					   	@PathVariable(name = "orderId") Integer orderId) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, orderId {}", institutionId, patientId, orderId);
-		deleteTranscribedOrderService.execute(orderId);
-	}
-
-	@PostMapping(value = "/{orderId}/uploadFiles" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	@ResponseStatus(code = HttpStatus.CREATED)
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public List<Integer>  uploadFiles(@PathVariable(name = "institutionId") Integer institutionId,
-									 @PathVariable(name = "patientId") Integer patientId,
-									 @PathVariable(name = "orderId") Integer orderId,
-									 @RequestPart("files") MultipartFile[] files) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, orderId {}", institutionId, patientId, orderId);
-		var result = uploadTranscribedOrderFileService.execute(files, orderId, patientId);
-		log.debug(OUTPUT, result);
-		return result;
-	}
-
-	@GetMapping(value = "/{id}/downloadTranscribedFile")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, TECNICO, INFORMADOR')")
-	public ResponseEntity<Resource> downloadImg(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "id") Integer id)
-	{
-		var storedFileBo = fetchOrderImageFileById.run(id);
-
-		return StoredFileResponse.sendFile(storedFileBo);
-	}
-
     @PutMapping("/{diagnosticReportId}/complete")
     @Transactional
     @ResponseStatus(code = HttpStatus.OK)
@@ -228,7 +172,9 @@ public class ServiceRequestController {
                 completeRequestDto);
 		if (completeRequestDto.getReferenceClosure() != null)
 			completeRequestDto.getReferenceClosure().setFileIds(completeRequestDto.getFileIds());
-		Integer result = completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportMapper.parseTo(completeRequestDto), institutionId);
+
+		CompleteDiagnosticReportBo completeDiagnosticReportBo = completeDiagnosticReportMapper.parseTo(completeRequestDto);
+		Integer result = completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportBo, institutionId);
         updateDiagnosticReportFileService.run(result, completeRequestDto.getFileIds());
         log.debug(OUTPUT, result);
     }
@@ -286,7 +232,11 @@ public class ServiceRequestController {
         DiagnosticReportBo resultService = diagnosticReportInfoService.run(diagnosticReportId);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(resultService.getUserId());
 		ReferenceRequestDto reference = sharedReferenceCounterReference.getReferenceByServiceRequestId(resultService.getEncounterId()).orElse(null);
-		DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(resultService, professionalDto, reference);
+		DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(
+			resultService,
+			professionalDto,
+			reference
+			);
         DiagnosticReportInfoWithFilesDto result = new DiagnosticReportInfoWithFilesDto(
                 driDto,
                 fileMapper.parseToList(resultService.getFiles()));
@@ -315,7 +265,12 @@ public class ServiceRequestController {
                     ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
 					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
 					ReferenceRequestDto reference = sharedReferenceCounterReference.getReferenceByServiceRequestId(diagnosticReportBo.getEncounterId()).orElse(null);
-                    return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage), reference);
+                    return diagnosticReportInfoMapper.parseTo(
+                    	diagnosticReportBo,
+                    	professionalDto,
+                    	patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage),
+                    	reference
+                    	);
 				})
                 .collect(Collectors.toList());
 
@@ -339,7 +294,11 @@ public class ServiceRequestController {
 				.map(diagnosticReportBo -> {
 					ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(diagnosticReportBo.getUserId());
 					PatientMedicalCoverageBo coverage = patientMedicalCoverageService.getActiveCoveragesByOrderId(diagnosticReportBo.getEncounterId());
-					return diagnosticReportInfoMapper.parseTo(diagnosticReportBo, professionalDto, patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage), null);
+					return diagnosticReportInfoMapper.parseTo(
+						diagnosticReportBo,
+						professionalDto,
+						patientMedicalCoverageMapper.toPatientMedicalCoverageDto(coverage),
+						null);
 				})
 				.collect(Collectors.toList());
 
@@ -366,22 +325,6 @@ public class ServiceRequestController {
 		return result;
 	}
 
-	@GetMapping("/studyTranscribedOrder")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public List<StudyTranscribedOrderReportInfoDto> getListStudyTranscribedOrder(@PathVariable(name = "institutionId") Integer institutionId,
-																				 @PathVariable(name = "patientId") Integer patientId) {
-		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
-
-		List<StudyTranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListStudyTranscribedOrderReports(patientId);
-
-		List<StudyTranscribedOrderReportInfoDto> result = resultService.stream()
-				.map(transcribedDiagnosticReportInfoMapper::parseToDto)
-				.collect(Collectors.toList());
-
-		log.trace(OUTPUT, result);
-		return result;
-	}
-
 	@GetMapping("/studyWithoutOrder")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public List<StudyWithoutOrderReportInfoDto> getListStudyWithoutOrder(@PathVariable(name = "institutionId") Integer institutionId,
@@ -392,23 +335,6 @@ public class ServiceRequestController {
 
 		List<StudyWithoutOrderReportInfoDto> result = resultService.stream()
 				.map(studyWithoutOrderReportInfoMapper::parseTo)
-				.collect(Collectors.toList());
-
-		log.trace(OUTPUT, result);
-		return result;
-	}
-
-	@GetMapping("/transcribedOrders")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
-	public List<TranscribedServiceRequestSummaryDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
-															 @PathVariable(name = "patientId") Integer patientId,
-															 @RequestParam(value = "orderId", required = false) String orderId) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, orderId {}", institutionId, patientId, orderId);
-
-		List<TranscribedServiceRequestBo> resultService = listTranscribedDiagnosticReportInfoService.execute(patientId);
-
-		List<TranscribedServiceRequestSummaryDto> result = resultService.stream()
-				.map(studyMapper::toTranscribedServiceRequestSummaryDto)
 				.collect(Collectors.toList());
 
 		log.trace(OUTPUT, result);
@@ -429,19 +355,44 @@ public class ServiceRequestController {
 		);
     }
 
-	@GetMapping(value = "/transcribed/{transcribedServiceRequestId}/download-pdf")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public ResponseEntity<Resource> downloadTranscribedOrderPdf(@PathVariable(name = "institutionId") Integer institutionId,
-												@PathVariable(name = "patientId") Integer patientId,
-												@PathVariable(name = "transcribedServiceRequestId") Integer transcribedServiceRequestId,
-												@RequestParam(name = "appointmentId") String appointmentId) throws PDFDocumentException {
-		log.trace("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}, appointmentId {}", institutionId, patientId, transcribedServiceRequestId, appointmentId);
-		var result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId, Integer.valueOf(appointmentId));
-		log.trace(OUTPUT, result);
+	@PutMapping("/{diagnosticReportId}/observations")
+	@Transactional
+	@ResponseStatus(code = HttpStatus.OK)
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
+	public void addObservations(@PathVariable(name = "institutionId") Integer institutionId,
+						 @PathVariable(name = "patientId") Integer patientId,
+						 @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
+						 @RequestBody AddDiagnosticReportObservationsCommandDto observations
+						 ) throws InvalidProcedureTemplateChangeException, DiagnosticReportObservationException {
+		log.debug("Input parameters ->  {} institutionIdpatientId {}, diagnosticReportId {}, observations {}",
+				institutionId,
+				patientId,
+				diagnosticReportId,
+				observations);
 
-		return StoredFileResponse.sendGeneratedBlob(//ServiceRequestService.downloadTranscribedOrderPdf
-				result
-		);
+		AddObservationsCommandVo observationsBo = diagnosticReportObservationsMapper.fromDto(observations);
+		addDiagnosticReportObservations.run(diagnosticReportId, observationsBo);
+
+		log.debug(OUTPUT, "endpoint doesn't provide output");
+	}
+
+	@GetMapping("/{diagnosticReportId}/observations")
+	@ResponseStatus(code = HttpStatus.OK)
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
+	public GetDiagnosticReportObservationGroupDto getObservations(
+		@PathVariable(name = "institutionId") Integer institutionId,
+		@PathVariable(name = "patientId") Integer patientId,
+		@PathVariable(name = "diagnosticReportId") Integer diagnosticReportId
+	) {
+		log.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
+
+		GetDiagnosticReportObservationGroupBo observations =
+			getDiagnosticReportObservationGroup.run(diagnosticReportId);
+
+		GetDiagnosticReportObservationGroupDto result = diagnosticReportObservationsMapper.parseTo(observations);
+
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 }
