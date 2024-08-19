@@ -22,7 +22,7 @@
 
 			<app-factores-de-riesgo-form-v2 formControlName="riskFactors"></app-factores-de-riesgo-form-v2>
 
-			<app-alergias-form formControlName="allergies" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias-form>
+			<app-alergias-form formControlName="allergies" [isAllergyNoReferInput]="data.emergencyCareEvolutionNote?.allergies.isReferred" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias-form>
 
 		</form>
 	</div>
