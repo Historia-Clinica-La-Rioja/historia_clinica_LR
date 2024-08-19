@@ -297,6 +297,9 @@
 				"TITLE": "Motivo de consulta",
 				"REGISTERED_REASONS": "Motivos de consulta registrados"
 			},
+			"clinical_specialty_sector": {
+                "TITLE": "Servicio de guardia"
+            },
 			"evolutions": {
 				"TITLE": "Evolución"
 			},

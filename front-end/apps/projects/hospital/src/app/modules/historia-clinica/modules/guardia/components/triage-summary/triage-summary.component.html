@@ -12,9 +12,16 @@
             <app-description-item-data-summary *ngIf="triageSummary.reasons" data-id="reasons-summary"
                 [descriptionItemDataSummary]="triageSummary.reasons"></app-description-item-data-summary>
 
+			<div data-id="clinical-specialty-sector-summary" *ngIf="triageSummary.clinicalSpecialtySector">
+				<app-iconed-titled-section icon="medical_services" title="guardia.documents-summary.clinical_specialty_sector.TITLE"></app-iconed-titled-section>
+				<div class="text-container section-description">
+					<span>{{triageSummary.clinicalSpecialtySector}}</span>
+				</div>
+			</div>
+
             <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
                 *ngIf="triageSummary.vitalSignsAndRiskFactors"
-                [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>   
+                [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
 
             <app-titled-grid-summary data-id="appearance-summary" *ngIf="triageSummary.appearance?.description.length"
             [itemsList]="triageSummary.appearance"></app-titled-grid-summary>

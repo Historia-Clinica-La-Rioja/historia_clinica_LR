@@ -16,19 +16,21 @@ export class TriageSummaryService {
 
     mapTriageAsViewFormat(triage: Item): TriageAsViewFormat {
         return {
-            ...(triage.content.category && 
+            ...(triage.content.category &&
                 { triageLevel: triage.content.category} ),
-            ...(triage.content.reasons.length && 
+            ...(triage.content.reasons.length &&
                 { reasons: this.documentsSummaryService.mapReasonsToDescriptionItemDataSummary(triage.content.reasons)} ),
-            ...(triage.content.riskFactors && 
+			...(triage.content.clinicalSpecialtySector &&
+				{ clinicalSpecialtySector: triage.content.clinicalSpecialtySector.description} ),
+            ...(triage.content.riskFactors &&
                 { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(triage.content.riskFactors)} ),
-            ...(triage.content.notes && 
+            ...(triage.content.notes &&
                 { observations: triage.content.notes} ),
-            ...(triage.content.appearance && 
+            ...(triage.content.appearance &&
                 { appearance: this.documentsSummaryService.mapAppearencesToTitleDescriptionListItem(triage.content.appearance)} ),
-            ...(triage.content.breathing && 
+            ...(triage.content.breathing &&
                 { breathing: this.documentsSummaryService.mapBreathingToTitleDescriptionListItem(triage.content.breathing)} ),
-            ...(triage.content.circulation && 
+            ...(triage.content.circulation &&
                 { circulation: this.documentsSummaryService.mapCirculationToTitleDescriptionListItem(triage.content.circulation)} )
         }
     }
@@ -37,6 +39,7 @@ export class TriageSummaryService {
 export interface TriageAsViewFormat {
     triageLevel: TriageCategory,
     reasons: DescriptionItemDataSummary,
+	clinicalSpecialtySector: string,
     vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
     observations: string,
     appearance: TitleDescriptionListItem,

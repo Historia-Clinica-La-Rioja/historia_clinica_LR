@@ -2,6 +2,7 @@
     <app-triage-chip [category]="triage.emergencyCareEpisodeListTriageDto"></app-triage-chip>
     <app-identifier-cases *ngIf="triage.reasons?.length" identifierCase={{REASON}}
         [description]="triage.reasons | showMoreConcepts"></app-identifier-cases>
+	<span class="mat-small">{{ triage.emergencyCareEpisodeListTriageDto.clinicalSpecialtySector?.description }}</span>
     <app-register-editor-info *ngIf="!!triageCreator" [registerEditor]="triageCreator">
     </app-register-editor-info>
 </div>
