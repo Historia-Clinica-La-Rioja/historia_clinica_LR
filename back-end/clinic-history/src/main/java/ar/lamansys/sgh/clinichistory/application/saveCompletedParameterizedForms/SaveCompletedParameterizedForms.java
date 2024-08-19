@@ -51,7 +51,7 @@ public class SaveCompletedParameterizedForms {
 		result.setNumericValue(completeParameterBo.getNumericValue());
 		if (completeParameterBo.isSnomed()){
 			SnomedBo snomedBo = new SnomedBo(completeParameterBo.getConceptSctid(), completeParameterBo.getConceptPt());
-			Integer snomedId = snomedService.getSnomedId(snomedBo).orElse(snomedService.createSnomedTerm(snomedBo));
+			Integer snomedId = snomedService.getSnomedId(snomedBo).orElseGet(() -> snomedService.createSnomedTerm(snomedBo));
 			result.setSnomedId(snomedId);
 		}
 		return result;
