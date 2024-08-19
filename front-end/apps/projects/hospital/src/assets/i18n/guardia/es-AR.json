@@ -227,6 +227,7 @@
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
 					"PROFESIONAL": "Profesional",
+					"SPECIALTY_SECTOR": "Servicio de guardia",
 					"UBICACION": "Zona de Triage",
 					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
 					"TEMPERATURA": "Temperatura",

@@ -4,6 +4,7 @@ import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { LABELS_RISK_FACTORS, LABELS_RISK_FACTORS_PEDIATRIC } from '../../utils/riskFactors.utils';
+import { EmergencyCareClinicalSpecialtySectorDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-triage-details',
@@ -144,6 +145,7 @@ export interface TriageDetails {
 	};
 	notes?: string;
 	reasons?: string[];
+	clinicalSpecialtySector?: EmergencyCareClinicalSpecialtySectorDto;
 }
 
 export interface RiskFactorFull {

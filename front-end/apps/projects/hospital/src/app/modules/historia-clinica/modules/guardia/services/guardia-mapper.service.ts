@@ -53,6 +53,7 @@ export class GuardiaMapperService {
 			circulation: mapCirculation(triageListDto.circulation),
 			notes: triageListDto.notes,
 			reasons: triageListDto.reasons.map(reason => reason.snomed.pt),
+			clinicalSpecialtySector: triageListDto.clinicalSpecialtySector,
 		};
 
 		function mapAppearance(appearance) {
