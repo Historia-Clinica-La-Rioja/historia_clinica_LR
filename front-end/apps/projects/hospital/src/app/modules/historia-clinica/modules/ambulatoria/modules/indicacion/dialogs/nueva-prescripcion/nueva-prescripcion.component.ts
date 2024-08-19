@@ -121,7 +121,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 					},
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
 					commercialMedicationPrescription: pi.commercialMedicationPrescription,
-				    suggestedCommercialMedicationSctid: pi.suggestedCommercialMedicationSctid
+				    suggestedCommercialMedication: pi.suggestedCommercialMedication
 				};
 			}),
 			repetitions: this.prescriptionForm.controls.posdatadas.value,

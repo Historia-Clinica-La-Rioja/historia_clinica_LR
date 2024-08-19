@@ -296,7 +296,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				unit: this.prescriptionItemForm.controls.unit.value
 			},
 			commercialMedicationPrescription: commercialMedicationPrescription,
-			suggestedCommercialMedicationSctid: this.prescriptionItemForm.controls.suggestedCommercialMedication.value?.sctid
+			suggestedCommercialMedication: this.prescriptionItemForm.controls.suggestedCommercialMedication.value
 		};
 		this.dialogRef.close(newItem);
 	}
@@ -508,5 +508,5 @@ export class NewPrescriptionItem {
 	dayDose: number;
 	quantity: QuantityDto;
 	commercialMedicationPrescription?: CommercialMedicationPrescriptionDto;
-    suggestedCommercialMedicationSctid?: string;
+    suggestedCommercialMedication?: SnomedDto;
 }
