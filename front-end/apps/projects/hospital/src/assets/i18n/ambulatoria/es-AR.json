@@ -857,7 +857,7 @@
                     "STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
                     "CONFIRM_ORDER": "Finalizar orden",
 					"URGENT": "Urgente",
-					"RUTINE": "Rutine",
+					"RUTINE": "Rutina",
 					"REQUIERES-TECHNICIAN-ON-SITE": "¿Requiere técnico en el lugar?",
 					"TYPE-OF-STUDY": "Tipo de estudio",
 					"PATIENT_DATA": "Datos del paciente",
