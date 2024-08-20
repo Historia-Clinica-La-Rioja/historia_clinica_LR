@@ -217,7 +217,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			involvedHealthcareProfessionalIds: [],
 			personalHistories: {
 				isReferred: null,
-				content: []			
+				content: []
 			},
 			completeForms: []
 		};
@@ -332,26 +332,28 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.setPresentationUnits(snomed.sctid);
 		}
 		else
-			this.setPresentationUnits(this.snomedConcept.sctid);
+			this.setPresentationUnits(this.snomedConcept?.sctid);
 	}
 
 	setSuggestedCommercialMedicationOptions(commercialPt?: string): void {
-		this.commercialMedicationService.getSuggestedCommercialMedicationSnomedListByGeneric(this.snomedConcept?.sctid).subscribe(result => {
-			this.suggestedCommercialMedicationOptions = result.map(snomed => ({
-				value: snomed,
-				compareValue: snomed.pt,
-				viewValue: snomed.pt
-			}));
+		if (this.snomedRelationsFFIsOn && this.searchConceptsLocallyFFIsOn) {
+			this.commercialMedicationService.getSuggestedCommercialMedicationSnomedListByGeneric(this.snomedConcept?.sctid).subscribe(result => {
+				this.suggestedCommercialMedicationOptions = result.map(snomed => ({
+					value: snomed,
+					compareValue: snomed.pt,
+					viewValue: snomed.pt
+				}));
 
-			if (commercialPt) {
-				this.initialSuggestCommercialMedication = this.suggestedCommercialMedicationOptions.find(option => option.compareValue === commercialPt);
-				this.setPresentationUnits(this.initialSuggestCommercialMedication.value.sctid);
-			}
-		});
+				if (commercialPt) {
+					this.initialSuggestCommercialMedication = this.suggestedCommercialMedicationOptions.find(option => option.compareValue === commercialPt);
+					this.setPresentationUnits(this.initialSuggestCommercialMedication.value.sctid);
+				}
+			});
+		}
 	}
 
 	setPresentationUnits(medicationSctid?: string): void {
-		if (medicationSctid)
+		if (this.snomedRelationsFFIsOn && this.commercialPrescriptionFFIsOn && medicationSctid)
 			this.presentationUnitsService.getMedicationPresentationUnits(medicationSctid).subscribe(result => {
 				this.presentationUnitsOptions = result;
 			})

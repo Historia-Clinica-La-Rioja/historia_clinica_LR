@@ -53,13 +53,13 @@
 			(conceptSelected)="setCommercialMedicationConcept($event)">
 		</app-commercial-pharmaco-typeahead>
 
-		<mat-checkbox formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="resetSuggestedCommercialMedication()">
+		<mat-checkbox *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn" formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="resetSuggestedCommercialMedication()">
 			<span id="suggest-commercial-checkbox">
 				{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION' | translate}}
 			</span>
 		</mat-checkbox>
 
-		<app-typeahead id="suggestedCommercialMedication" *ngIf="prescriptionItemForm.value.isSuggestCommercialMedicationChecked"
+		<app-typeahead id="suggestedCommercialMedication" *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn && prescriptionItemForm.value.isSuggestCommercialMedicationChecked"
 			[titleInput]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGESTED_COMMERCIAL_MEDICATION' | translate"
 			[externalSetValue]="initialSuggestCommercialMedication"
 			[options]="suggestedCommercialMedicationOptions"
