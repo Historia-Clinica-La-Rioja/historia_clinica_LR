@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.publicapi.activities.application.fetchactivitiesbyfilter.exception.DiagnosticNotFoundException;
 import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
 import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedCIE10Bo;
@@ -254,51 +256,94 @@ public class ActivitiesMapper {
 		/**
 		 * Attentions are grouped by (encounter, scope)
 		 * See {@link ar.lamansys.sgh.publicapi.domain.ScopeEnum}
-		 * This pair can be traced to the fields document.source_id and document.source_type_id
+		 * This pair can be traced to the fields:
+		 * 	 * v_attention.encounter_id -> document.source_id
+		 * 	 * v_attention.scope_id -> document.source_type_id
 		 */
-		Map<AttentionGroupKey, List<SingleAttentionInfoDto>> groupedAttentions = resultBo.stream()
-				.filter(res -> res.getSingleDiagnosticDto().getDiagnosis().getPt() != null)
-				.filter(res -> res.getSingleDiagnosticDto().getUpdatedOn() != null)
-				.collect(groupingBy(attention -> new AttentionGroupKey(attention.getEncounterId(), attention.getScope())));
+		Map<AttentionGroupKey, List<SingleAttentionInfoDto>> groupedAttentions = resultBo
+			.stream()
+			.collect(groupingBy(attention -> new AttentionGroupKey(attention.getEncounterId(), attention.getScope())));
 
-		for(var key : groupedAttentions.keySet()) {
-			var list = groupedAttentions.get(key);
-			var lastMainDiagnosisOptional = list.stream()
-					.max(Comparator.comparing(a -> a.getSingleDiagnosticDto()
-							.getUpdatedOn()));
-			if(lastMainDiagnosisOptional.isPresent()) {
-				var lastMainDiagnosis = lastMainDiagnosisOptional.get();
-				DiagnosesDto diagnosis = new DiagnosesDto();
-				diagnosis.setMain(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis());
-				diagnosis.setOthers(list.stream()
-						.filter(diag -> ProblemTypeEnum.map(diag.getSingleDiagnosticDto().getDiagnosisType()).equals(ProblemTypeEnum.DIAGNOSIS))
-						.filter(diag -> !diag.getSingleDiagnosticDto().getDiagnosis().equals(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis()))
-						.map(diag -> diag.getSingleDiagnosticDto().getDiagnosis())
-						.distinct()
-						.collect(Collectors.toList()));
+		/**
+		 * Starting from hsi-10498 and hsi-9370, the diagnosis field is optional. Before, attentions without a diagnosis
+		 * attached weren't returned by this endpoint.
+		 *
+		 * Certain activities don't have a diagnosis attached:
+		 * 	* Medications, vaccines and 'plan parenteral' administered during a hospitalization
+		 * 	* Outpatient consultations without an assigned problem
+		 */
+		for (var attentionGroup : groupedAttentions.entrySet()) {
+			AttentionInfoDto newAttention;
+			List<SingleAttentionInfoDto> attentions = attentionGroup.getValue();
 
-				AttentionInfoDto attention = AttentionInfoDto.builder()
-						.attentionDate(lastMainDiagnosis.getAttentionDate())
-						.coverage(lastMainDiagnosis.getCoverage())
-						.scope(lastMainDiagnosis.getScope())
-						.responsibleDoctor(lastMainDiagnosis.getResponsibleDoctor())
-						.speciality(lastMainDiagnosis.getSpeciality())
-						.patient(lastMainDiagnosis.getPatient())
-						.encounterId(lastMainDiagnosis.getEncounterId())
-						.internmentInfo(lastMainDiagnosis.getInternmentInfo())
-						.diagnoses(diagnosis)
-						.id(lastMainDiagnosis.getId())
-						.attentionDateWithTime(lastMainDiagnosis.getAttentionDateWithTime())
-						.personExtendedInfo(lastMainDiagnosis.getPersonExtendedInfo())
-						.emergencyCareAdministrativeDischargeDateTime(lastMainDiagnosis.getEmergencyCareAdministrativeDischargeDateTime())
-						.build();
+			//There's a diagnosis
+			if (groupContainsDiagnosis(attentions)) {
+				SingleAttentionInfoDto lastMainDiagnosis =
+					attentions
+					.stream()
+					.max(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn()))
+					.orElseThrow(() -> noDiagnosticFound());
 
-				result.add(attention);
+				DiagnosesDto diagnoses = buildDiagnosis(attentions, lastMainDiagnosis);
+				newAttention = mapToAttention(lastMainDiagnosis, diagnoses);
 			}
-			result = result.stream().sorted(Comparator.comparingLong(AttentionInfoDto::getId).reversed()).collect(Collectors.toList());
+			//No diagnosis
+			else {
+				SingleAttentionInfoDto lastMainDiagnosis = attentions.get(0);
+				DiagnosesDto diagnoses = DiagnosesDto.emptyDiagnoses();
+				newAttention = mapToAttention(lastMainDiagnosis, diagnoses);
+			}
+
+			result.add(newAttention);
 		}
 
+		return result
+			.stream()
+			.sorted(Comparator.comparingLong(AttentionInfoDto::getId).reversed())
+			.collect(Collectors.toList());
+	}
 
-		return result;
+	private static DiagnosesDto buildDiagnosis(List<SingleAttentionInfoDto> attentions, SingleAttentionInfoDto lastMainDiagnosis) {
+		DiagnosesDto diagnosis = new DiagnosesDto();
+		diagnosis.setMain(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis());
+		diagnosis.setOthers(attentions.stream()
+				.filter(diag -> ProblemTypeEnum.map(diag.getSingleDiagnosticDto().getDiagnosisType()).equals(ProblemTypeEnum.DIAGNOSIS))
+				.filter(diag -> !diag.getSingleDiagnosticDto().getDiagnosis().equals(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis()))
+				.map(diag -> diag.getSingleDiagnosticDto().getDiagnosis())
+				.distinct()
+				.collect(Collectors.toList()));
+		return diagnosis;
+	}
+
+	private DiagnosticNotFoundException noDiagnosticFound() {
+		return new DiagnosticNotFoundException();
+	}
+
+	private boolean groupContainsDiagnosis(List<SingleAttentionInfoDto> attentionGroup) {
+		return attentionGroup
+		.stream()
+		.anyMatch(res ->
+			res.getSingleDiagnosticDto().getDiagnosis().getPt() != null &&
+			res.getSingleDiagnosticDto().getUpdatedOn() != null
+		);
+	}
+
+	private static AttentionInfoDto mapToAttention(SingleAttentionInfoDto attentionSource, DiagnosesDto diagnoses) {
+		AttentionInfoDto attention = AttentionInfoDto.builder()
+				.attentionDate(attentionSource.getAttentionDate())
+				.coverage(attentionSource.getCoverage())
+				.scope(attentionSource.getScope())
+				.responsibleDoctor(attentionSource.getResponsibleDoctor())
+				.speciality(attentionSource.getSpeciality())
+				.patient(attentionSource.getPatient())
+				.encounterId(attentionSource.getEncounterId())
+				.internmentInfo(attentionSource.getInternmentInfo())
+				.diagnoses(diagnoses)
+				.id(attentionSource.getId())
+				.attentionDateWithTime(attentionSource.getAttentionDateWithTime())
+				.personExtendedInfo(attentionSource.getPersonExtendedInfo())
+				.emergencyCareAdministrativeDischargeDateTime(attentionSource.getEmergencyCareAdministrativeDischargeDateTime())
+				.build();
+		return attention;
 	}
 }
