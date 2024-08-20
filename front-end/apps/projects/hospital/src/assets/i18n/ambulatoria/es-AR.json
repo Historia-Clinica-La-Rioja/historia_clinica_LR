@@ -568,6 +568,7 @@
                     "MEDICAL_COVERAGE_LABEL": "Cobertura médica",
                     "MEDICAL_COVERAGE": "Cobertura médica",
                     "SELECT_SPECIALTY": "Seleccione especialidad",
+                    "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
                     "WITHOUT_RECIPE": "Sin receta",
                     "UPDATE_COVERAGE": "Actualizar cobertura",
                     "ADMINISTRATION_TIME_DAYS": "Durante: {{days}} días",
