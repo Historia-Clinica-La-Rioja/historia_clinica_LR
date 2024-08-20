@@ -111,12 +111,13 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "               WHERE hc.problem_id IN (:problemTypes)  " +
                 "               GROUP BY dhc.document_id " +
                 "            ) prob ON (t.doc_id = prob.document_id)";
-        Optional<Object[]> queryResult = (Optional<Object[]>) entityManager.createNativeQuery(query)
+        Optional<Object[]> queryResult = entityManager.createNativeQuery(query)
                 .setParameter("documentId", documentId)
                 .setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC))
 				.setParameter("outPatientValue", outPatientValue)
 				.setParameter("vaccineValue", vaccineValue)
-                .getSingleResult();
+				.setMaxResults(1)
+				.getResultList().stream().findFirst();
 
         Optional<FormVOutpatientVo> result = queryResult.map(a -> new FormVOutpatientVo(
                 (String) a[0],
