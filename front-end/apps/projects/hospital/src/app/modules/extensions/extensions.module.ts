@@ -17,6 +17,7 @@ import { CubejsDashboardComponent } from './components/cubejs-dashboard/cubejs-d
 import { DateOnlyIsoFormInputComponent } from './components/date-only-iso-form-input/date-only-iso-form-input.component';
 import { DownloadCsvButtonComponent } from './components/download-csv-button/download-csv-button.component';
 import { FreeTextFormInputComponent } from './components/free-text-form-input/free-text-form-input.component';
+import { HtmlComponent } from './components/html/html.component';
 import { JsonComponent } from './components/json/json.component';
 import { MultiselectCubejsDashboardComponent } from './components/multiselect-cubejs-dashboard/multiselect-cubejs-dashboard.component';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
@@ -60,6 +61,7 @@ import { cubejsOptions } from './extensions-cubejs';
 		DateOnlyIsoFormInputComponent,
 		DownloadCsvButtonComponent,
 		FreeTextFormInputComponent,
+		HtmlComponent,
 		JsonComponent,
 		MultiselectCubejsDashboardComponent,
 		PageLayoutComponent,
@@ -76,7 +78,6 @@ import { cubejsOptions } from './extensions-cubejs';
 		UiComponentComponent,
 		UiComponentListComponent,
 		UiExternalComponentComponent,
-
 	],
 	exports: [
 		// components

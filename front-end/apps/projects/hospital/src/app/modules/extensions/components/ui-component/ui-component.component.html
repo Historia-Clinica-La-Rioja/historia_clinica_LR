@@ -52,8 +52,9 @@
 	<div *ngSwitchCase="TYPE_DEFINITIONS.tabs">
 		<app-tabs [tabs]="uiComponent.args.tabs"></app-tabs>
 	</div>
-	<div *ngSwitchCase="TYPE_DEFINITIONS.html" [innerHTML]="valueAsHtml"></div>
-
+	<div *ngSwitchCase="TYPE_DEFINITIONS.html">
+		<app-html [content]="uiComponent.args.value"></app-html>
+	</div>
 	<div *ngSwitchCase="TYPE_DEFINITIONS.code">
 		<code>{{uiComponent.args.value | json}}</code>
 	</div>
