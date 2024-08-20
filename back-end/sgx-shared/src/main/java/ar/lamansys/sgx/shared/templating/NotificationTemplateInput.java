@@ -23,7 +23,9 @@ public class NotificationTemplateInput<T> {
 		return new NotificationTemplateInput<>(
 				prefix + this.templateId,
 				this.args,
-				this.feature
+				this.feature,
+				Collections.emptyList(),
+				null
 		);
 	}
 
