@@ -139,7 +139,7 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 2, style, content.getSector());
 		excelUtilsService.setCellValue(row, 3, style, content.getPoliceIntervention());
 		excelUtilsService.setCellValue(row, 4, style, content.getAttentionDate());
-		excelUtilsService.setCellValue(row, 5, style, content.getAttentionHour());
+		excelUtilsService.setCellValue(row, 5, style, dateTools.standardizeTime(content.getAttentionHour()));
 		excelUtilsService.setCellValue(row, 6, style, content.getProfessionalRegistering());
 		excelUtilsService.setCellValue(row, 7, style, content.getProfessionalAttention());
 		excelUtilsService.setCellValue(row, 8, style, content.getIdentification());
@@ -170,7 +170,7 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 0, style, content.getPatientProvider());
 		excelUtilsService.setCellValue(row, 1, style, content.getProviderDni());
 		excelUtilsService.setCellValue(row, 2, style, content.getAttentionDate());
-		excelUtilsService.setCellValue(row, 3, style, content.getHour());
+		excelUtilsService.setCellValue(row, 3, style, dateTools.standardizeTime(content.getHour()));
 		excelUtilsService.setCellValue(row, 4, style, content.getConsultationNumber());
 		excelUtilsService.setCellValue(row, 5, style, content.getPatientDni());
 		excelUtilsService.setCellValue(row, 6, style, content.getPatientName());
@@ -218,7 +218,7 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 0, style, content.getLender());
 		excelUtilsService.setCellValue(row, 1, style, content.getLenderDni());
 		excelUtilsService.setCellValue(row, 2, style, content.getAttentionDate());
-		excelUtilsService.setCellValue(row, 3, style, content.getHour());
+		excelUtilsService.setCellValue(row, 3, style, dateTools.standardizeTime(content.getHour()));
 		excelUtilsService.setCellValue(row, 4, style, content.getPatientDni());
 		excelUtilsService.setCellValue(row, 5, style, content.getPatientName());
 		excelUtilsService.setCellValue(row, 6, style, content.getGender());
