@@ -136,9 +136,9 @@ export class StudyComponent implements OnInit {
     }
 
 	private mapToStudyInformationFromImageOrderCases(report: DiagnosticWithTypeReportInfoDto): StudyInformation {
-        return {
+		return {
             diagnosticInformation: report,
-            hasActiveAppointment: (report.infoOrderInstances as InfoNewStudyOrderDto).hasActiveAppointment,
+            hasActiveAppointment: (report.infoOrderInstances as InfoNewStudyOrderDto)?.hasActiveAppointment?(report.infoOrderInstances as InfoNewStudyOrderDto).hasActiveAppointment: false ,
 			appointmentId: report.infoOrderInstances?.imageId ? report.infoOrderInstances.imageId : null ,
 			reportStatus: report.infoOrderInstances?.viewReport
         }
