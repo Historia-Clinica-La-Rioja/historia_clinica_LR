@@ -62,7 +62,9 @@ export class CardEstudiosComponent implements OnInit {
 	episodeId: number;
 	response: DiagnosticReportInfoDto[] = []
 
-	patientMedicalCoverageId: number;
+	patientEmergencyCareMedicalCoverageId: number;
+	patientInternmentEpisodeMedicalCoverageId: number;
+
 	@Input() filterBy: {
 		source: string,
 		id: number,
@@ -132,7 +134,7 @@ export class CardEstudiosComponent implements OnInit {
 					this.intermentDiagnosis = diagnoses.map(this.mapDiagnosesGeneralStateDto);
 				});
 				this.internmentEpisodeService.getInternmentEpisode(this.internmentEpisodeInProgressId).subscribe((internmentEpisodeBMDto: InternmentEpisodeBMDto) =>
-					this.patientMedicalCoverageId = internmentEpisodeBMDto.patientMedicalCoverageId)
+					this.patientInternmentEpisodeMedicalCoverageId = internmentEpisodeBMDto.patientMedicalCoverageId)
 			}
 		});
 
@@ -146,7 +148,7 @@ export class CardEstudiosComponent implements OnInit {
 			).subscribe(
 				(episode: EmergencyCareListDto) => {
 					if (episode) {
-						this.patientMedicalCoverageId = episode.patient.patientMedicalCoverageId;
+						this.patientEmergencyCareMedicalCoverageId = episode.patient.patientMedicalCoverageId;
 						this.episodeId = episode.id;
 						this.episodeEnAtencion = episode.state.id === EstadosEpisodio.EN_ATENCION;
 						this.notEmergencyCareTemporaryPatient = episode.patient.typeId != PatientType.EMERGENCY_CARE_TEMPORARY;
@@ -245,7 +247,7 @@ export class CardEstudiosComponent implements OnInit {
 		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 			{
 				width: DialogWidth.MEDIUM,
-				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId, patientMedicalCoverageId: this.patientMedicalCoverageId },
+				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId, patientInternmentEpisodeMedicalCoverageId: this.patientInternmentEpisodeMedicalCoverageId },
 			})
 
 		newOrderComponent.afterClosed().subscribe((newInternmentOrder: NewInternmentOrder) => {
@@ -285,7 +287,7 @@ export class CardEstudiosComponent implements OnInit {
 			const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 				{
 					width: DialogWidth.MEDIUM,
-					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, patientMedicalCoverageId: this.patientMedicalCoverageId },
+					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, patientEmergencyCareMedicalCoverageId: this.patientEmergencyCareMedicalCoverageId },
 				});
 			newOrderComponent.afterClosed().subscribe((newOrder: NewInternmentOrder) => {
 				if (newOrder) {
