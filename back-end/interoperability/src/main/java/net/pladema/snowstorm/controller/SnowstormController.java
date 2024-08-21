@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -168,6 +169,7 @@ public class SnowstormController {
 		List<SnomedTemplateDto> result = searchTemplates.run(term, eclKey, institutionId)
 				.stream()
 				.map(this::mapToSnomedTemplateDto)
+				.sorted(Comparator.comparing(SnomedTemplateDto::getDescription))
 				.collect(Collectors.toList());
 		LOG.debug("Output size -> {}", result.size());
 		LOG.trace("Output -> {}", result);
