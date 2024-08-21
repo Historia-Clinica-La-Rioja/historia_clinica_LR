@@ -28,7 +28,6 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 
-import { DatePipe } from '@angular/common';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
@@ -167,7 +166,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly translateService: TranslateService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
-		private readonly datePipe: DatePipe,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 		private readonly snowstormService: SnowstormService,
@@ -179,8 +177,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.dateFormatPipe);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.dateFormatPipe);
 		this.personalHistoriesNewConsultationService = new NewConsultationPersonalHistoriesService(this.snomedService, this.snackBarService);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);

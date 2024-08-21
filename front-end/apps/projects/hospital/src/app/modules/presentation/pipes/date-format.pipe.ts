@@ -1,5 +1,4 @@
 import { DatePipe } from '@angular/common';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DEFAULT_LANG } from '../../../app.component';
 import { format } from 'date-fns';
@@ -23,7 +22,7 @@ export class DateFormatPipe implements PipeTransform {
 			case 'date':
 				return this.currentLang === 'es-AR' ? dateToViewDate(paramDate) : this.datePipe.transform(paramDate, 'shortDate')
 			case 'datetime':
-				return this.currentLang === 'es-AR' ? dateTimeToViewDateHourMinute(paramDate) : this.datePipe.transform(paramDate, DatePipeFormat.SHORT);
+				return this.currentLang === 'es-AR' ? dateTimeToViewDateHourMinute(paramDate) : this.datePipe.transform(paramDate, 'short');
 			case 'time':
 				return this.currentLang === 'es-AR' ? timeToHourMinute(paramDate) : this.datePipe.transform(paramDate, 'shortTime');
 			default:

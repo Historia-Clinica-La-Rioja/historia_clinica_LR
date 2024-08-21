@@ -24,7 +24,6 @@ export enum DateFormat {
 }
 
 export enum DatePipeFormat {
-	SHORT = 'short',// es-AR format: 27/3/96 03:24
 	MEDIUM = 'medium',// es-AR format: 27 mar. 1996 03:24:19
 	LONG = 'long',// es-AR format: 27 de marzo de 1996 a las 03:24:19 GMT-3
 	FULL = 'full',// es-AR format: miércoles, 27 de marzo de 1996 a las 03:24:19 GMT-03:00

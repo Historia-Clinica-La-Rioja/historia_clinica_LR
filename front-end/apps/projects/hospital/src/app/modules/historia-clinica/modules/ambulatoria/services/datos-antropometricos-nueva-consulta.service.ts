@@ -4,13 +4,12 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ClinicalObservationDto, HCEAnthropometricDataDto, MasterDataInterface } from '@api-rest/api-model';
 import { Observable, Subject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DatePipe } from '@angular/common';
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 export type AnthropometricDataKey = keyof AnthropometricData;
 export interface DatosAntropometricos {
@@ -54,7 +53,7 @@ export class DatosAntropometricosNuevaConsultaService {
 		private readonly patientId: number,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe?: DatePipe,
+		private readonly dateFormatPipe?: DateFormatPipe,
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
@@ -211,7 +210,7 @@ export class DatosAntropometricosNuevaConsultaService {
 	}
 
 	getDate(): string {
-		return this.datePipe?.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+		if (this.dateList.length > 0) return this.dateFormatPipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), 'datetime');
 	}
 
 	hasAtLeastOneValueLoaded(): boolean {
