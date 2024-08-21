@@ -25,7 +25,7 @@ import net.pladema.provincialreports.programreports.service.ProgramReportsExcelS
 
 @RestController
 @RequestMapping("programreports")
-@Tag(name = "Program reports", description = "Reportes de programa")
+@Tag(name = "Reports - program", description = "Reportes de programa, program reports")
 public class ProgramReportsController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProgramReportsController.class);
