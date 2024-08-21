@@ -8,6 +8,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.GetMostFrequen
 
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ import java.util.List;
 public class GetMostFrequentConceptsServiceImpl implements GetMostFrequentConceptsService {
 
 	private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+
+	@Value("${app.service-request.concept.most-frequent.max:30}")
+	private Integer serviceRequestConceptMostFrequentMax;
 
 	@Override
 	public List<SharedSnomedDto> getMostFrequentStudies(Integer institutionId){
