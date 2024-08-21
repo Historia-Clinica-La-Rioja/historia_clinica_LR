@@ -16,6 +16,8 @@ export const dtoToLoincInput = (p: ProcedureParameterFullSummaryDto, preloadData
 	const order = p.orderNumber;
 	const preload = preloadData?.observations.find(preloadItem => preloadItem.procedureParameterId === p.id)?.value || '';
 	const unitOfMeasureId = preloadData?.observations.find(preloadItem => preloadItem.procedureParameterId === p.id)?.unitOfMeasureId || '';
+	const snomedSctid = preloadData?.observations.find(preloadItem => preloadItem.procedureParameterId === p.id)?.snomedSctid || '';
+	const snomedPt = preloadData?.observations.find(preloadItem => preloadItem.procedureParameterId === p.id)?.snomedPt || '';
 
 	if (p.typeId === 1) { //NUMERIC
 		return new NumericLoincInput({
@@ -47,7 +49,9 @@ export const dtoToLoincInput = (p: ProcedureParameterFullSummaryDto, preloadData
 			type: 'snomed',
 			order,
 			param,
-			preload
+			preload,
+			snomedSctid,
+			snomedPt
 		});
 	}
 
