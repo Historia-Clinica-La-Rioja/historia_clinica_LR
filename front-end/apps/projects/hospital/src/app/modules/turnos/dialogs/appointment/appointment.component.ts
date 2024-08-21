@@ -472,11 +472,15 @@ export class AppointmentComponent implements OnInit {
 
 	cancelDateForm(): void {
 		this.formDate.reset();
-		this.initializeFormDate();
 		this.dateFormToggle();
 	}
 
 	openDateForm(): void {
+        this.initializeFormDate();
+        this.loadAvailableDays(this.dateAppointment, true);
+        this.formDate.get('recurringType').setValue(this.recurringTypeSelected?.id);
+        this.loadAppointmentsHours(dateToDateDto(this.selectedDate), true);
+        this.setModalityAndValidator(false);
 		this.dateFormToggle();
 	}
 
