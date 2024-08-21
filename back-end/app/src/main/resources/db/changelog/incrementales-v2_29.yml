@@ -12,3 +12,11 @@ databaseChangeLog:
                     name: required_documentation
                     type: text
 
+    - changeSet:
+          id: add-indexes-to-document_vital_sign-and-observation_vital_sign
+          author: fzudaire
+          changes:
+              -   sql:
+                      sql: |-
+                          CREATE INDEX IF NOT EXISTS IDX_document_vital_sign_observation_vital_sign_id ON  document_vital_sign (observation_vital_sign_id);
+                          CREATE INDEX IF NOT EXISTS IDX_observation_vital_sign_patient_id ON observation_vital_sign (patient_id);
