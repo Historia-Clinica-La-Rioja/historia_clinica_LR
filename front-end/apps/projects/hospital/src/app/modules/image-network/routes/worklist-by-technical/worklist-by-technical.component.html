@@ -69,12 +69,12 @@
                 <mat-list class="mat-form-field-wrapper" *ngIf="detailedAppointments.length; else nothingToShow">
                     <div *ngFor="let appointment of pageSlice">
                         <mat-list-item class="appointment-detail">
-                            <div class="appointment-container" fxFlex="100">
-                                <app-colored-label class="personalized-label uppercase" fxFlex.lg="9"
-                                    fxFlex.gt-sm="11" description={{appointment.description}}
+                            <div class="appointment-container space-gap" fxFlex="100">
+                                <app-colored-label class="personalized-label uppercase layout-label"
+                                description={{appointment.description}}
                                     color="{{appointment.color}}"></app-colored-label>
 
-                                <div class="patient-information" fxFlex.gt-sm="20">
+                                <div class="patient-information layout-patient">
                                     <span class="patient-name">
                                         {{appointment.patientFullName | titlecase}}
                                     </span>
@@ -83,33 +83,32 @@
                                         {{appointment.data.patient.id}}</span>
                                 </div>
 
-                                <div fxFlex.gt-sm="5">
-                                    <div *ngIf="!appointment.data.serviceRequestId">
+                                <div *ngIf="!appointment.data.serviceRequestId">
+                                    <div class="layout-tooltip">
                                         <app-tooltip-order [typeOrder]="!appointment.data.studyName ? 'sin orden' : 'transcripta'"></app-tooltip-order>
                                     </div>
                                 </div>
 
-                                <div fxFlex.gt-sm="10">
+                                <div class="layout-study">
                                     <span class="study-name smaller-font" *ngIf="appointment.data.studyName; else noStudy" data-id="study-name" matTooltip="{{appointment.data.studies.join(', ') | titlecase}}">{{appointment.studiesFullName | titlecase}}</span>
                                     <ng-template #noStudy><span class="study-name grey smaller-font">{{'image-network.worklist.details_study.PENDING_ORDER' | translate}}</span></ng-template>
                                 </div>
-
-                                <div class="appointment-date-information smaller-font" fxFlex.gt-sm="10">
+                                <div class="appointment-date-information smaller-font layout-time">
                                     <span class="grey">{{appointment.date}}</span>
                                     <span class="grey">{{appointment.time}} hs.
                                     </span>
                                 </div>
-								<div fxFlex fxLayoutAlign="center">
+								<div fxLayoutAlign="center" class="layout-actions">
 									<button mat-raised-button color="primary" *ngIf="appointment.canBeFinished" (click)="finishStudy(appointment.data, appointment.patientFullName)">
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
-                                    <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlex fxFlexLayout="row"
+                                    <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlexLayout="row"
                                         fxLayoutAlign="center center" fxLayoutGap="10px">
                                         <app-view-report *ngIf="appointment.reportStatus.id == reportStates.COMPLETED; else showLabel"
                                             [appointmentId]="appointment.data.id" [buttonText]="'image-network.worklist.VIEW_REPORT'">
                                         </app-view-report>
                                         <ng-template #showLabel>
-                                            <span class="derive-information smaller-font {{appointment.reportStatus.color}}" fxFlex="40" fxFlex.gt-lg="50">
+                                            <span class="derive-information smaller-font {{appointment.reportStatus.color}}">
                                                 {{appointment.reportStatus.description}}{{appointment.reportStatus.id == reportStates.DERIVED ? appointment.derive?.name : null}}
                                             </span>
                                         </ng-template>
