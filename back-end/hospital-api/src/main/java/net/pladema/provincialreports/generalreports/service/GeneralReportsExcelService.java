@@ -179,7 +179,7 @@ public class GeneralReportsExcelService {
 		excelUtilsService.setCellValue(row, 1, style, content.getPrescriberLicense());
 		excelUtilsService.setCellValue(row, 2, style, content.getPrescriberProvincialLicense());
 		excelUtilsService.setCellValue(row, 3, style, content.getPrescriberNationalLicense());
-		excelUtilsService.setCellValue(row, 4, style, content.getDate());
+		excelUtilsService.setCellValue(row, 4, style, dateTools.newReformatDate(content.getDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 5, style, content.getPatient());
 		excelUtilsService.setCellValue(row, 6, style, content.getPatientDNI());
 		excelUtilsService.setCellValue(row, 7, style, content.getMedicalCoverage());
@@ -189,10 +189,10 @@ public class GeneralReportsExcelService {
 		excelUtilsService.setCellValue(row, 11, style, content.getMedicine());
 		excelUtilsService.setCellValue(row, 12, style, content.getDuration());
 		excelUtilsService.setCellValue(row, 13, style, content.getFrequency());
-		excelUtilsService.setCellValue(row, 14, style, content.getStartDate());
-		excelUtilsService.setCellValue(row, 15, style, content.getEndDate());
-		excelUtilsService.setCellValue(row, 16, style, content.getSuspensionStartDate());
-		excelUtilsService.setCellValue(row, 17, style, content.getSuspensionEndDate());
+		excelUtilsService.setCellValue(row, 14, style, dateTools.newReformatDate(content.getStartDate(), "dd-MM-yyyy HH:mm"));
+		excelUtilsService.setCellValue(row, 15, style, dateTools.newReformatDate(content.getEndDate(), "dd-MM-yyyy HH:mm"));
+		excelUtilsService.setCellValue(row, 16, style, dateTools.newReformatDate(content.getSuspensionStartDate(), "dd-MM-yyyy"));
+		excelUtilsService.setCellValue(row, 17, style, dateTools.newReformatDate(content.getSuspensionEndDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 18, style, content.getDosage());
 		excelUtilsService.setCellValue(row, 19, style, content.getDosePerDay());
 		excelUtilsService.setCellValue(row, 20, style, content.getDosePerUnit());
