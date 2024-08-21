@@ -301,7 +301,7 @@ databaseChangeLog:
                     type: int
 
     - changeSet:
-        id: correct_negative_snomed_id_medication_statement
+        id: correct_negative_snomed_id_medication_statement_validated
         author: mmalyvarni
         context: "!schema-only"
         changes:
@@ -327,8 +327,10 @@ databaseChangeLog:
                     AND sg.description = 'MEDICINE'
                     AND sg.institution_id = -1
                     LIMIT 1;
-                    UPDATE medication_statement SET snomed_id = non_negative_sctid_snomed_row WHERE snomed_id = negative_sctid_snomed_row.id;
-                    DELETE FROM snomed WHERE id = negative_sctid_snomed_row.id;
+                    IF non_negative_sctid_snomed_row IS NOT NULL THEN
+                      UPDATE medication_statement SET snomed_id = non_negative_sctid_snomed_row WHERE snomed_id = negative_sctid_snomed_row.id;
+                      DELETE FROM snomed WHERE id = negative_sctid_snomed_row.id;
+                    END IF;
                   END LOOP;
                 END $$;
 
