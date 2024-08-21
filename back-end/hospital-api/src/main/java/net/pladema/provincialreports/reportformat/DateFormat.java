@@ -160,7 +160,7 @@ public class DateFormat {
 
 	public String newReformatDate(String previousDate, String outputPattern) {
 		if (previousDate == null || previousDate.trim().isEmpty()) {
-			return "NO ESPECIFICADO";
+			return "";
 		}
 
 		previousDate = previousDate.trim();
