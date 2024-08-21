@@ -1,25 +1,23 @@
 package net.pladema.provincialreports.nursingreports.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.provincialreports.generalreports.repository.EmergencyConsultationDetail;
 import net.pladema.provincialreports.nursingreports.repository.NursingEmergencyConsultationDetail;
 import net.pladema.provincialreports.nursingreports.repository.NursingHospitalizationConsultationDetail;
 import net.pladema.provincialreports.nursingreports.repository.NursingOutpatientConsultationDetail;
 import net.pladema.provincialreports.nursingreports.repository.NursingProceduresConsultationDetail;
 import net.pladema.provincialreports.nursingreports.repository.NursingVaccineConsultationDetail;
 import net.pladema.provincialreports.reportformat.DateFormat;
-
 import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
-
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class NursingReportsExcelService {
@@ -138,7 +136,7 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 1, style, content.getOffice());
 		excelUtilsService.setCellValue(row, 2, style, content.getSector());
 		excelUtilsService.setCellValue(row, 3, style, content.getPoliceIntervention());
-		excelUtilsService.setCellValue(row, 4, style, content.getAttentionDate());
+		excelUtilsService.setCellValue(row, 4, style, dateTools.newReformatDate(content.getAttentionDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 5, style, dateTools.standardizeTime(content.getAttentionHour()));
 		excelUtilsService.setCellValue(row, 6, style, content.getProfessionalRegistering());
 		excelUtilsService.setCellValue(row, 7, style, content.getProfessionalAttention());
@@ -147,7 +145,7 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 10, style, content.getNames());
 		excelUtilsService.setCellValue(row, 11, style, content.getGender());
 		excelUtilsService.setCellValue(row, 12, style, content.getSelfPerceivedGender());
-		excelUtilsService.setCellValue(row, 13, style, content.getBirthDate());
+		excelUtilsService.setCellValue(row, 13, style, dateTools.newReformatDate(content.getBirthDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 14, style, content.getAgeTurn());
 		excelUtilsService.setCellValue(row, 15, style, content.getAgeToday());
 		excelUtilsService.setCellValue(row, 16, style, content.getEthnicity());
@@ -159,7 +157,7 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 22, style, content.getAttentionType());
 		excelUtilsService.setCellValue(row, 23, style, content.getTriageNote());
 		excelUtilsService.setCellValue(row, 24, style, content.getTriageLevel());
-		excelUtilsService.setCellValue(row, 25, style, content.getDateDischarge());
+		excelUtilsService.setCellValue(row, 25, style, dateTools.newReformatDate(content.getDateDischarge(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 26, style, content.getAmbulanceDischarge());
 		excelUtilsService.setCellValue(row, 27, style, content.getTypeDischarge());
 		excelUtilsService.setCellValue(row, 28, style, content.getPatientExit());
@@ -169,13 +167,13 @@ public class NursingReportsExcelService {
 		// no glycosilated hemoglobin, blood sugar, cardiovascular risk
 		excelUtilsService.setCellValue(row, 0, style, content.getPatientProvider());
 		excelUtilsService.setCellValue(row, 1, style, content.getProviderDni());
-		excelUtilsService.setCellValue(row, 2, style, content.getAttentionDate());
+		excelUtilsService.setCellValue(row, 2, style, dateTools.newReformatDate(content.getAttentionDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 3, style, dateTools.standardizeTime(content.getHour()));
 		excelUtilsService.setCellValue(row, 4, style, content.getConsultationNumber());
 		excelUtilsService.setCellValue(row, 5, style, content.getPatientDni());
 		excelUtilsService.setCellValue(row, 6, style, content.getPatientName());
 		excelUtilsService.setCellValue(row, 7, style, content.getGender());
-		excelUtilsService.setCellValue(row, 8, style, content.getBirthDate());
+		excelUtilsService.setCellValue(row, 8, style, dateTools.newReformatDate(content.getBirthDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 9, style, content.getAgeTurn());
 		excelUtilsService.setCellValue(row, 10, style, content.getAgeToday());
 		excelUtilsService.setCellValue(row, 11, style, content.getEthnicity());
@@ -203,13 +201,13 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 3, style, content.getIdentification());
 		excelUtilsService.setCellValue(row, 4, style, content.getProfessional());
 		excelUtilsService.setCellValue(row, 5, style, content.getLicenseNumber());
-		excelUtilsService.setCellValue(row, 6, style, content.getEntryDate());
-		excelUtilsService.setCellValue(row, 7, style, content.getProbableDischargeDate());
+		excelUtilsService.setCellValue(row, 6, style, dateTools.newReformatDate(content.getEntryDate(), "dd-MM-yyyy"));
+		excelUtilsService.setCellValue(row, 7, style, dateTools.newReformatDate(content.getProbableDischargeDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 8, style, content.getBed());
 		excelUtilsService.setCellValue(row, 9, style, content.getCategoryBed());
 		excelUtilsService.setCellValue(row, 10, style, content.getRoomName());
 		excelUtilsService.setCellValue(row, 11, style, content.getSector());
-		excelUtilsService.setCellValue(row, 12, style, content.getDischargeDate());
+		excelUtilsService.setCellValue(row, 12, style, dateTools.newReformatDate(content.getDischargeDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 13, style, content.getProcedures());
 		excelUtilsService.setCellValue(row, 14, style, content.getVitalSign());
 	}
@@ -217,12 +215,12 @@ public class NursingReportsExcelService {
 	public void fillNursingProceduresRow(IRow row, NursingProceduresConsultationDetail content, ICellStyle style) {
 		excelUtilsService.setCellValue(row, 0, style, content.getLender());
 		excelUtilsService.setCellValue(row, 1, style, content.getLenderDni());
-		excelUtilsService.setCellValue(row, 2, style, content.getAttentionDate());
+		excelUtilsService.setCellValue(row, 2, style, dateTools.newReformatDate(content.getAttentionDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 3, style, dateTools.standardizeTime(content.getHour()));
 		excelUtilsService.setCellValue(row, 4, style, content.getPatientDni());
 		excelUtilsService.setCellValue(row, 5, style, content.getPatientName());
 		excelUtilsService.setCellValue(row, 6, style, content.getGender());
-		excelUtilsService.setCellValue(row, 7, style, content.getBirthday());
+		excelUtilsService.setCellValue(row, 7, style, dateTools.newReformatDate(content.getBirthday(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 8, style, content.getAgeTurn());
 		excelUtilsService.setCellValue(row, 9, style, content.getAgeToday());
 		excelUtilsService.setCellValue(row, 10, style, content.getEthnicity());
@@ -248,11 +246,11 @@ public class NursingReportsExcelService {
 	public void fillNursingVaccinesRow(IRow row, NursingVaccineConsultationDetail content, ICellStyle style) {
 		excelUtilsService.setCellValue(row, 0, style, content.getProvider());
 		excelUtilsService.setCellValue(row, 1, style, content.getProviderIdentificationNumber());
-		excelUtilsService.setCellValue(row, 2, style, content.getAttentionDate());
+		excelUtilsService.setCellValue(row, 2, style, dateTools.newReformatDate(content.getAttentionDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 3, style, content.getPatientIdentificationNumber());
 		excelUtilsService.setCellValue(row, 4, style, content.getPatientName());
 		excelUtilsService.setCellValue(row, 5, style, content.getPatientGender());
-		excelUtilsService.setCellValue(row, 6, style, content.getPatientBirthDate());
+		excelUtilsService.setCellValue(row, 6, style, dateTools.newReformatDate(content.getPatientBirthDate(), "dd-MM-yyyy"));
 		excelUtilsService.setCellValue(row, 7, style, content.getAgeOnAppointmentDate());
 		excelUtilsService.setCellValue(row, 8, style, content.getVaccine());
 		excelUtilsService.setCellValue(row, 9, style, content.getSctid());
