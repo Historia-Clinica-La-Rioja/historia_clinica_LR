@@ -147,7 +147,13 @@ public class DateFormat {
 			DateTimeFormatter.ofPattern("d MMM yyyy").withLocale(LOCALE_ARGENTINA),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSS"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSXXX"),
 			DateTimeFormatter.ofPattern("yyyy/MM/dd"),
 			DateTimeFormatter.ofPattern("yyyyMMdd")
 	);
@@ -158,15 +164,19 @@ public class DateFormat {
 		}
 
 		previousDate = previousDate.trim();
-
-		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputPattern, new Locale("es", "AR"));
+		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputPattern, LOCALE_ARGENTINA);
 
 		for (DateTimeFormatter inputFormatter : INPUT_FORMATTERS) {
 			try {
-				LocalDate date = LocalDate.parse(previousDate, inputFormatter);
-				return date.format(outputFormatter);
+				if (inputFormatter.toString().contains("H") || inputFormatter.toString().contains("m") || inputFormatter.toString().contains("s")) {
+					LocalDateTime dateTime = LocalDateTime.parse(previousDate, inputFormatter);
+					return dateTime.format(outputFormatter);
+				} else {
+					LocalDate date = LocalDate.parse(previousDate, inputFormatter);
+					return date.format(outputFormatter);
+				}
 			} catch (DateTimeParseException e) {
-				throw new RuntimeException(e);
+				// continue trying with the next formatter
 			}
 		}
 		throw new RuntimeException("Failed to parse date " + previousDate + " with formatter " + outputFormatter);
