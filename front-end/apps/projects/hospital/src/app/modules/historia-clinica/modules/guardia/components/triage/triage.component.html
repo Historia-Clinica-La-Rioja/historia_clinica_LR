@@ -24,7 +24,7 @@
 			</div>
 
 			<div *ngIf="hasSpecialtySectors">
-				<app-specialty-sector-form [specialtySectors]="specialtySectors" (selectedSpecialtySectorForm)="onSelectedSpecialtySectorChange($event)"></app-specialty-sector-form>
+				<app-specialty-sector-form [lastTriageSpecialtySector]="lastTriageSpecialtySector" [specialtySectors]="specialtySectors" (selectedSpecialtySectorForm)="onSelectedSpecialtySectorChange($event)"></app-specialty-sector-form>
 			</div>
 
 

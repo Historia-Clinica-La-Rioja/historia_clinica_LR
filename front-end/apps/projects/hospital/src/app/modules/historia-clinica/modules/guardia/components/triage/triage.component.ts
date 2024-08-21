@@ -31,6 +31,7 @@ export class TriageComponent implements OnInit {
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 	triageCategories: TriageCategory[];
 	lastTriageReasons: MotivoConsulta[] = [];
+	lastTriageSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
 	specialtySectors: EmergencyCareClinicalSpecialtySectorDto[];
 	hasSpecialtySectors: boolean;
 
@@ -141,6 +142,7 @@ export class TriageComponent implements OnInit {
 		this.lastTriageReasons = lastTriage.reasons;
 		this.triageLevel = this.triageCategories.find(triageCategory => triageCategory.id === lastTriage.category.id);
 		this.triageForm.controls.triageCategoryId.setValue(this.triageLevel.id);
+		this.lastTriageSpecialtySector = lastTriage.clinicalSpecialtySector;
 	}
 
 }

@@ -19,9 +19,17 @@ export class SpecialtySectorFormComponent implements OnInit {
 	hasProffesionalRole: boolean;
 	private hasAdministrativeRole: boolean;
 	isAdministrativeAndHasTriageFFInTrue: boolean;
+	private _lastTriageSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
 	_specialtySectors:EmergencyCareClinicalSpecialtySectorDto[];
 
 	form: FormGroup<SpecialtySectorForm>;
+
+	@Input() set lastTriageSpecialtySector(lastTriageSpecialtySector: EmergencyCareClinicalSpecialtySectorDto) {
+		if(lastTriageSpecialtySector){
+			this._lastTriageSpecialtySector = lastTriageSpecialtySector;
+			this.initializeForm();
+		}
+	}
 
 	@Input() set specialtySectors(specialtySectors: EmergencyCareClinicalSpecialtySectorDto[]) {
 		if(specialtySectors){
@@ -60,9 +68,14 @@ export class SpecialtySectorFormComponent implements OnInit {
 	}
 
 	private initializeForm() {
+		const preloadLastValue = this._specialtySectors?.find(sector => sector.id === this._lastTriageSpecialtySector?.id);
 		this.form = this.formBuilder.group<SpecialtySectorForm>({
-			specialtySector: new FormControl<EmergencyCareClinicalSpecialtySectorDto>(null, Validators.required)
+			specialtySector: new FormControl<EmergencyCareClinicalSpecialtySectorDto>(
+				preloadLastValue || null, Validators.required)
 		});
+		this.specialtySectorFormValidityService.setFormValidity(this.form.valid);
+		this.handleFormChanges();
+		this.emitForm();
 	}
 
 	private handleFormChanges() {
