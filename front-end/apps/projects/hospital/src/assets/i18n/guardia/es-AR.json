@@ -151,7 +151,8 @@
 				"TITLE": "Filtrar por"
 			},
 			"tabs": {
-				"PATIENTS": "Pacientes"
+				"PATIENTS": "Pacientes",
+				"ATTENTION_PLACES": "Lugares de atención"
 			},
 			"TITLE": "Episodios de guardia",
 			"LAST": "Último"

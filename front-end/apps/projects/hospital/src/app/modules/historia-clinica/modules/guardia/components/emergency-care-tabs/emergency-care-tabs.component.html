@@ -4,4 +4,10 @@
             <app-emergency-care-patients-summary></app-emergency-care-patients-summary>
         </ng-template>
     </mat-tab>
+
+	<mat-tab *ngIf="hasProffesionalRole" label="{{'guardia.home.tabs.ATTENTION_PLACES' | translate | uppercase}}">
+		<ng-template matTabContent>
+			<app-emergency-care-attention-places></app-emergency-care-attention-places>
+		</ng-template>
+	</mat-tab>
 </mat-tab-group>
