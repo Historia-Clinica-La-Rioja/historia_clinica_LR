@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { EmergencyCareAttentionPlaceService } from '../../services/emergency-care-attention-place.service';
+import { EmergencyCareAttentionPlaceDto } from '@api-rest/api-model';
 
 @Component({
   selector: 'app-emergency-care-attention-places',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EmergencyCareAttentionPlacesComponent implements OnInit {
 
-  constructor() { }
+    loading = true;
 
-  ngOnInit(): void {
-  }
+    hasAttentionPlaces: boolean;
+    attentionPlaces: EmergencyCareAttentionPlaceDto[];
+    selectedAttentionPlace: EmergencyCareAttentionPlaceDto;
 
+    constructor(
+		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService
+	) { }
+
+    ngOnInit() {
+		this.emergencyCareAttentionPlaceService.getAttentionPlaces().subscribe(places => {
+			this.loading = false;
+		  	this.attentionPlaces = places;
+			this.hasAttentionPlaces = this.attentionPlaces.length > 0;
+		});
+    }
 }

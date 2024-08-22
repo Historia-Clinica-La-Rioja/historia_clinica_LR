@@ -1,0 +1,18 @@
+@import '../../../../../../../assets/styles/mixins';
+
+.spinner {
+    @include centered-spinner;
+}
+
+.container {
+	display: grid;
+	grid-template-columns: 1fr 2.5fr 1.5fr;
+}
+
+.dashboard-panel {
+    margin-top: 0px;
+    overflow-y: auto;
+	.no-data{
+		background-color: white;
+	}
+}

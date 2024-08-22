@@ -150,6 +150,10 @@
 				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
 				"TITLE": "Filtrar por"
 			},
+			"attention_places":{
+                "NO_DATA": "No hay lugares de atención para mostrar",
+                "NO_SELECTED_PLACE": "Seleccione un lugar para ver el detalle aqui"
+            },
 			"tabs": {
 				"PATIENTS": "Pacientes",
 				"ATTENTION_PLACES": "Lugares de atención"
