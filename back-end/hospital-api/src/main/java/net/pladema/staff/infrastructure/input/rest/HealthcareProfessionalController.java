@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.hospitalization.service.surgicalreport.CreateSurgicalReport;
 import net.pladema.staff.application.GetAllProfessionalsAndTechnicians;
 import net.pladema.staff.application.fetchprofessionalsbyfilter.FetchProfessionalsByFilter;
+import net.pladema.staff.application.getallprofessioinalsandtechniciansbyinstitution.GetAllProfessionalsAndTechniciansByInstitution;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
 import net.pladema.staff.application.getUserIdByHealthcareProfessionalId.GetUserIdByHealthcareProfessionalId;
@@ -61,6 +63,7 @@ public class HealthcareProfessionalController {
 	private final SaveExternalTemporaryProfessional saveExternalTemporaryProfessional;
 	private final FetchProfessionalsByFilter fetchProfessionalsByFilter;
 	private final ObjectMapper jackson;
+	private final GetAllProfessionalsAndTechniciansByInstitution getAllProfessionalsAndTechniciansByInstitution;
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
@@ -76,6 +79,18 @@ public class HealthcareProfessionalController {
 	public List<ProfessionalDto> getAllProfessionalsAndTechnicians() {
 		log.debug("No input parameters");
 		List<HealthcareProfessionalBo> professionals = getAllProfessionalsAndTechnicians.run();
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@GetMapping("institution/{institutionId}/get-all-professionals-and-technicians")
+
+	public List<ProfessionalDto> getAllProfessionalsAndTechniciansByInstitution(
+			@PathVariable(name = "institutionId") Integer institutionId
+	) {
+		log.debug("Input parameters -> {}",institutionId);
+		List<HealthcareProfessionalBo> professionals = getAllProfessionalsAndTechniciansByInstitution.run(institutionId);
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
 		log.debug(OUTPUT, result);
 		return result;

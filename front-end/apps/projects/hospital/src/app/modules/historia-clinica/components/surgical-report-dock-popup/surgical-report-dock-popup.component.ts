@@ -91,7 +91,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
 		this.diagnosis = data.diagnosis;
 		this.mainDiagnosis = data.mainDiagnosis;
-		this.healthcareProfessionalService.getAllProfessionalsAndTechnicians().subscribe(response => {
+		this.healthcareProfessionalService.getAllProfessionalsAndTechniciansByInstitution().subscribe(response => {
 			if (response)
 				this.professionals = response;
 		});
