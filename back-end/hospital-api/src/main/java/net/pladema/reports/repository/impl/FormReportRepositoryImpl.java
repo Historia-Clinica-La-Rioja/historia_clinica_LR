@@ -108,7 +108,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "               FROM {h-schema}document_health_condition dhc " +
                 "               JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
                 "               JOIN {h-schema}snomed sno ON (hc.snomed_id = sno.id) " +
-                "               WHERE hc.problem_id IN (:problemTypes)  " +
+                "               WHERE hc.problem_id IN (:problemTypes) AND dhc.document_id = :documentId " +
                 "               GROUP BY dhc.document_id " +
                 "            ) prob ON (t.doc_id = prob.document_id)";
         Optional<Object[]> queryResult = entityManager.createNativeQuery(query)

@@ -178,7 +178,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos	" +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos,	" +
 				"               t.created_on as createdOn, t.id as id, t.doctor_id" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
@@ -273,7 +273,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos   " +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos,   " +
 				"               t.created_on as createdOn, t.id as id, t.doctor_id" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
