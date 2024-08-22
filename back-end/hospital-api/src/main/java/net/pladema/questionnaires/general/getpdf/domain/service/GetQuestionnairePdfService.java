@@ -40,9 +40,6 @@ public class GetQuestionnairePdfService {
 	private final QuestionnaireResponseRepository questionnaireResponseRepository;
 
 	@Autowired
-	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
-
-    @Autowired
 	private final InstitutionRepository institutionRepository;
 
 	@Autowired
@@ -57,8 +54,7 @@ public class GetQuestionnairePdfService {
     public GetQuestionnairePdfService(AnswerRepository answerRepository, QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, InstitutionRepository institutionRepository, PersonRepository personRepository, IdentificationTypeRepository identificationTypeRepository, QuestionnaireUtilsService utilsService) {
         this.answerRepository = answerRepository;
         this.questionnaireResponseRepository = questionnaireResponseRepository;
-        this.healthcareProfessionalRepository = healthcareProfessionalRepository;
-        this.institutionRepository = institutionRepository;
+		this.institutionRepository = institutionRepository;
         this.personRepository = personRepository;
         this.identificationTypeRepository = identificationTypeRepository;
 		this.utilsService = utilsService;

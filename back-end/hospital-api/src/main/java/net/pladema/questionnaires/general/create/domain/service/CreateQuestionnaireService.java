@@ -2,6 +2,8 @@ package net.pladema.questionnaires.general.create.domain.service;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import net.pladema.questionnaires.common.repository.AnswerRepository;
 @Service
 public class CreateQuestionnaireService {
 
+	private static final Logger logger = LoggerFactory.getLogger(CreateQuestionnaireService.class);
+
 	@Autowired
 	private QuestionnaireResponseRepository responseRepository;
 
@@ -23,6 +27,7 @@ public class CreateQuestionnaireService {
 
 	@Transactional
 	public QuestionnaireResponse createQuestionnaireResponse (QuestionnaireResponseDTO responseDTO, Integer patientId) {
+		logger.info("Starting transaction to create questionnaire response for patientId: {}", patientId);
 
 		QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
 		questionnaireResponse.setQuestionnaireId(responseDTO.getQuestionnaireId());
@@ -30,6 +35,7 @@ public class CreateQuestionnaireService {
 
 		questionnaireResponse.setStatusId(2);
 
+		logger.debug("Saving questionnaire response: {}", questionnaireResponse);
 		responseRepository.save(questionnaireResponse);
 
 		for (AnswerDTO answerDTO : responseDTO.getAnswers()) {
@@ -44,9 +50,11 @@ public class CreateQuestionnaireService {
 
 			answer.setQuestionnaireResponse(questionnaireResponse);
 
+			logger.debug("Saving answer: {}", answer);
 			answerRepository.save(answer);
 		}
 
+		logger.info("Finished transaction to create questionnaire response for patientId: {}", patientId);
 		return questionnaireResponse;
     }
 }
