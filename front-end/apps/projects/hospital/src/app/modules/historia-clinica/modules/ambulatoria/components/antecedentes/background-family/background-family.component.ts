@@ -32,311 +32,130 @@ export class BackgroundFamilyComponent {
   antecedentesData: any;
   estadoCivilMadre = '';
   submitted: boolean;
- 
+
   constructor(
-    private antecedentesServices: AntecedentesServices, 
+    private antecedentesServices: AntecedentesServices,
     private readonly route: ActivatedRoute,
 
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-     this.route.paramMap.subscribe(params => {
-     this.patientId = Number(params.get('idPaciente'));
+    this.route.paramMap.subscribe(params => {
+      this.patientId = Number(params.get('idPaciente'));
 
     });
-    // console.log('Patient ID:', this.patientId);  
   }
 
-  
-  isCheckboxAChecked() {
-    return this.convivenciaMembers.madre.A;
-  }
+  familyMembers = [
+    { name: 'Madre', key: 'madre' },
+    { name: 'Padre', key: 'padre' },
+    { name: 'Madrastra', key: 'madrastra' },
+    { name: 'Padrastro', key: 'padrastro' },
+    { name: 'Hermanos', key: 'hermanos' },
+    { name: 'Pareja', key: 'pareja' },
+    { name: 'Hijos', key: 'hijos' },
+    { name: 'Abuelos', key: 'abuelos' },
+    { name: 'Otros', key: 'otros' }
+  ];
 
-  isCheckboxBDisabled() {
-    return this.isCheckboxAChecked();
-  }
-
-  isCheckboxCDisabled() {
-    return this.isCheckboxAChecked();
-  }
-  isCheckboxDChecked() {
-    return this.convivenciaMembers.padre.D;
-  }
-
-  isCheckboxEDisabled() {
-    return this.isCheckboxDChecked();
-  }
-
-  isCheckboxFDisabled() {
-    return this.isCheckboxDChecked();
-  }
-  isMadrastraCheckboxGChecked() {
-    return this.convivenciaMembers.madrastra.G;
-  }
-  isMadrastraCheckboxHDisabled() {
-    return this.isMadrastraCheckboxGChecked();
-  }
-  isMadrastraCheckboxIDisabled() {
-    return this.isMadrastraCheckboxGChecked();
-  }
-
-  isPadrastroCheckboxJChecked() {
-    return this.convivenciaMembers.padrastro.J;
-  }
-  isPadrastroCheckboxKDisabled() {
-    return this.isPadrastroCheckboxJChecked();
-  }
-  isPadrastroCheckboxLDisabled() {
-    return this.isPadrastroCheckboxJChecked();
-  }
-
-  isParejaCheckboxPChecked() {
-    return this.convivenciaMembers.pareja.P;
-  }
-  isParejaCheckboxDDisabled() {
-    return this.isParejaCheckboxPChecked();
-  }
-  isParejaCheckboxRDisabled() {
-    return this.isParejaCheckboxPChecked();
-  }
-
-  isHijosCheckboxSChecked() {
-    return this.convivenciaMembers.hijos.S;
-  }
-  isHijosCheckboxTDisabled() {
-    return this.isHijosCheckboxSChecked();
-  }
-  isHijosCheckboxUDisabled() {
-    return this.isHijosCheckboxSChecked();
-  }
-
-  isAbuelosCheckboxVChecked() {
-    return this.convivenciaMembers.abuelos.V;
-  }
-  isAbuelosCheckboxWDisabled() {
-    return this.isAbuelosCheckboxVChecked();
-  }
-  isAbuelosCheckboxXDisabled() {
-    return this.isAbuelosCheckboxVChecked();
-  }
-
-  isOtrosCheckboxYChecked() {
-    return this.convivenciaMembers.otros.Y;
-  }
-  isOtrosCheckboxZDisabled() {
-    return this.isOtrosCheckboxYChecked();
-  }
-  isOtrosCheckboxZ2Disabled() {
-    return this.isOtrosCheckboxYChecked();
-  }
-  isCheckboxMChecked() {
-    return this.convivenciaMembers.hermanos.M;
-  }
-  isCheckboxNDisabled() {
-    return this.isCheckboxMChecked();
-  }
-  isCheckboxODisabled() {
-    return this.isCheckboxMChecked();
-  }
-
-  // FAMILIA 
   convivenciaMembers = {
-    madre: {
-      A: false,
-      B: false,
-      C: false
-    },
-
-    padre: {
-      D: false,
-      E: false,
-      F: false
-    },
-
-    madrastra: {
-      G: false,
-      H: false,
-      I: false
-    },
-
-    padrastro: {
-      J: false,
-      K: false,
-      L: false
-    },
-
-    hermanos: {
-      M: false,
-      N: false,
-      O: false
-    },
-
-    pareja: {
-      P: false,
-      D: false,
-      R: false
-    },
-
-    hijos: {
-      S: false,
-      T: false,
-      U: false
-    },
-
-    abuelos: {
-      V: false,
-      W: false,
-      X: false
-    },
-
-    otros: {
-      Y: false,
-      Z: false,
-      Z2: false
-    },
+    madre: { A: false, B: false, C: false },
+    padre: { D: false, E: false, F: false },
+    madrastra: { G: false, H: false, I: false },
+    padrastro: { J: false, K: false, L: false },
+    hermanos: { M: false, N: false, O: false },
+    pareja: { P: false, D: false, R: false },
+    hijos: { S: false, T: false, U: false },
+    abuelos: { V: false, W: false, X: false },
+    otros: { Y: false, Z: false, Z2: false }
   };
 
-  // VIVE 
+  onCheckboxChange(memberKey: string, checkboxValue: string) {
+  }
+
+  isCheckboxDisabled(memberKey: string, dependentCheckbox: string): boolean {
+    return this.convivenciaMembers[memberKey][dependentCheckbox];
+  }
+
+
+  // VIVE
   hogarLugar = {
+    institucion: { A2: false, B2: false },
+    sinHogar: { C2: false, D2: false },
+    personaSolitaria: { E2: false, F2: false },
+    camaCompartida: { G2: false, H2: false }
+  };
 
-    institucion: {
-      A2: false,
-      B2: false
-    },
+  lugares = [
+    { itemId: 32, label: 'En institución', key: 'institucion', noKey: 'A2', siKey: 'B2' },
+    { itemId: 33, label: 'En la calle', key: 'sinHogar', noKey: 'C2', siKey: 'D2' },
+    { itemId: 34, label: 'Solo', key: 'personaSolitaria', noKey: 'E2', siKey: 'F2' },
+    { itemId: 35, label: 'Comparte la cama', key: 'camaCompartida', noKey: 'G2', siKey: 'H2' }
+  ];
 
-    sinHogar: {
-      C2: false,
-      D2: false
-    },
-
-    personaSolitaria: {
-      E2: false,
-      F2: false
-    },
-
-    camaCompartida: {
-      G2: false,
-      H2: false
-    }
-
+  optionMappingHogar = {
+    A2: 19, B2: 20,
+    C2: 19, D2: 20,
+    E2: 19, F2: 20,
+    G2: 19, H2: 20
   };
 
   // PADRES O SUSTITUTO
-
   educacion = {
-    padre: {
-      A3: false,
-      B3: false,
-      C3: false,
-      D3: false,
-      E3: false,
-      F3: false
-    },
-    madre: {
-      A4: false,
-      B4: false,
-      C4: false,
-      D4: false,
-      E4: false,
-      F4: false
-    }
+    padre: { A3: false, B3: false, C3: false, D3: false, E3: false, F3: false },
+    madre: { A4: false, B4: false, C4: false, D4: false, E4: false, F4: false }
   };
 
-  // ESTADO CIVIL MADRE 
+  opcionesPadre = ['A3', 'B3', 'C3', 'D3', 'E3', 'F3'];
+  opcionesMadre = ['A4', 'B4', 'C4', 'D4', 'E4', 'F4'];
 
+  optionMapping: { [key: string]: number } = {
+    'A3': 28, 'B3': 29, 'C3': 30, 'D3': 31, 'E3': 32, 'F3': 33,
+    'A4': 28, 'B4': 29, 'C4': 30, 'D4': 31, 'E4': 32, 'F4': 33
+  };
+
+  // ESTADO CIVIL  
   estadoCivil = {
-    madre: {
-      E1: false,
-      E2: false,
-      E3: false,
-      E4: false
-    },
-
-    padre: {
-      E5: false,
-      E6: false,
-      E7: false,
-      E8: false
-    }
+    madre: { E1: false, E2: false, E3: false, E4: false },
+    padre: { E5: false, E6: false, E7: false, E8: false }
   };
 
-  trabajoRemunerado = {
-    madre: {
-      si: false,
-      no: false
-    }
-  }
+  estadoCivilOptions = [
+    { key: 'E1', label: 'Soltera' },
+    { key: 'E2', label: 'Casada' },
+    { key: 'E3', label: 'Unión estable' },
+    { key: 'E4', label: 'Otros' }
+  ];
+  
 
-  trabajoRemunerado2 = {
-    padre: {
-      si: false,
-      no: false
-    }
-  };
+  // TRABAJO REMUNERADO
+  trabajoRemunerado = { madre: { si: false, no: false } };
+  trabajoRemunerado2 = { padre: { si: false, no: false } };
 
-
-  viviendaElectricidad = {
-
-    electricidad: {
-      si: false,
-      no: false
-    },
-  }
+  // VIVIENDA
+  viviendaElectricidad = { electricidad: { si: false, no: false } };
 
   viviendaAgua = {
-    conexionAgua: {
-      si: false,
-      fueradelhogar: false
-    },
+    conexionAgua: { si: false, fueradelhogar: false },
+    sinConexion: { no: false }
+  };
 
-    sinConexion: {
-      no: false,
-    }
-  }
   viviendaExcretas = {
-
-    conexionExcretas: {
-      si: false,
-      no: false,
-      fueradelhogar: false,
-      letrina: false
-    },
-  }
-
-  horasFueraDeCasa = {
-    horasMadre: {
-      H1: 0,
-    },
-    horasPadre: {
-      H2: 0
-    }
-
-  }
-
-  edadMadre = {
-    madre: {
-      counter1: 0
-    },
+    conexionExcretas: { si: false, no: false, fueradelhogar: false, letrina: false }
   };
 
-  edadPadre = {
-    padre: {
-      counter2: 0
-    }
-  };
+  // HORAS FUERA DE CASA
+  horasFueraDeCasa = { horasMadre: { H1: 0 }, horasPadre: { H2: 0 } };
 
-  hermanosEnVida = {
-    vivo: 0,
+  // EDAD
+  edadMadre = { madre: { counter1: 0 } };
+  edadPadre = { padre: { counter2: 0 } };
 
-    ido: {
-      desvivido: 0,
-    }
-  };
+  // HERMANOS EN VIDA
+  hermanosEnVida = { vivo: 0, ido: { desvivido: 0 } };
 
-  numeroCuartos = {
-    cuartos: {
-      cantidad: 0
-    }
-  };
+  // NÚMERO DE CUARTOS
+  numeroCuartos = { cuartos: { cantidad: 0 } };
+
 
   optionIdCuartos(cuartos: any) {
     const mappingCantidadCuartos = {
@@ -463,127 +282,25 @@ export class BackgroundFamilyComponent {
   }
   // ESTADO CIVIL MAPPING
 
-  optionIdEstadoCivilMadre(estadocivil: any) {
+  optionIdEstadoCivil(estadocivil: any) {
     const mappingEstadoCivil = {
       'E1': 34,
       'E2': 35,
       'E3': 36,
       'E4': 37
     };
-
+  
     const selectedOption = Object.keys(estadocivil).find(key => estadocivil[key]);
     return mappingEstadoCivil[selectedOption] || undefined;
-
   }
-
-  optionIdEstadoCivilPadre(estadocivil2: any) {
-    const mappingEstadoCivil2 = {
-      'E5': 34,
-      'E6': 35,
-      'E7': 36,
-      'E8': 37
-    };
-
-    const selectedOption = Object.keys(estadocivil2).find(key => estadocivil2[key]);
-    return mappingEstadoCivil2[selectedOption] || undefined;
-
-  }
-
   // FAMILIA MAPPING 
 
-  optionIdFamilyMadre(member: any) {
+  optionIdFamily(member: any) {
     const mappingOptionFamily = {
-      'A': 19,
-      'B': 26,
-      'C': 27
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyPadre(member: any) {
-    const mappingOptionFamily = {
-      'D': 19,
-      'E': 26,
-      'F': 27,
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyMadrastra(member: any) {
-    const mappingOptionFamily = {
-      'G': 19,
-      'H': 26,
-      'I': 27
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyPadrastro(member: any) {
-    const mappingOptionFamily = {
-      'J': 19,
-      'K': 26,
-      'L': 27
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyHermanos(member: any) {
-    const mappingOptionFamily = {
-      'M': 19,
-      'N': 26,
-      'O': 27
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyPareja(member: any) {
-    const mappingOptionFamily = {
-      'P': 19,
-      'D': 26,
-      'R': 27
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyHijos(member: any) {
-    const mappingOptionFamily = {
-      'S': 19,
-      'T': 26,
-      'U': 27
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyAbuelos(member: any) {
-    const mappingOptionFamily = {
-      'V': 19,
-      'W': 26,
-      'X': 27
-
-    };
-    const selectedOption = Object.keys(member).find(key => member[key]);
-    return mappingOptionFamily[selectedOption] || undefined;
-  }
-
-  optionIdFamilyOtros(member: any) {
-    const mappingOptionFamily = {
-      'Y': 19,
-      'Z': 26,
-      'Z2': 27
-
+      'A': 19, 'B': 26, 'C': 27, 'D': 19, 'E': 26,
+      'F': 27, 'G': 19, 'H': 26, 'I': 27, 'J': 19,
+      'K': 26, 'L': 27, 'M': 19, 'N': 26, 'O': 27, 'P': 19, 'Q': 26, 'R': 27,
+      'S': 19, 'T': 26, 'U': 27, 'V': 19, 'W': 26, 'X': 27, 'Y': 19, 'Z': 26, 'Z2': 27
     };
     const selectedOption = Object.keys(member).find(key => member[key]);
     return mappingOptionFamily[selectedOption] || undefined;
@@ -591,72 +308,16 @@ export class BackgroundFamilyComponent {
 
   // VIVE MAPPING
 
-  OptionHogar(hogar: any) {
-    const mappingInstitucion = {
-      'A2': 19,
-      'B2': 20
-    };
-
-    const selectedOption = Object.keys(hogar).find(key => hogar[key]);
-    return mappingInstitucion[selectedOption] || undefined;
-  }
-
-  OptionSinHogar(hogar: any) {
-    const mappingEnLaCalle = {
-      'C2': 19,
-      'D2': 20
-    };
-
-    const selectedOption = Object.keys(hogar).find(key => hogar[key]);
-    return mappingEnLaCalle[selectedOption] || undefined;
-  }
-
-  OptionSolo(hogar: any) {
-    const mappingSolo = {
-      'E2': 19,
-      'F2': 20
-    };
-
-    const selectedOption = Object.keys(hogar).find(key => hogar[key]);
-    return mappingSolo[selectedOption] || undefined;
-  }
-
-  OptionCama(hogar: any) {
-    const mappingCama = {
-      'G2': 19,
-      'H2': 20
-    };
-
-    const selectedOption = Object.keys(hogar).find(key => hogar[key]);
-    return mappingCama[selectedOption] || undefined;
-  }
+  getOptionHogar(hogar: any): number | undefined {
+  const selectedOption = Object.keys(hogar).find(key => hogar[key]);
+  return this.optionMappingHogar[selectedOption] || undefined;
+}
 
   // PADRES/SUSTITUTO MAPPING 
 
-  optionPadreAcargo(padre: any) {
-    const mappingOptionFamilyPadre = {
-      'A3': 28,
-      'B3': 29,
-      'C3': 30,
-      'D3': 31,
-      'E3': 32,
-      'F3': 33
-    };
-    const selectedOption = Object.keys(padre).find(key => padre[key]);
-    return mappingOptionFamilyPadre[selectedOption] || undefined;
-  }
-
-  optionMadreAcargo(madre: any) {
-    const mappingOptionFamilyMadre = {
-      'A4': 28,
-      'B4': 29,
-      'C4': 30,
-      'D4': 31,
-      'E4': 32,
-      'F4': 33
-    };
-    const selectedOption = Object.keys(madre).find(key => madre[key]);
-    return mappingOptionFamilyMadre[selectedOption] || undefined;
+  getOptionEducacionPadres(familyMember: any, opciones: string[]): number | undefined {
+    const selectedOption = opciones.find(option => familyMember[option]);
+    return this.optionMapping[selectedOption] || undefined;
   }
 
   construirDatos() {
@@ -665,77 +326,77 @@ export class BackgroundFamilyComponent {
       "answers": [
         {
           "itemId": 24,
-          "optionId": this.optionIdFamilyMadre(this.convivenciaMembers.madre),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.madre),
           "value": "",
         },
         {
           "itemId": 25,
-          "optionId": this.optionIdFamilyPadre(this.convivenciaMembers.padre),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.padre),
           "value": ""
         },
         {
           "itemId": 26,
-          "optionId": this.optionIdFamilyMadrastra(this.convivenciaMembers.madrastra),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.madrastra),
           "value": ""
         },
         {
           "itemId": 27,
-          "optionId": this.optionIdFamilyPadrastro(this.convivenciaMembers.padrastro),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.padrastro),
           "value": ""
         },
         {
           "itemId": 28,
-          "optionId": this.optionIdFamilyHermanos(this.convivenciaMembers.hermanos),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.hermanos),
           "value": 1
         },
         {
           "itemId": 29,
-          "optionId": this.optionIdFamilyPareja(this.convivenciaMembers.pareja),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.pareja),
           "value": 1
         },
         {
           "itemId": 54,
-          "optionId": this.optionIdFamilyHijos(this.convivenciaMembers.hijos),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.hijos),
           "value": 1
         },
         {
           "itemId": 55,
-          "optionId": this.optionIdFamilyAbuelos(this.convivenciaMembers.abuelos),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.abuelos),
           "value": 1
         },
         {
           "itemId": 30,
-          "optionId": this.optionIdFamilyOtros(this.convivenciaMembers.otros),
+          "optionId": this.optionIdFamily(this.convivenciaMembers.otros),
           "value": 1
         },
         {
           "itemId": 32,
-          "optionId": this.OptionHogar(this.hogarLugar.institucion),
+          "optionId": this.getOptionHogar(this.hogarLugar.institucion),
           "value": 1
         },
         {
           "itemId": 33,
-          "optionId": this.OptionSinHogar(this.hogarLugar.sinHogar),
+          "optionId": this.getOptionHogar(this.hogarLugar.sinHogar),
           "value": 1
         },
         {
           "itemId": 34,
-          "optionId": this.OptionSolo(this.hogarLugar.personaSolitaria),
+          "optionId": this.getOptionHogar(this.hogarLugar.personaSolitaria),
           "value": 1
         },
         {
           "itemId": 35,
-          "optionId": this.OptionCama(this.hogarLugar.camaCompartida),
+          "optionId": this.getOptionHogar(this.hogarLugar.camaCompartida),
           "value": 1
         },
         {
           "itemId": 37,
-          "optionId": this.optionPadreAcargo(this.educacion.padre),
+          "optionId": this.getOptionEducacionPadres(this.educacion.padre, this.opcionesPadre),
           "value": 1
         },
         {
           "itemId": 38,
-          "optionId": this.optionMadreAcargo(this.educacion.madre),
+          "optionId": this.getOptionEducacionPadres(this.educacion.madre, this.opcionesMadre),
           "value": 1
         },
         {
@@ -756,7 +417,7 @@ export class BackgroundFamilyComponent {
         },
         {
           "itemId": 43,
-          "optionId": this.optionIdEstadoCivilMadre(this.estadoCivil.madre),
+          "optionId": this.optionIdEstadoCivil(this.estadoCivil.madre),
           "value": 1
         },
         {
@@ -766,7 +427,7 @@ export class BackgroundFamilyComponent {
         },
         {
           "itemId": 56,
-          "optionId": this.optionIdEstadoCivilPadre(this.estadoCivil.padre),
+          "optionId": this.optionIdEstadoCivil(this.estadoCivil.padre),
           "value": 1
         },
 
@@ -815,10 +476,10 @@ export class BackgroundFamilyComponent {
     };
     return datos;
   }
-  
+
   submitForm(): void {
     this.submitted = true;
-  
+
     Swal.fire({
       icon: 'question',
       iconColor: '#2687c5',
@@ -842,7 +503,7 @@ export class BackgroundFamilyComponent {
             Swal.showLoading();
             setTimeout(() => {
               Swal.close();
-              this.enviarFormulario(); 
+              this.enviarFormulario();
 
               Swal.fire({
                 icon: 'success',
@@ -855,7 +516,7 @@ export class BackgroundFamilyComponent {
               });
             }, 2000);
           }
-          
+
         });
       } else if (result.isDenied) {
         Swal.fire({
@@ -872,6 +533,6 @@ export class BackgroundFamilyComponent {
   enviarFormulario(): void {
     const questionnaireData = this.construirDatos();
     this.antecedentesServices.createAntecedecentes(this.patientId, questionnaireData).subscribe();
-    
+
   }
 }
