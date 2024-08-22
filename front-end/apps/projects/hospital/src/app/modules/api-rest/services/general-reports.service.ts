@@ -43,5 +43,9 @@ export class GeneralReportsService {
         const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/complementary-studies`;
         return this.getGeneralReport(params, fileName, url);
     }
+    getMedicationPrescriptionReport(params: any, fileName: string): Observable<any> {
+        const url = `${environment.apiBase}/generalreports/${this.contextService.institutionId}/medicines-prescription`;
+        return this.getGeneralReport(params, fileName, url);
+    }
     
 }
