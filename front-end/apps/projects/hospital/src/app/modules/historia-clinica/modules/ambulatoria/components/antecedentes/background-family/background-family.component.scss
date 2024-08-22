@@ -1,8 +1,35 @@
 .container {
-  padding: 28px;
-  max-width: 92%;
+  max-width: 94%;
   border: 1px solid #e0eef7;
-  box-shadow: 0px 3px 3px 0px rgba(179, 177, 179, 1);
+  box-shadow: 0px 3px 3px 0px rgb(179, 177, 179);
+  margin: auto;
+  padding: 1%;
+}
+
+.subtitle1 {
+  position: relative;
+  right: 10%;
+}
+
+.box1 {
+  margin-left: 13%;
+  position: relative;
+  left: 13%;
+}
+
+.titles-convivencia {
+  position: relative;
+  right: 27.1%;
+}
+
+.titles-convivencia2 {
+  position: relative;
+  right: 39.1%;
+}
+
+.titles-convivencia3 {
+  position: relative;
+  right: 27.1%;
 }
 
 
@@ -27,12 +54,28 @@ mat-card {
   bottom: 5px;
 }
 
+.inHouse1 {
+  position: relative;
+  right: 26.8%;
+}
+
+.inHouse2 {
+  position: relative;
+  right: 28.5%;
+}
+
+.inHouse3 {
+  position: relative;
+  right: 50%;
+}
+
 //CHECKBOX AMARILLO PARA FAMILIA Y HOGAR
 
 .yellow-alert {
   width: 20px;
   position: relative;
   margin: 20px auto;
+  right: 49%;
 }
 
 .yellow-alert label {
@@ -76,9 +119,8 @@ mat-card {
 .yellow-alertEDIT {
 
   position: relative;
-  right: 36%;
+  right: 63.6%;
 }
-
 //RADIO BUTTON AMARILLO PARA VIVIENDA
 
 
@@ -138,13 +180,12 @@ input[type="radio"].yellow-alert-radio:checked::before {
 
 .place-title {
   position: relative;
-  right: 35.6%;
-
+  right: 63.3%;
 }
 
 .place {
   position: relative;
-  right: 36%;
+  right: 60%;
 }
 
 th {
@@ -280,7 +321,8 @@ table {
 
 .check-vivienda {
   position: relative;
-  left: 15%;
+  padding: 1%;
+  left: 34px;
 }
 
 .check-vivienda2 {
@@ -321,9 +363,8 @@ table {
 
 .container-instruccion {
   position: relative;
-  right: 77px;
+  left: 2.5%;
   display: flex;
-  justify-content: space-between;
 }
 
 .mat-raised-button {

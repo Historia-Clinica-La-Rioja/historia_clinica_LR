@@ -1,6 +1,5 @@
 <div class="container">
   <form (ngSubmit)="submitForm()" #formulario="ngForm">
-
     <div class="full" _ngcontent-rsa-c295="">
       <mat-card _ngcontent-kda-c377="" class="mat-card mat-focus-indicator box">
         <mat-card-header _ngcontent-kda-c377="" class="mat-card-header">
@@ -14,233 +13,83 @@
               <span class="title-inicial">
                 Cuestionario de antecedentes familiares
               </span>
-
             </mat-card-title>
           </div>
         </mat-card-header>
-
         <mat-divider role="separator" class="mat-divider mat-divider-horizontal ng-star-inserted"
           aria-orientation="horizontal"></mat-divider>
-
         <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column"
           ng-reflect-fx-layout="column" class="ng-star-inserted"
           style="flex-direction: column; box-sizing: border-box; display: flex;">
           <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full">
-
-            <h2 class="titlePrincipal" >
+            <h2 class="titlePrincipal">
               Familia
             </h2>
-            
             <div style="flex-direction: column; box-sizing: border-box; display: flex;">
 
               <!-- CONVIVENCIA -->
-
-              <table>
+              <table class="box1">
                 <thead>
                   <tr>
-                    <th>CONVIVE CON</th>
-                    <th>No</th>
-                    <th class="inHouse">En la casa</th>
-                    <th>En el cuarto</th>
+                    <th class="subtitle1">CONVIVE CON</th>
+                    <th class="inHouse1">No</th>
+                    <th class="inHouse2">En la casa</th>
+                    <th class="inHouse3">En el cuarto</th>
                   </tr>
                 </thead>
                 <tbody>
-
-                  <tr id="24">
-                    <td>Madre</td>
-                    <td>
-                      <input type="checkbox" [(ngModel)]="convivenciaMembers.madre.A" name="madreA" value="A" (change)="isCheckboxAChecked()">
+                  <tr *ngFor="let member of familyMembers">
+                    <td>{{ member.name }}</td>
+                    <td class="titles-convivencia">
+                      <input type="checkbox" [(ngModel)]="convivenciaMembers[member.key].A" name="{{member.key}}A"value="A" (change)="onCheckboxChange(member.key, 'A')">
                     </td>
-                    <td>
-                      <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.madre.B" name="madreB" value="B" [disabled]="isCheckboxBDisabled()">
+                    <td class="titles-convivencia2">
+                      <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers[member.key].B" name="{{member.key}}B" value="B" [disabled]="isCheckboxDisabled(member.key, 'A')">
                     </td>
-                    <td class="yellow-alert">
-                      <input type="checkbox" id="yellow-alert" [(ngModel)]="convivenciaMembers.madre.C" name="madreC" value="C" [disabled]="isCheckboxCDisabled()">
-                      <label for="yellow-alert"></label>
+                    <td class="yellow-alert & titles-convivencia3">
+                      <input type="checkbox" id="yellow-alert-{{member.key}}" [(ngModel)]="convivenciaMembers[member.key].C" name="{{member.key}}C" value="C" [disabled]="isCheckboxDisabled(member.key, 'A')">
+                      <label for="yellow-alert-{{member.key}}"></label>
                     </td>
-                  </tr>
-                  
-
-                  <tr>
-
-                    <tr>
-                      <td>Padre</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.padre.D" name="padreD" value="D" (change)="isCheckboxDChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.padre.E" name="padre" value="E" [disabled]="isCheckboxEDisabled()">
-                      </td>
-                      <td class="yellow-alert">
-                        <input type="checkbox" id="yellow-alert2" [(ngModel)]="convivenciaMembers.padre.F" name="padre" value="F" [disabled]="isCheckboxFDisabled()">
-                        <label for="yellow-alert2"></label>
-                      </td>
-                    </tr>
-                    
-                    <tr>
-                      <td>Madrastra</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.madrastra.G" name="madrastraG" value="G" (change)="isMadrastraCheckboxGChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.madrastra.H" name="madrastra" value="H" [disabled]="isMadrastraCheckboxHDisabled()">
-                      </td>
-                      <td class="yellow-alert">
-                        <input type="checkbox" id="yellow-alert3" [(ngModel)]="convivenciaMembers.madrastra.I" name="madrastra" value="I" [disabled]="isMadrastraCheckboxIDisabled()">
-                        <label for="yellow-alert3"></label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Padrastro</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.padrastro.J" name="padrastroJ" value="J" (change)="isPadrastroCheckboxJChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.padrastro.K" name="padrastro" value="K" [disabled]="isPadrastroCheckboxKDisabled()">
-                      </td>
-                      <td class="yellow-alert">
-                        <input type="checkbox" id="yellow-alert33" [(ngModel)]="convivenciaMembers.padrastro.L" name="padrastro" value="L" [disabled]="isPadrastroCheckboxLDisabled()">
-                        <label for="yellow-alert33"></label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Hermanos</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.hermanos.M" name="hermanosM" value="M" (change)="isCheckboxMChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.hermanos.N" name="hermanos" value="N" [disabled]="isCheckboxNDisabled()">
-                      </td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.hermanos.O" name="hermanos" value="O" [disabled]="isCheckboxODisabled()">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Pareja</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.pareja.P" name="parejaP" value="P" (change)="isParejaCheckboxPChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.pareja.D" name="pareja" value="D" [disabled]="isParejaCheckboxDDisabled()">
-                      </td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.pareja.R" name="pareja" value="R" [disabled]="isParejaCheckboxRDisabled()">
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Hijos</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.hijos.S" name="hijosS" value="S" (change)="isHijosCheckboxSChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.hijos.T" name="hijos" value="T" [disabled]="isHijosCheckboxTDisabled()">
-                      </td>
-                      <td class="yellow-alert">
-                        <input type="checkbox" id="yellow-alert4" [(ngModel)]="convivenciaMembers.hijos.U" name="hijos" value="U" [disabled]="isHijosCheckboxUDisabled()">
-                        <label for="yellow-alert4"></label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Abuelos</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.abuelos.V" name="abuelosV" value="V" (change)="isAbuelosCheckboxVChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.abuelos.W" name="abuelos" value="W" [disabled]="isAbuelosCheckboxWDisabled()">
-                      </td>
-                      <td class="yellow-alert">
-                        <input type="checkbox" id="yellow-alert5" [(ngModel)]="convivenciaMembers.abuelos.X" name="abuelos" value="X" [disabled]="isAbuelosCheckboxXDisabled()">
-                        <label for="yellow-alert5"></label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Otros</td>
-                      <td>
-                        <input type="checkbox" [(ngModel)]="convivenciaMembers.otros.Y" name="otrosY" value="Y" (change)="isOtrosCheckboxYChecked()">
-                      </td>
-                      <td>
-                        <input class="middle" type="checkbox" [(ngModel)]="convivenciaMembers.otros.Z" name="otros" value="Z" [disabled]="isOtrosCheckboxZDisabled()">
-                      </td>
-                      <td class="yellow-alert">
-                        <input type="checkbox" id="yellow-alert6" [(ngModel)]="convivenciaMembers.otros.Z2" name="otros" value="Z2" [disabled]="isOtrosCheckboxZ2Disabled()">
-                        <label for="yellow-alert6"></label>
-                      </td>
                   </tr>
                 </tbody>
               </table>
 
               <!-- VIVE -->
               <br>
-
               <br> <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486=""
                 aria-orientation="horizontal"
                 class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
                 style="margin-bottom: 15px;"></mat-divider>
 
               <br />
-              <table>
+              <table class="box1">
                 <thead>
                   <tr>
-                    <th>Vive</th>
+                    <th class="subtitle1">Vive</th>
                     <th class="place">No</th>
                     <th class="place-title">Si</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr id="32">
-                    <td>En institución</td>
+                  <tr *ngFor="let lugar of lugares; let i = index" [attr.id]="lugar.itemId">
+                    <td>{{ lugar.label }}</td>
                     <td class="place">
-                      <input [(ngModel)]="hogarLugar.institucion.A2" type="checkbox" name="no.institucion" value="A2">
-
+                      <input [(ngModel)]="hogarLugar[lugar.key][lugar.noKey]" type="checkbox" [name]="'no.' + lugar.key" [value]="lugar.noKey">
                     </td>
-
-                    <td class="place" class="yellow-alert && yellow-alertEDIT"><input id="yellow-alert7"
-                        [(ngModel)]="hogarLugar.institucion.B2" type="checkbox" name="si.institucion" value="B2">
-                      <label for="yellow-alert7"></label>
-                    </td>
-                  </tr>
-                  <tr id="33">
-                    <td>En la calle</td>
-                    <td class="place"><input [(ngModel)]="hogarLugar.sinHogar.C2" type="checkbox" name="enLaCalle"
-                        value="C2"></td>
-                    <td class="place" class="yellow-alert && yellow-alertEDIT">
-                      <input [(ngModel)]="hogarLugar.sinHogar.D2" id="yellow-alert8" type="checkbox" name="enLaCalle"
-                        value="D2">
-                      <label for="yellow-alert8"></label>
-                    </td>
-                  </tr>
-                  <tr id="34">
-                    <td>Solo</td>
-                    <td class="place"><input [(ngModel)]="hogarLugar.personaSolitaria.E2" type="checkbox" name="solo"
-                        value="E2"></td>
-                    <td class="place" class="yellow-alert && yellow-alertEDIT">
-                      <input id="yellow-alert9" [(ngModel)]="hogarLugar.personaSolitaria.F2" id="yellow-alert9"
-                        type="checkbox" name="solo" value="F2"> <label for="yellow-alert9"></label>
-                    </td>
-                  </tr>
-                  <tr id="35">
-                    <td>Comparte la cama</td>
-                    <td class="place"><input [(ngModel)]="hogarLugar.camaCompartida.G2" type="checkbox" name="camax2"
-                        value="G2"></td>
-                    <td class="place" class="yellow-alert && yellow-alertEDIT"><input id="yellow-alert10"
-                        [(ngModel)]="hogarLugar.camaCompartida.H2" type="checkbox" name="camax2" value="H2">
-                      <label for="yellow-alert10"></label>
-
+                    <td class="yellow-alert && yellow-alertEDIT">
+                      <input [(ngModel)]="hogarLugar[lugar.key][lugar.siKey]" [id]="'yellow-alert' + (i + 7)" type="checkbox" [name]="'si.' + lugar.key" [value]="lugar.siKey">
+                      <label [for]="'yellow-alert' + (i + 7)"></label>
                     </td>
                   </tr>
                 </tbody>
               </table>
-
               <br>
-
               <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486="" aria-orientation="horizontal"
                 class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
                 style="margin-bottom: 15px;"></mat-divider>
-
               <br />
 
               <!-- NIVEL DE INSTRUCCION -->
-
               <table>
                 <thead>
                   <tr>
@@ -248,22 +97,14 @@
                   </tr>
                 </thead>
                 <tbody class="container-instruccion">
-                  <tr class="section3" [(ngModel)]="educacionPadreOSustituto" id="36">
+                  <tr class="section3" id="36">
                     <td>Padre o sustituto</td>
                     <div class="checkPadres" id="37">
-
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.padre.A3"
-                        name="padre.sustituto" value="A3">
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.padre.B3"
-                        name="padre.sustituto" value="B3">
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.padre.C3"
-                        name="padre.sustituto" value="C3">
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.padre.D3"
-                        name="padre.sustituto" value="D3">
-                      <input type="radio" [(ngModel)]="educacion.padre.E3" name="padre.sustituto" value="E3">
-                      <input type="radio" [(ngModel)]="educacion.padre.F3" name="padre.sustituto" value="F3">
+                      <ng-container *ngFor="let option of opcionesPadre; let i = index">
+                        <input type="radio" [class.yellow-alert-radio]="i < opcionesPadre.length - 2" id="yellow-radio"
+                          [(ngModel)]="educacion.padre[option]" name="padre.sustituto" [value]="option">
+                      </ng-container>
                       <label for="yellow-radio"></label>
-
                     </div>
                   </tr>
                   <tr class="section3 text1">
@@ -274,109 +115,63 @@
                     <td>Secundario Completo</td>
                     <td>Univ./terciario</td>
                   </tr>
-                  <tr class="section3">
+                  <tr class="section3" id="38">
                     <td>Madre o sustituta</td>
-                    <div class="checkPadres" [(ngModel)]="educacionMadreOSustituto" id="38">
-
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.madre.A4"
-                        name="madre.sustituta" value="A4">
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.madre.B4"
-                        name="madre.sustituta" value="B4">
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.madre.C4"
-                        name="madre.sustituta" value="C4">
-                      <input type="radio" class="yellow-alert-radio" id="yellow-radio" [(ngModel)]="educacion.madre.D4"
-                        name="madre.sustituta" value="D4">
-                      <input type="radio" [(ngModel)]="educacion.madre.E4" name="madre.sustituta" value="E4">
-                      <input type="radio" [(ngModel)]="educacion.madre.F4" name="madre.sustituta" value="F4">
+                    <div class="checkPadres">
+                      <ng-container *ngFor="let option of opcionesMadre; let i = index">
+                        <input type="radio" [class.yellow-alert-radio]="i < opcionesMadre.length - 2" id="yellow-radio"
+                          [(ngModel)]="educacion.madre[option]" name="madre.sustituta" [value]="option">
+                      </ng-container>
                       <label for="yellow-radio"></label>
-
                     </div>
                   </tr>
                 </tbody>
               </table>
-
               <br>
-
-              <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486="" aria-orientation="horizontal"
-                class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
-                style="margin-bottom: 15px; border-top-style: none;"></mat-divider>
-
               <br />
-
               <span class="color-primary title && title-section4"
-                style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center;">
+                style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center; margin-top: 7px;">
                 Madre
               </span>
-
-
+              
               <!-- MADRE -->
-              <table>
-                <div class="div1">
+              <div class="div1">
+                <table>
                   <tr>
-                    <th class="section4">Edad</th>
+                    <th class="section4 section4b2">Estado civil</th>
                   </tr>
-                  <tr class="section4-b section4" id="42">
-                    <td class="chart-title2">Años</td>
+                  <tr *ngFor="let option of estadoCivilOptions" class="section4-b section4">
+                    <td>{{ option.label }}</td>
                     <td>
-                      <input class="section4-b chart2" [(ngModel)]="edadMadre.madre.counter1" name="counter1" type="number" min="0">
+                      <input class="section4-b" type="radio" name="estadoCivilMadre"
+                        [(ngModel)]="estadoCivil.madre[option.key]" [value]="option.key">
                     </td>
                   </tr>
-
-                </div>
-
-                <div class="div1">
-                  <table>
-                    <tr>
-                      <th class="section4 section4b2">Estado civil</th>
-                    </tr>
-                    <tr class="section4-b section4" [(ngModel)]="estadoCivilMadre" id="43">
-                      <td>Soltera</td>
-                      <td>
-                        <input class="section4-b" type="radio" name="estadoCivil" [(ngModel)]="estadoCivil.madre.E1"
-                          value="E1">
-                      </td>
-                    </tr>
-                    <tr class="section4-b section4">
-                      <td>Casada</td>
-                      <td>
-                        <input class="section4-b" type="radio" name="estadoCivil" [(ngModel)]="estadoCivil.madre.E2"
-                          value="E2">
-                      </td>
-                    </tr>
-                    <tr class="section4-b section4">
-                      <td>Unión estable</td>
-                      <td>
-                        <input class="section4-b" type="radio" name="estadoCivil" [(ngModel)]="estadoCivil.madre.E3"
-                          value="E3">
-                      </td>
-                    </tr>
-                    <tr class="section4-b section4">
-                      <td>Otros</td>
-                      <td>
-                        <input class="section4-b" type="radio" name="estadoCivil" [(ngModel)]="estadoCivil.madre.E4"
-                          value="E4">
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-
-
-                <div class="div1" [(ngModel)]="trabajoMadre" id="39">
+                </table>
+              </div>
+              <div class="div1" [(ngModel)]="trabajoMadre" id="39">
+                <table>
                   <tr>
                     <th class="section4 section4b2">Trabajo remunerado</th>
                   </tr>
                   <tr class="section4-b section4" id="40">
                     <td>Si</td>
-                    <td><input class="section4-b" type="radio" name="trabajoRemunerado"
-                        [(ngModel)]="trabajoRemunerado.madre.si" value="si" id="20"></td>
+                    <td>
+                      <input class="section4-b" type="radio" name="trabajoRemunerado"
+                        [(ngModel)]="trabajoRemunerado.madre.si" value="si" id="20">
+                    </td>
                   </tr>
                   <tr class="section4-b section4">
                     <td>No</td>
-                    <td><input class="section4-b" type="radio" name="trabajoRemunerado"
-                        [(ngModel)]="trabajoRemunerado.madre.no" value="no" id="19"></td>
+                    <td>
+                      <input class="section4-b" type="radio" name="trabajoRemunerado"
+                        [(ngModel)]="trabajoRemunerado.madre.no" value="no" id="19">
+                    </td>
                   </tr>
-                </div>
+                </table>
+              </div>
 
+              <table>
                 <tr class="section4-b section4">
                   <td class="chart-title">Horas fuera de la casa</td>
                   <td>
@@ -386,76 +181,66 @@
                 </tr>
               </table>
 
+              <br><br />
 
-              <br>
-
-              <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486="" aria-orientation="horizontal"
-                class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
-                style="margin-bottom: 15px; border-top-style: none;"></mat-divider>
-
-              <br />
               <span class="color-primary title && title-section4"
-                style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center;">
+                style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center; margin-top: 7px;">
                 Padre
               </span>
 
               <!-- PADRE -->
-
-              <table>
-                <div class="div1">
+              <div class="div1">
+                <table>
                   <tr>
                     <th class="section4">Edad</th>
                   </tr>
                   <tr class="section4-b section4" id="44">
                     <td class="chart-title2">Años</td>
-                    <input class="section4-b chart" type="number" id="45" name="counter2" [(ngModel)]="edadPadre.padre.counter2" min="0">
+                    <td>
+                      <input class="section4-b chart" type="number" id="45" name="counter2"
+                        [(ngModel)]="edadPadre.padre.counter2" min="0">
+                    </td>
                   </tr>
-                </div>
+                </table>
+              </div>
 
-                <div class="div1" [(ngModel)]="estadoCivilPadre" id="56">
+              <div class="div1">
+                <table>
                   <tr>
                     <th class="section4 section4b2">Estado civil</th>
                   </tr>
+                  <tr *ngFor="let option of estadoCivilOptions" class="section4-b section4">
+                    <td>{{ option.label }}</td>
+                    <td>
+                      <input class="section4-b" type="radio" name="estadoCivilPadre"
+                        [(ngModel)]="estadoCivil.padre[option.key]" [value]="option.key">
+                    </td>
+                  </tr>
+                </table>
+              </div>
 
-                  <tr class="section4-b section4">
-                    <td>Soltero</td>
-                    <td><input class="section4-b" type="radio" name="estadoCivil2" [(ngModel)]="estadoCivil.padre.E5"
-                        value="E5"></td>
-                  </tr>
-                  <tr class="section4-b section4">
-                    <td>Casado</td>
-                    <td><input class="section4-b" type="radio" name="estadoCivil2" [(ngModel)]="estadoCivil.padre.E6"
-                        value="E6"></td>
-                  </tr>
-
-                  <tr class="section4-b section4">
-                    <td>Unión estable</td>
-                    <td><input class="section4-b" type="radio" name="estadoCivil2" [(ngModel)]="estadoCivil.padre.E7"
-                        value="E7"></td>
-                  </tr>
-                  <tr class="section4-b section4">
-                    <td>Otros</td>
-                    <td><input class="section4-b" type="radio" name="estadoCivil2" [(ngModel)]="estadoCivil.padre.E8"
-                        value="E8"></td>
-                  </tr>
-                </div>
-
-                <div class="div1" [(ngModel)]="trabajoPadre">
+              <div class="div1" [(ngModel)]="trabajoPadre">
+                <table>
                   <tr>
                     <th class="section4 section4b2">Trabajo remunerado</th>
                   </tr>
                   <tr class="section4-b section4">
                     <td>Si</td>
-                    <td><input class="section4-b" type="radio" name="trabajoRemunerado2"
-                        [(ngModel)]="trabajoRemunerado2.padre.si" value="si" id="20"></td>
+                    <td>
+                      <input class="section4-b" type="radio" name="trabajoRemunerado2"
+                        [(ngModel)]="trabajoRemunerado2.padre.si" value="si" id="20">
+                    </td>
                   </tr>
                   <tr class="section4-b section4">
                     <td>No</td>
-                    <td><input class="section4-b" type="radio" name="trabajoRemunerado2"
-                        [(ngModel)]="trabajoRemunerado2.padre.no" value="no" id="19"></td>
+                    <td>
+                      <input class="section4-b" type="radio" name="trabajoRemunerado2"
+                        [(ngModel)]="trabajoRemunerado2.padre.no" value="no" id="19">
+                    </td>
                   </tr>
-                </div>
-
+                </table>
+              </div>
+              <table>
                 <tr class="section4-b section4">
                   <td class="chart-title">Horas fuera de la casa</td>
                   <td>
@@ -464,11 +249,6 @@
                   </td>
                 </tr>
               </table>
-
-
-              <mat-divider class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
-                style="margin-bottom: 15px; border-top-style: none;"></mat-divider>
-
               <br />
 
               <span class="color-primary title && title-section4"
@@ -477,7 +257,6 @@
               </span>
 
               <!-- HERMANOS EN VIDA  -->
-
               <table>
                 <div class="div1">
                   <tr class="section4-b && section4" [(ngModel)]="hermanosVivos" id="46">
@@ -502,23 +281,21 @@
                 class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
                 style="margin-bottom: 15px; border-top-style: none;"></mat-divider>
 
-
               <!-- VIVIENDA -->
-
               <span class="color-primary title && title-section4"
-                style="margin-right: 10px; font-size: 20px; background-color: #f6fafb; text-align: center;">
+                style="margin-right: 10px; font-size: 20px; background-color: #f6fafb; text-align: center; margin-top: 7px;">
                 Vivienda
               </span>
 
               <tr class="line">
-                <td>Número de cuartos</td>
+                <td style="position: relative;right: 32px;">Número de cuartos</td>
                 <td class="check-vivienda" [(ngModel)]="cantidadCuartos">
-                  <input min="0" style="max-width: 18%;" [(ngModel)]="numeroCuartos.cuartos.cantidad" class="chart-vivienda" name="cuartos"  type="number" id="50">
+                  <input min="0" style="max-width: 18%;" [(ngModel)]="numeroCuartos.cuartos.cantidad"
+                    class="chart-vivienda" name="cuartos" type="number" id="50">
                 </td>
               </tr>
 
               <table class="Vivienda" id="49">
-
                 <thead>
                   <tr>
                     <th class="vivienda-titles1">Si</th>
@@ -531,7 +308,8 @@
                   <td class="check-vivienda"><input type="radio" name="energiaElectrica"
                       [(ngModel)]="viviendaElectricidad.electricidad.si" class="radio-tamaño" value="si" id="20"></td>
                   <td class="check-vivienda2"><input type="radio" name="energiaElectrica" class="yellow-alert-radio"
-                      id="yellow-radio" class="radio-tamaño" [(ngModel)]="viviendaElectricidad.electricidad.no" value="no" id="19">
+                      id="yellow-radio" class="radio-tamaño" [(ngModel)]="viviendaElectricidad.electricidad.no"
+                      value="no" id="19">
                     <label for="yellow-radio"></label>
                   </td>
                 </tr>
@@ -546,8 +324,8 @@
                 <tr id="52">
                   <td>Conectado a la red</td>
                   <td class="check-vivienda">
-                    <input type="radio" name="conectadoaRed" class="radio-tamaño" [(ngModel)]="viviendaAgua.conexionAgua.si" value="si"
-                      id="38">
+                    <input type="radio" name="conectadoaRed" class="radio-tamaño"
+                      [(ngModel)]="viviendaAgua.conexionAgua.si" value="si" id="38">
                   </td>
                   <td class="check-vivienda2">
                     <input type="radio" name="conectadoaRedExcretas" class="yellow-alert-radio" id="yellow-radio"
@@ -560,8 +338,8 @@
                 <tr id="52">
                   <td>No conectado a la red</td>
                   <td class="check-vivienda">
-                    <input type="radio" name="conectadoaRed" class="radio-tamaño" [(ngModel)]="viviendaAgua.sinConexion.no" value="no"
-                      id="38">
+                    <input type="radio" name="conectadoaRed" class="radio-tamaño"
+                      [(ngModel)]="viviendaAgua.sinConexion.no" value="no" id="38">
                   </td>
                   <td class="check-vivienda2">
                     <input type="radio" class="yellow-alert-radio" id="yellow-radio" name="conectadoaRedExcretas"
@@ -574,8 +352,8 @@
                 <tr id="40">
                   <td>Fuera del hogar</td>
                   <td class="check-vivienda">
-                    <input type="radio" name="conectadoaRed" class="radio-tamaño" [(ngModel)]="viviendaAgua.conexionAgua.fueradelhogar"
-                      value="fueradelhogar">
+                    <input type="radio" name="conectadoaRed" class="radio-tamaño"
+                      [(ngModel)]="viviendaAgua.conexionAgua.fueradelhogar" value="fueradelhogar">
                   </td>
                   <td class="check-vivienda2">
                     <input type="radio" class="yellow-alert-radio" name="conectadoaRedExcretas"
@@ -592,21 +370,17 @@
                       [(ngModel)]="viviendaExcretas.conexionExcretas.letrina" value="letrina">
                     <label for="yellow-radio"></label>
                   </td>
-
                 </tr>
               </table>
 
               <button mat-raised-button color="primary" type="submit">Guardar Formulario</button>
               <br>
-
             </div>
-
           </app-content>
         </div>
       </mat-card>
     </div>
   </form>
   <div>
-    <br>
-  </div>
+   </div>
 </div>
