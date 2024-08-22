@@ -82,13 +82,17 @@ else
 fi
 
 git add back-end/pom-parent.xml
-echo "databaseChangeLog: 
-    - logicalFilePath: incrementales-v${M_VERSION}_$(($MIN_VERSION+1)) 
+echo "databaseChangeLog:
+    - logicalFilePath: incrementales-v${M_VERSION}_$(($MIN_VERSION+1))
 " >> back-end/app/src/main/resources/db/changelog/incrementales-v${M_VERSION}_$(($MIN_VERSION+1)).yml
-echo "
-- include:
-    file: incrementales-v${M_VERSION}_$(($MIN_VERSION+1)).yml
-    relativeToChangelogFile: true" >> back-end/app/src/main/resources/db/changelog/db.changelog-master.yaml
+
+awk -v M_VERSION=${M_VERSION} -v MIN_VERSION=${MIN_VERSION} '
+    /- includeAll:/ {
+        print "- include:\n    file: incrementales-v" M_VERSION "_" MIN_VERSION+1 ".yml\n    relativeToChangelogFile: true\n"
+    }
+    { print }
+' back-end/app/src/main/resources/db/changelog/db.changelog-master.yaml > temp && mv temp back-end/app/src/main/resources/db/changelog/db.changelog-master.yaml
+
 git add back-end/app/src/main/resources/db/
 git commit -m "Comienza desarrollo de $NEXT_MM_VERSION"
 git push ${REMOTE} code-freeze -o merge_request.create -o merge_request.merge_when_pipeline_succeeds -o merge_request.remove_source_branch -o merge_request.title="Code Freeze  V${CURR_VERSION}"
