@@ -269,7 +269,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			}
 
 		const {item, showDosage, showStudyCategory} = this.data;
-		const commercialMedicationPrescription = !this.commercialPrescriptionFFIsOn ? null :
+		const commercialMedicationPrescription = !(this.snomedRelationsFFIsOn && this.commercialPrescriptionFFIsOn) ? null :
 			{
 				medicationPackQuantity: this.prescriptionItemForm.controls.medicationPackQuantity.value,
 				presentationUnitQuantity: this.prescriptionItemForm.controls.presentationUnit.value
@@ -468,11 +468,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.quantity.setValidators([Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]);
 		}
 
-		if (this.commercialPrescriptionFFIsOn) {
+		if (this.snomedRelationsFFIsOn && this.commercialPrescriptionFFIsOn) {
 			this.prescriptionItemForm.controls.presentationUnit.setValidators([Validators.required]);
 			this.prescriptionItemForm.controls.medicationPackQuantity.setValue(this.MIN_VALUE);
 			this.prescriptionItemForm.controls.medicationPackQuantity.setValidators([Validators.min(this.MIN_VALUE), Validators.pattern(NUMBER_PATTERN), Validators.required]);
-
 		}
 	}
 
