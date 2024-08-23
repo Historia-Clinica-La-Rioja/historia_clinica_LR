@@ -27,27 +27,27 @@ public class EmergencyConsultationDetail {
 
 	private String identification;
 
-	private String lastName;
+	private String lastNames;
 
 	private String names;
 
 	private String medicalCoverage;
 
-	private String emergencyCareEntrance;
+	private String typeOfEntry;
 
 	private String situation;
 
 	private String emergencyCareType;
 
-	private String triageNote;
+	private String triageNotes;
 
 	private String triageLevel;
 
-	private String dateDischarge;
+	private String dischargeDate;
 
-	private String ambulanceDischarge;
+	private String dischargeAmbulance;
 
-	private String typeDischarge;
+	private String dischargeType;
 
 	private String patientExit;
 

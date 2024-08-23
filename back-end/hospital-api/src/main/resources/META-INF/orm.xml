@@ -1127,60 +1127,69 @@
 
 	<named-native-query name="GeneralReports.EmergencyConsultationDetail" result-set-mapping="GeneralReports.EmergencyConsultationDetailResult">
 		<query>
-			SELECT concat(ins.name, ' ', ins.sisa_code) AS institution,
-			ece.ambulance_company_id as ambulance,
-			d_of.description as office,
-			css.description as sector,
+			SELECT
+			CONCAT(ins.name, ' ', ins.sisa_code) AS institution,
+			ece.ambulance_company_id AS ambulance,
+			d_of.description AS office,
+			css.description AS sector,
 			CASE
-			WHEN ece.has_police_intervention=true THEN
-			concat('Sí')
-			ELSE concat('No')
+			WHEN ece.has_police_intervention = true THEN CONCAT('Sí')
+			ELSE CONCAT('No')
 			END AS policeIntervention,
-			case
-			when (EXTRACT(HOUR FROM ece.updated_on)) &lt; 3 then
-			(concat(EXTRACT(DAY FROM ece.updated_on)-1, '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on)))
-			else concat(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
-			end as attentionDate,
-			<!-- concat(EXTRACT(HOUR FROM ece.created_on AT TIME ZONE 'UTC-3'), ':', EXTRACT(MINUTE FROM ece.created_on AT TIME ZONE 'UTC-3')) as attentionHour, -->
-			to_char(ece.created_on AT TIME ZONE 'UTC+0', 'HH24:MI') as attentionHour,
-			concat(it.description, ' ', pe.identification_number) as identification,
-			concat(pe.last_name, ' ', pe.other_last_names) as lastName,
-			concat(pe.first_name, ' ', pe.middle_names) as names,
-			concat(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) as medicalCoverage,
-			ec_in_t.description AS emergencyCareEntrance,
+			CASE
+			WHEN (EXTRACT(HOUR FROM ece.updated_on)) &lt; 3 THEN
+			CONCAT(EXTRACT(DAY FROM ece.updated_on) - 1, '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
+			ELSE
+			CONCAT(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
+			END AS attentionDate,
+			CONCAT(EXTRACT(HOUR FROM ece.created_on AT TIME ZONE 'UTC-3'), ':', EXTRACT(MINUTE FROM ece.created_on AT TIME ZONE 'UTC-3')) AS attentionHour,
+			CONCAT(it.description, ' ', pe.identification_number) AS identification,
+			CONCAT(pe.last_name, ' ', pe.other_last_names) AS lastNames,
+			CONCAT(pe.first_name, ' ', pe.middle_names) AS names,
+			CONCAT(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) AS medicalCoverage,
+			ec_in_t.description AS typeOfEntry,
 			ec_st.description AS situation,
 			ec_t.description AS emergencyCareType,
-			(SELECT string_agg(tr.notes, ', ') FROM triage tr WHERE tr.emergency_care_episode_id=ece.id) AS triageNote,
-			concat(tr_cat.name, ' Codigo: ', tr_cat.color_name) as triageLevel,
-			ec_dis.administrative_discharge_on as dateDischarge,
-			ec_dis.ambulance_company_id AS ambulanceDischarge,
-			dis.description as typeDischarge,
-			dis_out.description as patientExit,
-			(SELECT string_agg(concat(mot.description), ', ') FROM emergency_care_episode_reason ecer LEFT JOIN reasons mot ON ecer.reason_id=mot.id WHERE ecer.emergency_care_episode_id=ece.id) as reasons,
-			(select string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date, ' - Tipo: ', pt.description,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
-			from document_health_condition dhc inner join health_condition hc on dhc.health_condition_id=hc.id inner join problem_type pt on hc.problem_id=pt.id inner join snomed s_prob on hc.snomed_id=s_prob.id inner join condition_clinical_status ccs on hc.status_id=ccs.id inner join condition_verification_status cvs on hc.verification_status_id=cvs.id where dhc.document_id=d.id and hc.problem_id&lt;>'57177007') as problems,
+			(SELECT STRING_AGG(tr.notes, ', ') FROM triage tr WHERE tr.emergency_care_episode_id = ece.id) AS triageNotes,
+			CONCAT(tr_cat.name, ' Codigo: ', tr_cat.color_name) AS triageLevel,
+			ec_dis.administrative_discharge_on AS dischargeDate,
+			ec_dis.ambulance_company_id AS dischargeAmbulance,
+			dis.description AS dischargeType,
+			dis_out.description AS patientExit,
+			(SELECT STRING_AGG(CONCAT(mot.description), ', ')
+			FROM emergency_care_episode_reason ecer
+			LEFT JOIN reasons mot ON ecer.reason_id = mot.id
+			WHERE ecer.emergency_care_episode_id = ece.id) AS reasons,
+			(SELECT STRING_AGG(CONCAT(s_prob.pt, ' (', ccs.description, ' &amp; ', cvs.description, ' - Fecha: ', hc.start_date, ' - Tipo: ', pt.description, ')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			FROM document_health_condition dhc
+			INNER JOIN health_condition hc ON dhc.health_condition_id = hc.id
+			INNER JOIN problem_type pt ON hc.problem_id = pt.id
+			INNER JOIN snomed s_prob ON hc.snomed_id = s_prob.id
+			INNER JOIN condition_clinical_status ccs ON hc.status_id = ccs.id
+			INNER JOIN condition_verification_status cvs ON hc.verification_status_id = cvs.id
+			WHERE dhc.document_id = d.id AND hc.problem_id &lt;> '57177007') AS problems,
 			ev.description AS evolution
 			FROM emergency_care_episode ece
 			INNER JOIN institution ins ON ece.institution_id = ins.id
 			INNER JOIN emergency_care_state ec_st ON ece.emergency_care_state_id = ec_st.id
 			INNER JOIN patient pa ON ece.patient_id = pa.id
 			INNER JOIN person pe ON pa.person_id = pe.id
-			INNER JOIN identification_type it ON pe.identification_type_id=it.id
-			LEFT JOIN patient_medical_coverage pmc on ece.patient_medical_coverage_id=pmc.id
-			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
-			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			INNER JOIN identification_type it ON pe.identification_type_id = it.id
+			LEFT JOIN patient_medical_coverage pmc ON ece.patient_medical_coverage_id = pmc.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id = mc.id
+			LEFT JOIN health_insurance hi ON hi.id = mc.id
 			LEFT JOIN emergency_care_entrance_type ec_in_t ON ece.emergency_care_entrance_type_id = ec_in_t.id
 			LEFT JOIN emergency_care_type ec_t ON ece.emergency_care_type_id = ec_t.id
 			LEFT JOIN emergency_care_discharge ec_dis ON ece.id = ec_dis.emergency_care_episode_id
 			LEFT JOIN discharge_type dis ON ec_dis.discharge_type_id = dis.id
-			LEFT JOIN emergency_care_entrance_type dis_out ON ec_dis.hospital_transport_id=dis_out.id
-			LEFT JOIN doctors_office d_of ON ece.doctors_office_id=d_of.id
-			LEFT JOIN clinical_specialty_sector css ON d_of.sector_id=css.id
-			LEFT JOIN triage_category tr_cat  ON ece.triage_category_id=tr_cat.id
-			LEFT JOIN document d ON d.source_id=ece.id AND d.source_type_id=4
-			LEFT JOIN note ev ON d.other_note_id=ev.id
+			LEFT JOIN emergency_care_entrance_type dis_out ON ec_dis.hospital_transport_id = dis_out.id
+			LEFT JOIN doctors_office d_of ON ece.doctors_office_id = d_of.id
+			LEFT JOIN clinical_specialty_sector css ON d_of.sector_id = css.id
+			LEFT JOIN triage_category tr_cat ON ece.triage_category_id = tr_cat.id
+			LEFT JOIN document d ON d.source_id = ece.id AND d.source_type_id = 4
+			LEFT JOIN note ev ON d.other_note_id = ev.id
 			WHERE ece.created_on BETWEEN :startDate AND :endDate
-			AND ins.id= :institutionId
+			AND ins.id = :institutionId
 		</query>
 	</named-native-query>
 	
@@ -1335,6 +1344,44 @@
 			WHERE d.created_on BETWEEN :startDate AND :endDate
 			AND i.id = :institutionId
 			order by d.created_on;
+		</query>
+	</named-native-query>
+
+	<named-native-query name="GeneralReports.MedicinesPrescriptionConsultationDetail" result-set-mapping="GeneralReports.MedicinesPrescriptionConsultationDetailResult">
+		<query>
+			--Versión: alfa
+			SELECT concat(ins.name, '(CUIT: ', ins.cuit, ' | SISA: ', ins.sisa_code, ')') AS institutionName, st.description AS prescriptionStatus,
+			CASE WHEN (EXTRACT(HOUR FROM mr.created_on)) &lt; 3 THEN mr.request_date-1 ELSE mr.request_date END AS date,
+			concat(pe_hp.last_name, ' ', pe_hp.other_last_names, ' ', pe_hp.first_name, ' ', pe_hp.middle_names) AS prescriber, pe_hp.identification_number AS prescriberDNI, hp.license_number as prescriberLicense,
+			(select string_agg(concat(psp.description_profession_ref, ': ', lic.license_number), ' | ') FROM professional_professions ppr inner join professional_specialty psp ON psp.id=ppr.professional_specialty_id inner join professional_license_numbers lic on ppr.id=lic.professional_profession_id WHERE ppr.healthcare_professional_id=hp.id and lic.type_license_number=1) as prescriberNationalLicense,
+			(select string_agg(concat(psp.description_profession_ref, ': ', lic.license_number), ' | ') FROM professional_professions ppr inner join professional_specialty psp ON psp.id=ppr.professional_specialty_id inner join professional_license_numbers lic on ppr.id=lic.professional_profession_id WHERE ppr.healthcare_professional_id=hp.id and lic.type_license_number=2) as prescriberProvincialLicense,
+			concat(pe.last_name, ' ', pe.other_last_names, ' ', pe.first_name, ' ', pe.middle_names) AS patient, pe.identification_number AS patientDNI, concat(mc.name, '(RNOS: ', hi.rnos, ')') AS medicalCoverage,
+			concat(s.pt, '(SNOMED: ', s.sctid,')') AS medicine, concat(sn_hc.pt, '(SNOMED: ', sn_hc.sctid,')') AS relatedDiagnosis,
+			case when dsg.chronic is true then 'Sí' else 'No' end as isChronic, dsg.event as event, concat(dsg.duration, ' ', dsg.duration_unit) as duration, concat(dsg.frequency, ' ', dsg.period_unit) as frequency,
+			dsg.start_date as startDate, dsg.end_date as endDate, dsg.suspended_start_date as suspensionStartDate, dsg.suspended_end_date as suspensionEndDate,
+			concat(qt.value, ' ', qt.unit) as dosage, dsg.doses_by_day as dosePerDay, dsg.doses_by_unit as dosePerUnit, ev.description as observations
+			FROM medication_request mr
+			INNER JOIN medication_request_status st ON mr.status_id=st.id
+			INNER JOIN institution ins ON mr.institution_id=ins.id
+			INNER JOIN healthcare_professional hp ON mr.doctor_id=hp.id
+			INNER JOIN person pe_hp ON hp.person_id=pe_hp.id
+			INNER JOIN patient pa ON mr.patient_id=pa.id
+			INNER JOIN person pe ON pa.person_id=pe.id
+			LEFT JOIN patient_medical_coverage pmc ON mr.medical_coverage_id=pmc.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			LEFT JOIN document d ON d.source_id=mr.id AND d.source_type_id=2
+			LEFT JOIN document_medicamention_statement dms ON dms.document_id=d.id
+			LEFT JOIN medication_statement ms ON dms.medication_statement_id=ms.id
+			LEFT JOIN snomed s ON ms.snomed_id=s.id
+			LEFT JOIN health_condition hcn ON ms.health_condition_id=hcn.id
+			LEFT JOIN snomed sn_hc ON hcn.snomed_id=sn_hc.id
+			LEFT JOIN dosage dsg ON ms.dosage_id=dsg.id
+			LEFT JOIN quantity qt ON dsg.dose_quantity_id=qt.id
+			LEFT JOIN note ev ON ms.note_id=ev.id
+			WHERE mr.created_on BETWEEN :startDate AND :endDate
+			AND ins.id = :institutionId
+			order by mr.created_on;
 		</query>
 	</named-native-query>
 
@@ -2838,17 +2885,17 @@
 			<column name="attentionDate" class="java.lang.String"/>
 			<column name="attentionHour" class="java.lang.String"/>
 			<column name="identification" class="java.lang.String"/>
-			<column name="lastName" class="java.lang.String"/>
+			<column name="lastNames" class="java.lang.String"/>
 			<column name="names" class="java.lang.String"/>
 			<column name="medicalCoverage" class="java.lang.String"/>
-			<column name="emergencyCareEntrance" class="java.lang.String"/>
+			<column name="typeOfEntry" class="java.lang.String"/>
 			<column name="situation" class="java.lang.String"/>
 			<column name="emergencyCareType" class="java.lang.String"/>
-			<column name="triageNote" class="java.lang.String"/>
+			<column name="triageNotes" class="java.lang.String"/>
 			<column name="triageLevel" class="java.lang.String"/>
-			<column name="dateDischarge" class="java.lang.String"/>
-			<column name="ambulanceDischarge" class="java.lang.String"/>
-			<column name="typeDischarge" class="java.lang.String"/>
+			<column name="dischargeDate" class="java.lang.String"/>
+			<column name="dischargeAmbulance" class="java.lang.String"/>
+			<column name="dischargeType" class="java.lang.String"/>
 			<column name="patientExit" class="java.lang.String"/>
 			<column name="reasons" class="java.lang.String"/>
 			<column name="problems" class="java.lang.String"/>
@@ -2915,6 +2962,35 @@
 			<column name="studyName" class="java.lang.String"/>
 			<column name="additionalNotes" class="java.lang.String"/>
 			<column name="associatedProblem" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="GeneralReports.MedicinesPrescriptionConsultationDetailResult">
+		<constructor-result target-class="net.pladema.provincialreports.generalreports.repository.MedicinesPrescriptionConsultationDetail">
+			<column name="institutionName" class="java.lang.String"/>
+			<column name="prescriptionStatus" class="java.lang.String"/>
+			<column name="date" class="java.lang.String"/>
+			<column name="prescriber" class="java.lang.String"/>
+			<column name="prescriberDNI" class="java.lang.String"/>
+			<column name="prescriberLicense" class="java.lang.String"/>
+			<column name="prescriberNationalLicense" class="java.lang.String"/>
+			<column name="prescriberProvincialLicense" class="java.lang.String"/>
+			<column name="patient" class="java.lang.String"/>
+			<column name="patientDNI" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="medicine" class="java.lang.String"/>
+			<column name="relatedDiagnosis" class="java.lang.String"/>
+			<column name="isChronic" class="java.lang.String"/>
+			<column name="event" class="java.lang.String"/>
+			<column name="duration" class="java.lang.String"/>
+			<column name="frequency" class="java.lang.String"/>
+			<column name="startDate" class="java.lang.String"/>
+			<column name="endDate" class="java.lang.String"/>
+			<column name="suspensionStartDate" class="java.lang.String"/>
+			<column name="suspensionEndDate" class="java.lang.String"/>
+			<column name="dosage" class="java.lang.String"/>
+			<column name="dosePerDay" class="java.lang.String"/>
+			<column name="dosePerUnit" class="java.lang.String"/>
+			<column name="observations" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 
