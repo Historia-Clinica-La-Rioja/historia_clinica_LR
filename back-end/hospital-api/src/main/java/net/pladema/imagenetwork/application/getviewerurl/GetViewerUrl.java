@@ -3,7 +3,7 @@ package net.pladema.imagenetwork.application.getviewerurl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.exception.StudyException;
-import net.pladema.imagenetwork.application.exception.StudyExceptionEnum;
+import net.pladema.imagenetwork.domain.exception.EStudyException;
 import net.pladema.imagenetwork.domain.ViewerUrlBo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class GetViewerUrl {
 
     private String getUrl() {
         if (viewerUrl == null || viewerUrl.isBlank())
-            throw new StudyException(StudyExceptionEnum.VIEWER_URL_NOT_DEFINED, "app.imagenetwork.error.viewer-not-defined");
+            throw new StudyException(EStudyException.VIEWER_URL_NOT_DEFINED, "app.imagenetwork.error.viewer-not-defined");
         return viewerUrl;
     }
 }

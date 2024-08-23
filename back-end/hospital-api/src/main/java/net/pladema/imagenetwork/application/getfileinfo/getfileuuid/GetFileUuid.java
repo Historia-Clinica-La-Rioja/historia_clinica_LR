@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.exception.StudyException;
-import net.pladema.imagenetwork.application.exception.StudyExceptionEnum;
+import net.pladema.imagenetwork.domain.exception.EStudyException;
 import net.pladema.imagenetwork.application.generatetokenstudypermissions.GenerateStudyTokenJWT;
 import net.pladema.imagenetwork.domain.StudyFileInfoBo;
 import net.pladema.imagenetwork.domain.filters.StudyInstanceFilter;
@@ -58,7 +58,7 @@ public class GetFileUuid {
                 .map(pacUrl -> getFileUUIDFromPACS(pacUrl, studyInstanceUID, headers, body))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new StudyException(StudyExceptionEnum.ANY_FILEUUID_WAS_FOUND, "app.imagenetwork.error.any-file-uuid-was-found"));
+                .orElseThrow(() -> new StudyException(EStudyException.ANY_FILEUUID_WAS_FOUND, "app.imagenetwork.error.any-file-uuid-was-found"));
 
         result.setToken(token);
 

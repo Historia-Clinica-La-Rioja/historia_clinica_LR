@@ -1,9 +1,9 @@
-package net.pladema.imagenetwork.application.exception;
+package net.pladema.imagenetwork.domain.exception;
 
 import lombok.Getter;
 
 @Getter
-public enum StudyExceptionEnum {
+public enum EStudyException {
     VIEWER_URL_NOT_DEFINED,
     PAC_SERVER_NOT_FOUND,
     TOKEN_INVALID,
