@@ -263,6 +263,18 @@
 							<app-odontogram (isOpenOdontologyConsultation)="setStateConsultationOdontology($event)"
 								(consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
+
+						<section>
+							<mat-tab id="antecedentes">
+								<ng-template mat-tab-label>
+									<span>ANTECEDENTES</span>
+								</ng-template>
+								<ng-template matTabContent>
+									<app-background-family></app-background-family>
+								</ng-template>
+							</mat-tab>
+						</section>
+						
 					</mat-tab>
 					<mat-tab id="tab_sap">
 						<ng-template mat-tab-label>
