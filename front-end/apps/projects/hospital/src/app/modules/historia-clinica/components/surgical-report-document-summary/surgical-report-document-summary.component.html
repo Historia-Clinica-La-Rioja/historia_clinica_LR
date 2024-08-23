@@ -7,6 +7,13 @@
             (editDocument)="edit()"></app-document-summary-header>
 		<mat-divider></mat-divider>
 
+		<ng-container *ngIf="_activeDocument?.document?.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _activeDocument.document?.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
+
 		<div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
 			<app-diagnosis-evolution-summary data-id="diagnosis-summary"
 				*ngIf="summary.surgicalReport.mainDiagnosis?.diagnoses || summary.surgicalReport.preOperativeDiagnosis"
