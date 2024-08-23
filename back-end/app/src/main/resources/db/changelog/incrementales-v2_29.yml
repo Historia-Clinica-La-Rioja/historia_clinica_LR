@@ -42,7 +42,7 @@ databaseChangeLog:
                         	WHERE dp.document_id = surgical_report.document_id
                         );
 
-    - changeSet:              
+    - changeSet:
         id: createIndexInstitutionId-institution-medicine_group
         author: fsimaro
         dbms: postgresql
@@ -50,4 +50,80 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_instutiton_medicine_group_institution_id" ON institution_medicine_group (institution_id);
+
+    - changeSet:
+          id: createTable-study_download_error
+          author: mromero
+          changes:
+              - createTable:
+                    tableName: study_download_error
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  nullable: false
+                                  primaryKey: true
+                                  primaryKeyName: PK_study_download_error
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: image_id
+                              type: varchar(80)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: pac_server_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: error_code
+                              type: smallint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: error_description
+                              type: varchar(255)
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: effective_time
+                            type: datetime
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: institution_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: file_uuid
+                              type: varchar(44)
+                              defaultValue: uuid
+              - addForeignKeyConstraint:
+                    baseColumnNames: pac_server_id
+                    baseTableName: study_download_error
+                    constraintName: FK_study_download_error_pac_server_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: pac_server
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: institution_id
+                    baseTableName: study_download_error
+                    constraintName: FK_study_download_error_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: institution
+                    validate: true
 
