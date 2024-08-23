@@ -193,7 +193,7 @@ public interface IDocumentBo {
 
 	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
 
-	default UUID getUuid() {return null;}
+	default UUID getUuid() {return UUID.randomUUID();}
 
     default Long getPreviousDocumentId() { return null; }
 

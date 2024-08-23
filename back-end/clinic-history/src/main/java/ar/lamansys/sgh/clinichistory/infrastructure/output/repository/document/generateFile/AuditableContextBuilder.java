@@ -133,9 +133,10 @@ public class AuditableContextBuilder {
 
 		Integer patientId = document.getPatientId();
 		Map<String,Object> contextMap = new HashMap<>();
-		addPatientInfo(contextMap, patientId, document.getDocumentType());
+		BasicPatientDto patientDto = basicDataFromPatientLoader.apply(patientId);
+		addPatientInfo(contextMap, patientDto, document.getDocumentType());
 		if (document.getDocumentType() == DocumentType.DIGITAL_RECIPE) {
-			addDigitalRecipeContextDocumentData(contextMap, document);
+			addDigitalRecipeContextDocumentData(contextMap, document, patientDto);
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
@@ -153,8 +154,8 @@ public class AuditableContextBuilder {
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
 	}
-	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId, Short documentType) {
-		var patientDto = basicDataFromPatientLoader.apply(patientId);
+
+	private void addPatientInfo(Map<String,Object> contextMap, BasicPatientDto patientDto, Short documentType) {
 		contextMap.put("patient", patientDto);
 		contextMap.put("patientCompleteName", patientDto.getCompletePersonName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 		contextMap.put("patientAge", calculatePatientAge(patientDto));
@@ -274,17 +275,30 @@ public class AuditableContextBuilder {
 		}
 	}
 
-	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {
+	/**
+	 * Some jurisdictions/flavors need the bar code to read as:
+	 * {patient identification number}-{recipe domain}-{encounter id}
+	 * while others use: {recipe domain}-{encounter id}
+	 *
+	 * The template used for the prescription can choose which one to use
+	 */
+	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document, BasicPatientDto patientDto) {
 		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		var dateUntil = document.getPerformedDate().plusDays(30).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("requestDate", date);
 		ctx.put("dateUntil", dateUntil);
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 
-
 		var recipeNumberWithDomain = recipeDomain + "-" + document.getEncounterId().toString();
 		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeNumberWithDomain);
+		var recipeNumberWithIdentificationNumber = String.format(
+			"%s-%s-%s",
+			patientDto.getIdentificationNumber(),
+			recipeDomain,
+			document.getEncounterId().toString());
+		var recipeNumberBarCodeWithIdentificationNumber = generateDigitalRecipeBarCode(recipeNumberWithIdentificationNumber);
 		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
+		ctx.put("recipeNumberBarCodeWithIdentificationNumber", recipeNumberBarCodeWithIdentificationNumber);
 		ctx.put("recipeNumber", recipeNumberWithDomain);
 
 		var recipeUuidWithDomain = completeDomain(recipeDomain.toString()) + "-" + document.getUuid().toString();
