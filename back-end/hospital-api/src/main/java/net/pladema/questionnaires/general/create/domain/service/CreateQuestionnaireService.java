@@ -26,12 +26,13 @@ public class CreateQuestionnaireService {
 	private AnswerRepository answerRepository;
 
 	@Transactional
-	public QuestionnaireResponse createQuestionnaireResponse (QuestionnaireResponseDTO responseDTO, Integer patientId) {
+	public QuestionnaireResponse createQuestionnaireResponse (QuestionnaireResponseDTO responseDTO, Integer patientId, Integer institutionId) {
 		logger.info("Starting transaction to create questionnaire response for patientId: {}", patientId);
 
 		QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
 		questionnaireResponse.setQuestionnaireId(responseDTO.getQuestionnaireId());
 		questionnaireResponse.setPatientId(patientId);
+		questionnaireResponse.setInstitutionId(institutionId);
 
 		questionnaireResponse.setStatusId(2);
 

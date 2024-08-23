@@ -11,6 +11,8 @@ import java.util.Map;
 
 import net.pladema.questionnaires.common.domain.service.QuestionnaireUtilsService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -32,6 +34,8 @@ import net.pladema.staff.repository.entity.HealthcareProfessional;
 
 @Service
 public class GetQuestionnairePdfService {
+
+	private static final Logger logger = LoggerFactory.getLogger(GetQuestionnairePdfService.class);
 
 	@Autowired
 	private final AnswerRepository answerRepository;
@@ -71,8 +75,15 @@ public class GetQuestionnairePdfService {
 		Person professionalPerson = personRepository.findById(professional.getPersonId())
 				.orElseThrow(() -> new NotFoundException("Healthcare professional person not found"));
 
-		Institution institution = institutionRepository.findById(institutionId)
-				.orElseThrow(() -> new NotFoundException("Institution not found"));
+		String institutionName = "Institución no especificada";
+
+		if (response.getInstitutionId() != null) {
+			Institution institution = institutionRepository.findById(response.getInstitutionId())
+					.orElseThrow(() -> new NotFoundException("Institution not found"));
+			institutionName = institution.getName();
+		} else {
+			logger.warn("'institution_id' is null for questionnaire response id: {}", questionnaireResponseId);
+		}
 
 		Person patientPerson = personRepository.findPersonByPatientId(response.getPatientId())
 				.orElseThrow(() -> new NotFoundException("Patient person not found"));
@@ -94,7 +105,7 @@ public class GetQuestionnairePdfService {
 		context.put("professional", professional);
 		context.put("professionalPerson", professionalPerson);
 		context.put("professionalPersonFullName", professionalPersonFullName);
-		context.put("institution", institution);
+		context.put("institutionName", institutionName);
 		context.put("patientPerson", patientPerson);
 		context.put("patientPersonFullName", patientPersonFullName);
 		context.put("patientAge", patientAge);

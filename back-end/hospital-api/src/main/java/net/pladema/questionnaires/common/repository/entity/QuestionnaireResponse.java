@@ -54,6 +54,9 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 	@Column(name = "patient_id", nullable = false)
 	private Integer patientId;
 
+	@Column(name = "institution_id")
+	private Integer institutionId;
+
 	@Transient
 	private String createdByFullName;
 
