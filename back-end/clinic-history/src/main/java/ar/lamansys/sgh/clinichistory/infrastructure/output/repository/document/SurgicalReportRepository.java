@@ -64,4 +64,19 @@ public interface SurgicalReportRepository extends JpaRepository<SurgicalReport, 
 			"FROM SurgicalReport sr " +
 			"WHERE sr.patientId IN :patientIds")
     List<SurgicalReport> getPatientsSurgicalReportIds(@Param("patientIds") List<Integer> patientIds);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE SurgicalReport sr SET sr.hasProsthesis = :hasProsthesis " +
+			"WHERE sr.documentId = :documentId")
+	void updateHasProsthesisByDocumentId(
+			@Param("documentId") Long documentId,
+			@Param("hasProsthesis") Boolean hasProsthesis
+	);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT s.hasProsthesis " +
+			"FROM SurgicalReport s " +
+			"WHERE s.documentId = :documentId " )
+	Boolean getHasProsthesis(@Param("documentId") Long documentId);
 }

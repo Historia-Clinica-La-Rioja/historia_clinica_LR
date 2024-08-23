@@ -60,7 +60,7 @@ public class SurgicalReportDto implements Serializable {
 	private @Valid List<HospitalizationProcedureDto> drainages = new ArrayList<>();
 
 	@Nullable
-	private String prosthesisDescription;
+	private ProsthesisInfoDto prosthesisInfo;
 
 	@Nullable
 	private String description;

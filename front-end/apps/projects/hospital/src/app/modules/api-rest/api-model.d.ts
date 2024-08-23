@@ -4298,6 +4298,11 @@ export interface ProfessionalsByClinicalSpecialtyDto {
     professionalsIds: number[];
 }
 
+export interface ProsthesisInfoDto {
+    description?: string;
+    hasProsthesis: boolean;
+}
+
 export interface ProvinceDto extends AbstractMasterdataDto<number> {
     id: number;
 }
@@ -5112,7 +5117,7 @@ export interface SurgicalReportDto extends Serializable {
     postoperativeDiagnosis?: DiagnosisDto[];
     preoperativeDiagnosis?: DiagnosisDto[];
     procedures?: HospitalizationProcedureDto[];
-    prosthesisDescription?: string;
+    prosthesisInfo?: ProsthesisInfoDto;
     startDateTime?: DateTimeDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
     surgicalTeam?: DocumentHealthcareProfessionalDto[];

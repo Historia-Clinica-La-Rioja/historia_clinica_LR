@@ -45,6 +45,7 @@ public class UpdateSurgicalReport {
 	public Long execute(Integer intermentEpisodeId, Long oldDocumentId, SurgicalReportBo newReport) {
 		log.debug("Input parameters -> intermentEpisodeId {}, oldDocumentId {}, newReport {} ", intermentEpisodeId, oldDocumentId, newReport);
 		surgicalReportValidator.assertContextValid(newReport);
+		surgicalReportValidator.assertProsthesisValid(newReport);
 		SurgicalReportBo oldReport = getSurgicalReport.run(oldDocumentId);
 		newReport.setInitialDocumentId(oldReport.getInitialDocumentId() != null ? oldReport.getInitialDocumentId() : oldReport.getId());
 		newReport.setPerformedDate(dateTimeProvider.nowDateTime());
@@ -60,6 +61,7 @@ public class UpdateSurgicalReport {
 		surgicalReportRepository.updateDocumentIdByDocumentId(oldDocumentId, newReport.getId());
 		surgicalReportRepository.updateStartDateTimeIdByDocumentId(newReport.getId(), newReport.getStartDateTime());
 		surgicalReportRepository.updateEndDateTimeIdByDocumentId(newReport.getId(), newReport.getEndDateTime());
+		surgicalReportRepository.updateHasProsthesisByDocumentId(newReport.getId(), newReport.hasProsthesis());
 		log.debug("Output -> {}", newReport.getId());
 		return newReport.getId();
 	}

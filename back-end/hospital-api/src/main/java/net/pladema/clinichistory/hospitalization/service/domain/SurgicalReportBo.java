@@ -88,7 +88,7 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	private LocalDateTime performedDate;
 
 	@Nullable
-	private String prosthesisDescription;
+	private ProsthesisInfoBo prosthesisInfo;
 
 	@Nullable
 	private Long initialDocumentId;
@@ -123,6 +123,11 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 		return SourceType.HOSPITALIZATION;
 	}
 
+	@Override
+	public String getProsthesisDescription() {
+		return this.prosthesisInfo == null ? null : prosthesisInfo.getDescription();
+	}
+
 	public List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() {
 		return Stream.of(
 						surgicalTeam != null ? surgicalTeam.stream() : Stream.<DocumentHealthcareProfessionalBo>empty(),
@@ -149,4 +154,7 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 		}
 	}
 
+	public Boolean hasProsthesis() {
+		return this.prosthesisInfo == null ? null : prosthesisInfo.getHasProsthesis();
+	}
 }

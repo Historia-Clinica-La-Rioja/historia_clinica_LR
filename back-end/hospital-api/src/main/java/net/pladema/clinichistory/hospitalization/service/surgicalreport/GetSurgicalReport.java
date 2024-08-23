@@ -11,11 +11,13 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.clinichistory.hospitalization.service.domain.ProsthesisInfoBo;
 import net.pladema.clinichistory.hospitalization.service.domain.SurgicalReportBo;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,12 +50,24 @@ public class GetSurgicalReport {
 		result.setFrozenSectionBiopsies(filterProceduresByType(procedures, ProcedureTypeEnum.FROZEN_SECTION_BIOPSY));
 		result.setDrainages(filterProceduresByType(procedures, ProcedureTypeEnum.DRAINAGE));
 		result.setHealthcareProfessionals(documentService.getHealthcareProfessionalsFromDocument(documentId));
-		result.setProsthesisDescription(documentService.getProsthesisDescriptionFromDocument(documentId).orElse(null));
+		result.setProsthesisInfo(getProsthesisInfoByDocumentId(documentId));
 		result.setStartDateTime(surgicalReportRepository.getStartDateTime(documentId));
 		result.setEndDateTime(surgicalReportRepository.getEndDateTime(documentId));
 		result.setDescription((surgicalReportRepository.getDescription(documentId)));
 		log.debug("Output result -> {}", result);
 		return result;
+	}
+
+	private ProsthesisInfoBo getProsthesisInfoByDocumentId(Long documentId) {
+		Boolean hasProsthesis = surgicalReportRepository.getHasProsthesis(documentId);
+		if (Objects.isNull(hasProsthesis)) {
+			return null;
+		}
+		return new ProsthesisInfoBo(
+				hasProsthesis,
+				documentService.getProsthesisDescriptionFromDocument(documentId).orElse(null)
+		);
+
 	}
 
 	private List<ProcedureBo> filterProceduresByType(List<ProcedureBo> procedures, ProcedureTypeEnum type){
