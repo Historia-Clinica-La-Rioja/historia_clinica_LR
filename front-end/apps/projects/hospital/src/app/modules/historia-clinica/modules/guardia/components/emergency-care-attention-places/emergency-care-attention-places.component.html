@@ -10,8 +10,8 @@
 			</div>
 
 			<div class="dashboard-panel">
-				<ng-container *ngIf="hasAttentionPlaces else noData">
-					<p>COMPONENTE DEL DASHBOARD</p>
+				<ng-container *ngIf="hasSectors else noData">
+					<app-emergency-care-attention-places-dashboard [sectors]="sectors"></app-emergency-care-attention-places-dashboard>
 				</ng-container>
 
 				<ng-template #noData>

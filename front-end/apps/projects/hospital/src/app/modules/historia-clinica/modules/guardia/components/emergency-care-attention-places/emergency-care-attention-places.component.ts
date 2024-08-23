@@ -11,8 +11,8 @@ export class EmergencyCareAttentionPlacesComponent implements OnInit {
 
     loading = true;
 
-    hasAttentionPlaces: boolean;
-    attentionPlaces: EmergencyCareAttentionPlaceDto[];
+    hasSectors: boolean;
+    sectors: EmergencyCareAttentionPlaceDto[];
     selectedAttentionPlace: EmergencyCareAttentionPlaceDto;
 
     constructor(
@@ -20,10 +20,10 @@ export class EmergencyCareAttentionPlacesComponent implements OnInit {
 	) { }
 
     ngOnInit() {
-		this.emergencyCareAttentionPlaceService.getAttentionPlaces().subscribe(places => {
+		this.emergencyCareAttentionPlaceService.getAttentionPlaces().subscribe(sectors => {
 			this.loading = false;
-		  	this.attentionPlaces = places;
-			this.hasAttentionPlaces = this.attentionPlaces.length > 0;
+		  	this.sectors = sectors;
+			this.hasSectors = this.sectors.length > 0;
 		});
     }
 }
