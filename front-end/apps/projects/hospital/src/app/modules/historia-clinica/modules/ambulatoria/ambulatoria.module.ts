@@ -74,6 +74,7 @@ import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../../../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
+import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 //dialog
 import { AgregarPrescripcionItemComponent } from './dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
@@ -117,7 +118,6 @@ import { ExternalSummaryCardComponent } from '@presentation/components/external-
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
 import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms-template/show-closed-forms-template.component';
-
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -234,6 +234,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		ReferenceStateLabelComponent,
 		ConceptsListComponent,
 		ConceptTypeaheadSearchComponent,
+		PatientSummaryComponent,
 	],
 	providers: [
 		HistoricalProblemsFacadeService

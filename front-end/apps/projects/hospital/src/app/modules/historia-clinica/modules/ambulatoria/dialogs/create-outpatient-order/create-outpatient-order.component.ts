@@ -7,12 +7,15 @@ import { PatientMedicalCoverageService } from "@api-rest/services/patient-medica
 import { PatientService } from "@api-rest/services/patient.service";
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
 import { MapperService } from "@core/services/mapper.service";
+import { PatientNameService } from '@core/services/patient-name.service';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { ButtonType } from '@presentation/components/button/button.component';
+import { Size } from '@presentation/components/item-summary/item-summary.component';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
-import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { map } from "rxjs/operators";
 
 @Component({
@@ -21,11 +24,10 @@ import { map } from "rxjs/operators";
 	styleUrls: ['./create-outpatient-order.component.scss']
 })
 export class CreateOutpatientOrderComponent implements OnInit {
-
 	eStudyType: EStudyType;
 	ROUTINE = EStudyType.ROUTINE
 	URGENT = EStudyType.URGENT
-	patient: PatientBasicData ;
+	patient: PatientSummary;
 	readonly ecl = SnomedECL.PROCEDURE;
 	hasError = hasError;
 	form: UntypedFormGroup;
@@ -34,8 +36,9 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	studyCategoryOptions = [];
 	healthProblemOptions = [];
 	selectedStudy: TemplateOrConceptOption = null;
-
 	orderStudiesService: OrderStudiesService;
+	size = Size.SMALL;
+	ButtonType = ButtonType;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, healthProblems },
@@ -48,11 +51,14 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
+		private readonly patientNameService: PatientNameService
 	) {
 
 		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
 			patient => {
-				this.patient = this.mapperService.toPatientBasicData(patient);
+				this.patientService.getPatientPhoto(patient.id).subscribe(photo => {
+					this.patient = this.mapperService.toPatientSummary(patient,photo, this.patientNameService);
+				})
 			});
 
 		this.orderStudiesService = new OrderStudiesService();
@@ -215,16 +221,18 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			});
 	}
 
-	private closeModal(newOutpatientOrder: NewOutpatientOrder): void {
+	private closeModal(newOutpatientOrder: NewOutpatientOrder) {
 		this.dialogRef.close(newOutpatientOrder);
 	}
 
-
+	validateForm(){
+		this.form.markAllAsTouched();
+	}
 	clear(control: AbstractControl): void {
 		control.reset();
 	}
 
-}
+  }
 
 export class NewOutpatientOrder {
 	prescriptionDto: PrescriptionDto;

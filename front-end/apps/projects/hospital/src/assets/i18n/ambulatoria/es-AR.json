@@ -887,7 +887,8 @@
 					"NO_ADDED_STUDIES": "Sin estudios agregados",
 					"BACK": "Volver",
 					"STUDY": "Estudio",
-					"NO_COVERAGE": "Sin cobertura"
+					"NO_COVERAGE": "Sin cobertura",
+                    "ERROR_STUDIES": "Debe agregar al menos un estudio"
                 }
             },
             "nursing": {
