@@ -6,6 +6,8 @@ import { MIN_DATE } from '@core/utils/date.utils';
 import { GeneralReportsService } from '@api-rest/services/general-reports.service';
 import { Moment } from 'moment';
 import { dateToMoment, newMoment } from '@core/utils/moment.utils';
+import { ActivatedRoute } from '@angular/router';
+import { ContextService } from '@core/services/context.service';
 
 @Component({
   selector: 'app-reportes-generales',
@@ -22,12 +24,23 @@ export class ReportesGeneralesComponent implements OnInit {
   REPORT_TYPES = GENERAL_REPORT_TYPES;
 
   minDate = MIN_DATE;
+  getMedicationPrescriptionReport: any;
+  getComplementaryStudiesReport: any;
+  routePrefix: string;
+  patientId: number;
 
   constructor(
     private readonly formBuilder: UntypedFormBuilder,
     private readonly generalReportsService: GeneralReportsService,
-  ) { }
-
+    private readonly contextService: ContextService,
+    private readonly route: ActivatedRoute,
+  ) 
+  
+  { 
+    this.routePrefix = `${this.contextService.institutionId}`;
+    this.route.paramMap.subscribe(params => {
+      this.patientId = Number(params.get('idPaciente'));   });
+    }
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       reportType: [null, Validators.required],
@@ -104,7 +117,10 @@ export class ReportesGeneralesComponent implements OnInit {
           break;
         default:
       }
+       
+
     }
+    
   }
 
 }
