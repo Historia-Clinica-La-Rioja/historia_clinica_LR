@@ -22,6 +22,8 @@ import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescript
 
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 
+import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -96,15 +98,16 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"ps.sctid_code as psc, " +
 		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.sctid as sid, " +
 		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
-		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, 0 as presentation_quantity, d.id, mr.is_archived, " +
+		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, mscp.medication_pack_quantity as presentation_quantity, d.id, mr.is_archived, " +
 		"case when d2.dose_quantity_id is null then null else q.value end, " +
 		"msls.id as status_id, " +
-		"patient_country.description AS country, "  + //45
-		"patient_province.description AS province, "  + //46
-		"patient_department.description AS department, "  + //47
-		"patient_city.description AS city, "  + //48
-		"patient_address.street AS person_street, " + //49
-		"patient_address.number AS person_street_number " + //50
+		"patient_country.description AS country, "  +
+		"patient_province.description AS province, "  +
+		"patient_department.description AS department, "  +
+		"patient_city.description AS city, "  +
+		"patient_address.street AS person_street, " +
+		"patient_address.number AS person_street_number, " +
+		"s3.sctid, s3.pt, mscp.presentation_unit_quantity " + 
 		"from medication_statement ms " +
 		"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
@@ -139,6 +142,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"left join dosage d2 on d2.id = ms.dosage_id " +
 		"left join quantity q on d2.dose_quantity_id = q.id " +
 		"left join medication_statement_line_state msls on msls.id = ms.prescription_line_state " +
+		"LEFT JOIN {h-schema}snomed s3 ON (s3.id = ms.suggested_commercial_medication_snomed_id) " +
+		"LEFT JOIN {h-schema}medication_statement_commercial_prescription mscp ON (mscp.medication_statement_id = ms.id) " +
 		"where p2.identification_number LIKE :identificationNumber " +
 		"and mr.id = :numericPrescriptionId " +
 		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
@@ -418,6 +423,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String) queryResult[34],
 								(String) queryResult[35]
 						),
+						new SuggestedCommercialMedicationBo(null, null),
 						null,
 						new PrescriptionDosageBo(
 								queryResult[36] != null ? (Double) queryResult[36] : 0,
@@ -427,7 +433,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(Integer) queryResult[40],
 								queryResult[43] != null ? (Double)queryResult[43] : null,
 								queryResult[53] != null ? (Integer)queryResult[53] : null,
-								queryResult[54] != null ? (String)queryResult[54] : null
+								queryResult[54] != null ? (String)queryResult[54] : null,
+								null
 						),
 						(Integer) queryResult[45],
 						queryResult[52] != null ? (String)queryResult[52] : null
@@ -811,12 +818,14 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String)queryResult[34],
 								(String)queryResult[35]
 						),
+						new SuggestedCommercialMedicationBo((String) queryResult[52], (String) queryResult[51]),
 						new CommercialMedicationBo(),
 						queryResult[36] != null ? (Double)queryResult[36] : 0,
 						queryResult[37] != null ? (Double) queryResult[37] : 0,
 						queryResult[38] != null ? (Double)queryResult[38] : 1,
 						(String)queryResult[39],
-						(Integer)queryResult[40],
+						(Short) queryResult[40],
+						queryResult[53] != null ? (Short) queryResult[53] : null,
 						queryResult[43] != null ? (Double)queryResult[43] : null
 				))
 		);

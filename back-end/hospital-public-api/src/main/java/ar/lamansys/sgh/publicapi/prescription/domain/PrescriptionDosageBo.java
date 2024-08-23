@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.publicapi.prescription.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +29,8 @@ public class PrescriptionDosageBo {
 
 	private String frequencyUnit;
 
+	private Short presentationPackageQuantity;
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -42,12 +43,13 @@ public class PrescriptionDosageBo {
 				Objects.equals(presentationQuantity, that.presentationQuantity) &&
 				Objects.equals(quantity, that.quantity) &&
 				Objects.equals(frequency, that.frequency) &&
-				Objects.equals(frequencyUnit, that.frequencyUnit);
+				Objects.equals(frequencyUnit, that.frequencyUnit) &&
+				Objects.equals(presentationPackageQuantity, that.presentationPackageQuantity);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(unitDosis, dayDosis, duration, presentation, presentationQuantity, quantity, frequency, frequencyUnit);
+		return Objects.hash(unitDosis, dayDosis, duration, presentation, presentationQuantity, quantity, frequency, frequencyUnit, presentationPackageQuantity);
 	}
 
 }

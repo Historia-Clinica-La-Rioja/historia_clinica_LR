@@ -21,5 +21,7 @@ public class PrescriptionDosageDto {
 
 	private Integer frequency;
 
+	private Short presentationPackageQuantity;
+
 	private String frequencyUnit;
 }

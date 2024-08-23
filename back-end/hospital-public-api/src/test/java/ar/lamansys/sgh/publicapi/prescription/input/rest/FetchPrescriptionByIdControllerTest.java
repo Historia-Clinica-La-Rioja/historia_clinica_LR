@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.SuggestedCommercialMedicationDto;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -231,12 +234,13 @@ public class FetchPrescriptionByIdControllerTest {
 									"TestGenerico",
 								"123123"
 						),
+						new SuggestedCommercialMedicationBo("SuggestedCommercialMedication", "987654321"),
 						commercialMedicationBo,
 						1.0,
 						1.0,
 						2.0,
 						"Caja",
-						2,
+						2, (short) 12,
 						2.5
 				))
 		);
@@ -330,15 +334,22 @@ public class FetchPrescriptionByIdControllerTest {
 			prescriptionLineDto.getPrescriptionLineStatus(),
 			mapToPrescriptionProblemBo(prescriptionLineDto.getPrescriptionProblemDto()),
 			mapToGenericMedicationBo(prescriptionLineDto.getGenericMedicationDto()),
+			mapToSuggestedCommercialMedicationBo(prescriptionLineDto.getSuggestedCommercialMedicationDto()),
 			mapToCommercialMedicationBo(prescriptionLineDto.getCommercialMedicationDto()),
 			prescriptionLineDto.getUnitDosis(),
 			prescriptionLineDto.getDayDosis(),
 			prescriptionLineDto.getDuration(),
 			prescriptionLineDto.getPresentation(),
 			prescriptionLineDto.getPresentationQuantity(),
+			prescriptionLineDto.getPresentationPackageQuantity(),
 			prescriptionLineDto.getQuantity()
 		);
 	}
+
+	private SuggestedCommercialMedicationBo mapToSuggestedCommercialMedicationBo(SuggestedCommercialMedicationDto suggestedCommercialMedicationDto) {
+		return new SuggestedCommercialMedicationBo(suggestedCommercialMedicationDto.getName(), suggestedCommercialMedicationDto.getSnomedId());
+	}
+
 	private InstitutionPrescriptionBo mapToInstitutionPrescriptionBo(InstitutionPrescriptionDto institutionPrescriptionDto) {
 		return new InstitutionPrescriptionBo(
 			institutionPrescriptionDto.getName(),

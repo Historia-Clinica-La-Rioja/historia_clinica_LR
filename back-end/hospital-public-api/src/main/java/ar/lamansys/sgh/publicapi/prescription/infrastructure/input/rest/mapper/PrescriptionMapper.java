@@ -11,6 +11,7 @@ import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescript
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionLineDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionDosageDto;
@@ -28,6 +29,8 @@ import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.Chan
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateMultipleMedicationDto;
 
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.DispensedMedicationDto;
+
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.SuggestedCommercialMedicationDto;
 
 import org.springframework.stereotype.Component;
 
@@ -172,8 +175,17 @@ public class PrescriptionMapper {
 				.genericMedicationDto(mapTo(prescriptionLineBo.getGenericMedicationBo()))
 				.commercialMedicationDto(mapTo(prescriptionLineBo.getCommercialMedicationBo()))
 				.quantity(prescriptionLineBo.getQuantity())
+				.presentationPackageQuantity(prescriptionLineBo.getPresentationPackageQuantity())
+				.suggestedCommercialMedicationDto(toSuggestedCommercialMedicationDto(prescriptionLineBo.getSuggestedCommercialMedicationBo()))
 				.build();
 
+	}
+
+	private SuggestedCommercialMedicationDto toSuggestedCommercialMedicationDto(SuggestedCommercialMedicationBo suggestedCommercialMedicationBo) {
+		return SuggestedCommercialMedicationDto.builder()
+				.name(suggestedCommercialMedicationBo.getName())
+				.snomedId(suggestedCommercialMedicationBo.getSnomedId())
+				.build();
 	}
 
 	private CommercialMedicationDto mapTo(CommercialMedicationBo commercialMedicationBo) {

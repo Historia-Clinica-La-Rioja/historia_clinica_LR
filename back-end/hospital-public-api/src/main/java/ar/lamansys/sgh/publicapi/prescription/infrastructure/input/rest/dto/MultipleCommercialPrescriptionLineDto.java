@@ -17,6 +17,8 @@ public class MultipleCommercialPrescriptionLineDto {
 
 	private GenericMedicationDto genericMedication;
 
+	private SuggestedCommercialMedicationDto suggestedCommercialMedication;
+
 	private List<CommercialMedicationDto> commercialMedications;
 
 	private PrescriptionDosageDto prescriptionDosage;
