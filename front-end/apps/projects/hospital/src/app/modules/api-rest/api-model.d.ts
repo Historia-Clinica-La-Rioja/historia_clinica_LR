@@ -1464,6 +1464,17 @@ export interface PhysicalSummary{
     frailId: number;
 }
 
+export interface AntecedentesAnswers{
+    id: number;
+    idQuestion: number;
+    idAnswer: number;   
+}
+
+export interface AntecedentesSummary{
+    institutionId: number;
+    patientId : number;
+    antecedentesId: number;
+}
 
 
 
