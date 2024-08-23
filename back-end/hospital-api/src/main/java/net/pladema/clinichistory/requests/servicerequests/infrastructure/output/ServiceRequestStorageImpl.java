@@ -8,10 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
 import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.SnomedItemBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestStatus;
@@ -71,6 +74,17 @@ public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 		log.debug("Output -> {}",result);
 		return result;
 	}
+
+	@Override
+	public 	List<SnomedItemBo> getMostFrequentStudies(Integer professionalId, Integer institutionId, Integer limit){
+		log.debug("Input parameter -> professionalId {}, institutionId {}, limit {}", professionalId, institutionId, limit);
+
+		List<SnomedItemBo> result = new ArrayList<>();
+
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 
 
 }

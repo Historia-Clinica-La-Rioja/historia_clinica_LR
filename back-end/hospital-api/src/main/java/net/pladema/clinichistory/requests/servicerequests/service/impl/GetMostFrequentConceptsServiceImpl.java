@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedServiceRequestPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,6 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +20,7 @@ import java.util.List;
 public class GetMostFrequentConceptsServiceImpl implements GetMostFrequentConceptsService {
 
 	private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
+	private final SharedServiceRequestPort sharedServiceRequestPort;
 
 	@Value("${app.service-request.concept.most-frequent.max:30}")
 	private Integer serviceRequestConceptMostFrequentMax;
@@ -29,7 +30,7 @@ public class GetMostFrequentConceptsServiceImpl implements GetMostFrequentConcep
 		log.debug("Input parameter -> institutionId {}", institutionId);
 
 		Integer professionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		List<SharedSnomedDto> result = new ArrayList<>();
+		List<SharedSnomedDto> result = sharedServiceRequestPort.getMostFrequentStudies(professionalId,institutionId,serviceRequestConceptMostFrequentMax);
 
 		log.debug("Output -> {}", result);
 		return result;

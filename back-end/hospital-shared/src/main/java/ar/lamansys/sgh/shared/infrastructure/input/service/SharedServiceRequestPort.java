@@ -13,4 +13,6 @@ public interface SharedServiceRequestPort {
 
 	void cancelServiceRequest(Integer serviceRequestId);
 
+	List<SharedSnomedDto> getMostFrequentStudies(Integer professionalId, Integer institutionId, Integer limit);
+
 }
