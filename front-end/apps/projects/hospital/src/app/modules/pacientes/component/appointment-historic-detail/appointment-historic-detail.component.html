@@ -5,7 +5,7 @@
                 description="{{ appointment.dateTime.date | viewDateDto: 'date' | dateFormat: 'fulldate' | titlecase }}" data-id="appoinmentDate">
             </app-identifier-cases>
             <app-identifier-cases *ngIf="appointment.dateTime.time" [identifierCase]="identiferCases.HOUR"
-                description="{{ appointment.dateTime.time | viewDateDto: 'time' | dateFormat: 'time' }} hs" data-id="appoinmentTime">
+                description="{{ appointment.dateTime.time | viewDateDto: 'time' | dateFormat: 'time' }}" data-id="appoinmentTime">
             </app-identifier-cases>
         </div>
     

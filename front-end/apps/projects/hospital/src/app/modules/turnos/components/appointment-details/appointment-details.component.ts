@@ -29,11 +29,7 @@ export class AppointmentDetailsComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.appointmentDate = stringToDate(this.emptyAppointment.date);
-		const timeData = this.emptyAppointment.hour.split(":");
-		this.appointmentDate.setHours(+timeData[0]);
-		this.appointmentDate.setMinutes(+timeData[1]);
-		this.appointmentDate.setSeconds(+timeData[2]);
+		this.appointmentDate = new Date(this.emptyAppointment.date + 'T' + this.emptyAppointment.hour);
 	}
 
 	assign() {
