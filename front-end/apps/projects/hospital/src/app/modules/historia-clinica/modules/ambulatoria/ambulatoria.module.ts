@@ -126,6 +126,8 @@ import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fi
 import { GetEdmontonComponent } from './components/cuestionarios/edmonton/get-edmonton/get-edmonton.component';
 import { GetPhysicalPerformanceComponent } from './components/cuestionarios/desempeno-fisico/get-physical-performance/get-physical-performance.component';
 import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/alert-dialog.component';
+import { BackgroundFamilyComponent } from './components/background-family/background-family.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @NgModule({
 	declarations: [
@@ -225,6 +227,7 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 		GetEdmontonComponent,
 		GetPhysicalPerformanceComponent,
 		AlertDialogComponent,
+  BackgroundFamilyComponent,
 	],
 	imports: [
 		CommonModule,
@@ -253,7 +256,9 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 		ConceptTypeaheadSearchComponent,
 	],
 	providers: [
-		HistoricalProblemsFacadeService
+		HistoricalProblemsFacadeService,
+		{ provide: MAT_DIALOG_DATA, useValue: {} }
+
 	]
 })
 export class AmbulatoriaModule {
