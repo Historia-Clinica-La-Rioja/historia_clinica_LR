@@ -17,7 +17,7 @@
 
 					<div id="date" fxLayout="column" fxFlex="17%">
 						<span>{{'ambulatoria.card-patient.BIRTHDAY_DATE' | translate}} </span>
-						<span>{{patient.cardModel.date}}</span>
+						<span *ngIf="patient.cardModel.date">{{patient.cardModel.date | dateFormat: 'date'}}</span>
 					</div>
 
 					<div id="ranking" *ngIf="patient?.cardModel.ranking" fxLayout="column" fxFlex="15%"

@@ -2,13 +2,13 @@
 	<div fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon" fontSet="material-icons-outlined"> event </mat-icon>
 		<span class="mat-body capitalize-first-letter text">
-			{{ getViewDate() }}
+			{{ appointmentDate | dateFormat: 'fulldate' }}
 		</span>
 	</div>
 	<div fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon"> query_builder </mat-icon>
 		<span class="mat-body text">
-			{{ getViewTime() }}
+			{{ appointmentHour | dateFormat: 'time' }}
 		</span>
 	</div>
 	<div fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">

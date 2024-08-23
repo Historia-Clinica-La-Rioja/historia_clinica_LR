@@ -20,7 +20,7 @@ export class AppointmentDetailsComponent implements OnInit {
 	@Input() patientId: number;
 	@Input() referenceSummary?: ReferenceSummaryDto;
 	@Output() resetInformation = new EventEmitter<void>();
-	appointmentTime: Date = new Date();
+	appointmentDate: Date = new Date();
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -29,10 +29,11 @@ export class AppointmentDetailsComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.appointmentDate = stringToDate(this.emptyAppointment.date);
 		const timeData = this.emptyAppointment.hour.split(":");
-		this.appointmentTime.setHours(+timeData[0]);
-		this.appointmentTime.setMinutes(+timeData[1]);
-		this.appointmentTime.setSeconds(+timeData[2]);
+		this.appointmentDate.setHours(+timeData[0]);
+		this.appointmentDate.setMinutes(+timeData[1]);
+		this.appointmentDate.setSeconds(+timeData[2]);
 	}
 
 	assign() {

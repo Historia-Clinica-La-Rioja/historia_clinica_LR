@@ -6,12 +6,9 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { dateTimeDtoToStringDate } from '@api-rest/mapper/date-dto.mapper';
-import { toHourMinute } from '@core/utils/date.utils';
+import { isEqualDate, toHourMinute } from '@core/utils/date.utils';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { isSameDay } from 'date-fns';
-import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-
-
 @Component({
 	selector: 'app-medical-discharge',
 	templateUrl: './medical-discharge.component.html',
@@ -22,7 +19,7 @@ export class MedicalDischargeComponent implements OnInit {
 	hasError = hasError;
 	todayDate = new Date();
 	minTime: string;
-	minDate: string;
+	minDate: Date;
 	public dischargeForm: UntypedFormGroup;
 	public minMedicalDischargeDate: Date;
 	public dischargeTypes: {};
@@ -35,7 +32,6 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly intermentEpisodeService: InternmentEpisodeService,
 		private readonly snackBarService: SnackBarService,
-		private readonly dateFormatPipe: DateFormatPipe,
 	) { }
 
 	ngOnInit(): void {
@@ -53,14 +49,14 @@ export class MedicalDischargeComponent implements OnInit {
 			.subscribe((lastUpdateDate: DateTimeDto) => {
 				this.minMedicalDischargeDate = new Date(dateTimeDtoToStringDate(lastUpdateDate));
 				this.minTime = toHourMinute(this.minMedicalDischargeDate);
-				this.minDate = this.dateFormatPipe.transform(this.minMedicalDischargeDate, 'date');
+				this.minDate = this.minMedicalDischargeDate;
 				this.setValidators();
 			});
 
 
 		this.dischargeForm.get('date').valueChanges.subscribe((value: Date) => {
 			if (isSameDay(value, this.todayDate)) {
-				if (this.minDate === (this.dateFormatPipe.transform(new Date(), 'date'))) {
+				if (isEqualDate(this.minDate, new Date())) {
 					this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
 				} else {
 					this.dischargeForm.get('time').setValidators([Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
@@ -77,7 +73,7 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	setValidators(): void {
-		if (this.minDate === (this.dateFormatPipe.transform(new Date(), 'date'))) {
+		if (isEqualDate(this.minDate, new Date())){
 			this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
 		} else {
 			this.dischargeForm.get('time').setValidators([Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]);

@@ -17,7 +17,6 @@ import { ROUTE_EMPADRONAMIENTO, ROUTE_UNLINK_PATIENT } from '../../../auditoria/
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
 import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { differenceInYears } from 'date-fns';
-import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -50,7 +49,6 @@ export class CardPatientComponent {
 	constructor(
 		public dialog: MatDialog,
 		private readonly patientNameService: PatientNameService,
-		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly contextService: ContextService,
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -118,7 +116,7 @@ export class CardPatientComponent {
 					identificationTypeId: patient.person.identificationTypeId,
 					dni: patient.person.identificationNumber || "Sin Información",
 					gender: this.genderTableView.find(p => p?.id === patient.person.genderId)?.description,
-					date: patient.person.birthDate ? this.dateFormatPipe.transform(patient.person.birthDate, 'date') : '',
+					date: new Date(patient.person.birthDate),
 					ranking: patient?.ranking,
 					patientTypeId: patient?.patientTypeId,
 					auditType: patient?.auditType,
@@ -176,7 +174,7 @@ export class CardPatientComponent {
 					lastName: '',
 					age: calculateAge(String(patient.person.birthDate)),
 					gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
-					birthDate: patient.person.birthDate ? this.dateFormatPipe.transform(patient.person.birthDate, 'date') : '',
+					birthDate: patient.person.birthDate,
 					identificationNumber: patient.person.identificationNumber,
 					identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
 					personAge: patient.person.personAge

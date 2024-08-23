@@ -1,7 +1,8 @@
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DEFAULT_LANG } from '../../../app.component';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 @Pipe({
 	name: 'dateFormat'
 })
@@ -40,10 +41,10 @@ const timeToHourMinute = (time: Date): string => `${format(time, DateFormat.HOUR
 
 const dateTimeToViewDateHourMinute = (dateTime: Date): string => `${dateToViewDate(dateTime)} - ${timeToHourMinute(dateTime)}`;
 
-const dateToFullDate = (date: Date): string => formatDate(date, DateFormat.FULL_DATE, DEFAULT_LANG).split('/').join(' de ');
+const dateToFullDate = (date: Date): string => format(date, DateFormat.FULL_DATE, {locale: es});
 
 enum DateFormat {
 	VIEW_DATE = 'dd/MM/yyyy',
 	HOUR_MINUTE = 'HH:mm',
-	FULL_DATE = 'EEEE, d/MMMM/yyyy',
+	FULL_DATE = 'PPPP',
 }

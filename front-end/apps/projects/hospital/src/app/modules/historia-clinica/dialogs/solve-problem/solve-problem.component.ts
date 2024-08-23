@@ -13,7 +13,7 @@ import { ProblemasService } from '../../services/problemas.service';
 import { SnomedService } from '../../services/snomed.service';
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { stringToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -47,13 +47,13 @@ export class SolveProblemComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly dateFormatPipe: DateFormatPipe,
 	) {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.today = this.toFormatDate(this.dateFormatPipe.transform(new Date(), 'date'));
+		this.today = new Date();
+		console.log('fecha de hoy: ', this.today);
 		this.form = this.formBuilder.group({
 			snomed: [{value: null, disabled: true}, Validators.required],
 			severidad: [null],
@@ -83,7 +83,7 @@ export class SolveProblemComponent implements OnInit {
 		}
 
 		if (p.startDate) {
-			this.dateToSet = this.toFormatDate(this.dataDto.startDate)
+			this.dateToSet = stringToDate(this.dataDto.startDate)
 			this.minDate = p.startDate
 			this.maxDate = p.startDate
 		} else {
@@ -166,9 +166,4 @@ export class SolveProblemComponent implements OnInit {
 		return hasError(this.form, type, controlName);
 	}
 
-
-	toFormatDate = (dateStr) => {
-		const [day, month, year] = dateStr.split('/');
-		return new Date(year, month - 1, day);
-	}
 }
