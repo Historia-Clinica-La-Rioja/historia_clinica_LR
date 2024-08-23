@@ -369,6 +369,7 @@ public class PrescriptionMapper {
 				.quantity(prescriptionDosageBo.getQuantity())
 				.frequency(prescriptionDosageBo.getFrequency())
 				.frequencyUnit(prescriptionDosageBo.getFrequencyUnit())
+				.presentationPackageQuantity(prescriptionDosageBo.getPresentationPackageQuantity())
 				.build();
 	}
 
@@ -382,6 +383,7 @@ public class PrescriptionMapper {
 				.commercialMedications(mapToCommercialMedicationDtoList(line.getCommercialMedications()))
 				.prescriptionDosage(mapTo(line.getPrescriptionDosage()))
 				.observation(line.getObservation())
+				.suggestedCommercialMedication(toSuggestedCommercialMedicationDto(line.getSuggestedCommercialMedication()))
 				.build();
 	}
 

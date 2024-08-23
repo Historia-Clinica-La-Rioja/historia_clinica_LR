@@ -240,7 +240,8 @@ public class FetchPrescriptionByIdControllerTest {
 						1.0,
 						2.0,
 						"Caja",
-						2, (short) 12,
+						(short) 2,
+						(short) 12,
 						2.5
 				))
 		);

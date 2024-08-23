@@ -283,7 +283,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"ps.sctid_code AS psc, " +
 				"pln.license_number, CASE WHEN pln.type_license_number = 1 THEN 'NACIONAL' ELSE 'PROVINCIAL' END, ms.prescription_line_number AS msid, msls.description AS mssd, s.pt AS spt, s.sctid AS sid, " +
 				"pt.description AS ptd, s2.pt AS s2pt, s2.sctid AS s2id, " +
-				"d2.doses_by_unit AS unit_dose, d2.doses_by_day, d2.duration, '' AS presentation, 0 AS presentation_quantity, d.id, mr.is_archived, " +
+				"d2.doses_by_unit AS unit_dose, d2.doses_by_day, d2.duration, '' AS presentation, mscp.medication_pack_quantity AS presentation_quantity, d.id, mr.is_archived, " +
 				"CASE WHEN d2.dose_quantity_id IS NULL THEN NULL ELSE q.value END, " +
 				"msls.id AS status_id, ms.id as medication_statement_id, " +
 				"co.description AS country, " +
@@ -296,7 +296,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"d2.frequency AS frequency, " +
 				"d2.period_unit AS frequency_unit, " +
 				"cs.name AS specialty, " +
-				"cs.sctid_code AS snomed_id " +
+				"cs.sctid_code AS snomed_id, " +
+				"s3.sctid, s3.pt, mscp.presentation_unit_quantity " +
 				"FROM {h-schema}medication_statement ms " +
 				"JOIN {h-schema}document_medicamention_statement dms ON (ms.id = dms.medication_statement_id) " +
 				"JOIN {h-schema}document d ON (d.id = dms.document_id) " +
@@ -334,6 +335,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"LEFT JOIN {h-schema}quantity q ON (d2.dose_quantity_id = q.id) " +
 				"LEFT JOIN {h-schema}medication_statement_line_state msls ON (msls.id = ms.prescription_line_state) " +
 				"LEFT JOIN {h-schema}note n ON (ms.note_id = n.id) " +
+				"LEFT JOIN {h-schema}snomed s3 ON (s3.id = ms.suggested_commercial_medication_snomed_id) " +
+				"LEFT JOIN {h-schema}medication_statement_commercial_prescription mscp ON (mscp.medication_statement_id = ms.id) " +
 				"WHERE p2.identification_number = :identificationNumber " +
 				"AND mr.id = :numericPrescriptionId " +
 				"AND (d.type_id = " + RECETA + " OR d.type_id = " + RECETA_DIGITAL + ") " +
@@ -423,19 +426,18 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String) queryResult[34],
 								(String) queryResult[35]
 						),
-						new SuggestedCommercialMedicationBo(null, null),
+						new SuggestedCommercialMedicationBo((String) queryResult[58], (String) queryResult[57]),
 						null,
 						new PrescriptionDosageBo(
 								queryResult[36] != null ? (Double) queryResult[36] : 0,
 								queryResult[37] != null ? (Double) queryResult[37] : 0,
 								queryResult[38] != null ? (Double) queryResult[38] : 1,
 								(String) queryResult[39],
-								(Integer) queryResult[40],
+								(Short) queryResult[40],
 								queryResult[43] != null ? (Double)queryResult[43] : null,
 								queryResult[53] != null ? (Integer)queryResult[53] : null,
 								queryResult[54] != null ? (String)queryResult[54] : null,
-								null
-						),
+								(Short) queryResult[59]),
 						(Integer) queryResult[45],
 						queryResult[52] != null ? (String)queryResult[52] : null
 				)),

@@ -21,7 +21,7 @@ public class PrescriptionDosageBo {
 
 	private String presentation;
 
-	private Integer presentationQuantity;
+	private Short presentationQuantity;
 
 	private Double quantity;
 
