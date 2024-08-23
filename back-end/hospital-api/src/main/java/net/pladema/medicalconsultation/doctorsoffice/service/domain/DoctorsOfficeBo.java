@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.doctorsoffice.service.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
 public class DoctorsOfficeBo {
 
     private Integer id;

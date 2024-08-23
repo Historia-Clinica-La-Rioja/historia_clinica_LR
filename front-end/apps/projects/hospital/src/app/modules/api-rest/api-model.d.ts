@@ -1667,7 +1667,30 @@ export interface ElectronicSignatureInvolvedDocumentDto {
     signatureStatus: EElectronicSignatureStatus;
 }
 
+export interface EmergencyCareAttentionPlaceDto {
+    beds: EmergencyCareBedDto[];
+    clinicalSpecialtySectors: ClinicalSpecialtySectorDto[];
+    description: string;
+    doctorsOffices: EmergencyCareDoctorsOfficeDto[];
+    id: number;
+    sectorId: number;
+    sectorOrganizationId: number;
+    shockRooms: ShockroomDto[];
+}
+
+export interface EmergencyCareBedDto {
+    available: boolean;
+    description: string;
+    id: number;
+}
+
 export interface EmergencyCareClinicalSpecialtySectorDto {
+    description: string;
+    id: number;
+}
+
+export interface EmergencyCareDoctorsOfficeDto {
+    available: boolean;
     description: string;
     id: number;
 }

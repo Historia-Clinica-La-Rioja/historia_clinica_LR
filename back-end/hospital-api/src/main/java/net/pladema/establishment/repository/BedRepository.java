@@ -1,5 +1,6 @@
 package net.pladema.establishment.repository;
 
+import net.pladema.establishment.domain.bed.EmergencyCareBedBo;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
 
@@ -106,5 +107,14 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			"FROM Bed b " +
 			"WHERE b.id = :bedId AND b.free IS TRUE AND b.available IS TRUE ")
 	boolean isBedFreeAndAvailable(@Param("bedId") Integer bedId);
-	
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.establishment.domain.bed.EmergencyCareBedBo(" +
+			"b.id, CONCAT(r.description, ' - ', b.bedNumber), " +
+			"CASE WHEN b.free = true AND b.available = true THEN true ELSE false END) " +
+			"FROM Bed b " +
+			"JOIN Room r ON r.id = b.roomId " +
+			"WHERE r.sectorId = :sectorId")
+	List<EmergencyCareBedBo> findAllEmergencyCareBedBySectorId(@Param("sectorId") Integer sectorId);
+
 }

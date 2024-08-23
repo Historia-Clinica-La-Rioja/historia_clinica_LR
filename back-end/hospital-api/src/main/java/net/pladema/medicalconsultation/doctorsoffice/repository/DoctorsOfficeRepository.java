@@ -3,6 +3,8 @@ package net.pladema.medicalconsultation.doctorsoffice.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -73,4 +75,14 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 			"FROM DoctorsOffice do " +
 			"WHERE do.id = :doctorsOfficeId")
 	Integer getSectorId(@Param("doctorsOfficeId") Integer doctorsOfficeId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo(" +
+			"d.id, d.description, d.openingTime, d.closingTime, " +
+			"CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END) " +
+			"FROM DoctorsOffice d " +
+			"LEFT JOIN EmergencyCareEpisode e ON e.doctorsOfficeId = d.id AND e.emergencyCareStateId = :emergencyCareStateId AND e.deleteable.deleted = false " +
+			"WHERE d.sectorId = :sectorId AND d.deleteable.deleted = false " +
+			"GROUP BY d.id, d.description, d.openingTime, d.closingTime")
+	List<DoctorsOfficeBo> getAllBySectorId(@Param("sectorId") Integer sectorId, @Param("emergencyCareStateId") Short emergencyCareStateId);
 }

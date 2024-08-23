@@ -60,9 +60,11 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 	List<ClinicalSpecialtySector> findAllBySectorTypeAndInstitution(@Param("sectorTypeId") Short sectorTypeId,
 																	@Param("institutionId") Integer institutionId);
 
+	@Transactional(readOnly = true)
 	@Query("SELECT css.description FROM ClinicalSpecialtySector css WHERE css.id = :id")
 	String findDescriptionById(@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
 	@Query("SELECT css " +
 			"FROM ClinicalSpecialtySector css " +
 			"JOIN Triage t on (css.id = t.clinicalSpecialtySectorId) " +
@@ -70,6 +72,10 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 			"ORDER BY t.id DESC")
 	List<ClinicalSpecialtySector> findAllByEpisodeId(@Param("episodeId") Integer episodeId);
 
+	@Transactional(readOnly = true)
+	List<ClinicalSpecialtySector> findAllBySectorId(@Param("sectorId") Integer sectorId);
+
+	@Transactional(readOnly = true)
 	@Query("SELECT CASE WHEN COUNT(css.id) > 0 THEN TRUE ELSE FALSE END " +
 			"FROM ClinicalSpecialtySector css " +
 			"JOIN Triage t on (css.id = t.clinicalSpecialtySectorId) " +

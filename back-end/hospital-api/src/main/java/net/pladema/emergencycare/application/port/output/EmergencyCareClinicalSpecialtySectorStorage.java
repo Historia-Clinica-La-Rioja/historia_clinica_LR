@@ -11,4 +11,6 @@ public interface EmergencyCareClinicalSpecialtySectorStorage {
 	String getDescriptionById(Integer clinicalSpecialtySectorId);
 
 	ClinicalSpecialtySectorBo getLastByEpisodeId(Integer episodeId);
+
+	List<ClinicalSpecialtySectorBo> getAllBySectorId(Integer sectorId);
 }
