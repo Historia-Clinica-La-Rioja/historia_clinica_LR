@@ -5,16 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.port.StudyPermissionUUIDStorage;
 import net.pladema.imagenetwork.domain.StudyPermissionBo;
 import net.pladema.imagenetwork.infrastructure.output.inmemory.repository.StudyPermissionsUUIDRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Slf4j
-@Repository
 @NoArgsConstructor
+@Service
 public class StudyPermissionUUIDStorageImpl implements StudyPermissionUUIDStorage {
 
 	private final StudyPermissionsUUIDRepository studyPermissionsUUIDRepository = new StudyPermissionsUUIDRepository();
+
 	@Override
 	public Optional<StudyPermissionBo> getStudyPermission(String uuidOfStudy) {
 		return studyPermissionsUUIDRepository.getStudyPermission(uuidOfStudy)
