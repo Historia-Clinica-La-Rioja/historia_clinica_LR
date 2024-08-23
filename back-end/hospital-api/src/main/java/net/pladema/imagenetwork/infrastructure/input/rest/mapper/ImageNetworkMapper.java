@@ -1,8 +1,11 @@
 package net.pladema.imagenetwork.infrastructure.input.rest.mapper;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import net.pladema.imagenetwork.domain.ErrorDownloadStudyBo;
 import net.pladema.imagenetwork.domain.PacsListBo;
 import net.pladema.imagenetwork.domain.StudyFileInfoBo;
 import net.pladema.imagenetwork.domain.ViewerUrlBo;
+import net.pladema.imagenetwork.infrastructure.input.rest.dto.ErrorDownloadStudyDto;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsListDto;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.StudyFileInfoDto;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.ViewerUrlDto;
@@ -15,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-@Mapper
+@Mapper(uses = {LocalDateMapper.class})
 public interface ImageNetworkMapper {
 
     @Named("uriToString")
@@ -36,4 +39,7 @@ public interface ImageNetworkMapper {
 
     @Named("toStudyFileInfoDto")
     ViewerUrlDto toViewerUrlDto(ViewerUrlBo viewerUrlBo);
+
+    @Named("toErrorDownloadStudyBo")
+    ErrorDownloadStudyBo toErrorDownloadStudyBo(ErrorDownloadStudyDto errorDownloadStudyDto);
 }

@@ -1981,6 +1981,14 @@ export interface EquipmentOpeningHoursDto extends TimeRangeDto {
     id?: number;
 }
 
+export interface ErrorDownloadStudyDto {
+    effectiveTime: DateTimeDto;
+    errorCode: number;
+    errorCodeDescription: string;
+    fileUuid: string;
+    pacServerId: number;
+}
+
 export interface ErrorProblemDto extends ProblemInfoDto {
     errorObservations: string;
     errorReasonId: number;
