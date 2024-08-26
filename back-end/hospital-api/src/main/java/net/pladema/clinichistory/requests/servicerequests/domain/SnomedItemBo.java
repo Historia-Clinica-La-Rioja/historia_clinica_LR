@@ -13,7 +13,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 public class SnomedItemBo implements Serializable {
 	private static final long serialVersionUID = -198432836028268437L;
@@ -28,6 +27,8 @@ public class SnomedItemBo implements Serializable {
 	private String parentId;
 
 	private String parentFsn;
+
+	private Long frequency;
 
 	public SnomedItemBo(String sctid, String pt) {
 		this.sctid = sctid;
@@ -46,4 +47,14 @@ public class SnomedItemBo implements Serializable {
 		this.sctid = sctid;
 		this.pt = pt;
 	}
+
+	public SnomedItemBo(Integer id, String sctid, String pt, String parentId, String parentFsn, Long frequency) {
+		this.id = id;
+		this.sctid = sctid;
+		this.pt = pt;
+		this.parentId = parentId;
+		this.parentFsn = parentFsn;
+		this.frequency = frequency;
+	}
+
 }

@@ -21,6 +21,8 @@ import net.pladema.clinichistory.requests.servicerequests.repository.entity.Serv
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.transcribed.application.port.TranscribedServiceRequestStorage;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -79,7 +81,7 @@ public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 	public 	List<SnomedItemBo> getMostFrequentStudies(Integer professionalId, Integer institutionId, Integer limit){
 		log.debug("Input parameter -> professionalId {}, institutionId {}, limit {}", professionalId, institutionId, limit);
 
-		List<SnomedItemBo> result = new ArrayList<>();
+		List<SnomedItemBo> result = serviceRequestRepository.getMostFrequentStudies(professionalId, institutionId, PageRequest.of(0, limit));
 
 		log.debug("Output -> {}", result);
 		return result;

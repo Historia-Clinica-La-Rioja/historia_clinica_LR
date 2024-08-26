@@ -4,8 +4,10 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.SnomedItemBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -67,4 +69,19 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 			"	WHERE ddr2.pk.documentId = d.id AND dr2.statusId <> '" + DiagnosticReportStatus.REGISTERED + "')")
 	List<ServiceRequestProcedureInfoBo> getActiveServiceRequestProcedures(@Param("serviceRequestId") Integer serviceRequestId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.domain.SnomedItemBo(s.id, " +
+			"s.sctid, s.pt, s.parentId, s.parentFsn, COUNT(s) AS frequency) " +
+			"FROM ServiceRequest sr " +
+			"JOIN Document d ON (sr.id = d.sourceId)  " +
+			"JOIN DocumentDiagnosticReport ddr ON (d.id = ddr.pk.documentId) " +
+			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
+			"JOIN Snomed s ON (dr.snomedId = s.id)" +
+			"WHERE sr.doctorId = :professionalId " +
+			"AND sr.institutionId = :institutionId  " +
+			"GROUP BY s.id, s.sctid, s.pt, s.parentId, s.parentFsn " +
+			"ORDER BY frequency DESC")
+	List<SnomedItemBo> getMostFrequentStudies(@Param("professionalId") Integer professionalId,
+											  @Param("institutionId") Integer institutionId,
+											  Pageable page);
 }
