@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ import java.util.function.BiFunction;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SharedAddObservationsCommandVo {
+
 	@Setter
 	@Getter
 	@ToString
@@ -63,5 +65,11 @@ public class SharedAddObservationsCommandVo {
 	public void addValue(Integer procedureParameterId, String value, Short unitOfMeasureId, String snomedSctid, String snomedPt) {
 		if (this.values == null) values = new ArrayList<>();
 		values.add(new Observation(procedureParameterId, value, unitOfMeasureId, snomedSctid, snomedPt));
+	}
+	public List<Integer> getParameterIds() {
+		return this.getValues()
+		.stream()
+		.map(Observation::getProcedureParameterId)
+		.collect(Collectors.toList());
 	}
 }

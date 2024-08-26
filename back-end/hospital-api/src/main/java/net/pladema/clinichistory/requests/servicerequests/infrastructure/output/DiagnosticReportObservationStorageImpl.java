@@ -129,11 +129,11 @@ public class DiagnosticReportObservationStorageImpl implements DiagnosticReportO
 
 	@Override
 	public void saveNewObservation(Integer groupId, NewDiagnosticReportObservationBo dro) throws DiagnosticReportObservationException {
-		var group = diagnosticReportObservationGroupRepository.findById(groupId).orElseThrow(groupNotFound(groupId));
+		diagnosticReportObservationGroupRepository.findById(groupId).orElseThrow(groupNotFound(groupId));
 		DiagnosticReportObservation newObs;
 		if (dro.getUnitOfMeasureId().isPresent()) {
 			Short uomId = dro.getUnitOfMeasureId().get();
-			var uom = unitOfMeasureRepository.findById(uomId).orElseThrow(uomNotFound(uomId));
+			unitOfMeasureRepository.findById(uomId).orElseThrow(uomNotFound(uomId));
 			newObs = DiagnosticReportObservation.newNumericObservation(groupId, dro.getProcedureParameterId(), dro.getValue(), uomId);
 		}
 		else {

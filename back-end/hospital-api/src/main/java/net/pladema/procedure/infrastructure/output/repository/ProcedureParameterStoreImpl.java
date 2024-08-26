@@ -1,6 +1,8 @@
 package net.pladema.procedure.infrastructure.output.repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,13 @@ public class ProcedureParameterStoreImpl implements ProcedureParameterStore {
 			param.setOrderNumber(orderNumber);
 			procedureParameterRepository.save(param);
 		});
+	}
+
+	@Override
+	public List<ProcedureParameterBo> findByIds(List<Integer> ids) {
+		return procedureParameterRepository.findAllById(ids)
+				.stream()
+				.map(procedureParameterMapper::toProcedureParameterBo)
+				.collect(Collectors.toList());
 	}
 }
