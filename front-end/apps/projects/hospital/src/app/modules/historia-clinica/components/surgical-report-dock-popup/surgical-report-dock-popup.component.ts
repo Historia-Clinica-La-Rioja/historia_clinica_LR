@@ -28,6 +28,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 	disabled = true;
 	markAsTouched = false;
 	validDate = false;
+	validSurgicalTeam = false;
 	validProsthesis = true;
 
 	surgicalReport: SurgicalReportDto = {
@@ -85,7 +86,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
@@ -100,6 +101,8 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			this.loadingReport = true;
 			this.surgicalReportService.getSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId).subscribe(response => {
 				this.surgicalReport = response;
+				this.diagnosis = response?.preoperativeDiagnosis;
+				this.mainDiagnosis = response?.mainDiagnosis;
 				this.loadingReport = false;
 				if (this.surgicalReport.startDateTime && this.surgicalReport.endDateTime)
 					this.disabled = false;
@@ -114,7 +117,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 	}
 
 	setDisabled(): void {
-		this.disabled = !this.validDate || !this.validProsthesis;
+		this.disabled = !this.validDate || !this.validProsthesis || this.validSurgicalTeam === false;
 	}
 
 	setValidProsthesis(event: boolean): void {
@@ -124,6 +127,11 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 
 	setValidDate(event: boolean): void {
 		this.validDate = event;
+		this.setDisabled();
+	}
+
+	setValidSurgicalTeam(event: boolean): void {
+		this.validSurgicalTeam = event;
 		this.setDisabled();
 	}
 
