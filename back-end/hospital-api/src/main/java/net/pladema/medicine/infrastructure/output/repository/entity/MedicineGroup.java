@@ -58,4 +58,7 @@ public class MedicineGroup extends SGXAuditableEntity<Integer>  {
 	@Column(name = "is_domain", nullable = false)
 	private Boolean isDomain;
 
+	@Column(name = "required_documentation", columnDefinition = "TEXT")
+	private String requiredDocumentation;
+
 }

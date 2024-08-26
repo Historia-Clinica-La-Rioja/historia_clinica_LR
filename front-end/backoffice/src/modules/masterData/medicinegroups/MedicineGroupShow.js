@@ -13,9 +13,11 @@ import {
     Datagrid,
     DeleteButton,
     Pagination,
-    useRecordContext
+    useRecordContext,
+    useGetOne
  }from 'react-admin';
 import { CreateRelatedButton } from '../../components';
+
 
 const MedicineGroupShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -52,7 +54,7 @@ const AddProblemToGroup = (props) => {
     );
 }
 
-const ShowPharmacos = (props) => {
+const ShowPharmacos = () => {
     return (
         <ReferenceManyField
             id='medicinegroupmedicines'
@@ -90,39 +92,43 @@ const ShowProblems = (props) => {
     );
 }
 
-const MedicineGroupShow = props => {
+const MedicineGroupShow = (props) => {
+
+    const { data: record } = useGetOne('medicinegroups', props.id);
+
     return(
-            <Show {...props} actions={<MedicineGroupShowActions/>}>
-                <SimpleShowLayout>
-                    <TextField source="name"/>
-                    <br/>
-                    <span>Cobertura pública exclusiva</span>
-                    <BooleanField source="requiresAudit"/>
-                    <br/>
-                    <span>Ámbito</span>
-                    <BooleanField source="outpatient"/>
-                    <BooleanField source="emergencyCare"/>
-                    <BooleanField source="internment"/>
-                    <br/>
-                    <span>Diagnósticos y problemas</span>
-                    <BooleanField source="allDiagnoses" />
-                    <br/>
-                    <span>Mensaje para indicaciones</span>
-                    <TextField source="message" label=""/>
-                    <Fragment>
-                        <TabbedShowLayout>
-                            <Tab label="Fármacos" id="pharmacos">
-                                <AddPharmacoToGroup/>
-                                <ShowPharmacos/>
-                            </Tab>
-                            <Tab label="Problemas/Diagnósticos" id="diagnoses">
-                                <AddProblemToGroup/>
-                                <ShowProblems/>
-                            </Tab>
-                        </TabbedShowLayout>
-                    </Fragment>
-                </SimpleShowLayout>
-            </Show>
+        <Show {...props} actions={<MedicineGroupShowActions/>}>
+            <SimpleShowLayout>
+                <TextField source="name"/>
+                <br/>
+                <span>Cobertura pública exclusiva</span>
+                <BooleanField source="requiresAudit"/>
+                {record?.requiredDocumentation && <TextField source="requiredDocumentation"/>}
+                <br/>
+                <span>Ámbito</span>
+                <BooleanField source="outpatient"/>
+                <BooleanField source="emergencyCare"/>
+                <BooleanField source="internment"/>
+                <br/>
+                <span>Diagnósticos y problemas</span>
+                <BooleanField source="allDiagnoses" />
+                <br/>
+                <span>Mensaje para indicaciones</span>
+                <TextField source="message" label="false"/> 
+                <Fragment>
+                    <TabbedShowLayout>
+                        <Tab label="Fármacos" id="pharmacos">
+                            <AddPharmacoToGroup/>
+                            <ShowPharmacos/>
+                        </Tab>
+                        <Tab label="Problemas/Diagnósticos" id="diagnoses">
+                            <AddProblemToGroup/>
+                            <ShowProblems/>
+                        </Tab>
+                    </TabbedShowLayout>
+                </Fragment>
+            </SimpleShowLayout>
+        </Show>
     );
 };
 

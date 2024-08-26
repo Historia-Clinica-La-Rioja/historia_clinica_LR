@@ -120,6 +120,7 @@ public class BackofficeInstitutionMedicineGroupStore implements BackofficeStore<
 					dto.setInternment(group.getInternment());
 					dto.setAllDiagnoses(group.getAllDiagnoses());
 					dto.setMessage(group.getMessage());
+					dto.setRequiredDocumentation(group.getRequiredDocumentation());
 		});
 		return dto;
 	}
@@ -134,6 +135,7 @@ public class BackofficeInstitutionMedicineGroupStore implements BackofficeStore<
 				.allDiagnoses(dto.getAllDiagnoses())
 				.message(dto.getMessage())
 				.isDomain(Boolean.FALSE)
+				.requiredDocumentation(dto.getRequiresAudit().equals(Boolean.TRUE) ? dto.getRequiredDocumentation() : null)
 				.build();
 
 		Integer groupId = medicineGroupRepository.save(groupEntity).getId();
@@ -162,6 +164,7 @@ public class BackofficeInstitutionMedicineGroupStore implements BackofficeStore<
 					medicineGroup.setEmergencyCare(dto.getEmergencyCare());
 					medicineGroup.setMessage(dto.getMessage());
 					medicineGroup.setAllDiagnoses(dto.getAllDiagnoses());
+					medicineGroup.setRequiredDocumentation(dto.getRequiresAudit().equals(Boolean.TRUE) ? dto.getRequiredDocumentation() : null);
 					medicineGroupRepository.save(medicineGroup);
 				});
 	}

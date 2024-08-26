@@ -1142,6 +1142,7 @@ const messages = {
                 addproblem: 'Agregar problema',
                 allDiagnoses: 'Incluir todos',
                 message: 'Mensaje',
+                requiredDocumentation: 'Documentación requerida'
             },
             tabs: {
                 pharmacos: 'Fármacos',
@@ -1213,7 +1214,8 @@ const messages = {
                 internment: 'Internación',
                 allDiagnoses: 'Incluir todos',
                 message: 'Mensaje',
-                enabled: 'Habilitado por la institución'
+                enabled: 'Habilitado por la institución',
+                requiredDocumentation: 'Documentación requerida'
             },
             addRelated: 'Agregar grupo de fármacos'
         }

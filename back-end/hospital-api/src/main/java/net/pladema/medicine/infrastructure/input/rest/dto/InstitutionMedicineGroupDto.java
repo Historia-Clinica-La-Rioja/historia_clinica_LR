@@ -29,5 +29,6 @@ public class InstitutionMedicineGroupDto implements Serializable {
 	private Boolean emergencyCare;
 	private String message;
 	private Boolean allDiagnoses;
+	private String requiredDocumentation;
 
 }

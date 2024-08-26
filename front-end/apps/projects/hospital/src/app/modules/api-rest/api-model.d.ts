@@ -2724,6 +2724,7 @@ export interface InstitutionMedicineGroupDto extends Serializable {
     message: string;
     name: string;
     outpatient: boolean;
+    requiredDocumentation: string;
     requiresAudit: boolean;
 }
 

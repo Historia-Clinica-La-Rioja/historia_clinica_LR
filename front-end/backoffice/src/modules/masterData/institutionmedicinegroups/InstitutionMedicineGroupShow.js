@@ -61,8 +61,11 @@ const ShowGroupProblems = (props) => {
 }
 
 const InstitutionMedicineGroupShow = props => {
-    const group = useGetOne('institutionmedicinegroups', props.id);
-    const isDomain = group.data?.isDomain;
+
+    const { data: record } = useGetOne('institutionmedicinegroups', props.id);
+
+    const isDomain = record?.isDomain;
+
     return(
         <Show {...props} hasEdit={true} >
             <SimpleShowLayout toolbar={<CustomToolbar/>} >
@@ -70,6 +73,7 @@ const InstitutionMedicineGroupShow = props => {
                 <br/>
                 <span>Cobertura pública exclusiva</span>
                 <BooleanField source="requiresAudit"/>
+                {record?.requiredDocumentation && <TextField source="requiredDocumentation"/>}
                 <br/>
                 <span>Ámbito</span>
                 <BooleanField source="outpatient"/>
@@ -80,7 +84,7 @@ const InstitutionMedicineGroupShow = props => {
                 <BooleanField source="allDiagnoses" />
                 <br/>
                 <span>Mensaje para indicaciones</span>
-                <TextField  source="message" label=""/>
+                <TextField source="message" label=""/>
                 <br/>
                 <BooleanField source="enabled" />
                 <br/>
