@@ -63,8 +63,6 @@ export class EmergencyCareEpisodeAttendService {
 
 	private mapToEpisode(response: ResponseEmergencyCareDto) {
 		const episode: Episode = {
-			waitingTime: 0,
-			waitingHours: 0,
 			creationDate: undefined,
 			doctorsOffice: undefined,
 			id: response.id,

@@ -1,7 +1,11 @@
-<div id="status" fxLayout="column">
-    <ng-container
-    *ngIf="(episode.state.id === estadosEpisodio.EN_ESPERA || episode.state.id === estadosEpisodio.AUSENTE) else otherStates">>
-        <span> {{ episode.state.description }}: </span>
+<div id="status" [ngSwitch]="episode.state.id">
+
+    <ng-container *ngSwitchCase="EPISODE_STATES.EN_ESPERA">
+        <app-emergency-care-waiting-status id="waiting-state" [stateUpdateOn]="episode.stateUpdatedOn"></app-emergency-care-waiting-status>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="EPISODE_STATES.AUSENTE">
+        <span> {{ episode.state?.description }}: </span>
         <span *ngIf="episode?.waitingTime && episode.waitingTime < 60">
             {{ episode.waitingTime }} min
         </span>
@@ -9,12 +13,13 @@
             {{ episode.waitingHours }} hs
         </span>
     </ng-container>
-    <span class="mat-small"> {{ episode.doctorsOffice?.description }} </span>
-    <span class="mat-small"> {{ episode.shockroom?.description }} </span>
-    <span class="mat-small"> {{ episode.bed?.bedNumber }} </span>
-    <span *ngIf="episode.relatedProfessional"> {{ episode.relatedProfessional.fullName }} </span>
 
-    <ng-template #otherStates>
-        <span id="state">{{ episode.state.description | uppercase }}</span>
-    </ng-template>
+    <div *ngSwitchCase="EPISODE_STATES.EN_ATENCION">
+        <app-emergency-care-in-attention-status id="in-attention-state" [episode]="episode"></app-emergency-care-in-attention-status>
+    </div>
+
+    <div *ngSwitchCase="EPISODE_STATES.CON_ALTA_MEDICA">
+        <app-emergency-care-patient-discharge-status id="patient-discharge-state" [episode]="episode"></app-emergency-care-patient-discharge-status>
+    </div>
+
 </div>

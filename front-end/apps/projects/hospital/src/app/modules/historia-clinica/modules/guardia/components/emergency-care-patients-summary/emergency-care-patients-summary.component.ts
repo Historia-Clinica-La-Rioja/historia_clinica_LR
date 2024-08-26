@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MasterDataInterface, DateTimeDto, EmergencyCareEpisodeFilterDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto, BedDto, ShockroomDto } from '@api-rest/api-model';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { MasterDataInterface, DateTimeDto, EmergencyCareEpisodeFilterDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto, BedDto, ShockroomDto, EmergencyCareEpisodeDischargeSummaryDto, SectorDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { differenceInMinutes } from 'date-fns';
 import { Observable } from 'rxjs';
-import { EstadosEpisodio } from '../../constants/masterdata';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientDescriptionUpdate } from '../emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+import { EstadosEpisodio } from '../../constants/masterdata';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { differenceInMinutes } from 'date-fns';
 
 const NOT_FOUND = -1;
 
@@ -142,8 +142,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	} */
 
 	private mapToEpisode(episode: EmergencyCareListDto): Episode {
-		const minWaitingTime = episode.state.id === EstadosEpisodio.EN_ESPERA ?
-			this.calculateWaitingTime(episode.creationDate) : undefined;
 		const timeSinceStateChange = episode.state.id === EstadosEpisodio.AUSENTE ?
 			this.calculateWaitingTime(episode.stateUpdatedOn) : undefined;
 		return {
@@ -152,10 +150,8 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 				emergencyCareEpisodeListTriageDto: episode.triage,
 				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) })
 			},
-			waitingTime: episode.state.id === EstadosEpisodio.AUSENTE ? timeSinceStateChange : minWaitingTime,
-			waitingHours: episode.state.id === EstadosEpisodio.AUSENTE ?
-				(timeSinceStateChange ? Math.round(timeSinceStateChange / 60) : undefined) :
-				(minWaitingTime ? Math.round(minWaitingTime / 60) : undefined),
+			waitingTime: timeSinceStateChange,
+			waitingHours: timeSinceStateChange ? Math.round(timeSinceStateChange / 60) : undefined,
 		};
 	}
 
@@ -202,8 +198,9 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 }
 
 export interface Episode {
-	waitingTime: number;
-	waitingHours: number;
+	waitingTime?: number;
+	waitingHours?: number;
+	dischargeSummary?: EmergencyCareEpisodeDischargeSummaryDto;
 	creationDate: DateTimeDto;
 	stateUpdatedOn?: DateTimeDto;
 	doctorsOffice: DoctorsOfficeDto;
@@ -217,6 +214,7 @@ export interface Episode {
 	canBeAbsent?: boolean
 	bed?: BedDto;
 	shockroom?: ShockroomDto;
+	sector?: SectorDto;
 }
 
 export interface EpisodeListTriage {

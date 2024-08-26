@@ -73,6 +73,11 @@
 		"home": {
 			"episodes": {
 				"episode": {
+					"status": {
+						"WAITING": "En espera de atención",
+						"IN_ATTETION": "En atención",
+						"PATIENT_DISCHARGE": "Alta de paciente"
+					},
 					"actions": {
 						"atender": {
 							"TITLE": "Atender",

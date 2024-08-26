@@ -119,6 +119,7 @@ import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-po
 //pipes
 import { ProblemStatusPipe } from './pipes/problem-status.pipe';
 import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
+import { ShowTimeElapsedPipe } from './pipes/show-time-elapsed.pipe';
 //Porque estan aca?
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
@@ -156,6 +157,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
+
 @NgModule({
 	declarations: [
 		// components
@@ -329,6 +331,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		//pipes
 		ProblemStatusPipe,
 		ShowTitleByPatientDataPipe,
+  		ShowTimeElapsedPipe,
 	],
 	imports: [
 		CommonModule,
@@ -392,6 +395,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		SummaryAttentionComponent,
 		//pipes
 		ProblemStatusPipe,
+		ShowTimeElapsedPipe,
 	],
 	providers: [
 		InternmentSummaryFacadeService,
