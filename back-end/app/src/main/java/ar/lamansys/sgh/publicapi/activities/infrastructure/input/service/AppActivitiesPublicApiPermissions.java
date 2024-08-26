@@ -43,6 +43,16 @@ public class AppActivitiesPublicApiPermissions implements ActivitiesPublicApiPer
 		);
 	}
 
+
+	@Override
+	public boolean canFetchAllInstitutions() {
+		//como son las instituciones del sistema por ahora no se pide institucion especifica
+		//ver HSI-10843
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isRole(ERole.API_FACTURACION)
+		);
+	}
+
 	@Override
 	public Optional<Integer> findInstitutionId(String refsetCode) {
 		return institutionRepository.findIdBySisaCode(refsetCode);

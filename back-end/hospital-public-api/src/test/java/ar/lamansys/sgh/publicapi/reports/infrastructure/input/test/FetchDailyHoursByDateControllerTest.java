@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.FetchDailyHoursByDateAccessDeniedException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.FetchDailyHoursByDate;
-import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.FetchConsultationsAccessDeniedException;
+import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.FetchDailyHoursByDateAccessDeniedException;
 import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.InstitutionNotFoundException;
 import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.WrongDateFilterException;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.FetchDailyHoursStorage;

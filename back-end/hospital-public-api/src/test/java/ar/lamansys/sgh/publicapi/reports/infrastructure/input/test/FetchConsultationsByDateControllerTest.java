@@ -8,12 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
-
-import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationDto;
-
-import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.mapper.FetchConsultationsByDateMapper;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +28,10 @@ import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.FetchConsultationsByDateController;
+import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationDto;
+import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.mapper.FetchConsultationsByDateMapper;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.service.ConsultationsByDatePublicApiPermissions;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
@@ -127,12 +124,6 @@ public class FetchConsultationsByDateControllerTest {
 	private void allowAccessPermission(boolean canAccess) {
 		when(consultationsByDatePublicApiPermissions.canFetchConsultations())
 				.thenReturn(canAccess);
-	}
-
-	private List<ConsultationDto> mapToDto(List<ConsultationBo> consultations) {
-		return	consultations.stream()
-				.map(FetchConsultationsByDateMapper::fromBo)
-				.collect(Collectors.toList());
 	}
 
 	private List<ConsultationBo> mockResult(){

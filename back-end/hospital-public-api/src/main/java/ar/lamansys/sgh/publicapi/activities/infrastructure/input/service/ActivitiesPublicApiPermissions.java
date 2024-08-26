@@ -16,4 +16,6 @@ public interface ActivitiesPublicApiPermissions {
 	boolean canAccessProcessActivityInfo(Integer institutionId);
 
 	boolean canAccessActivityByFilter(Integer institutionId);
+
+	boolean canFetchAllInstitutions();
 }

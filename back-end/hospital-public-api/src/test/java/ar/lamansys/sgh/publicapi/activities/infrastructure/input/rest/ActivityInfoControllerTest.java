@@ -30,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,8 +42,6 @@ import static org.mockito.Mockito.when;
 class ActivityInfoControllerTest {
 
 	private ActivityInfoController activityInfoController;
-	private String refsetCode = "REFSET_CODE";
-	private Long activityId = 1L;
 
 	@Mock
 	private ActivitiesMapper activitiesMapper;
@@ -115,7 +114,7 @@ class ActivityInfoControllerTest {
 		verify(fetchProcedureByActivity, times(1)).run("REFSET_CODE", 1L);
 		verify(activitiesMapper, times(1)).mapTo(procedure);
 
-		assertFalse(result.getBody().isEmpty());
+		assertFalse(Objects.requireNonNull(result.getBody()).isEmpty());
 		assertEquals(1, result.getBody().size());
 		assertEquals(procedureDto, result.getBody().get(0));
 	}
@@ -144,7 +143,7 @@ class ActivityInfoControllerTest {
 		verify(fetchSuppliesByActivity, times(1)).run("REFSET_CODE", 1L);
 		verify(activitiesMapper, times(1)).mapTo(supply);
 
-		assertFalse(result.getBody().isEmpty());
+		assertFalse(Objects.requireNonNull(result.getBody()).isEmpty());
 		assertEquals(1, result.getBody().size());
 		assertEquals(supplyDto, result.getBody().get(0));
 	}
@@ -169,12 +168,14 @@ class ActivityInfoControllerTest {
 				.build();
 		when(activitiesMapper.mapToBedRelocation(any())).thenReturn(List.of(bedRelocationDto));
 
+		Long activityId = 1L;
+		String refsetCode = "REFSET_CODE";
 		var result = activityInfoController.getBedRelocationsByActivity(refsetCode, activityId);
 
 		verify(fetchBedRelocationByActivity, times(1)).run(refsetCode, activityId);
 		verify(activitiesMapper, times(1)).mapToBedRelocation(any());
 
-		assertFalse(result.getBody().isEmpty());
+		assertFalse(Objects.requireNonNull(result.getBody()).isEmpty());
 		assertEquals(1, result.getBody().size());
 		assertEquals(bedRelocationDto, result.getBody().get(0));
 	}
