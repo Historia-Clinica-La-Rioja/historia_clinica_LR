@@ -1,3 +1,14 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_29 
 
+    - changeSet:
+        id: addColumn-required_documentation-medicine_group
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: medicine_group
+              columns:
+                - column:
+                    name: required_documentation
+                    type: text
+
