@@ -118,7 +118,6 @@ export class CardEstudiosComponent implements OnInit {
 			study: [null],
 		});
 
-		this.getStudy();
 
 		this.setActionsLayout();
 
