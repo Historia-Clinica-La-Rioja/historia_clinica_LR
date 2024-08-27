@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, DiagnosisDto, EProfessionType, HealthConditionDto, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
@@ -11,6 +11,7 @@ import { ComponentEvaluationManagerService } from '@historia-clinica/modules/amb
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { SurgicalReportProfessionalTeamComponent } from '../surgical-report-professional-team/surgical-report-professional-team.component';
 
 @Component({
 	selector: 'app-surgical-report-dock-popup',
@@ -77,6 +78,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 	DRAINAGE = ProcedureTypeEnum.DRAINAGE;
 	CULTURE = ProcedureTypeEnum.CULTURE;
 	FROZEN_SECTION_BIOPSY = ProcedureTypeEnum.FROZEN_SECTION_BIOPSY;
+	@ViewChild(SurgicalReportProfessionalTeamComponent) professionalTeamComponent: SurgicalReportProfessionalTeamComponent;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -117,7 +119,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 	}
 
 	setDisabled(): void {
-		this.disabled = !this.validDate || !this.validProsthesis || this.validSurgicalTeam === false;
+		this.disabled = !this.validDate || !this.validProsthesis || !this.validSurgicalTeam;
 	}
 
 	setValidProsthesis(event: boolean): void {
@@ -158,6 +160,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			);
 		}
 		else {
+			this.professionalTeamComponent.notifySave();
 			this.markAsTouched = true;
 			this.snackBarService.showError('Faltan completar campos en el formulario');
 		}

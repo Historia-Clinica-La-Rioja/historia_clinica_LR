@@ -28,6 +28,10 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 		private requestMasterDataService: RequestMasterDataService
 	) { }
 
+	notifySave(): void {
+		this.isSelectedSurgeon = this.isSelectedSurgeon && this.showErrorProfessionalRepeated ? true : false;
+	}
+
 	ngOnInit(): void {
 		this.surgeon = this.surgicalReport.surgicalTeam.find(p => p.profession.type === EProfessionType.SURGEON);
 		this.emitValidSurgeon();
@@ -47,7 +51,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 			data: {
 				professionals: this.professionals,
 				professions: this.professions,
-				idProfessionalSelected: this.surgeon.healthcareProfessional.id,
+				healthcareProfessionals: this.surgicalReport.surgicalTeam,
 			}
 		});
 		dialogRef.afterClosed().subscribe((professional: AddMemberMedicalTeam) => {
