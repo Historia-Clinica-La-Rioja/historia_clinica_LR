@@ -18,6 +18,10 @@
 		"UNIT_DOSE": "Dosis / Unidad",
 		"DAY_DOSE": "Dosis / Día",
 		"TREATMENT_DAYS": "Días de tratamiento",
-		"QUANTITY": "Cantidad"
+		"QUANTITY": "Cantidad",
+		"SUGGESTED_COMMERCIAL": "Marca sugerida",
+		"PRESENTATION": "Presentación",
+		"MEDICATION_PACK": "Envases",
+		"INTERVAL": "Intervalo"
 	}
 }

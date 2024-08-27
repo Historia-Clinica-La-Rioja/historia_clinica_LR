@@ -1,15 +1,20 @@
-<div>
+<div class="container">
     <app-title-description
         [title]="'pharmaco-detail.PHARMACO'"
         [text]="pharmaco.pt">
     </app-title-description>
-    
-    <div class="doses-treatment-quantity">
+
+	<app-title-description *ngIf="pharmaco.commercialPt"
+		[title]="'pharmaco-detail.SUGGESTED_COMMERCIAL'"
+		[text]="pharmaco.commercialPt">
+	</app-title-description>
+
+    <div class="grouped-info">
         <app-title-description
             [title]="'pharmaco-detail.UNIT_DOSE'"
             [text]="pharmaco.unitDose">
         </app-title-description>
-    
+
         <app-title-description
             [title]="'pharmaco-detail.DAY_DOSE'"
             [text]="pharmaco.dayDose">
@@ -23,6 +28,23 @@
         <app-title-description
             [title]="'pharmaco-detail.QUANTITY'"
             [text]="pharmaco.quantity">
+        </app-title-description>
+    </div>
+
+	<app-title-description *ngIf="pharmaco.interval"
+		[title]="'pharmaco-detail.INTERVAL'"
+		[text]="pharmaco.interval">
+	</app-title-description>
+
+	<div class="grouped-info" *ngIf="pharmaco.commercialMedicationPrescription">
+        <app-title-description
+            [title]="'pharmaco-detail.PRESENTATION'"
+            [text]="pharmaco.commercialMedicationPrescription.presentationUnitQuantity + ' unidades'">
+        </app-title-description>
+
+        <app-title-description
+            [title]="'pharmaco-detail.MEDICATION_PACK'"
+            [text]="pharmaco.commercialMedicationPrescription.medicationPackQuantity">
         </app-title-description>
     </div>
 </div>

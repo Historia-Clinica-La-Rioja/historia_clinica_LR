@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CommercialMedicationPrescriptionDto } from '@api-rest/api-model';
 import { PresentationModule } from '@presentation/presentation.module';
 
 @Component({
@@ -18,5 +19,8 @@ export interface PharmacoDetail {
 	unitDose: number,
 	dayDose: number,
 	treatmentDays: number,
-	quantity: number
+	quantity: number,
+	interval?: string,
+	commercialPt?: string,
+	commercialMedicationPrescription?: CommercialMedicationPrescriptionDto
 }
