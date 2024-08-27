@@ -129,8 +129,15 @@
                 "SELECT_TEMPLATE_DELETE": "Seleccione plantilla a eliminar",
                 "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente",
                 "SNACKBAR_SUCCESS_DELETE_TEMPLATE": "Plantilla eliminada exitosamente",
-                "DETAIL_ORDER":"Detalle orden"
-
+                "DETAIL_ORDER":"Detalle orden",
+                "asynchronous_download": {
+                    "REQUESTING_STUDY": "Solicitando estudio...",
+                    "SETTING_UP_STUDY": "Preparando el archivo...",
+                    "REQUEST_WAIT": "Esta solicitud puede demorar, una vez verificado el estudio se descargará automáticamente",
+                    "RETRY_DOWNLOAD": "Reintentar descarga",
+                    "DOWNLOAD_FAILED": "La preparación del archivo falló",
+                    "STUDY_NOT_AVAILABLE": "Estudio no disponible"
+                }
             },
             "filters": {
                 "MODALITY": "Seleccione modalidad",

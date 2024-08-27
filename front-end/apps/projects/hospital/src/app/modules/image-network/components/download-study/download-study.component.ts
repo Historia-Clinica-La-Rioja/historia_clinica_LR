@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, Input } from '@angular/core';
-import { PacsListDto, StudyFileInfoDto } from '@api-rest/api-model';
+import { PacsDto, StudyFileInfoDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
@@ -30,10 +30,10 @@ export class DownloadStudyComponent {
         if (this.imageId){
             this.isLoading = true;
             this.studyPACAssociationService.getPacGlobalURL(this.imageId).pipe(
-                switchMap((pacs: PacsListDto) => 
+                switchMap((pacs: PacsDto) =>
                     this.studyPACAssociationService.getStudyInfo(this.imageId, pacs).pipe(
-                        switchMap((studyInfo: StudyFileInfoDto) => 
-                            this.studyPACAssociationService.downloadStudy(studyInfo.uuid, this.imageId, studyInfo.url, studyInfo.token).pipe(
+                        switchMap((studyInfo: StudyFileInfoDto) =>
+                            this.studyPACAssociationService.downloadStudy(studyInfo, this.imageId).pipe(
                                 catchError((error) => {
                                     throw error;
                                 })

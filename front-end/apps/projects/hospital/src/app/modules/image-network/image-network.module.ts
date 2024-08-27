@@ -43,6 +43,7 @@ import { PatientSummaryComponent } from '../hsi-components/patient-summary/patie
 import { ImageQueueFiltersComponent } from './components/image-queue-filters/image-queue-filters.component';
 import { ImageQueuePaginatorComponent } from './components/image-queue-paginator/image-queue-paginator.component';
 import { QueueImageListComponent } from './components/queue-image-list/queue-image-list.component';
+import { DownloadStatusPopupComponent } from './dialogs/download-status-popup/download-status-popup.component';
 
 @NgModule({
     declarations: [
@@ -77,6 +78,7 @@ import { QueueImageListComponent } from './components/queue-image-list/queue-ima
 		WorklistByTechnicalComponent,
 		WorklistComponent,
 		WorklistFiltersComponent,
+  DownloadStatusPopupComponent,
     ],
     imports: [
         CommonModule,

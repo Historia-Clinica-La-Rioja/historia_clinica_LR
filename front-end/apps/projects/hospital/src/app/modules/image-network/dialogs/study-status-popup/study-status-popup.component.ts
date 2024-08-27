@@ -10,6 +10,7 @@ export class StudyStatusPopupComponent {
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public readonly data: {
+            title: string,
 			icon: string,
 			iconColor: string,
 			popUpMessage?: string,
