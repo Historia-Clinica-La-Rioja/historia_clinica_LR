@@ -55,7 +55,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		postoperativeDiagnosis: [],
 		preoperativeDiagnosis: [],
 		procedures: [],
-		prosthesisDescription: undefined,
+		prosthesisInfo: undefined,
 		startDateTime: {
 			date: {
 				year: undefined,

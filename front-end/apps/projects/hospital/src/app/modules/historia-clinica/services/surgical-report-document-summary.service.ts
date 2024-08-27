@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnestheticTechniqueDto, DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, GenericMasterDataDto, HospitalizationProcedureDto, SurgicalReportDto } from '@api-rest/api-model';
+import { AnestheticTechniqueDto, DiagnosisDto, DocumentHealthcareProfessionalDto, EProfessionType, GenericMasterDataDto, HospitalizationProcedureDto, ProsthesisInfoDto, SurgicalReportDto } from '@api-rest/api-model';
 import { DocumentsSummaryMapperService } from './documents-summary-mapper.service';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
@@ -47,7 +47,7 @@ export class SurgicalReportDocumentSummaryService {
 			...(surgicalReport.pathologist && { pathologist: this.mapPathologistToDescriptionItemDataSummary([surgicalReport.pathologist]) }),
 			...(surgicalReport.transfusionist && { transfusionist: this.mapTransfusionistToDescriptionItemDataSummary([surgicalReport.transfusionist]) }),
 			...(surgicalReport.cultures.length && { cultures: this.mapCultureToItemDataSummary(surgicalReport.cultures) }),
-			...(surgicalReport.prosthesisDescription && { prosthesis: this.mapProsthesisDescriptionToItemDataSummary(surgicalReport.prosthesisDescription) }),
+			prosthesis: this.mapProsthesisDescriptionToItemDataSummary(surgicalReport.prosthesisInfo),
 			...(surgicalReport.frozenSectionBiopsies.length && { frozenSectionBiopsies: this.mapFrozenBiopsyToItemDataSummary(surgicalReport.frozenSectionBiopsies) }),
 			...(surgicalReport.drainages.length && { drainages: this.mapDrainageToItemDataSummary(surgicalReport.drainages) }),
 			...(surgicalReport.postoperativeDiagnosis.length && { postOperativeDiagnosis: this.mapToCustomDiagnosesData(surgicalReport.postoperativeDiagnosis, 'Diagnósticos Post-Operatorios') }),
@@ -61,12 +61,16 @@ export class SurgicalReportDocumentSummaryService {
 		}
 	}
 
-	private mapProsthesisDescriptionToItemDataSummary(prosthesisDescription: string): ItemsAndDescriptionData {
+	private mapProsthesisDescriptionToItemDataSummary(prosthesisInfo: ProsthesisInfoDto): ItemsAndDescriptionData {
 		return {
 			...PROTESIS_SURGERY_DESCRIPTION_ITEM,
 			data: {
-				items: prosthesisDescription ? [{ description: 'Si' }] : [{ description: '' }],
-				note: prosthesisDescription ? [this.documentsSummaryService.toDescriptionItemData(prosthesisDescription)] : [],
+				items: prosthesisInfo?.hasProsthesis !== undefined
+					? [{ description: prosthesisInfo.hasProsthesis ? 'Si' : 'No' }]
+					: [{ description: 'sin información' }],
+				note: prosthesisInfo?.description
+					? [this.documentsSummaryService.toDescriptionItemData(prosthesisInfo.description)]
+					: [],
 			}
 		};
 	}
