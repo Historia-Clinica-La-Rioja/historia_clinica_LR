@@ -822,13 +822,30 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		);
 	}
 
+	/**
+	 * The order of the conditionals matters. A cancelled prescription can't be expired/overdue
+	 * The status is computed as follows:
+	 * 	1. If the state is not null AND the line is cancelled -> return cancelled
+	 * 	2. If it's expired -> return "VENCIDO"
+	 * 	3. If the state is not null -> return the state
+	 * 	4. By default, return "ACTIVO"
+	 */
 	private String getPrescriptionLineStatus(Object[] queryResult, LocalDate dueDate) {
+
+		Object medicationStatementLineStateId = queryResult[44];
+		Object medicationStatementLineStateDescription = queryResult[30];
+
+		if (medicationStatementLineStateId != null && medicationStatementLineStateId.equals(RECETA_CANCELADA))
+			return (String) medicationStatementLineStateDescription;
+
 		if (dueDate.isBefore(LocalDate.now())) {
-			return "VENCIDO";
+			return PrescriptionValidStatesEnum.VENCIDO.name();
 		}
-		if (queryResult[44] != null && queryResult[30] != null && queryResult[44].equals(RECETA_CANCELADA)) {
-			return (String) queryResult[30];
+
+		if (medicationStatementLineStateId != null && medicationStatementLineStateDescription != null) {
+			return (String) medicationStatementLineStateDescription;
 		}
-		return "";
+
+		return PrescriptionValidStatesEnum.ACTIVO.name();
 	}
 }
