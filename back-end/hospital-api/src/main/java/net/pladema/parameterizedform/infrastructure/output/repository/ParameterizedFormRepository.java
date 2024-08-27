@@ -31,9 +31,10 @@ public interface ParameterizedFormRepository extends SGXAuditableEntityJPAReposi
 			"FROM ParameterizedForm pf " +
 			"WHERE pf.statusId = 2 " +
 			"AND pf.id != :formId " +
-			"AND pf.name = :name")
-	Boolean existsFormByName(@Param("formId") Integer formId,
-							 @Param("name") String name);
+			"AND pf.name = :name " +
+			"AND pf.isDomain = true")
+	Boolean existsDomainParameterizedFormByName(@Param("formId") Integer formId,
+												@Param("name") String name);
 
 
 	@Transactional(readOnly = true)

@@ -60,4 +60,19 @@ public interface InstitutionalParameterizedFormRepository extends SGXAuditableEn
 			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
 	void updateInstitutionalParameterizedFormEnabled(@Param("parameterizedFormId") Integer parameterizedFormId);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT (CASE WHEN count(pf.id) > 0 THEN TRUE ELSE FALSE END) " +
+					"FROM ParameterizedForm pf " +
+					"JOIN InstitutionalParameterizedForm ipf ON pf.id = ipf.parameterizedFormId " +
+					"WHERE pf.id != :formId " +
+					"AND pf.name = :name " +
+					"AND pf.isDomain = :isDomain " +
+					"AND ipf.institutionId = :institutionId " +
+					"AND ipf.isEnabled = true " +
+					"AND pf.statusId = 2")
+	Boolean existsParameterizedFormByNameAndInsitutionIdAndDomain(@Param("formId") Integer formId,
+																	@Param("institutionId") Integer institutionId,
+																	@Param("name") String name,
+																	@Param("isDomain") Boolean isDomain);
+
 }

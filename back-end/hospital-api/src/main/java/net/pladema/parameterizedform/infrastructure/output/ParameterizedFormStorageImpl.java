@@ -42,13 +42,16 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 		parameterizedFormRepository.findById(formId).ifPresent(form -> {
 			EFormStatus actualState = EFormStatus.map(form.getStatusId());
 			EFormStatus nextState = actualState.getNextState();
-			assertFormName(formId, form.getName(), nextState);
-			parameterizedFormRepository.updateStatusByFormId(formId, nextState.getId());
-			List<InstitutionalParameterizedForm> formEnabledInInstitutions = institutionalParameterizedFormRepository.getByParameterizedFormId(formId);
-			Boolean isInactive = nextState.getId().equals(EFormStatus.INACTIVE.getId());
-			if (isInactive && form.getIsDomain() && !formEnabledInInstitutions.isEmpty()) {
-				institutionalParameterizedFormRepository.updateInstitutionalParameterizedFormEnabled(formId);
+			if (form.getIsDomain())
+				assertDomainFormName(formId, form.getName(), nextState);
+			else {
+				List<InstitutionalParameterizedForm> institutionalParameterizedForm = institutionalParameterizedFormRepository.getByParameterizedFormId(formId);
+				var institutionId = institutionalParameterizedForm.get(0).getInstitutionId();
+				assertEnabledDomainParameterizedFormName(formId, form.getName(), nextState, institutionId);
+				assertInstitutionalFormName(formId, form.getName(), nextState, institutionId);
 			}
+			parameterizedFormRepository.updateStatusByFormId(formId, nextState.getId());
+			handleInstitutionalFormStatus(formId, nextState, form.getIsDomain());
 		});
 	}
 
@@ -84,9 +87,7 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 		log.debug("Input parameters -> parameterizedFormId {}, institutionId {}, enablement {}", parameterizedFormId, institutionId, enablement);
 		parameterizedFormRepository.findById(parameterizedFormId).ifPresent(
 				parameterizedForm -> {
-					if (parameterizedForm.getStatusId().equals(EFormStatus.DRAFT.getId())) {
-						throw new NotFoundException("draft-form", "No se puede habilitar un formulario con estado borrador.");
-					}
+					assertEnablementValidations(parameterizedForm, institutionId, enablement);
 					institutionalParameterizedFormRepository.findByParameterizedFormIdAndInstitutionId(parameterizedFormId, institutionId).ifPresentOrElse(
 							institutionalParameterizedForm -> updateInsitutionalParameterizedForm(institutionalParameterizedForm, enablement),
 							() -> saveInsitutionalParameterizedForm(parameterizedForm.getId(), institutionId, enablement)
@@ -107,10 +108,24 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 		return result;
 	}
 
-	private void assertFormName(Integer formId, String name, EFormStatus nextState) {
+	private void assertDomainFormName(Integer formId, String name, EFormStatus nextState) {
 		Boolean nextStateIsActive = nextState.getId().equals(EFormStatus.ACTIVE.getId());
-		Boolean existsFormWithName = parameterizedFormRepository.existsFormByName(formId, name);
-		if (nextStateIsActive && existsFormWithName)
+		Boolean existsDomainParameterizedFormByName = parameterizedFormRepository.existsDomainParameterizedFormByName(formId, name);
+		if (nextStateIsActive && existsDomainParameterizedFormByName)
+			throw new NotFoundException("form-with-same-name", String.format("Ya existe un formulario activo con ese nombre", name));
+	}
+
+	private void assertEnabledDomainParameterizedFormName(Integer formId, String name, EFormStatus nextState, Integer institutionId) {
+		Boolean nextStateIsActive = nextState.getId().equals(EFormStatus.ACTIVE.getId());
+		Boolean existsDomainParameterizedFormByName = institutionalParameterizedFormRepository.existsParameterizedFormByNameAndInsitutionIdAndDomain(formId, institutionId, name, true);
+		if (nextStateIsActive && existsDomainParameterizedFormByName)
+			throw new NotFoundException("form-with-same-name", String.format("Ya existe un formulario activo con ese nombre", name));
+	}
+
+	private void assertInstitutionalFormName(Integer formId, String name, EFormStatus nextState, Integer institutionId) {
+		Boolean nextStateIsActive = nextState.getId().equals(EFormStatus.ACTIVE.getId());
+		Boolean existsFormWithNameInInstitution = institutionalParameterizedFormRepository.existsParameterizedFormByNameAndInsitutionIdAndDomain(formId, institutionId, name, false);
+		if (nextStateIsActive && existsFormWithNameInInstitution)
 			throw new NotFoundException("form-with-same-name", String.format("Ya existe un formulario con ese nombre", name));
 	}
 
@@ -143,4 +158,23 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 		return Boolean.FALSE;
 	}
 
+	private void handleInstitutionalFormStatus(Integer formId, EFormStatus nextState, Boolean isDomain) {
+		List<InstitutionalParameterizedForm> formEnabledInInstitutions = institutionalParameterizedFormRepository.getByParameterizedFormId(formId);
+		Boolean isInactive = nextState.getId().equals(EFormStatus.INACTIVE.getId());
+		if (isInactive && isDomain && !formEnabledInInstitutions.isEmpty()) {
+			institutionalParameterizedFormRepository.updateInstitutionalParameterizedFormEnabled(formId);
+		}
+	}
+
+	private void assertEnablementValidations(ParameterizedForm pf, Integer institutionId, Boolean enablement) {
+		if (!enablement)
+			return;
+		if (pf.getStatusId().equals(EFormStatus.DRAFT.getId())) {
+			throw new NotFoundException("draft-form", "No se puede habilitar un formulario con estado borrador.");
+		}
+
+		Boolean existsParameterizedFormByName = institutionalParameterizedFormRepository.existsParameterizedFormByNameAndInsitutionIdAndDomain(pf.getId(), institutionId, pf.getName(), false);
+		if (existsParameterizedFormByName)
+			throw new NotFoundException("institutional-form-with-same-name", String.format("No se puede habilitar ya que existe un formulario institucional activo con el mismo nombre", pf.getName()));
+	}
 }
