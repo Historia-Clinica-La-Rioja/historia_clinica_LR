@@ -98,8 +98,15 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
 		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, 0 as presentation_quantity, d.id, mr.is_archived, " +
 		"case when d2.dose_quantity_id is null then null else q.value end, " +
-		"msls.id as status_id " +
-		"from medication_statement ms join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
+		"msls.id as status_id, " +
+		"patient_country.description AS country, "  + //45
+		"patient_province.description AS province, "  + //46
+		"patient_department.description AS department, "  + //47
+		"patient_city.description AS city, "  + //48
+		"patient_address.street AS person_street, " + //49
+		"patient_address.number AS person_street_number " + //50
+		"from medication_statement ms " +
+		"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
 		"join medication_request mr on mr.id = d.source_id join patient p on p.id = ms.patient_id " +
 		"join person p2 on p2.id = p.person_id " +
@@ -112,6 +119,11 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"left join medical_coverage_plan mcp on mcp.medical_coverage_id = pmc.medical_coverage_id " +
 		"left join institution i on i.id = d.institution_id " +
 		"left join address a on a.id = i.address_id " +
+		"left join address patient_address ON (patient_address.id = pe.address_id) " +
+		"left join country patient_country ON (patient_address.country_id = patient_country.id) " +
+		"left join province patient_province ON (patient_address.province_id = patient_province.id) " +
+		"left join department patient_department ON (patient_address.department_id = patient_department.id) " +
+		"left join city patient_city ON (patient_address.city_id = patient_city.id) " +
 		"join healthcare_professional hp on hp.id = mr.doctor_id " +
 		"join person p3 on p3.id = hp.person_id " +
 		"join identification_type it2 on it2.id = p3.identification_type_id " +
@@ -733,11 +745,10 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	}
 
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
-
+		var accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
 		var dueDate = queryResult[2] != null ?
 				((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
-
-		var accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
+		String prescriptionLineStatus = getPrescriptionLineStatus(queryResult, dueDate);
 
 		return new PrescriptionBo(
 				domainNumber.toString(),
@@ -747,24 +758,24 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"api/external-document-access/download-prescription/" + accessId,
 				queryResult[42] == null ? Boolean.FALSE : (Boolean)queryResult[42],
 				new PatientPrescriptionBo(
-						(String)queryResult[3],
-						(String)queryResult[4],
-						(String)queryResult[5],
-						(String)queryResult[6],
-						(String)queryResult[7],
-						((Date)queryResult[8]).toLocalDate(),
-						(String)queryResult[9],
-						(String)queryResult[10],
-						(String)queryResult[11],
-						(String)queryResult[12],
-						(String)queryResult[13],
+						(String)queryResult[3], //name
+						(String)queryResult[4], //lastName
+						(String)queryResult[5], //selfPerceivedName
+						(String)queryResult[6], //dniSex
+						(String)queryResult[7], //gender
+						((Date)queryResult[8]).toLocalDate(), //birthDate
+						(String)queryResult[9], //identificationType
+						(String)queryResult[10], //identificationNumber
+						(String)queryResult[11], //medicalCoverage
+						(String)queryResult[12], //medicalCoverageCuit
+						(String)queryResult[13], //medicalCoveragePlan
 						(String)queryResult[14],
-						(String) queryResult[46],
-						(String) queryResult[47],
-						(String) queryResult[48],
-						(String) queryResult[49],
-						(String) queryResult[50],
-						(String) queryResult[51]
+						queryResult[45] == null ? "" : (String) queryResult[45],
+						queryResult[46] == null ? "" : (String) queryResult[46],
+						queryResult[47] == null ? "" : (String) queryResult[47],
+						queryResult[48] == null ? "" : (String) queryResult[48],
+						queryResult[49] == null ? "" : (String) queryResult[49],
+						queryResult[50] == null ? "" : (String) queryResult[50]
 				),
 				new InstitutionPrescriptionBo(
 						(String)queryResult[15],
@@ -790,7 +801,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				),
 				List.of(new PrescriptionLineBo(
 						(Integer)queryResult[29],
-						queryResult[44].equals(RECETA_CANCELADA) || dueDate.isAfter(LocalDate.now()) ? (String)queryResult[30] : "VENCIDO",
+						prescriptionLineStatus,
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
 								(String)queryResult[32],
@@ -809,5 +820,15 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						queryResult[43] != null ? (Double)queryResult[43] : null
 				))
 		);
+	}
+
+	private String getPrescriptionLineStatus(Object[] queryResult, LocalDate dueDate) {
+		if (dueDate.isBefore(LocalDate.now())) {
+			return "VENCIDO";
+		}
+		if (queryResult[44] != null && queryResult[30] != null && queryResult[44].equals(RECETA_CANCELADA)) {
+			return (String) queryResult[30];
+		}
+		return "";
 	}
 }
