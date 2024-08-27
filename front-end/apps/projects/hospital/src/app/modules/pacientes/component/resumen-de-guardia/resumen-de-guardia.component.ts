@@ -32,6 +32,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
+const MIN_ACTIONS = 3;
+const BACK_TO_WAITING_STATES = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.AUSENTE];
+const STATES_TO_ATTEND_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE];
+const STATES_TO_EDIT_EPISODE = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE]; 
 
 @Component({
 	selector: 'app-resumen-de-guardia',
@@ -72,6 +76,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	private hasRoleAbleToSeeTriage: boolean;
 
 	availableActions: ActionInfo[] = [];
+	sliceActions: ActionInfo[] = [];
 	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
 	ButtonType = ButtonType;
 
@@ -310,10 +315,12 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 			switchMap(() => this.emergencyCareEpisodeService.hasEvolutionNote(this.episodeId)),
 			tap(hasEvolutionNote => {
 				this.availableActions = [];
+				this.sliceActions = [];
 				// Following code within this function must be in this order
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote && !this.isEmergencyCareTemporalPatient) {
-					let action: ActionInfo = {
+				const canDoMedicalDischarge = this.hasEmergencyCareRelatedRole && hasEvolutionNote && !this.isEmergencyCareTemporalPatient && this.episodeState === EstadosEpisodio.EN_ATENCION
+				if (canDoMedicalDischarge) {
+					const action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE',
 						id: 'medical_discharge',
 						callback: this.goToMedicalDischarge.bind(this)
@@ -322,7 +329,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 				}
 
 				if (this.showAdministrativeDischargeButton(hasEvolutionNote)) {
-					let action: ActionInfo = {
+					const action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
 						id: 'administrative_discharge',
 						callback: this.goToAdministrativeDischarge.bind(this)
@@ -330,8 +337,8 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 					this.availableActions.push(action);
 				}
 
-				if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA || this.episodeState === this.STATES.AUSENTE) {
-					let action: ActionInfo = {
+				if (STATES_TO_EDIT_EPISODE.includes(this.episodeState)) {
+					const action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.EDIT_BUTTON',
 						id: 'edit_episode',
 						callback: this.goToEditEpisode.bind(this).bind(this)
@@ -339,8 +346,8 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasEmergencyCareRelatedRole && (this.episodeState === this.STATES.EN_ESPERA || this.episodeState === this.STATES.AUSENTE)) {
-					let action: ActionInfo = {
+				if (this.hasEmergencyCareRelatedRole && STATES_TO_ATTEND_EPISODE.includes(this.episodeState)) {
+					const action: ActionInfo = {
 						label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 						id: 'attend',
 						callback: this.attend.bind(this)
@@ -348,8 +355,8 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasEmergencyCareRelatedRole && (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.AUSENTE)) {
-					let action: ActionInfo = {
+				if (this.hasEmergencyCareRelatedRole && BACK_TO_WAITING_STATES.includes(this.episodeState)) {
+					const action: ActionInfo = {
 						label: 'Pasar a espera',
 						id: 'a-en-espera',
 						callback: this.toEnEspera.bind(this)
@@ -358,12 +365,17 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 				}
 
 				if (this.canBeAbsent) {
-                    let action: ActionInfo = {
-                        label: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
-                        id: 'markAsAbsent',
-                        callback: this.markAsAbsent.bind(this)
-                    }
-                    this.availableActions.push(action);
+					const action: ActionInfo = {
+						label: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
+						id: 'markAsAbsent',
+						callback: this.markAsAbsent.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				if (this.availableActions.length > MIN_ACTIONS) {
+					const max = this.availableActions.length;
+					this.sliceActions = this.availableActions.splice(3, max);
 				}
 			})
 		).subscribe();
