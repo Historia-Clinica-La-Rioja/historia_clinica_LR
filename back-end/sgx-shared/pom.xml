@@ -33,7 +33,6 @@
 			<groupId>ar.lamansys</groupId>
 			<artifactId>sgx-backoffice</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -237,7 +236,8 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.16.1</version>
 		</dependency>
-    </dependencies>
+
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
