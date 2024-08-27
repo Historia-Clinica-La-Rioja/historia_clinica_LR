@@ -239,6 +239,8 @@ public enum AppFeature implements Feature {
 	@Label("Indica si los documentos de guardia podrán ser editados")
 	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA,
 
+	@Label("Indica si se encuentra habilitada la financiacion de medicamentos")
+	HABILITAR_FINANCIACION_DE_MEDICAMENTOS
 	;
 
 	public boolean isActive() {
