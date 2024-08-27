@@ -6,7 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
 //standalone componentes
 import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
-import { PharmarcoDetailComponent } from '@hsi-components/pharmarco-detail/pharmarco-detail.component';
+import { PharmacoDetailComponent } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
 //components
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
 import { CardPharmacoComponent } from './components/card-pharmaco/card-pharmaco.component';
@@ -98,7 +98,7 @@ import { PharmacosToDispenseComponent } from './components/pharmacos-to-dispense
 		HistoriaClinicaModule,
 		//Standalone Component
 		PatientSummaryComponent,
-		PharmarcoDetailComponent,
+		PharmacoDetailComponent,
 	],
 	providers: [
 		NursingRecordFacadeService

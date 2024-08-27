@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { PharmarcoDetailComponent } from './pharmarco-detail.component';
+import { PharmacoDetailComponent } from './pharmaco-detail.component';
 
-const meta: Meta<PharmarcoDetailComponent> = {
-	title: 'HSI/PharmarcoDetailComponent',
-	component: PharmarcoDetailComponent,
+const meta: Meta<PharmacoDetailComponent> = {
+	title: 'HSI/PharmacoDetailComponent',
+	component: PharmacoDetailComponent,
 	tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<PharmarcoDetailComponent>;
+type Story = StoryObj<PharmacoDetailComponent>;
 
 export const complete: Story = {
 	args: {

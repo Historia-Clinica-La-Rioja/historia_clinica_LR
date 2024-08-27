@@ -2,18 +2,18 @@ import { Component, Input } from '@angular/core';
 import { PresentationModule } from '@presentation/presentation.module';
 
 @Component({
-	selector: 'app-pharmarco-detail',
-	templateUrl: './pharmarco-detail.component.html',
-	styleUrls: ['./pharmarco-detail.component.scss'],
+	selector: 'app-pharmaco-detail',
+	templateUrl: './pharmaco-detail.component.html',
+	styleUrls: ['./pharmaco-detail.component.scss'],
 	standalone: true,
 	imports: [PresentationModule]
 })
-export class PharmarcoDetailComponent {
+export class PharmacoDetailComponent {
 
-	@Input() pharmaco: PharmarcoDetail;
+	@Input() pharmaco: PharmacoDetail;
 }
 
-export interface PharmarcoDetail {
+export interface PharmacoDetail {
 	pt: string,
 	unitDose: number,
 	dayDose: number,

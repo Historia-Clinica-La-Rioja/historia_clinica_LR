@@ -4,7 +4,7 @@ import { ApiErrorDto, DoctorInfoDto, DosageInfoDto, MedicationInfoDto } from '@a
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { MedicationStatementInstitutionalSupplyService } from '@api-rest/services/medication-statement-institutional-supply.service';
 import { PatientNameService } from '@core/services/patient-name.service';
-import { PharmarcoDetail } from '@hsi-components/pharmarco-detail/pharmarco-detail.component';
+import { PharmacoDetail } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { MedicationToDispenseService } from '../../services/medication-to-dispense.service';
@@ -20,7 +20,7 @@ import { processErrors } from '@core/utils/form.utils';
 export class MedicationDispensePopupComponent implements OnInit {
 
 	ButtonType = ButtonType;
-	pharmaco: PharmarcoDetail;
+	pharmaco: PharmacoDetail;
 	problem: string;
 	observations: string;
 	registerEditor: RegisterEditor;
@@ -54,7 +54,7 @@ export class MedicationDispensePopupComponent implements OnInit {
 				},
 				error: (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg))
 			})
-	}	
+	}
 
 	private setPharmaco = () => {
 		const dosage: DosageInfoDto =  this.medicationInfo.dosage;
