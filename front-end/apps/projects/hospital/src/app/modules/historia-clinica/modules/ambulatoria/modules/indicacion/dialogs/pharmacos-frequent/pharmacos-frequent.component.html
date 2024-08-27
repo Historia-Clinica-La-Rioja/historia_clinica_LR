@@ -1,13 +1,14 @@
-<div mat-dialog-content>
-	<div fxLayout="row" fxLayoutAlign="space-between">
-		<div mat-dialog-title class="mat-h3">
-			{{'indicacion.card-pharmaco-frequent.TITLE' | translate}}
-		</div>
-
-		<button type="button" mat-icon-button mat-dialog-close (click)="close(false)">
-			<mat-icon>close</mat-icon>
-		</button>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div mat-dialog-title class="mat-h3">
+		{{'indicacion.card-pharmaco-frequent.TITLE' | translate}}
 	</div>
+
+	<button type="button" mat-icon-button mat-dialog-close (click)="close(false)">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div mat-dialog-content>
 
 	<h2>{{'indicacion.card-pharmaco-frequent.SUBTITLE' | translate}} </h2>
 
@@ -38,8 +39,10 @@
 
 	<app-card-pharmaco [pharmacos]="pageSlice" (selectionChange)="close(true, $event)"></app-card-pharmaco>
 
+</div>
+
+<div mat-dialog-actions>
 	<mat-paginator [length]="numberOfPatients" [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"
 		showFirstLastButtons>
 	</mat-paginator>
 </div>
-
