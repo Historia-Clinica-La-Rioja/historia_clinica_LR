@@ -668,7 +668,7 @@
                 "EPICRISIS": "Epicrisis",
 				"TRIAGE": "Triage",
 				"DOCTOR_EVOLUTION_NOTE": "Nota de evolución médica",
-				"SURGICAL_REPORT": "Parte quirúrgico de internación"
+				"SURGICAL_REPORT": "Parte quirúrgico"
 			},
             "procedure": {
 				"TITLE": "Procedimientos",

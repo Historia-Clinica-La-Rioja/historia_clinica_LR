@@ -259,6 +259,8 @@ export class DocumentsSummaryComponent implements OnInit {
 	}
 
 	getDocumentType(document: DocumentSearchDto): string {
+		if (document.documentType === this.DOCUMENT_TYPES.SURGICAL_REPORT)
+			return 'internaciones.documents-summary.document-name.SURGICAL_REPORT';
 		if (document.documentType === this.DOCUMENT_TYPES.ANAMNESIS)
 			return 'internaciones.documents-summary.document-name.ANAMNESIS';
 		if ((document.documentType == this.DOCUMENT_TYPES.EPICRISIS || document.documentType == this.DOCUMENT_TYPES.ANESTHETIC_REPORT) && !document.confirmed)
