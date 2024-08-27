@@ -4811,6 +4811,11 @@ export interface SharedAnthropometricDataDto {
     weight: string;
 }
 
+export interface SharedHolidayDto {
+    date: DateDto;
+    description: string;
+}
+
 export interface SharedRiskFactorDto {
     diastolicBloodPressure: string;
     systolicBloodPressure: string;

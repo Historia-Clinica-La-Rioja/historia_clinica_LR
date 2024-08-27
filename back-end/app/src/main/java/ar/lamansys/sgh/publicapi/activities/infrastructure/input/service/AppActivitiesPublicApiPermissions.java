@@ -54,6 +54,15 @@ public class AppActivitiesPublicApiPermissions implements ActivitiesPublicApiPer
 	}
 
 	@Override
+	public boolean canFetchHolidays() {
+		//como son los feriados del sistema por ahora no se pide institucion especifica
+		//ver HSI-10585
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isRole(ERole.API_FACTURACION)
+		);
+	}
+
+	@Override
 	public Optional<Integer> findInstitutionId(String refsetCode) {
 		return institutionRepository.findIdBySisaCode(refsetCode);
 	}

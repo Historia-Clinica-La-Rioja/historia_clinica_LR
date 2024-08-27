@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "PublicApi Facturacion", description = "Public Api Institutions for Billing")
 public class InstitutionsForBillingController {
 
-	FetchInstitutionsForBilling fetchInstitutions;
+	private FetchInstitutionsForBilling fetchInstitutions;
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)

@@ -18,4 +18,6 @@ public interface ActivitiesPublicApiPermissions {
 	boolean canAccessActivityByFilter(Integer institutionId);
 
 	boolean canFetchAllInstitutions();
+
+	boolean canFetchHolidays();
 }

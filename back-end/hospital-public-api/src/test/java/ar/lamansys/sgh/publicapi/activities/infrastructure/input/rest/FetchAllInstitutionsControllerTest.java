@@ -1,18 +1,9 @@
 package ar.lamansys.sgh.publicapi.activities.infrastructure.input.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import ar.lamansys.sgh.publicapi.TestUtils;
-
-import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
-
-import ar.lamansys.sgh.publicapi.activities.institutions.application.exception.FetchInstitutionsForBillingAccessException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.activities.institutions.application.FetchInstitutionsForBilling;
+import ar.lamansys.sgh.publicapi.activities.institutions.application.exception.FetchInstitutionsForBillingAccessException;
 import ar.lamansys.sgh.publicapi.activities.institutions.infrastructure.input.rest.InstitutionsForBillingController;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
