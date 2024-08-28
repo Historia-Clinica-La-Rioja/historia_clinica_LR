@@ -9,7 +9,7 @@
 			[(surgicalReport)]="surgicalReport"></app-surgical-report-surgery-procedures>
 
 		<app-surgical-report-professional-team data-id="professional-team-section" [professionals]="professionals"
-			[(surgicalReport)]="surgicalReport" (validSurgeon)="setValidSurgicalTeam($event)">
+			[canConfirmSurgicalTeam]="canConfirmSurgicalTeam" [(surgicalReport)]="surgicalReport" (validSurgeon)="setValidSurgicalTeam($event)">
 		</app-surgical-report-professional-team>
 
 		<app-surgical-report-anesthesia data-id="anesthesia-section" [(surgicalReport)]="surgicalReport"

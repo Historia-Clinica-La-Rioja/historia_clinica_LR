@@ -8,6 +8,7 @@ import { CustomDiagnosesData, ItemsAndDescriptionData, SurgicalProcedures } from
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { getElementAtPosition } from '@core/utils/array.utils';
+import { TranslateService } from '@ngx-translate/core';
 
 const INFO_DIVIDER = ' | ';
 const PATHOLOGIST_INFO = {
@@ -19,6 +20,8 @@ const TRANSFUSIONIST_INFO = {
 	description: 'Transfusionista'
 };
 const UNIQUE_DESCRIPTION_POSITION = 0;
+const SURGEON_POSITION = 0;
+const SURGICAL_TEAM_POSITION = 1;
 
 @Injectable({
 	providedIn: 'root'
@@ -28,6 +31,7 @@ export class SurgicalReportDocumentSummaryService {
 	professions: GenericMasterDataDto<EProfessionType>[];
 
 	constructor(
+		private readonly translateService: TranslateService,
 		private readonly documentsSummaryService: DocumentsSummaryMapperService,
 		private readonly requestMasterDataService: RequestMasterDataService,
 	) {
@@ -66,8 +70,10 @@ export class SurgicalReportDocumentSummaryService {
 			...PROTESIS_SURGERY_DESCRIPTION_ITEM,
 			data: {
 				items: prosthesisInfo?.hasProsthesis !== undefined
-					? [{ description: prosthesisInfo.hasProsthesis ? 'Si' : 'No' }]
-					: [{ description: 'sin información' }],
+					? [{ description: prosthesisInfo.hasProsthesis
+						? this.translateService.instant('internaciones.surgical-report.protesis.options.YES')
+						: this.translateService.instant('internaciones.surgical-report.protesis.options.NO') }]
+					: [{ description: this.translateService.instant('internaciones.surgical-report.protesis.options.NO_INFO') }],
 				note: prosthesisInfo?.description
 					? [this.documentsSummaryService.toDescriptionItemData(prosthesisInfo.description)]
 					: [],
@@ -134,8 +140,8 @@ export class SurgicalReportDocumentSummaryService {
 			data: {
 				items: items,
 				note: [],
-				firstItem: [items.length > 0 ? items[0] : undefined],
-				remainingItems: items.length > 1 ? items.slice(1) : [],
+				firstItem: [items.length > SURGEON_POSITION ? items[SURGEON_POSITION] : undefined],
+				remainingItems: items.length > SURGICAL_TEAM_POSITION ? items.slice(SURGICAL_TEAM_POSITION) : undefined,
 			}
 		};
 	}

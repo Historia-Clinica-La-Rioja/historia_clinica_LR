@@ -14,6 +14,12 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 	@Input() professionals: ProfessionalDto[];
 	@Input() surgicalReport: SurgicalReportDto;
+	@Input()
+	set canConfirmSurgicalTeam(value: boolean) {
+		if (value) {
+			this.notifySave()
+		}
+	}
 	@Output() validSurgeon = new EventEmitter<boolean>();
 
 	healthcareProfessionals: AddMemberMedicalTeam[] = [];
@@ -28,9 +34,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 		private requestMasterDataService: RequestMasterDataService
 	) { }
 
-	notifySave(): void {
-		this.isSelectedSurgeon = this.isSelectedSurgeon && this.showErrorProfessionalRepeated ? true : false;
-	}
+
 
 	ngOnInit(): void {
 		this.surgeon = this.surgicalReport.surgicalTeam.find(p => p.profession.type === EProfessionType.SURGEON);
@@ -130,5 +134,9 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 		this.validSurgeon.emit(hasSurgeon && !this.showErrorProfessionalRepeated);
 		this.isSelectedSurgeon = hasSurgeon;
+	}
+
+	private notifySave(): void {
+		this.isSelectedSurgeon = this.isSelectedSurgeon && !this.showErrorProfessionalRepeated ? true : false;
 	}
 }
