@@ -1011,7 +1011,7 @@ public class AppointmentsController {
 	}
 
 	@GetMapping(value = "/{appointmentId}/custom-appointment")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<CustomRecurringAppointmentDto> getCustomAppointment(@PathVariable(name = "institutionId") Integer institutionId,
 																			  @PathVariable(name = "appointmentId") Integer appointmentId) {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
