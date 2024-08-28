@@ -227,21 +227,25 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
         log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
-        appointmentRepository.updateState(appointmentId, appointmentStateId, userId, LocalDateTime.now());
-        if (appointmentStateId == AppointmentState.CANCELLED || appointmentStateId == AppointmentState.ABSENT)
-            appointmentOrderImageRepository.deleteByAppointment(appointmentId);
-        if (appointmentStateId == AppointmentState.ASSIGNED || appointmentStateId == AppointmentState.CONFIRMED)
-            appointmentOrderImageRepository.activateAppointment(appointmentId);
-        if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
-            Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+        Optional<Short> stateId = appointmentRepository.getAppointmentStateId(appointmentId);
+        if(stateId.isPresent() && stateId.get() != AppointmentState.SERVED) {
+            appointmentRepository.updateState(appointmentId, appointmentStateId, userId, LocalDateTime.now());
+            if (appointmentStateId == AppointmentState.CANCELLED || appointmentStateId == AppointmentState.ABSENT)
+                appointmentOrderImageRepository.deleteByAppointment(appointmentId);
+            if (appointmentStateId == AppointmentState.ASSIGNED || appointmentStateId == AppointmentState.CONFIRMED)
+                appointmentOrderImageRepository.activateAppointment(appointmentId);
+            if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
+                Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+                if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null)
+                    checkRemainingChildAppointments(appointment.get().getParentAppointmentId());
+            }
 
-            if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null)
-                checkRemainingChildAppointments(appointment.get().getParentAppointmentId());
+            historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
+            log.debug(OUTPUT, Boolean.TRUE);
+            return Boolean.TRUE;
         }
-
-        historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
-        log.debug(OUTPUT, Boolean.TRUE);
-        return Boolean.TRUE;
+        log.debug(OUTPUT, Boolean.FALSE);
+        return Boolean.FALSE;
     }
 
 	/**

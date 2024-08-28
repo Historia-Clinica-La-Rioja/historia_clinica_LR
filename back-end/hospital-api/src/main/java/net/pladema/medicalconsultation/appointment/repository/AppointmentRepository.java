@@ -966,4 +966,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<AppointmentDateHourBo> findAppointmentDateAndHoyByAppointmentIds(
 		@Param("appointmentIds") Set<Integer> appointmentIds
 	);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a.appointmentStateId  " +
+            "FROM Appointment AS a " +
+            "WHERE a.id = :appointmentId ")
+	Optional<Short> getAppointmentStateId(@Param("appointmentId") Integer appointmentId);
 }
