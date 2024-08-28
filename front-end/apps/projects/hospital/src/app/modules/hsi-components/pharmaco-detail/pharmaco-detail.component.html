@@ -1,5 +1,5 @@
 <div class="container">
-    <app-title-description
+    <app-title-description *ngIf="pharmaco.pt"
         [title]="'pharmaco-detail.PHARMACO'"
         [text]="pharmaco.pt">
     </app-title-description>
@@ -10,22 +10,22 @@
 	</app-title-description>
 
     <div class="grouped-info">
-        <app-title-description
+        <app-title-description *ngIf="pharmaco.unitDose"
             [title]="'pharmaco-detail.UNIT_DOSE'"
             [text]="pharmaco.unitDose">
         </app-title-description>
 
-        <app-title-description
+        <app-title-description *ngIf="pharmaco.dayDose"
             [title]="'pharmaco-detail.DAY_DOSE'"
             [text]="pharmaco.dayDose">
         </app-title-description>
 
-        <app-title-description
+        <app-title-description *ngIf="pharmaco.treatmentDays"
             [title]="'pharmaco-detail.TREATMENT_DAYS'"
             [text]="pharmaco.treatmentDays">
         </app-title-description>
 
-        <app-title-description
+        <app-title-description *ngIf="pharmaco.quantity"
             [title]="'pharmaco-detail.QUANTITY'"
             [text]="pharmaco.quantity">
         </app-title-description>

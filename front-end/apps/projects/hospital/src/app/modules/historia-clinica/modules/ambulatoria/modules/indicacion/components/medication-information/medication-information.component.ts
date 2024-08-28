@@ -8,6 +8,7 @@ import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '@historia
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
 import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
+import { PharmacoDetail } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
 
 @Component({
     selector: 'app-medication-information',
@@ -25,6 +26,7 @@ export class MedicationInformationComponent implements OnInit {
 
 	prescriptionForm: FormGroup<PrescriptionForm>;
     prescriptionItems: NewPrescriptionItem[];
+	pharmacosDetail: PharmacoDetail[] = [];
     itemCount = 0;
     showAddMedicationError = false;
     isAddMedicationLoading = false;
@@ -66,6 +68,7 @@ export class MedicationInformationComponent implements OnInit {
 				} else {
 					this.editPrescriptionItem(prescriptionItem);
 				}
+				this.pharmacosDetail.push(this.buildPharmacoDetail(prescriptionItem));
 			}
 		});
 	}
@@ -90,6 +93,19 @@ export class MedicationInformationComponent implements OnInit {
 				this.openPrescriptionItemDialog(mapToNewPrescriptionItem(result.pharmaco));
 			});
 		})
+	}
+
+	private buildPharmacoDetail(prescriptionItem: NewPrescriptionItem): PharmacoDetail {
+		return {
+			pt: prescriptionItem.snomed.pt,
+			dayDose: prescriptionItem.dayDose,
+			quantity: prescriptionItem.quantity.value,
+			treatmentDays: prescriptionItem.administrationTimeDays,
+			unitDose: prescriptionItem.unitDose,
+			commercialMedicationPrescription: prescriptionItem.commercialMedicationPrescription,
+			commercialPt: prescriptionItem.suggestedCommercialMedication?.pt,
+			interval: prescriptionItem.isDailyInterval ? "Diario" : prescriptionItem.intervalHours + " hs"
+		}
 	}
 
     private setShowAddMedicationError() {

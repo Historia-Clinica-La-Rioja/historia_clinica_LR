@@ -16,7 +16,7 @@ export const complete: Story = {
 			pt: 'paracetamol 32 mg/ml, solución oral',
 			unitDose: 1,
 			dayDose: 1,
-			treatmentDays: 31,
+			treatmentDays: '31',
 			quantity: 2
 		}
 	}

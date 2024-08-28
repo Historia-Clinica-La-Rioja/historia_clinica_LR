@@ -18,7 +18,7 @@ export interface PharmacoDetail {
 	pt: string,
 	unitDose: number,
 	dayDose: number,
-	treatmentDays: number,
+	treatmentDays: string,
 	quantity: number,
 	interval?: string,
 	commercialPt?: string,
