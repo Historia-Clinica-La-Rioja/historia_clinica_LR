@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
     Show,
     SimpleShowLayout,
@@ -21,6 +21,9 @@ import UnidadesJerarquicas from './UnidadesJerarquicas';
 import { Grid, Divider } from '@material-ui/core';
 import { ParameterizedFormSection } from './ParameterizedFormSection';
 import { MedicineTabs } from './MedicineTabs';
+import {Button} from '@material-ui/core';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -100,6 +103,81 @@ const ShowSectors = () => {
 const InstitutionShow = props => {
     const { permissions } = usePermissions();
     const parameterizedFormFF = permissions?.featureFlags.some( ff => ff === 'HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
+    
+    const [showButtons, setShowButtons] = useState(true);
+    const [showSectors, setShowSectors] = useState(false);
+    const [showOtherSections, setOtherSections] = useState(true);
+
+    const toggleShowSectors = () => {
+        setShowSectors(true);
+        setShowButtons(false);
+        setOtherSections(false); 
+    };
+
+    const resetShowSections = () => {
+        setShowSectors(false); 
+        setShowButtons(true);
+        setOtherSections(true); 
+    };
+
+    const ActionButton = ({ onClick, label }) => (
+        <Button color="primary" onClick={onClick} style={{marginBottom : 10, marginTop : 10}}>
+            {label} &nbsp; <ArrowForwardIosIcon fontSize='inherit'/>
+        </Button>
+    );
+
+    const BackButton = () => {
+        return (
+            <Button color="primary" onClick={resetShowSections} variant='outlined' style={{marginTop : 10}}>
+                <ArrowBackIcon fontSize='inherit'/> &nbsp; Volver  
+            </Button>
+        );
+    }
+
+    const SectorsSection = () => {
+        return (
+            <>
+                <SectionTitle label="resources.institutions.fields.sectors" />
+                    <CreateRelatedButton
+                        reference="sectors"
+                        refFieldName="institutionId"
+                        label="resources.sectors.createRelated"
+                    />
+                <ShowSectors />
+                <BackButton />
+            </>
+        );
+    }
+
+    const HierarchicalUnitSection = (props) => {
+        return (
+            <>
+                <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
+                <CreateHierarchicalUnit {...props} />
+                <HierarchicalUnitTabs {...props} />
+            </>
+        );
+    }
+
+    const PharmacosSection = () => {
+        return (
+            <>
+                <SectionTitle label="resources.institutions.fields.pharmacos" />
+                <MedicineTabs {...props}/>
+            </>
+        );
+    }
+
+    const OtherSections = (props) => {
+        return (
+            <>
+                <HierarchicalUnitSection {...props} />
+                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
+                <PharmacosSection/>
+            </>
+        );
+    }
+
     return (
         <Show actions={<InstitutionShowActions />} {...props}>
             <SimpleShowLayout>
@@ -191,19 +269,11 @@ const InstitutionShow = props => {
                     </Grid>
                       
                 </Grid>
-                <SectionTitle label="resources.institutions.fields.sectors"/>
-                <CreateRelatedButton
-                    reference="sectors"
-                    refFieldName="institutionId"
-                    label="resources.sectors.createRelated"
-                />
-                <ShowSectors />
-                <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
-                <CreateHierarchicalUnit />
-                <HierarchicalUnitTabs {...props} />
-                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
-                <SectionTitle label="resources.institutions.fields.pharmacos" />
-                <MedicineTabs {...props}/>
+                
+                {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
+                {showSectors && <SectorsSection/>}
+                {showOtherSections && <OtherSections {...props} />}
+                
             </SimpleShowLayout>
         </Show>
     );
@@ -220,7 +290,7 @@ const HierarchicalUnitTabs = (props) => (
             </Tab>
         </TabbedShowLayout>
     </Fragment>
-)
+);
 
 export default InstitutionShow;
 export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, HierarchicalUnitTabs, ShowSectors };
