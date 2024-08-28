@@ -1670,6 +1670,12 @@ export interface EmergencyCareDto extends Serializable {
     reason: string;
 }
 
+export interface EmergencyCareEpisodeAttentionPlaceDto {
+    bedId: number;
+    doctorsOfficeId: number;
+    shockroomId: number;
+}
+
 export interface EmergencyCareEpisodeDischargeSummaryDto {
     administrativeDischargeOn: DateTimeDto;
     episodeId: number;
@@ -1677,12 +1683,6 @@ export interface EmergencyCareEpisodeDischargeSummaryDto {
     medicalDischargeProfessionalLastName: string;
     medicalDischargeProfessionalName: string;
     observation: string;
-}
-
-export interface EmergencyCareEpisodeAttentionPlaceDto {
-    bedId: number;
-    doctorsOfficeId: number;
-    shockroomId: number;
 }
 
 export interface EmergencyCareEpisodeFilterDto {

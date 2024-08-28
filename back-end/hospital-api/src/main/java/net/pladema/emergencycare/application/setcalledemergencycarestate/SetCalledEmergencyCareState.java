@@ -36,7 +36,7 @@ public class SetCalledEmergencyCareState {
 		if (hee.isPresent() && hee.get().getEmergencyCareStateId().equals(EEmergencyCareState.LLAMADO.getId()))
 			saveHistoricEmergencyEpisode(episodeId, emergencyCareEpisodeAttentionPlaceBo, (short) (hee.get().getCalls() + 1));
 		else saveHistoricEmergencyEpisode(episodeId, emergencyCareEpisodeAttentionPlaceBo, INITIAL_CALLS_COUNT);
-		Boolean result = emergencyCareEpisodeStateStorage.updateEpisodeState(episodeId, EEmergencyCareState.LLAMADO);
+		Boolean result = updateEpisodeState(episodeId, institutionId, emergencyCareEpisodeAttentionPlaceBo);
 		notifyEmergencyCareSchedulerCallService.run(episodeId, institutionId);
 		log.debug("Output -> {}", result);
 		return result;
@@ -59,5 +59,19 @@ public class SetCalledEmergencyCareState {
 			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.CHANGE_OF_STATE_NOT_VALID,
 					"No es posible pasar a estado llamado desde el estado actual del episodio de guardia.");
 
+	}
+
+	private Boolean updateEpisodeState(Integer episodeId, Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo emergencyCareEpisodeAttentionPlaceBo){
+		Integer doctorsOfficeId = emergencyCareEpisodeAttentionPlaceBo.getDoctorsOfficeId();
+		Integer bedId = emergencyCareEpisodeAttentionPlaceBo.getBedId();
+		Integer shockroomId = emergencyCareEpisodeAttentionPlaceBo.getShockroomId();
+		Short stateId = EEmergencyCareState.LLAMADO.getId();
+		if (doctorsOfficeId != null)
+			emergencyCareEpisodeStateStorage.updateStateWithDoctorsOffice(episodeId,institutionId,stateId,doctorsOfficeId);
+		else if (bedId != null)
+			emergencyCareEpisodeStateStorage.updateStateWithBed(episodeId,institutionId,stateId,bedId);
+		else if (shockroomId != null)
+			emergencyCareEpisodeStateStorage.updateStateWithShockroom(episodeId,institutionId,stateId,shockroomId);
+		return true;
 	}
 }
