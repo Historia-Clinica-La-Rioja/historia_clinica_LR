@@ -15,7 +15,7 @@
 		<sonar.java.source>11</sonar.java.source>
 		<revision>2.31.0-SNAPSHOT</revision>
 		<java.version>11</java.version>
-		<spring-boot.version>2.6.15</spring-boot.version>
+		<spring-boot.version>2.7.18</spring-boot.version>
 		<mssql-jdbc.version>7.4.1.jre8</mssql-jdbc.version>
 		<postgresql.version>42.2.8</postgresql.version>
 		<lombok.version>1.18.10</lombok.version>
