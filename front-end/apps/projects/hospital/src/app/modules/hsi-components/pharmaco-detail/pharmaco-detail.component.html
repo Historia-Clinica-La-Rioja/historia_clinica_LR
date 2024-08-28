@@ -47,4 +47,14 @@
             [text]="pharmaco.commercialMedicationPrescription.medicationPackQuantity">
         </app-title-description>
     </div>
+
+	<app-identifier-cases *ngIf="pharmaco.healthProblem"
+		[identifierCase]="identiferCases.PROBLEM"
+        [description]="pharmaco.healthProblem">
+    </app-identifier-cases>
+
+	<app-title-description *ngIf="pharmaco.observations"
+		[title]="'pharmaco-detail.OBSERVATIONS'"
+		[text]="pharmaco.observations">
+	</app-title-description>
 </div>

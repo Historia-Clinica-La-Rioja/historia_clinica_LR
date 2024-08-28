@@ -104,7 +104,9 @@ export class MedicationInformationComponent implements OnInit {
 			unitDose: prescriptionItem.unitDose,
 			commercialMedicationPrescription: prescriptionItem.commercialMedicationPrescription,
 			commercialPt: prescriptionItem.suggestedCommercialMedication?.pt,
-			interval: prescriptionItem.isDailyInterval ? "Diario" : prescriptionItem.intervalHours + " hs"
+			interval: prescriptionItem.isDailyInterval ? "Diario" : prescriptionItem.intervalHours + " hs",
+			observations: prescriptionItem.observations,
+			healthProblem: prescriptionItem.healthProblem.description
 		}
 	}
 

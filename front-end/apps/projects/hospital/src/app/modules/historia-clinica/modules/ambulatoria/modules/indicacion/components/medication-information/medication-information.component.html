@@ -3,7 +3,7 @@
         <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}</h2>
     </div>
     <div *ngFor="let pharmacoDetail of pharmacosDetail" class="item-container">
-		<app-pharmaco-detail [pharmaco]="pharmacoDetail" *ngIf="pharmacoDetail"></app-pharmaco-detail>
+        <app-pharmaco-detail [pharmaco]="pharmacoDetail" *ngIf="pharmacoDetail"></app-pharmaco-detail>
         <mat-divider class="divider" *ngIf="prescriptionItems.length > 1"></mat-divider>
     </div>
 
