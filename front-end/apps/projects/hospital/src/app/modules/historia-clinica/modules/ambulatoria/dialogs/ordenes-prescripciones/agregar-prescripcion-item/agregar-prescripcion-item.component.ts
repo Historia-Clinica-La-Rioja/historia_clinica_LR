@@ -137,6 +137,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	resetCommercialMedication(): void {
 		this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(false);
+		this.prescriptionItemForm.controls.suggestedCommercialMedication.setValue(null);
 		this.initialSuggestCommercialMedication = undefined;
 		this.suggestedCommercialMedicationOptions = [];
 		this.presentationUnitsOptions = [];
@@ -298,7 +299,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				unit: this.prescriptionItemForm.controls.unit.value
 			},
 			commercialMedicationPrescription: commercialMedicationPrescription,
-			suggestedCommercialMedication: this.prescriptionItemForm.controls.suggestedCommercialMedication.value
+			suggestedCommercialMedication: this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.value ? this.prescriptionItemForm.controls.suggestedCommercialMedication.value : null
 		};
 		this.dialogRef.close(newItem);
 	}
