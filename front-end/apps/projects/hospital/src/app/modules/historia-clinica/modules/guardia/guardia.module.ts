@@ -23,6 +23,7 @@ import { TitledGridSummaryComponent } from './components/titled-grid-summary/tit
 import { EmergencyCareAttentionPlacesComponent } from './components/emergency-care-attention-places/emergency-care-attention-places.component';
 import { EmergencyCareAttentionPlacesDashboardComponent } from './components/emergency-care-attention-places-dashboard/emergency-care-attention-places-dashboard.component';
 import { EmergencyCareAttentionPlaceSectorComponent } from './components/emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
+import { EmergencyCareAttentionPlaceSpaceComponent } from './components/emergency-care-attention-place-space/emergency-care-attention-place-space.component';
 import { EmergencyCareDashboardActionsComponent } from './components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { EmergencyCareElapsedTimeStateComponent } from './components/emergency-care-elapsed-time-state/emergency-care-elapsed-time-state.component';
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
@@ -84,6 +85,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareAttentionPlacesComponent,
 		EmergencyCareAttentionPlacesDashboardComponent,
 		EmergencyCareAttentionPlaceSectorComponent,
+		EmergencyCareAttentionPlaceSpaceComponent,
 		EmergencyCareDashboardActionsComponent,
 		EmergencyCareElapsedTimeStateComponent,
 		EmergencyCareInAttentionStateComponent,
