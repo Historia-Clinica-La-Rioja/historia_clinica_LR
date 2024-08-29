@@ -24,7 +24,7 @@
 					label="{{ 'historia-clinica.template-concept-search.MOST_FREQUENT_STUDIES' | translate }}">
 					<mat-option *ngFor="let option of mostFrequentStudies" [value]="option" [matTooltip]="option.data.pt.term"
 						matTooltipClass="tooltip">
-						<span class="capitalize">{{option.data.pt.term}}</span>
+						<span>{{option.data.pt.term}}</span>
 					</mat-option>
 				</mat-optgroup>
 

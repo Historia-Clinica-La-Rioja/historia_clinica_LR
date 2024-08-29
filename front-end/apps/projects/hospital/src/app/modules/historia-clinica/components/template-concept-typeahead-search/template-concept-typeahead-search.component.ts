@@ -6,6 +6,7 @@ import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { debounceTime, distinctUntilChanged, map, mergeMap, startWith } from "rxjs/operators";
 import { ContextService } from "@core/services/context.service";
 import { MostFrequentConceptsService } from '@api-rest/services/most-frequent-concepts.service';
+import { capitalize } from '@core/utils/core.utils';
 
 const MAX_ITEMS_DISPLAY = 30;
 
@@ -155,7 +156,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 			  lang: " ",
 			},
 			pt: {
-			  term: input.pt,
+			  term: capitalize(input.pt),
 			  lang: " ",
 			}
 		  }
