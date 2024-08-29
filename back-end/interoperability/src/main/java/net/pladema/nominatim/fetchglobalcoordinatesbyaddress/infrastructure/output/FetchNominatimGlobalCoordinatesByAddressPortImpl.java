@@ -1,5 +1,6 @@
 package net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.output;
 
+import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.exception.RestTemplateApiException;
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.application.port.output.FetchNominatimGlobalCoordinatesByAddressPort;
@@ -10,7 +11,6 @@ import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.NominatimReq
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.enums.ENominatimResponseCode;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.output.config.NominatimWSConfig;
 
-import org.apache.http.client.utils.URIBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +28,12 @@ public class FetchNominatimGlobalCoordinatesByAddressPortImpl implements FetchNo
 
 	@Override
 	public NominatimRequestResponseBo run(NominatimAddressBo address) {
-		URIBuilder requestUri = parseToRequestUri(address);
+		String requestString = parseToRequestString(address);
 		HashMap<String, Object>[] map = new HashMap[1];
 		try {
-			map = restClientInterface.exchangeGet(requestUri.build().toString(), map.getClass()).getBody();
+			map = restClientInterface.exchangeGet(requestString, map.getClass()).getBody();
 		}
-		catch (Exception e) {
+		catch (RestTemplateApiException e) {
 			return new NominatimRequestResponseBo(ENominatimResponseCode.SERVER_ERROR, null);
 		}
 
@@ -51,28 +51,31 @@ public class FetchNominatimGlobalCoordinatesByAddressPortImpl implements FetchNo
 		return new NominatimRequestResponseBo(ENominatimResponseCode.SUCCESSFUL, globalCoordinates);
 	}
 
-	private URIBuilder parseToRequestUri(NominatimAddressBo address) {
-		URIBuilder result = new URIBuilder();
+	private String parseToRequestString(NominatimAddressBo address) {
+		StringBuilder result = new StringBuilder();
+		String EMPTY_SPACE = " ";
+		String ENCODED_EMPTY_SPACE = "+";
+
 		if (isNotNullNorEmpty(address.getStreetName()) && isNotNullNorEmpty(address.getHouseNumber()))
-			result.addParameter("street", address.getHouseNumber() + " " + address.getStreetName());
+			result.append("?street=").append(address.getStreetName()).append(EMPTY_SPACE).append(address.getHouseNumber());
 		else if (isNotNullNorEmpty(address.getStreetName()))
-			result.addParameter("street", address.getStreetName());
+			result.append("?street=").append(address.getStreetName());
 
 		if (isNotNullNorEmpty(address.getCityName()))
-			result.addParameter("city", address.getCityName());
+			result.append("&city=").append(address.getCityName());
 
 		if (isNotNullNorEmpty(address.getPostalCode()))
-			result.addParameter("postalcode", address.getPostalCode());
+			result.append("&postalcode=").append(address.getPostalCode());
 
 		if (isNotNullNorEmpty(address.getStateName()))
-			result.addParameter("state", address.getStateName());
+			result.append("&state=").append(address.getStateName());
 
 		if (isNotNullNorEmpty(address.getCountryName()))
-			result.addParameter("country", address.getCountryName());
+			result.append("&country=").append(address.getCountryName());
 
-		result.setParameter("format", "json");
+		result.append("&format=json");
 
-		return result;
+		return result.toString().replace(EMPTY_SPACE, ENCODED_EMPTY_SPACE);
 	}
 
 	private boolean isNotNullNorEmpty(String string) {
