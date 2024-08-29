@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Episode } from '../emergency-care-patients-summary/emergency-care-patients-summary.component';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { Color } from '@presentation/colored-label/colored-label.component';
 
@@ -19,7 +19,7 @@ export class EmergencyCarePatientDischargeStatusComponent implements OnInit {
 		const dischargeSummary = episode.dischargeSummary;
 		this.medicalDischargeCreator = {
 			createdBy: `${dischargeSummary.medicalDischargeProfessionalName} ${dischargeSummary.medicalDischargeProfessionalLastName}`,
-			date: dateTimeDtoToDate(dischargeSummary.medicalDischargeOn)
+			date: dateTimeDtotoLocalDate(dischargeSummary.medicalDischargeOn)
 		}
 	}
 
