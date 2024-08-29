@@ -15,9 +15,10 @@ import { Subscription, switchMap, take } from 'rxjs';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
+import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
 
 @Component({
   selector: 'app-emergency-care-dashboard-actions',
@@ -53,6 +54,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		private readonly translate: TranslateService,
 		private readonly episodeStateService: EpisodeStateService,
 		private snackBarService: SnackBarService,
+		private readonly dialogService: DialogService<ConfirmDialogV2Component>,
 	) { }
 
 	ngOnInit() {
@@ -148,13 +150,16 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	}
 
 	private markPatientAsAbscent(){
-		const dialog = this.dialog.open(ConfirmDialogComponent, {
-            data: {
-                title: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.TITLE'),
-                content: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM'),
-                okButtonLabel: 'Aceptar'
-            }
-        })
+		const dialogData: ConfirmDialogData = {
+			title: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
+			hasIcon: false,
+			content: 'guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM',
+			okButtonLabel: 'guardia.home.episodes.episode.actions.mark_as_absent.buttons.CONFIRM',
+			cancelButtonLabel: 'buttons.NO_CANCEL',
+			buttonClose: true
+		}; 
+		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL };
+        const dialog = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
         dialog.afterClosed().pipe(
             take(1),
             switchMap(closed => {

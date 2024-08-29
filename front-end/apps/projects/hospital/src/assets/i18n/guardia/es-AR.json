@@ -88,13 +88,19 @@
 							"TITLE": "Marcar como ausente",
 							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a AUSENTE?",
 							"SUCCESS": "Estado de episodio actualizado a AUSENTE exitosamente",
-							"ERROR": "Error al actualizar estado de episodio a AUSENTE"
+							"ERROR": "Error al actualizar estado de episodio a AUSENTE",
+							"buttons": {
+								"CONFIRM": "Si, marcar como ausente"
+							}
 						},
 						"en_espera": {
 							"TITLE": "Pasar a en espera",
 							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a EN ESPERA?",
 							"SUCCESS": "Episodio con paciente en espera",
-							"ERROR": "Error al cambiar el estado del episodio"
+							"ERROR": "Error al cambiar el estado del episodio",
+							"buttons": {
+								"CONFIRM": "Si, pasar a espera"
+							}
 						},
 						"edit_patient_episode": {
 							"TITLE": "Editar episodio"

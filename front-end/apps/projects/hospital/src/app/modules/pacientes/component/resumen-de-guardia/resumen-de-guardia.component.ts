@@ -27,7 +27,8 @@ import { NewTriageService } from '@historia-clinica/services/new-triage.service'
 import { TranslateService } from '@ngx-translate/core';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
+import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
 
@@ -101,7 +102,8 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private readonly emergencyCareEpisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly translate: TranslateService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly dialogService: DialogService<ConfirmDialogV2Component>,
 	) {}
 
 
@@ -173,13 +175,16 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	}
 
 	toEnEspera(): void {
-		const ref = this.dialog.open(ConfirmDialogComponent, {
-			data: {
-				title: `${TRANSLATE_KEY_PREFIX}.en_espera.TITLE`,
-				content: `${TRANSLATE_KEY_PREFIX}.en_espera.CONFIRM`,
-				okButtonLabel: 'Aceptar'
-			}
-		})
+		const dialogData: ConfirmDialogData = {
+			title: `${TRANSLATE_KEY_PREFIX}.en_espera.TITLE`,
+			hasIcon: false,
+			content: `${TRANSLATE_KEY_PREFIX}.en_espera.CONFIRM`,
+			okButtonLabel: `${TRANSLATE_KEY_PREFIX}.en_espera.buttons.CONFIRM`,
+			cancelButtonLabel: 'buttons.NO_CANCEL',
+			buttonClose: true,
+		}
+		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL }
+		const ref = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
 
 		ref.afterClosed().subscribe(
 			closed => {
@@ -254,13 +259,16 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	}
 
 	markAsAbsent(){
-        const dialog = this.dialog.open(ConfirmDialogComponent, {
-            data: {
-                title: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.TITLE'),
-                content: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM'),
-                okButtonLabel: 'Aceptar'
-            }
-		})
+		const dialogData: ConfirmDialogData = {
+			title: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
+			hasIcon: false,
+			content: 'guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM',
+			okButtonLabel: 'guardia.home.episodes.episode.actions.mark_as_absent.buttons.CONFIRM',
+			cancelButtonLabel: 'buttons.NO_CANCEL',
+			buttonClose: true
+		}; 
+		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL };
+        const dialog = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
         dialog.afterClosed().pipe(
             take(1),
             switchMap(closed => {
