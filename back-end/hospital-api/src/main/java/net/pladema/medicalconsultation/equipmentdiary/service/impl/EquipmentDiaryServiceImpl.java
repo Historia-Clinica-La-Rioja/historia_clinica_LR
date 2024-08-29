@@ -208,7 +208,7 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
                 throw new OverturnsLimitException(
                         "Se encuentran asignados una cantidad mayor de sobreturnos al límite establecido en la franja del dia " +
                                 EDayOfWeek.map(doh.getOpeningHours().getDayWeekId()).getDescription() +
-                                ", en el horario de " + doh.getOpeningHours().getFrom() + " a " + doh.getOpeningHours().getTo());
+                                ", en el horario de " + doh.getOpeningHours().getFrom() + "hs. a " + doh.getOpeningHours().getTo() + "hs.");
             }
         });
     }
