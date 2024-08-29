@@ -72,8 +72,9 @@ public class StudyController {
 	public StudyFileInfoDto getStudyFileInfo(@PathVariable Integer institutionId,
 															 @PathVariable String studyInstanceUID,
 															 @RequestBody PacsListDto pacs) throws JsonProcessingException {
-		log.trace("Input -> institutionId '{}' studyInstanceUID '{}' pacs '{}'", institutionId, studyInstanceUID, pacs);
-		StudyFileInfoBo studyFileInfoBo = getFileUuid.run(studyInstanceUID, pacs.getUrls());
+		log.trace("Input -> institutionId '{}' studyInstanceUID '{}' PacsListDto '{}'", institutionId, studyInstanceUID, pacs);
+		var pacsBo = imageNetworkMapper.toPacsUrlBo(pacs);
+		StudyFileInfoBo studyFileInfoBo = getFileUuid.run(studyInstanceUID, pacsBo);
 		var result = imageNetworkMapper.toStudyFileInfoDto(studyFileInfoBo);
 		log.trace("Output -> {}", result);
 		return result;

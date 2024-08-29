@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.exception.StudyException;
+import net.pladema.imagenetwork.domain.PacsBo;
+import net.pladema.imagenetwork.domain.PacsListBo;
 import net.pladema.imagenetwork.domain.exception.EStudyException;
 import net.pladema.imagenetwork.application.generatetokenstudypermissions.GenerateStudyTokenJWT;
 import net.pladema.imagenetwork.domain.StudyFileInfoBo;
@@ -19,7 +21,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -42,8 +43,8 @@ public class GetFileUuid {
         this.objectMapper = objectMapper;
     }
 
-    public StudyFileInfoBo run(String studyInstanceUID, List<String> urls) throws JsonProcessingException {
-        log.debug("Input parameters -> studyInstanceUID {}", studyInstanceUID);
+    public StudyFileInfoBo run(String studyInstanceUID, PacsListBo pacsListBo) throws JsonProcessingException {
+        log.debug("Input parameters -> studyInstanceUID {}, pacsListBo {}", studyInstanceUID, pacsListBo);
 
 
         String token = generateStudyTokenJWT.run(studyInstanceUID);
@@ -54,8 +55,9 @@ public class GetFileUuid {
         headers.setContentType(APPLICATION_JSON);
         headers.setContentLength(body.length());
 
-        var result = urls.stream()
-                .map(pacUrl -> getFileUUIDFromPACS(pacUrl, studyInstanceUID, headers, body))
+        var result = pacsListBo.getPacs()
+                .stream()
+                .map(pac -> getFileUUIDFromPACS(pac, studyInstanceUID, headers, body))
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new StudyException(EStudyException.ANY_FILEUUID_WAS_FOUND, "app.imagenetwork.error.any-file-uuid-was-found"));
@@ -67,7 +69,8 @@ public class GetFileUuid {
 
     }
 
-    private StudyFileInfoBo getFileUUIDFromPACS(String pacUrl, String studyInstanceUID, HttpHeaders headers, String body) {
+    private StudyFileInfoBo getFileUUIDFromPACS(PacsBo pacsBo, String studyInstanceUID, HttpHeaders headers, String body) {
+        String pacUrl = pacsBo.getUrl();
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromHttpUrl(pacUrl)
                 .path("/".concat(studyInstanceUID).concat(pathContextToFindInfo));
@@ -89,7 +92,7 @@ public class GetFileUuid {
             if (response.length > 1)
                 log.warn("No se obtuvo un único file-uuid en el PACS {}", pacUrl);
 
-            return new StudyFileInfoBo(pacUrl, response[0]);
+            return new StudyFileInfoBo(pacUrl, response[0], pacsBo.getId());
 
         } catch(RestClientException e) {
             e.printStackTrace();

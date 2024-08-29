@@ -15,5 +15,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PacsListDto {
-	private List<String> urls;
+	private List<PacsDto> pacs;
 }

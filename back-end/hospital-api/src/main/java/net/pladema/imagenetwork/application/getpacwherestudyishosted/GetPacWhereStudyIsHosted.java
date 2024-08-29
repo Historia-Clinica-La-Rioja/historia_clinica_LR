@@ -3,8 +3,8 @@ package net.pladema.imagenetwork.application.getpacwherestudyishosted;
 import ar.lamansys.sgx.shared.restclient.configuration.HttpClientConfiguration;
 import ar.lamansys.sgx.shared.restclient.configuration.resttemplate.RestTemplateSSL;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.establishment.repository.entity.PacServer;
 import net.pladema.imagenetwork.application.port.StudyPacAssociationStorage;
+import net.pladema.imagenetwork.domain.PacsBo;
 import net.pladema.imagenetwork.domain.PacsListBo;
 import net.pladema.imagenetwork.infrastructure.input.rest.exception.PacsResponseErrorHandler;
 import org.springframework.http.HttpEntity;
@@ -15,12 +15,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
+@Service
 public class GetPacWhereStudyIsHosted {
 
     private final StudyPacAssociationStorage studyStorage;
@@ -36,22 +35,26 @@ public class GetPacWhereStudyIsHosted {
 
     public PacsListBo run(String studyInstanceUID, boolean doHealthcheck) {
         log.debug("Get PAC URL where the study '{}' is hosted", studyInstanceUID);
-        List<PacServer> pacServers = studyStorage.getPacServersBy(studyInstanceUID);
-        var pacListBo = new PacsListBo(pacServers);
-        var result = doHealthcheck ? this.filterUnrecheablePACS(pacListBo): pacListBo;
+        var pacListBo = studyStorage.getPacServersBy(studyInstanceUID);
+        var result = doHealthcheck
+                ? this.filterUnrecheablePACS(pacListBo)
+                : pacListBo;
         log.debug("Output -> {}", result);
         return result;
     }
 
     private PacsListBo filterUnrecheablePACS(PacsListBo pacs) {
-        pacs.setUrls(pacs.getUrls().stream()
+        var result = pacs.getPacs()
+                .stream()
                 .map(this::doHealthcheckProof)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet());
+        pacs.setPacs(result);
         return pacs;
     }
 
-    private URI doHealthcheckProof(URI pacURI) {
+    private PacsBo doHealthcheckProof(PacsBo pacsBo) {
+        URI pacURI = pacsBo.getURI();
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromHttpUrl(pacURI.toString())
                 .path(pathContextToHealthcheckPACS);
@@ -63,7 +66,7 @@ public class GetPacWhereStudyIsHosted {
                     HttpEntity.EMPTY, Object.class).getStatusCode();
             if (status.isError())
                 throw new RestClientException(status.getReasonPhrase());
-            return pacURI;
+            return pacsBo;
 
         } catch(RestClientException e) {
             log.warn("Falló prueba de healthcheck para el PACS {}", pacURI);

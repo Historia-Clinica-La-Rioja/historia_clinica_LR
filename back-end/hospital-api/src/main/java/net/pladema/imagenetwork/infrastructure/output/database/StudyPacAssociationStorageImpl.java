@@ -2,9 +2,12 @@ package net.pladema.imagenetwork.infrastructure.output.database;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.imagenetwork.domain.ErrorDownloadStudyBo;
+import net.pladema.imagenetwork.domain.PacsBo;
+import net.pladema.imagenetwork.domain.PacsListBo;
 import net.pladema.imagenetwork.infrastructure.output.database.entity.ErrorDownloadStudy;
 import net.pladema.imagenetwork.infrastructure.output.database.mapper.StudyStorageMapper;
 import net.pladema.imagenetwork.infrastructure.output.database.repository.ErrorDownloadStudyRepository;
@@ -29,8 +32,9 @@ public class StudyPacAssociationStorageImpl implements StudyPacAssociationStorag
 	private final ErrorDownloadStudyRepository errorDownloadStudyRepository;
 
 	@Override
-	public List<PacServer> getPacServersBy(String studyInstanceUID) {
-		return studyPacRepository.findAllPacServerBy(studyInstanceUID);
+	public PacsListBo getPacServersBy(String studyInstanceUID) {
+		var pacs = studyPacRepository.findAllPacServerBy(studyInstanceUID);
+		return this.mapTo(pacs);
 	}
 
 	@Override
@@ -47,5 +51,12 @@ public class StudyPacAssociationStorageImpl implements StudyPacAssociationStorag
 		var toSave = studyStorageMapper.toErrorDownloadStudy(errorDownloadStudyBo);
 		return Optional.of(errorDownloadStudyRepository.save(toSave))
 				.map(ErrorDownloadStudy::getId);
+	}
+
+	private PacsListBo mapTo(List<PacServer> pacServers) {
+		var pacs = pacServers.stream()
+				.map(pacServer -> new PacsBo(pacServer.getId(), pacServer.getDomain()))
+				.collect(Collectors.toSet());
+		return new PacsListBo(pacs);
 	}
 }

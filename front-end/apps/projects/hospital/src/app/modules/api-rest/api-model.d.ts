@@ -3664,8 +3664,13 @@ export interface PacServerTypeDto extends Serializable {
     id: number;
 }
 
+export interface PacsDto {
+    id: number;
+    url: string;
+}
+
 export interface PacsListDto {
-    urls: string[];
+    pacs: PacsDto[];
 }
 
 export interface PageDto<T> {
@@ -5078,6 +5083,7 @@ export interface StudyDto extends Serializable {
 }
 
 export interface StudyFileInfoDto {
+    pacServerId: number;
     token: string;
     url: string;
     uuid: string;
