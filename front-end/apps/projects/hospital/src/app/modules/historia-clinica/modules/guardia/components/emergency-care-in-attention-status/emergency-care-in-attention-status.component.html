@@ -1,18 +1,18 @@
 <div fxLayout="column" fxLayoutGap="10px">
-    <app-colored-label description="{{'guardia.home.episodes.episode.status.IN_ATTETION' | translate}}"
-        color={{GREEN}} icon="check_circle_outline"></app-colored-label>
+    <app-colored-label description="{{'guardia.home.episodes.episode.status.IN_ATTETION' | translate}}" color={{GREEN}}
+        icon="check_circle_outline"></app-colored-label>
     <app-identifier-cases identifierCase={{IDENTIFIER_CASES.SECTOR}}
         [description]="_episode.sector.description"></app-identifier-cases>
     <app-identifier-cases *ngIf="_episode.doctorsOffice" identifierCase={{IDENTIFIER_CASES.ROOM}}
         [description]="_episode.doctorsOffice.description"></app-identifier-cases>
     <app-identifier-cases *ngIf="_episode.shockroom" identifierCase={{IDENTIFIER_CASES.SHOCKROOM}}
         [description]="_episode.shockroom.description"></app-identifier-cases>
-    <div *ngIf="!!_episode.bed" fxLayout="row" fxLayoutGap="20px">
-        <app-identifier-cases identifierCase={{IDENTIFIER_CASES.ROOM_V2}} [position]="'column'" [showLegend]="true"
-            [description]="_episode.bed.room.description"></app-identifier-cases>
-        <app-identifier-cases identifierCase={{IDENTIFIER_CASES.BED}} [position]="'column'" [showLegend]="true"
-            [description]="_episode.bed.bedNumber"></app-identifier-cases>
-    </div>
+
+    <app-identifier-cases *ngIf="!!_episode.bed" identifierCase={{IDENTIFIER_CASES.ROOM_V2}} [showLegend]="true"
+        [description]="_episode.bed.room.description"></app-identifier-cases>
+    <app-identifier-cases *ngIf="!!_episode.bed" identifierCase={{IDENTIFIER_CASES.BED}} [showLegend]="true"
+        [description]="_episode.bed.bedNumber"></app-identifier-cases>
+
     <app-register-editor-info [registerEditor]="attentionCreator">
     </app-register-editor-info>
 </div>
