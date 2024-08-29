@@ -198,7 +198,7 @@ public class AppointmentsController {
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
 	private final CreateAppointmentLabel createAppointmentLabel;
-	
+
 	private final ReassignAppointment reassignAppointment;
 
 	private final SharedBookingPort sharedBookingPort;
@@ -651,14 +651,6 @@ public class AppointmentsController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/publish-work-list/{appointmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public ResponseEntity<Boolean> publishWorkList(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId
-	) {
-		return ResponseEntity.ok().body(true);
-	}
 
 	@GetMapping("/get-study-instance-UID/{appointmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, INFORMADOR, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")

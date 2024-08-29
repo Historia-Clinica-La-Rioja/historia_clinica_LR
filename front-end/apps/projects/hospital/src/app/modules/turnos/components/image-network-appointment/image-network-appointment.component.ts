@@ -363,16 +363,9 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
 			if (upDateState) {
-				this.publishWorkListUpdate(newStateId)
+				this.updateState(newStateId)
 			}
 		});
-	}
-
-	publishWorkListUpdate(newStateId: number): void {
-		this.appointmentService.publishWorkList(this.data.appointmentData.appointmentId).
-		subscribe(
-			() => this.updateState(newStateId)
-		)
 	}
 
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
@@ -388,7 +381,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			if ( checkStatesConfirm && this.coverageIsNotUpdate() && this.appointment.appointmentStateId !== APPOINTMENT_STATES_ID.CONFIRMED) {
 				this.confirmChangeState(newStateId);
 			}else {
-				this.publishWorkListUpdate(newStateId)
+				this.updateState(newStateId)
 			}}
 		else {
 			this.updateState(newStateId);
