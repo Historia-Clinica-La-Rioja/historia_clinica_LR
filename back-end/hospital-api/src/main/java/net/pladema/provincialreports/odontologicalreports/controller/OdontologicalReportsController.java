@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("newodontologicalreports")
+@RequestMapping("odontologicalreports")
 @Tag(name = "Reports - odontological", description = "Reportes odontológicos, odontological reports")
 public class OdontologicalReportsController {
 	private static final Logger logger = LoggerFactory.getLogger(OdontologicalReportsController.class);
