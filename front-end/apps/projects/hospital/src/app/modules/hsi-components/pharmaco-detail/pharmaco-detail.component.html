@@ -1,8 +1,20 @@
 <div class="container">
-    <app-title-description *ngIf="pharmaco.pt"
-        [title]="'pharmaco-detail.PHARMACO'"
-        [text]="pharmaco.pt">
-    </app-title-description>
+
+	<div class="pharmaco-container">
+		<app-title-description *ngIf="pharmaco.pt"
+			[title]="'pharmaco-detail.PHARMACO'"
+			[text]="pharmaco.pt">
+		</app-title-description>
+
+		<div class="buttons" *ngIf="showButtons">
+			<button mat-icon-button color="primary" (click)="emitEdit()" [disabled]="disabled">
+				<mat-icon>edit</mat-icon>
+			</button>
+			<button mat-icon-button color="warn" (click)="emitDelete()" [disabled]="disabled">
+				<mat-icon>delete_outline</mat-icon>
+			</button>
+		</div>
+	</div>
 
 	<app-title-description *ngIf="pharmaco.commercialPt"
 		[title]="'pharmaco-detail.SUGGESTED_COMMERCIAL'"

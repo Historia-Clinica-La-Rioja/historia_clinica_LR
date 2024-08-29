@@ -63,18 +63,24 @@ export class MedicationInformationComponent implements OnInit {
 				if (!prescriptionItem.id) {
 					prescriptionItem.id = ++this.itemCount;
 					this.prescriptionItems.push(prescriptionItem);
+					this.pharmacosDetail.push(this.buildPharmacoDetail(prescriptionItem));
 					this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
 					this.setShowAddMedicationError();
 				} else {
 					this.editPrescriptionItem(prescriptionItem);
+					this.editPharmacoDetail(prescriptionItem);
 				}
-				this.pharmacosDetail.push(this.buildPharmacoDetail(prescriptionItem));
 			}
 		});
 	}
 
-    deletePrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
-		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === prescriptionItem.id), 1);
+    editMedication(id: number): void {
+		this.openPrescriptionItemDialog(this.prescriptionItems.find(item => item.id === id));
+	}
+
+	deleteMedication(id: number): void {
+		this.pharmacosDetail.splice(this.pharmacosDetail.findIndex(item => item.id === id), 1);
+		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === id), 1);
 		this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
 		this.setShowAddMedicationError();
 	}
@@ -89,7 +95,6 @@ export class MedicationInformationComponent implements OnInit {
 			}).afterClosed().subscribe(result => {
 				if (!result || !result.openFormPharmaco) return;
 				if (!result.pharmaco && result.openFormPharmaco) return this.openPrescriptionItemDialog();
-
 				this.openPrescriptionItemDialog(mapToNewPrescriptionItem(result.pharmaco));
 			});
 		})
@@ -97,6 +102,7 @@ export class MedicationInformationComponent implements OnInit {
 
 	private buildPharmacoDetail(prescriptionItem: NewPrescriptionItem): PharmacoDetail {
 		return {
+			id: prescriptionItem.id,
 			pt: prescriptionItem.snomed.pt,
 			dayDose: prescriptionItem.dayDose,
 			quantity: prescriptionItem.quantity.value,
@@ -130,4 +136,20 @@ export class MedicationInformationComponent implements OnInit {
 		editPrescriptionItem.observations = prescriptionItem.observations;
 	}
 
+	private editPharmacoDetail(prescriptionItem: NewPrescriptionItem): void {
+		const editPharmacoDetail = this.pharmacosDetail.find(p => p.id === prescriptionItem.id);
+		const pharmacoDetail = this.buildPharmacoDetail(prescriptionItem);
+
+		editPharmacoDetail.id = pharmacoDetail.id;
+		editPharmacoDetail.pt = pharmacoDetail.pt;
+		editPharmacoDetail.treatmentDays = pharmacoDetail.treatmentDays;
+		editPharmacoDetail.unitDose = pharmacoDetail.unitDose;
+		editPharmacoDetail.quantity = pharmacoDetail.quantity;
+		editPharmacoDetail.observations = pharmacoDetail.observations;
+		editPharmacoDetail.interval = pharmacoDetail.interval;
+		editPharmacoDetail.healthProblem = pharmacoDetail.healthProblem;
+		editPharmacoDetail.dayDose = pharmacoDetail.dayDose;
+		editPharmacoDetail.commercialPt = pharmacoDetail.commercialPt;
+		editPharmacoDetail.commercialMedicationPrescription = pharmacoDetail.commercialMedicationPrescription;
+	}
 }

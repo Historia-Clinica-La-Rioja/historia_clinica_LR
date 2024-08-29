@@ -59,6 +59,7 @@ export class MedicationDispensePopupComponent implements OnInit {
 	private setPharmaco = () => {
 		const dosage: DosageInfoDto =  this.medicationInfo.dosage;
 		this.pharmaco = {
+			id: this.medicationInfo.id,
 			pt: this.medicationInfo.snomed.pt,
 			unitDose: dosage.dosesByUnit,
 			dayDose: dosage.dosesByDay,

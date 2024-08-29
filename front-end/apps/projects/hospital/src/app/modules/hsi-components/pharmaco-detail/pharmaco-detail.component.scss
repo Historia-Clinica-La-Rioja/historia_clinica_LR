@@ -8,3 +8,14 @@
 	flex-direction: column;
 	gap: 0.5rem;
 }
+
+.pharmaco-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.buttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+}

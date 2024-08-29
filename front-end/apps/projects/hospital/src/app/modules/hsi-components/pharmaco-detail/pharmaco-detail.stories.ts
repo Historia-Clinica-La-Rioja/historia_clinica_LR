@@ -13,6 +13,7 @@ type Story = StoryObj<PharmacoDetailComponent>;
 export const complete: Story = {
 	args: {
 		pharmaco: {
+			id: 1,
 			pt: 'paracetamol 32 mg/ml, solución oral',
 			unitDose: 1,
 			dayDose: 1,
