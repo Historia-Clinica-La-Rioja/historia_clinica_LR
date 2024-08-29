@@ -146,7 +146,7 @@ public class GeneralReportsController {
 		logger.info("getMedicinesPrescriptionExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
 
 		try {
-			String title = "Reporte de prescripción de medicamentos (generales)";
+			String title = "Reporte de prescripción de medicamentos";
 			String[] headers = {"Nombre de prescriptor", "Licencia", "Licencia provincial", "Licencia nacional", "Fecha", "Nombre de paciente", "DNI de paciente", "Obra social", "Diagnóstico asociado", "¿Es crónico?", "Evento", "Nombre de medicamento", "Duración", "Frecuencia", "Fecha de inicio", "Fecha de fin", "Inicio de suspensión", "Fin de suspensión", "Dosificación", "Dosis diaria", "Dosis por unidad", "Observaciones", "Estado de receta"};
 
 			logger.debug("building medicines prescription excel report");

@@ -36,7 +36,7 @@ public class CreateQuestionnaireController {
 		logger.debug("QuestionnaireResponseDTO: {}", responseDTO);
 		QuestionnaireResponse createdResponse;
 		try {
-			createdResponse = questionnaireService.createQuestionnaireResponse(responseDTO, patientId);
+			createdResponse = questionnaireService.createQuestionnaireResponse(responseDTO, patientId, institutionId);
 		} catch (Exception e) {
 			logger.error("Error creating questionnaire response for patientId: {}", patientId, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
