@@ -1,0 +1,23 @@
+<mat-expansion-panel class="container" [expanded]="true">
+	<mat-expansion-panel-header>
+		<mat-panel-title>
+			<h2 class="title">{{ _sector.description }}</h2>
+		</mat-panel-title>
+	</mat-expansion-panel-header>
+
+	<ng-container *ngIf="isOrganizedBySpecialty">
+		<ng-container *ngIf="specialtyDescriptions.length; else noSpecialties">
+			<p> {{ specialtyDescriptions | stringSeparator }} </p>
+		</ng-container>
+
+		<ng-template #noSpecialties>
+			<p> {{'guardia.home.attention_places.sector.NO_ASSOCIATED_SPECIALTY' | translate}}</p>
+		</ng-template>
+	</ng-container>
+
+	<div *ngFor="let space of spaces; let i = index">
+		<h1>COMPONENTE DE ESPACIO CREADO</h1>
+		<mat-divider *ngIf="i < spaces.length - 1"></mat-divider>
+	</div>
+
+</mat-expansion-panel>
