@@ -1,0 +1,34 @@
+<section class="popup-container" *ngIf="isOpen">
+  <div class="popup-header">
+    <span>VADEMECUM PROVINCIAL</span>
+    <button>
+      <mat-icon>download</mat-icon>
+    </button>
+    <button class="close-btn" (click)="closePopup()">
+      <mat-icon>close</mat-icon>
+    </button>
+    
+  </div>
+  <div class="popup-content">
+    <table>
+      <thead>
+        <tr>
+          <th>DESCRIPCIÓN</th>
+          <th>PRESENTACIÓN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medicamento of medicamentos">
+          <td>{{ medicamento.descripcion }}</td>
+          <td>{{ medicamento.presentacion }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="popup-footer">
+    <input type="text" placeholder="Buscar medicamento" [(ngModel)]="searchTerm" (input)="filterMedicamentos()" />
+    <button class="search-btn">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+</section>

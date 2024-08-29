@@ -39,6 +39,7 @@ import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmac
 import { PatientInformationComponent } from './components/patient-information/patient-information.component';
 import { PrescriptionInformationComponent } from './components/prescription-information/prescription-information.component';
 import { MedicationInformationComponent } from './components/medication-information/medication-information.component';
+import { VademecumPopupComponent } from './dialogs/vademecum-popup/vademecum-popup.component';
 
 @NgModule({
 	declarations: [
@@ -71,8 +72,9 @@ import { MedicationInformationComponent } from './components/medication-informat
 		WarningMessageComponent,
 		EmergencyCareIndicationsCardComponent,
 		PatientInformationComponent,
-  PrescriptionInformationComponent,
-  MedicationInformationComponent,
+		PrescriptionInformationComponent,
+		MedicationInformationComponent,
+		VademecumPopupComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
