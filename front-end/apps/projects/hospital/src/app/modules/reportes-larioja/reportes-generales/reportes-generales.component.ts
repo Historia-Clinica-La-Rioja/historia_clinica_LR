@@ -103,6 +103,9 @@ export class ReportesGeneralesComponent implements OnInit {
         case 4:
           this.generalReportsService.getComplementaryStudiesReport(params, `${this.REPORT_TYPES[3].description}.xls`).subscribe();
           break;
+          case 5:
+          this.generalReportsService.getMedicationPrescriptionReport(params, `${this.REPORT_TYPES[4].description}.xls`).subscribe();
+          break;
         default:
       }
     }
