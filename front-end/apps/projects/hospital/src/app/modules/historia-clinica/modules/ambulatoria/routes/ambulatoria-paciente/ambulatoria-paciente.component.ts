@@ -428,7 +428,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isAdultoMayor(): boolean {
 		const edadPaciente = this.patient.age; 
 
-		return edadPaciente > 60;
+		return edadPaciente >= 60;
 	}
 
 	goToPatient(): void {
