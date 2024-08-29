@@ -106,6 +106,7 @@ const InstitutionShow = props => {
     
     const [showButtons, setShowButtons] = useState(true);
     const [showSectors, setShowSectors] = useState(false);
+    const [showHierarchicalUnit, setHierarchicalUnit] = useState(false);
     const [showOtherSections, setOtherSections] = useState(true);
 
     const toggleShowSectors = () => {
@@ -114,10 +115,17 @@ const InstitutionShow = props => {
         setOtherSections(false); 
     };
 
+    const toggleShowHierarchicalUnit = () => {
+        setHierarchicalUnit(true);
+        setShowButtons(false);
+        setOtherSections(false);
+    };
+
     const resetShowSections = () => {
         setShowSectors(false); 
         setShowButtons(true);
-        setOtherSections(true); 
+        setHierarchicalUnit(false);
+        setOtherSections(true);
     };
 
     const ActionButton = ({ onClick, label }) => (
@@ -155,6 +163,7 @@ const InstitutionShow = props => {
                 <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
                 <CreateHierarchicalUnit {...props} />
                 <HierarchicalUnitTabs {...props} />
+                <BackButton />
             </>
         );
     }
@@ -171,7 +180,6 @@ const InstitutionShow = props => {
     const OtherSections = (props) => {
         return (
             <>
-                <HierarchicalUnitSection {...props} />
                 {parameterizedFormFF && <ParameterizedFormSection {...props} />}
                 <PharmacosSection/>
             </>
@@ -269,9 +277,11 @@ const InstitutionShow = props => {
                     </Grid>
                       
                 </Grid>
-                
+
                 {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
+                {showButtons && <ActionButton onClick={toggleShowHierarchicalUnit} label="Unidades jerárquicas" />}
                 {showSectors && <SectorsSection />}
+                {showHierarchicalUnit && <HierarchicalUnitSection {...props} />}
                 {showOtherSections && <OtherSections {...props} />}
                 
             </SimpleShowLayout>
