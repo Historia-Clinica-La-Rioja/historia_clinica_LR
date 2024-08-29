@@ -1,10 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="end">
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<h1 mat-dialog-title> {{dialogTitle | translate}} </h1>
     <button id="close-modal"  mat-icon-button aria-label="close" mat-dialog-close>
         <mat-icon>close</mat-icon>
     </button>
 </div>
 <div mat-dialog-content>
-	<h1> {{dialogTitle | translate}} </h1>
     <h4 translate="guardia.dialog.attention_place.SUBTITLE"></h4>
     <form [formGroup]="form">
         <mat-form-field appearance="outline">
