@@ -1,11 +1,11 @@
 package net.pladema.parameter.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.shared.domain.forms.enums.EParameterType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.parameter.domain.enums.EParameterType;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import java.util.List;

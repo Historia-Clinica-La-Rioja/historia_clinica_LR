@@ -9,7 +9,7 @@ import net.pladema.parameter.application.port.ParameterTextOptionStorage;
 import net.pladema.parameter.application.port.ParameterUnitOfMeasureStorage;
 import net.pladema.parameter.domain.ParameterBo;
 import net.pladema.parameter.domain.ParameterCompleteDataBo;
-import net.pladema.parameter.domain.enums.EParameterType;
+import ar.lamansys.sgh.shared.domain.forms.enums.EParameterType;
 import net.pladema.parameterizedform.application.port.output.ParameterizedFormParameterStorage;
 
 import net.pladema.snowstorm.repository.SnomedGroupRepository;

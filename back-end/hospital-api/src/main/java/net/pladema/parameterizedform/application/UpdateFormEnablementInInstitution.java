@@ -1,4 +1,4 @@
-package net.pladema.parameterizedform;
+package net.pladema.parameterizedform.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

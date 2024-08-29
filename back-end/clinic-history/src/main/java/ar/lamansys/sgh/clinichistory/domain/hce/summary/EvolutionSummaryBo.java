@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.hce.summary;
 
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompletedFormSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import lombok.Getter;
@@ -38,6 +39,8 @@ public class EvolutionSummaryBo {
 	private String institutionName;
 
 	private ElectronicJointSignatureProfessionalsBo electronicJointSignatureProfessionals;
+
+	private List<CompletedFormSummaryBo> completedForms;
 
     public EvolutionSummaryBo(Integer id, LocalDateTime startDate, HealthcareProfessionalBo professional, String evolutionNote){
         this.consultationID = id;

@@ -2,7 +2,7 @@ package net.pladema.parameterizedform.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
 
-import net.pladema.parameter.domain.enums.EParameterType;
+import ar.lamansys.sgh.shared.domain.forms.enums.EParameterType;
 import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
 import net.pladema.parameter.infrastructure.output.repository.ParameterUnitOfMeasureRepository;
 import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;

@@ -977,6 +977,20 @@ export interface CompleteRequestDto {
     referenceClosure?: ReferenceClosureDto;
 }
 
+export interface CompletedFormSummaryDto {
+    formName: string;
+    id: number;
+    parameters: CompletedParameterSummaryDto[];
+}
+
+export interface CompletedParameterSummaryDto {
+    completedValue: string;
+    description: string;
+    id: number;
+    loincId: number;
+    type: EParameterType;
+}
+
 export interface CompletedParameterizedFormParameterDto {
     conceptPt?: string;
     conceptSctid?: string;
@@ -2320,6 +2334,7 @@ export interface HCEErrorProblemDto {
 
 export interface HCEEvolutionSummaryDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
+    completedForms: CompletedFormSummaryDto[];
     consultationId: number;
     document: HCEDocumentDataDto;
     electronicJointSignatureProfessionals: ElectronicJointSignatureProfessionalsDto;
@@ -4889,6 +4904,21 @@ export interface SharedHolidayDto {
     description: string;
 }
 
+export interface SharedParameterDto {
+    description: string;
+    id: number;
+    inputCount: number;
+    loincId: number;
+    orderNumber: number;
+    snomedGroupId: number;
+    textOptions: TextOptionDto[];
+    type: EParameterType;
+    unitOfMeasure: UnitOfMeasureDto;
+}
+
+export interface SharedParameterizedFormDto {
+}
+
 export interface SharedRiskFactorDto {
     diastolicBloodPressure: string;
     systolicBloodPressure: string;
@@ -5191,6 +5221,11 @@ export interface TerminologyQueueItemDto {
     url: string;
 }
 
+export interface TextOptionDto {
+    description: string;
+    id: number;
+}
+
 export interface TextTemplateDto extends DocumentTemplateDto {
     text: string;
 }
@@ -5330,6 +5365,12 @@ export interface URI extends Comparable<URI>, Serializable {
 }
 
 export interface URL extends Serializable {
+}
+
+export interface UnitOfMeasureDto {
+    code: string;
+    description: string;
+    id: number;
 }
 
 export interface UnsatisfiedAppointmentDemandDto {

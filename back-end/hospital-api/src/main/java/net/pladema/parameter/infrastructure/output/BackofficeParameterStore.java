@@ -2,7 +2,7 @@ package net.pladema.parameter.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.parameter.domain.ParameterTextOptionBo;
-import net.pladema.parameter.domain.enums.EParameterType;
+import ar.lamansys.sgh.shared.domain.forms.enums.EParameterType;
 import net.pladema.parameter.infrastructure.input.rest.dto.ParameterDto;
 import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
 import net.pladema.parameter.infrastructure.output.repository.ParameterTextOptionRepository;

@@ -1,4 +1,4 @@
-package net.pladema.parameter.domain.enums;
+package ar.lamansys.sgh.shared.domain.forms.enums;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;

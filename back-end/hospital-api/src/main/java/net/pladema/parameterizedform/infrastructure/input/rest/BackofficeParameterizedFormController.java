@@ -1,6 +1,6 @@
 package net.pladema.parameterizedform.infrastructure.input.rest;
 
-import net.pladema.parameterizedform.UpdateFormEnablementInInstitution;
+import net.pladema.parameterizedform.application.UpdateFormEnablementInInstitution;
 import net.pladema.parameterizedform.application.GetFormsByStatus;
 import net.pladema.parameterizedform.application.UpdateFormStatus;
 import net.pladema.parameterizedform.domain.enums.EFormStatus;
