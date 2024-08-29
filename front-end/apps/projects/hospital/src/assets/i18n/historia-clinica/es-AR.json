@@ -68,7 +68,9 @@
 		},
 		"template-concept-search": {
 			"TEMPLATE_OPTION_GROUP": "Plantillas",
-			"CONCEPT_OPTION_GROUP": "Conceptos"
+			"CONCEPT_OPTION_GROUP": "Conceptos",
+			"MOST_FREQUENT_STUDIES": "Estudios más frecuentes...",
+			"INCLUDES_STUDIES": "Incluye {{count}} estudios"
 		},
 		"new-consultation-add-reason-form": {
 			"ADD_REASON": "Agregar motivo",
