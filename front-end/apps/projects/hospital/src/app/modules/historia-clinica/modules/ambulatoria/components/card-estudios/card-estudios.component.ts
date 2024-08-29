@@ -245,7 +245,7 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateInternmentOrderDialog() {
 		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 			{
-				width: DialogWidth.MEDIUM,
+				width: DialogWidth.LARGE,
 				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId, patientInternmentEpisodeMedicalCoverageId: this.patientInternmentEpisodeMedicalCoverageId },
 			})
 
@@ -285,7 +285,7 @@ export class CardEstudiosComponent implements OnInit {
 		if (this.emergencyCareDiagnosis.length) {
 			const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 				{
-					width: DialogWidth.MEDIUM,
+					width: DialogWidth.LARGE,
 					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, patientEmergencyCareMedicalCoverageId: this.patientEmergencyCareMedicalCoverageId },
 				});
 			newOrderComponent.afterClosed().subscribe((newOrder: NewInternmentOrder) => {
@@ -306,7 +306,7 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateOutpatientOrderDialog(healthProblems) {
 		const newOrderComponent = this.dialog.open(CreateOutpatientOrderComponent,
 			{
-				width: DialogWidth.MEDIUM,
+				width: DialogWidth.LARGE,
 				autoFocus: false,
 				data: { patientId: this.patientId, healthProblems },
 			});
