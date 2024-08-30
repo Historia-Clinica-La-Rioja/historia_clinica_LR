@@ -21,7 +21,6 @@ import { WorklistFacadeService } from '../../services/worklist-facade.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
-const DATE_RANGE = 60;
 const PATIENT_INFORMATION = 'patientInformation';
 const IDENTIFICATION = 'identification';
 const INSTITUTION_NAME = 'institutionName';
@@ -55,7 +54,7 @@ export class WorklistByInformerComponent implements OnInit {
 		end: new FormControl<Date>(new Date(), Validators.required),
 	});
 	dateRangeMax: Date = new Date();
-	dateRangeMin: Date = new Date();
+	dateRangeMin: Date
 
 	isFilterExpanded: boolean = false;
 	statuses$: Observable<MasterDataDto[]>;
@@ -203,7 +202,6 @@ export class WorklistByInformerComponent implements OnInit {
 
 	private setDateRanges() {
 		this.dateRangeMax.setDate(this.dateRangeMax.getDate());
-		this.dateRangeMin.setDate(this.dateRangeMin.getDate() - DATE_RANGE);
 	}
 
 	private mapToWorklist(worklist: WorklistDto[]): Worklist[] {
