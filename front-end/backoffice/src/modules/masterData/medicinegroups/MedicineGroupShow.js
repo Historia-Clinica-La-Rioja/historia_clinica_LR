@@ -114,7 +114,7 @@ const MedicineGroupShow = (props) => {
                 <BooleanField source="allDiagnoses" />
                 <br/>
                 <span>Mensaje para indicaciones</span>
-                <TextField source="message" label="false"/> 
+                <TextField source="message" label=""/> 
                 <Fragment>
                     <TabbedShowLayout>
                         <Tab label="Fármacos" id="pharmacos">
