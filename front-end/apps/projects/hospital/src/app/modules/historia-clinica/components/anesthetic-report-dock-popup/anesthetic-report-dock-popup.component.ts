@@ -20,6 +20,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
     isLoading = false;
 	isLoadingDraft = false;
+    isConfirmed = true;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -40,6 +41,9 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         })
 		this.anesthethicReportHandlerService.getIsAnestheticReportLoadingDraft().subscribe(isLoadingDraft => {
             this.isLoadingDraft = isLoadingDraft;
+        })
+		this.anesthethicReportHandlerService.isConfirmed$.subscribe(isConfirmed => {
+            this.isConfirmed = isConfirmed;
         })
 
 		this.anesthethicReportHandlerService.loadAnestheticPreviousData(this.data);

@@ -134,7 +134,7 @@
 
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
-		<app-button [color]="'primary'" [isLoading]="isLoadingDraft" [disabled]="isLoading"
+		<app-button *ngIf="!isConfirmed" [color]="'primary'" [isLoading]="isLoadingDraft" [disabled]="isLoading"
 			[text]="'internaciones.anesthesic-report.buttons.SAVE_DRAFT' | translate | uppercase"
 			[buttonType]="'mat-stroked-button'" (clicked)="save(true)">
 		</app-button>

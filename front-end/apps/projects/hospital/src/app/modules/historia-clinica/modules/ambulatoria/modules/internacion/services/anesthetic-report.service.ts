@@ -122,6 +122,9 @@ export class AnestheticReportService {
 
 	private postAnesthesiaSubject: BehaviorSubject<PostAnesthesiaStatusDto> = new BehaviorSubject<PostAnesthesiaStatusDto>(null);
     postAnesthesia$ = this.postAnesthesiaSubject.asObservable();
+    
+	private isConfirmedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+    isConfirmed$ = this.isConfirmedSubject.asObservable();
 
     constructor(
         private readonly snomedService: SnomedService,
@@ -155,6 +158,7 @@ export class AnestheticReportService {
 		if (dialogData.isDraft || dialogData.anestheticPartId) {
 			this.anesthethicReportService.getAnestheticReport(dialogData.anestheticPartId).subscribe(data => {
                 if (data) {
+                    this.isConfirmedSubject.next(data.confirmed);
                     this.loadMainDiagnosis();
 					this.diagnosisSource.next(data.diagnosis);
 					this.anesthesicReportProposedSurgeryService.setData(data.surgeryProcedures);
@@ -181,7 +185,9 @@ export class AnestheticReportService {
 					this.postAnesthesiaSubject.next(data.postAnesthesiaStatus)
 				}
 			})
-		}
+		} else {
+            this.isConfirmedSubject.next(false);
+        }
 	}
 
 	private resetDraftSubjects() {
