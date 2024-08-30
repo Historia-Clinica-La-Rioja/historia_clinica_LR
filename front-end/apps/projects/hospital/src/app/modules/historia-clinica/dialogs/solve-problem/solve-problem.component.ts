@@ -13,7 +13,6 @@ import { ProblemasService } from '../../services/problemas.service';
 import { SnomedService } from '../../services/snomed.service';
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { stringToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -53,7 +52,6 @@ export class SolveProblemComponent implements OnInit {
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
 		this.today = new Date();
-		console.log('fecha de hoy: ', this.today);
 		this.form = this.formBuilder.group({
 			snomed: [{value: null, disabled: true}, Validators.required],
 			severidad: [null],
@@ -83,7 +81,7 @@ export class SolveProblemComponent implements OnInit {
 		}
 
 		if (p.startDate) {
-			this.dateToSet = stringToDate(this.dataDto.startDate)
+			this.dateToSet = this.toFormatDate(this.dataDto.startDate)
 			this.minDate = p.startDate
 			this.maxDate = p.startDate
 		} else {
@@ -164,6 +162,11 @@ export class SolveProblemComponent implements OnInit {
 
 	hasError(type: string, controlName: string): boolean {
 		return hasError(this.form, type, controlName);
+	}
+
+	toFormatDate = (dateStr) => {
+		const [day, month, year] = dateStr.split('/');
+		return new Date(year, month - 1, day);
 	}
 
 }

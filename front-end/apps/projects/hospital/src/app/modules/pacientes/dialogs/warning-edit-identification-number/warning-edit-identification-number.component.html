@@ -20,7 +20,7 @@
 		<strong *ngIf="data.personData?.firstName"
 			innerHTML=" - {{ data.personData?.firstName | translate}} {{data.personData?.lastName | translate}}"></strong>
 		<strong *ngIf="data.personData?.cuil" innerHTML=" - Cuil {{ data.personData?.cuil | translate}}"></strong>
-		<strong *ngIf="data.personData?.birthDate" innerHTML=" - Fecha Nac. {{ data.personData?.birthDate | translate | dateFormat: 'date'}}"></strong>
+		<strong *ngIf="data.personData?.birthDate" innerHTML=" - Fecha Nac. {{ data.personData?.birthDate  | isoToDate | dateFormat: 'date'}}"></strong>
 	</div>
 
 	<div mat-dialog-content fxLayoutGap="25px" class="margin-bottom">

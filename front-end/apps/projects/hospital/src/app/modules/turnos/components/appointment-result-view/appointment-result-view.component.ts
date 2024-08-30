@@ -8,6 +8,7 @@ import { HolidayCheckService } from '@shared-appointment-access-management/servi
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { toHourMinute } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-appointment-result-view',
@@ -40,7 +41,7 @@ export class AppointmentResultViewComponent implements OnInit {
 
 	assign(): void {
 		const appointmentDate = toApiFormat(dateDtoToDate(this.appointment.date));
-		const appointmentHour = this.dateFormatPipe.transform(timeDtoToDate(this.appointment.hour), 'time');
+		const appointmentHour = toHourMinute(timeDtoToDate(this.appointment.hour));
 		this.holidayService.checkAvailability(appointmentDate).subscribe(isAvailable => {
 			if (isAvailable) {
 				const dialogRef = this.dialog.open(NewAppointmentComponent, {

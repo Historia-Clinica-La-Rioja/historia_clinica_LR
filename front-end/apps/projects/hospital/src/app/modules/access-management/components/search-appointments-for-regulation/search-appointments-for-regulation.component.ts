@@ -16,7 +16,7 @@ import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { listToTypeaheadOptions, objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
-import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -82,7 +82,6 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		private careLineService: CareLineService,
 		private specialtyService: SpecialtyService,
 		private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
-		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
@@ -174,8 +173,8 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 
 			const startDate = new Date(this.searchForm.controls.startDate.value);
 			const endDate = new Date(this.searchForm.controls.endDate.value);
-			const endDateString = this.dateFormatPipe.transform(endDate, 'date');
-			const startDateString = this.dateFormatPipe.transform(startDate, 'date');
+			const endDateString = toApiFormat(endDate);
+			const startDateString = toApiFormat(startDate);
 
 			const filters: ProtectedAppointmentsFilter = {
 				careLineId: this.searchForm.value.careLine?.id,
