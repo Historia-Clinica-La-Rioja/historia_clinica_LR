@@ -1,0 +1,21 @@
+@import "../../../../../../../assets/styles/mixins.scss";
+
+.form-title {
+    font-weight: 500;
+}
+
+.form-row {
+	@include form-row;
+}
+
+.align-center {
+    @include align-center;
+}
+
+.item-separation {
+   margin-bottom: 16px;
+}
+
+.mat-list-item:last-child {
+    margin-bottom: 0;
+}

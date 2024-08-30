@@ -1,0 +1,12 @@
+<div class="form-row align-center" fxLayoutGap="10px">
+    <mat-icon mat-list-icon class="material-icons-outlined">
+        assignment
+    </mat-icon>
+    <h3 class="form-title">{{formName}}</h3>
+</div>
+
+<mat-list *ngIf="parametersMapKeys.length">
+    <mat-list-item class="item-separation" *ngFor="let key of parametersMapKeys">
+        <app-title-description [title]="key" [text]="parametersInformationMap.get(key) || 'Sin información'"></app-title-description>
+    </mat-list-item>
+</mat-list>

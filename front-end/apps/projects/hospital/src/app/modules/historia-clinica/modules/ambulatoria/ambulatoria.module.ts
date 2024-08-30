@@ -27,6 +27,8 @@ import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambu
 //declarations
 import { AmendedProblemsComponent } from './components/amended-problems/amended-problems.component';
 import { AmendedProblemsInformationComponent } from './components/amended-problems-information/amended-problems-information.component';
+import { AssociatedParameterizedFormInformationComponent } from './components/associated-parameterized-form-information/associated-parameterized-form-information.component';
+import { AssociatedParameterizedFormListComponent } from './components/associated-parameterized-form-list/associated-parameterized-form-list.component';
 import { CardEstudiosComponent } from './components/card-estudios/card-estudios.component';
 import { CardIndicacionesComponent } from './components/card-indicaciones/card-indicaciones.component';
 import { CarelinesAndSpecialtiesReferenceComponent } from './components/carelines-and-specialties-reference/carelines-and-specialties-reference.component';
@@ -123,6 +125,8 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
 import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms-template/show-closed-forms-template.component';
 @NgModule({
 	declarations: [
+		AssociatedParameterizedFormInformationComponent,
+		AssociatedParameterizedFormListComponent,
 		HomeComponent,
 		PatientProfileComponent,
 		AmbulatoriaPacienteComponent,
