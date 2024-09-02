@@ -1,15 +1,15 @@
 package net.pladema.provincialreports.olderadultsreports.repository;
 
-import org.springframework.stereotype.Repository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class OlderAdultsReportQueryFactory {
