@@ -38,6 +38,7 @@ public class GetSurgicalReport {
 		result.setPatientId(document.getPatientId());
 		result.setEncounterId(document.getSourceId());
 		result.setInstitutionId(document.getInstitutionId());
+		result.setInitialDocumentId(document.getInitialDocumentId());
 		GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
 		result.setMainDiagnosis(new DiagnosisBo(generalHealthConditionBo.getMainDiagnosis()));
 		result.setPreoperativeDiagnosis(generalHealthConditionBo.getPreoperativeDiagnosis());
