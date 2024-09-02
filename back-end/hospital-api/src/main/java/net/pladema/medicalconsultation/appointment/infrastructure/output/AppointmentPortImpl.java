@@ -44,4 +44,9 @@ public class AppointmentPortImpl implements AppointmentPort {
 		return appointmentRepository.getModalityById(appointmentId);
 	}
 
+	@Override
+	public void deleteAppointmentById(Integer appointmentId) {
+		appointmentRepository.deleteById(appointmentId);
+	}
+
 }

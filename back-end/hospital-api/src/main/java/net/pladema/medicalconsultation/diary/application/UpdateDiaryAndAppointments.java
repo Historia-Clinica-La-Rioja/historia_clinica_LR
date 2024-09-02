@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UpdateDiaryAndAppointments {
 
-    private final UpdateOutOfBoundsAppointments updateOutOfBoundsAppointments;
+    private final HandleDiaryOutOfBoundsAppointments handleDiaryOutOfBoundsAppointments;
     private final DiaryService diaryService;
 
     @Transactional
     public Integer run(DiaryBo diaryBo) {
         log.debug("Input parameters -> diaryBo {}", diaryBo);
 
-        updateOutOfBoundsAppointments.run(diaryBo);
+        handleDiaryOutOfBoundsAppointments.run(diaryBo);
         Integer result = diaryService.updateDiary(diaryBo);
 
         log.debug("Output -> result {}", result);

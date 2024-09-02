@@ -5,15 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.domain.IDiaryOpeningHoursBo;
-import net.pladema.medicalconsultation.diary.domain.IOpeningHoursBo;
 
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"diaryId", "overturnCount"})
 @ToString
 @NoArgsConstructor
-public class DiaryOpeningHoursBo implements IDiaryOpeningHoursBo {
+public class DiaryOpeningHoursBo {
 
     private Integer diaryId;
 
@@ -35,8 +33,8 @@ public class DiaryOpeningHoursBo implements IDiaryOpeningHoursBo {
 
 	private Boolean regulationProtectedAppointmentsAllowed;
 
-    @Override
-    public IOpeningHoursBo getIOpeningHours() {
-        return openingHours;
-    }
+	public boolean overlap(DiaryOpeningHoursBo current) {
+		return openingHours.overlap(current.getOpeningHours());
+	}
+
 }

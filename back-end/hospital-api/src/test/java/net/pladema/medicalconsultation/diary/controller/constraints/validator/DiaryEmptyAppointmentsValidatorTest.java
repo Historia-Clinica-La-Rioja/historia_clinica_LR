@@ -2,8 +2,8 @@ package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
+import net.pladema.medicalconsultation.diary.application.port.output.DiaryPort;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
@@ -35,9 +35,6 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	private DiaryEmptyAppointmentsValidator diaryEmptyAppointmentsValidator;
 
 	@Mock
-	private AppointmentService appointmentService;
-
-	@Mock
 	private LocalDateMapper localDateMapper;
 
 	@Mock
@@ -49,10 +46,13 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	@Mock
 	private DiaryOpeningHoursService diaryOpeningHoursService;
 
+	@Mock
+	private DiaryPort diaryPort;
+
 
 	@BeforeEach
 	void setUp() {
-		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(appointmentService, localDateMapper, featureFlagsService, diaryService, diaryOpeningHoursService);
+		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(localDateMapper, featureFlagsService, diaryService, diaryOpeningHoursService, diaryPort);
 		when(localDateMapper.fromStringToLocalDate("2020-08-01")).thenReturn(LocalDate.parse("2020-08-01"));
 		when(localDateMapper.fromStringToLocalDate("2020-08-31")).thenReturn(LocalDate.parse("2020-08-31"));
 		when(localDateMapper.fromStringToLocalTime("10:00:00")).thenReturn(LocalTime.parse("10:00:00"));
@@ -63,19 +63,9 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	private void setupContextValid() {
 		LocalDate apbDate = LocalDate.parse("2020-08-12");
 		LocalTime apbHour = LocalTime.parse("11:15:00");
-		AppointmentBo apb1 = AppointmentBo.builder()
-				.id(1).diaryId(1).patientId(1)
-				.date(apbDate).hour(apbHour)
-				.appointmentStateId((short) 1)
-				.overturn(false)
-				.openingHoursId(1)
-				.medicalAttentionTypeId((short) 1)
-				.phonePrefix("011")
-				.phoneNumber("429784")
-				.snomedId(55)
-				.build();
-		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
-		when(appointmentService.getAppointmentsByDiaries(any(), any(), any())).thenReturn(returnFutureAppmets);
+		UpdateDiaryAppointmentBo apb1 = new UpdateDiaryAppointmentBo(1, apbDate, apbHour, (short) 1, (short) 1);
+		List<UpdateDiaryAppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
+		when(diaryPort.getUpdateDiaryAppointments(any())).thenReturn(returnFutureAppmets);
 		DiaryBo diaryBo = getDiaryBo();
 		when(diaryService.getDiaryById(any())).thenReturn(diaryBo);
 	}
@@ -83,16 +73,9 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	private void setupContextInvalid() {
 		LocalDate apbDate = LocalDate.parse("2020-08-12");
 		LocalTime apbHour = LocalTime.parse("13:15:00");
-		AppointmentBo apb1 = AppointmentBo.builder()
-				.id(1).diaryId(1).patientId(1)
-				.date(apbDate).hour(apbHour)
-				.appointmentStateId((short) 1)
-				.overturn(false)
-				.openingHoursId(1)
-				.medicalAttentionTypeId((short) 2)
-				.build();
-		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
-		when(appointmentService.getAppointmentsByDiaries(any(), any(), any())).thenReturn(returnFutureAppmets);
+		UpdateDiaryAppointmentBo apb1 = new UpdateDiaryAppointmentBo(1, apbDate, apbHour, (short) 1, (short) 2);
+		List<UpdateDiaryAppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
+		when(diaryPort.getUpdateDiaryAppointments(any())).thenReturn(returnFutureAppmets);
 		DiaryBo diaryBo = getDiaryBo();
 		when(diaryService.getDiaryById(any())).thenReturn(diaryBo);
 	}
@@ -145,12 +128,10 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	void test_AppointmentsValid() {
 		setupContextValid();
 		Assertions.assertTrue(diaryEmptyAppointmentsValidator.isValid(getDiaryDto(), contextMock));
-
 	}
 
 	@Test
 	void test_AppointmentsInvalid() {
-		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(mockConstraintViolationBuilder);
 		setupContextInvalid();
 		when(contextMock.buildConstraintViolationWithTemplate(any())).thenReturn(mockConstraintViolationBuilder);
 		Assertions.assertFalse(diaryEmptyAppointmentsValidator.isValid(getDiaryDto(), contextMock));

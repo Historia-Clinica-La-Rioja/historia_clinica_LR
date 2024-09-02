@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.diary.repository.domain.ActiveDiaryClinicalSpecialtyVo;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
@@ -392,4 +393,19 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 		@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
 		@Param("practiceId") Integer practiceId
 	);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo(a.id, a.dateTypeId, a.hour, " +
+			"a.appointmentStateId, doh.medicalAttentionTypeId) " +
+			"FROM Diary d " +
+			"JOIN AppointmentAssn aa ON (aa.pk.diaryId = d.id) " +
+			"JOIN Appointment a ON (a.id = aa.pk.appointmentId) " +
+			"JOIN DiaryOpeningHours doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
+			"WHERE d.id = :diaryId " +
+			"AND a.appointmentStateId != :appointmentStateId " +
+			"AND a.deleteable.deleted = FALSE " +
+			"AND d.deleteable.deleted = FALSE")
+	List<UpdateDiaryAppointmentBo> fetchUpdateDiaryAppointments(@Param("diaryId") Integer diaryId,
+																@Param("appointmentStateId") Short appointmentStateId);
+
 }

@@ -1,21 +1,18 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.domain.IDiaryBo;
-import net.pladema.medicalconsultation.diary.domain.IDiaryOpeningHoursBo;
 
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class DiaryBo implements IDiaryBo {
+public class DiaryBo {
 
     protected Integer id;
 
@@ -75,10 +72,6 @@ public class DiaryBo implements IDiaryBo {
 	public DiaryBo(LocalDate startDate, LocalDate endDate) {
 		this.startDate = startDate;
 		this.endDate = endDate;
-	}
-
-	public List<IDiaryOpeningHoursBo> getIDiaryOpeningHours() {
-		return Collections.unmodifiableList(diaryOpeningHours);
 	}
 
 }

@@ -16,4 +16,6 @@ public interface AppointmentPort {
 
 	Short getAppointmentModalityById(Integer appointmentId);
 
+	void deleteAppointmentById(Integer appointmentId);
+
 }
