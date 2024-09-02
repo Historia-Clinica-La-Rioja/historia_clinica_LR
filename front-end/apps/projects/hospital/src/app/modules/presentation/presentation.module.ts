@@ -113,6 +113,7 @@ import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 import { OnlyNumericCharactersDirective } from './directives/only-numeric-characters.directive';
 import { OnlyAlphabeticCharactersDirective } from './directives/only-alphabetic-characters.directive';
 // pipes
+import { CapitalizeFirstLetterPipe } from './pipes/capitalize-first-letter.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
@@ -233,6 +234,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		OnlyNumericCharactersDirective,
 		OnlyAlphabeticCharactersDirective,
 		// pipes
+		CapitalizeFirstLetterPipe,
 		DateFormatPipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
@@ -353,6 +355,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		OnlyNumericCharactersDirective,
 		OnlyAlphabeticCharactersDirective,
 		// pipes
+		CapitalizeFirstLetterPipe,
 		DateFormatPipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,

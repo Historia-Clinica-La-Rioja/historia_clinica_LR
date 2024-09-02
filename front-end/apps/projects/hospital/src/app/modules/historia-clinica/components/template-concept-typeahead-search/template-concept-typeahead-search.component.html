@@ -10,7 +10,7 @@
 					label="{{ 'historia-clinica.template-concept-search.MOST_FREQUENT_STUDIES' | translate }}">
 					<mat-option *ngFor="let option of mostFrequentStudies" [value]="option"
 						[matTooltip]="option.data.pt.term" matTooltipClass="tooltip">
-						<span>{{option.data.pt.term}}</span>
+						<span>{{option.data.pt.term | capitalizeFirstLetter}}</span>
 					</mat-option>
 				</mat-optgroup>
 
@@ -34,7 +34,7 @@
 					label="{{ 'historia-clinica.template-concept-search.CONCEPT_OPTION_GROUP' | translate }}">
 					<mat-option *ngFor="let option of conceptOptions" [value]="option"
 						[matTooltip]="option.data.pt.term" matTooltipClass="tooltip">
-						{{option.data.pt.term}}
+						{{option.data.pt.term | capitalizeFirstLetter}}
 					</mat-option>
 				</mat-optgroup>
 			</ng-container>
