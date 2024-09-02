@@ -1,13 +1,7 @@
 package net.pladema.provincialreports.odontologicalreports.controller;
 
 
-import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalReportsQueryFactory;
-
-import net.pladema.provincialreports.odontologicalreports.service.OdontologicalReportsExcelService;
-import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
+import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
+import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalReportsQueryFactory;
+import net.pladema.provincialreports.odontologicalreports.service.OdontologicalReportsExcelService;
+import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
 
 @RestController
 @RequestMapping("odontologicalreports")
