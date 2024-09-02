@@ -69,4 +69,15 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 			"WHERE t.emergencyCareEpisodeId = :episodeId "+
 			"ORDER BY t.id DESC")
 	List<ClinicalSpecialtySector> findAllByEpisodeId(@Param("episodeId") Integer episodeId);
+
+	@Query("SELECT CASE WHEN COUNT(css.id) > 0 THEN TRUE ELSE FALSE END " +
+			"FROM ClinicalSpecialtySector css " +
+			"JOIN Triage t on (css.id = t.clinicalSpecialtySectorId) " +
+			"JOIN EmergencyCareEpisode ece on (t.emergencyCareEpisodeId = ece.id) " +
+			"WHERE css.id = :id " +
+			"AND t.deleteable.deleted IS FALSE " +
+			"AND ece.deleteable.deleted IS FALSE " +
+			"AND ece.emergencyCareStateId <> 3")
+	boolean hasAnyActiveEmergencyCareEpisodeAssociated(@Param("id") Integer id);
+
 }

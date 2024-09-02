@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 public class BackofficeClinicalServiceSectorValidator implements BackofficePermissionValidator<ClinicalSpecialtySector, Integer> {
 
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
+
+	public static final String ASOCIADO_A_UN_TRIAGE_DE_UN_EPISODIO_DE_GUARDIA_ACTIVO = "El servicio se encuentra asociado a un triage de un episodio de guardia activo.";
 	private final ClinicalServiceSectorRepository repository;
 
 	private final SectorRepository sectorRepository;
@@ -91,6 +93,8 @@ public class BackofficeClinicalServiceSectorValidator implements BackofficePermi
 
 	@Override
 	public void assertDelete(Integer id) {
+		if (repository.hasAnyActiveEmergencyCareEpisodeAssociated(id))
+			throw new PermissionDeniedException(ASOCIADO_A_UN_TRIAGE_DE_UN_EPISODIO_DE_GUARDIA_ACTIVO);
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		Integer institutionId = repository.getInstitutionId(id);
