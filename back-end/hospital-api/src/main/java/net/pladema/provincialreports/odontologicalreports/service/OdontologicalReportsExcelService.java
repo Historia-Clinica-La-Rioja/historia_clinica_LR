@@ -1,22 +1,20 @@
 package net.pladema.provincialreports.odontologicalreports.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-import net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail;
 import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalProceduresConsultationDetail;
 import net.pladema.provincialreports.odontologicalreports.repository.OdontologyConsultationDetail;
 import net.pladema.provincialreports.reportformat.DateFormat;
-
 import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
-
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class OdontologicalReportsExcelService {
