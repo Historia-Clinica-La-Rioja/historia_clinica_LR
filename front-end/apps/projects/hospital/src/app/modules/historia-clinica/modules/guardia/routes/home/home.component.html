@@ -1,8 +1,12 @@
 <app-content width="full">
-	<section id="header" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+	<section id="header" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between">
 		<div>
 			<h2 id="title" class="page-title" [translate]="'guardia.home.TITLE'"></h2>
 		</div>
+		<app-button id="new-episode" buttonType="{{RAISED}}" 
+				(clicked)="goToNewEpisode()"
+				text="guardia.home.episodes.NEW_EPISODE">
+		</app-button>
 	</section>
 
 	<app-emergency-care-tabs></app-emergency-care-tabs>

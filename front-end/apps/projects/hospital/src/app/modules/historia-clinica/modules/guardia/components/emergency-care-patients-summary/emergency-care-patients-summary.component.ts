@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MasterDataInterface, DateTimeDto, EmergencyCareEpisodeFilterDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto, BedDto, ShockroomDto, EmergencyCareEpisodeDischargeSummaryDto, SectorDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
@@ -44,7 +43,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
 	constructor(
-		private router: Router,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private snackBarService: SnackBarService,
 		public readonly formBuilder: UntypedFormBuilder,
@@ -87,10 +85,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 
 	goToEpisode(episode: Episode, patient: { typeId: number, id: number }) {
 		this.guardiaRouterService.goToEpisode(episode.state.id, { id: patient.id, typeId: patient.typeId });
-	}
-
-	goToAdmisionAdministrativa(): void {
-		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
 	}
 
 	filter(): void {

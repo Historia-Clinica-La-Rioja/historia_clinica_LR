@@ -3,11 +3,6 @@
 
 @include mat-form-field-background-white;
 
-.new-episode-button {
-	width: 100%;
-	height: 36px;
-}
-
 div.spinner {
 	@include centered-spinner;
 }

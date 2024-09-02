@@ -147,11 +147,6 @@
 
         <div results fxLayout="column" fxLayoutGap="15px" fxFlexFill>
 
-            <div class="new-episode" fxLayoutAlign="end end">
-                <button mat-raised-button color="primary" (click)="goToAdmisionAdministrativa()" class="uppercase"
-                    translate="guardia.home.episodes.NEW_EPISODE"></button>
-            </div>
-
             <div class="spinner" *ngIf="loading else content">
                 <mat-spinner color="primary"></mat-spinner>
             </div>

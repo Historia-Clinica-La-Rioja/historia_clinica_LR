@@ -150,15 +150,14 @@
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",
 				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
-				"TITLE": "Episodios de guardia"
+				"TITLE": "Filtrar por"
 			},
 			"tabs": {
 				"PATIENTS": "Pacientes"
 			},
-			"TITLE": "Guardia de emergencia"
+			"TITLE": "Episodios de guardia"
 		},
 		"episode": {
-			"TITLE": "Episodio de guardia",
 			"EDIT_EPISODE": "Editar episodio",
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"administrative": {
