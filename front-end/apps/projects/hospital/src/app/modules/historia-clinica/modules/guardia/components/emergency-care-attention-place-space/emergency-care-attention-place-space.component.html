@@ -2,6 +2,10 @@
 	<p class="mat-body-strong">{{space.type}}</p>
 </header>
 
-<div *ngFor="let item of space.items">
-	<h3>BOTON</h3>
+<div class="buttons-availability-container">
+	<div *ngFor="let item of space.items">
+		<button mat-raised-button [ngClass]="{'available': item.available}">
+			{{item.description}}
+		</button>
+	</div>
 </div>
