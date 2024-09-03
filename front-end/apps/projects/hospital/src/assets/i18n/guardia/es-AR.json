@@ -127,10 +127,10 @@
 						"TEMPORAL": "Paciente temporal",
 						"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia",
 						"DETAILS": "Detalle",
-						"WAITING_MINUTES": "Hace {{waitingMinutes}} min",
-						"WAITING_HOURS": "Hace {{waitingHours}} hs",
-						"WAITING_MINUTES_CALL": "Último hace {{waitingMinutes}} min",
-						"WAITING_HOURS_CALL": "Último hace {{waitingHours}} hs"
+						"WAITING_MINUTES": "Hace {{waitingMinutes}} min.",
+						"WAITING_HOURS": "Hace {{waitingHours}} hs.",
+						"WAITING_MINUTES_CALL": "Último hace {{waitingMinutes}} min.",
+						"WAITING_HOURS_CALL": "Último hace {{waitingHours}} hs."
 					}
 				},
 				"filters": {
