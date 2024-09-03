@@ -114,6 +114,7 @@
 					<mat-label
 						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SUMMARY'"></mat-label>
 					<textarea matInput type="text" name="summary" formControlName="summary"></textarea>
+					<mat-error *ngIf="formReference.hasError('maxlength', 'summary')" translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}"></mat-error>
 				</mat-form-field>
 			</div>
 

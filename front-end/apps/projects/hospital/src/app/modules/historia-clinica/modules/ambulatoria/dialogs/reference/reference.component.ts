@@ -11,6 +11,7 @@ import { VALIDATIONS } from '@core/utils/form.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-reference',
@@ -32,6 +33,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	boxMessageInfo: BoxMessageInformation;
 
 	PRIORITY = PRIORITY;
+	readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -165,7 +167,7 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			careLine: [null, [Validators.required]],
 			clinicalSpecialties: [null, [Validators.required]],
 			institutionDestinationId: [null, [Validators.required]],
-			summary: [null],
+			summary: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			provinceOrigin: [null],
 			departmentOrigin: [null],
 			institutionOrigin: [null],
