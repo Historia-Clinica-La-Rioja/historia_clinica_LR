@@ -19,7 +19,6 @@ import SectionTitle from '../../components/SectionTitle';
 import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 import UnidadesJerarquicas from './UnidadesJerarquicas';
 import { Grid, Divider } from '@material-ui/core';
-import { ParameterizedFormSection } from './ParameterizedFormSection';
 import { MedicineTabs } from './MedicineTabs';
 import {Button} from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -103,37 +102,39 @@ const ShowSectors = () => {
 const InstitutionShow = props => {
     const { permissions } = usePermissions();
     const parameterizedFormFF = permissions?.featureFlags.some( ff => ff === 'HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
-    
+
     const [showButtons, setShowButtons] = useState(true);
     const [showSectors, setShowSectors] = useState(false);
     const [showHierarchicalUnit, setHierarchicalUnit] = useState(false);
-    const [showOtherSections, setOtherSections] = useState(true);
     const [showParameterizedForm, setShowParameterizedForm] = useState(false);
+    const [showPharmacosSection, setPharmacosSection] = useState(false);
 
     const toggleShowSectors = () => {
         setShowSectors(true);
         setShowButtons(false);
-        setOtherSections(false); 
     };
 
     const toggleShowHierarchicalUnit = () => {
         setHierarchicalUnit(true);
         setShowButtons(false);
-        setOtherSections(false);
     };
 
     const toggleShowParameterizedForm = () => {
         setShowParameterizedForm(true);
         setShowButtons(false);
-        setOtherSections(false);
+    };
+
+    const toggleShowPharmacosSection = () => {
+        setPharmacosSection(true);
+        setShowButtons(false);
     };
 
     const resetShowSections = () => {
-        setShowSectors(false); 
+        setShowSectors(false);
         setShowButtons(true);
         setHierarchicalUnit(false);
-        setOtherSections(true);
         setShowParameterizedForm(false);
+        setPharmacosSection(false);
     };
 
     const ActionButton = ({ onClick, label }) => (
@@ -145,7 +146,7 @@ const InstitutionShow = props => {
     const BackButton = () => {
         return (
             <Button color="primary" onClick={resetShowSections} variant='outlined' style={{marginTop : 10}}>
-                <ArrowBackIcon fontSize='inherit'/> &nbsp; Volver  
+                <ArrowBackIcon fontSize='inherit'/> &nbsp; Volver
             </Button>
         );
     }
@@ -176,28 +177,20 @@ const InstitutionShow = props => {
         );
     }
 
-    const ParameterizedFormsSection = (props) => {
-        return (
-            <>
-                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
-                <BackButton />
-            </>
-        );
-    }
-
     const PharmacosSection = () => {
         return (
             <>
                 <SectionTitle label="resources.institutions.fields.pharmacos" />
                 <MedicineTabs {...props}/>
+                <BackButton />
             </>
         );
     }
 
-    const OtherSections = (props) => {
+    const ParameterizedFormsSection = (props) => {
         return (
             <>
-                <PharmacosSection/>
+                <BackButton />
             </>
         );
     }
@@ -297,11 +290,12 @@ const InstitutionShow = props => {
                 {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
                 {showButtons && <ActionButton onClick={toggleShowHierarchicalUnit} label="Unidades jerárquicas" />}
                 {(parameterizedFormFF && showButtons) && <ActionButton onClick={toggleShowParameterizedForm} label="Formularios configurables" />}
-                {showSectors && <SectorsSection />}
+                {showButtons && <ActionButton onClick={toggleShowPharmacosSection} label="Fármacos" />}
+                {showSectors && <SectorsSection/>}
                 {showHierarchicalUnit && <HierarchicalUnitSection {...props} />}
                 {showParameterizedForm && <ParameterizedFormsSection {...props} />}
-                {showOtherSections && <OtherSections {...props} />}
-                
+                {showPharmacosSection && <PharmacosSection/>}
+
             </SimpleShowLayout>
         </Show>
     );
