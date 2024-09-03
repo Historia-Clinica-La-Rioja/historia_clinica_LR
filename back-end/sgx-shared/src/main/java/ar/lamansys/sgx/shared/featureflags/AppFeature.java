@@ -234,7 +234,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO,
 
 	@Label("Indica si se encuentra habilitada la dispensa de medicamentos dentro de las instituciones")
-	HABILITAR_DISPENSA
+	HABILITAR_DISPENSA,
+
+	@Label("Indica si los documentos de guardia podrán ser editados")
+	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA
 	;
 
 	public boolean isActive() {
