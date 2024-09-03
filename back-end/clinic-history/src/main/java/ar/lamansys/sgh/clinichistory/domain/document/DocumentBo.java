@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -114,6 +115,14 @@ public class DocumentBo implements IDocumentBo {
 
     private String documentStatusId;
 
+    @Override
+    public String getDocumentStatusId() {
+        if (Objects.isNull(documentStatusId)) {
+            return IDocumentBo.super.getDocumentStatusId();
+        }
+        return documentStatusId;
+
+    }
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)
