@@ -76,6 +76,7 @@ mat-card {
   position: relative;
   margin: 20px auto;
   right: 43%;
+  top: 11px;
 }
 
 .yellow-alert label {
@@ -86,19 +87,20 @@ mat-card {
   top: 0;
   left: 4px;
   background: linear-gradient(to bottom, #fff11c 0%, #fff11c 100%);
-  border-radius: 4px;
-  border: 1px solid rgb(48 53 57);
+  border-radius: 2px;
+  border: 1.3px solid rgba(159, 152, 152, 0.54);
 
 }
+
 
 .yellow-alert label:after {
   content: "";
   width: 6px;
   height: 3px;
   position: absolute;
-  top: 3px;
+  top: 2px;
   left: 2px;
-  border: 2px solid rgba(0, 0, 0, 0.968627451);
+  border: 2.5px solid rgba(0, 0, 0, 0.968627451);
   border-top: none;
   border-right: none;
   background: transparent;
@@ -141,11 +143,11 @@ input[type="radio"].yellow-alert-radio:checked::before {
   content: "";
   display: inline-block;
   width: 5px;
-  height: 5px;
+  height: 4px;
   background-color: black;
   border-radius: 50%;
   position: relative;
-  top: -2px;
+  top: -3px;
   left: 4.5px;
   transform: scale(0);
 
@@ -231,10 +233,9 @@ table {
   max-width: none;
 }
 
-.hermanos-vivos {
+.hermanos-name {
   position: relative;
-  right: 26%;
-  background-color: red($color: #e0af0f);
+  right: 23%;
 }
 
 .title-section4 {

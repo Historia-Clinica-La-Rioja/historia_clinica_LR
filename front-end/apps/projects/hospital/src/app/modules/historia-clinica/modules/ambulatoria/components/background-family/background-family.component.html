@@ -48,7 +48,7 @@
                       </td>
                       <td class="yellow-alert & titles-convivencia3">
                         <input type="checkbox" id="yellow-alert-{{member.key}}" [(ngModel)]="convivenciaMembers[member.key].C" name="{{member.key}}C" value="C" [disabled]="isCheckboxDisabled(member.key, 'A')">
-                        <label for="yellow-alert-{{member.key}}"></label>
+                        <label for="yellow-alert-{{member.key}}" [ngStyle]="{'background': getCheckboxCBackground(member.key)}"></label>
                       </td>
                     </tr>
                   </tbody>
@@ -70,12 +70,11 @@
                     <tr *ngFor="let lugar of lugares; let i = index" [attr.id]="lugar.itemId">
                       <td>{{ lugar.label }}</td>
                       <td class="place">
-                        <input [(ngModel)]="hogarLugar[lugar.key][lugar.noKey]" type="checkbox" [name]="'no.' + lugar.key" [value]="lugar.noKey">
-                      </td>
+                        <input [(ngModel)]="hogarLugar[lugar.key][lugar.noKey]" type="checkbox" [name]="'no.' + lugar.key"  [value]="lugar.noKey" (change)="onNoCheckboxChange(lugar.key)"></td>
                       <td class="yellow-alert && yellow-alertEDIT">
-                        <input [(ngModel)]="hogarLugar[lugar.key][lugar.siKey]" [id]="'yellow-alert' + (i + 7)" type="checkbox" [name]="'si.' + lugar.key" [value]="lugar.siKey">
-                        <label [for]="'yellow-alert' + (i + 7)"></label>
-                      </td>
+                        <input [(ngModel)]="hogarLugar[lugar.key][lugar.siKey]" [id]="'yellow-alert' + (i + 7)" type="checkbox" [name]="'si.' + lugar.key" [value]="lugar.siKey"  [disabled]="isSiCheckboxDisabled(lugar.key)" >                        
+                        <label [for]="'yellow-alert' + (i + 7)" [ngStyle]="getCheckboxSiStyles(lugar.key)"></label>                     
+                       </td>
                     </tr>
                   </tbody>
                 </table>
@@ -164,7 +163,7 @@
                   <tr class="section4-b section4">
                     <td class="chart-title">Horas fuera de la casa</td>
                     <td>
-                      <input class="section4-b chart" type="number" [(ngModel)]="horasFueraDeCasa.horasMadre.H1"  name="HorasMadre">
+                      <input class="section4-b chart" type="number" [(ngModel)]="horasFueraDeCasa.horasMadre.H1"  name="HorasMadre" min="0">
                     </td>
                   </tr>
                 </table>
@@ -225,7 +224,7 @@
                   <tr class="section4-b section4">
                     <td class="chart-title">Horas fuera de la casa</td>
                     <td>
-                      <input class="section4-b chart" type="number" id="57" [(ngModel)]="horasFueraDeCasa.horasPadre.H2" name="HorasPadre">
+                      <input class="section4-b chart" type="number" id="57" [(ngModel)]="horasFueraDeCasa.horasPadre.H2" name="HorasPadre" min="0">
                     </td>
                   </tr>
                 </table>
@@ -236,23 +235,17 @@
   
                 <!-- HERMANOS EN VIDA  -->
                 <table>
-                  <div class="div1">
-                    <tr class="section4-b && section4" [(ngModel)]="hermanosVivos" id="46">
-                      <td class="hermanos-vivos">Vivos</td>
-                      <td><input min="0" style="max-width: 18%;" class="section4-b" type="number" name="vivo"
-                          [(ngModel)]="hermanosEnVida.vivo" id="47"></td>
-                    </tr>
-  
-                  </div>
-                  <div class="div1">
-  
-                    <tr class="section4-b && section4" [(ngModel)]="hermanosMuertos">
-                      <td class="hermanos-vivos"> Muertos</td>
-                      <td><input min="0" style="max-width: 18.5%;" class="section4-b && color-hermanos" type="number" name="desvivido" [(ngModel)]="hermanosEnVida.ido.desvivido" id="48"></td>
-                    </tr>
-                    <!-- [(ngModel)]="hermanosEnVida.muertos" -->
-                  </div>
-                </table>
+                  <tr class="section4-b && section4" [(ngModel)]="hermanosVivos" id="46">
+                   <td class="hermanos-name">Vivos</td>
+                   <td><input min="0" style="max-width: 16.2%; position: relative; left: 6px;" class="section4-b" type="number" name="vivo"
+                       [(ngModel)]="hermanosEnVida.vivo" id="47"></td>
+                 </tr>
+
+                   <tr class="section4-b && section4" [(ngModel)]="hermanosMuertos">
+                   <td class="hermanos-name"> Muertos</td>
+                   <td><input min="0" style="max-width: 18%;position: relative; left: 6px;" class="section4-b && color-hermanos" type="number" name="desvivido" [(ngModel)]="hermanosEnVida.ido.desvivido" id="48"></td>
+                 </tr>
+              </table>
   
                 <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486="" aria-orientation="horizontal" class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal" style="margin-bottom: 15px; border-top-style: none;"></mat-divider>
   
