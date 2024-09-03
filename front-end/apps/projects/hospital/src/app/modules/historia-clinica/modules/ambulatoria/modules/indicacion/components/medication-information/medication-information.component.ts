@@ -134,6 +134,8 @@ export class MedicationInformationComponent implements OnInit {
 		editPrescriptionItem.isDailyInterval = prescriptionItem.isDailyInterval;
 		editPrescriptionItem.studyCategory = prescriptionItem.studyCategory;
 		editPrescriptionItem.observations = prescriptionItem.observations;
+		editPrescriptionItem.commercialMedicationPrescription = prescriptionItem.commercialMedicationPrescription;
+		editPrescriptionItem.suggestedCommercialMedication = prescriptionItem.suggestedCommercialMedication;
 	}
 
 	private editPharmacoDetail(prescriptionItem: NewPrescriptionItem): void {
