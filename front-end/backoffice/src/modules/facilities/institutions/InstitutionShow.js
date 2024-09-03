@@ -108,6 +108,7 @@ const InstitutionShow = props => {
     const [showSectors, setShowSectors] = useState(false);
     const [showHierarchicalUnit, setHierarchicalUnit] = useState(false);
     const [showOtherSections, setOtherSections] = useState(true);
+    const [showParameterizedForm, setShowParameterizedForm] = useState(false);
 
     const toggleShowSectors = () => {
         setShowSectors(true);
@@ -121,11 +122,18 @@ const InstitutionShow = props => {
         setOtherSections(false);
     };
 
+    const toggleShowParameterizedForm = () => {
+        setShowParameterizedForm(true);
+        setShowButtons(false);
+        setOtherSections(false);
+    };
+
     const resetShowSections = () => {
         setShowSectors(false); 
         setShowButtons(true);
         setHierarchicalUnit(false);
         setOtherSections(true);
+        setShowParameterizedForm(false);
     };
 
     const ActionButton = ({ onClick, label }) => (
@@ -163,6 +171,15 @@ const InstitutionShow = props => {
                 <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
                 <CreateHierarchicalUnit {...props} />
                 <HierarchicalUnitTabs {...props} />
+                <BackButton />
+            </>
+        );
+    }
+
+    const ParameterizedFormsSection = (props) => {
+        return (
+            <>
+                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
                 <BackButton />
             </>
         );
@@ -280,8 +297,10 @@ const InstitutionShow = props => {
 
                 {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
                 {showButtons && <ActionButton onClick={toggleShowHierarchicalUnit} label="Unidades jerárquicas" />}
+                {(parameterizedFormFF && showButtons) && <ActionButton onClick={toggleShowParameterizedForm} label="Formularios configurables" />}
                 {showSectors && <SectorsSection />}
                 {showHierarchicalUnit && <HierarchicalUnitSection {...props} />}
+                {showParameterizedForm && <ParameterizedFormsSection {...props} />}
                 {showOtherSections && <OtherSections {...props} />}
                 
             </SimpleShowLayout>
