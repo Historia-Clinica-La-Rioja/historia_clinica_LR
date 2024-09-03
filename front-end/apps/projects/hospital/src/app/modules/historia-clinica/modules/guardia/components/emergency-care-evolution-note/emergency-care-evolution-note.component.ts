@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { EmergencyCareEvolutionNoteDto } from '@api-rest/api-model';
+import { AppFeature, EmergencyCareEvolutionNoteDto } from '@api-rest/api-model';
 import { EvolutionNoteAsViewFormat, EvolutionNoteSummaryService } from '../../services/evolution-note-summary.service';
 import { NotaDeEvolucionDockPopupComponent, NotaDeEvolucionData } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-emergency-care-evolution-note',
@@ -38,6 +39,7 @@ export class EmergencyCareEvolutionNoteComponent {
     private documentName = '';
     documentSummary$: Observable<HeaderDescription>;
     isPopUpOpened = false;
+	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA = false;
 
     constructor(
 		private readonly evolutionNoteSummaryService: EvolutionNoteSummaryService,
@@ -48,8 +50,10 @@ export class EmergencyCareEvolutionNoteComponent {
         private readonly translateService: TranslateService,
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
+		private readonly featureFlag: FeatureFlagService
 	) { 
         this.documentName = this.translateService.instant('guardia.documents-summary.document-name.EVOLUTION_NOTE');
+		this.setFeatureFlags();
     }
 
     private fetchSummaryInfo(){
@@ -60,7 +64,7 @@ export class EmergencyCareEvolutionNoteComponent {
             let medicalDischarge$ = this.emergencyCareEpisodeAdministrativeDischargeService.hasAdministrativeDischarge(this._episodeId);
 
             this.documentSummary$ = forkJoin([header$, medicalDischarge$]).pipe(map(([headerData, hasMedicalDischarge]) => {
-                return this.documentSummaryMapperService.mapEmergencyCareToHeaderDescription(headerData, this.documentName, !hasMedicalDischarge, false, true);
+                return this.documentSummaryMapperService.mapEmergencyCareToHeaderDescription(headerData, this.documentName, this.canEditEmergencyCareEvolutionNote(hasMedicalDischarge), false, true);
             }));
         }
     }
@@ -74,6 +78,14 @@ export class EmergencyCareEvolutionNoteComponent {
 			this.openEvolutionNote(evolutionNoteData);
 			this.resetActiveDocument.next();
 		});
+	}
+
+	private canEditEmergencyCareEvolutionNote = (hasMedicalDischarge: boolean): boolean => {
+		return !hasMedicalDischarge && this.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA;
+	}
+
+	private setFeatureFlags = () => {
+		this.featureFlag.isActive(AppFeature.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA).subscribe((isActive: boolean) => this.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA = isActive);
 	}
 
 	private openEvolutionNote(evolutionNoteData: EmergencyCareEvolutionNoteDto) {
