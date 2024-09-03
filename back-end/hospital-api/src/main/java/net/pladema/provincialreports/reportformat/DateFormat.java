@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Date;
@@ -147,12 +148,20 @@ public class DateFormat {
 			DateTimeFormatter.ofPattern("d MMM yyyy").withLocale(LOCALE_ARGENTINA),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.ss"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSS"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSS"),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssXXX"),
+			new DateTimeFormatterBuilder()
+					.appendPattern("yyyy-MM-dd HH:mm:ss")
+					.optionalStart()
+					.appendPattern("XXX")
+					.optionalEnd()
+					.toFormatter(),
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSXXX"),
 			DateTimeFormatter.ofPattern("yyyy/MM/dd"),
 			DateTimeFormatter.ofPattern("yyyyMMdd")
