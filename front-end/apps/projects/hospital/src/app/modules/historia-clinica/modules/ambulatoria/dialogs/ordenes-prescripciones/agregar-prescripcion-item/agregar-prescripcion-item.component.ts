@@ -129,9 +129,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(value => {
 			this.snomedConcept = undefined
-			if (value) {
-				this.resetCommercialMedication();
-			}
+			this.resetCommercialMedication();
+
 		});
 	}
 
@@ -316,20 +315,26 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	setConcept(selectedConcept: SnomedDto, commercialPt?: string): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.prescriptionItemForm.controls.snomed.setValue(pt);
-		this.prescriptionItemForm.controls.snomed.disable();
-		this.setPresentationUnits(selectedConcept?.sctid);
-		this.setSuggestedCommercialMedicationOptions(commercialPt);
+		if (selectedConcept) {
+			this.snomedConcept = selectedConcept;
+			const pt = selectedConcept ? selectedConcept.pt : '';
+			this.prescriptionItemForm.controls.snomed.setValue(pt);
+			this.prescriptionItemForm.controls.snomed.disable();
+			this.setPresentationUnits(selectedConcept?.sctid);
+			this.setSuggestedCommercialMedicationOptions(commercialPt);
 
-		if (this.isHabilitarRecetaDigitalFFActive) {
-			if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
-				this.enableUnitDoseAndDayDose();
-				this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => pt.includes(value))[0]);
-			} else {
-				this.disableUnitDoseAndDayDose();
+			if (this.isHabilitarRecetaDigitalFFActive) {
+				if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
+					this.enableUnitDoseAndDayDose();
+					this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => pt.includes(value))[0]);
+				} else {
+					this.disableUnitDoseAndDayDose();
+				}
 			}
+		}
+		else {
+			this.snomedConcept = undefined
+			this.resetCommercialMedication();
 		}
 	}
 
@@ -338,12 +343,12 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	setSuggestedCommercialMedication(snomed: SnomedDto): void {
-		if (snomed){
-			this.prescriptionItemForm.controls.suggestedCommercialMedication.setValue(snomed);
-			this.setPresentationUnits(snomed.sctid);
-		}
-		else
-			this.setPresentationUnits(this.snomedConcept?.sctid);
+		const conceptSctid = snomed ? snomed.sctid : this.snomedConcept?.sctid;
+		this.setPresentationUnits(conceptSctid);
+
+		this.prescriptionItemForm.controls.suggestedCommercialMedication.setValue(snomed);
+		this.initialSuggestCommercialMedication = this.suggestedCommercialMedicationOptions.find(option => option.compareValue === snomed?.pt);
+
 	}
 
 	setSuggestedCommercialMedicationOptions(commercialPt?: string): void {
@@ -355,13 +360,13 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 					viewValue: snomed.pt
 				}));
 
-				const checkboxValue = (this.snomedConcept && this.suggestedCommercialMedicationOptions.find(option => option.compareValue === this.initialSuggestCommercialMedication?.compareValue))
-				this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(checkboxValue);
-
 				if (commercialPt) {
 					this.initialSuggestCommercialMedication = this.suggestedCommercialMedicationOptions.find(option => option.compareValue === commercialPt);
 					this.setPresentationUnits(this.initialSuggestCommercialMedication?.value.sctid);
 				}
+
+				const checkboxValue = !!(this.snomedConcept && this.suggestedCommercialMedicationOptions.find(option => option.compareValue === this.initialSuggestCommercialMedication?.compareValue))
+				this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(checkboxValue);
 			});
 		}
 	}
@@ -377,8 +382,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			})
 	}
 
-	resetSuggestedCommercialMedication(): void {
-		this.initialSuggestCommercialMedication = undefined;
+	changeCheckboxValue(event): void {
+		if (!event.checked)
+			this.initialSuggestCommercialMedication = undefined;
 		this.setSuggestedCommercialMedication(undefined);
 	}
 
