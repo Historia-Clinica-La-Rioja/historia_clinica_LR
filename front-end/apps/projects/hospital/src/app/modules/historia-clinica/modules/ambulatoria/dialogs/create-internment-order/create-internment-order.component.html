@@ -118,7 +118,6 @@
 						</div>
 						<div fxFlex="50%">
 							<app-titled-content-card [title]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ADDED_STUDIES'">
-								<br>
 								<div *ngIf="(orderStudiesService.data.length > 0); else withoutStudies">
 
 									<div *ngFor="let study of orderStudiesService.data; let i = index">
@@ -150,7 +149,7 @@
 				</mat-dialog-content>
 
 				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
-					<button mat-raised-button mat-button color="primary" matStepperPrevious>
+					<button mat-stroked-button color="primary" matStepperPrevious>
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' |
 						translate}}</button>
 
@@ -213,7 +212,7 @@
 
 				</mat-dialog-content>
 				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
-					<button id="back" mat-raised-button mat-button color="primary" matStepperPrevious>
+					<button id="back" mat-stroked-button color="primary" matStepperPrevious>
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' | translate}}
 					</button>
 

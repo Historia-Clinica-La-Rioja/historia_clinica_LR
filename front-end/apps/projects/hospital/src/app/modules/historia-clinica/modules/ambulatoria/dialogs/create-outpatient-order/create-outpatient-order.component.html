@@ -106,7 +106,7 @@
 							<app-template-concept-typeahead-search *ngIf="!selectedStudy else studySelectedField"
 								placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.SEARCH_STUDY' | translate}}"
 								[debounceTime]="0" [ecl]="this.ecl" (optionSelected)="handleStudySelected($event)" required="form.controls.studySelection.touched && orderStudiesService.data.length === 0">
-							</app-template-concept-typeahead-search>				
+							</app-template-concept-typeahead-search>
 
 							<ng-template #studySelectedField>
 
@@ -126,7 +126,6 @@
 						<div fxFlex="50%">
 							<app-titled-content-card
 								[title]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ADDED_STUDIES'">
-								<br>
 								<div *ngIf="(orderStudiesService.data.length > 0); else withoutStudies">
 
 									<div *ngFor="let study of orderStudiesService.data; let i = index">
@@ -153,14 +152,14 @@
 							</app-titled-content-card>
 							<mat-error class="error"
 							*ngIf="form.controls.studySelection.touched && orderStudiesService.data.length === 0"
-							[translate]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ERROR_STUDIES'"></mat-error>	
+							[translate]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ERROR_STUDIES'"></mat-error>
 						</div>
 
 					</div>
 				</mat-dialog-content>
 
 				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
-					<button mat-raised-button mat-button color="primary" matStepperPrevious>
+					<button mat-stroked-button color="primary" matStepperPrevious>
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' |
 						translate}}</button>
 
@@ -224,7 +223,7 @@
 
 				</mat-dialog-content>
 				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
-					<button id="back" mat-raised-button mat-button color="primary" matStepperPrevious>
+					<button id="back" mat-stroked-button color="primary" matStepperPrevious>
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' | translate}}
 					</button>
 

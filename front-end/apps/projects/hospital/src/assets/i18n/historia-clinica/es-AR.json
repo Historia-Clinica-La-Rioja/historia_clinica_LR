@@ -68,7 +68,7 @@
 		},
 		"template-concept-search": {
 			"TEMPLATE_OPTION_GROUP": "Conjunto de estudios",
-			"CONCEPT_OPTION_GROUP": "Conceptos",
+			"ALL_STUDIES": "Todos los estudios",
 			"MOST_FREQUENT_STUDIES": "Estudios más frecuentes...",
 			"INCLUDES_STUDIES": "Incluye {{count}} estudios"
 		},

@@ -31,7 +31,7 @@
 				</mat-optgroup>
 
 				<mat-optgroup *ngIf="(conceptOptions?.length)"
-					label="{{ 'historia-clinica.template-concept-search.CONCEPT_OPTION_GROUP' | translate }}">
+					label="{{ 'historia-clinica.template-concept-search.ALL_STUDIES' | translate }}">
 					<mat-option *ngFor="let option of conceptOptions" [value]="option"
 						[matTooltip]="option.data.pt.term" matTooltipClass="tooltip">
 						{{option.data.pt.term | capitalizeFirstLetter}}
