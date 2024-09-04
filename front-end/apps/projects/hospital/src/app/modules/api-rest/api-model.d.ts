@@ -6192,6 +6192,7 @@ export const enum ERole {
     API_ANEXO = "API_ANEXO",
     API_REPORTES = "API_REPORTES",
     INDEXADOR = "INDEXADOR",
+    GESTOR_DE_ACCESO_INSTITUCIONAL = "GESTOR_DE_ACCESO_INSTITUCIONAL",
 }
 
 export const enum ESchoolLevel {
