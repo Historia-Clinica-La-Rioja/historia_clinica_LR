@@ -1,5 +1,5 @@
 <mat-card id="card">
-	<div id="content-card" *ngFor="let patient of pageSlice;last as isLast">
+	<div id="content-card" *ngFor="let patient of patientsToShow;last as isLast">
 		<app-card id="patient" [cardContent]="patient.cardModel" [viewCardToAudit]="viewCardToAudit">
 			<div fxLayout="row" fxLayout.lt-sm="column">
 				<div id="content-patient" fxLayoutAlign="space-around start" fxFlex="100%">
@@ -55,10 +55,10 @@
 		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 	</div>
 
-	<mat-divider [hidden]="patientContent?.length"></mat-divider>
+	<mat-divider [hidden]="patientsToShow?.length"></mat-divider>
 
-	<mat-paginator *ngIf="(patientContent?.length !== 0)" [length]="numberOfPatients"
-		[pageSizeOptions]="pageSizeOptions" [pageSize]="initialSize" (page)="onPageChange($event)" showFirstLastButtons>
+	<mat-paginator *ngIf="(patientsToShow?.length !== 0)" [length]="patientResultsLength"
+		[pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)" showFirstLastButtons>
 	</mat-paginator>
 
 </mat-card>

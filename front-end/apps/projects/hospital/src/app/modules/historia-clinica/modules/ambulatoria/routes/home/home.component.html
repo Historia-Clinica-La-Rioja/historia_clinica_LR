@@ -140,8 +140,8 @@
 		</mat-card>
 
 		<div>
-			<app-card-patient [patientData]="patientData" [genderTableView]="genderTableView"
-				*ngIf="patientData?.length > 0 else noInfo">
+			<app-card-patient *ngIf="patientData?.length > 0 else noInfo" [patientResultsLength]="patientResultsLength"
+				[patientData]="patientData" [genderTableView]="genderTableView" (page)="onPageChange($event)">
 			</app-card-patient>
 		</div>
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
+import { GenderDto, IdentificationTypeDto, PageDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
 import { newDate, } from '@core/utils/moment.utils';
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
 	minDate = MIN_DATE;
 	requiringAtLeastOneMoreValue: boolean;
 	public tableModel: TableModel<PatientSearchDto>;
-
+	page = { pageIndex: 0, pageSize: 5 };
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -115,16 +115,24 @@ export class HomeComponent implements OnInit {
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
 			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI, '');
-			const personalInformationFilter = this.getPersonalInformationFilters();
-			this.patientService.searchPatientOptionalFilters(personalInformationFilter)
-				.subscribe((data: LimitedPatientSearchDto) => {
-					this.patientData = data.patientList;
-					this.patientResultsLength = data.actualPatientSearchSize;
-					setTimeout(() => {
-						this.scrollToSearchResults();
-					}, 500);
+			const personalInformationReq: PersonInformationRequest =this.getPersonalInformationFilters()
+
+
+			this.patientService.searchPatientOptionalFilters(personalInformationReq, { pageNumber: this.page.pageIndex, pageSize: this.page.pageSize })
+				.subscribe((data: PageDto<PatientSearchDto>) => {
+					this.patientData = data.content;
+					this.patientResultsLength = data.totalElementsAmount;
+
+						setTimeout(() => {
+							this.scrollToSearchResults();
+						}, 500);
 				});
 		}
+	}
+
+	onPageChange(event) {
+		this.page = event;
+		this.save();
 	}
 
 	clear(control: AbstractControl): void {
