@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +29,6 @@ import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.FetchConsultationsByDateController;
-import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.mapper.FetchConsultationsByDateMapper;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.service.ConsultationsByDatePublicApiPermissions;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;

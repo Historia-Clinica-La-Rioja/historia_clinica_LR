@@ -237,7 +237,8 @@ public enum AppFeature implements Feature {
 	HABILITAR_DISPENSA,
 
 	@Label("Indica si los documentos de guardia podrán ser editados")
-	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA
+	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA,
+
 	;
 
 	public boolean isActive() {

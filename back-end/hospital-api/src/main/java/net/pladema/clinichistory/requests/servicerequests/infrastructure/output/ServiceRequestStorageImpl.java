@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
@@ -20,7 +19,6 @@ import net.pladema.clinichistory.requests.servicerequests.repository.entity.Serv
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.transcribed.application.port.TranscribedServiceRequestStorage;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

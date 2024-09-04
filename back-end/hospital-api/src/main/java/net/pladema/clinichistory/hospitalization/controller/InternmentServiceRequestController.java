@@ -11,7 +11,6 @@ import net.pladema.clinichistory.hospitalization.service.servicerequest.CreateIn
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
-import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 import net.pladema.events.EHospitalApiTopicDto;
 
 import net.pladema.events.HospitalApiPublisher;

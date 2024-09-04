@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.medicine.domain.InstitutionMedicineFinancingStatusBo;
-import net.pladema.medicine.domain.InstitutionMedicineGroupBo;
 import net.pladema.medicine.infrastructure.output.repository.InstitutionMedicineFinancingStatusRepository;
 
 import net.pladema.medicine.infrastructure.output.repository.MedicineFinancingStatusRepository;

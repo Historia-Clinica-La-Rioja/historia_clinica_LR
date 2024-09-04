@@ -1,14 +1,11 @@
 package ar.lamansys.sgh.publicapi.documents.annex.infrastructure.output;
 
-import java.util.Optional;
-
 import ar.lamansys.sgh.publicapi.ApiConsumerCondition;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.documents.annex.application.AnnexReportByEncounterPublicApiPermissionsPort;
-import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.session.application.port.UserSessionStorage;
 

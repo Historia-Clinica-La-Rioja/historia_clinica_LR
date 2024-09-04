@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import java.time.LocalDateTime;
 import java.util.List;

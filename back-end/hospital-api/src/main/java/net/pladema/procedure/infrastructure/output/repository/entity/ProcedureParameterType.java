@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.procedure.domain.ProcedureParameterBo;
-import net.pladema.procedure.domain.ProcedureParameterTypeBo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

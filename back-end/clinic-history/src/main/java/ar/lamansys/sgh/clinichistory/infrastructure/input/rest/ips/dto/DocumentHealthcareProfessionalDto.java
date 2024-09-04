@@ -2,7 +2,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthcareProfessionalDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.EProfessionType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

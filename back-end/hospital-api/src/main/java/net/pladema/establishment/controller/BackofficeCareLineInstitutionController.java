@@ -2,7 +2,6 @@ package net.pladema.establishment.controller;
 
 import javax.validation.Valid;
 
-import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 

@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

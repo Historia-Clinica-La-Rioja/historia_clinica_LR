@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
-import org.apache.poi.util.StringUtil;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

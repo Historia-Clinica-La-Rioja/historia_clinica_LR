@@ -3,8 +3,6 @@ package net.pladema.address.controller;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;

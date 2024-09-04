@@ -1,7 +1,5 @@
 package net.pladema.hsi.addons.billing.infrastructure.output;
 
-import java.util.Collections;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 

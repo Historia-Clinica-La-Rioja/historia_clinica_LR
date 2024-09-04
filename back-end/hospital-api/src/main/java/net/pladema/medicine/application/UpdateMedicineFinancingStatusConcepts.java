@@ -9,7 +9,6 @@ import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
-import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;

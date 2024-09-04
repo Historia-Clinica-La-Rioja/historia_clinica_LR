@@ -1,6 +1,5 @@
 package net.pladema.establishment.controller;
 
-import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 

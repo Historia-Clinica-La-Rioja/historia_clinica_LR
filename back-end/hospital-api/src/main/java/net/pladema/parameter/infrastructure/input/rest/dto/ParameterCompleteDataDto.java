@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.parameter.domain.ParameterTextOptionBo;
-import net.pladema.parameter.domain.ParameterUnitOfMeasureBo;
 import net.pladema.parameter.domain.enums.EParameterType;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 

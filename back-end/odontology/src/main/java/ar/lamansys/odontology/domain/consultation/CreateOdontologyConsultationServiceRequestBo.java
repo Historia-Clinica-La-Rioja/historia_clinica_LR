@@ -1,12 +1,7 @@
 package ar.lamansys.odontology.domain.consultation;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import lombok.AllArgsConstructor;

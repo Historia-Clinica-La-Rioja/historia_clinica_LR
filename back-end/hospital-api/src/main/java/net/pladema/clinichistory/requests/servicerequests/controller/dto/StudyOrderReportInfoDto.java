@@ -11,9 +11,8 @@ import lombok.ToString;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 
 import javax.annotation.Nullable;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Setter

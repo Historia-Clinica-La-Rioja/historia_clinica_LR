@@ -1,12 +1,9 @@
 package net.pladema.procedure.domain.fullsummary;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import lombok.Builder;
 import lombok.Getter;
-import net.pladema.procedure.domain.ProcedureParameterTypeBo;
 
 @Builder
 @Getter

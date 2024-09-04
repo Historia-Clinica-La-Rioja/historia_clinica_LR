@@ -8,7 +8,6 @@ import net.pladema.sgx.backoffice.validation.BackofficeEntityValidator;
 
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

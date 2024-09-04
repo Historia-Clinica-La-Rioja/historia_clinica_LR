@@ -3,9 +3,7 @@ package net.pladema.establishment.controller.constraints.validator.permissions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import net.pladema.establishment.repository.CareLineInstitutionRepository;

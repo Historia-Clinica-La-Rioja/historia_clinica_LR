@@ -8,16 +8,11 @@ import net.pladema.medicine.infrastructure.input.rest.dto.MedicineFinancingStatu
 import net.pladema.medicine.domain.MedicineFinancingStatusBo;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.text.Normalizer;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

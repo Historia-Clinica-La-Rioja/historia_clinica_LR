@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.HealthCareProfessionalGroupMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.HealthcareProfessionalGroup;
-import net.pladema.person.service.PersonService;
 import net.pladema.staff.application.FetchProfessionalsByIds;
 import net.pladema.staff.application.fetchprofessionalbyid.FetchProfessionalById;
 import net.pladema.staff.application.fetchprofessionalbyuser.FetchProfessionalByUser;

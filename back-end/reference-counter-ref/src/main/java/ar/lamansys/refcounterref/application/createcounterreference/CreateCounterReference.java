@@ -18,7 +18,7 @@ import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Ref
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hl7.fhir.r4.model.Count;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

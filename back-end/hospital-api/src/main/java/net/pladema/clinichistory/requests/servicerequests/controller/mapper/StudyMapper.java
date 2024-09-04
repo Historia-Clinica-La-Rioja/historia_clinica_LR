@@ -12,7 +12,6 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
 import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportSummaryDto;
-import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
 import org.mapstruct.IterableMapping;

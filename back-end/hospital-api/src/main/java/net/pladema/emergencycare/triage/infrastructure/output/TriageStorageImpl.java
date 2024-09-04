@@ -2,7 +2,6 @@ package net.pladema.emergencycare.triage.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
 import net.pladema.emergencycare.triage.application.ports.TriageStorage;
 import net.pladema.emergencycare.triage.domain.TriageBo;
 
@@ -10,12 +9,7 @@ import net.pladema.emergencycare.triage.infrastructure.output.repository.TriageR
 
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.html.Option;
 
 import java.util.Optional;
 

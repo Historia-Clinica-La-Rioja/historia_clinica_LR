@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 
-import org.springframework.transaction.annotation.Transactional;
-
 
 public interface SharedCreateConsultationServiceRequest {
 

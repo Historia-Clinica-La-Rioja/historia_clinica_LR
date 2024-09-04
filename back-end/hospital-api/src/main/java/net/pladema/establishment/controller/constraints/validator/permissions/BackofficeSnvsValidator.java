@@ -8,7 +8,7 @@ import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.snvs.infrastructure.output.repository.report.SnvsReport;
 import net.pladema.snvs.infrastructure.output.repository.report.SnvsReportRepository;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
-import org.springframework.data.domain.Example;
+
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

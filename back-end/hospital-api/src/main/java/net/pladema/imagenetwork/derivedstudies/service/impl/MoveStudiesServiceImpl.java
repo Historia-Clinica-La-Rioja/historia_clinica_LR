@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import lombok.AllArgsConstructor;
 
 
 import org.springframework.stereotype.Service;

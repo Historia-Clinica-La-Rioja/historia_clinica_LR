@@ -2,10 +2,7 @@ package net.pladema.establishment.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.establishment.repository.entity.InstitutionalParameterizedForm;
-import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedForm;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.service.surgicalreport.CreateSurgicalReport;
 import net.pladema.staff.application.GetAllProfessionalsAndTechnicians;
 import net.pladema.staff.application.fetchprofessionalsbyfilter.FetchProfessionalsByFilter;
 import net.pladema.staff.application.getallprofessioinalsandtechniciansbyinstitution.GetAllProfessionalsAndTechniciansByInstitution;

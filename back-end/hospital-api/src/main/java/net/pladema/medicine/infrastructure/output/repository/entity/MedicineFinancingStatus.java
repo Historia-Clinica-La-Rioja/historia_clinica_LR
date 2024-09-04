@@ -15,8 +15,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString

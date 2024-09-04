@@ -7,13 +7,10 @@ import net.pladema.establishment.controller.dto.InstitutionalGroupRuleDto;
 import net.pladema.establishment.repository.InstitutionalGroupInstitutionRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
 import net.pladema.establishment.repository.RuleRepository;
-import net.pladema.establishment.repository.domain.InstitutionalGroupInstitutionVo;
 import net.pladema.establishment.repository.domain.InstitutionalGroupRuleVo;
 import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
 import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
-
-import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;

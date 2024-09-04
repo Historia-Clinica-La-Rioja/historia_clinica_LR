@@ -10,7 +10,6 @@ import net.pladema.establishment.repository.InstitutionalGroupRepository;
 import net.pladema.establishment.repository.InstitutionalGroupRuleRepository;
 import net.pladema.establishment.repository.RuleRepository;
 import net.pladema.establishment.repository.entity.InstitutionalGroup;
-import net.pladema.establishment.repository.entity.InstitutionalGroupInstitution;
 import net.pladema.establishment.repository.entity.InstitutionalGroupRule;
 import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;

@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

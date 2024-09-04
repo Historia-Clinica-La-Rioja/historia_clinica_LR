@@ -2,8 +2,6 @@ package net.pladema.reports.service.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import net.pladema.staff.domain.LicenseNumberBo;
 

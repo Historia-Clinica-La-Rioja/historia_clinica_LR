@@ -3,7 +3,6 @@ package net.pladema.medicalconsultation.appointment.controller.mapper;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentOrderDetailImageBO;
 import net.pladema.staff.controller.dto.ProfessionalDto;

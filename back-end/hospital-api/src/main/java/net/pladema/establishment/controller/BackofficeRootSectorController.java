@@ -1,13 +1,9 @@
 package net.pladema.establishment.controller;
 
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeRootSectorValidator;
-import net.pladema.establishment.repository.RootSectorRepository;
-import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.RootSector;
-import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
-import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

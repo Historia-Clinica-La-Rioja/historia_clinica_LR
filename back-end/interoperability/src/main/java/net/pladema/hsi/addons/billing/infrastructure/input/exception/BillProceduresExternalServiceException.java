@@ -2,7 +2,6 @@ package net.pladema.hsi.addons.billing.infrastructure.input.exception;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.experimental.Delegate;
 import net.pladema.hsi.addons.billing.application.BillProceduresException;
 
 

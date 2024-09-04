@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.parameterizedform.application.port.output.ParameterizedFormStorage;
 
 import net.pladema.parameterizedform.infrastructure.input.rest.dto.ParameterizedFormDto;
-import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedForm;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

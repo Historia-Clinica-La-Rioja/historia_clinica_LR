@@ -5,18 +5,14 @@ import net.pladema.medicine.application.port.MedicineFinancingStatusSearchStorag
 import net.pladema.medicine.domain.InstitutionMedicineFinancingStatusBo;
 import net.pladema.medicine.domain.MedicineFinancingStatusFilterBo;
 import net.pladema.medicine.infrastructure.input.rest.dto.InstitutionMedicineFinancingStatusDto;
-import net.pladema.medicine.infrastructure.input.rest.dto.MedicineFinancingStatusDto;
 import net.pladema.medicine.infrastructure.output.repository.InstitutionMedicineFinancingStatusRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

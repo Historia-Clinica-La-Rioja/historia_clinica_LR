@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
-
 import org.apache.logging.log4j.util.Strings;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;

@@ -4,21 +4,15 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.repository.HierarchicalUnitRelationshipRepository;
 import net.pladema.establishment.repository.HierarchicalUnitRepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
-import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 
 import net.pladema.sgx.exceptions.BackofficeValidationException;
-import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static net.pladema.establishment.repository.entity.HierarchicalUnitType.SERVICIO;
 

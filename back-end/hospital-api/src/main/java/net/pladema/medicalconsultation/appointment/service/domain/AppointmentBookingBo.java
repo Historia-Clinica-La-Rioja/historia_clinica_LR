@@ -9,7 +9,6 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Setter

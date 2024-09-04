@@ -12,7 +12,6 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.HealthInsuranceBo;
-import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 import net.pladema.person.controller.dto.BMPersonDto;

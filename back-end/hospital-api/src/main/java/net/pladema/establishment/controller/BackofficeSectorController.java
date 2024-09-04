@@ -3,14 +3,12 @@ package net.pladema.establishment.controller;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSectorValidator;
 import net.pladema.establishment.repository.SectorRepository;
-import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.establishment.repository.entity.RootSector;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
-import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.data.domain.Example;

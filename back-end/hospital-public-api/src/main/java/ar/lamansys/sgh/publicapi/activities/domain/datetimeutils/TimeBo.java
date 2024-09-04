@@ -1,8 +1,5 @@
 package ar.lamansys.sgh.publicapi.activities.domain.datetimeutils;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 
 import javax.annotation.Nullable;

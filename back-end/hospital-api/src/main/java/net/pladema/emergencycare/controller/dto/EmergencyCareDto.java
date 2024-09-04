@@ -8,7 +8,6 @@ import lombok.ToString;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter

@@ -9,7 +9,6 @@ import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

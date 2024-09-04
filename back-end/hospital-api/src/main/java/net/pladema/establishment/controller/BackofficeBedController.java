@@ -6,7 +6,6 @@ import net.pladema.establishment.controller.constraints.validator.entities.Backo
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;

@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest;
 
-import ar.lamansys.sgh.publicapi.appointment.application.cancelBooking.CancelBookingByInstitution;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchbookingbyinstitution.FetchBookingByInstitution;
 import ar.lamansys.sgh.publicapi.appointment.application.makeBooking.MakeBooking;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
@@ -26,8 +25,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

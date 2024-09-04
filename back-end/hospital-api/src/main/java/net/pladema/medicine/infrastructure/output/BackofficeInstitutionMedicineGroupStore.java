@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.medicine.domain.InstitutionMedicineGroupBo;
 import net.pladema.medicine.infrastructure.input.rest.dto.InstitutionMedicineGroupDto;
-import net.pladema.medicine.infrastructure.input.rest.dto.MedicineGroupProblemDto;
 import net.pladema.medicine.infrastructure.output.repository.InstitutionMedicineGroupRepository;
 import net.pladema.medicine.infrastructure.output.repository.MedicineGroupRepository;
 import net.pladema.medicine.infrastructure.output.repository.entity.InstitutionMedicineGroup;

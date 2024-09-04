@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
-import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import java.time.LocalDateTime;
 

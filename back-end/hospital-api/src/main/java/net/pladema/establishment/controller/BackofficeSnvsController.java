@@ -2,7 +2,6 @@ package net.pladema.establishment.controller;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSnvsValidator;
-import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;

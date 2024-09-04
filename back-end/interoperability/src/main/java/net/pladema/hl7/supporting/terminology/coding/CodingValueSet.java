@@ -1,6 +1,5 @@
 package net.pladema.hl7.supporting.terminology.coding;
 
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
