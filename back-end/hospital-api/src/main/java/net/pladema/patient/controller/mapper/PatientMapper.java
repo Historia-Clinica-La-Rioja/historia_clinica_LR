@@ -3,13 +3,11 @@ package net.pladema.patient.controller.mapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.PersonAgeDto;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.patient.controller.dto.APatientDto;
-import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
 import net.pladema.patient.controller.dto.MergedPatientSearchDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.PatientGenderAgeDto;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
 import net.pladema.patient.repository.entity.Patient;
-import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
@@ -52,9 +50,6 @@ public interface PatientMapper {
 	@Mapping(target = "auditTypeId", source = "auditType.id")
 	Patient fromPatientDto(APatientDto patientDto);
 
-	@Named("toLimitedPatientSearchDto")
-	LimitedPatientSearchDto toLimitedPatientSearchDto(LimitedPatientSearchBo limitedPatientSearchBo);
-
 	@Named("toPatientGenderAgeDto")
 	@Mapping(target = "gender.description", source = "gender.value")
 	PatientGenderAgeDto toPatientGenderAgeDto(PatientGenderAgeBo patientGenderAgeBo);
@@ -64,5 +59,8 @@ public interface PatientMapper {
 		if (source.getBirthDate() != null)
 			target.setAge(new PersonAgeDto(source.getBirthDate()));
 	}
+
+	@Named("toPatientSearchDtoList")
+	List<PatientSearchDto> toPatientSearchDtoList(List<PatientSearch> patientSearches);
 
 }

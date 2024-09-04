@@ -18,6 +18,8 @@ import net.pladema.patient.service.domain.PatientGenderAgeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +61,6 @@ import net.pladema.patient.repository.entity.PatientAudit;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.AuditablePatientInfoBo;
-import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
@@ -143,13 +144,11 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
+	public Page<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter, Pageable pageable) {
 		LOG.debug(INPUT_DATA, searchFilter);
 		boolean filterByNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 		searchFilter.setFilterByNameSelfDetermination(filterByNameSelfDetermination);
-		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter);
-		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE);
-		LimitedPatientSearchBo result = new LimitedPatientSearchBo(patientList, actualPatientListSize);
+		Page<PatientSearch> result = patientRepository.getAllByOptionalFilter(searchFilter, pageable);
 		LOG.trace(OUTPUT, result);
 		return result;
 	}

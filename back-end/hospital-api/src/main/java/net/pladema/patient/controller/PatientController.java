@@ -13,10 +13,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -48,7 +55,6 @@ import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
-import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
 import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
 import net.pladema.patient.controller.dto.PatientPhotoDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
@@ -61,7 +67,6 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.DoctorsBo;
-import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.permissions.repository.enums.ERole;
@@ -152,7 +157,9 @@ public class PatientController {
 	}
 
 	@GetMapping(value = "/optionalfilter")
-	public ResponseEntity<LimitedPatientSearchDto> searchPatientOptionalFilters(@RequestParam String searchFilterStr) {
+	public PageDto<PatientSearchDto> searchPatientOptionalFilters(@RequestParam String searchFilterStr,
+																  @NotNull @RequestParam Short pageNumber,
+																  @NotNull @RequestParam Short pageSize) {
 		LOG.debug("Input data -> searchFilterStr {} ", searchFilterStr);
 		PatientSearchFilter searchFilter = null;
 		try {
@@ -160,10 +167,9 @@ public class PatientController {
 		} catch (IOException e) {
 			LOG.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
 		}
-		LimitedPatientSearchBo limitedPatientSearchBo = patientService.searchPatientOptionalFilters(searchFilter);
-		LimitedPatientSearchDto result = mapToLimitedPatientSearchDto(limitedPatientSearchBo);
-
-		return ResponseEntity.ok(result);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<PatientSearch> limitedPatientSearchBo = patientService.searchPatientOptionalFilters(searchFilter, pageable);
+		return mapToPatientSeatchPageDto(limitedPatientSearchBo, pageable);
 	}
 
 	@PostMapping(value = "/institution/{institutionId}")
@@ -465,15 +471,13 @@ public class PatientController {
 		return optPhoto;
 	}
 
-	private LimitedPatientSearchDto mapToLimitedPatientSearchDto(LimitedPatientSearchBo limitedPatientSearchBo) {
-		LimitedPatientSearchDto result = this.patientMapper.toLimitedPatientSearchDto(limitedPatientSearchBo);
-		result.getPatientList().stream().forEach(p -> {
-			limitedPatientSearchBo.getPatientList().stream().forEach( pl -> {
-				if(pl.getIdPatient().equals(p.getIdPatient())) {
-					p.getPerson().setNameSelfDetermination(pl.getNameSelfDetermination());
-				}
-			});
-		});
+	private PageDto<PatientSearchDto> mapToPatientSeatchPageDto(Page<PatientSearch> limitedPatientSearchBo, Pageable pageable) {
+		List<PatientSearchDto> content = patientMapper.toPatientSearchDtoList(limitedPatientSearchBo.getContent());
+		PageDto<PatientSearchDto> result = PageDto.fromPage(new PageImpl<>(content, pageable, limitedPatientSearchBo.getTotalElements()));
+		result.getContent().forEach(p -> limitedPatientSearchBo.getContent().forEach(pl -> {
+			if (pl.getIdPatient().equals(p.getIdPatient()))
+				p.getPerson().setNameSelfDetermination(pl.getNameSelfDetermination());
+		}));
 		return result;
 	}
 

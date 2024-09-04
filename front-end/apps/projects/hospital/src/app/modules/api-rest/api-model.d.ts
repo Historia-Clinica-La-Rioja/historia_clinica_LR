@@ -2945,11 +2945,6 @@ export interface LicenseNumberTypeDto extends Serializable {
     id: number;
 }
 
-export interface LimitedPatientSearchDto {
-    actualPatientSearchSize: number;
-    patientList: PatientSearchDto[];
-}
-
 export interface LoggedPersonDto {
     avatar?: string;
     firstName: string;
