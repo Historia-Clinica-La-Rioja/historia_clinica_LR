@@ -1467,13 +1467,22 @@
 			else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pe.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
 			end as ageToday,
 			pex.phone_number as phone,
-			ie.entry_date AT TIME ZONE 'UTC+0' as entryDate,
-			ie.probable_discharge_date AT TIME ZONE 'UTC+0' as probableDischargeDate,
+			TO_CHAR(
+			(ie.entry_date AT TIME ZONE 'UTC+0') AT TIME ZONE 'UTC-3',
+			'DD-MM-YYYY HH24:MI'
+			) as entryDate,
+			TO_CHAR(
+			(ie.probable_discharge_date AT TIME ZONE 'UTC+0') AT TIME ZONE 'UTC-3',
+			'DD-MM-YYYY HH24:MI'
+			) as probableDischargeDate,
 			bed.bed_number as bed,
 			b_cat.description as category,
 			room.description as room,
 			sector.description as sector,
-			pd.administrative_discharge_date AT TIME ZONE 'UTC+0' as dischargeDate,
+			TO_CHAR(
+			(pd.administrative_discharge_date AT TIME ZONE 'UTC+0') AT TIME ZONE 'UTC-3',
+			'DD-MM-YYYY HH24:MI'
+			) as dischargeDate,
 			(SELECT string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date ,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
 			from document_health_condition dhc INNER JOIN health_condition hc on dhc.health_condition_id=hc.id INNER JOIN problem_type pt on hc.problem_id=pt.id INNER JOIN snomed s_prob on hc.snomed_id=s_prob.id INNER JOIN condition_clinical_status ccs on hc.status_id=ccs.id INNER JOIN condition_verification_status cvs on hc.verification_status_id=cvs.id where dhc.document_id=d.id) as problems
 			FROM internment_episode ie

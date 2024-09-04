@@ -52,7 +52,7 @@ public class GeneralReportsController {
 			logger.debug("building emergency excel report");
 			IWorkbook wb = excelService.buildEmergencyExcel(title, headers, queryFactory.queryEmergency(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Emergencias diarias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Generales - Emergencias diarias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -77,7 +77,7 @@ public class GeneralReportsController {
 			logger.debug("building diabetics excel report");
 			IWorkbook wb = excelService.buildDiabeticsOrHypertensivesExcel(title, headers, queryFactory.queryDiabetics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Diabéticos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Generales - Diabéticos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -102,7 +102,7 @@ public class GeneralReportsController {
 			logger.debug("building hypertensives excel report");
 			IWorkbook wb = excelService.buildDiabeticsOrHypertensivesExcel(title, headers, queryFactory.queryHypertensives(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Hipertensos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Generales - Hipertensos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -127,7 +127,7 @@ public class GeneralReportsController {
 			logger.debug("building complementary studies excel report");
 			IWorkbook wb = excelService.buildComplementaryStudiesExcel(title, headers, queryFactory.queryComplementaryStudies(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Estudios complementarios - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Generales - Estudios complementarios - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -152,7 +152,7 @@ public class GeneralReportsController {
 			logger.debug("building medicines prescription excel report");
 			IWorkbook wb = excelService.buildMedicinesPrescriptionExcel(title, headers, queryFactory.queryMedicinesPrescription(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Prescripción de medicamentos - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Generales - Prescripción de medicamentos - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

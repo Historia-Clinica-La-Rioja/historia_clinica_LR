@@ -60,7 +60,7 @@ public class ProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildEpidemiologyOneExcel(title, headers, this.queryFactory.queryEpidemiologyOne(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Epidemiología - Vigilancia epidemiológica - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programas - Vigilancia epidemiológica - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
@@ -99,7 +99,7 @@ public class ProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildEpidemiologyTwoExcel(title, headers, this.queryFactory.queryEpidemiologyTwo(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Epidemiología - Notificación colectiva - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programas - Notificación colectiva de epidemiología - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
@@ -137,7 +137,7 @@ public class ProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildRecuperoGeneralExcel(title, headers, this.queryFactory.queryRecuperoGeneral(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Recupero - Obras sociales - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programas - Recupero de obras sociales - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
@@ -191,7 +191,7 @@ public class ProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildSumarGeneralExcel(title, headers, this.queryFactory.querySumarGeneral(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId), institutionId, startDate, endDate);
 
-			String filename = "Programa Sumar - General - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programas - SUMAR general - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
@@ -238,7 +238,7 @@ public class ProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildSumarOdontologicoExcel(title, headers, this.queryFactory.querySumarOdontologico(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Programa Sumar - Odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programas - SUMAR odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
@@ -285,7 +285,7 @@ public class ProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildRecuperoOdontologicoExcel(title, headers, this.queryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Recupero - Odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programas - Recupero odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
