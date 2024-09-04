@@ -78,6 +78,28 @@ export class BackgroundFamilyComponent {
     return this.convivenciaMembers[memberKey][dependentCheckbox];
   }
 
+  getCheckboxCBackground(memberKey: string): string {
+    return this.convivenciaMembers[memberKey]?.A ? '#cccecf38' : '#fff11c';
+  }
+
+  onNoCheckboxChange(lugarKey: string): void {
+ }
+
+isSiCheckboxDisabled(lugarKey: string): boolean {
+  return this.hogarLugar[lugarKey]?.[this.lugares.find(l => l.key === lugarKey)?.noKey];
+}
+
+getCheckboxSiStyles(lugarKey: string): {[key: string]: string} {
+  if (this.isSiCheckboxDisabled(lugarKey)) {
+    return {
+      'background': '#cccecf38',
+     };
+  } else {
+    return {
+      'background-color': '#fff11c'
+    };
+  }
+}
 
   // VIVE
   hogarLugar = {
