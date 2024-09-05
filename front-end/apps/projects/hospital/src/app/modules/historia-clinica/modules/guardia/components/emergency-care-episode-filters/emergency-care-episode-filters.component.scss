@@ -1,11 +1,6 @@
-@import '../../../../../../../assets/styles/mixins';
 @import '../../../../../../../assets/styles/mat-mixins';
 
 @include mat-form-field-background-white;
-
-div.spinner {
-	@include centered-spinner;
-}
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -22,14 +17,4 @@ input[type="number"] {
 
 .triage-options {
 	padding-bottom: 5px;
-}
-
-.flex-container {
-	display: flex;
-	flex-direction: column;
-	height: auto;
-}
-
-.padding {
-    padding: 2% 0%;
 }

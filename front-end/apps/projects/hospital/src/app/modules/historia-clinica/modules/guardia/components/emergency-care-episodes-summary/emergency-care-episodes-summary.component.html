@@ -1,0 +1,57 @@
+<section id="body">
+    <app-filters-card [cardTitle]="'guardia.home.episodes.TITLE'">
+
+        <app-emergency-care-episode-filters filters (updateEpisodes)="loadEpisodes(FIRST_PAGE)">
+        </app-emergency-care-episode-filters>
+
+        <div results fxLayout="column" fxLayoutGap="15px" fxFlexFill>
+
+            <div class="spinner" *ngIf="loading else content">
+                <mat-spinner color="primary"></mat-spinner>
+            </div>
+            <ng-template #content>
+				<ng-container *ngIf="episodes?.length else noData">
+                    <mat-nav-list>
+                        <mat-list-item *ngFor="let episode of episodes" class="flex-container" (click)="goToEpisode(episode, episode?.patient)">
+                            <div class="padding" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="30px" fxFlex="100%">
+
+                                <app-emergency-care-patient-summary-item id="patient" fxFlex="35%" [patient]="episode.patient" [reason]="episode.reason" [episodeTypeDescription]="episode.type?.description"></app-emergency-care-patient-summary-item>
+                                <app-emergency-care-triage-summary-item id="triage" fxFlex="30%" [episodeListTriage]="episode.triage"></app-emergency-care-triage-summary-item>
+                                <app-emergency-care-state-summary-item id="status" fxFlex="30%" [episode]="episode"></app-emergency-care-state-summary-item>
+                                <app-emergency-care-dashboard-actions fxFlex="5%"
+                                    [episode]="episode"
+                                    (triageDialogClosed)="handleTriageDialogClosed($event)"
+                                    (patientDescriptionUpdate)="handlePatientDescriptionUpdate($event)"
+                                    (markedAsAbsent)="handleAbsentState($event)">
+                                </app-emergency-care-dashboard-actions>
+
+                            </div>
+
+                            <mat-divider class="divider-list"></mat-divider>
+                        </mat-list-item>
+                    </mat-nav-list>
+                    <mat-paginator #paginator
+                            (page)="handlePageEvent($event)"
+                            [length]="elementsAmount"
+                            [pageSize]="PAGE_SIZE"
+                            [hidePageSize]="true"
+                            [showFirstLastButtons]="true">
+                    </mat-paginator>
+                </ng-container>
+            </ng-template>
+        </div>
+
+    </app-filters-card>
+</section>
+
+<ng-template #noData>
+	<div id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center">
+		<h2 *ngIf="episodes?.length || filterService.hasFilters() else noActiveEpisodes" class="mat-h2"
+			style="text-align: center" translate="guardia.home.episodes.NO_DATA_FOR_FILTER">
+		</h2>
+		<ng-template #noActiveEpisodes>
+			<h2 class="mat-h2" style="text-align: center" translate="guardia.home.episodes.NO_DATA">
+			</h2>
+		</ng-template>
+	</div>
+</ng-template>

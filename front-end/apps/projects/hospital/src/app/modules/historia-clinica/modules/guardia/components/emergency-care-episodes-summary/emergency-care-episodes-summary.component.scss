@@ -1,0 +1,15 @@
+@import '../../../../../../../assets/styles/mixins';
+
+div.spinner {
+	@include centered-spinner;
+}
+
+.flex-container {
+	display: flex;
+	flex-direction: column;
+	height: auto;
+}
+
+.padding {
+    padding: 2% 0%;
+}

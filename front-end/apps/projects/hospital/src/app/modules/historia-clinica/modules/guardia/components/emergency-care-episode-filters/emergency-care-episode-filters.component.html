@@ -1,0 +1,124 @@
+<div fxLayout="column" style="max-width: 300px">
+    <form [formGroup]="filterService.getForm()">
+        <mat-form-field fxFlexFill appearance="outline">
+            <mat-label translate="guardia.home.episodes.filters.URGENCY"></mat-label>
+            <mat-select formControlName="triage" (selectionChange)="filter()">
+                <mat-option id="triage-filter" class="triage-options"
+                            *ngFor="let triageCategory of triageCategories$ | async" [value]="triageCategory.id">
+                    <app-triage-chip [category]="triageCategory" [isFilled]="true"></app-triage-chip>
+                </mat-option>
+            </mat-select>
+            <button *ngIf="filterService.getForm().value.triage" id="clear-triage-filter" type="button"
+                mat-icon-button matSuffix color="warn"
+                (click)="clear('triage'); $event.stopPropagation()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <mat-form-field fxFlexFill appearance="outline">
+            <mat-label translate="guardia.home.episodes.filters.TYPE"></mat-label>
+            <mat-select id="type-filter" formControlName="emergencyCareType"
+                (selectionChange)="filter()">
+                <mat-option *ngFor="let emergencyCareType of emergencyCareTypes$ | async"
+                    [value]="emergencyCareType.id">
+                    {{ emergencyCareType.description }}
+                </mat-option>
+            </mat-select>
+            <button *ngIf="filterService.getForm().value.emergencyCareType" id="clear-type-filter"
+                type="button" mat-icon-button matSuffix color="warn"
+                (click)="clear('emergencyCareType'); $event.stopPropagation()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <div class="mat-h4" style="margin: 15px 0"
+            translate="guardia.home.episodes.filters.FILTER_BY_PATIENT"></div>
+
+        <mat-form-field fxFlexFill appearance="outline">
+            <mat-label translate="guardia.home.episodes.filters.PATIENT_ID"></mat-label>
+            <input id="patient-id-filter" matInput type="number" formControlName="patientId"
+                (keydown.enter)="filter()">
+            <div matSuffix fxLayout="row">
+                <button *ngIf="filterService.getForm().value.patientId" id="clear-patientId-filter"
+                    type="button" mat-icon-button color="warn"
+                    (click)="clear('patientId'); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <button id="search-patientId-filter" type="button" mat-icon-button
+                    (click)="filter(); $event.stopPropagation()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </mat-form-field>
+
+        <mat-form-field fxFlexFill appearance="outline">
+            <mat-label translate="guardia.home.episodes.filters.IDENTIFICATION_NUMBER"></mat-label>
+            <input id="person-idNumber-filter" matInput type="text"
+                formControlName="identificationNumber" (keydown.enter)="filter()">
+            <div matSuffix fxLayout="row">
+                <button *ngIf="filterService.getForm().value.identificationNumber"
+                    id="clear-idNumber-filter" type="button" mat-icon-button color="warn"
+                    (click)="clear('identificationNumber'); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <button id="search-idNumber-filter" type="button" mat-icon-button
+                    (click)="filter(); $event.stopPropagation()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+            <mat-error *ngIf="hasError(filterService.getForm(), 'maxlength', 'identificationNumber')"
+                translate="forms.MAX_LENGTH_ERROR"
+                [translateParams]=" { max: getError(filterService.getForm(), 'maxlength', 'identificationNumber').requiredLength }">
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlexFill appearance="outline">
+            <mat-label translate="guardia.home.episodes.filters.FIRST_NAME"></mat-label>
+            <input id="first-name-filter" matInput type="text" formControlName="firstName"
+                (keydown.enter)="filter()">
+            <div matSuffix fxLayout="row">
+                <button *ngIf="filterService.getForm().value.firstName" id="clear-first-name-filter"
+                    type="button" mat-icon-button color="warn"
+                    (click)="clear('firstName'); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <button id="search-first-name-filter" type="button" mat-icon-button
+                    (click)="filter(); $event.stopPropagation()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+            <mat-error *ngIf="hasError(filterService.getForm(), 'maxlength', 'firstName')"
+                translate="forms.MAX_LENGTH_ERROR"
+                [translateParams]=" { max: getError(filterService.getForm(), 'maxlength', 'firstName').requiredLength }">
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlexFill appearance="outline">
+            <mat-label translate="guardia.home.episodes.filters.LAST_NAME"></mat-label>
+            <input id="last-name-filter" matInput type="text" formControlName="lastName"
+                (keydown.enter)="filter()">
+            <div matSuffix fxLayout="row">
+                <button *ngIf="filterService.getForm().value.lastName" id="clear-last-name-filter"
+                    type="button" mat-icon-button color="warn"
+                    (click)="clear('lastName'); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <button id="search-last-name-filter" type="button" mat-icon-button
+                    (click)="filter(); $event.stopPropagation()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+            <mat-error *ngIf="hasError(filterService.getForm(), 'maxlength', 'lastName')"
+                translate="forms.MAX_LENGTH_ERROR"
+                [translateParams]=" { max: getError(filterService.getForm(), 'maxlength', 'lastName').requiredLength }">
+            </mat-error>
+        </mat-form-field>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px"
+            class="slide-toggle-wrapper">
+            <mat-label translate="guardia.home.episodes.filters.EMERGENCY_CARE_TEMPORARY"></mat-label>
+            <mat-slide-toggle (change)="filter()" formControlName="emergencyCareTemporary">
+            </mat-slide-toggle>
+        </div>
+    </form>
+</div>

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DateTimeDto } from '@api-rest/api-model';
 import { EmergencyCareStatusLabels } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
-import { Episode } from '../emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { Episode } from '../emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { EstadosEpisodio } from '../../constants/masterdata';
 import { TranslateService } from '@ngx-translate/core';
 

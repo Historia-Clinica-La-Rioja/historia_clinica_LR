@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Episode } from '../emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { Episode } from '../emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { EstadosEpisodio } from '../../constants/masterdata';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature, ERole } from '@api-rest/api-model';

@@ -1,21 +1,23 @@
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Episode } from '../components/emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { Episode } from '../components/emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { Observable } from 'rxjs';
-import { MasterDataInterface } from '@api-rest/api-model';
+import { EmergencyCareEpisodeFilterDto, MasterDataInterface } from '@api-rest/api-model';
 import { tap } from 'rxjs/operators';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { EstadosEpisodio } from '../constants/masterdata';
 import { TriageCategory } from '../components/triage-chip/triage-chip.component';
+import { Injectable } from '@angular/core';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
 	description: 'No definido'
 };
 
+@Injectable()
 export class EpisodeFilterService {
 
 	constructor(
@@ -123,6 +125,20 @@ export class EpisodeFilterService {
 	getEmergencyCareTypes(): Observable<MasterDataInterface<number>[]> {
 		return this.emergencyCareMasterDataService.getType().pipe(tap(types => types.unshift(NO_INFO)));
 	}
+
+	getFilterData(): EmergencyCareEpisodeFilterDto {
+		return {
+		  mustBeEmergencyCareTemporal: this.form.value.emergencyCareTemporary,
+		  identificationNumber: this.form.value.identificationNumber,
+		  patientFirstName: this.form.value.firstName,
+		  patientId: this.form.value.patientId,
+		  patientLastName: this.form.value.lastName,
+		  triageCategoryIds: [],
+		  typeIds: [],
+		  clinicalSpecialtySectorIds: [],
+		  stateIds: []
+		};
+	  }
 
 }
 

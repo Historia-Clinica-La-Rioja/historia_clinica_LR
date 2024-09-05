@@ -1,4 +1,4 @@
-import { Episode } from '../components/emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { Episode } from '../components/emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { EpisodeFilterService } from './episode-filter.service';
 
 describe('EpisodeFilterService', () => {

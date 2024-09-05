@@ -32,12 +32,13 @@ import { EmergencyCareAttentionPlaceSpaceComponent } from './components/emergenc
 import { EmergencyCareDashboardActionsComponent } from './components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { EmergencyCareDetailPlaceTypeComponent } from './components/emergency-care-detail-place-type/emergency-care-detail-place-type.component';
 import { EmergencyCareElapsedTimeStateComponent } from './components/emergency-care-elapsed-time-state/emergency-care-elapsed-time-state.component';
+import { EmergencyCareEpisodeFiltersComponent } from './components/emergency-care-episode-filters/emergency-care-episode-filters.component';
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
 import { EmergencyCareInAttentionStateComponent } from './components/emergency-care-in-attention-state/emergency-care-in-attention-state.component';
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
 import { EmergencyCarePatientDischargeStateComponent } from './components/emergency-care-patient-discharge-state/emergency-care-patient-discharge-state.component';
-import { EmergencyCarePatientsSummaryComponent } from './components/emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { EmergencyCareEpisodesSummaryComponent } from './components/emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { EmergencyCareTabsComponent } from './components/emergency-care-tabs/emergency-care-tabs.component';
 import { EmergencyCarePatientSummaryItemComponent } from './components/emergency-care-patient-summary-item/emergency-care-patient-summary-item.component';
 import { EmergencyCareStateSummaryItemComponent } from './components/emergency-care-state-summary-item/emergency-care-state-summary-item.component';
@@ -65,6 +66,7 @@ import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 // services
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from './services/emergency-care-attention-place-availability-button-selection.service';
+import { EpisodeFilterService } from './services/episode-filter.service';
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { SpecialtySectorFormValidityService } from './services/specialty-sector-form-validity.service';
@@ -102,9 +104,10 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareDetailPlaceTypeComponent,
 		EmergencyCareElapsedTimeStateComponent,
 		EmergencyCareInAttentionStateComponent,
+		EmergencyCareEpisodeFiltersComponent,
 		EmergencyCarePatientComponent,
 		EmergencyCarePatientDischargeStateComponent,
-		EmergencyCarePatientsSummaryComponent,
+		EmergencyCareEpisodesSummaryComponent,
 		EmergencyCarePatientSummaryItemComponent,
 		EmergencyCareStateSummaryItemComponent,
 		EmergencyCareTabsComponent,
@@ -158,9 +161,10 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 	providers: [
 		// services
 		EmergencyCareAttentionPlaceAvailabilityButtonSelectionService,
+		EpisodeFilterService,
 		EpisodeStateService,
 		NewEpisodeService,
-		SpecialtySectorFormValidityService
+		SpecialtySectorFormValidityService,
 	]
 })
 export class GuardiaModule {

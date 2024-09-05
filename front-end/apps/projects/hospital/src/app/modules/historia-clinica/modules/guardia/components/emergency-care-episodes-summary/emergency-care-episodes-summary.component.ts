@@ -1,32 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
-import { MasterDataInterface, DateTimeDto, EmergencyCareEpisodeFilterDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto, BedDto, ShockroomDto, EmergencyCareEpisodeDischargeSummaryDto, SectorDto } from '@api-rest/api-model';
+import { DateTimeDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto, BedDto, ShockroomDto, EmergencyCareEpisodeDischargeSummaryDto, SectorDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
-import { getError, hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable } from 'rxjs';
-import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientDescriptionUpdate } from '../emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
-import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+import { EpisodeFilterService } from '../../services/episode-filter.service';
 
 const NOT_FOUND = -1;
 
 @Component({
-	selector: 'app-emergency-care-patients-summary',
-	templateUrl: './emergency-care-patients-summary.component.html',
-	styleUrls: ['./emergency-care-patients-summary.component.scss'],
+	selector: 'app-emergency-care-episodes-summary',
+	templateUrl: './emergency-care-episodes-summary.component.html',
+	styleUrls: ['./emergency-care-episodes-summary.component.scss'],
 	providers: [TriageDefinitionsService]
 })
-export class EmergencyCarePatientsSummaryComponent implements OnInit {
-
-	getError = getError;
-	hasError = hasError;
-
-	filterService: EpisodeFilterService;
+export class EmergencyCareEpisodesSummaryComponent implements OnInit {
 
 	readonly PAGE_SIZE = 20;
 	readonly FIRST_PAGE = 0;
@@ -36,9 +28,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	/* patientsPhotos: PatientPhotoDto[]; */
 	elementsAmount: number;
 
-	triageCategories$: Observable<TriageCategory[]>;
-	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
-
 	constructor(
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private snackBarService: SnackBarService,
@@ -46,19 +35,16 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly guardiaRouterService: GuardiaRouterService,
-	) {
-		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
-	}
+		readonly filterService: EpisodeFilterService,
+	) { }
 
 	ngOnInit(): void {
 		this.loadEpisodes(this.FIRST_PAGE);
-		this.triageCategories$ = this.filterService.getTriageCategories();
-		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
 	}
 
 	loadEpisodes(pageNumber: number): void {
-		const filterData: EmergencyCareEpisodeFilterDto = this.getFilterData();
-		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber, filterData)
+		const filterData = this.filterService.getFilterData();
+		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber, filterData )
 			.subscribe((result: PageDto<EmergencyCareListDto>) => {
 				this.elementsAmount = result.totalElementsAmount;
 				this.episodes = result.content.map(content => this.mapToEpisode(content));
@@ -67,34 +53,8 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 			}, _ => this.loading = false);
 	}
 
-	private getFilterData(): EmergencyCareEpisodeFilterDto {
-		return {
-			mustBeEmergencyCareTemporal: this.filterService.getForm().value.emergencyCareTemporary,
-			identificationNumber: this.filterService.getForm().value.identificationNumber,
-			patientFirstName: this.filterService.getForm().value.firstName,
-			patientId: this.filterService.getForm().value.patientId,
-			patientLastName: this.filterService.getForm().value.lastName,
-			triageCategoryIds: [],
-			typeIds: [],
-			clinicalSpecialtySectorIds: [],
-			stateIds: []
-		};
-	}
-
 	goToEpisode(episode: Episode, patient: { typeId: number, id: number }) {
 		this.guardiaRouterService.goToEpisode(episode.state.id, { id: patient.id, typeId: patient.typeId });
-	}
-
-	filter(): void {
-		this.filterService.markAsFiltered();
-		if (this.filterService.isValid()) {
-			this.loadEpisodes(this.FIRST_PAGE);
-		}
-	}
-
-	clear(control: string): void {
-		this.filterService.clear(control);
-		this.filter();
 	}
 
 	//Descomentar y refactorizar cuando se obtengan nuevamente las fotos del paciente
