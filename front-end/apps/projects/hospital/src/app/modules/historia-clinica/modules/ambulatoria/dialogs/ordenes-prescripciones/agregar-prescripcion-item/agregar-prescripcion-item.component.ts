@@ -54,6 +54,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	HABILITAR_RECETA_DIGITAL: AppFeature = AppFeature.HABILITAR_RECETA_DIGITAL;
 	pharmaceuticalForm: string[] = ["óvulo", "cápsula", "comprimido", "supositorio"];
 	enableFields: boolean = false;
+	isEnabledFinancedPharmaco = false;
+	markFormAsTouched = false;
 
 	private hasPrescriptorRole: boolean;
 
@@ -111,6 +113,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 						});
 					}
 				});
+
+			this.featureFlagService.isActive(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS).subscribe(isOn => this.isEnabledFinancedPharmaco = isOn);
 			this.permissionService.contextAssignments$().subscribe((userRoles: ERole[]) => this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]));
 		}
 
@@ -276,6 +280,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			|| intervalValidation(this.prescriptionItemForm, 'intervalHours','interval')
 			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays','administrationTime')) {
 				this.scrollToFirstError();
+				this.markFormAsTouched = true;
 				return this.prescriptionItemForm.markAllAsTouched();
 			}
 
@@ -318,7 +323,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (selectedConcept) {
 			this.snomedConcept = selectedConcept;
 			const pt = selectedConcept ? selectedConcept.pt : '';
-			this.prescriptionItemForm.controls.snomed.setValue(pt);
+			this.prescriptionItemForm.controls.snomed.setValue(selectedConcept);
 			this.prescriptionItemForm.controls.snomed.disable();
 			this.setPresentationUnits(selectedConcept?.sctid);
 			this.setSuggestedCommercialMedicationOptions(commercialPt);
@@ -417,7 +422,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.snomedConcept = prescriptionItem.snomed;
 
 		if (this.isHabilitarRecetaDigitalFFActive) {
-			if (this.pharmaceuticalForm.some(value => prescriptionItem.snomed.pt.includes(value))) {
+			if (this.pharmaceuticalForm.some(value => prescriptionItem.snomed.pt?.includes(value))) {
 				this.enableUnitDoseAndDayDose();
 				this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => prescriptionItem.snomed.pt.includes(value))[0]);
 			} else {
@@ -467,6 +472,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.medicationPackQuantity.setValue(prescriptionItem.commercialMedicationPrescription.medicationPackQuantity);
 			this.prescriptionItemForm.controls.presentationUnit.setValue(prescriptionItem.commercialMedicationPrescription.presentationUnitQuantity);
 		}
+		
+		this.snomedConcept = prescriptionItem.snomed;
+		this.prescriptionItemForm.controls.snomed.setValue(this.snomedConcept);
 	}
 
 	private formConfiguration() {
@@ -526,6 +534,7 @@ export class NewPrescriptionItemData {
 	showStudyCategory: boolean;
 	eclTerm: SnomedECL;
 	item?: NewPrescriptionItem;
+	hasSelectedCoverage?: boolean;
 }
 
 export class NewPrescriptionItem {

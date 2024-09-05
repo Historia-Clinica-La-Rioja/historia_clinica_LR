@@ -2,13 +2,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
-import { SnomedDto } from '@api-rest/api-model';
+import { AppFeature, SnomedDto } from '@api-rest/api-model';
 import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
 import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
 import { PharmacoDetail } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
     selector: 'app-medication-information',
@@ -20,6 +21,7 @@ export class MedicationInformationComponent implements OnInit {
     @Input() prescriptionData: NewPrescriptionData;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
     @Input() submitted: boolean;
+	@Input() hasSelectedCoverage = false;
 
     @Output() showMedicationErrorEmitter = new EventEmitter<boolean>();
 	@Output() prescriptionItemsEmmiter = new EventEmitter<NewPrescriptionItem[]>();
@@ -30,17 +32,20 @@ export class MedicationInformationComponent implements OnInit {
     itemCount = 0;
     showAddMedicationError = false;
     isAddMedicationLoading = false;
+	isEnabledFinancedPharmaco = false;
 
     constructor(
         private readonly dialog: MatDialog,
         private readonly medicationRequestService: MedicationRequestService,
 		private statePrescripcionService: StatePrescripcionService,
+		private readonly featureFlagService: FeatureFlagService,
     ) { }
 
     ngOnInit(): void {
 		this.prescriptionForm = this.statePrescripcionService.getForm();
         this.prescriptionItems = this.prescriptionData.prescriptionItemList ? this.prescriptionData.prescriptionItemList : [];
 		this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS).subscribe(isOn => this.isEnabledFinancedPharmaco = isOn);
     }
 
     openPrescriptionItemDialog(item?: NewPrescriptionItem): void {
@@ -54,6 +59,7 @@ export class MedicationInformationComponent implements OnInit {
 				showStudyCategory: this.prescriptionData.addPrescriptionItemDialogData.showStudyCategory,
 				eclTerm: this.prescriptionData.addPrescriptionItemDialogData.eclTerm,
 				item,
+				hasSelectedCoverage: this.hasSelectedCoverage
 			},
 			width: '35%',
 		});
@@ -87,6 +93,13 @@ export class MedicationInformationComponent implements OnInit {
 
     openPharmacosFrequestDialog() {
 		this.isAddMedicationLoading = true;
+		const hasToSearchInFoundedPharmaco = this.isEnabledFinancedPharmaco && this.isHabilitarRecetaDigitalEnabled && !this.hasSelectedCoverage;
+		if (hasToSearchInFoundedPharmaco) {
+			this.isAddMedicationLoading = false;
+			this.openPrescriptionItemDialog();
+			return;
+		}
+
 		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.prescriptionData.patientId).subscribe((pharmacos: SnomedDto[]) => {
 			this.isAddMedicationLoading = false;
 			this.dialog.open(PharmacosFrequentComponent, {

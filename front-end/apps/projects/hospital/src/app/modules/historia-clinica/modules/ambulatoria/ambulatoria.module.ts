@@ -39,6 +39,8 @@ import { DeferredDateSelectorComponent } from './components/deferred-date-select
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { EmergencyCareProblemsComponent } from './components/emergency-care-problems/emergency-care-problems.component';
 import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
+import { GenericFinancedPharmacoSearchComponent } from './components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
+import { GenericPharmacoItemComponent } from './components/generic-pharmaco-item/generic-pharmaco-item.component';
 import { GuardiaComponent } from './components/guardia/guardia.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
@@ -167,6 +169,8 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		NewConsultationFamilyHistoryFormComponent,
 		VaccineSearchComponent,
 		ClinicalHistoryActionsComponent,
+		GenericFinancedPharmacoSearchComponent,
+		GenericPharmacoItemComponent,
 		GuardiaComponent,
 		EnviarRecetaDigitalPorEmailComponent,
 		DestinationInstitutionReferenceComponent,

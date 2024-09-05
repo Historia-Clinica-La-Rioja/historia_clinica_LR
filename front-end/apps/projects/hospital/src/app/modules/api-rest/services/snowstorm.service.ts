@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { map } from 'rxjs/operators';
-import { SharedSnomedDto, SnomedDto, SnomedECL, SnomedResponseDto, SnomedTemplateDto } from '@api-rest/api-model';
+import { SharedSnomedDto, SnomedDto, SnomedECL, SnomedMedicationSearchDto, SnomedResponseDto, SnomedTemplateDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
+import { ContextService } from '@core/services/context.service';
 
 export const SNOMED_RESULTS_LIMIT = '30';
 
@@ -13,7 +14,8 @@ export const SNOMED_RESULTS_LIMIT = '30';
 export class SnowstormService {
 
 	constructor(
-		private readonly http: HttpClient
+		private readonly http: HttpClient,
+		private readonly contextService: ContextService,
 	) { }
 
 	getSNOMEDConcepts(params): Observable<SnomedResponseDto> {
@@ -56,6 +58,15 @@ export class SnowstormService {
 		return this.http.get<SharedSnomedDto[]>(url, {
 			params: queryParams
 		});
+	}
+
+	getMedicationConceptsWithFinancingData(term: string, problem: string): Observable<SnomedMedicationSearchDto[]> {
+		const url = `${environment.apiBase}/snowstorm/search-medication-concepts`;
+		const params = new HttpParams()
+			.append('term', term)
+			.append('institutionId', this.contextService.institutionId)
+			.append('problem', problem);
+		return this.http.get<SnomedMedicationSearchDto[]>(url, { params });
 	}
 }
 

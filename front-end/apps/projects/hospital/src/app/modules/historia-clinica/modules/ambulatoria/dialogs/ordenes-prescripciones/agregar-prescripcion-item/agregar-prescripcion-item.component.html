@@ -33,25 +33,41 @@
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<ng-container *ngIf="prescriptionItemForm.value.pharmacoSearchType">
-			<app-concept-typeahead-search
-				[ecl]="data.eclTerm"
-				[appearanceOutline]="true"
-				[showSearchIcon]="true"
-				[clearButton]="true"
-				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH'"
-				[preload]="snomedConcept"
-				[required]="true"
-				(conceptSelected)="setConcept($event)">
-			</app-concept-typeahead-search>
+		<ng-container *ngIf="(isHabilitarRecetaDigitalFFActive && isEnabledFinancedPharmaco && !data.hasSelectedCoverage) else genericPharmaco">
+			<ng-container *ngIf="prescriptionItemForm.value.pharmacoSearchType === DEFAULT_RADIO_OPTION else commercialPharmaco">
+				<app-generic-financed-pharmaco-search
+					[problemSelected]="prescriptionItemForm.value.healthProblem"
+					[preloadConcept]="data.item?.snomed"
+					[markFormAsTouched]="markFormAsTouched"
+					(conceptSelected)="setConcept($event)"
+				>
+				</app-generic-financed-pharmaco-search>
+			</ng-container>
 		</ng-container>
 
-		<app-commercial-pharmaco-typeahead *ngIf="!prescriptionItemForm.value.pharmacoSearchType && snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
-			[ecl]="data.eclTerm"
-			[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
-			[required]="true"
-			(conceptSelected)="setCommercialMedicationConcept($event)">
-		</app-commercial-pharmaco-typeahead>
+		<ng-template #genericPharmaco>
+			<ng-container *ngIf="prescriptionItemForm.value.pharmacoSearchType ===  DEFAULT_RADIO_OPTION else commercialPharmaco">
+				<app-concept-typeahead-search
+					[ecl]="data.eclTerm"
+					[appearanceOutline]="true"
+					[showSearchIcon]="true"
+					[clearButton]="true"
+					[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH'"
+					[preload]="snomedConcept"
+					[required]="true"
+					(conceptSelected)="setConcept($event)">
+				</app-concept-typeahead-search>
+			</ng-container>
+		</ng-template>
+
+		<ng-template #commercialPharmaco>
+			<app-commercial-pharmaco-typeahead *ngIf="prescriptionItemForm.value.pharmacoSearchType === OTHER_RADIO_OPTION && snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
+				[ecl]="data.eclTerm"
+				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
+				[required]="true"
+				(conceptSelected)="setCommercialMedicationConcept($event)">
+			</app-commercial-pharmaco-typeahead>
+		</ng-template>
 
 		<mat-checkbox *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn" formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="changeCheckboxValue($event)">
 			<span id="suggest-commercial-checkbox">

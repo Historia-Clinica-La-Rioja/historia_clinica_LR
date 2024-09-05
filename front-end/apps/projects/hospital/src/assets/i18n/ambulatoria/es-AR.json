@@ -537,7 +537,8 @@
 					"PRESENTATION_UNITS": "Presentaciones disponibles",
 					"SELECT_PRESENTATION_UNITS": "Seleccione presentación",
 					"UNITS": " unidades",
-					"MEDICATION_PACK_QUANTITY": "Cantidad de envases"
+					"MEDICATION_PACK_QUANTITY": "Cantidad de envases",
+                    "ENABLED_IN_VADEME": "Habilitado en Vademe"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
