@@ -36,7 +36,7 @@ public class GenericServiceRequestBo {
 
 	private Short studyTypeId;
 
-	private Boolean requiresTechnician;
+	private Boolean requiresTransfer;
 
 	public Integer getPatientId() {
 		if (patientInfo != null)

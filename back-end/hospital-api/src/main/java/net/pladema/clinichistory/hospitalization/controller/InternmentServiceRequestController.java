@@ -76,7 +76,7 @@ public class InternmentServiceRequestController {
 					studyListDto,
 					serviceRequestListDto.getObservations(),
 					serviceRequestListDto.getStudyType().getId(),
-					serviceRequestListDto.getRequiresTechnician());
+					serviceRequestListDto.getRequiresTransfer());
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createInternmentServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId) );
@@ -95,7 +95,7 @@ public class InternmentServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTechnician){
+	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTransfer){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
 		GenericServiceRequestBo result = new GenericServiceRequestBo();
 		result.setCategoryId(categoryId);
@@ -104,7 +104,7 @@ public class InternmentServiceRequestController {
 		result.setDiagnosticReports(studyMapper.parseToList(studies));
 		result.setObservations(observations);
 		result.setStudyTypeId(studyType);
-		result.setRequiresTechnician(requiresTechnician);
+		result.setRequiresTransfer(requiresTransfer);
 		log.debug("Output -> {}", result);
 		return result;
 	}

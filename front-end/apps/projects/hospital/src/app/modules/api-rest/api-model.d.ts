@@ -4060,7 +4060,7 @@ export interface PrescriptionDto extends Serializable {
     medicalCoverageId?: number;
     observations?: string;
     repetitions?: number;
-    requiresTechnician?: boolean;
+    requiresTransfer?: boolean;
     studyType?: EStudyType;
 }
 

@@ -46,7 +46,7 @@ public class CreateInternmentServiceRequestServiceImpl implements CreateInternme
 				.associatedSourceId(activeEpisodeId)
 				.observations(genericServiceRequestBo.getObservations())
 				.studyTypeId(genericServiceRequestBo.getStudyTypeId())
-				.requiresTechnician(genericServiceRequestBo.getRequiresTechnician())
+				.requiresTransfer(genericServiceRequestBo.getRequiresTransfer())
 				.build();
 	}
 

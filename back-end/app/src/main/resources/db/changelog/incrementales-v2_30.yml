@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_30 
+    - logicalFilePath: incrementales-v2_30
 
     - changeSet:
         id: add-name_self_determination-not-null-index-to-table-person-extended
@@ -8,3 +8,13 @@ databaseChangeLog:
           - sql:
               sql: |-
                 CREATE INDEX IF NOT EXISTS IDX_person_extended_name_self_determination ON person_extended (name_self_determination);
+    
+    - changeSet:
+        id: rename-requires-technician-to-requires-transfer
+        author: lvenere
+        changes:
+          - renameColumn:
+              tableName: service_request
+              oldColumnName: requires_technician
+              newColumnName: requires_transfer
+              columnDataType: boolean

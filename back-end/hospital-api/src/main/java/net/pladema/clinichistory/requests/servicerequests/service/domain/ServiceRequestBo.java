@@ -62,7 +62,7 @@ public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
 
 	private Short studyTypeId;
 
-	private Boolean requiresTechnician;
+	private Boolean requiresTransfer;
 
 	@Override
     public Integer getPatientId() {

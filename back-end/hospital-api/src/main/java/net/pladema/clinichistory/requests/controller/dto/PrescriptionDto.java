@@ -45,5 +45,5 @@ public class PrescriptionDto implements Serializable {
 	private EStudyType studyType;
 
 	@Nullable
-	private Boolean requiresTechnician;
+	private Boolean requiresTransfer;
 }

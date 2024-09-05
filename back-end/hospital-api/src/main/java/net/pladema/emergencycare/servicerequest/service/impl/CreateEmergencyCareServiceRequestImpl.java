@@ -40,7 +40,7 @@ public class CreateEmergencyCareServiceRequestImpl implements CreateEmergencyCar
 				.associatedSourceId(episodeId)
 				.observations(extendedServiceRequestBo.getObservations())
 				.studyTypeId(extendedServiceRequestBo.getStudyTypeId())
-				.requiresTechnician(extendedServiceRequestBo.getRequiresTechnician())
+				.requiresTransfer(extendedServiceRequestBo.getRequiresTransfer())
 				.build();
 	}
 

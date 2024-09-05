@@ -68,8 +68,8 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 	@Column(name = "study_type_id")
 	private Short studyType;
 
-	@Column(name = "requires_technician")
-	private Boolean requiresTechnician;
+	@Column(name = "requires_transfer")
+	private Boolean requiresTransfer;
 
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,
