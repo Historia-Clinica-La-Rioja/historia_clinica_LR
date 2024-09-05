@@ -23,8 +23,6 @@ public class EmergencyCareEpisodeFilterDto {
 
 	private String patientLastName;
 
-	private boolean mustBeTemporal;
-
 	private boolean mustBeEmergencyCareTemporal;
 
 	private List<Integer> clinicalSpecialtySectorIds;

@@ -24,9 +24,7 @@ public class EmergencyCareEpisodeFilterBo {
 	private String patientFirstName;
 
 	private String patientLastName;
-
-	private Boolean mustBeTemporal;
-
+	
 	private Boolean mustBeEmergencyCareTemporal;
 
 	private List<Integer> clinicalSpecialtySectorIds;

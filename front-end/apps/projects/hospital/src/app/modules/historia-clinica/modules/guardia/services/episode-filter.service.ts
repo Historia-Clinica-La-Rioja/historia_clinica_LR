@@ -30,7 +30,6 @@ export class EpisodeFilterService {
 			identificationNumber: [null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
-			temporal: [null],
 			emergencyCareTemporary: [null],
 			administrativeDischarge: [null]
 		});
@@ -76,10 +75,6 @@ export class EpisodeFilterService {
 		return target?.toLowerCase().includes(filterValue.toLowerCase());
 	}
 
-	static filterTemporal(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.temporal ? episode.patient?.typeId === PatientType.TEMPORARY : true);
-	}
-
 	static filterNoPatient(episode: Episode, filters: EpisodeFilters) {
 		return (filters.emergencyCareTemporary ? episode.patient?.typeId === PatientType.EMERGENCY_CARE_TEMPORARY : true);
 	}
@@ -101,7 +96,6 @@ export class EpisodeFilterService {
 				EpisodeFilterService.filterByPatientId(episode, filters) &&
 				EpisodeFilterService.filterByFirstName(episode, filters) &&
 				EpisodeFilterService.filterByLastName(episode, filters) &&
-				EpisodeFilterService.filterTemporal(episode, filters) &&
 				EpisodeFilterService.filterNoPatient(episode, filters) &&
 				EpisodeFilterService.filterAdministrativeDischarge(episode, filters);
 	}
@@ -139,7 +133,6 @@ interface EpisodeFilters {
 	identificationNumber?: string;
 	firstName?: string;
 	lastName?: string;
-	temporal?: boolean;
 	emergencyCareTemporary?: boolean;
 	administrativeDischarge?: boolean;
 }

@@ -1775,7 +1775,6 @@ export interface EmergencyCareEpisodeFilterDto {
     clinicalSpecialtySectorIds: number[];
     identificationNumber: string;
     mustBeEmergencyCareTemporal: boolean;
-    mustBeTemporal: boolean;
     patientFirstName: string;
     patientId: number;
     patientLastName: string;

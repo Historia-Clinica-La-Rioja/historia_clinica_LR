@@ -74,7 +74,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 			patientFirstName: this.filterService.getForm().value.firstName,
 			patientId: this.filterService.getForm().value.patientId,
 			patientLastName: this.filterService.getForm().value.lastName,
-			mustBeTemporal: this.filterService.getForm().value.temporal,
 			triageCategoryIds: [],
 			typeIds: [],
 			clinicalSpecialtySectorIds: []
