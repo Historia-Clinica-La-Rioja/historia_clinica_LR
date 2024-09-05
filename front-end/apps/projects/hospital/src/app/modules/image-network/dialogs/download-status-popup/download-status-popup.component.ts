@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { DownloadStudyService } from '../../services/download-study.service';
 
 @Component({
     selector: 'app-download-status-popup',
@@ -18,34 +18,34 @@ export class DownloadStatusPopupComponent implements OnInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: {
-            title: string,
-            subtitle: string
+            initialTitle: string,
+            initialSubtitle: string
         },
-        private readonly studyPacAssociationService: StudyPACAssociationService,
+        private readonly downloadStudyService: DownloadStudyService,
     ) { }
 
     ngOnInit(): void {
-        this.title = this.data.title;
-        this.subtitle = this.data.subtitle;
+        this.title = this.data.initialTitle;
+        this.subtitle = this.data.initialSubtitle;
         this.subscribeToData();
     }
 
     subscribeToData() {
-        this.studyPacAssociationService.title$.subscribe(title => {
+        this.downloadStudyService.title$.subscribe(title => {
             this.title = title;
         })
-        this.studyPacAssociationService.subtitle$.subscribe(subtitle => {
+        this.downloadStudyService.subtitle$.subscribe(subtitle => {
             this.subtitle = subtitle;
         })
-        this.studyPacAssociationService.error$.subscribe(error => {
+        this.downloadStudyService.error$.subscribe(error => {
             this.errorStatus = error;
         })
-        this.studyPacAssociationService.canBeCancelled$.subscribe(canBeCancelled => {
+        this.downloadStudyService.canBeCancelled$.subscribe(canBeCancelled => {
             this.canBeCancelled = canBeCancelled;
         })
     }
 
     retryDownload() {
-        this.studyPacAssociationService.retryDownload();
+        this.downloadStudyService.retryDownload();
     }
 }
