@@ -660,7 +660,7 @@
 			concat(substring(pe.last_name, 1, 3), substring(pe.first_name, 1, 2)) as coding,
 			pe.birth_date as birthDate,
 			g.description as gender,
-			hc.created_on AT TIME ZONE 'UTC+0' as startDate,
+			TO_CHAR(hc.created_on AT TIME ZONE 'UTC-3', 'DD-MM-YYYY HH24:MI:SS') as startDate,
 			dep.description as department,
 			concat(ci.description, ' - ', a.street, ' N° ', a.number, case when a.floor is not null then concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) as address,
 			hc.cie10_codes as cie10Codes,
