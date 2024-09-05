@@ -27,4 +27,6 @@ public class EmergencyCareEpisodeFilterDto {
 
 	private boolean mustBeEmergencyCareTemporal;
 
+	private List<Integer> clinicalSpecialtySectorIds;
+
 }

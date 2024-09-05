@@ -21,12 +21,14 @@ import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -65,8 +67,19 @@ public class GetAllEpisodeListByFilter {
 			}
 			if (selfPerceivedFF) setSelfDeterminationNames(ec);
 		});
+		if (filter.getClinicalSpecialtySectorIds().isEmpty()) {
+			log.debug("Output -> {}", result);
+			return result;
+		}
+
+		var episodeFilters = result.stream()
+				.filter(episode -> filter.getClinicalSpecialtySectorIds().contains(episode.getTriage().getClinicalSpecialtySectorId()))
+				.collect(Collectors.toList());
+		result = new PageImpl<>(episodeFilters, pageable, episodeFilters.size());
+
 		log.debug("Output -> {}", result);
 		return result;
+
 	}
 
 	private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {

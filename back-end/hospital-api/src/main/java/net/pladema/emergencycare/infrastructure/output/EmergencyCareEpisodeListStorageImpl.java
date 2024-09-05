@@ -52,7 +52,7 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						"LEFT JOIN Bed b ON (ece.bedId = b.id) " +
 						"LEFT JOIN Room r ON (b.roomId = r.id) " +
 						"LEFT JOIN Sector se ON (se.id = COALESCE(dso.sectorId, s.sectorId, r.sectorId)) " +
-						"LEFT JOIN EmergencyCareState ecs ON (ece.emergencyCareStateId = ecs.id) ";
+						"LEFT JOIN EmergencyCareState ecs ON (ece.emergencyCareStateId = ecs.id)";
 
 		String sqlWhereStatement =
 				"WHERE (ece.emergencyCareStateId IN (" + STATE_IDS_STRING + "))" +
@@ -63,7 +63,6 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						(filter.getIdentificationNumber() != null ? " AND LOWER(pe.identificationNumber) LIKE '%" + filter.getIdentificationNumber().toLowerCase() + "%'" : " ") +
 						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND LOWER(petd.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%') OR (petd.nameSelfDetermination IS NULL AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'))" : " AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'" : " ") +
 						(filter.getPatientLastName() != null ? " AND LOWER(pe.lastName) LIKE '%" + filter.getPatientLastName().toLowerCase() + "%'" : " ") +
-						(filter.getMustBeTemporal() != null && filter.getMustBeTemporal() ? " AND pa.typeId = " + EPatientType.TEMPORARY.getId() : " ") +
 						(filter.getMustBeEmergencyCareTemporal() != null && filter.getMustBeEmergencyCareTemporal() ? " AND pa.typeId = " + EPatientType.EMERGENCY_CARE_TEMPORARY.getId() : " ");
 
 

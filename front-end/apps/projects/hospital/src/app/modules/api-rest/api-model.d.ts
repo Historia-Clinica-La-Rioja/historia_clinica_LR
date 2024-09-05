@@ -1772,6 +1772,7 @@ export interface EmergencyCareEpisodeDischargeSummaryDto {
 }
 
 export interface EmergencyCareEpisodeFilterDto {
+    clinicalSpecialtySectorIds: number[];
     identificationNumber: string;
     mustBeEmergencyCareTemporal: boolean;
     mustBeTemporal: boolean;

@@ -77,6 +77,7 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 			mustBeTemporal: this.filterService.getForm().value.temporal,
 			triageCategoryIds: [],
 			typeIds: [],
+			clinicalSpecialtySectorIds: []
 		};
 	}
 
