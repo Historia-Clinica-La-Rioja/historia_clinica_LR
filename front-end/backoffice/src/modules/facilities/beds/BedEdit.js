@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     BooleanInput,
     Datagrid,
@@ -15,33 +15,94 @@ import {
     CustomToolbar,
 } from '../../components';
 
-const BedEdit = props => (
-    <Edit {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
-            <TextInput source="bedNumber" validate={[required()]} />
+const BedEdit = props => {
+    const [enabled, setEnabled] = useState(true);
+    const [available, setAvailable] = useState(true);
+    const [free, setFree] = useState(true);
+    const [canSave, setCanSave] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
 
-            <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false}/>
+    const handleEnabledChange = (value) => {
+        setEnabled(value);
+        validateFields(value, available, free);
+    };
 
-            <BooleanInput source="enabled" validate={[required()]} disabled={false} initialValue={true}/>
-            <BooleanInput source="available" validate={[required()]} disabled={false} initialValue={true}/>
-            <BooleanInput source="free" validate={[required()]} disabled={false} initialValue={true}/>
+    const handleAvailableChange = (value) => {
+        setAvailable(value);
+        validateFields(enabled, value, free);
+    };
 
-            <ReferenceManyField
-                addLabel={true}
-                label="resources.beds.fields.episodes"
-                reference="internmentepisodes"
-                target="bedId"
-                sort={{ field: 'entryDate', order: 'DESC' }}
-                filter={{ statusId: 1 }}
-                pagination={<Pagination />}
+    const handleFreeChange = (value) => {
+        setFree(value);
+        validateFields(enabled, available, value);
+    };
+
+    const validateFields = (enabledValue, availableValue, freeValue) => {
+        if (!enabledValue && availableValue) {
+            setCanSave(false);
+            setErrorMessage('No se puede guardar un cama no habilitada y disponible.');
+        } else if (!availableValue && freeValue) {
+            setCanSave(false);
+            setErrorMessage('No se puede guardar una cama no disponible y libre.');
+        } else {
+            setCanSave(true);
+            setErrorMessage('');
+        }
+    };
+
+    return (
+        <Edit {...props}>
+            <SimpleForm
+                redirect="show"
+                toolbar={<CustomToolbar isEdit={true} canSave={canSave} />}
             >
-                <Datagrid>
-                    <SgxDateField source="entryDate" />
-                </Datagrid>
-            </ReferenceManyField>
+                <TextInput source="bedNumber" validate={[required()]} disabled={!canSave} />
 
-        </SimpleForm>
-    </Edit>
-);
+                <SgxSelectInput source="roomId" element="rooms" optionText="description" alwaysOn allowEmpty={false} disabled={!canSave} />
+
+                <BooleanInput 
+                    source="enabled" 
+                    validate={[required()]} 
+                    onChange={handleEnabledChange} 
+                    disabled={false} 
+                    initialValue={true}
+                />
+                <BooleanInput 
+                    source="available" 
+                    validate={[required()]} 
+                    onChange={handleAvailableChange} 
+                    disabled={false} 
+                    initialValue={true}
+                />
+                <BooleanInput 
+                    source="free" 
+                    onChange={handleFreeChange} 
+                    disabled={false} 
+                    initialValue={true}
+                />
+
+                <ReferenceManyField
+                    addLabel={true}
+                    label="resources.beds.fields.episodes"
+                    reference="internmentepisodes"
+                    target="bedId"
+                    sort={{ field: 'entryDate', order: 'DESC' }}
+                    filter={{ statusId: 1 }}
+                    pagination={<Pagination />}
+                >
+                    <Datagrid>
+                        <SgxDateField source="entryDate" />
+                    </Datagrid>
+                </ReferenceManyField>
+
+                {!canSave && (
+                    <div style={{ color: 'red', marginTop: '10px' }}>
+                        {errorMessage}
+                    </div>
+                )}
+            </SimpleForm>
+        </Edit>
+    );
+};
 
 export default BedEdit;

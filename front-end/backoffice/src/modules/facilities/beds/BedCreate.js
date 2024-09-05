@@ -12,6 +12,10 @@ import CustomToolbar from '../../components/CustomToolbar';
 
 const redirect = (basePath, id, data) => `/rooms/${data.roomId}/show`;
 
+const validateTrue = (message) => (value) => {
+    return value === true ? undefined : message;
+};
+
 const BedCreate = props => (
     <Create {...props}>
         <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
@@ -25,9 +29,9 @@ const BedCreate = props => (
             >
                 <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
             </ReferenceInput>
-            <BooleanInput source="enabled" validate={[required()]} disabled={false} initialValue={true}/>
-            <BooleanInput source="available" validate={[required()]} disabled={false} initialValue={true}/>
-            <BooleanInput source="free" validate={[required()]} disabled={false} initialValue={true}/>
+            <BooleanInput source="enabled" validate={[required(), validateTrue('La cama debe estar habilitada para su creación.')]} disabled={false} initialValue={true}/>
+            <BooleanInput source="available" validate={[required(), validateTrue('La cama debe estar disponible para su creación.')]} disabled={false} initialValue={true}/>
+            <BooleanInput source="free" validate={[required()]} disabled={true} initialValue={true}/>
         </SimpleForm>
     </Create>
 );
