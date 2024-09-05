@@ -1778,8 +1778,8 @@ export interface EmergencyCareEpisodeFilterDto {
     patientFirstName: string;
     patientId: number;
     patientLastName: string;
-    triageCategoryId: number;
-    typeId: number;
+    triageCategoryIds: number[];
+    typeIds: number[];
 }
 
 export interface EmergencyCareEpisodeInProgressDto {

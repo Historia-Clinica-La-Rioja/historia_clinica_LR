@@ -4,14 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class EmergencyCareEpisodeFilterDto {
 
-	private Short triageCategoryId;
+	private List<Short> triageCategoryIds;
 
-	private Short typeId;
+	private List<Short> typeIds;
 
 	private Integer patientId;
 

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +29,6 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 	private EntityManager entityManager;
 
 	private FeatureFlagsService featureFlagsService;
-
-	private final Short undefinedEmergencyCareType = -1;
 
 	private final String STATE_IDS_STRING = EEmergencyCareState.getAllForEmergencyCareList()
 			.stream().map(String::valueOf)
@@ -57,9 +56,10 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 
 		String sqlWhereStatement =
 				"WHERE (ece.emergencyCareStateId IN (" + STATE_IDS_STRING + "))" +
-						"AND ece.institutionId = " + institutionId +
-						(filter.getTriageCategoryId() != null ? " AND ece.triageCategoryId = " + filter.getTriageCategoryId() : " ") +
-						(filter.getPatientId() != null ? " AND pa.id = " + filter.getPatientId() : " ") +
+						"AND ece.institutionId = :institutionId" +
+						(filter.getTriageCategoryIds() != null && !filter.getTriageCategoryIds().isEmpty() ? " AND ece.triageCategoryId IN :triageCategoryIds" : " ") +
+						(filter.getTypeIds() != null && !filter.getTypeIds().isEmpty() ? " AND ece.emergencyCareTypeId IN :typeIds": " ") +
+						(filter.getPatientId() != null ? " AND pa.id = :patientId" : " ") +
 						(filter.getIdentificationNumber() != null ? " AND LOWER(pe.identificationNumber) LIKE '%" + filter.getIdentificationNumber().toLowerCase() + "%'" : " ") +
 						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND LOWER(petd.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%') OR (petd.nameSelfDetermination IS NULL AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'))" : " AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'" : " ") +
 						(filter.getPatientLastName() != null ? " AND LOWER(pe.lastName) LIKE '%" + filter.getPatientLastName().toLowerCase() + "%'" : " ") +
@@ -67,25 +67,36 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						(filter.getMustBeEmergencyCareTemporal() != null && filter.getMustBeEmergencyCareTemporal() ? " AND pa.typeId = " + EPatientType.EMERGENCY_CARE_TEMPORARY.getId() : " ");
 
 
-		if (filter.getTypeId() != null) {
-			sqlWhereStatement += filter.getTypeId().equals(undefinedEmergencyCareType) ? " AND ece.emergencyCareTypeId is NULL " : " AND ece.emergencyCareTypeId = " + filter.getTypeId() + " ";
-		}
-
 		String sqlOrderByStatement = "ORDER BY ecs.order, ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn";
 
-		List<EmergencyCareVo> resultData = entityManager.createQuery(sqlDataSelectStatement + sqlFromStatement + sqlWhereStatement + sqlOrderByStatement)
+		Query resultQuery = entityManager.createQuery(sqlDataSelectStatement + sqlFromStatement + sqlWhereStatement + sqlOrderByStatement)
 				.setMaxResults(pageable.getPageSize()) //LIMIT
-				.setFirstResult(pageable.getPageSize() * pageable.getPageNumber()) //OFFSET
-				.getResultList();
+				.setFirstResult(pageable.getPageSize() * pageable.getPageNumber());//OFFSET
 
-		long totalResultAmount = countTotalAmountOfElements(sqlFromStatement + sqlWhereStatement);
+		setQueryParameters(filter, institutionId, resultQuery);
+
+		List<EmergencyCareVo> resultData = resultQuery.getResultList();
+
+		long totalResultAmount = countTotalAmountOfElements(filter, institutionId, sqlFromStatement + sqlWhereStatement);
 		List<EmergencyCareBo> result = resultData.stream().map(EmergencyCareBo::new).collect(Collectors.toList());
 		return new PageImpl<>(result, pageable, totalResultAmount);
 	}
 
-	private long countTotalAmountOfElements(String fromAndWhereStatement) {
+	private long countTotalAmountOfElements(EmergencyCareEpisodeFilterBo filter, Integer institutionId, String fromAndWhereStatement) {
 		String sqlCountSelectStatement = "SELECT COUNT(1) ";
-		return (long) entityManager.createQuery(sqlCountSelectStatement + fromAndWhereStatement).getSingleResult();
+		Query resultQuery = entityManager.createQuery(sqlCountSelectStatement + fromAndWhereStatement);
+		setQueryParameters(filter, institutionId, resultQuery);
+		return (long) resultQuery.getSingleResult();
+	}
+
+	private void setQueryParameters(EmergencyCareEpisodeFilterBo filter, Integer institutionId, Query result) {
+		result.setParameter("institutionId", institutionId);
+		if (filter.getTypeIds()!= null && !filter.getTypeIds().isEmpty())
+			result.setParameter("typeIds", filter.getTypeIds());
+		if (filter.getTriageCategoryIds()!= null && !filter.getTriageCategoryIds().isEmpty())
+			result.setParameter("triageCategoryIds", filter.getTriageCategoryIds());
+		if (filter.getPatientId() != null)
+			result.setParameter("patientId", filter.getPatientId());
 	}
 
 }
