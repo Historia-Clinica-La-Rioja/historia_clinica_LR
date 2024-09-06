@@ -50,6 +50,9 @@ public class LastOdontogramDrawing {
     @Column(name = "right_surface", length = 20)
     private String rightSurface;
 
+	@Column(name = "odontology_consultation_id")
+	private Integer  odontologyConsultationId;
+
     public LastOdontogramDrawing(Integer patientId, ToothDrawingsBo toothDrawings) {
         this.patientId = patientId;
 		this.toothId = toothDrawings.getToothId();

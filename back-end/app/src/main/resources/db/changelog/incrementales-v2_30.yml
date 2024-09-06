@@ -32,3 +32,16 @@ databaseChangeLog:
                     constraints:
                       nullable: true
 
+    - changeSet:
+        id: addColumn-odontology_consultation_id-last_odontogram_drawing
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: last_odontogram_drawing
+              columns:
+                - column:
+                    name: odontology_consultation_id
+                    type: int
+                    constraints:
+                      references: odontology_consultation(id)
+                      foreignKeyName: FK_last_odontogram_drawing_odontology_consultation_id
