@@ -14,4 +14,6 @@ public interface MedicineFinancingStatusSearchStorage {
 
 	Page<InstitutionMedicineFinancingStatusBo> findAllByFilter(Integer institutionId, MedicineFinancingStatusFilterBo filter, Pageable pageable);
 
+	Page<InstitutionMedicineFinancingStatusBo> findAllFinancedInInstitution(Integer institutionId, String conceptPt);
+
 }

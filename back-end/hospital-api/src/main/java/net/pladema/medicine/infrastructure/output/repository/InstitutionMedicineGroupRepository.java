@@ -58,7 +58,8 @@ public interface InstitutionMedicineGroupRepository extends SGXAuditableEntityJP
 			"FROM InstitutionMedicineGroup img " +
 			"JOIN MedicineGroup mg ON (mg.id = img.medicineGroupId) " +
 			"JOIN MedicineGroupMedicine mgm ON (mg.id = mgm.medicineGroupId) " +
-			"JOIN MedicineFinancingStatus mfs ON (mgm.medicineId = mfs.id) " +
+			"JOIN MedicineFinancingStatus mfs ON (mgm.medicineId = mfs.id)" +
+			"JOIN InstitutionMedicineFinancingStatus imfs ON (imfs.medicineId = mfs.id AND imfs.institutionId = :institutionId) " +
 			"JOIN Snomed s ON (mgm.medicineId = s.id) " +
 			"LEFT JOIN MedicineGroupProblem mgp ON (mg.id = mgp.medicineGroupId) " +
 			"LEFT JOIN Snomed s2 ON (mgp.problemId = s2.id) " +
@@ -66,7 +67,7 @@ public interface InstitutionMedicineGroupRepository extends SGXAuditableEntityJP
 			"AND img.institutionId = :institutionId " +
 			"AND s.sctid IN (:medicineSctids) " +
 			"AND (mg.allDiagnoses IS TRUE OR (s2.sctid = :problemSctid AND mgp.deleteable.deleted IS FALSE)) " +
-			"AND mfs.financed IS TRUE " +
+			"AND (mfs.financed IS TRUE OR imfs.financed IS TRUE) " +
 			"AND mgm.deleteable.deleted IS FALSE " +
 			"AND img.deleteable.deleted IS FALSE " +
 			"AND mg.deleteable.deleted IS FALSE")

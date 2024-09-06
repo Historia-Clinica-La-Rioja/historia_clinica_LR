@@ -22,5 +22,15 @@ public class MedicineGroupMedicineBo implements Serializable {
 	private Integer medicineId;
 	private Boolean financed;
 	private String conceptPt;
+	private Boolean financedByInstitution;
+	private Integer institutionId;
+
+	public MedicineGroupMedicineBo(Integer id, Integer medicineGroupId, Integer medicineId, Boolean financed, String conceptPt){
+		this.id = id;
+		this.medicineGroupId = medicineGroupId;
+		this.medicineId = medicineId;
+		this.financed = financed;
+		this.conceptPt = conceptPt;
+	}
 
 }

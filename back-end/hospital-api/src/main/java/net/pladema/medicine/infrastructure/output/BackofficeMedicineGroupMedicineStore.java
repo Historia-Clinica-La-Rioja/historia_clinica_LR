@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +32,13 @@ public class BackofficeMedicineGroupMedicineStore implements BackofficeStore<Med
 
 	@Override
 	public Page<MedicineGroupMedicineDto> findAll(MedicineGroupMedicineDto example, Pageable pageable) {
-		List<MedicineGroupMedicineDto> result =
-				medicineGroupMedicineRepository.getByMedicineGroupId(example.getMedicineGroupId())
-				.stream()
-				.map(this::mapToDto)
-				.collect(Collectors.toList());
+		List<MedicineGroupMedicineBo> bos = new ArrayList<>();
+		bos = example.getInstitutionId() == null ?
+				medicineGroupMedicineRepository.getByMedicineGroupId(example.getMedicineGroupId()) :
+				medicineGroupMedicineRepository.getByMedicineGroupIdAndInstitutionId(example.getMedicineGroupId(), example.getInstitutionId());
+
+		List<MedicineGroupMedicineDto> result = bos.stream().map(this::mapToDto).collect(Collectors.toList());
+
 		sortResult(result, pageable.getSort());
 		int minIndex = pageable.getPageNumber()*pageable.getPageSize();
 		int maxIndex = minIndex + pageable.getPageSize();
@@ -83,6 +86,8 @@ public class BackofficeMedicineGroupMedicineStore implements BackofficeStore<Med
 		result.setMedicineId(bo.getMedicineId());
 		result.setFinanced(bo.getFinanced());
 		result.setConceptPt(bo.getConceptPt());
+		result.setFinancedByInstitution(bo.getFinancedByInstitution());
+		result.setInstitutionId(bo.getInstitutionId());
 		return result;
 	}
 

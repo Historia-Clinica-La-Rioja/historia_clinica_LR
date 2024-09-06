@@ -33,4 +33,16 @@ public interface MedicineGroupMedicineRepository extends SGXAuditableEntityJPARe
 			"WHERE mgm.medicineGroupId = :medicineGroupId " +
 			"AND mgm.deleteable.deleted IS FALSE")
 	List<MedicineGroupMedicineBo> getByMedicineGroupId(@Param("medicineGroupId") Integer medicineGroupId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicine.domain.MedicineGroupMedicineBo(mgm.id, mgm.medicineGroupId, mfs.id, mfs.financed, s.pt, imfs.financed, imfs.institutionId) " +
+			"FROM MedicineGroupMedicine mgm " +
+			"JOIN MedicineFinancingStatus mfs ON (mgm.medicineId = mfs.id) " +
+			"JOIN InstitutionMedicineFinancingStatus imfs ON (mfs.id = imfs.medicineId) " +
+			"JOIN Snomed s ON (mfs.id = s.id) " +
+			"WHERE mgm.medicineGroupId = :medicineGroupId " +
+			"AND imfs.institutionId = :institutionId " +
+			"AND mgm.deleteable.deleted IS FALSE")
+	List<MedicineGroupMedicineBo> getByMedicineGroupIdAndInstitutionId(@Param("medicineGroupId") Integer medicineGroupId, @Param("institutionId") Integer institutionId);
+
 }

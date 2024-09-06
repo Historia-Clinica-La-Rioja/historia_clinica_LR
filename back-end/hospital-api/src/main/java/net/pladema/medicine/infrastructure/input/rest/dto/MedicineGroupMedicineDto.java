@@ -22,5 +22,7 @@ public class MedicineGroupMedicineDto implements Serializable {
 	private Integer medicineId;
 	private Boolean financed;
 	private String conceptPt;
+	private Boolean financedByInstitution;
+	private Integer institutionId;
 
 }

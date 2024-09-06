@@ -3,9 +3,11 @@ package net.pladema.medicine.infrastructure.output;
 import lombok.AllArgsConstructor;
 import net.pladema.medicine.application.port.MedicineFinancingStatusSearchStorage;
 import net.pladema.medicine.domain.InstitutionMedicineFinancingStatusBo;
+import net.pladema.medicine.domain.MedicineFinancingStatusBo;
 import net.pladema.medicine.domain.MedicineFinancingStatusFilterBo;
 import net.pladema.medicine.infrastructure.input.rest.dto.InstitutionMedicineFinancingStatusDto;
 import net.pladema.medicine.infrastructure.output.repository.InstitutionMedicineFinancingStatusRepository;
+import net.pladema.medicine.infrastructure.output.repository.MedicineFinancingStatusRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 import org.springframework.data.domain.Example;
@@ -23,12 +25,18 @@ public class BackofficeInstitutionMedicineFinancingStatusStore implements Backof
 
 	private final InstitutionMedicineFinancingStatusRepository repository;
 	private final MedicineFinancingStatusSearchStorage medicineFinancingStatusSearchStorage;
+	private final MedicineFinancingStatusRepository medicineFinancingStatusRepository;
 
 	@Override
 	public Page<InstitutionMedicineFinancingStatusDto> findAll(InstitutionMedicineFinancingStatusDto example, Pageable pageable) {
 		Integer institutionId = example.getInstitutionId();
-		MedicineFinancingStatusFilterBo filter = new MedicineFinancingStatusFilterBo(example.getConceptSctid(), example.getConceptPt(), example.getFinancedByDomain(), example.getFinancedByInstitution());
-		return medicineFinancingStatusSearchStorage.findAllByFilter(institutionId, filter, pageable).map(this::mapToDto);
+		/* If medicineId = -1 it means that we are adding a medicine to an institutional medicine group, we have to return all financed medicines */
+		if (example.getMedicineId() != null && example.getMedicineId().equals(-1)) {
+			return medicineFinancingStatusSearchStorage.findAllFinancedInInstitution(institutionId, example.getConceptPt()).map(this::mapToDto);
+		} else {
+			MedicineFinancingStatusFilterBo filter = new MedicineFinancingStatusFilterBo(example.getConceptSctid(), example.getConceptPt(), example.getFinancedByDomain(), example.getFinancedByInstitution());
+			return medicineFinancingStatusSearchStorage.findAllByFilter(institutionId, filter, pageable).map(this::mapToDto);
+		}
 	}
 
 	@Override
@@ -38,12 +46,12 @@ public class BackofficeInstitutionMedicineFinancingStatusStore implements Backof
 
 	@Override
 	public List<InstitutionMedicineFinancingStatusDto> findAllById(List<Integer> ids) {
-		return repository.getAllByIds(ids).stream().map(this::mapToDto).collect(Collectors.toList());
+		return repository.findAllById(ids).stream().map(this::mapToDto).collect(Collectors.toList());
 	}
 
 	@Override
 	public Optional<InstitutionMedicineFinancingStatusDto> findById(Integer id) {
-		return repository.findMedicineById(id).map(this::mapToDto);
+		return repository.findBoById(id).map(this::mapToDto);
 	}
 
 	@Override
@@ -71,11 +79,12 @@ public class BackofficeInstitutionMedicineFinancingStatusStore implements Backof
 		result.setId(bo.getId());
 		result.setInstitutionId(bo.getInstitutionId());
 		result.setFinancedByInstitution(bo.getFinancedByInstitution());
-		result.setMedicineId(bo.getId());
+		result.setMedicineId(bo.getMedicineId());
 		result.setFinancedByDomain(bo.getFinancedByDomain());
 		result.setConceptPt(bo.getConceptPt());
 		result.setConceptSctid(bo.getConceptSctid());
 		return result;
 	}
+
 
 }

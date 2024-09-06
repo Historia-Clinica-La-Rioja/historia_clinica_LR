@@ -90,6 +90,42 @@ public class MedicineFinancingStatusSearchStorageImpl implements MedicineFinanci
 		return new PageImpl<>(result, pageable, totalResult);
 	}
 
+	@Override
+	public Page<InstitutionMedicineFinancingStatusBo> findAllFinancedInInstitution(Integer institutionId, String conceptPt){
+
+		String sqlSelectStatement = "SELECT imfs.id, imfs.institution_id, imfs.financed as financed_by_institution, mfs.id as medicine_id, s.sctid, s.pt, mfs.financed as financed_by_domain ";
+
+		String sqlFromStatement = "FROM {h-schema}institution_medicine_financing_status imfs " +
+				"JOIN {h-schema}medicine_financing_status mfs ON (imfs.medicine_id = mfs.id) " +
+				"JOIN {h-schema}snomed s ON (s.id = mfs.id) ";
+
+		String sqlWhereStatement = "WHERE (mfs.financed IS TRUE OR imfs.financed IS TRUE) " +
+				"AND imfs.institution_id = " + institutionId +
+				(conceptPt != null ? " AND s.pt LIKE %" + conceptPt + "% " : " ");
+
+		String sqlOrderByStatement = "ORDER BY s.pt ASC";
+
+		List<Object[]> queryResult = entityManager.createNativeQuery(sqlSelectStatement + sqlFromStatement + sqlWhereStatement + sqlOrderByStatement)
+				.setMaxResults(100) //LIMIT
+				.getResultList();
+
+		List<InstitutionMedicineFinancingStatusBo> result = new ArrayList<>();
+
+		queryResult.forEach(o -> result.add(new InstitutionMedicineFinancingStatusBo(
+				(Integer) o[0],
+				(Integer) o[1],
+				(Boolean) o[2],
+				(Integer) o[3],
+				(String) o[4],
+				(String) o[5],
+				(Boolean) o[6]))
+		);
+
+		return new PageImpl<>(result);
+	}
+
+
+
 	private String getWhereStatement(MedicineFinancingStatusFilterBo filter, Integer institutionId){
 		return "WHERE mfs.deleted IS FALSE " +
 		(institutionId != null ? "AND imfs.institution_id = " + institutionId + " " : "") +

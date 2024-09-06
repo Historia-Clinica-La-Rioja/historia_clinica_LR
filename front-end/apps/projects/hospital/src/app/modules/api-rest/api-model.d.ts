@@ -3193,7 +3193,9 @@ export interface MedicineFinancingStatusDto extends Serializable {
 export interface MedicineGroupMedicineDto extends Serializable {
     conceptPt: string;
     financed: boolean;
+    financedByInstitution: boolean;
     id: number;
+    institutionId: number;
     medicineGroupId: number;
     medicineId: number;
 }
