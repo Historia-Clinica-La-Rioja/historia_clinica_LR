@@ -38,10 +38,10 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 
 		String whereStatement =	"WHERE p.deleteable.deleted = FALSE " +
 				"AND p.typeId != " + EPatientType.REJECTED.getId() + " " +
-				(searchFilter.getFirstName() != null && !searchFilter.getFirstName().isBlank() ? (searchFilter.getFilterByNameSelfDetermination() ? "AND ((pe.nameSelfDetermination IS NOT NULL AND UPPER(pe.nameSelfDetermination) LIKE '%" + searchFilter.getFirstName().toUpperCase() + "%') OR (pe.nameSelfDetermination IS NULL AND UPPER(p2.firstName) LIKE '%" + searchFilter.getFirstName().toUpperCase() + "%')) " : "AND UPPER(p2.firstName) LIKE '%" + searchFilter.getFirstName().toUpperCase() + "%' ") : "") +
-				(searchFilter.getMiddleNames() != null && !searchFilter.getMiddleNames().isBlank() ? "AND UPPER(p2.middleNames) LIKE '%" + searchFilter.getMiddleNames().toUpperCase() + "%' " : "") +
-				(searchFilter.getLastName() != null && !searchFilter.getLastName().isBlank() ? "AND UPPER(p2.lastName) LIKE '%" + searchFilter.getLastName().toUpperCase() + "%' " : "") +
-				(searchFilter.getOtherLastNames() != null ? "AND UPPER(p2.otherLastNames) LIKE '%" + searchFilter.getOtherLastNames().toUpperCase() +"%' " : "") +
+				(searchFilter.getFirstName() != null && !searchFilter.getFirstName().isBlank() ? ((searchFilter.getFilterByNameSelfDetermination() ? "AND UPPER(COALESCE(pe.nameSelfDetermination, p2.firstName)) " : "AND UPPER(p2.firstName) ") + "LIKE '" + searchFilter.getFirstName().toUpperCase() + "%' ") : "") +
+				(searchFilter.getMiddleNames() != null && !searchFilter.getMiddleNames().isBlank() ? "AND UPPER(p2.middleNames) LIKE '" + searchFilter.getMiddleNames().toUpperCase() + "%' " : "") +
+				(searchFilter.getLastName() != null && !searchFilter.getLastName().isBlank() ? "AND UPPER(p2.lastName) LIKE '" + searchFilter.getLastName().toUpperCase() + "%' " : "") +
+				(searchFilter.getOtherLastNames() != null ? "AND UPPER(p2.otherLastNames) LIKE '" + searchFilter.getOtherLastNames().toUpperCase() +"%' " : "") +
 				(searchFilter.getGenderId() != null ? "AND p2.genderId = " + searchFilter.getGenderId() + " " : "") +
 				(searchFilter.getIdentificationNumber() != null && !searchFilter.getIdentificationNumber().isBlank() ? "AND p2.identificationNumber = '" + searchFilter.getIdentificationNumber() + "' " : "") +
 				(searchFilter.getIdentificationTypeId() != null ? "AND p2.identificationTypeId = " + searchFilter.getIdentificationTypeId() + " " : "") +
