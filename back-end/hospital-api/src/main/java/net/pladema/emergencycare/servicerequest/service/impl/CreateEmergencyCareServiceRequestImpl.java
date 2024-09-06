@@ -41,6 +41,7 @@ public class CreateEmergencyCareServiceRequestImpl implements CreateEmergencyCar
 				.observations(extendedServiceRequestBo.getObservations())
 				.studyTypeId(extendedServiceRequestBo.getStudyTypeId())
 				.requiresTransfer(extendedServiceRequestBo.getRequiresTransfer())
+				.deferredDate(extendedServiceRequestBo.getDeferredDate())
 				.build();
 	}
 

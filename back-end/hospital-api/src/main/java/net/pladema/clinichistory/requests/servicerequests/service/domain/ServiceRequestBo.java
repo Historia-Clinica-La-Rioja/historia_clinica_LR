@@ -64,6 +64,8 @@ public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
 
 	private Boolean requiresTransfer;
 
+	private LocalDateTime deferredDate;
+
 	@Override
     public Integer getPatientId() {
         if (patientInfo != null)

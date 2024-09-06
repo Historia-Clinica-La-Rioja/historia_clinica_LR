@@ -71,6 +71,9 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 	@Column(name = "requires_transfer")
 	private Boolean requiresTransfer;
 
+	@Column(name = "deferred_date")
+	private LocalDateTime deferredDate;
+
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,
 						  Integer doctorId,

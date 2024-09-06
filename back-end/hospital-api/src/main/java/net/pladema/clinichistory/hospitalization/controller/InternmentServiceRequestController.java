@@ -2,6 +2,8 @@ package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,7 @@ public class InternmentServiceRequestController {
 	private final PatientExternalService patientExternalService;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final StudyMapper studyMapper;
+	private final LocalDateMapper localDateMapper;
 
 	@PostMapping("/patient/{patientId}")
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -76,7 +80,8 @@ public class InternmentServiceRequestController {
 					studyListDto,
 					serviceRequestListDto.getObservations(),
 					serviceRequestListDto.getStudyType().getId(),
-					serviceRequestListDto.getRequiresTransfer());
+					serviceRequestListDto.getRequiresTransfer(),
+					serviceRequestListDto.getDeferredDate());
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createInternmentServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId) );
@@ -95,7 +100,7 @@ public class InternmentServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTransfer){
+	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTransfer, DateTimeDto deferredDate){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
 		GenericServiceRequestBo result = new GenericServiceRequestBo();
 		result.setCategoryId(categoryId);
@@ -105,6 +110,7 @@ public class InternmentServiceRequestController {
 		result.setObservations(observations);
 		result.setStudyTypeId(studyType);
 		result.setRequiresTransfer(requiresTransfer);
+		result.setDeferredDate(localDateMapper.fromDateDto(deferredDate.getDate()).atTime(localDateMapper.fromTimeDto(deferredDate.getTime())) );
 		log.debug("Output -> {}", result);
 		return result;
 	}

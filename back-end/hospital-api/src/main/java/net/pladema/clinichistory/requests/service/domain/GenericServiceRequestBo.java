@@ -38,11 +38,12 @@ public class GenericServiceRequestBo {
 
 	private Boolean requiresTransfer;
 
+	private LocalDateTime deferredDate;
+
 	public Integer getPatientId() {
 		if (patientInfo != null)
 			return patientInfo.getId();
 		return null;
 	}
-
 
 }

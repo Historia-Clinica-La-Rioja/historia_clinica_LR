@@ -4053,6 +4053,7 @@ export interface PreferredTermDto {
 
 export interface PrescriptionDto extends Serializable {
     clinicalSpecialtyId?: number;
+    deferredDate?: DateTimeDto;
     hasRecipe: boolean;
     isArchived?: boolean;
     isPostDated?: boolean;

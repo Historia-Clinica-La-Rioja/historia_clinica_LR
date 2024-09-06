@@ -2,7 +2,10 @@ package net.pladema.emergencycare.servicerequest.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import ca.uhn.fhir.model.primitive.DateTimeDt;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +63,8 @@ public class EmergencyCareServiceRequestController {
 
 	private final StudyMapper studyMapper;
 
+	private final LocalDateMapper localDateMapper;
+
 	@PostMapping("/patient/{patientId}")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@Transactional
@@ -72,13 +79,13 @@ public class EmergencyCareServiceRequestController {
 		Integer patientMedicalCoverageId = emergencyCareEpisodeService.getPatientMedicalCoverageIdByEpisode(episodeId);
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
 		List<Integer> result = new ArrayList<>();
-		srGroupBy.forEach((categoryId, studyListDto) ->	handleStudyList(institutionId, episodeId, doctorId, patientMedicalCoverageId, patientDto, result, categoryId, studyListDto, serviceRequestListDto.getObservations(), serviceRequestListDto.getStudyType().getId(), serviceRequestListDto.getRequiresTransfer()));
+		srGroupBy.forEach((categoryId, studyListDto) ->	handleStudyList(institutionId, episodeId, doctorId, patientMedicalCoverageId, patientDto, result, categoryId, studyListDto, serviceRequestListDto.getObservations(), serviceRequestListDto.getStudyType().getId(), serviceRequestListDto.getRequiresTransfer(), serviceRequestListDto.getDeferredDate()));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private void handleStudyList(Integer institutionId, Integer episodeId, Integer doctorId, Integer medicalCoverageId, BasicPatientDto patientDto, List<Integer> result, String categoryId, List<PrescriptionItemDto> studyListDto, String observations, Short studyTypeId, Boolean requiresTransfer) {
-		ExtendedServiceRequestBo serviceRequestBo = parseTo(doctorId, patientDto, categoryId, medicalCoverageId, studyListDto, observations, studyTypeId, requiresTransfer);
+	private void handleStudyList(Integer institutionId, Integer episodeId, Integer doctorId, Integer medicalCoverageId, BasicPatientDto patientDto, List<Integer> result, String categoryId, List<PrescriptionItemDto> studyListDto, String observations, Short studyTypeId, Boolean requiresTransfer, DateTimeDto deferredDate) {
+		ExtendedServiceRequestBo serviceRequestBo = parseTo(doctorId, patientDto, categoryId, medicalCoverageId, studyListDto, observations, studyTypeId, requiresTransfer, deferredDate);
 		serviceRequestBo.setInstitutionId(institutionId);
 		Integer srId = emergencyCareServiceRequestService.execute(serviceRequestBo, episodeId);
 		hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
@@ -93,7 +100,7 @@ public class EmergencyCareServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public ExtendedServiceRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyTypeId, Boolean requiresTransfer){
+	public ExtendedServiceRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyTypeId, Boolean requiresTransfer, DateTimeDto deferredDate){
 		log.debug("parseTo -> doctorId {}, patientDto {}, categoryId {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, categoryId, medicalCoverageId, studies);
 		ExtendedServiceRequestBo result = new ExtendedServiceRequestBo();
 		result.setCategoryId(categoryId);
@@ -104,6 +111,7 @@ public class EmergencyCareServiceRequestController {
 		result.setObservations(observations);
 		result.setStudyTypeId(studyTypeId);
 		result.setRequiresTransfer(requiresTransfer);
+		result.setDeferredDate(localDateMapper.fromDateDto(deferredDate.getDate()).atTime(localDateMapper.fromTimeDto(deferredDate.getTime())) );
 		log.debug("Output -> {}", result);
 		return result;
 	}

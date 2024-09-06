@@ -47,6 +47,7 @@ public class CreateInternmentServiceRequestServiceImpl implements CreateInternme
 				.observations(genericServiceRequestBo.getObservations())
 				.studyTypeId(genericServiceRequestBo.getStudyTypeId())
 				.requiresTransfer(genericServiceRequestBo.getRequiresTransfer())
+				.deferredDate(genericServiceRequestBo.getDeferredDate())
 				.build();
 	}
 

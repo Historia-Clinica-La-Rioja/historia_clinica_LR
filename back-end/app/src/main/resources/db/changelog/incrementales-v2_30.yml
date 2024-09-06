@@ -18,3 +18,17 @@ databaseChangeLog:
               oldColumnName: requires_technician
               newColumnName: requires_transfer
               columnDataType: boolean
+
+    - changeSet:
+        id: addColumn-deferred-order-date-to-service-request
+        author: lvenere
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: deferred_date
+                    type: timestamp
+                    constraints:
+                      nullable: true
+
