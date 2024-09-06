@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import net.pladema.reports.application.generators.GenerateEmergencyCareNominalDetailExcelReport;
 
+import net.pladema.reports.application.generators.GenerateImageNetworkProductivityExcelReport;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.FileService;
@@ -24,6 +26,7 @@ public class ProcessInstitutionExcelReport {
 	private final GenerateInstitutionMonthlyExcelReport generateInstitutionMonthlyExcelReport;
 	private final GenerateAppointmentNominalDetailExcelReport generateAppointmentNominalDetailExcelReport;
 	private final GenerateEmergencyCareNominalDetailExcelReport generateEmergencyCareNominalDetailExcelReport;
+	private final GenerateImageNetworkProductivityExcelReport generateImageNetworkProductivityExcelReport;
 	private final FileService fileService;
 
 	public FileInfo run(InstitutionReportQueued reportInstitutionMonthlyQueue) throws InstitutionExcelReportGeneratorNotFound {
@@ -66,6 +69,9 @@ public class ProcessInstitutionExcelReport {
 		}
 		if (InstitutionReportType.EmergencyCareNominalDetail.equals(reportType)) {
 			return Optional.of(generateEmergencyCareNominalDetailExcelReport);
+		}
+		if (InstitutionReportType.ImageNetworkProductivity.equals(reportType)) {
+			return Optional.of(generateImageNetworkProductivityExcelReport);
 		}
 		return Optional.empty();
 	}

@@ -2576,13 +2576,6 @@ export interface IdentifierDto extends Serializable {
     value: string;
 }
 
-export interface ImageNetworkProductivityFilterDto {
-    clinicalSpecialtyId: number;
-    from: DateDto;
-    healthcareProfessionalId: number;
-    to: DateDto;
-}
-
 export interface ImageQueueFilteringCriteriaDto {
     equipmentId: number;
     from: DateDto;

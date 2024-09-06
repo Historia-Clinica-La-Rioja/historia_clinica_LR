@@ -1,12 +1,10 @@
 package net.pladema.reports.imageNetworkProductivity.infrastructure.input;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.files.StreamsUtils;
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -16,10 +14,6 @@ import net.pladema.reports.imageNetworkProductivity.application.GenerateImageNet
 
 import net.pladema.reports.imageNetworkProductivity.domain.ImageNetworkProductivityFilterBo;
 
-import net.pladema.reports.imageNetworkProductivity.infrastructure.input.dto.ImageNetworkProductivityFilterDto;
-
-import net.pladema.reports.imageNetworkProductivity.infrastructure.input.mapper.ImageNetworkProductivityReportMapper;
-
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 
 import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
 
@@ -39,30 +35,33 @@ import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
 @RequestMapping("/institution/{institutionId}/report/image-network-productivity")
 public class ImageNetworkProductivityReportController {
 
-	private ImageNetworkProductivityReportMapper imageNetworkProductivityReportMapper;
-
 	private GenerateImageNetworkProductivitySheet generateImageNetworkProductivitySheet;
 
-	private ObjectMapper objectMapper;
+	private LocalDateMapper localDateMapper;
 
 	@GetMapping
-	public ResponseEntity<Resource> run(@PathVariable("institutionId") Integer institutionId,
-										@RequestParam("filter") String imageNetworkProductivityFilterDto) throws JsonProcessingException {
-		log.debug("Input parameters -> institutionId {}, imageNetworkProductivityFilterDto {}", institutionId, imageNetworkProductivityFilterDto);
-		ImageNetworkProductivityFilterBo filter = parseFilter(imageNetworkProductivityFilterDto, institutionId);
+	public ResponseEntity<Resource> run(
+		@PathVariable("institutionId") Integer institutionId,
+		@RequestParam(value="fromDate") String fromDate,
+		@RequestParam(value="toDate") String toDate,
+		@RequestParam(value="clinicalSpecialtyId", required = false) Short clinicalSpecialtyId,
+		@RequestParam(value="doctorId", required = false) Integer doctorId,
+		@RequestParam(value="hierarchicalUnitTypeId", required = false) Integer hierarchicalUnitTypeId,
+		@RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
+		@RequestParam(value="appointmentStateId", required = false) Short appointmentStateId,
+		@RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants
+	) {
+		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, appointmentStateId {}, includeHierarchicalUnitDescendants {}" ,
+				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants);
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+		ImageNetworkProductivityFilterBo filter = new ImageNetworkProductivityFilterBo(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId);
 		IWorkbook result = generateImageNetworkProductivitySheet.run(filter);
 		return StoredFileResponse.sendFile(buildReport(result), generateFileName(result.getExtension()), result.getContentType());
 	}
 
 	private String generateFileName(String extension) {
 		return "reporte_productividad_rdi." + extension;
-	}
-
-	private ImageNetworkProductivityFilterBo parseFilter(String filter, Integer institutionId) throws JsonProcessingException {
-		ImageNetworkProductivityFilterDto imageNetworkProductivityFilterDto = objectMapper.readValue(filter, ImageNetworkProductivityFilterDto.class);
-		ImageNetworkProductivityFilterBo result = imageNetworkProductivityReportMapper.fromImageNetworkProductivityFilterDto(imageNetworkProductivityFilterDto);
-		result.setInstitutionId(institutionId);
-		return result;
 	}
 
 	private FileContentBo buildReport(IWorkbook workbook) {

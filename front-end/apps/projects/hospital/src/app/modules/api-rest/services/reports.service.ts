@@ -5,7 +5,6 @@ import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DownloadService } from '@core/services/download.service';
 import { ReportFilters } from "../../reportes/routes/home/home.component";
-import { ImageNetworkProductivityFilterDto } from '@api-rest/api-model';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Injectable({
@@ -69,10 +68,9 @@ export class ReportsService {
 		return this.getReport(params, fileName, url);
 		}
 
-	getImageNetworkProductivityReport(searchCriteria: ImageNetworkProductivityFilterDto, fileName: string){
+	getImageNetworkProductivityReport(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/report/image-network-productivity`;
-		const params = { filter: JSON.stringify(searchCriteria) };
-		return this.downloadService.downloadXlsWithRequestParams(url, fileName, params);
+		return this.getReport(params, fileName, url);
 	}
 
 }

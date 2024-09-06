@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { REPORT_TYPES_ID } from '../../constants/report-types';
 import { ReportsService } from '@api-rest/services/reports.service';
-import { AppFeature, ImageNetworkProductivityFilterDto } from '@api-rest/api-model';
-import { ReportFilters } from '../home/home.component';
-import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { InstitutionReportType } from '@api-rest/services/report-institution-queue.service';
 import { MonthlyQueueService } from '../../components/monthly-queue/monthly-queue.service';
@@ -63,8 +61,13 @@ export class MonthlyReportComponent implements OnInit {
 				fileName
 			)
 		}
-
-
+		if (reportId === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
+			return this.monthlyQueueService.showDialog(
+				InstitutionReportType.ImageNetworkProductivity,
+				reportFilters,
+				fileName
+			)
+		}
 
 	}
 
@@ -77,21 +80,12 @@ export class MonthlyReportComponent implements OnInit {
 			[REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL]:
 			this.reportsService.getNominalAppointmentsDetail(reportFilters, `${reportDescription}.xls`),
 			[REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING]:
-			this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(reportFilters), `${reportDescription}.xls`),
+			this.reportsService.getImageNetworkProductivityReport(reportFilters, `${reportDescription}.xls`),
 			[REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT]: this.reportsService.getNominalEmergencyCareEpisodeDetail(reportFilters, `${reportDescription}.xls`)
 		};
 
 		return getReportById[reportId];
 
-	}
-
-	private prepareImageNetworkProductivityFilterDto(reportsFilters: ReportFilters): ImageNetworkProductivityFilterDto {
-		return {
-			clinicalSpecialtyId: reportsFilters.clinicalSpecialtyId,
-			from: dateToDateDto(reportsFilters.fromDate),
-			healthcareProfessionalId: reportsFilters.doctorId,
-			to: dateToDateDto(reportsFilters.toDate),
-		}
 	}
 
 }

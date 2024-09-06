@@ -1,5 +1,6 @@
 package net.pladema.reports.imageNetworkProductivity.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class ImageNetworkProductivityFilterBo {
 
 	private Integer institutionId;

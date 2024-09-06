@@ -60,5 +60,6 @@ export class ReportInstitutionQueueService {
 export const enum InstitutionReportType {
     Monthly = "Monthly",
     AppointmentNominalDetail = "AppointmentNominalDetail",
-	EmergencyCareNominalDetail = "EmergencyCareNominalDetail"
+	EmergencyCareNominalDetail = "EmergencyCareNominalDetail",
+	ImageNetworkProductivity = "ImageNetworkProductivity"
 }
