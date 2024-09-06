@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate.ProfessionalDataBo;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -151,7 +153,9 @@ public class FetchConsultationsByDateControllerTest {
 						LocalDate.of(2024, 8, 19)
 				)),
 				List.of(),
-				List.of()
+				List.of(),
+				ProfessionalDataBo.builder()
+						.build()
 		));
 	}
 }

@@ -32,5 +32,5 @@ public class ConsultationDto {
 	private List<ConsultationItemWithDateDto> reasons;
 	private List<ConsultationItemWithDateDto> procedures;
 	private List<ConsultationItemWithDateDto> problems;
-
+	private ProfessionalDataDto professionalData;
 }

@@ -12,16 +12,17 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.TimeBo;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.ConsultationsByDateStorage;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate.ProfessionalDataBo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,11 +54,15 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				" coalesce(hu.closest_service_id, hu2.closest_service_id) as consultation_hierarchical_unit_service_id, " +
 				" coalesce(hu3.alias, hu4.alias) as consultation_hierarchical_unit_service_name, " +
 				" coalesce(hu.id, hu2.id) as diary_hierarchical_unit_id, " +
-				" coalesce(hu.alias, hu2.alias) 	as diary_hierarchical_unit_name, " +
+				" coalesce(hu.alias, hu2.alias) as diary_hierarchical_unit_name, " +
 				" ba.appointment_id as booking_id, " +
 				" coalesce(hu.type_id, hu2.type_id) as type_consulta, " +
 				" coalesce(hu3.type_id, hu4.type_id) as type_diary, " +
-				" proc.performed_date, hc.start_date, hc.inactivation_date " +
+				" proc.performed_date, hc.start_date, hc.inactivation_date, " +
+				" hp.id as id_profesional, peprof.cuil as cuil_profesional, it.description as tipo_ident_profesional, " +
+				" prof.first_name as primer_nombre, prof.middle_names as medio_nombre, prof.last_name as apellido, " +
+				" peprof.name_self_determination as nombre_autodeterminado, " +
+				" prof.identification_number as numero_ident_profesional " +
 				" from appointment a " +
 				" left join booking_appointment ba on ba.appointment_id = a.id " +
 				" left join booking_person bp on ba.booking_person_id = bp.id " +
@@ -98,6 +103,11 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				" left join snomed s2 on s2.id = hc.snomed_id " +
 				" left join outpatient_consultation_reasons ocr on ocr.outpatient_consultation_id = oc.id " +
 				" left join reasons r on r.id = ocr.reason_id " +
+				" join healthcare_professional hp on d.healthcare_professional_id = hp.id " +
+				" join person prof on hp.person_id = prof.id " +
+				" join person_extended peprof on peprof.person_id = prof.id " +
+				" join identification_type it2 on it2.id = prof.identification_type_id " +
+				" join clinical_specialty csprof on csprof.id = d.clinical_specialty_id " +
 				" where a.deleted IS NOT TRUE AND as2.id <> 4 AND as2.id <> 7 AND d.deleted IS NOT TRUE AND hu.deleted IS NOT TRUE AND hu2.deleted IS NOT TRUE " +
 				" AND a.date_type_id BETWEEN :dateFrom AND :dateUntil " + WHERE_INSTITUTION_ID + WHERE_HIERARCHICAL_UNIT_ID;
 
@@ -242,7 +252,17 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				appointmentBookingChannel,
 				reasons,
 				procedures,
-				problems
+				problems,
+				ProfessionalDataBo.builder()
+						.id((Integer) row[37])
+						.cuil((String) row[38])
+						.identificationType((String) row[39])
+						.firstName((String) row[40])
+						.middleNames((String) row[41])
+						.lastName((String) row[42])
+						.selfPerceivedName((String) row[43])
+						.identificationNumber((String) row[44])
+						.build()
 		);
 	}
 }

@@ -5,11 +5,13 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate.ProfessionalDataBo;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationItemWithDateDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.HierarchicalUnitDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.IdentificationDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.MedicalCoverageNameDto;
+import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ProfessionalDataDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.SnomedClinicalSpecialtyDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
@@ -78,6 +80,20 @@ public class FetchConsultationsByDateMapper {
 				.problems(mapToList(consultationBo.getProblems()))
 				.reasons(mapToList(consultationBo.getReasons()))
 				.procedures(mapToList(consultationBo.getProcedures()))
+				.professionalData(mapToDto(consultationBo.getProfessionalData()))
+				.build();
+	}
+
+	private static ProfessionalDataDto mapToDto(ProfessionalDataBo professionalData) {
+		return ProfessionalDataDto.builder()
+				.id(professionalData.getId())
+				.firstName(professionalData.getFirstName())
+				.middleNames(professionalData.getMiddleNames())
+				.lastName(professionalData.getLastName())
+				.selfPerceivedName(professionalData.getSelfPerceivedName())
+				.identificationNumber(professionalData.getIdentificationNumber())
+				.identificationType(professionalData.getIdentificationType())
+				.cuil(professionalData.getCuil())
 				.build();
 	}
 
