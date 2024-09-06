@@ -226,6 +226,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si el módulo de cuestionarios está activo")
 	HABILITAR_CUESTIONARIOS,
+
+	@Label("Indica si se muestra la seccion antecedentes familiares en la historia clinica")
+	HABILITAR_ANTECEDENTES_FAMILIARES,
 	;
 
 	public boolean isActive() {
