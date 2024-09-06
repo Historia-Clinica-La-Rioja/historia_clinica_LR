@@ -25,7 +25,6 @@ public class BackofficeInstitutionMedicineFinancingStatusStore implements Backof
 
 	private final InstitutionMedicineFinancingStatusRepository repository;
 	private final MedicineFinancingStatusSearchStorage medicineFinancingStatusSearchStorage;
-	private final MedicineFinancingStatusRepository medicineFinancingStatusRepository;
 
 	@Override
 	public Page<InstitutionMedicineFinancingStatusDto> findAll(InstitutionMedicineFinancingStatusDto example, Pageable pageable) {

@@ -1,15 +1,42 @@
-import React from "react";
-import { AutocompleteInput, SimpleForm, Create, ReferenceInput } from "react-admin";
+import { React, useState, useEffect, useRef } from "react";
+import { AutocompleteInput, SimpleForm, Create, ReferenceInput, useGetOne } from "react-admin";
 import CustomToolbar from '../../components/CustomToolbar';
 
+const goBack = () => {
+    window.history.back();
+}
 
 const MedicineGroupMedicineCreate = (props) => {
-    const redirect = `/medicinegroups/${props?.location?.state?.record?.medicineGroupId}/show`;
+    
+    const { data: record } = useGetOne('medicinegroups', props?.location?.state?.record?.medicineGroupId);
+
+    const institutionId = props?.location?.state?.record?.institutionId;
+
+    const reference = record?.isDomain ? "medicinefinancingstatus" : "institutionmedicinesfinancingstatus";
+
+    const [medicine, setMedicine] = useState(null);
+
+    const medicineRef = useRef(medicine); // Creamos un useRef para mantener la referencia al fármaco seleccionado
+
+    // Transformar el valor que se envía en la solicitud
+    const transform = (record) => {
+        const selectedMedicine = medicineRef.current;
+        const selectedMedicineId = (selectedMedicine.medicineId ? selectedMedicine.medicineId : selectedMedicine.id);
+        // Construimos el objeto a enviar en la solicitud
+        return {
+            ...record,
+            medicineId: selectedMedicineId , // Aquí enviamos el medicineId correcto
+        };
+    };
+
+    useEffect(() => {
+        medicineRef.current = medicine;
+    }, [medicine]);
 
     return(
-        <Create {...props}>
+        <Create {...props} transform={transform}>
 
-            <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
+            <SimpleForm redirect={goBack} toolbar={<CustomToolbar />}>
             
                 <ReferenceInput
                     source="medicineGroupId"
@@ -20,13 +47,13 @@ const MedicineGroupMedicineCreate = (props) => {
             
                 <ReferenceInput
                     source="medicineId"
-                    reference="medicinefinancingstatus"
+                    reference={reference}
                     label="Fármaco"
-                    filter={{ financed: true}}
+                    filter={{ financed: true, institutionId: institutionId, medicineId: -1 }}
                     sort={{ field: 'name', order:'ASC' }}
-                    perPage={1000}
+                    perPage={100}         
                 >
-                    <AutocompleteInput optionText="conceptPt" optionValue="id"></AutocompleteInput>
+                    <AutocompleteInput optionText="conceptPt" onSelect={(selected) => setMedicine(selected)}> </AutocompleteInput>
                 </ReferenceInput>
             
             </SimpleForm>

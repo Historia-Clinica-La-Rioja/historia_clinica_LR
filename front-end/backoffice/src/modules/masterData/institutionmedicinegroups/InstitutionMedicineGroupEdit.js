@@ -9,11 +9,14 @@ import {
 import { CustomToolbar } from '../../components';
 import { useState } from 'react';
 
-const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show/1`;
+const goBack = () => {
+    window.history.back();
+}
 
 const InstitutionMedicineGroupEdit = (props) => {
 
     const [record, setRecord] = useState({});
+
     const [isDomain, setIsDomain] = useState(false);
     
     const [requiresAudit, setRequiresAudit] = useState(record?.requiresAudit);
@@ -29,11 +32,10 @@ const InstitutionMedicineGroupEdit = (props) => {
     const handleRequiresAuditChange = (event) => {
         setRequiresAudit(event);
     };
-
-
+    
     return (
     <Edit {...props} hasShow={true} >
-        <SimpleForm redirect={redirect} toolbar={<CustomToolbar isEdit={!isDomain}/>}>
+        <SimpleForm redirect={goBack} toolbar={<CustomToolbar isEdit={!isDomain}/>}>
             <TextInput source="name" disabled={isDomain}/> 
             <span>Cobertura pública exclusiva</span>
             <br/>

@@ -9,9 +9,10 @@ import {
     Datagrid,
     useRecordContext,
     useGetOne,
-    List
+    List,
 } from 'react-admin';
 import { CustomToolbar } from '../../components';
+import {CreateRelatedButton} from '../../components';
 
 const EmptyTitle = () => <span />;
 
@@ -21,7 +22,7 @@ const ShowGroupPharmacos = (props) => {
         <List
             {...props}
             resource="medicinegroupmedicines"
-            filter= {{ 'medicineGroupId': record.medicineGroupId}}
+            filter= {{ medicineGroupId: record.medicineGroupId, institutionId: record.institutionId }}
             bulkActionButtons={false}
             exporter={false}
             hasCreate={false}
@@ -30,10 +31,36 @@ const ShowGroupPharmacos = (props) => {
             empty={false}
         >
             <Datagrid>
-                <TextField label="resources.medicinefinancingstatus.fields.conceptPt" source="conceptPt" />
-                <BooleanField label="resources.medicinefinancingstatus.fields.financed" source="financed" />
+                <TextField label="resources.institutionmedicinesfinancingstatus.fields.conceptPt" source="conceptPt" />
+                <BooleanField label="resources.institutionmedicinesfinancingstatus.fields.financedByDomain" source="financed" />
+                <BooleanField label="resources.institutionmedicinesfinancingstatus.fields.financedByInstitution" source="financedByInstitution" />
             </Datagrid>
         </List>
+    );
+}
+
+const AddPharmacoToGroup = (props) => {
+    const record = useRecordContext(props);
+    const customRecord = {medicineGroupId: record.medicineGroupId, institutionId: record.institutionId};
+    return (
+        <CreateRelatedButton
+            customRecord={customRecord}
+            reference="medicinegroupmedicines"
+            refFieldName="medicineGroupId"
+            label="resources.medicinegroups.fields.addpharmaco"/>
+    );
+}
+
+const AddProblemToGroup = (props) => {
+    const record = useRecordContext(props);
+    const customRecord = {medicineGroupId: record.medicineGroupId};
+    const allDiagnoses = record && record.allDiagnoses;
+    return ( allDiagnoses ? null :
+        <CreateRelatedButton
+            customRecord={customRecord}
+            reference="medicinegroupproblems"
+            refFieldName="medicineGroupId"
+            label="resources.medicinegroups.fields.addproblem"/>
     );
 }
 
@@ -45,7 +72,7 @@ const ShowGroupProblems = (props) => {
         <List
             {...props}
             resource="medicinegroupproblems"
-            filter= {{ 'medicineGroupId': record.medicineGroupId}}
+            filter= {{ medicineGroupId: record.medicineGroupId, institutionId: record.institutionId }}
             bulkActionButtons={false}
             exporter={false}
             hasCreate={false}
@@ -65,7 +92,6 @@ const InstitutionMedicineGroupShow = props => {
     const { data: record } = useGetOne('institutionmedicinegroups', props.id);
 
     const isDomain = record?.isDomain;
-
     return(
         <Show {...props} hasEdit={true} >
             <SimpleShowLayout toolbar={<CustomToolbar/>} >
@@ -88,18 +114,18 @@ const InstitutionMedicineGroupShow = props => {
                 <br/>
                 <BooleanField source="enabled" />
                 <br/>
-                {isDomain &&
                 <Fragment>
                     <TabbedShowLayout>
                         <Tab label="Fármacos" id="pharmacos">
+                            {!isDomain && <AddPharmacoToGroup/>}  
                             <ShowGroupPharmacos/>
                         </Tab>
                         <Tab label="Problemas/Diagnósticos" id="diagnoses">
+                            {!isDomain && <AddProblemToGroup/>}
                             <ShowGroupProblems/>
                         </Tab>
                     </TabbedShowLayout>
                 </Fragment>
-                }
             </SimpleShowLayout>
         </Show> 
     );
