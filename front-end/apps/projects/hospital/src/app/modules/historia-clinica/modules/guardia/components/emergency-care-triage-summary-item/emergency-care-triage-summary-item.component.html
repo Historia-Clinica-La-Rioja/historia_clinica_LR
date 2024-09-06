@@ -1,8 +1,11 @@
 <div id="triage" fxLayout="column" fxLayoutGap="10px">
     <app-triage-chip [category]="triage.emergencyCareEpisodeListTriageDto"></app-triage-chip>
-    <app-identifier-cases *ngIf="triage.reasons?.length" identifierCase={{REASON}}
+    <app-identifier-cases *ngIf="triage.reasons?.length" identifierCase={{IDENTIFIER_CASES.REASON}}
         [description]="triage.reasons | showMoreConcepts"></app-identifier-cases>
-	<span class="mat-small">{{ triage.emergencyCareEpisodeListTriageDto.clinicalSpecialtySector?.description }}</span>
+    <app-identifier-cases *ngIf="!!triage.emergencyCareEpisodeListTriageDto.clinicalSpecialtySector?.id"
+        identifierCase={{IDENTIFIER_CASES.SERVICE}}
+        [description]="triage.emergencyCareEpisodeListTriageDto.clinicalSpecialtySector.description"
+    ></app-identifier-cases>
     <app-register-editor-info *ngIf="!!triageCreator" [registerEditor]="triageCreator">
     </app-register-editor-info>
 </div>

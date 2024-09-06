@@ -10,7 +10,7 @@ import { IDENTIFIER_CASES } from '@hsi-components/identifier-cases/identifier-ca
 })
 export class EmergencyCareTriageSummaryItemComponent {
 
-	readonly REASON = IDENTIFIER_CASES.REASON;
+	readonly IDENTIFIER_CASES = IDENTIFIER_CASES;
 	triageCreator: RegisterEditor;
 	triage: EpisodeListTriage;
 

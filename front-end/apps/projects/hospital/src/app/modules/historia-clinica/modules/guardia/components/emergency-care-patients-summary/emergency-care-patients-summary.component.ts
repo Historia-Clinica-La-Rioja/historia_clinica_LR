@@ -12,9 +12,6 @@ import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientDescriptionUpdate } from '../emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
-import { EstadosEpisodio } from '../../constants/masterdata';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { differenceInMinutes } from 'date-fns';
 
 const NOT_FOUND = -1;
 
@@ -136,19 +133,12 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	} */
 
 	private mapToEpisode(episode: EmergencyCareListDto): Episode {
-		const timeSinceStateChange = episode?.stateUpdatedOn
-			? this.calculateWaitingTime(episode.stateUpdatedOn)
-			: undefined;
 		return {
 			...episode,
 			triage: {
 				emergencyCareEpisodeListTriageDto: episode.triage,
 				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) })
-			},
-			waitingTime: timeSinceStateChange,
-			waitingHours: ([EstadosEpisodio.AUSENTE, EstadosEpisodio.LLAMADO].includes(episode.state.id )) && timeSinceStateChange >= 60
-			? Math.floor(timeSinceStateChange / 60)
-			: undefined
+			}
 		};
 	}
 
@@ -186,17 +176,9 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 		}
 	}
 
-	private calculateWaitingTime(dateTime: DateTimeDto): number {
-		const creationDate = dateTimeDtoToDate(dateTime);
-		const now = new Date();
-		return differenceInMinutes(now, creationDate);
-	}
-
 }
 
 export interface Episode {
-	waitingTime?: number;
-	waitingHours?: number;
 	dischargeSummary?: EmergencyCareEpisodeDischargeSummaryDto;
 	creationDate: DateTimeDto;
 	stateUpdatedOn?: DateTimeDto;

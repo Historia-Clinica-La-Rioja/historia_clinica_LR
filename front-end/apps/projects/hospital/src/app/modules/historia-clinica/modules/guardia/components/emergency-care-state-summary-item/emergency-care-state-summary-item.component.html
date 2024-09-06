@@ -1,0 +1,8 @@
+<div id="state" [ngSwitch]="episode.state.id">
+
+    <app-emergency-care-in-attention-state *ngSwitchCase="EPISODE_STATES.EN_ATENCION" id="in-attention-state" [episode]="episode"></app-emergency-care-in-attention-state>
+
+    <app-emergency-care-patient-discharge-state *ngSwitchCase="EPISODE_STATES.CON_ALTA_MEDICA" id="patient-discharge-state" [episode]="episode"></app-emergency-care-patient-discharge-state>
+
+    <app-emergency-care-elapsed-time-state *ngSwitchDefault id="waiting-absent-call-state" [episode]="episode"></app-emergency-care-elapsed-time-state>
+</div>

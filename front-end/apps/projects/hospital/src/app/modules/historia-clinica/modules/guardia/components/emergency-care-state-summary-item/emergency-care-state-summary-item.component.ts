@@ -3,11 +3,11 @@ import { Episode } from '../emergency-care-patients-summary/emergency-care-patie
 import { EstadosEpisodio } from '../../constants/masterdata';
 
 @Component({
-	selector: 'app-emergency-care-status-summary-item',
-	templateUrl: './emergency-care-status-summary-item.component.html',
-	styleUrls: ['./emergency-care-status-summary-item.component.scss']
+	selector: 'app-emergency-care-state-summary-item',
+	templateUrl: './emergency-care-state-summary-item.component.html',
+	styleUrls: ['./emergency-care-state-summary-item.component.scss']
 })
-export class EmergencyCareStatusSummaryItemComponent {
+export class EmergencyCareStateSummaryItemComponent {
 
 	readonly EPISODE_STATES = EstadosEpisodio;
 	@Input() episode: Episode;

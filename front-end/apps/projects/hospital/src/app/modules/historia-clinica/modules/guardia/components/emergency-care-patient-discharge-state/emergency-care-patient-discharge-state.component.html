@@ -1,6 +1,5 @@
 <div fxLayout="column" fxLayoutGap="10px">
-    <app-colored-label description="{{'guardia.home.episodes.episode.status.PATIENT_DISCHARGE' | translate }}"
-        color={{BLUE}} icon="done_all"></app-colored-label>
+    <app-emergency-care-status-labels [statusLabel]="statusLabel"></app-emergency-care-status-labels>
     <app-register-editor-info [registerEditor]="medicalDischargeCreator"
         [registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
     </app-register-editor-info>

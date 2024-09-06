@@ -4,8 +4,6 @@ import { EpisodeFilterService } from './episode-filter.service';
 describe('EpisodeFilterService', () => {
 
 	const episode = {
-		waitingTime: null,
-		waitingHours: null,
 		creationDate: null,
 		doctorsOffice: null,
 		id: null,

@@ -21,18 +21,19 @@ import { AdministrativeTriageComponent } from './components/administrative-triag
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
 import { TitledGridSummaryComponent } from './components/titled-grid-summary/titled-grid-summary.component';
 import { EmergencyCareDashboardActionsComponent } from './components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
+import { EmergencyCareElapsedTimeStateComponent } from './components/emergency-care-elapsed-time-state/emergency-care-elapsed-time-state.component';
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
-import { EmergencyCareInAttentionStatusComponent } from './components/emergency-care-in-attention-status/emergency-care-in-attention-status.component';
+import { EmergencyCareInAttentionStateComponent } from './components/emergency-care-in-attention-state/emergency-care-in-attention-state.component';
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
-import { EmergencyCarePatientDischargeStatusComponent } from './components/emergency-care-patient-discharge-status/emergency-care-patient-discharge-status.component';
+import { EmergencyCarePatientDischargeStateComponent } from './components/emergency-care-patient-discharge-state/emergency-care-patient-discharge-state.component';
 import { EmergencyCarePatientsSummaryComponent } from './components/emergency-care-patients-summary/emergency-care-patients-summary.component';
 import { EmergencyCareTabsComponent } from './components/emergency-care-tabs/emergency-care-tabs.component';
 import { EmergencyCarePatientSummaryItemComponent } from './components/emergency-care-patient-summary-item/emergency-care-patient-summary-item.component';
-import { EmergencyCareStatusSummaryItemComponent } from './components/emergency-care-status-summary-item/emergency-care-status-summary-item.component';
+import { EmergencyCareStateSummaryItemComponent } from './components/emergency-care-state-summary-item/emergency-care-state-summary-item.component';
 import { EmergencyCareTriageSummaryItemComponent } from './components/emergency-care-triage-summary-item/emergency-care-triage-summary-item.component';
 import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
-import { EmergencyCareWaitingStatusComponent } from './components/emergency-care-waiting-status/emergency-care-waiting-status.component';
+
 import { EvolutionsSummaryComponent } from './components/evolutions-summary/evolutions-summary.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { MedicalDischargeByNurseComponent } from './components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
@@ -57,6 +58,7 @@ import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { SpecialtySectorFormValidityService } from './services/specialty-sector-form-validity.service';
 // standalone
+import { EmergencyCareStatusLabelsComponent } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
 import { IdentifierCasesComponent } from '@hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/temporary-patient.component';
@@ -77,16 +79,16 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		AdministrativeTriageComponent,
 		AdultGynecologicalTriageComponent,
 		EmergencyCareDashboardActionsComponent,
-		EmergencyCareInAttentionStatusComponent,
+		EmergencyCareElapsedTimeStateComponent,
+		EmergencyCareInAttentionStateComponent,
 		EmergencyCarePatientComponent,
-		EmergencyCarePatientDischargeStatusComponent,
+		EmergencyCarePatientDischargeStateComponent,
 		EmergencyCarePatientsSummaryComponent,
 		EmergencyCarePatientSummaryItemComponent,
-		EmergencyCareStatusSummaryItemComponent,
+		EmergencyCareStateSummaryItemComponent,
 		EmergencyCareTabsComponent,
 		EmergencyCareTriageSummaryItemComponent,
 		EmergencyCareTemporaryPatientComponent,
-		EmergencyCareWaitingStatusComponent,
 		EvolutionsSummaryComponent,
 		MedicalDischargeByNurseComponent,
 		MedicalDischargeTypesComponent,
@@ -108,7 +110,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareEvolutionsComponent,
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,
-		AttentionPlaceDialogComponent
+		AttentionPlaceDialogComponent,
 	],
 	imports: [
 		CommonModule,
@@ -120,6 +122,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		LazyMaterialModule,
 		PresentationModule,
 		// standalone
+		EmergencyCareStatusLabelsComponent,
 		IdentifierCasesComponent,
 		PatientSummaryComponent,
 		TemporaryPatientComponent,

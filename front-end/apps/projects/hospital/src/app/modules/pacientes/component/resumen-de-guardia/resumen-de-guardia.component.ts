@@ -23,6 +23,7 @@ import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
+import { EmergencyCareStatusLabels } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
@@ -56,7 +57,6 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
 	episodeState: EstadosEpisodio;
-	episodeStateDescription: string;
 	withoutMedicalDischarge: boolean;
 
 	hasMedicalDischarge = false;
@@ -82,6 +82,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	ButtonType = ButtonType;
 
 	isAdministrativeAndHasTriageFFInFalse: boolean;
+	statusLabel: EmergencyCareStatusLabels;
 
 	constructor(
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
@@ -277,9 +278,9 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	private setEpisodeState() {
 		this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
 			state => {
-				this.episodeStateDescription = state.description;
 				this.episodeState = state.id;
 				this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
+				this.buildStatusLabel(state.description);
 				this.calculateAvailableActions();
 			}
 		);
@@ -428,6 +429,18 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		function hasHistory(triages: TriageListDto[]) {
 			return triages?.length > 0;
 		}
+	}
+
+	private buildStatusLabel(stateDescription: string) {
+		const description = {
+			[EstadosEpisodio.EN_ESPERA]: 'guardia.home.episodes.episode.status.WAITING',
+			[EstadosEpisodio.EN_ATENCION]: 'guardia.home.episodes.episode.status.IN_ATTETION',
+			[EstadosEpisodio.AUSENTE]: 'guardia.home.episodes.episode.status.ABSENT',
+			[EstadosEpisodio.LLAMADO]: stateDescription,
+			[EstadosEpisodio.CON_ALTA_MEDICA]: 'guardia.home.episodes.episode.status.PATIENT_DISCHARGE'
+		}
+		
+		this.statusLabel = {stateId: this.episodeState, description: description[this.episodeState]}
 	}
 }
 

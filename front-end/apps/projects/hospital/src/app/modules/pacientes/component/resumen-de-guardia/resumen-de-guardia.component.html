@@ -41,16 +41,17 @@
 
             <mat-divider inset></mat-divider>
 
-            <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
-                <strong> {{ 'ambulatoria.paciente.guardia.ENTRANCE' | translate }}: </strong>
-                <span *ngIf="responseEmergencyCare?.creationDate as creationDate" id="creation_date">
-                    {{ creationDate | viewDateDto : 'datetime' | dateFormat: 'datetime'}}
-                </span>
-                <ng-container *ngIf="responseEmergencyCare?.entranceType?.description">
-                    <span id="entrance_type"> ({{ responseEmergencyCare?.entranceType?.description }}) </span>
-                </ng-container>
-                <span> {{  episodeStateDescription }} </span>
-
+            <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+                <app-emergency-care-status-labels [statusLabel]="statusLabel"></app-emergency-care-status-labels>
+                <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
+                    <strong> {{ 'ambulatoria.paciente.guardia.ENTRANCE' | translate }}: </strong>
+                    <span *ngIf="responseEmergencyCare?.creationDate as creationDate" id="creation_date">
+                        {{ creationDate | viewDateDto : 'datetime' | dateFormat: 'datetime'}}
+                    </span>
+                    <ng-container *ngIf="responseEmergencyCare?.entranceType?.description">
+                        <span id="entrance_type"> ({{ responseEmergencyCare?.entranceType?.description }}) </span>
+                    </ng-container>
+                </div>
             </div>
             <div *ngIf="responseEmergencyCare?.hasPoliceIntervention === false else withInfo">
                 <span class="gray-text">

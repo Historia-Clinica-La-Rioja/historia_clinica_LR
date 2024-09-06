@@ -36,6 +36,7 @@ import { SearchCreateComponent } from './component/search-create/search-create.c
 import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 //Standalone component
+import { EmergencyCareStatusLabelsComponent } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
 // dialogs
@@ -58,8 +59,6 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
-
-
 
 @NgModule({
 	declarations: [
@@ -132,6 +131,7 @@ import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 		InternacionesModule,
 		GuardiaModule,
 		//Standalone Components
+		EmergencyCareStatusLabelsComponent,
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
 	],

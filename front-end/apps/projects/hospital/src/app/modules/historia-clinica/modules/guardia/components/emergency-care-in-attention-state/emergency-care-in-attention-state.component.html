@@ -1,6 +1,5 @@
 <div fxLayout="column" fxLayoutGap="10px">
-    <app-colored-label description="{{'guardia.home.episodes.episode.status.IN_ATTETION' | translate}}" color={{GREEN}}
-        icon="check_circle_outline"></app-colored-label>
+    <app-emergency-care-status-labels [statusLabel]="statusLabel"></app-emergency-care-status-labels>
     <app-identifier-cases identifierCase={{IDENTIFIER_CASES.SECTOR}}
         [description]="_episode.sector.description"></app-identifier-cases>
     <app-identifier-cases *ngIf="_episode.doctorsOffice" identifierCase={{IDENTIFIER_CASES.ROOM}}
