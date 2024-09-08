@@ -11,6 +11,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { toOutpatientMedicationDto, toOutpatientAnthropometricDataDto, toOutpatientFamilyHistoryDto, toOutpatientRiskFactorDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
 import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -101,7 +102,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 				isReferred: (this.isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null: this.isFamilyHistoriesNoRefer,
 				content: familyHistories,
 			},
-			procedures: value.procedures?.data || [],
+			procedures: value.procedures?.data.map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}) || [],
 			medications,
 			riskFactors,
 			allergies: {
