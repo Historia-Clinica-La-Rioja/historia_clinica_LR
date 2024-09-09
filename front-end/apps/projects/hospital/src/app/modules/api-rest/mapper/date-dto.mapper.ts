@@ -116,3 +116,10 @@ export const timeDtotoString = (time: TimeDto): string => {
 	const minutes = time.minutes.toString().padStart(2, '0');
 	return `${hours}:${minutes}`;
 }
+
+export const timeDtotoFullTimeString = (time: TimeDto): string => {
+	const hours = time.hours.toString().padStart(2, '0');
+	const minutes = time.minutes.toString().padStart(2, '0');
+	const seconds = time.seconds.toString().padStart(2, '0');
+	return `${hours}:${minutes}:${seconds}`;
+}

@@ -105,7 +105,6 @@ export class NewAppointmentComponent implements OnInit {
 	boxMessageInfo: BoxMessageInformation;
 	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
 	fullDate: Date;
-	fullTime: string;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -227,7 +226,6 @@ export class NewAppointmentComponent implements OnInit {
 			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)])
 		});
 
-		this.fullTime = this.data.hour + ':00';
 		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date));
 	}
 
@@ -572,7 +570,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private verifyExistingAppointment(): Observable<any> {
-		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.fullTime, this.data.institutionId)
+		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour, this.data.institutionId)
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
@@ -619,7 +617,7 @@ export class NewAppointmentComponent implements OnInit {
 		return {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
-			hour: this.fullTime,
+			hour: this.data.hour,
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,

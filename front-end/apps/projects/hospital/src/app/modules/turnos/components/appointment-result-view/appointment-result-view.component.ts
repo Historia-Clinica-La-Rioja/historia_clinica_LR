@@ -1,14 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiaryAvailableAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
-import { dateDtoToDate, stringToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, stringToDate, timeDtotoFullTimeString } from '@api-rest/mapper/date-dto.mapper';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-import { toHourMinute } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-appointment-result-view',
@@ -41,7 +40,7 @@ export class AppointmentResultViewComponent implements OnInit {
 
 	assign(): void {
 		const appointmentDate = toApiFormat(dateDtoToDate(this.appointment.date));
-		const appointmentHour = toHourMinute(timeDtoToDate(this.appointment.hour));
+		const appointmentHour = timeDtotoFullTimeString(this.appointment.hour);
 		this.holidayService.checkAvailability(appointmentDate).subscribe(isAvailable => {
 			if (isAvailable) {
 				const dialogRef = this.dialog.open(NewAppointmentComponent, {
