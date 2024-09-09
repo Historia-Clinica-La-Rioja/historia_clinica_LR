@@ -104,7 +104,8 @@ export class NewAppointmentComponent implements OnInit {
 	isEnableTelemedicina: boolean = false;
 	boxMessageInfo: BoxMessageInformation;
 	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
-	fullDate: Date
+	fullDate: Date;
+	fullTime: string;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -226,7 +227,8 @@ export class NewAppointmentComponent implements OnInit {
 			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)])
 		});
 
-		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date))
+		this.fullTime = this.data.hour + ':00';
+		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date));
 	}
 
 	setModalityValidation(modality) {
@@ -570,7 +572,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private verifyExistingAppointment(): Observable<any> {
-		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour, this.data.institutionId)
+		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.fullTime, this.data.institutionId)
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
@@ -617,7 +619,7 @@ export class NewAppointmentComponent implements OnInit {
 		return {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
-			hour: this.data.hour,
+			hour: this.fullTime,
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,

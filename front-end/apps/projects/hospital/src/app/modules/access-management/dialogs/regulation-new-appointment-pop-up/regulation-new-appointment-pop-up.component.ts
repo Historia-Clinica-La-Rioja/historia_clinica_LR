@@ -63,7 +63,8 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
-	fullDate: Date
+	fullDate: Date;
+	fullTime: string;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: RegulationNewAppointmentData,
@@ -148,6 +149,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 		}
 		this.setModalityValidation(this.modalitySelected);
 
+		this.fullTime = this.data.hour + ':00';
 		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date))
 
 	}
@@ -292,7 +294,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 		const newAppointment: CreateAppointmentDto = {
 			date: this.data.date,
 			diaryId: this.data.diaryId,
-			hour: this.data.hour,
+			hour: this.fullTime,
 			openingHoursId: this.data.openingHoursId,
 			overturn: this.data.overturnMode,
 			patientId: this.patientId,
@@ -365,7 +367,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	}
 
 	private verifyExistingAppointment(): Observable<AppointmentShortSummaryDto> {
-		return this.appointmentService.verifyExistingAppointments(this.patientId, this.data.date, this.data.hour, this.data.institutionId);
+		return this.appointmentService.verifyExistingAppointments(this.patientId, this.data.date, this.fullTime, this.data.institutionId);
 	}
 
 	private create(newAppointment: CreateAppointmentDto): Observable<number> {
