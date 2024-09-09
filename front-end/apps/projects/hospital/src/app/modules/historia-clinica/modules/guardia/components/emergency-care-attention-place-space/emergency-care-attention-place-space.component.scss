@@ -1,28 +1,7 @@
-@import "../../../../../../../assets/styles/variables";
 .buttons-availability-container {
     margin: 1rem 0;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: flex-start;
-}
-
-button {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	width: 160px;
-}
-
-.mat-raised-button {
-    color: $button-not-available;
-    border: 1px solid $button-not-available;
-    padding: 0 5px;
-    box-shadow: none;
-}
-
-.available {
-    background-color: $button-available;
-    color: white;
-    border: 1px solid $button-available;
 }

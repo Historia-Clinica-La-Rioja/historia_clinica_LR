@@ -58,6 +58,7 @@ import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecol
 import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 // services
+import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from './services/emergency-care-attention-place-availability-button-selection.service';
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { SpecialtySectorFormValidityService } from './services/specialty-sector-form-validity.service';
@@ -144,6 +145,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 	],
 	providers: [
 		// services
+		EmergencyCareAttentionPlaceAvailabilityButtonSelectionService,
 		EpisodeStateService,
 		NewEpisodeService,
 		SpecialtySectorFormValidityService

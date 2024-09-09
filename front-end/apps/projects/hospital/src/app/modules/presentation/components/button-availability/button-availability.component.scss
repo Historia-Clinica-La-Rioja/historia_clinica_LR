@@ -1,0 +1,35 @@
+button {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.small {
+	width: 64px;
+}
+
+.large {
+	width: 160px;
+}
+
+.available {
+  background-color: #51A351;
+  color: white;
+  border: 1px solid #51A351;
+}
+
+.not-available {
+	color: #D34444;
+	border: 1px solid #D34444;
+	box-shadow: none;
+}
+
+.disable {
+  background-color: #9A9A9A;
+  color: white;
+  border: 1px solid #9A9A9A;
+}
+
+.selected {
+	border: 2px solid rgba(38, 135, 197, 1);
+}

@@ -3,9 +3,13 @@
 </header>
 
 <div class="buttons-availability-container">
-	<div *ngFor="let item of space.items">
-		<button mat-raised-button [ngClass]="{'available': item.available}">
-			{{item.description}}
-		</button>
+	<div *ngFor="let item of itemsInfo">
+		<app-button-availability
+			[description]="item.description"
+			[type]="item.type"
+			[size]="item.size"
+			[isSelected]="item.isSelected"
+			(clicked)="selectItem(item)">
+		</app-button-availability>
 	</div>
 </div>
