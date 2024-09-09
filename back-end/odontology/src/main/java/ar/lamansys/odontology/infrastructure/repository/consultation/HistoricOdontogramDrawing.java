@@ -53,9 +53,10 @@ public class HistoricOdontogramDrawing {
 	@Column(name = "odontology_consultation_id")
 	private Integer  odontologyConsultationId;
 
-	public HistoricOdontogramDrawing(Integer patientId, ToothDrawingsBo toothDrawings) {
+	public HistoricOdontogramDrawing(Integer patientId, ToothDrawingsBo toothDrawings, Integer odontologyConsultationId) {
 		this.patientId = patientId;
 		this.toothId = toothDrawings.getToothId();
+		this.odontologyConsultationId = odontologyConsultationId;
 		this.wholeTooth = (toothDrawings.getWholeDrawing() != null) ? toothDrawings.getWholeDrawing().getSnomed().getSctid() : null;
 		this.internalSurface = (toothDrawings.getInternalSurfaceDrawing() != null) ? toothDrawings.getInternalSurfaceDrawing().getSctid() : null;
 		this.externalSurface = (toothDrawings.getExternalSurfaceDrawing() != null) ? toothDrawings.getExternalSurfaceDrawing().getSctid() : null;

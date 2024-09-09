@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DrawOdontogramService {
 
-    List<ToothDrawingsBo> run(Integer patientId, List<ConsultationDentalActionBo> actions);
+    List<ToothDrawingsBo> run(Integer patientId, List<ConsultationDentalActionBo> actions, Integer consultationId);
 
 }

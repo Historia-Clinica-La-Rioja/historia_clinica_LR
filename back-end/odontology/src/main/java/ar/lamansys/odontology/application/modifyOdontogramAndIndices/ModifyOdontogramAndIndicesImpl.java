@@ -90,11 +90,10 @@ public class ModifyOdontogramAndIndicesImpl implements ModifyOdontogramAndIndice
 			cda.add(cdaToAdd);
 		});
 
-		var result = drawOdontogramService.run(newPatientId,cda);
-
 		var indices = toothIndicesStorage.computeIndices(newPatientId,cda);
 
 		var lastOdontologyConsultation = odontologyConsultationStorage.getLastByPatientId(newPatientId);
+		var result = drawOdontogramService.run(newPatientId,cda, lastOdontologyConsultation.getId());
 		indices.setConsultationDate(lastOdontologyConsultation.getUpdatedOn());
 		consultationCpoCeoIndicesStorage.saveIndices(lastOdontologyConsultation.getId(),indices);
 

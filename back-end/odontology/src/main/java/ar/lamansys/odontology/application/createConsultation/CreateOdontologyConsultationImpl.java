@@ -156,7 +156,6 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 		processDentalActions(consultationBo);
 		Integer patientId = consultationBo.getPatientId();
-		drawOdontogramService.run(patientId, consultationBo.getDentalActions());
 
 		setPatientMedicalCoverageIfEmpty(consultationBo, doctorInfoBo);
 
@@ -167,6 +166,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 				now,
 				true
 		));
+
+		drawOdontogramService.run(patientId, consultationBo.getDentalActions(), encounterId);
 
 		consultationBo.setConsultationId(encounterId);
 		cpoCeoIndicesCalculator.run(consultationBo);
