@@ -128,6 +128,7 @@ import { GetPhysicalPerformanceComponent } from './components/cuestionarios/dese
 import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/alert-dialog.component';
 import { BackgroundFamilyComponent } from './components/background-family/background-family.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FeDeErratasComponent } from './components/fe-de-erratas/fe-de-erratas.component';
 
 @NgModule({
 	declarations: [
@@ -228,6 +229,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 		GetPhysicalPerformanceComponent,
 		AlertDialogComponent,
   BackgroundFamilyComponent,
+  FeDeErratasComponent,
 	],
 	imports: [
 		CommonModule,
