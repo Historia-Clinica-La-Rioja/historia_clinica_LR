@@ -38,6 +38,7 @@ import { Position } from '@presentation/components/identifier/identifier.compone
 import { buildProblemHeaderInformation } from '@historia-clinica/mappers/problems.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { compare } from '@core/utils/date.utils';
+import { FeDeErratasComponent } from '../fe-de-erratas/fe-de-erratas.component';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -70,6 +71,16 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	private severityTypeMasterData: any[];
 
 	public selectedTab: number = 0;
+
+
+
+	// FE DE ERRATAS
+	public isEditing: boolean = false; 
+  	currentDocumentId: number;  
+  	currentInstitutionId: number; 
+  currentHealthcareProfessionalId: number;  
+
+
 
 	// External clinical history attributes
 	public externalClinicalHistoryList: ExternalClinicalHistorySummaryDto[];
@@ -131,6 +142,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 				if (this.showExternalClinicalHistoryTab) this.loadExternalClinicalHistoryList();
 			}
 		);
+    this.currentInstitutionId = this.contextService.institutionId; // Reemplaza con el método correcto
 	}
 
 	ngOnDestroy(): void {
@@ -267,4 +279,32 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	goToEpisode(episodeId: number) {
 		this.goToEmergencyCareEpisode.next(episodeId);
 	}
+
+
+
+// Fe de erratas 
+	
+showErrata() {
+	this.isEditing = true;
+
+	this.dialog.open(FeDeErratasComponent, {
+	  data: {
+		institutionId: this.currentInstitutionId,
+		documentId: this.currentDocumentId,
+		healthcareProfessionalId: this.currentHealthcareProfessionalId 		  }
+	}).afterClosed().subscribe(result => {
+	  this.handleCloseErrata();
+	});
+	console.log({
+		institutionId: this.currentInstitutionId,
+		documentId: this.currentDocumentId,
+		healthcareProfessionalId: this.currentHealthcareProfessionalId
+	  });
+  }
+  // Método que se ejecuta cuando se cierra la errata
+  handleCloseErrata() {
+	this.isEditing = false;  // Oculta el componente de erratas
+	console.log('Errata cerrada');
+  }
+	
 }

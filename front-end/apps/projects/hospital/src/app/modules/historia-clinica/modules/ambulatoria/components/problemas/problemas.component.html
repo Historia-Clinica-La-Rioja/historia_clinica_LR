@@ -312,6 +312,20 @@
 																{{historicalProblem.consultationEvolutionNote}}</p>
 														</div>
 
+<!-- ________________________________________________________________________________________-->
+															<div>
+																<button mat-button (click)="showErrata()">EDITAR</button>
+																<app-fe-de-erratas
+																*ngIf="isEditing"
+																[documentId]="currentDocumentId"
+																[institutionId]="currentInstitutionId"
+																(closeErrata)="handleCloseErrata()"
+																></app-fe-de-erratas>
+
+															</div>
+<!-- ________________________________________________________________________________________-->
+
+
 														<app-amended-problems-information *ngIf="historicalProblem.markedAsError"
 															[errorProblem]="historicalProblem.errorProblem"></app-amended-problems-information>
 													</div>
