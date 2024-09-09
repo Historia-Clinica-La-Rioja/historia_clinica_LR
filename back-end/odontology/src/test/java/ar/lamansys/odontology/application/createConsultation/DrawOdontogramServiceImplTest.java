@@ -3,6 +3,7 @@ package ar.lamansys.odontology.application.createConsultation;
 import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.HistoricOdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.DrawingBo;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
@@ -25,9 +26,12 @@ class DrawOdontogramServiceImplTest {
     @Mock
     private OdontogramDrawingStorage odontogramDrawingStorage;
 
+	@Mock
+	private ar.lamansys.odontology.domain.consultation.HistoricOdontogramDrawingStorage HistoricOdontogramDrawingStorage;
+
     @BeforeEach
     void setUp() {
-        drawOdontogramService = new DrawOdontogramServiceImpl(odontogramDrawingStorage);
+        drawOdontogramService = new DrawOdontogramServiceImpl(odontogramDrawingStorage, HistoricOdontogramDrawingStorage);
     }
 
     @Test
@@ -42,7 +46,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.RIGHT, true));
 
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions, 1);
 
         Assertions.assertEquals(1, odontogramDrawings.size());
 
@@ -69,7 +73,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.RIGHT, true));
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, null, false));
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions, 1);
 
 
         Assertions.assertEquals(1, odontogramDrawings.size());
@@ -97,7 +101,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.RIGHT, false));
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, ESurfacePositionBo.LEFT, false));
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions, 1);
 
 
         Assertions.assertEquals(1, odontogramDrawings.size());
@@ -124,7 +128,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, null, false));
         dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, null, false));
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions, 1);
 
 
         Assertions.assertEquals(1, odontogramDrawings.size());
@@ -152,7 +156,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action2, tooth1, ESurfacePositionBo.CENTRAL, false));
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth1, null, false));
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions, 1);
 
 
         Assertions.assertEquals(1, odontogramDrawings.size());
@@ -186,7 +190,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action3, tooth3, null, false));
 
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(1, dentalActions, 1);
 
         Assertions.assertEquals(3, odontogramDrawings.size());
 
@@ -213,7 +217,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, ESurfacePositionBo.RIGHT, true));
 
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(patientId, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(patientId, dentalActions, 1);
 
         Assertions.assertNull(odontogramDrawings.get(0).getWholeDrawing());
         Assertions.assertTrue(odontogramDrawings.get(0).hasAnyDrawing());
@@ -241,7 +245,7 @@ class DrawOdontogramServiceImplTest {
         dentalActions.add(new ConsultationDentalActionBo(action1, tooth1, ESurfacePositionBo.RIGHT, true));
 
 
-        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(patientId, dentalActions);
+        List<ToothDrawingsBo> odontogramDrawings = drawOdontogramService.run(patientId, dentalActions, 1);
 
         Assertions.assertNotNull(odontogramDrawings.stream()
                 .filter(d -> d.getToothId().equals("tooth 1"))
