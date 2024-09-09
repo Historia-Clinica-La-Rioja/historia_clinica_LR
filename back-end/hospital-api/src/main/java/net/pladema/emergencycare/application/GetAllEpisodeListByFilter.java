@@ -62,7 +62,7 @@ public class GetAllEpisodeListByFilter {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);
 			}
-			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ALTA_MEDICA.getId())){
+			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ALTA_PACIENTE.getId())){
 				ec.setDischargeSummary(emergencyCareEpisodeDischargeService.getEpisodeDischargeSummary(ec.getId()));
 			}
 			if (selfPerceivedFF) setSelfDeterminationNames(ec);

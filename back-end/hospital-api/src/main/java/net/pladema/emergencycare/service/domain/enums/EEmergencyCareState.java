@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 public enum EEmergencyCareState {
 
     ATENCION(1, "En atención"),
-    ESPERA(2, "En espera"),
+    ESPERA(2, "En espera de atención"),
     ALTA_ADMINISTRATIVA(3, "Con alta administrativa"),
-    ALTA_MEDICA(4, "Con alta médica"),
+    ALTA_PACIENTE(4, "Alta de paciente"),
 	AUSENTE(5, "Ausente"),
 	LLAMADO(6, "Llamado");
 
@@ -70,7 +70,7 @@ public enum EEmergencyCareState {
 	}
 
 	public static List<Short> getAllForEmergencyCareList(){
-		return Stream.of(EEmergencyCareState.ATENCION, EEmergencyCareState.ESPERA, EEmergencyCareState.ALTA_MEDICA,
+		return Stream.of(EEmergencyCareState.ATENCION, EEmergencyCareState.ESPERA, EEmergencyCareState.ALTA_PACIENTE,
 						EEmergencyCareState.AUSENTE, EEmergencyCareState.LLAMADO)
 				.map(EEmergencyCareState::getId)
 				.collect(Collectors.toList());

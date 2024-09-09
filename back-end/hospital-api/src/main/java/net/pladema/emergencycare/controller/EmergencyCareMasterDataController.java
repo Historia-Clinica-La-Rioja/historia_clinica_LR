@@ -68,4 +68,10 @@ public class EmergencyCareMasterDataController {
 		LOG.debug("{}", "All emergency episode sector types");
 		return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.getEmergencyEpisodeSectorType()));
 	}
+
+	@GetMapping(value = "/emergency-episode-states")
+	public ResponseEntity<Collection<MasterDataDto>> getEmergencyCareStates() {
+		LOG.debug("{}", "All emergency care status");
+		return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.getEmergencyCareStates()));
+	}
 }

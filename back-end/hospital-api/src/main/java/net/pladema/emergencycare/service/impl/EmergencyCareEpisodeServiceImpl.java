@@ -152,7 +152,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		List<EmergencyCareEpisode> ece = emergencyCareEpisodeRepository.getFromPatientsAndStatus(patients, Arrays.asList(
 				EmergencyCareState.EN_ESPERA,
 				EmergencyCareState.EN_ATENCION,
-				EmergencyCareState.CON_ALTA_MEDICA
+				EmergencyCareState.CON_ALTA_PACIENTE
 		));
 		if (ece.isEmpty()) {
 			log.debug(OUTPUT, false);
