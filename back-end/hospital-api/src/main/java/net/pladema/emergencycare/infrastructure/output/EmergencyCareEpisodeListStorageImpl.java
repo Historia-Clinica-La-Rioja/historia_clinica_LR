@@ -59,6 +59,7 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						"AND ece.institutionId = :institutionId" +
 						(filter.getTriageCategoryIds() != null && !filter.getTriageCategoryIds().isEmpty() ? " AND ece.triageCategoryId IN :triageCategoryIds" : " ") +
 						(filter.getTypeIds() != null && !filter.getTypeIds().isEmpty() ? " AND ece.emergencyCareTypeId IN :typeIds": " ") +
+						(filter.getStateIds() != null && !filter.getStateIds().isEmpty() ? " AND ecs.id IN :stateIds" : " ") +
 						(filter.getPatientId() != null ? " AND pa.id = :patientId" : " ") +
 						(filter.getIdentificationNumber() != null ? " AND LOWER(pe.identificationNumber) LIKE '%" + filter.getIdentificationNumber().toLowerCase() + "%'" : " ") +
 						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND LOWER(petd.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%') OR (petd.nameSelfDetermination IS NULL AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'))" : " AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'" : " ") +
@@ -94,6 +95,8 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 			result.setParameter("typeIds", filter.getTypeIds());
 		if (filter.getTriageCategoryIds()!= null && !filter.getTriageCategoryIds().isEmpty())
 			result.setParameter("triageCategoryIds", filter.getTriageCategoryIds());
+		if (filter.getStateIds()!= null && !filter.getStateIds().isEmpty())
+			result.setParameter("stateIds", filter.getStateIds());
 		if (filter.getPatientId() != null)
 			result.setParameter("patientId", filter.getPatientId());
 	}

@@ -27,4 +27,6 @@ public class EmergencyCareEpisodeFilterDto {
 
 	private List<Integer> clinicalSpecialtySectorIds;
 
+	private List<Short> stateIds;
+
 }
