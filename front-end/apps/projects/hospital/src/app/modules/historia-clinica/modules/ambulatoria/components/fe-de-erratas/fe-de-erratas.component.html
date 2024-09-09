@@ -1,0 +1,11 @@
+<div>
+    <h3>FE DE ERRATAS</h3>
+    <mat-form-field>
+        <mat-label>Correcciones</mat-label>
+        <textarea matInput [(ngModel)]="errataText" [disabled]="isEditing" placeholder="Ingrese las correcciones aquí..."></textarea>
+    </mat-form-field>
+  
+    <!-- Botones ACEPTAR y CANCELAR solo si isEditing es true -->
+         <button mat-button (click)="submitErrata()">ACEPTAR</button>
+        <!-- <button mat-button (click)="cancelEdit()">CANCELAR</button> -->
+   </div>
