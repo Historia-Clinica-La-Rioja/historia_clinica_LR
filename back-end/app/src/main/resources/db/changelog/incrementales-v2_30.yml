@@ -45,3 +45,66 @@ databaseChangeLog:
                     constraints:
                       references: odontology_consultation(id)
                       foreignKeyName: FK_last_odontogram_drawing_odontology_consultation_id
+
+    - changeSet:
+        id: createTable-historic_odontogram_drawing
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: historic_odontogram_drawing
+              columns:
+                - column:
+                    name: patient_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: tooth_id
+                    type: varchar(20)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: odontology_consultation_id
+                    type: int
+                - column:
+                    name: whole_tooth
+                    type: varchar(20)
+                - column:
+                    name: internal_surface
+                    type: varchar(20)
+                - column:
+                    name: external_surface
+                    type: varchar(20)
+                - column:
+                    name: central_surface
+                    type: varchar(20)
+                - column:
+                    name: left_surface
+                    type: varchar(20)
+                - column:
+                    name: right_surface
+                    type: varchar(20)
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+          - addForeignKeyConstraint:
+              baseTableName: historic_odontogram_drawing
+              baseColumnNames: patient_id
+              referencedTableName: patient
+              referencedColumnNames: id
+              constraintName: FK_historic_odontogram_drawing_patient_id
+          - addForeignKeyConstraint:
+              baseTableName: historic_odontogram_drawing
+              baseColumnNames: tooth_id
+              referencedTableName: tooth
+              referencedColumnNames: sctid
+              constraintName: FK_historic_odontogram_drawing_tooth_id
+          - addForeignKeyConstraint:
+              baseTableName: historic_odontogram_drawing
+              baseColumnNames: odontology_consultation_id
+              referencedTableName: odontology_consultation
+              referencedColumnNames: id
+              constraintName: FK_historic_odontogram_drawing_odontology_consultation_id
