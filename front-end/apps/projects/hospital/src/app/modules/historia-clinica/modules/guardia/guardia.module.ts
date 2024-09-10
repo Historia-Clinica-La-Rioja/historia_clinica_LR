@@ -44,13 +44,14 @@ import { EmergencyCarePatientSummaryItemComponent } from './components/emergency
 import { EmergencyCareStateSummaryItemComponent } from './components/emergency-care-state-summary-item/emergency-care-state-summary-item.component';
 import { EmergencyCareTriageSummaryItemComponent } from './components/emergency-care-triage-summary-item/emergency-care-triage-summary-item.component';
 import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
-
+import { EmergencyCareTypeCheckboxComponent } from './components/emergency-care-type-checkbox/emergency-care-type-checkbox.component';
 import { EvolutionsSummaryComponent } from './components/evolutions-summary/evolutions-summary.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { MedicalDischargeByNurseComponent } from './components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
 import { MedicalDischargeTypesComponent } from './components/medical-discharge-types/medical-discharge-types.component';
 import { PatientBasicInformationComponent } from './components/patient-basic-information/patient-basic-information.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
+import { TriageCategoryCheckboxComponent } from './components/triage-category-checkbox/triage-category-checkbox.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
 import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
@@ -75,6 +76,9 @@ import { EmergencyCareStatusLabelsComponent } from '@hsi-components/emergency-ca
 import { IdentifierCasesComponent } from '@hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/temporary-patient.component';
+// pipes
+import { ShowTriageCategoryDescriptionPipe } from './pipes/show-triage-category-description.pipe';
+import { ShowTypeDescriptionPipe } from './pipes/show-type-description.pipe';
 
 @NgModule({
 	declarations: [
@@ -113,12 +117,14 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareTabsComponent,
 		EmergencyCareTriageSummaryItemComponent,
 		EmergencyCareTemporaryPatientComponent,
+		EmergencyCareTypeCheckboxComponent,
 		EvolutionsSummaryComponent,
 		MedicalDischargeByNurseComponent,
 		MedicalDischargeTypesComponent,
 		PatientBasicInformationComponent,
 		PediatricTriageComponent,
 		TitledGridSummaryComponent,
+		TriageCategoryCheckboxComponent,
 		TriageChipComponent,
 		TriageComponent,
 		TriageDetailsComponent,
@@ -126,7 +132,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		TriageSummaryComponent,
 		ReasonsFormComponent,
 		SpecialtySectorFormComponent,
-        SpecialtySummaryComponent,
+		SpecialtySummaryComponent,
 		// dialogs
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
@@ -135,6 +141,9 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,
 		AttentionPlaceDialogComponent,
+		//pipes
+		ShowTriageCategoryDescriptionPipe,
+		ShowTypeDescriptionPipe,
 	],
 	imports: [
 		CommonModule,

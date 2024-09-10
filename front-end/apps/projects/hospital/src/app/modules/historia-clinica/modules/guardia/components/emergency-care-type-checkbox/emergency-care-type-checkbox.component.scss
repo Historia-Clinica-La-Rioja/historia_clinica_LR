@@ -1,0 +1,5 @@
+@import '../../../../../../../assets/styles/mixins';
+
+.font-weight{
+    @include info-primary;
+}

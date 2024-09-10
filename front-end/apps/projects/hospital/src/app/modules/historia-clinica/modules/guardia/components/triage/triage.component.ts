@@ -60,7 +60,7 @@ export class TriageComponent implements OnInit {
 		this.subscribeToFormChanges();
 
 		const hasValidRoleToNotDefineTriageLevel$ = this.permissionsService.hasContextAssignments$(ROLE_ALLOWED_NOT_TO_DEFINE_TRIAGE_LEVEL).pipe(take(1));
-		const triageCategories$ = this.triageMasterDataService.getCategories();
+		const triageCategories$ = this.triageMasterDataService.getTriageCategories();
 
 		forkJoin([hasValidRoleToNotDefineTriageLevel$, triageCategories$]).subscribe(([hasValidRoleToNotDefineTriageLevel, triageCategories]) => {
 			this.triageCategories = triageCategories;
