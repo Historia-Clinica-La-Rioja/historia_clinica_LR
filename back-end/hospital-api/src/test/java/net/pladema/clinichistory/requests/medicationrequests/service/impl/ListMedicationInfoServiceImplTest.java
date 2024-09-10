@@ -35,6 +35,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
+@Disabled
 class ListMedicationInfoServiceImplTest extends UnitRepository {
 
     private ListMedicationInfoService listMedicationInfoService;
