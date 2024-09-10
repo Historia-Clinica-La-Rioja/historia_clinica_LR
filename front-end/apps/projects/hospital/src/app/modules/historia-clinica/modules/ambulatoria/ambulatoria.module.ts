@@ -35,6 +35,7 @@ import { CompleteStudyComponent } from './dialogs/complete-study/complete-study.
 import { CompleteStudyInformationComponent } from './components/complete-study-information/complete-study-information.component';
 import { CompleteInfoComponent } from './components/complete-info/complete-info.component';
 import { DestinationInstitutionReferenceComponent } from './components/destination-institution-reference/destination-institution-reference.component';
+import { DeferredDateSelectorComponent } from './components/deferred-date-selector/deferred-date-selector.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { EmergencyCareProblemsComponent } from './components/emergency-care-problems/emergency-care-problems.component';
 import { ExternalClinicalHistoryComponent } from './components/external-clinical-history/external-clinical-history.component';
@@ -169,6 +170,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		GuardiaComponent,
 		EnviarRecetaDigitalPorEmailComponent,
 		DestinationInstitutionReferenceComponent,
+		DeferredDateSelectorComponent,
 		CarelinesAndSpecialtiesReferenceComponent,
 		OriginInstitutionReferenceComponent,
 		EpisodeSummaryComponent,
