@@ -873,7 +873,7 @@
                     "CONFIRM_ORDER": "Finalizar orden",
 					"URGENT": "Urgente",
 					"RUTINE": "Rutina",
-					"REQUIERES-TECHNICIAN-ON-SITE": "¿Requiere técnico en el lugar?",
+					"REQUIERES-TECHNICIAN-ON-SITE": "¿Requiere translado?",
 					"TYPE-OF-STUDY": "Tipo de estudio",
 					"PATIENT_DATA": "Datos del paciente",
                     "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
@@ -889,7 +889,10 @@
 					"BACK": "Volver",
 					"STUDY": "Estudio",
 					"NO_COVERAGE": "Sin cobertura",
-                    "ERROR_STUDIES": "Debe agregar al menos un estudio"
+                    "ERROR_STUDIES": "Debe agregar al menos un estudio",
+					"DEFERRED_ORDER_OF_STUDY": "Orden de estudio diferida",
+					"DEFERRE_ORDER_DATE": "Fecha diferida de orden",
+					"INVALID_TIME":"La hora debe ser posterior a la hora actual"
                 }
             },
             "nursing": {
