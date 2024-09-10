@@ -51,7 +51,8 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 				// quien puede ver las instituciones
 				ERole.ROOT,
 				ERole.ADMINISTRADOR,
-				ERole.API_IMAGENES
+				ERole.API_IMAGENES,
+				ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO
 		);
 	}
 
