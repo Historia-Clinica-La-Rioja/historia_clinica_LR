@@ -15,14 +15,24 @@
 				</ng-container>
 
 				<ng-template #noData>
-					<div class="no-data">
+					<mat-card>
 						<app-no-data [message]="'guardia.home.attention_places.NO_DATA'"></app-no-data>
-					</div>
+					</mat-card>
 				</ng-template>
 			</div>
 
 			<div class="details-panel">
-				<!-- espacio reservado para componente de detalle -->
+				<ng-container *ngIf="hasSectors">
+					<mat-card>
+						<ng-container *ngIf="selectedSpaceId else noSelectedSpace">
+							<app-emergency-care-attention-place-details></app-emergency-care-attention-place-details>
+						</ng-container>
+
+						<ng-template #noSelectedSpace>
+							<app-no-data [message]="'guardia.home.attention_places.NO_SELECTED_SPACE'"></app-no-data>
+						</ng-template>
+					</mat-card>
+				</ng-container>
 			</div>
 		</div>
 	</ng-template>

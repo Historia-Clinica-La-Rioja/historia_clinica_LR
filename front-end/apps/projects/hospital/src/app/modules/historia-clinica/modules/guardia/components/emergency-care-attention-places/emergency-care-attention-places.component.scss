@@ -12,7 +12,9 @@
 .dashboard-panel {
     margin-top: 0px;
     overflow-y: auto;
-	.no-data{
-		background-color: white;
-	}
+}
+
+.details-panel {
+	height: fit-content;
+    margin-left: 1rem;
 }

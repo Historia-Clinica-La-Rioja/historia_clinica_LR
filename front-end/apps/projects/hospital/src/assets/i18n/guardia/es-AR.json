@@ -152,7 +152,7 @@
 			},
 			"attention_places":{
                 "NO_DATA": "No hay lugares de atención para mostrar",
-                "NO_SELECTED_PLACE": "Seleccione un lugar para ver el detalle",
+                "NO_SELECTED_SPACE": "Seleccione un lugar para ver el detalle",
 				"sector": {
 					"NO_ASSOCIATED_SPECIALTY": "Sin servicio asociado"
 				}
