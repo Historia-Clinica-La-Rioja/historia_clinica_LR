@@ -143,7 +143,8 @@
 					"RESULT_ONE_EPISODE": "Resultado: 1 episodio",
 					"TEMPORAL_PATIENT": "Paciente temporal",
 					"TYPE": "Tipo de guardia",
-					"URGENCY": "Nivel de urgencia"
+					"URGENCY": "Nivel de urgencia",
+					"STATES": "Estados de atención"
 				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",

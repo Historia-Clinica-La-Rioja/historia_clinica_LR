@@ -54,6 +54,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 		this.form = new FormGroup<FiltersEpisodeForm>({
 			triageCategories: new FormControl(null),
 			emergencyCareTypes: new FormControl(null),
+			states: new FormControl(null),
 			patientId: new FormControl(null),
 			identificationNumber: new FormControl(null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)),
 			firstName: new FormControl(null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)),
@@ -64,7 +65,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	private subscribeToFormChanges() {
-		const formControls: FormControlType[] = ['triageCategories', 'emergencyCareTypes'];
+		const formControls: FormControlType[] = ['triageCategories', 'emergencyCareTypes', 'states'];
 		formControls.forEach(formControl => this.subscribeToFormControlsChanges(formControl));
 	}
 
@@ -82,6 +83,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 		return {
 			triageCategories: controls.triageCategories.value,
 			emergencyCareTypes: controls.emergencyCareTypes.value,
+			states: controls.states.value,
 			patientId: controls.patientId.value,
 			identificationNumber: controls.identificationNumber.value,
 			firstName: controls.firstName.value,
@@ -96,13 +98,12 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 		this.filterService.setFilters(episodeFilters);
 		this.updateEpisodes.emit();
 	}
-
-
 }
 
 interface FiltersEpisodeForm {
 	triageCategories: FormControl<FormCheckbox>,
 	emergencyCareTypes: FormControl<FormCheckbox>,
+	states: FormControl<FormCheckbox>,
 	patientId: FormControl<number>,
 	identificationNumber: FormControl<string>,
 	firstName: FormControl<string>,
@@ -115,4 +116,4 @@ export type FormCheckbox = {
 	[key: string]: boolean;
 }
 
-type FormControlType = 'triageCategories' | 'emergencyCareTypes';
+type FormControlType = 'triageCategories' | 'emergencyCareTypes' | 'states';

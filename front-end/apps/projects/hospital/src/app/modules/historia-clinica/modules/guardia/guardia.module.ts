@@ -51,6 +51,7 @@ import { MedicalDischargeByNurseComponent } from './components/medical-discharge
 import { MedicalDischargeTypesComponent } from './components/medical-discharge-types/medical-discharge-types.component';
 import { PatientBasicInformationComponent } from './components/patient-basic-information/patient-basic-information.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
+import { StatesCheckboxComponent } from './components/states-checkbox/states-checkbox.component';
 import { TriageCategoryCheckboxComponent } from './components/triage-category-checkbox/triage-category-checkbox.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
@@ -79,6 +80,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 // pipes
 import { ShowTriageCategoryDescriptionPipe } from './pipes/show-triage-category-description.pipe';
 import { ShowTypeDescriptionPipe } from './pipes/show-type-description.pipe';
+import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 
 @NgModule({
 	declarations: [
@@ -123,6 +125,7 @@ import { ShowTypeDescriptionPipe } from './pipes/show-type-description.pipe';
 		MedicalDischargeTypesComponent,
 		PatientBasicInformationComponent,
 		PediatricTriageComponent,
+		StatesCheckboxComponent,
 		TitledGridSummaryComponent,
 		TriageCategoryCheckboxComponent,
 		TriageChipComponent,
@@ -144,6 +147,7 @@ import { ShowTypeDescriptionPipe } from './pipes/show-type-description.pipe';
 		//pipes
 		ShowTriageCategoryDescriptionPipe,
 		ShowTypeDescriptionPipe,
+		ShowStateDescriptionPipe,
 	],
 	imports: [
 		CommonModule,

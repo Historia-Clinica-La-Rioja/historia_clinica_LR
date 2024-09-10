@@ -40,4 +40,9 @@ export class EmergencyCareMasterDataService {
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
+	getEmergencyCareStates(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/emergency-episode-states`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 }

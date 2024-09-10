@@ -1,12 +1,14 @@
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
-import { Observable } from 'rxjs';
-import { EmergencyCareEpisodeFilterDto, MasterDataInterface, TriageCategoryDto } from '@api-rest/api-model';
+import { map, Observable } from 'rxjs';
+import { EmergencyCareEpisodeFilterDto, MasterDataDto, MasterDataInterface, TriageCategoryDto } from '@api-rest/api-model';
 import { Injectable } from '@angular/core';
 import { FormCheckbox } from '../components/emergency-care-episode-filters/emergency-care-episode-filters.component';
+import { EstadosEpisodio } from '../constants/masterdata';
 
 const TRIAGE_CATEGORIES_FORM = 'triageCategories';
 const EMERGENCY_CARE_TYPES_FORM = 'emergencyCareTypes';
+const STATES_FORM = 'states';
 
 @Injectable()
 export class EpisodeFilterService {
@@ -29,6 +31,10 @@ export class EpisodeFilterService {
 		return this.emergencyCareMasterDataService.getType();
 	}
 
+	getStates(): Observable<MasterDataDto[]> {
+		return this.emergencyCareMasterDataService.getEmergencyCareStates().pipe(map(states => states.filter(state => state.id != EstadosEpisodio.CON_ALTA_ADMINISTRATIVA)))
+	}
+
 	setFilters(filters: EpisodeFilters) {
 		this.filters = {
 			clinicalSpecialtySectorIds: [],
@@ -37,7 +43,7 @@ export class EpisodeFilterService {
 			patientFirstName: filters.firstName,
 			patientId: filters.patientId,
 			patientLastName: filters.lastName,
-			stateIds: [],
+			stateIds: this.getCheckboxFilterValue(filters.states, STATES_FORM),
 			triageCategoryIds: this.getCheckboxFilterValue(filters.triageCategories, TRIAGE_CATEGORIES_FORM),
 			typeIds: this.getCheckboxFilterValue(filters.emergencyCareTypes, EMERGENCY_CARE_TYPES_FORM),
 		}
@@ -85,6 +91,7 @@ export class EpisodeFilterService {
 export interface EpisodeFilters {
 	triageCategories?: FormCheckbox;
 	emergencyCareTypes?: FormCheckbox;
+	states?: FormCheckbox;
 	patientId?: number;
 	identificationNumber?: string;
 	firstName?: string;
