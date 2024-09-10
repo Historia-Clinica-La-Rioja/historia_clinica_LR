@@ -128,7 +128,8 @@
 				"GESTOR_CENTRO_LLAMADO":  "Gestor de centro de llamado",
 				"ADMINISTRADOR_DE_DATOS_PERSONALES": "Administrador de datos personales",
 				"API_REPORTES": "API Reportes",
-                "API_IMAGENES": "API Imagenes"
+                "API_IMAGENES": "API Imagenes",
+				"FHIR_ACCESS_ALL_RESOURCES": "API FHIR Acceso general a la API"
 			}
 		}
 	}
