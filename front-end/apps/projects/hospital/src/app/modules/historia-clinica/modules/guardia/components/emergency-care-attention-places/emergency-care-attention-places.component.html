@@ -24,8 +24,8 @@
 			<div class="details-panel">
 				<ng-container *ngIf="hasSectors">
 					<mat-card>
-						<ng-container *ngIf="selectedSpaceId else noSelectedSpace">
-							<app-emergency-care-attention-place-details></app-emergency-care-attention-place-details>
+						<ng-container *ngIf="selectedSpace else noSelectedSpace">
+							<app-emergency-care-attention-place-details [selectedSpace]="selectedSpace"></app-emergency-care-attention-place-details>
 						</ng-container>
 
 						<ng-template #noSelectedSpace>

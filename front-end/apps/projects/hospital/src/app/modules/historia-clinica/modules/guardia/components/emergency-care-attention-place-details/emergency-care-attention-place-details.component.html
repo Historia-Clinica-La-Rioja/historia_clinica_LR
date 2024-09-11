@@ -1,1 +1,5 @@
-<p>emergency-care-attention-place-details works!</p>
+<div *ngIf="details$ | async as details">
+	<div *ngIf="spaceTypeDetails">
+		<app-emergency-care-detail-place-type [spaceType]="selectedSpace.spaceType" [spaceTypeDetails]="spaceTypeDetails"></app-emergency-care-detail-place-type>
+	</div>
+</div>

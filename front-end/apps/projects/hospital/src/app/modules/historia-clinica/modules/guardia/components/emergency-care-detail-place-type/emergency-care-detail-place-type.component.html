@@ -1,0 +1,15 @@
+<h2>{{ spaceType | showSpaceDetailTitle }}</h2>
+<p> {{spaceTypeDetails.sectorDescription}} </p>
+<div fxLayout="row" class="center-gap">
+	<app-button-availability
+		[description]="spaceTypeDetails.description"
+		[type]="buttonType"
+		[isSelected]=false>
+	</app-button-availability>
+
+	<app-colored-label
+		[description]="labelDescription | translate"
+		[color]="labelColor">
+	</app-colored-label>
+</div>
+

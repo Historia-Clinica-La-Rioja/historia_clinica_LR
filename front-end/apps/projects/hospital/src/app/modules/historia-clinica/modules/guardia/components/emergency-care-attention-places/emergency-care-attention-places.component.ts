@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EmergencyCareAttentionPlaceService } from '../../services/emergency-care-attention-place.service';
 import { EmergencyCareAttentionPlaceDto } from '@api-rest/api-model';
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from '../../services/emergency-care-attention-place-availability-button-selection.service';
+import { SelectedSpace } from '../emergency-care-attention-place-space/emergency-care-attention-place-space.component';
 
 @Component({
   selector: 'app-emergency-care-attention-places',
@@ -14,7 +15,7 @@ export class EmergencyCareAttentionPlacesComponent implements OnInit {
 
     hasSectors: boolean;
     sectors: EmergencyCareAttentionPlaceDto[];
-    selectedSpaceId: number;
+    selectedSpace: SelectedSpace;
 
     constructor(
 		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
@@ -35,8 +36,10 @@ export class EmergencyCareAttentionPlacesComponent implements OnInit {
 	}
 
 	private listenToButtonSelection(){
-		this.buttonSelectionService.selectedButtonId$.subscribe(buttonId => {
-            this.selectedSpaceId = buttonId;
+		this.buttonSelectionService.selectedButton$.subscribe(space => {
+			if (space) {
+				this.selectedSpace = space;
+			}
         });
 	}
 }

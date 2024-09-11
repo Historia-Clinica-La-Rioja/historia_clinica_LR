@@ -118,6 +118,7 @@ import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diag
 import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-popup/vital-signs-chart-popup.component';
 //pipes
 import { ProblemStatusPipe } from './pipes/problem-status.pipe';
+import { ShowSpaceDetailTitlePipe } from './pipes/show-space-detail-title.pipe';
 import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
 import { ShowTimeElapsedPipe } from './pipes/show-time-elapsed.pipe';
 //Porque estan aca?
@@ -330,6 +331,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		VitalSignsChartPopupComponent,
 		//pipes
 		ProblemStatusPipe,
+		ShowSpaceDetailTitlePipe,
 		ShowTitleByPatientDataPipe,
   		ShowTimeElapsedPipe,
 	],
@@ -395,6 +397,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		SummaryAttentionComponent,
 		//pipes
 		ProblemStatusPipe,
+		ShowSpaceDetailTitlePipe,
 		ShowTimeElapsedPipe,
 	],
 	providers: [
