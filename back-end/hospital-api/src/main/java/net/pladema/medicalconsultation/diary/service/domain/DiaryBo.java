@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 
@@ -88,5 +89,28 @@ public class DiaryBo extends SelfValidating<DiaryBo> {
 			if (openingHour.getOnSiteAttentionAllowed() == null && openingHour.getPatientVirtualAttentionAllowed() == null && openingHour.getSecondOpinionVirtualAttentionAllowed() == null)
 				throw new DiaryException(DiaryEnumException.MODALITY_NOT_FOUND, "Una de las franjas horarias no cuenta con una modalidad definida");
 		});
+	}
+
+	public boolean isAppointmentOutOfDiary(UpdateDiaryAppointmentBo a) {
+		return this.getDiaryOpeningHours() == null
+				|| this.isOutOfDiaryBounds(a)
+				|| this.isOutOfOpeningHoursBounds(a);
+	}
+
+	private boolean isOutOfDiaryBounds(UpdateDiaryAppointmentBo a) {
+		LocalDate from = this.getStartDate();
+		LocalDate to = this.getEndDate();
+		return a.getDate().isBefore(from) || a.getDate().isAfter(to);
+	}
+
+	private boolean isOutOfOpeningHoursBounds(UpdateDiaryAppointmentBo a) {
+		return this.getDiaryOpeningHours()
+				.stream()
+				.noneMatch(diaryOpeningHoursBo -> diaryOpeningHoursBo.fitsAppointmentHere(a));
+	}
+
+	public void updateMyDiaryOpeningHours() {
+		this.getDiaryOpeningHours()
+				.forEach(doh -> doh.updateMeWithDiaryInformation(this));
 	}
 }

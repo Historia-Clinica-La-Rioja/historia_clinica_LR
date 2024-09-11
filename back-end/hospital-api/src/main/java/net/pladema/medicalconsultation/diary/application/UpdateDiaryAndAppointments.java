@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -60,13 +59,11 @@ public class UpdateDiaryAndAppointments {
             validateOverlapWithOcupation(diaryToUpdate);
 
         diaryToUpdate.setId(diarySaved.getId());
-        HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
-        diaryToUpdate.getDiaryOpeningHours().forEach(doh -> {
-            if (doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() && diaryToUpdate.getCareLines().isEmpty())
-                doh.setProtectedAppointmentsAllowed(false);
-            doh.setDiaryId(diaryToUpdate.getId());
-            apmtsByNewDOH.put(doh, new ArrayList<>());
-        });
+        diaryToUpdate.updateMyDiaryOpeningHours();
+
+        // re-define
+        // HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
+
         Collection<AppointmentBo> apmts = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), diaryToUpdate.getStartDate(), diaryToUpdate.getEndDate());
         adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
         diaryService.persistDiary(diaryToUpdate);

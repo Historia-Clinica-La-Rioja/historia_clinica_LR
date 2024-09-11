@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
+
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -41,4 +44,26 @@ public class DiaryOpeningHoursBo {
 		return openingHours.getId();
 	}
 
+	public boolean fitsAppointmentHere(UpdateDiaryAppointmentBo a) {
+		return this.fitsIn(a) && this.sameMedicalAttention(a);
+	}
+
+	private boolean fitsIn(UpdateDiaryAppointmentBo a) {
+		LocalTime from = openingHours.getFrom();
+		LocalTime to = openingHours.getTo();
+		LocalTime appointmentLocalTime = a.getTime();
+		return (appointmentLocalTime.equals(from) || appointmentLocalTime.isAfter(from))
+				&& appointmentLocalTime.isBefore(to);
+	}
+
+	private boolean sameMedicalAttention(UpdateDiaryAppointmentBo a) {
+		return this.getMedicalAttentionTypeId().equals(a.getMedicalAttentionTypeId());
+	}
+
+	public void updateMeWithDiaryInformation(DiaryBo diaryBo) {
+		var noCarelines = diaryBo.getCareLines().isEmpty();
+		if (this.getProtectedAppointmentsAllowed() != null && this.getProtectedAppointmentsAllowed() && noCarelines)
+			this.setProtectedAppointmentsAllowed(false);
+		this.setDiaryId(diaryBo.getId());
+	}
 }
