@@ -1048,6 +1048,7 @@ const messages = {
                 code: 'Unidad',
                 enabled: 'Disponible en sistema'
             },
+            title: 'Estándar UCOM'
         },
         proceduretemplateparameters: {
             name: 'Parametros asociados',
