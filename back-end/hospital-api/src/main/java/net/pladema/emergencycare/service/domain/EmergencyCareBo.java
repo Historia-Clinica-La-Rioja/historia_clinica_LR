@@ -108,7 +108,9 @@ public class EmergencyCareBo {
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
         this.id = emergencyCareEpisode.getId();
         if(emergencyCareEpisode.getPatientId() != null) {
-            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId());
+            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId(),
+					emergencyCareEpisode.getPatientMedicalCoverageId(),
+					emergencyCareEpisode.getPatientDescription());
         }
         this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.emergencyCareEntranceId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
@@ -120,6 +122,7 @@ public class EmergencyCareBo {
             this.doctorsOffice.setId(emergencyCareEpisode.getDoctorsOfficeId());
         }
         this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
+		this.reason = emergencyCareEpisode.getReason();
     }
 
     public void setTriageRiskFactorIds(List<Integer> riskFactorIds) {

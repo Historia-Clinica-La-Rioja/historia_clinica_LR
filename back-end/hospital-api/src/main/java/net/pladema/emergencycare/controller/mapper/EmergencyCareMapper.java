@@ -35,6 +35,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionDto")
     @Mapping(target = "creationDate", source = "createdOn")
     @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
+	@Mapping(target = "patient.person.photo", ignore = true)
     ResponseEmergencyCareDto toResponseEmergencyCareDto(EmergencyCareBo emergencyCareBo);
 
     @AfterMapping
@@ -54,6 +55,7 @@ public interface EmergencyCareMapper {
 	@Mapping(target = "triage.reasons", source = "triage.reasons")
 	@Mapping(target = "triage.creator", source = "triage.creator")
 	@Mapping(target = "triage.clinicalSpecialtySector", source = "triage.clinicalSpecialtySectorBo")
+	@Mapping(target = "patient.person.photo", ignore = true)
     EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 
     @Named("toListEmergencyCareListDto")

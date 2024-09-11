@@ -1,6 +1,7 @@
 package net.pladema.patient.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.emergencycare.domain.EmergencyCarePatientBo;
 import net.pladema.patient.domain.DocumentPatientBo;
 import net.pladema.patient.domain.FetchGlobalCoordinatesSanitaryResponsibilityAreaPatientAddressBo;
 import net.pladema.patient.repository.domain.PatientPersonVo;
@@ -146,5 +147,12 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 																								@Param("upperLatitude") Double upperLatitude,
 																								@Param("upperLongitude") Double upperLongitude);
 
-
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT NEW net.pladema.emergencycare.domain.EmergencyCarePatientBo(p.id, p.typeId, pe, petd.nameSelfDetermination, it.description) "+
+			" FROM Patient p "+
+			" LEFT JOIN Person pe ON (p.personId = pe.id) " +
+			" LEFT JOIN PersonExtended petd ON (pe.id = petd.id) "+
+			" LEFT JOIN IdentificationType it ON (pe.identificationTypeId = it.id) " +
+			" WHERE p.id = :id ")
+	EmergencyCarePatientBo findEmergencyCarePatientById(@Param("id") Integer id);
 }

@@ -6,7 +6,13 @@ import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeSto
 
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 
+import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -28,6 +34,16 @@ public class EmergencyCareEpisodeStorageImpl implements EmergencyCareEpisodeStor
 	@Override
 	public Boolean existsEpisodeInOffice(Integer doctorsOfficeId, Integer shockroomId) {
 		return emergencyCareEpisodeRepository.existsEpisodeInOffice(doctorsOfficeId, shockroomId) > 0;
+	}
+
+	@Override
+	public Optional<EmergencyCareBo> getByBedIdInAttention(Integer bedId) {
+		return emergencyCareEpisodeRepository.findByBedIdInAttention(bedId).map(EmergencyCareBo::new);
+	}
+
+	@Override
+	public ProfessionalPersonBo getProfessionalByEpisodeId(Integer id) {
+		return new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(id));
 	}
 
 }

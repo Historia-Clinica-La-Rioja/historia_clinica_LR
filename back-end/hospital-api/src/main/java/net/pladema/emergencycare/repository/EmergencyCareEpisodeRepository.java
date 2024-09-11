@@ -289,4 +289,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"WHERE ecd.emergencyCareEpisodeId = :episodeId")
 	boolean isEpisodeMedicalOrAdministrativeDischarge(@Param("episodeId") Integer episodeId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT ece FROM EmergencyCareEpisode ece WHERE ece.bedId = :bedId AND ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION)
+	Optional<EmergencyCareEpisode> findByBedIdInAttention(@Param("bedId") Integer bedId);
+
 }

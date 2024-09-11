@@ -3,6 +3,7 @@ package net.pladema.emergencycare.controller.exceptions;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.emergencycare.application.exception.EmergencyCareAttentionPlaceException;
 import net.pladema.emergencycare.application.getemergencycaredocumentheader.exceptions.GetEmergencyCareDocumentHeaderException;
 import net.pladema.emergencycare.application.exception.EmergencyCareEpisodeException;
 import net.pladema.emergencycare.application.exception.EmergencyCareEpisodeStateException;
@@ -53,5 +54,12 @@ public class EmergencyCareExceptionHandler {
 	protected ApiErrorMessageDto handleEmergencyCareStateException(EmergencyCareEpisodeStateException ex) {
 		log.debug("EmergencyCareEpisodeStateException exception -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+	@ExceptionHandler({EmergencyCareAttentionPlaceException.class})
+	protected ApiErrorMessageDto handleEmergencyCareAttentionPlaceException(EmergencyCareAttentionPlaceException ex) {
+		log.debug("EmergencyCareAttentionPlaceException exception -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 }

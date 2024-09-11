@@ -1687,6 +1687,15 @@ export interface ElectronicSignatureInvolvedDocumentDto {
     signatureStatus: EElectronicSignatureStatus;
 }
 
+export interface EmergencyCareAttentionPlaceDetailDto {
+    lastTriage?: EmergencyCareEpisodeListTriageDto;
+    patient?: EmergencyCarePatientDto;
+    professional?: ProfessionalPersonDto;
+    reason?: string;
+    state?: MasterDataDto;
+    type?: MasterDataDto;
+}
+
 export interface EmergencyCareAttentionPlaceDto {
     beds: EmergencyCareBedDto[];
     clinicalSpecialtySectors: ClinicalSpecialtySectorDto[];
@@ -1698,10 +1707,15 @@ export interface EmergencyCareAttentionPlaceDto {
     shockRooms: ShockroomDto[];
 }
 
+export interface EmergencyCareBedDetailDto extends EmergencyCareAttentionPlaceDetailDto {
+    bed: EmergencyCareBedDto;
+}
+
 export interface EmergencyCareBedDto {
     available: boolean;
     description: string;
     id: number;
+    sectorDescription: string;
 }
 
 export interface EmergencyCareClinicalSpecialtySectorDto {
@@ -1856,11 +1870,17 @@ export interface EmergencyCarePatientDto extends Serializable {
 }
 
 export interface EmergencyCarePersonDto {
+    age: PersonAgeDto;
     firstName: string;
+    gender: string;
+    id: number;
     identificationNumber: string;
     identificationType: string;
     lastName: string;
+    middleNames: string;
     nameSelfDetermination: string;
+    otherLastNames: string;
+    photo?: PersonPhotoDto;
 }
 
 export interface EmergencyCareUserDto {
