@@ -60,7 +60,7 @@
 
 			<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 				<button mat-raised-button mat-button matStepperNext color="primary"
-					[disabled]="!this.form.controls.healthProblem.valid" >
+					[disabled]="!this.form.controls.healthProblem.valid">
 					{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT'|translate}}
 				</button>
 			</mat-dialog-actions>
@@ -117,7 +117,8 @@
 							</ng-template>
 						</div>
 						<div fxFlex="50%">
-							<app-titled-content-card [title]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ADDED_STUDIES'">
+							<app-titled-content-card
+								[title]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ADDED_STUDIES'">
 								<div *ngIf="(orderStudiesService.data.length > 0); else withoutStudies">
 
 									<div *ngFor="let study of orderStudiesService.data; let i = index">
@@ -168,7 +169,8 @@
 				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ORDER_DETAIL'|translate}}
 			</ng-template>
 
-			<div *ngIf="orderStudiesService.data.length > 0">
+			<div *ngIf="orderStudiesService.data.length > 0" fxLayout="column" fxLayoutAlign="space-evenly stretch"
+				fxLayoutGap="15px">
 
 				<mat-dialog-content fxLayout="column" fxLayoutGap="15px">
 					<div fxLayout="column" fxLayoutGap="5px">
@@ -209,6 +211,15 @@
 							<textarea matInput type="text" formControlName="notes" id="note-input"></textarea>
 						</mat-form-field>
 					</div>
+					<app-deferred-date-selector
+						[minDate]="today"
+						[maxDate]="maxDate"
+						[isSelectedDateInThePast]="isSelectedDateInThePast"
+						[isDeferredSectionSelected]="form.controls.selectSectionDeferredDate.value"
+						(dateChange)="handleDateChange($event)"
+						(timeChange)="handleTimeChange($event)"
+						(deferredSectionToggle)="handleDeferredSectionToggle($event)">
+					</app-deferred-date-selector>
 
 				</mat-dialog-content>
 				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">

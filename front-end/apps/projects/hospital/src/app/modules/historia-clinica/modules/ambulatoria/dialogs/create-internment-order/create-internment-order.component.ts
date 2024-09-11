@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto } from "@api-rest/api-model";
+import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto, PrescriptionItemDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
+import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
@@ -14,6 +15,8 @@ import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinic
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { PatientBasicData } from '@presentation/utils/patient.utils';
+
+const MAX_DATE = 45;
 
 @Component({
 	selector: 'app-create-order',
@@ -37,6 +40,18 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 	orderStudiesService: OrderStudiesService;
 	title = this.data.emergencyCareId ? 'Nueva orden de Guardia' : 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
+	today = new Date();
+	isSelectedDateInThePast = false;
+	maxDate: Date = this.setMaxDay(new Date());
+	setDateWithTime = false;
+	private selectedDateTime: Date;
+
+	private setMaxDay(today: Date): Date {
+		const maxDate = new Date(today);
+		maxDate.setDate(maxDate.getDate() + MAX_DATE);
+		return maxDate;
+	}
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number, patientInternmentEpisodeMedicalCoverageId?: number, patientEmergencyCareMedicalCoverageId?: number },
 		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
@@ -71,6 +86,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+
 		this.form = this.formBuilder.group({
 			patientMedicalCoverage: [null],
 			studyCategory: [null, Validators.required],
@@ -78,7 +94,9 @@ export class CreateInternmentOrderComponent implements OnInit {
 			healthProblem: [null, Validators.required],
 			studyType: [EStudyType.ROUTINE, Validators.required],
 			requiresTechnical: [false, Validators.required],
-			notes: [null]
+			notes: [null],
+			selectSectionDeferredDate: [false],
+			date: [null],
 		});
 
 		this.requestMasterDataService.categories().subscribe(categories => {
@@ -87,6 +105,13 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 		this.healthProblemOptions = this.data.diagnoses;
 		this.setMainDiagnosisAsDefaultHealthProblem();
+
+		this.form.controls.selectSectionDeferredDate.valueChanges.subscribe((selectSectionDeferredDate: boolean) => {
+			if (!selectSectionDeferredDate)
+				this.form.controls.date.setValue(null);
+		}
+		)
+
 	}
 
 	private setMainDiagnosisAsDefaultHealthProblem() {
@@ -159,27 +184,81 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	confirmOrder() {
-		let prescriptionLineNumberAux = 0;
-		const newInternmentOrder: PrescriptionDto = {
-			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
-			hasRecipe: true,
-			observations: this.form.controls.notes.value,
-			studyType: this.form.controls.studyType.value,
-			requiresTransfer: this.form.controls.requiresTechnical.value,
-			items: this.orderStudiesService.getStudies().map(study => {
-				return {
-					healthConditionId: this.form.controls.healthProblem.value.id,
-					snomed: study.snomed,
-					categoryId: this.form.controls.studyCategory.value,
-					prescriptionLineNumber: ++prescriptionLineNumberAux,
-				};
-			})
-		};
+		const selectedDate = this.form.controls.date?.value;
+
+		if (this.form.controls.selectSectionDeferredDate.value) {
+			if (selectedDate && this.setDateWithTime) {
+				this.isSelectedDateInThePast = this.isDateInThePast(selectedDate);
+				if (!this.isSelectedDateInThePast)
+					this.saveOrder();
+			}
+		} else {
+			this.saveOrder();
+		}
+
+	}
+
+	handleDateChange(selectedDate: Date) {
+		this.selectedDateTime = selectedDate;
+		this.form.controls.date.setValue(this.selectedDateTime);
+		this.isSelectedDateInThePast = this.isDateInThePast(this.selectedDateTime);
+	}
+
+	handleTimeChange(selectedTime: { hours: number; minutes: number }) {
+		this.isSelectedDateInThePast = false;
+
+		if (this.selectedDateTime) {
+			this.setDateWithTime = true;
+			const dateWithTime = new Date(this.selectedDateTime);
+			dateWithTime.setHours(selectedTime.hours);
+			dateWithTime.setMinutes(selectedTime.minutes);
+			this.selectedDateTime = dateWithTime;
+			this.form.controls.date.setValue(this.selectedDateTime);
+		}
+	}
+
+	handleDeferredSectionToggle(isSelected: boolean) {
+		this.form.controls.selectSectionDeferredDate.setValue(isSelected);
+	}
+
+	private isDateInThePast(selectedDate: Date): boolean {
+		return this.today > selectedDate;
+	}
+
+	private saveOrder() {
+		const newInternmentOrder = this.createNewInternmentOrder();
 		if (this.data.emergencyCareId) {
 			this.saveEmergencyCareOrder(newInternmentOrder);
 		} else {
 			this.saveInternmentOrder(newInternmentOrder);
 		}
+	}
+
+	private createNewInternmentOrder(): PrescriptionDto {
+		const { patientMedicalCoverage, notes, studyType, requiresTechnical, healthProblem, studyCategory } = this.form.controls;
+		const studies = this.orderStudiesService.getStudies();
+
+		return {
+			medicalCoverageId: patientMedicalCoverage.value?.id,
+			hasRecipe: true,
+			observations: notes.value,
+			studyType: studyType.value,
+			requiresTransfer: requiresTechnical.value,
+			...(this.form.controls.date?.value && {
+				deferredDate: dateToDateTimeDto(this.form.controls.date.value)
+			}),
+			items: this.createPrescriptionItems(studies, healthProblem.value.id, studyCategory.value)
+		};
+	}
+
+	private createPrescriptionItems(studies: Study[], healthConditionId: number, categoryId: string): PrescriptionItemDto[] {
+		let prescriptionLineNumber = 0;
+		return studies.map(study => ({
+			healthConditionId,
+			snomed: study.snomed,
+			categoryId,
+			prescriptionLineNumber: ++prescriptionLineNumber,
+		}));
 	}
 
 	private saveEmergencyCareOrder(newInternmentOrder: PrescriptionDto) {
