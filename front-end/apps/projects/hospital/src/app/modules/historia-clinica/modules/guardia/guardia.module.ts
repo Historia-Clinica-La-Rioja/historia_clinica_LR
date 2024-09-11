@@ -21,6 +21,7 @@ import { AdministrativeTriageComponent } from './components/administrative-triag
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
 import { TitledGridSummaryComponent } from './components/titled-grid-summary/titled-grid-summary.component';
 import { EmergencyCareAttentionPlaceDetailsComponent } from './components/emergency-care-attention-place-details/emergency-care-attention-place-details.component';
+import { EmergencyCareAttentionPlacePatientComponent } from './components/emergency-care-attention-place-patient/emergency-care-attention-place-patient.component';
 import { EmergencyCareAttentionPlacesComponent } from './components/emergency-care-attention-places/emergency-care-attention-places.component';
 import { EmergencyCareAttentionPlacesDashboardComponent } from './components/emergency-care-attention-places-dashboard/emergency-care-attention-places-dashboard.component';
 import { EmergencyCareAttentionPlaceSectorComponent } from './components/emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
@@ -86,6 +87,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		AdministrativeTriageComponent,
 		AdultGynecologicalTriageComponent,
 		EmergencyCareAttentionPlaceDetailsComponent,
+		EmergencyCareAttentionPlacePatientComponent,
 		EmergencyCareAttentionPlacesComponent,
 		EmergencyCareAttentionPlacesDashboardComponent,
 		EmergencyCareAttentionPlaceSectorComponent,
@@ -94,7 +96,6 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareDetailPlaceTypeComponent,
 		EmergencyCareElapsedTimeStateComponent,
 		EmergencyCareInAttentionStateComponent,
-		EmergencyCareInAttentionStatusComponent,
 		EmergencyCarePatientComponent,
 		EmergencyCarePatientDischargeStateComponent,
 		EmergencyCarePatientsSummaryComponent,
