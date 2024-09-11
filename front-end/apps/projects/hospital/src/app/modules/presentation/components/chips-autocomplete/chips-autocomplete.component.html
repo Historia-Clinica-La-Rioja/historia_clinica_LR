@@ -10,7 +10,7 @@
 	</mat-form-field>
 
 	<mat-chip-list #chipGrid>
-		<mat-chip selected color="primary" *ngFor="let option of optionsSelected" (removed)="remove(option)">
+		<mat-chip selected *ngFor="let option of optionsSelected" (removed)="remove(option)">
 			{{option.compareValue}}
 			<button matChipRemove>
 				<mat-icon>cancel</mat-icon>
