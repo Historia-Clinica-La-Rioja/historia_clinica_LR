@@ -5,6 +5,7 @@ import ar.lamansys.refcounterref.application.createcounterreference.exceptions.C
 import ar.lamansys.refcounterref.application.createcounterreferencefile.exceptions.CreateCounterReferenceFileException;
 import ar.lamansys.refcounterref.application.createreferencefile.exceptions.CreateReferenceFileException;
 import ar.lamansys.refcounterref.application.createreferenceobservation.exceptions.ReferenceObservationException;
+import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyReferenceException;
 import ar.lamansys.refcounterref.application.referenceforwarding.exceptions.ReferenceForwardingException;
 import ar.lamansys.refcounterref.application.getcounterreferencefile.exceptions.GetCounterReferenceFileException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
@@ -104,6 +105,13 @@ public class ReferenceCounterReferenceExceptionHandler {
 	@ExceptionHandler({CancelReferenceException.class})
 	protected ApiErrorMessageDto handleCancelReferenceException(CancelReferenceException ex, Locale locale) {
 		log.debug("CancelReferenceException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ModifyReferenceException.class})
+	protected ApiErrorMessageDto handleModifyReferenceException(ModifyReferenceException ex, Locale locale) {
+		log.debug("ModifyReferenceException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

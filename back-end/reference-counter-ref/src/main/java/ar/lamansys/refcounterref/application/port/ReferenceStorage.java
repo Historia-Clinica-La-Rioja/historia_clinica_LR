@@ -37,4 +37,6 @@ public interface ReferenceStorage {
 
 	Optional<ReferenceStudyBo> getReferenceStudy(Integer referenceId);
 
+	void updateDestinationInstitution(Integer referenceId, Integer institutionId);
+
 }
