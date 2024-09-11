@@ -1,3 +1,23 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_31 
+    - logicalFilePath: incrementales-v2_31
 
+
+    - changeSet:
+        id: insert-new-emergency-care-type
+        author: jvaldez
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO emergency_care_type VALUES (-1, 'No definido');
+
+    - changeSet:
+        id: add-default-value-and-not-null-constraint-emergency_care_type_id
+        author: jvaldez
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: emergency_care_type_id
+              tableName: emergency_care_episode
+              validate: true
+              defaultNullValue: -1
