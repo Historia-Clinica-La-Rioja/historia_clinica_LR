@@ -8,9 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.emergencycare.application.getallemergencycareattentionplaces.GetAllEmergencyCareAttentionPlaces;
 
 import net.pladema.emergencycare.application.getemergencycarebeddetail.GetEmergencyCareBedDetail;
+import net.pladema.emergencycare.application.getemergencycareshockroomdetail.GetEmergencyCareShockRoomDetail;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDto;
 
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareBedDetailDto;
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareShockRoomDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.mapper.EmergencyCareAttentionPlaceMapper;
 
 import net.pladema.person.controller.service.PersonExternalService;
@@ -33,6 +35,7 @@ public class EmergencyCareAttentionPlaceController {
 	private final EmergencyCareAttentionPlaceMapper emergencyCareAttentionPlaceMapper;
 	private final GetEmergencyCareBedDetail getEmergencyCareBedDetail;
 	private final PersonExternalService personExternalService;
+	private final GetEmergencyCareShockRoomDetail getEmergencyCareShockRoomDetail;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -50,9 +53,19 @@ public class EmergencyCareAttentionPlaceController {
 		log.debug("Input get emergency care bed detail parameters -> institutionId {}, bedId {}", institutionId, bedId);
 		EmergencyCareBedDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareBedDetailDto(getEmergencyCareBedDetail.run(bedId));
 		if (result.hasPersonId())
-			result.setPersonPhoto(personExternalService.getPersonPhoto(result.getPatient().getId()));
+			result.setPersonPhoto(personExternalService.getPersonPhoto(result.getPersonId()));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
+	@GetMapping("/shockroom/{shockroomId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public EmergencyCareShockRoomDetailDto getShockRoomDetail(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "shockroomId") Integer shockroomId){
+		log.debug("Input get emergency care shockroom detail parameters -> institutionId {}, shockroomId {}", institutionId, shockroomId);
+		EmergencyCareShockRoomDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareShockRoomDetailDto(getEmergencyCareShockRoomDetail.run(shockroomId));
+		if (result.hasPersonId())
+			result.setPersonPhoto(personExternalService.getPersonPhoto(result.getPersonId()));
+		log.debug("Output -> {}", result);
+		return result;
+	}
 }

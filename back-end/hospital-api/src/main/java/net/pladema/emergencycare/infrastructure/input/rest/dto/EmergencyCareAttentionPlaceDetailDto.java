@@ -45,4 +45,10 @@ public class EmergencyCareAttentionPlaceDetailDto {
 		if (hasPersonId())
 			this.patient.getPerson().setPhoto(personPhotoDto);
 	}
+
+	public Integer getPersonId(){
+		if (hasPersonId())
+			return this.patient.getPerson().getId();
+		return null;
+	}
 }

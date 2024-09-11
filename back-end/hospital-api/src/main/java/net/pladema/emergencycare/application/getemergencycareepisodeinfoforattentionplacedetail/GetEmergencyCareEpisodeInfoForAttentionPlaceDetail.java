@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeStorage;
 import net.pladema.emergencycare.application.port.output.EmergencyCarePatientStorage;
 import net.pladema.emergencycare.application.port.output.EmergencyCareTriageCategoryStorage;
-import net.pladema.emergencycare.domain.EmergencyCareBedDetailBo;
+import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceDetailBo;
 
 import net.pladema.emergencycare.domain.EmergencyCarePatientBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
@@ -24,20 +24,20 @@ public class GetEmergencyCareEpisodeInfoForAttentionPlaceDetail {
 	private final FetchLastTriageByEmergencyCareEpisodeId fetchLastTriageByEmergencyCareEpisodeId;
 	private final EmergencyCareTriageCategoryStorage emergencyCareTriageCategoryStorage;
 
-	public void run(EmergencyCareBedDetailBo ecbd, EmergencyCareBo ec){
+	public void run(EmergencyCareAttentionPlaceDetailBo ecap, EmergencyCareBo ec){
 		if(ec.getPatient() != null) {
 			EmergencyCarePatientBo ecp = emergencyCarePatientStorage.getById(ec.getPatient().getId());
 			ecp.setPatientDescription(ec.getPatient().getPatientDescription());
-			ecbd.setPatient(ecp);
+			ecap.setPatient(ecp);
 		}
-		ecbd.setReason(ec.getReason());
-		ecbd.setEmergencyCareTypeId(ec.getEmergencyCareTypeId());
-		ecbd.setEmergencyCareStateId(ec.getEmergencyCareStateId());
-		ecbd.setProfessional(emergencyCareEpisodeStorage.getProfessionalByEpisodeId(ec.getId()));
+		ecap.setReason(ec.getReason());
+		ecap.setEmergencyCareTypeId(ec.getEmergencyCareTypeId());
+		ecap.setEmergencyCareStateId(ec.getEmergencyCareStateId());
+		ecap.setProfessional(emergencyCareEpisodeStorage.getProfessionalByEpisodeId(ec.getId()));
 		TriageBo lastTriage = fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId());
 		if (lastTriage != null){
-			ecbd.setLastTriage(lastTriage);
-			ecbd.setTriageCategoryInfo(emergencyCareTriageCategoryStorage.getById(lastTriage.getCategoryId()));
+			ecap.setLastTriage(lastTriage);
+			ecap.setTriageCategoryInfo(emergencyCareTriageCategoryStorage.getById(lastTriage.getCategoryId()));
 		}
 	}
 }

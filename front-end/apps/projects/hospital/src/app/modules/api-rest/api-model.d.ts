@@ -1883,6 +1883,10 @@ export interface EmergencyCarePersonDto {
     photo?: PersonPhotoDto;
 }
 
+export interface EmergencyCareShockRoomDetailDto extends EmergencyCareAttentionPlaceDetailDto {
+    shockroom: ShockroomDto;
+}
+
 export interface EmergencyCareUserDto {
     firstName: string;
     id: number;
@@ -4994,6 +4998,7 @@ export interface ShockroomDto {
     available: boolean;
     description: string;
     id: number;
+    sectorDescription: string;
 }
 
 export interface SignatureStatusTypeDto {

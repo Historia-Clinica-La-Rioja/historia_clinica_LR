@@ -46,4 +46,9 @@ public class EmergencyCareEpisodeStorageImpl implements EmergencyCareEpisodeStor
 		return new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(id));
 	}
 
+	@Override
+	public Optional<EmergencyCareBo> getByShockroomIdInAttention(Integer shockroomId) {
+		return emergencyCareEpisodeRepository.findByShockroomIdInAttention(shockroomId).map(EmergencyCareBo::new);
+	}
+
 }

@@ -8,6 +8,7 @@ import net.pladema.emergencycare.controller.mapper.MasterDataMapper;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareBedDetailBo;
+import net.pladema.emergencycare.domain.EmergencyCareShockRoomDetailBo;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDto;
 
@@ -15,6 +16,7 @@ import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareBedD
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareBedDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoctorsOfficeDto;
 
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareShockRoomDetailDto;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.establishment.domain.bed.EmergencyCareBedBo;
@@ -71,6 +73,9 @@ public interface EmergencyCareAttentionPlaceMapper {
 
 	@Named("toPersonAgeDto")
 	PersonAgeDto toPersonAgeDto(PersonAgeBo personAgeBo);
+
+	@Named("toEmergencyCareShockRoomDetailBo")
+	EmergencyCareShockRoomDetailDto toEmergencyCareShockRoomDetailDto(EmergencyCareShockRoomDetailBo emergencyCareShockRoomDetailBo);
 
 	@AfterMapping
 	default void masterDataEmergencyCareAttentionMapping(@MappingTarget EmergencyCareAttentionPlaceDetailDto target,

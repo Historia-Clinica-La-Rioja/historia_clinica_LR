@@ -14,6 +14,7 @@ public class ShockroomDto {
 	private Integer id;
 	private String description;
 	private boolean isAvailable;
+	private String sectorDescription;
 
 	public ShockroomDto(Integer id, String description) {
 		this.id = id;
