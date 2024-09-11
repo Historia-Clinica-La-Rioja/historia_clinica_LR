@@ -7,8 +7,6 @@ import net.pladema.imagenetwork.domain.ErrorDownloadStudyBo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -20,7 +18,6 @@ public class SaveErrorDownloadStudy {
     public Boolean run(ErrorDownloadStudyBo errorDownloadStudyBo) {
         log.debug("Input parameters -> errorDownloadStudyBo {}", errorDownloadStudyBo);
 
-        errorDownloadStudyBo.setCreatedOn(LocalDateTime.now());
         this.assertContextValid(errorDownloadStudyBo);
         var result = studyPacAssociationStorage.saveErrorDownloadStudy(errorDownloadStudyBo).isPresent();
 

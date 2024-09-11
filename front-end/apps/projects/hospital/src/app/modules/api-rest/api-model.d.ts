@@ -3669,10 +3669,6 @@ export interface PacsDto {
     url: string;
 }
 
-export interface PacsListDto {
-    pacs: PacsDto[];
-}
-
 export interface PageDto<T> {
     content: T[];
     totalElementsAmount: number;

@@ -3,12 +3,10 @@ package net.pladema.imagenetwork.infrastructure.input.rest.mapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.imagenetwork.domain.ErrorDownloadStudyBo;
 import net.pladema.imagenetwork.domain.PacsBo;
-import net.pladema.imagenetwork.domain.PacsListBo;
 import net.pladema.imagenetwork.domain.StudyFileInfoBo;
 import net.pladema.imagenetwork.domain.ViewerUrlBo;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.ErrorDownloadStudyDto;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsDto;
-import net.pladema.imagenetwork.infrastructure.input.rest.dto.PacsListDto;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.StudyFileInfoDto;
 import net.pladema.imagenetwork.infrastructure.input.rest.dto.ViewerUrlDto;
 import org.mapstruct.IterableMapping;
@@ -16,6 +14,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -31,10 +30,6 @@ public interface ImageNetworkMapper {
     @IterableMapping(qualifiedByName = "toPacsDto")
     List<PacsDto> toPacsDtoList(Set<PacsBo> pacsBo);
 
-    @Named("toPacsUrlDto")
-    @Mapping(target = "pacs", source = "pacs", qualifiedByName = "toPacsDtoList")
-    PacsListDto toPacsUrlDto(PacsListBo pacsListBo);
-
     @Named("toPacsBo")
     @Mapping(target = "domain", expression = "java(PacsBo.getDomain(pacsDto.getUrl()))")
     PacsBo toPacsBo(PacsDto pacsDto);
@@ -43,10 +38,6 @@ public interface ImageNetworkMapper {
     @IterableMapping(qualifiedByName = "toPacsBo")
     Set<PacsBo> toPacsBoSet(List<PacsDto> pacsDto);
 
-    @Named("toPacsUrlBo")
-    @Mapping(target = "pacs", source = "pacs", qualifiedByName = "toPacsBoList")
-    PacsListBo toPacsUrlBo(PacsListDto pacsListDto);
-
     @Named("toStudyFileInfoDto")
     StudyFileInfoDto toStudyFileInfoDto(StudyFileInfoBo studyFileInfoBo);
 
@@ -54,5 +45,5 @@ public interface ImageNetworkMapper {
     ViewerUrlDto toViewerUrlDto(ViewerUrlBo viewerUrlBo);
 
     @Named("toErrorDownloadStudyBo")
-    ErrorDownloadStudyBo toErrorDownloadStudyBo(ErrorDownloadStudyDto errorDownloadStudyDto);
+    ErrorDownloadStudyBo toErrorDownloadStudyBo(ErrorDownloadStudyDto errorDownloadStudyDto, Integer institutionId, String studyInstanceUID, LocalDateTime createdOn);
 }

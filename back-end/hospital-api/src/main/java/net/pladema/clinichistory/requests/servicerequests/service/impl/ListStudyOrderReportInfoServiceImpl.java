@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListStudyOrderReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
 import net.pladema.imagenetwork.application.getlocalviewerurl.GetLocalViewerUrl;
-import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacsWhereStudyIsHosted;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReportInfoService {
 
     private final ListStudyOrderReportRepository listStudyOrderReportRepository;
-    private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
+    private final GetPacsWhereStudyIsHosted getPacsWhereStudyIsHosted;
     private final AppointmentService appointmentService;
     private final GetLocalViewerUrl getLocalViewerUrl;
 
@@ -36,7 +36,7 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         List<StudyOrderReportInfoBo> result = listStudyOrderReportRepository.execute(patientId).stream()
                 .map(this::createStudyOrderReportInfoBo)
                 .peek(studyOrderReportInfoBo -> studyOrderReportInfoBo.setIsAvailableInPACS(
-                        getPacWhereStudyIsHosted.run(studyOrderReportInfoBo.getImageId(), false)
+                        getPacsWhereStudyIsHosted.run(studyOrderReportInfoBo.getImageId(), false)
                                 .isAvailableInPACS()))
                 .collect(Collectors.toList());
         addAppointmentDateTime(result);

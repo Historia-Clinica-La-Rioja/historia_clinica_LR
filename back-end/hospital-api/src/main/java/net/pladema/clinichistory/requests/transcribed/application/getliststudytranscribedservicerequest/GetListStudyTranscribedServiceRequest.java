@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.transcribed.application.port.TranscribedServiceRequestStorage;
 import net.pladema.imagenetwork.application.getlocalviewerurl.GetLocalViewerUrl;
-import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacsWhereStudyIsHosted;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class GetListStudyTranscribedServiceRequest {
 
-    private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
+    private final GetPacsWhereStudyIsHosted getPacsWhereStudyIsHosted;
     private final TranscribedServiceRequestStorage transcribedServiceRequestStorage;
     private final AppointmentService appointmentService;
     private final GetLocalViewerUrl getLocalViewerUrl;
@@ -40,7 +40,7 @@ public class GetListStudyTranscribedServiceRequest {
     }
 
     private void setIfIsAvailable(StudyTranscribedOrderReportInfoBo studyTranscribedOrderReportInfoBo) {
-        var result = getPacWhereStudyIsHosted.run(studyTranscribedOrderReportInfoBo.getImageId(), false)
+        var result = getPacsWhereStudyIsHosted.run(studyTranscribedOrderReportInfoBo.getImageId(), false)
                 .isAvailableInPACS();
         studyTranscribedOrderReportInfoBo.setIsAvailableInPACS(result);
     }
