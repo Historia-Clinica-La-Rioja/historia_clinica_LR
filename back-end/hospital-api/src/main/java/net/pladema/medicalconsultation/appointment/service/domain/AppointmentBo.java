@@ -17,13 +17,9 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import javax.annotation.Nullable;
-
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
 
 @Getter
 @Setter
@@ -224,11 +220,6 @@ public class AppointmentBo {
 
 	public boolean isExpiredRegister() {
 		return LocalDateTime.of(this.date, this.hour).isBefore(this.createdOn.minusHours(3));
-	}
-
-	public boolean belongsTo(DiaryOpeningHoursBo doh) {
-		return getWeekDay(this.getDate()).equals(doh.getOpeningHours().getDayWeekId())
-				&& isBetween(this.getHour(), doh.getOpeningHours().getFrom(), doh.getOpeningHours().getTo());
 	}
 
 }

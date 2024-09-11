@@ -9,6 +9,9 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointment
 
 import java.time.LocalTime;
 
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
+
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"diaryId", "overturnCount"})
@@ -65,5 +68,11 @@ public class DiaryOpeningHoursBo {
 		if (this.getProtectedAppointmentsAllowed() != null && this.getProtectedAppointmentsAllowed() && noCarelines)
 			this.setProtectedAppointmentsAllowed(false);
 		this.setDiaryId(diaryBo.getId());
+	}
+
+	/* Probably duplicate fitsAppointmentHere() */
+	public boolean belongsTo(UpdateDiaryAppointmentBo a) {
+		return getWeekDay(a.getDate()).equals(this.getOpeningHours().getDayWeekId())
+				&& isBetween(a.getTime(), this.getOpeningHours().getFrom(), this.getOpeningHours().getTo());
 	}
 }

@@ -22,4 +22,6 @@ public class UpdateDiaryAppointmentBo {
 
 	private Short medicalAttentionTypeId;
 
+	private boolean overturn;
+
 }

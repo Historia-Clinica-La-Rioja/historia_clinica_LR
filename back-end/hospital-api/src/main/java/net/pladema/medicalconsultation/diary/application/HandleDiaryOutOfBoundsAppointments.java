@@ -10,7 +10,6 @@ import net.pladema.medicalconsultation.appointment.application.port.AppointmentP
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.diary.application.port.output.DiaryPort;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 
 import org.springframework.stereotype.Service;
@@ -23,13 +22,10 @@ public class HandleDiaryOutOfBoundsAppointments {
 
 	private final AppointmentService appointmentService;
     private final AppointmentPort appointmentPort;
-	private final DiaryPort diaryPort;
 
     @Transactional
-    public void run(DiaryBo diaryToUpdate) {
-        log.debug("Input parameters -> diary {}", diaryToUpdate);
-
-        List<UpdateDiaryAppointmentBo> appointments = diaryPort.getUpdateDiaryAppointments(diaryToUpdate.getId());
+    public void run(DiaryBo diaryToUpdate, List<UpdateDiaryAppointmentBo> appointments) {
+        log.debug("Input parameters -> diary {}, appointments {}", diaryToUpdate, appointments);
 
         appointments.stream()
                 .filter(diaryToUpdate::isAppointmentOutOfDiary)

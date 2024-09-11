@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import net.pladema.medicalconsultation.diary.domain.UpdateDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableAppointmentsBo;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
@@ -35,6 +36,12 @@ public interface DiaryMapper {
     @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours")
 	@Mapping(target = "diaryLabelBo", source = "diaryLabelDto")
     DiaryBo toDiaryBo(DiaryADto diaryADto);
+
+    @Named("toDiaryBo")
+    @Mapping(target = "updateDiaryOpeningHours", source = "diaryOpeningHours")
+    @Mapping(target = "diaryOpeningHours", ignore = true)
+    @Mapping(target = "diaryLabelBo", source = "diaryLabelDto")
+    UpdateDiaryBo toUpdateDiaryBo(DiaryADto diaryADto);
 
     @Named("toDiaryListDto")
     DiaryListDto toDiaryListDto(DiaryBo diaryBo);

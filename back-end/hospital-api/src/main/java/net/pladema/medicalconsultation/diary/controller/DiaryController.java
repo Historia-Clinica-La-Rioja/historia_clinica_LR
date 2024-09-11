@@ -44,6 +44,7 @@ import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursFre
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryOpeningHoursMapper;
 import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
+import net.pladema.medicalconsultation.diary.domain.UpdateDiaryBo;
 import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
@@ -129,7 +130,7 @@ public class DiaryController {
             @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
             @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid DiaryDto diaryDto) {
         log.debug("Input parameters -> institutionId {}, diaryId {}, diaryDto {}", institutionId, diaryId, diaryDto);
-        DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryDto);
+        UpdateDiaryBo diaryToUpdate = diaryMapper.toUpdateDiaryBo(diaryDto);
         diaryToUpdate.setId(diaryId);
 		Integer result = updateDiaryAndAppointments.run(diaryToUpdate);
 		log.debug(OUTPUT, result);
