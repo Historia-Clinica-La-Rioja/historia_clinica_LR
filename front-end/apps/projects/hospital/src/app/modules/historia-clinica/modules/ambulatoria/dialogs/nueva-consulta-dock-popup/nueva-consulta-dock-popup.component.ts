@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, ClinicalSpecialtyDto, CompleteParameterizedFormDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CompleteParameterizedFormDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, ProcedureDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -15,7 +15,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import { Problema } from '../../../../services/problemas.service';
-import { ProcedimientosService } from '../../../../services/procedimientos.service';
+import { Procedimiento, ProcedimientosService } from '../../../../services/procedimientos.service';
 import { SnomedService } from '../../../../services/snomed.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { AmbulatoryConsultationReferenceService, ReferenceInformation } from '../../services/ambulatory-consultation-reference.service';
@@ -52,11 +52,13 @@ import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
-import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+// import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { DialogWidth } from '@presentation/services/dialog.service';
-import { getElementAtPosition } from '@core/utils/array.utils';
+import { getElementAtPosition, pushIfNotExists } from '@core/utils/array.utils';
+import { SearchSnomedConceptComponent } from '../search-snomed-concept/search-snomed-concept.component';
+import { Concept, ConceptDateFormComponent } from '../../modules/internacion/dialogs/concept-date-form/concept-date-form.component';
 
 const TIME_OUT = 5000;
 const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO]}];
@@ -103,6 +105,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
 	touchedConfirm = false;
+	procedures: ProcedureDto[] = [];
+
 	referenceSituationViolence = null;
 	allergyContent: ConceptsList = {
 		id: 'allergy-checkbox-concepts-list',
@@ -589,7 +593,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					};
 				}
 			),
-			procedures: this.createOrderService.getOrderForNewConsultation(),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(procedimiento => this.mapProcedimientoToNursingProcedure(procedimiento)),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
@@ -651,6 +655,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		return result;
 	}
+
+	private mapProcedimientoToNursingProcedure = (procedimiento: Procedimiento) => {
+		return {
+		  	performedDate: procedimiento.performedDate ? toApiFormat(procedimiento.performedDate): null,
+		  	snomed: procedimiento.snomed
+		};
+	}
+
 	private mapToOutpatientProblemDto(problem: HCEPersonalHistory): OutpatientProblemDto {
 		return {
 			chronic: problem.chronic,
@@ -750,18 +762,69 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
-	addProcedure(): void {
+	openSearchSnomedConceptComponent(): void {
 		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
-		this.dialog.open(AddProcedureComponent, {
-			data: {
-				patientId: this.data.idPaciente,
-				createOrderService: this.createOrderService,
-				problems: problems,
-			},
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, {
 			autoFocus: false,
 			width: DialogWidth.MEDIUM,
 			disableClose: true,
+			data: this.buildProcedureDataToDialog(problems)
 		});
+
+		dialogRef.afterClosed().subscribe((snomedConcept: SnomedDto) => this.openConceptDateFormComponent(snomedConcept));
+	}
+
+	private openConceptDateFormComponent = (snomedConcept: SnomedDto) => {
+		if (!snomedConcept) return;
+
+		const dialogRef = this.dialog.open(ConceptDateFormComponent, {
+			width: '35%',
+			disableClose: false,
+			data: this.buildConceptDateToDialog(snomedConcept)
+		});
+		dialogRef.afterClosed().subscribe((procedure: Concept) => {
+			if (!procedure) return;
+
+			const procedureDto: ProcedureDto = {
+				performedDate: procedure?.data,
+				snomed: procedure.snomedConcept
+			};
+			this.addProcedure(procedureDto);
+		});
+	}
+
+	private addProcedure(procedure: ProcedureDto) {
+		this.procedures = pushIfNotExists<ProcedureDto>(this.procedures, procedure, this.compareProcedure);
+		this.procedimientoNuevaConsultaService.add({snomed: procedure.snomed, performedDate: this.fromStringToDate(procedure.performedDate)});
+	}
+
+	private buildConceptDateToDialog = (snomedConcept: SnomedDto) => {
+		const data = {
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			add: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
+			title: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			snomedConcept
+		}
+		return data;
+	}
+
+	private buildProcedureDataToDialog = (problems: SnomedDto[]) => {
+		const data = {
+			patientId: this.data.idPaciente,
+			createOrderService: this.createOrderService,
+			problems: problems,
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			title: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
+			eclFilter: SnomedECL.PROCEDURE
+		}
+		return data;
+	}
+
+	private fromStringToDate(date: string): Date {
+		if (!date) return;
+
+		const dateData = date.split("-");
+		return new Date(+dateData[0], +dateData[1]-1, +dateData[2]);
 	}
 
 	addAllergy(): void {
@@ -795,6 +858,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.addFamilyHistory();
 		}
 		this.isFamilyHistoriesNoRefer = !$event.checkboxSelected;
+	}
+
+
+	private compareProcedure(concept1: ProcedureDto, concept2: ProcedureDto): boolean {
+		return concept1.snomed.sctid === concept2.snomed.sctid
 	}
 
 }
