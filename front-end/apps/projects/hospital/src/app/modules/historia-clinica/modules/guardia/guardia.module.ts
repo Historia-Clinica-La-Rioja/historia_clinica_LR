@@ -51,6 +51,7 @@ import { MedicalDischargeByNurseComponent } from './components/medical-discharge
 import { MedicalDischargeTypesComponent } from './components/medical-discharge-types/medical-discharge-types.component';
 import { PatientBasicInformationComponent } from './components/patient-basic-information/patient-basic-information.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
+import { ServiceChipsAutocompleteComponent } from './components/service-chips-autocomplete/service-chips-autocomplete.component';
 import { StatesCheckboxComponent } from './components/states-checkbox/states-checkbox.component';
 import { TriageCategoryCheckboxComponent } from './components/triage-category-checkbox/triage-category-checkbox.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
@@ -134,6 +135,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		TriageLevelSummaryComponent,
 		TriageSummaryComponent,
 		ReasonsFormComponent,
+		ServiceChipsAutocompleteComponent,
 		SpecialtySectorFormComponent,
 		SpecialtySummaryComponent,
 		// dialogs

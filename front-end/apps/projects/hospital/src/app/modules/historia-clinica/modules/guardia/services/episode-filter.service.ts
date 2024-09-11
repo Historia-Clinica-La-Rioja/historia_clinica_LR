@@ -1,10 +1,11 @@
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { map, Observable } from 'rxjs';
-import { EmergencyCareEpisodeFilterDto, MasterDataDto, MasterDataInterface, TriageCategoryDto } from '@api-rest/api-model';
+import { EmergencyCareClinicalSpecialtySectorDto, EmergencyCareEpisodeFilterDto, MasterDataDto, MasterDataInterface, TriageCategoryDto } from '@api-rest/api-model';
 import { Injectable } from '@angular/core';
-import { FormCheckbox } from '../components/emergency-care-episode-filters/emergency-care-episode-filters.component';
+import { FormCheckbox, FormChips } from '../components/emergency-care-episode-filters/emergency-care-episode-filters.component';
 import { EstadosEpisodio } from '../constants/masterdata';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 
 const TRIAGE_CATEGORIES_FORM = 'triageCategories';
 const EMERGENCY_CARE_TYPES_FORM = 'emergencyCareTypes';
@@ -18,7 +19,8 @@ export class EpisodeFilterService {
 
 	constructor(
 		private readonly triageMasterDataService: TriageMasterDataService,
-		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService
+		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 	) {
 		this.initializeFilters();
 	}
@@ -35,9 +37,13 @@ export class EpisodeFilterService {
 		return this.emergencyCareMasterDataService.getEmergencyCareStates().pipe(map(states => states.filter(state => state.id != EstadosEpisodio.CON_ALTA_ADMINISTRATIVA)))
 	}
 
+	getServices(): Observable<EmergencyCareClinicalSpecialtySectorDto[]> {
+		return this.emergencyCareEpisodeService.getSpecialtySectors();
+	}
+
 	setFilters(filters: EpisodeFilters) {
 		this.filters = {
-			clinicalSpecialtySectorIds: [],
+			clinicalSpecialtySectorIds: this.getClinicalSpecialtySectorIds(filters.clinicalSpecialtySectorIds),
 			identificationNumber: filters.identificationNumber,
 			mustBeEmergencyCareTemporal: filters.emergencyCareTemporary,
 			patientFirstName: filters.firstName,
@@ -72,6 +78,11 @@ export class EpisodeFilterService {
 		this.hasSelectedFilters = !!(this.filters.clinicalSpecialtySectorIds?.length || this.filters.identificationNumber || this.filters.mustBeEmergencyCareTemporal || this.filters.patientFirstName || this.filters.patientId || this.filters.patientLastName || this.filters.stateIds?.length || this.filters.triageCategoryIds?.length || this.filters.typeIds?.length)
 	}
 
+	private getClinicalSpecialtySectorIds(formValue: FormChips): number[] {
+		return formValue?.clinicalSpecialtySectorIds ? formValue.clinicalSpecialtySectorIds : [];
+	}
+
+
 	private initializeFilters() {
 		this.filters = {
 			clinicalSpecialtySectorIds: [],
@@ -92,6 +103,7 @@ export interface EpisodeFilters {
 	triageCategories?: FormCheckbox;
 	emergencyCareTypes?: FormCheckbox;
 	states?: FormCheckbox;
+	clinicalSpecialtySectorIds?: FormChips;
 	patientId?: number;
 	identificationNumber?: string;
 	firstName?: string;

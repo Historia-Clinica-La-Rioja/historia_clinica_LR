@@ -144,7 +144,9 @@
 					"TEMPORAL_PATIENT": "Paciente temporal",
 					"TYPE": "Tipo de guardia",
 					"URGENCY": "Nivel de urgencia",
-					"STATES": "Estados de atención"
+					"STATES": "Estados de atención",
+					"EMERGENCY_CARE_SERVICE": "Servicios de guardia",
+					"EMERGENCY_CARE_SERVICE_PLACEHOLDER": "Seleccione un servicio"
 				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",

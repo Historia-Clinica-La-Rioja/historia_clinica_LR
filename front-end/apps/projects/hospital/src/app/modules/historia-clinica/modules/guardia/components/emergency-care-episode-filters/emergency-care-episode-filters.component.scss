@@ -23,3 +23,7 @@ input[type="number"] {
 .font-weigth {
 	@include info-primary;
 }
+
+.service-width {
+	display: block;
+}

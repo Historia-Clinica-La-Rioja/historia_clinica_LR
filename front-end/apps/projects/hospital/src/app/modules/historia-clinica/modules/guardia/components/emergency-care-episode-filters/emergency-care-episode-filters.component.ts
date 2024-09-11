@@ -55,6 +55,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 			triageCategories: new FormControl(null),
 			emergencyCareTypes: new FormControl(null),
 			states: new FormControl(null),
+			clinicalSpecialtySectorIds: new FormControl(null),
 			patientId: new FormControl(null),
 			identificationNumber: new FormControl(null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)),
 			firstName: new FormControl(null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)),
@@ -65,7 +66,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	private subscribeToFormChanges() {
-		const formControls: FormControlType[] = ['triageCategories', 'emergencyCareTypes', 'states'];
+		const formControls: FormControlType[] = ['triageCategories', 'emergencyCareTypes', 'states', 'clinicalSpecialtySectorIds'];
 		formControls.forEach(formControl => this.subscribeToFormControlsChanges(formControl));
 	}
 
@@ -84,6 +85,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 			triageCategories: controls.triageCategories.value,
 			emergencyCareTypes: controls.emergencyCareTypes.value,
 			states: controls.states.value,
+			clinicalSpecialtySectorIds: controls.clinicalSpecialtySectorIds.value,
 			patientId: controls.patientId.value,
 			identificationNumber: controls.identificationNumber.value,
 			firstName: controls.firstName.value,
@@ -103,6 +105,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 interface FiltersEpisodeForm {
 	triageCategories: FormControl<FormCheckbox>,
 	emergencyCareTypes: FormControl<FormCheckbox>,
+	clinicalSpecialtySectorIds: FormControl<FormChips>,
 	states: FormControl<FormCheckbox>,
 	patientId: FormControl<number>,
 	identificationNumber: FormControl<string>,
@@ -116,4 +119,8 @@ export type FormCheckbox = {
 	[key: string]: boolean;
 }
 
-type FormControlType = 'triageCategories' | 'emergencyCareTypes' | 'states';
+type FormControlType = 'triageCategories' | 'emergencyCareTypes' | 'states' | 'clinicalSpecialtySectorIds';
+
+export type FormChips = {
+	[key: string]: number[];
+}
