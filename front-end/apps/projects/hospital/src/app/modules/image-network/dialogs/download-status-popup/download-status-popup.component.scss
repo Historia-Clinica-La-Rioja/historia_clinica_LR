@@ -10,6 +10,13 @@
     margin-bottom: 10px
 }
 
+.error-icon {
+    width: 70px;
+    height: 70px;
+	font-size: 5em;
+	line-height: 4rem;
+}
+
 .dialog-title {
     @include space-between;
 }

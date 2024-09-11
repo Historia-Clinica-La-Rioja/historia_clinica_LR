@@ -10,7 +10,7 @@ import { DownloadStudyService } from '../../services/download-study.service';
 })
 export class DownloadStatusPopupComponent implements OnInit {
 
-    buttonType: ButtonType;
+    ButtonType = ButtonType;
     title: string;
     subtitle: string;
     errorStatus = false;

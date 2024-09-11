@@ -8,13 +8,14 @@ import { BehaviorSubject, Observable, take, tap } from 'rxjs';
 import { DownloadStatusPopupComponent } from '../dialogs/download-status-popup/download-status-popup.component';
 import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
 import { StudyStatusPopupComponent } from '../dialogs/study-status-popup/study-status-popup.component';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 const INTERVAL_TIME = 5000;
 @Injectable({
     providedIn: 'root'
 })
 export class DownloadStudyService {
-    private titleSubject = new BehaviorSubject<string>('image-network.worklist.details_study.asynchronous_download.REQUESTING_STUDY');
+    private titleSubject = new BehaviorSubject<string>('image-network.worklist.details_study.asynchronous_download.SETTING_UP_STUDY');
     title$: Observable<string> = this.titleSubject.asObservable();
     private subtitleSubject = new BehaviorSubject<string>('image-network.worklist.details_study.asynchronous_download.REQUEST_WAIT');
     subtitle$: Observable<string> = this.subtitleSubject.asObservable();
@@ -39,7 +40,7 @@ export class DownloadStudyService {
         this.studyInfo = studyInfo;
         this.studyInstanceUID = studyInstanceUID;
         
-        return this.studyPACAssociationService.downloadStudy(this.studyInfo, this.studyInstanceUID).pipe(tap((response: any) => {
+        return this.studyPACAssociationService.downloadStudy(this.studyInfo, this.studyInstanceUID).pipe(take(1), tap((response: any) => {
                 this.openDownloadStatusDialog();
                 this.canBeCancelledSubject.next(true);
                 this.jobId = response.ID;
@@ -69,22 +70,39 @@ export class DownloadStudyService {
 
     askForJobStatus = () => {
         this.studyPACAssociationService.getJobStatus(this.studyInfo.url, this.studyInstanceUID, this.jobId, this.studyInfo.token).pipe(take(1))
-            .subscribe((response: any) => {
-                if (response.State === "Success") {
-                    this.handleJobStatusSuccess();
-                }
-                if (response.State === "Failure") {
-                    this.handleJobStatusError(response);
+            .subscribe({
+                next: (response: any) => {
+                    if (response.State === "Success") {
+                        this.handleJobStatusSuccess();
+                    }
+                    if (response.State === "Failure") {
+                        clearInterval(this.interval);
+                        this.handleJobStatusError(response.ErrorCode);
+                        this.studyPACAssociationService.saveError(response, this.studyInfo, this.studyInstanceUID).subscribe();
+                    }
+                },
+                error: (e) => {
+                    clearInterval(this.interval);
+                    const error = {
+                        ErrorCode: '001',
+                        ErrorDescription: 'Connection failed',
+                    }
+
+                    this.studyPACAssociationService.saveError(error, this.studyInfo, this.studyInstanceUID).subscribe();
+                    this.handleJobStatusError();
                 }
             })
     }
 
     handleJobStatusSuccess() {
         this.canBeCancelledSubject.next(false);
+        this.titleSubject.next('image-network.worklist.details_study.asynchronous_download.REQUESTING_STUDY');
         clearInterval(this.interval);
         this.studyPACAssociationService.getZip(this.studyInfo.url, this.studyInstanceUID, this.jobId, this.studyInfo.token).subscribe((jobOutput: Blob) => {
             this.manageDialogs();
-            saveAs(jobOutput, `${this.studyInstanceUID}.zip`);
+            const blobType = { type: 'application/zip' };
+            const file = new Blob([jobOutput], blobType);
+            saveAs(file, `${this.studyInstanceUID}.zip`);
         })
     }
 
@@ -107,12 +125,12 @@ export class DownloadStudyService {
         })
     }
 
-    handleJobStatusError(response: any) {
+    handleJobStatusError(error?: string) {
         const studyError = this.translateService.instant('image-network.worklist.details_study.asynchronous_download.STUDY_NOT_AVAILABLE');
         this.errorSubject.next(true);
-        this.titleSubject.next(`${studyError} - Error ${response.ErrorCode}`);
+        const errorMessage = error ? `${studyError} - Error ${error}` : `${studyError}`;
+        this.titleSubject.next(`${errorMessage}`);
         this.subtitleSubject.next('image-network.worklist.details_study.asynchronous_download.DOWNLOAD_FAILED');
-        this.studyPACAssociationService.saveError(response, this.studyInfo, this.studyInstanceUID);
     }
 
     private cancelActiveJob() {
@@ -125,6 +143,27 @@ export class DownloadStudyService {
 
     retryDownload() {
         this.dialogRef.close();
-        this.downloadStudy(this.studyInfo, this.studyInstanceUID);
+        this.errorSubject.next(false);
+        this.titleSubject.next('image-network.worklist.details_study.asynchronous_download.SETTING_UP_STUDY');
+        this.subtitleSubject.next('image-network.worklist.details_study.asynchronous_download.REQUEST_WAIT');
+        this.downloadStudy(this.studyInfo, this.studyInstanceUID).pipe(take(1)).subscribe({
+            error: () => {
+                this.dialogService.open(DiscardWarningComponent,
+                    { dialogWidth: DialogWidth.SMALL }, {
+                    data: this.getErrorDataDialog(),
+                    minWidth: '30%'
+                });
+            }
+        });
+    }
+
+    private getErrorDataDialog() {
+        return {
+            title: 'image-network.worklist.details_study.ERROR_DOWNLOAD_STUDY',
+            content: '',
+            okButtonLabel: 'buttons.ACCEPT',
+            errorMode: true,
+            color: 'warn'
+        };
     }
 }

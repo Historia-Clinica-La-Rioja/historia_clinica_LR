@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ErrorDownloadStudyDto, PacsListDto, StudyFileInfoDto } from '@api-rest/api-model';
+import { ErrorDownloadStudyDto, PacsDto, StudyFileInfoDto } from '@api-rest/api-model';
+import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { ContextService } from '@core/services/context.service';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -19,26 +21,26 @@ export class StudyPACAssociationService {
         this.BASE_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/imagenetwork`
     }
 
-    getPacGlobalURL(studyInstanceUID: string): Observable<PacsListDto> {
+    getPacGlobalURL(studyInstanceUID: string): Observable<PacsDto[]> {
         const url = `${this.BASE_URL}/${studyInstanceUID}/pacs`
-        return this.http.get<PacsListDto>(url);
+        return this.http.get<PacsDto[]>(url);
     }
 
-    getStudyInfo(studyInstanceUID: string, pacs: PacsListDto): Observable<StudyFileInfoDto> {
+    getStudyInfo(studyInstanceUID: string, pacs: PacsDto[]): Observable<StudyFileInfoDto> {
         const url = `${this.BASE_URL}/${studyInstanceUID}/file-info`
         return this.http.post<StudyFileInfoDto>(url, pacs);
     }
 
-    saveError(response: any, studyInfo: StudyFileInfoDto, studyInstanceUID: string){
+    saveError(response: any, studyInfo: StudyFileInfoDto, studyInstanceUID: string): Observable<ErrorDownloadStudyDto>{
         const url = `${this.BASE_URL}/${studyInstanceUID}/download-error`;
         const studyDownloadError: ErrorDownloadStudyDto = {
-            effectiveTime: response.Timestamp,
+            effectiveTime: response.Timestamp ? dateToDateTimeDto(dateISOParseDate(response.Timestamp)) : dateToDateTimeDto(new Date()),
             errorCode: response.ErrorCode,
             errorCodeDescription: response.ErrorDescription,
             fileUuid: studyInfo.uuid,
             pacServerId: studyInfo.pacServerId,
         }
-        return this.http.put<ErrorDownloadStudyDto>(url, { studyDownloadError });
+        return this.http.post<ErrorDownloadStudyDto>(url, studyDownloadError);
     }
 
     downloadStudy(studyInfo: StudyFileInfoDto, studyInstanceUID: string): Observable<any> {
