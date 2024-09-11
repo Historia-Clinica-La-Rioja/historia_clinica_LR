@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @ToString
@@ -35,4 +37,9 @@ public class OpeningHoursBo extends TimeRangeBo {
 				&& getTo().isAfter(other.getFrom());
 	}
 
+	public boolean isSameOpeningHour(OpeningHoursBo otherOpeningHours) {
+		return Objects.equals(this.getDayWeekId(), otherOpeningHours.getDayWeekId())
+				&& this.getFrom().equals(otherOpeningHours.getFrom())
+				&& this.getTo().equals(otherOpeningHours.getTo());
+	}
 }

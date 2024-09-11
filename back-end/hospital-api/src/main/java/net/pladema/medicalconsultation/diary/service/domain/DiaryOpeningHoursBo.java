@@ -37,4 +37,8 @@ public class DiaryOpeningHoursBo {
 		return openingHours.overlap(current.getOpeningHours());
 	}
 
+	public Integer getOpeningHoursId() {
+		return openingHours.getId();
+	}
+
 }
