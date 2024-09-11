@@ -16,5 +16,8 @@ public class SharedSnowstormSearchItemDto {
 	private Boolean active;
 	private String pt;
 
+	public SharedSnowstormSearchItemDto(String conceptId) {
+		this.conceptId = conceptId;
+	}
 }
 

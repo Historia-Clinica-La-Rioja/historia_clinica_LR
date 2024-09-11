@@ -11,21 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.cipres.domain.SnomedBo;
 import net.pladema.snowstorm.application.fetchconcepts.FetchConcepts;
 import net.pladema.snowstorm.application.fetchconceptswithresultcount.FetchConceptsWithResultCount;
+import net.pladema.snowstorm.application.fetchmedicineconceptswithfundingdata.FetchMedicineConceptsWithFinancingData;
 import net.pladema.snowstorm.controller.dto.FullySpecifiedNamesDto;
 import net.pladema.snowstorm.controller.dto.PreferredTermDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
+import net.pladema.snowstorm.controller.dto.SnomedMedicationSearchDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
 import net.pladema.snowstorm.controller.dto.SnomedTemplateDto;
 import net.pladema.snowstorm.domain.GetSnomedConceptEclRelated;
-import net.pladema.snowstorm.services.SnowstormService;
+import net.pladema.snowstorm.domain.SnomedFinancedMedicineBo;
 import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
 import net.pladema.snowstorm.services.domain.SnomedTemplateSearchItemBo;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
-import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
-import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConceptsWithResultCount;
 import net.pladema.snowstorm.services.searchTemplates.SearchTemplates;
 
 import org.springframework.data.repository.query.Param;
@@ -58,10 +58,12 @@ public class SnowstormController {
 	private ObjectMapper objectMapper;
 
 	private GetSnomedConceptEclRelated getSnomedConceptEclRelated;
-	
+
 	private final FetchConcepts fetchConcepts;
 
 	private final FetchConceptsWithResultCount fetchConceptsWithResultCount;
+
+	private final FetchMedicineConceptsWithFinancingData fetchMedicineConceptsWithFinancingData;
 
 	private final SnomedSearchMapper snomedSearchMapper;
 
@@ -121,6 +123,19 @@ public class SnowstormController {
                 .collect(Collectors.toList());
     }
 
+	@GetMapping(value = "/search-medication-concepts")
+	public List<SnomedMedicationSearchDto> getMedicationConceptsWithFinancingData(@RequestParam(value = "term") String term,
+																				  @RequestParam(value = "institutionId") Integer institutionId,
+																				  @RequestParam(value = "problem") String problem) throws SnowstormApiException {
+		log.debug("Input data -> term: {}, institutionId: {}, problem: {}", term, institutionId, problem);
+		List<SnomedMedicationSearchDto> result =  fetchMedicineConceptsWithFinancingData.run(institutionId, term, problem)
+				.stream()
+				.map(this::mapToSnomedMedicationSearchDto)
+				.collect(Collectors.toList());
+		log.trace(OUTPUT, result);
+		return result;
+	}
+
 	private SnomedTemplateDto mapToSnomedTemplateDto(SnomedTemplateSearchItemBo snomedTemplateSearchItemBo) {
 		List<SnomedSearchItemDto> items = snomedTemplateSearchItemBo.getConcepts()
 				.stream()
@@ -135,6 +150,16 @@ public class SnowstormController {
 		result.setId(snomedCachedSearchBo.getSctid());
 		result.setPt(new PreferredTermDto(snomedCachedSearchBo.getPt(), "es"));
 		result.setFsn(new FullySpecifiedNamesDto(snomedCachedSearchBo.getPt(), "es"));
+		return result;
+	}
+
+	private SnomedMedicationSearchDto mapToSnomedMedicationSearchDto(SnomedFinancedMedicineBo snomedFinancedMedicineBo) {
+		SnomedMedicationSearchDto result = new SnomedMedicationSearchDto();
+		result.setConceptId(snomedFinancedMedicineBo.getConceptId());
+		result.setId(snomedFinancedMedicineBo.getConceptId());
+		result.setPt(new PreferredTermDto(snomedFinancedMedicineBo.getPt().getTerm(), "es"));
+		result.setFsn(new FullySpecifiedNamesDto(snomedFinancedMedicineBo.getPt().getTerm(), "es"));
+		result.setFinanced(snomedFinancedMedicineBo.isFinanced());
 		return result;
 	}
 

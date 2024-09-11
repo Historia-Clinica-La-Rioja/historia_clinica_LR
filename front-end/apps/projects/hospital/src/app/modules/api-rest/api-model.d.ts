@@ -4964,6 +4964,10 @@ export interface SnomedEclDto {
     value: string;
 }
 
+export interface SnomedMedicationSearchDto extends SnomedSearchItemDto {
+    financed: boolean;
+}
+
 export interface SnomedPracticeDto {
     id: number;
     pt: string;
@@ -5810,6 +5814,7 @@ export const enum AppFeature {
     HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO = "HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO",
     HABILITAR_DISPENSA = "HABILITAR_DISPENSA",
     HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA = "HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA",
+    HABILITAR_FINANCIACION_DE_MEDICAMENTOS = "HABILITAR_FINANCIACION_DE_MEDICAMENTOS",
 }
 
 export const enum CreationStatus {
