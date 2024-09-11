@@ -17,9 +17,11 @@ public interface DiaryService {
 
     Integer addDiary(DiaryBo diaryToSave);
 
-    Integer updateDiary(DiaryBo diaryToSave);
+    Integer persistDiary(DiaryBo diaryToUpdate);
 
     Boolean deleteDiary(Integer diaryId);
+
+    void setDiaryLabels(DiaryBo diaryToUpdate);
 
     List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId, Integer institutionId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);

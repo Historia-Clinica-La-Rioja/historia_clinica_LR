@@ -1,10 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
 import static ar.lamansys.sgx.shared.security.UserInfo.getCurrentAuditor;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
@@ -36,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -45,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
@@ -65,13 +59,11 @@ import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
-import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
-import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
@@ -87,8 +79,6 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryOpeningHoursService diaryOpeningHoursService;
 
     private final AppointmentService appointmentService;
-
-    private final UpdateAppointmentOpeningHoursService updateApmtOHService;
 
     private final DiaryAssociatedProfessionalService diaryAssociatedProfessionalService;
 
@@ -160,6 +150,13 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
+    public Integer persistDiary(DiaryBo diaryToSave) {
+        Diary diary = createDiaryInstance(diaryToSave);
+        return persistDiary(diaryToSave, diary);
+    }
+
+    @Override
+    @Transactional
     public Boolean deleteDiary(Integer diaryId) {
         log.debug(INPUT_DIARY_ID, diaryId);
         Diary diaryToDelete = diaryRepository.findById(diaryId)
@@ -175,37 +172,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Integer updateDiary(DiaryBo diaryToUpdate) {
-        log.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
-
-        validateDiary(diaryToUpdate);
-
-		Optional<Diary> diaryOpt = diaryRepository.findById(diaryToUpdate.getId());
-		if (diaryOpt.isPresent() && !diaryOpt.get().getDoctorsOfficeId().equals(diaryToUpdate.getDoctorsOfficeId()))
-			validateOverlapWithOcupation(diaryToUpdate);
-
-        return diaryOpt
-                .map(savedDiary -> {
-                    HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
-                    diaryToUpdate.getDiaryOpeningHours().forEach(doh -> {
-                        if (doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() && diaryToUpdate.getCareLines().isEmpty())
-                            doh.setProtectedAppointmentsAllowed(false);
-                        doh.setDiaryId(savedDiary.getId());
-                        apmtsByNewDOH.put(doh, new ArrayList<>());
-                    });
-                    Collection<AppointmentBo> apmts = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), diaryToUpdate.getStartDate(), diaryToUpdate.getEndDate());
-                    adjustExistingAppointmentsOpeningHours(apmtsByNewDOH, apmts);
-                    persistDiary(diaryToUpdate, mapDiaryBo(diaryToUpdate, savedDiary));
-                    updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
-                    setDiaryLabels(diaryToUpdate);
-                    deleteDiaryLabels(diaryToUpdate);
-                    log.debug("Diary updated -> {}", diaryToUpdate);
-                    return diaryToUpdate.getId();
-                })
-                .orElseThrow(() -> new EntityNotFoundException("diary.invalid.id"));
-    }
-
-    private void setDiaryLabels(DiaryBo diaryToUpdate) {
+    public void setDiaryLabels(DiaryBo diaryToUpdate) {
         diaryToUpdate.getDiaryLabelBo().forEach(diaryLabelBo -> {
             if (diaryLabelBo.getId() == null) {
                 diaryLabelBo.setDiaryId(diaryToUpdate.getId());
@@ -219,53 +186,6 @@ public class DiaryServiceImpl implements DiaryService {
                 });
             }
         });
-    }
-
-    private void deleteDiaryLabels(DiaryBo diaryToUpdate) {
-        List<Integer> ids = diaryToUpdate.getDiaryLabelBo()
-                .stream()
-                .map(diaryLabelBo -> diaryLabelBo.getId())
-                .collect(Collectors.toList());
-        ids.add(-1);
-        appointmentService.deleteLabelFromAppointment(diaryToUpdate.getId(), ids);
-        diaryLabelRepository.deleteDiaryLabels(diaryToUpdate.getId(), ids);
-    }
-
-    private void adjustExistingAppointmentsOpeningHours(HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,
-                                                        Collection<AppointmentBo> apmts) {
-
-        apmtsByNewDOH.forEach((doh, apmtsList) -> {
-            apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(toList()));
-            if (overturnsOutOfLimit(doh, apmtsList)) {
-                throw new OverturnsLimitException(
-                        "Se encuentran asignados una cantidad mayor de sobreturnos al límite establecido en la franja del dia " +
-                                EDayOfWeek.map(doh.getOpeningHours().getDayWeekId()).getDescription() +
-                                ", en el horario de " + doh.getOpeningHours().getFrom() + "hs. a " + doh.getOpeningHours().getTo() + "hs.");
-            }
-        });
-
-    }
-
-    private void updatedExistingAppointments(DiaryBo diaryToUpdate,
-                                             HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH) {
-        Collection<DiaryOpeningHoursBo> dohSavedList = diaryOpeningHoursService
-                .getDiariesOpeningHours(Stream.of(diaryToUpdate.getId()).collect(toList()));
-        apmtsByNewDOH.forEach((doh, apmts) -> dohSavedList.stream().filter(doh::equals).findAny().ifPresent(
-                savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
-        List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
-                .collect(toList());
-        apmtsToUpdate.forEach(appointment -> updateApmtOHService.execute(appointment, false));
-    }
-
-    private boolean overturnsOutOfLimit(DiaryOpeningHoursBo doh, List<AppointmentBo> apmtsList) {
-        Map<LocalDate, Long> overturnsByDate = apmtsList.stream().filter(AppointmentBo::isOverturn)
-                .collect(groupingBy(AppointmentBo::getDate, counting()));
-        return overturnsByDate.values().stream().anyMatch(overturns -> overturns > doh.getOverturnCount().intValue());
-    }
-
-    private boolean belong(AppointmentBo apmt, DiaryOpeningHoursBo doh) {
-        return getWeekDay(apmt.getDate()).equals(doh.getOpeningHours().getDayWeekId())
-                && isBetween(apmt.getHour(), doh.getOpeningHours().getFrom(), doh.getOpeningHours().getTo());
     }
 
     @Override
@@ -760,35 +680,5 @@ public class DiaryServiceImpl implements DiaryService {
         completeDiary.setDiaryOpeningHours(new ArrayList<>(diaryOpeningHours));
         return completeDiary;
     }
-
-	private void validateOverlapWithOcupation(DiaryBo diaryBo) {
-		if (foundOverlapWithOcupation(diaryBo))
-			throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, "Superposición de rango horario en consultorio");
-	}
-
-	private Boolean foundOverlapWithOcupation(DiaryBo diaryBo) {
-		return diaryBo.getDiaryOpeningHours()
-				.stream()
-				.map(DiaryOpeningHoursBo::getOpeningHours)
-				.flatMap(doh -> {
-					try {
-						return diaryOpeningHoursService.findAllWeeklyDoctorsOfficeOccupation(diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(), diaryBo.getEndDate(), null)
-								.stream()
-								.flatMap(occupationBo -> occupationBo.getTimeRanges()
-										.stream()
-										.map(timeRangeBo -> new OpeningHoursBo(occupationBo.getId(), timeRangeBo)))
-								.filter(oh -> !isSameOpeningHour(doh,oh) && doh.overlap(oh));
-					} catch (DiaryOpeningHoursException e) {
-						throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, e.getMessage());
-					}
-				})
-				.findAny().isPresent();
-	}
-
-	private Boolean isSameOpeningHour(OpeningHoursBo openingHoursBo, OpeningHoursBo openingHoursBo2){
-		return Objects.equals(openingHoursBo.getDayWeekId(), openingHoursBo2.getDayWeekId()) &&
-				openingHoursBo.getFrom() == openingHoursBo2.getFrom() &&
-				openingHoursBo.getTo() == openingHoursBo2.getTo();
-	}
 
 }
