@@ -9,12 +9,18 @@ import ar.lamansys.sgh.shared.domain.forms.enums.EParameterType;
 import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
 import net.pladema.parameter.infrastructure.output.repository.ParameterTextOptionRepository;
 import net.pladema.parameter.infrastructure.output.repository.ParameterUnitOfMeasureRepository;
+import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;
 import net.pladema.parameterizedform.infrastructure.output.repository.ParameterizedFormParameterRepository;
+
+import net.pladema.parameterizedform.infrastructure.output.repository.ParameterizedFormRepository;
+
+import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedForm;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,6 +33,7 @@ public class SharedParameterizedFormPortImpl implements SharedParameterizedFormP
 	private final ParameterTextOptionRepository parameterTextOptionRepository;
 	private final ParameterUnitOfMeasureRepository parameterUnitOfMeasureRepository;
 	private final LoincCodeStoragePort loincCodeStoragePort;
+	private final ParameterizedFormRepository parameterizedFormRepository;
 
 	@Override
 	public List<SharedParameterDto> getParametersByFormId(Integer parameterizedFormId) {
@@ -36,6 +43,11 @@ public class SharedParameterizedFormPortImpl implements SharedParameterizedFormP
 				.sorted(Comparator.comparing(SharedParameterDto::getOrderNumber)
 				.thenComparing(SharedParameterDto::getId))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Optional<String> getFormNameById(Integer id) {
+		return parameterizedFormRepository.findById(id).map(ParameterizedForm::getName);
 	}
 
 	private SharedParameterDto completeParameterData(SharedParameterDto dto){

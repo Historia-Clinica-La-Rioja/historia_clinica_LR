@@ -1267,6 +1267,22 @@
                 </div>
             </dl>
         </div>
+
+        <div th:fragment="completedForms" th:if="${completedForms != null && not #lists.isEmpty(completedForms)}">
+            <dl th:each="form,iter: ${completedForms}">
+                <p class="section-title" th:text="${form.name}"></p>
+                <dl class="section-data" th:each="parameter,iter: ${form.parameters}">
+                    <dd>
+                        <strong><span th:text="${parameter.description}"></span></strong>
+                    </dd>
+                    <dd>
+                        <span th:if="${parameter.value != null}" th:text="${parameter.value}"></span>
+                        <span th:if="${parameter.value == null}">Sin información</span>
+                    </dd>
+                </dl>
+            </dl>
+        </div>
+
     </div>
 
 

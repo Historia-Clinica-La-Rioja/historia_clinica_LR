@@ -977,6 +977,12 @@ export interface CompleteRequestDto {
     referenceClosure?: ReferenceClosureDto;
 }
 
+export interface CompletedFormDto {
+    id: number;
+    name: string;
+    parameters: Parameter[];
+}
+
 export interface CompletedFormSummaryDto {
     formName: string;
     id: number;
@@ -3692,6 +3698,11 @@ export interface PageDto<T> {
 export interface PageRequestDto {
     pageNumber: number;
     pageSize: number;
+}
+
+export interface Parameter {
+    description: string;
+    value: string;
 }
 
 export interface ParameterCompleteDataDto {

@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterBo;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -15,6 +17,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterizedFormPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
@@ -35,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +90,8 @@ public class AuditableContextBuilder {
 
 	private final SharedAddressPort sharedAddressPort;
 
+	private final MapCompletedForms mapCompletedForms;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -107,7 +114,8 @@ public class AuditableContextBuilder {
 			DoctorsOfficeFinder doctorsOfficeFinder,
 			ShockRoomFinder shockRoomFinder,
 			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder,
-			SharedAddressPort sharedAddressPort) {
+			SharedAddressPort sharedAddressPort,
+			MapCompletedForms mapCompletedForms) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -130,6 +138,7 @@ public class AuditableContextBuilder {
 		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
 		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
 		this.sharedAddressPort = sharedAddressPort;
+		this.mapCompletedForms = mapCompletedForms;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document) {
@@ -214,6 +223,8 @@ public class AuditableContextBuilder {
 		var involvedProfessionals = documentInvolvedProfessionalFinder.find(document.getInvolvedHealthcareProfessionalIds());
 		contextMap.put("involvedProfessionals", involvedProfessionals);
 
+		var completedForms = mapCompletedForms.execute(document.getCompleteForms());
+		contextMap.put("completedForms", completedForms);
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("clinicalSpecialtySector", document.getClinicalSpecialtySectorId() != null ?
 				clinicalSpecialtySectorDtoFunction.apply(document.getClinicalSpecialtySectorId()) : null);
@@ -402,5 +413,6 @@ public class AuditableContextBuilder {
 		return String.format("%0" + (11 - domain.length()) + "d%s", 0, domain);
 
 	}
+
 }
 
