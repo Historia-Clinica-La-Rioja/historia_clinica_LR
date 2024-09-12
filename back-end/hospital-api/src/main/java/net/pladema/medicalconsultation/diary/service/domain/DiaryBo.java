@@ -113,4 +113,8 @@ public class DiaryBo extends SelfValidating<DiaryBo> {
 		this.getDiaryOpeningHours()
 				.forEach(doh -> doh.updateMeWithDiaryInformation(this));
 	}
+
+	public boolean equalsDoctorsOffice(DiaryBo other) {
+		return this.getDoctorsOfficeId().equals(other.getDoctorsOfficeId());
+	}
 }

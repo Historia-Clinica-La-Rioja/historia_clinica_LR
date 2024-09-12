@@ -42,15 +42,14 @@ public class UpdateDiaryAndAppointments {
 
     @Transactional
     public Integer run(UpdateDiaryBo diaryToUpdate) {
-        log.debug("Input parameters -> diaryBo {}", diaryToUpdate);
+        log.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 
         diaryToUpdate.validateSelf();
 
         DiaryBo diarySaved = diaryPort.findById(diaryToUpdate.getId())
                 .orElseThrow(() -> new NotFoundException("diary-not-found", "diary.invalid.id"));
 
-        if (diarySaved.getDoctorsOfficeId().equals(diaryToUpdate.getDoctorsOfficeId()))
-            validateOverlapWithOcupation(diaryToUpdate);
+        this.validateOverlapWithOccupation(diaryToUpdate, diarySaved);
 
         diaryToUpdate.setId(diarySaved.getId());
         diaryToUpdate.updateMyDiaryOpeningHours();
@@ -75,27 +74,31 @@ public class UpdateDiaryAndAppointments {
         return result;
     }
 
-    private void validateOverlapWithOcupation(DiaryBo diaryBo) {
-        if (foundOverlapWithOcupation(diaryBo))
+    private void validateOverlapWithOccupation(UpdateDiaryBo diaryToUpdate, DiaryBo diarySaved) {
+        boolean doctorsOfficeHasChanged = !diaryToUpdate.equalsDoctorsOffice(diarySaved);
+        if (doctorsOfficeHasChanged && foundOverlapWithOccupation(diaryToUpdate))
             throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, "Superposición de rango horario en consultorio");
     }
 
-    private Boolean foundOverlapWithOcupation(DiaryBo diaryBo) {
-        return diaryBo.getDiaryOpeningHours()
+    private Boolean foundOverlapWithOccupation(UpdateDiaryBo diaryBo) {
+        List<OpeningHoursBo> allOpeningHoursDoctorsOfficeOccupation;
+        try {
+            allOpeningHoursDoctorsOfficeOccupation = diaryOpeningHoursService.findAllWeeklyDoctorsOfficeOccupation(diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(), diaryBo.getEndDate(), null)
+                    .stream()
+                    .flatMap(occupationBo -> occupationBo.getTimeRanges()
+                            .stream()
+                            .map(timeRangeBo -> new OpeningHoursBo(occupationBo.getId(), timeRangeBo)))
+                    .collect(toList());
+        } catch (DiaryOpeningHoursException e) {
+            throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, e.getMessage());
+        }
+
+        return diaryBo.getUpdateDiaryOpeningHours()
                 .stream()
-                .map(DiaryOpeningHoursBo::getOpeningHours)
-                .flatMap(doh -> {
-                    try {
-                        return diaryOpeningHoursService.findAllWeeklyDoctorsOfficeOccupation(diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(), diaryBo.getEndDate(), null)
-                                .stream()
-                                .flatMap(occupationBo -> occupationBo.getTimeRanges()
-                                        .stream()
-                                        .map(timeRangeBo -> new OpeningHoursBo(occupationBo.getId(), timeRangeBo)))
-                                .filter(oh -> !doh.isSameOpeningHour(oh) && doh.overlap(oh));
-                    } catch (DiaryOpeningHoursException e) {
-                        throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, e.getMessage());
-                    }
-                })
+                .map(UpdateDiaryOpeningHoursBo::getOpeningHours)
+                .flatMap(openingHoursFromNewDiary -> allOpeningHoursDoctorsOfficeOccupation.stream()
+                                                        .filter(openingHoursOccupation -> openingHoursOccupation.isOverlapWithOccupation(openingHoursFromNewDiary))
+                )
                 .findAny()
                 .isPresent();
     }

@@ -31,13 +31,17 @@ public class OpeningHoursBo extends TimeRangeBo {
 		this.dayWeekId = dayWeekId;
 	}
 
+	public boolean isOverlapWithOccupation(OpeningHoursBo other) {
+		return !other.isSameOpeningHour(this) && other.overlap(this);
+	}
+
 	public boolean overlap(OpeningHoursBo other) {
 		return getDayWeekId().equals(other.getDayWeekId())
 				&& getFrom().isBefore(other.getTo())
 				&& getTo().isAfter(other.getFrom());
 	}
 
-	public boolean isSameOpeningHour(OpeningHoursBo otherOpeningHours) {
+	private boolean isSameOpeningHour(OpeningHoursBo otherOpeningHours) {
 		return Objects.equals(this.getDayWeekId(), otherOpeningHours.getDayWeekId())
 				&& this.getFrom().equals(otherOpeningHours.getFrom())
 				&& this.getTo().equals(otherOpeningHours.getTo());
