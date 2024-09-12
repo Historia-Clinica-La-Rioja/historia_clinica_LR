@@ -10,6 +10,7 @@ import {
     useRecordContext,
     useGetOne,
     List,
+    DeleteButton
 } from 'react-admin';
 import { CustomToolbar } from '../../components';
 import {CreateRelatedButton} from '../../components';
@@ -34,6 +35,7 @@ const ShowGroupPharmacos = (props) => {
                 <TextField label="resources.institutionmedicinesfinancingstatus.fields.conceptPt" source="conceptPt" />
                 <BooleanField label="resources.institutionmedicinesfinancingstatus.fields.financedByDomain" source="financed" />
                 <BooleanField label="resources.institutionmedicinesfinancingstatus.fields.financedByInstitution" source="financedByInstitution" />
+                {!record.isDomain && <DeleteButton redirect={false}/>}
             </Datagrid>
         </List>
     );
@@ -82,6 +84,7 @@ const ShowGroupProblems = (props) => {
         >
             <Datagrid>
                 <TextField label="resources.medicinegroupproblems.fields.conceptPt" source="conceptPt"/>
+                {!record.isDomain && <DeleteButton redirect={false}/>}
             </Datagrid>
         </List>
     );
