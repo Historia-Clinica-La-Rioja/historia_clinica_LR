@@ -3,10 +3,12 @@
 		<app-emergency-care-detail-place-type [spaceType]="selectedSpace.spaceType" [spaceTypeDetails]="spaceTypeDetails"></app-emergency-care-detail-place-type>
 
 		<div *ngIf="!spaceTypeDetails.available" class="more-details">
-            <div *ngIf="details.moreDetails.patient">
+            <div *ngIf="details.moreDetails?.patient">
                 <mat-divider></mat-divider>
-                <app-emergency-care-attention-place-patient [patient]="details.moreDetails.patient"></app-emergency-care-attention-place-patient>
+                <app-emergency-care-attention-place-patient [patient]="details.moreDetails?.patient"></app-emergency-care-attention-place-patient>
             </div>
+			<mat-divider></mat-divider>
+			<app-emergency-care-attention-place-attention-state [state]="details.moreDetails.state" [professional]="details.moreDetails.professional" [date]="details.moreDetails.updatedOn"></app-emergency-care-attention-place-attention-state>
 		</div>
 	</div>
 </div>

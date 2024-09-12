@@ -1,0 +1,9 @@
+<div *ngIf="statusLabel && registerEditorInfo">
+	<app-emergency-care-status-labels [statusLabel]="statusLabel"></app-emergency-care-status-labels>
+
+	<app-register-editor-info
+		registerEditorCase={{REGISTER_EDITOR_CASES.DATE_HOUR}}
+		[registerEditor]="registerEditorInfo">
+	</app-register-editor-info>
+</div>
+

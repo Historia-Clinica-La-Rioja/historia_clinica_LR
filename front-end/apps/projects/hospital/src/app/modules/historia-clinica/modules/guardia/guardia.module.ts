@@ -20,6 +20,7 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 import { AdministrativeTriageComponent } from './components/administrative-triage/administrative-triage.component';
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
 import { TitledGridSummaryComponent } from './components/titled-grid-summary/titled-grid-summary.component';
+import { EmergencyCareAttentionPlaceAttentionStateComponent } from './components/emergency-care-attention-place-attention-state/emergency-care-attention-place-attention-state.component';
 import { EmergencyCareAttentionPlaceDetailsComponent } from './components/emergency-care-attention-place-details/emergency-care-attention-place-details.component';
 import { EmergencyCareAttentionPlacePatientComponent } from './components/emergency-care-attention-place-patient/emergency-care-attention-place-patient.component';
 import { EmergencyCareAttentionPlacesComponent } from './components/emergency-care-attention-places/emergency-care-attention-places.component';
@@ -86,6 +87,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		// components
 		AdministrativeTriageComponent,
 		AdultGynecologicalTriageComponent,
+		EmergencyCareAttentionPlaceAttentionStateComponent,
 		EmergencyCareAttentionPlaceDetailsComponent,
 		EmergencyCareAttentionPlacePatientComponent,
 		EmergencyCareAttentionPlacesComponent,
