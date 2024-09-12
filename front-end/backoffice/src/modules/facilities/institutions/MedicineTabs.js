@@ -40,7 +40,7 @@ const ShowPharmacos = (props) => {
             hasCreate={false}
             title={<EmptyTitle />}
         >
-            <Datagrid rowClick="edit">
+            <Datagrid rowClick="show">
                 <TextField source="conceptSctid" />
                 <TextField source="conceptPt" />
                 <BooleanField source="financedByDomain" sortable={false} />
@@ -78,7 +78,7 @@ const InstitutionMedicineGroups = (props) => {
             filter={{ 'isDomain' : false}}
             pagination={<Pagination />}
         >
-            <Datagrid rowClick="edit">
+            <Datagrid rowClick="show">
                 <TextField source="name" label="Nombre"/>
                 <DeleteButton  redirect={false}/>
             </Datagrid>
