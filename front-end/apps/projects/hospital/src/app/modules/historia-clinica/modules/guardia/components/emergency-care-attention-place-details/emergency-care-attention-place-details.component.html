@@ -9,6 +9,9 @@
             </div>
 			<mat-divider></mat-divider>
 			<app-emergency-care-attention-place-attention-state [state]="details.moreDetails.state" [professional]="details.moreDetails.professional" [date]="details.moreDetails.updatedOn"></app-emergency-care-attention-place-attention-state>
+			<div *ngIf="details.moreDetails?.reason || details.moreDetails?.type">
+				<app-emergency-care-attention-place-entry-details [reason]="details.moreDetails.reason" [type]="details.moreDetails.type"></app-emergency-care-attention-place-entry-details>
+			</div>
 		</div>
 	</div>
 </div>

@@ -159,6 +159,9 @@
 				"space": {
 					"FREE": "Libre",
 					"NOT_FREE": "Ocupada"
+				},
+				"entry": {
+					"TITLE": "Ingreso"
 				}
             },
 			"tabs": {
