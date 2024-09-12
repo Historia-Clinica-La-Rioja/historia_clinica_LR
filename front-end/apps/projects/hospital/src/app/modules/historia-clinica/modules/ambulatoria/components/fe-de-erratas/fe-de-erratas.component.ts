@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
-import { ErrataService } from './service/fe-de-erratas.service';  // Asegúrate de que la ruta al servicio es correcta
+import { ErrataService } from './service/fe-de-erratas.service';   
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 @Component({
   selector: 'app-fe-de-erratas',
   templateUrl: './fe-de-erratas.component.html',
@@ -19,8 +19,10 @@ export class FeDeErratasComponent implements OnInit {
   currentDocumentId: any;
 
   constructor(
-    private errataService: ErrataService, // Inyectamos el servicio correctamente
+    private errataService: ErrataService,
+    private healthcareService: HealthcareProfessionalService, 
     @Inject(MAT_DIALOG_DATA) public data: any,
+
   ) {
     console.log('Data received in FeDeErratasComponent:', data);
     this.institutionId = data.institutionId;
@@ -28,26 +30,31 @@ export class FeDeErratasComponent implements OnInit {
     this.documentId = data.documentId;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.healthcareService.getHealthcareProfessionalByUserId().subscribe(
+      (id: number) => {
+        this.healthcareProfessionalId = id;  // Asigna el valor obtenido
+      },
+      (error) => {
+        console.error('Error fetching healthcareProfessionalId:', error);
+      }
+    );
+  }
 
   submitErrata() {
-    // Crea el objeto errataData desde this.data
     const errataData = {
       documentId: this.documentId,
       healthcareProfessionalId: this.healthcareProfessionalId,
       institutionId: this.institutionId,
-      errataText: this.errataText, // Este sería el texto de la errata
+      errataText: this.errataText,  
     };
 
-    // Llamada al servicio para crear la errata
     this.errataService.createErrata(this.institutionId, errataData).subscribe(
       (response) => {
         console.log('Errata created successfully', response);
-        // Aquí puedes agregar lógica para notificar al usuario del éxito
       },
       (error) => {
         console.error('Error creating errata:', error);
-        // Notificar al usuario del error
       }
     );
   }

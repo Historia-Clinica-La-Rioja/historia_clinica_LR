@@ -294,12 +294,13 @@ showErrata() {
 		healthcareProfessionalId: this.currentHealthcareProfessionalId 		  }
 	}).afterClosed().subscribe(result => {
 	  this.handleCloseErrata();
-	});
-	console.log({
+	  console.log({
 		institutionId: this.currentInstitutionId,
 		documentId: this.currentDocumentId,
 		healthcareProfessionalId: this.currentHealthcareProfessionalId
 	  });
+	});
+	 
   }
   // Método que se ejecuta cuando se cierra la errata
   handleCloseErrata() {
