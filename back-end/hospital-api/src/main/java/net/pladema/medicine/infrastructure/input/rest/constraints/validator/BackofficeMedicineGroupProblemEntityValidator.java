@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
-@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 @Component
 public class BackofficeMedicineGroupProblemEntityValidator implements BackofficeEntityValidator<MedicineGroupProblemDto, Integer> {
 
