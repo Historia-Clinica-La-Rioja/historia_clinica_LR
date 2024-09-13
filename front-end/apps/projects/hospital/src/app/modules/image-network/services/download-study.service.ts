@@ -28,7 +28,7 @@ export class DownloadStudyService {
     private studyInstanceUID: string;
     private jobId : number;
     private studyInfo: StudyFileInfoDto;
-    private dialogRef: MatDialogRef<DownloadStatusPopupComponent>;
+    private downloadStatusDialogRef: MatDialogRef<DownloadStatusPopupComponent>;
 
     constructor(
         private readonly dialogService: DialogService<any>,
@@ -52,7 +52,7 @@ export class DownloadStudyService {
     }
 
     private openDownloadStatusDialog(){
-        this.dialogRef = this.dialogService.open(
+        this.downloadStatusDialogRef = this.dialogService.open(
             DownloadStatusPopupComponent,
             { dialogWidth: DialogWidth.SMALL },
             { 
@@ -60,7 +60,7 @@ export class DownloadStudyService {
                 initialSubtitle: "image-network.worklist.details_study.asynchronous_download.REQUEST_WAIT"
             }
         );
-        this.dialogRef.afterClosed().subscribe((cancelled) => {
+        this.downloadStatusDialogRef.afterClosed().subscribe((cancelled) => {
             clearInterval(this.interval);
             if(cancelled){
                 this.cancelActiveJob();
@@ -107,7 +107,7 @@ export class DownloadStudyService {
     }
 
     private manageDialogs() {
-        this.dialogRef.close();
+        this.downloadStatusDialogRef.close();
         const successDialogRef = this.dialogService.open(
             StudyStatusPopupComponent,
             { dialogWidth: DialogWidth.SMALL },
@@ -136,13 +136,13 @@ export class DownloadStudyService {
     private cancelActiveJob() {
         if(this.jobId){
             this.studyPACAssociationService.cancelActiveJob(this.studyInfo.url, this.studyInstanceUID, this.jobId, this.studyInfo.token).subscribe( () => {
-                this.dialogRef.close();
+                this.downloadStatusDialogRef.close();
             })
         }
     }
 
     retryDownload() {
-        this.dialogRef.close();
+        this.downloadStatusDialogRef.close();
         this.errorSubject.next(false);
         this.titleSubject.next('image-network.worklist.details_study.asynchronous_download.SETTING_UP_STUDY');
         this.subtitleSubject.next('image-network.worklist.details_study.asynchronous_download.REQUEST_WAIT');
