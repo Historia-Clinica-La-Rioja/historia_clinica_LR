@@ -54,6 +54,9 @@ public class GenericServiceRequestBo {
 	}
 
 	public LocalDateTime validateDeferredDate(LocalDateTime deferredDate){
+		deferredDate = deferredDate.withSecond(0);
+		requestDate = requestDate.withSecond(0).withNano(0);
+
 		boolean expired = isExpiredRegister(deferredDate.toLocalDate(), deferredDate.toLocalTime());
 		if (expired) {
 			throw new IllegalArgumentException("Deferred date is expired");
@@ -65,7 +68,7 @@ public class GenericServiceRequestBo {
 	}
 
 	public boolean isExpiredRegister(LocalDate date, LocalTime hour) {
-		return LocalDateTime.of(date, hour).isBefore(this.requestDate.minusHours(3));
+		return LocalDateTime.of(date, hour).isBefore(this.requestDate.minusHours(3).withSecond(0).withNano(0));
 	}
 
 }
