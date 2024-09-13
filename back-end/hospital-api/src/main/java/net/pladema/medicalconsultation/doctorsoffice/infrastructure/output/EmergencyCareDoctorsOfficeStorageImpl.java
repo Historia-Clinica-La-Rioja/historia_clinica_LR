@@ -9,6 +9,7 @@ import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOffic
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +20,11 @@ public class EmergencyCareDoctorsOfficeStorageImpl implements EmergencyCareDocto
 	@Override
 	public List<DoctorsOfficeBo> getAllBySectorId(Integer sectorId) {
 		return doctorsOfficeRepository.getAllBySectorId(sectorId, EEmergencyCareState.ATENCION.getId());
+	}
+
+	@Override
+	public Optional<DoctorsOfficeBo> getById(Integer id) {
+		return doctorsOfficeRepository.findEmergencyCareDoctorOfficeById(id, EEmergencyCareState.ATENCION.getId());
 	}
 
 }

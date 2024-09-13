@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.infrastructure.input.rest.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class EmergencyCareAttentionPlaceDetailDto {
 
 	@Nullable
 	private ProfessionalPersonDto professional;
+
+	@Nullable
+	private DateTimeDto updatedOn;
 
 	@Nullable
 	private EmergencyCareEpisodeListTriageDto lastTriage;

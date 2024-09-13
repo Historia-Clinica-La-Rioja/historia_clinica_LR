@@ -105,6 +105,7 @@ public class TriageBo implements IDocumentBo {
 		this.doctorsOfficeId = triage.getDoctorsOfficeId();
 		this.createdBy = triage.getCreatedBy();
 		this.clinicalSpecialtySectorBo = ClinicalSpecialtySectorBo.builder().id(triage.getClinicalSpecialtySectorId()).build();
+		this.createdOn = triage.getCreatedOn();
 	}
 
     public boolean isAdultGynecological() {

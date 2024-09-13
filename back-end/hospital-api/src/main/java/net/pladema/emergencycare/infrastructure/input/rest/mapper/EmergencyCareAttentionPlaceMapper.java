@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.infrastructure.input.rest.mapper;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.PersonAgeDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareClinicalSpecialtySectorMapper;
@@ -8,17 +9,20 @@ import net.pladema.emergencycare.controller.mapper.MasterDataMapper;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareBedDetailBo;
+import net.pladema.emergencycare.domain.EmergencyCareDoctorsOfficeDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareShockRoomDetailBo;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDto;
 
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareBedDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareBedDto;
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoctorsOfficeDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoctorsOfficeDto;
 
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareShockRoomDetailDto;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.mapper.TriageMapper;
 import net.pladema.establishment.domain.bed.EmergencyCareBedBo;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 
@@ -33,7 +37,8 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {EmergencyCareClinicalSpecialtySectorMapper.class, MasterDataMapper.class, OutpatientConsultationMapper.class})
+@Mapper(uses = {EmergencyCareClinicalSpecialtySectorMapper.class, MasterDataMapper.class, OutpatientConsultationMapper.class,
+		LocalDateMapper.class, TriageMapper.class})
 public interface EmergencyCareAttentionPlaceMapper {
 
 	@Named("toDtoList")
@@ -57,25 +62,26 @@ public interface EmergencyCareAttentionPlaceMapper {
 	@Named("toEmergencyCareBedDto")
 	EmergencyCareBedDto toEmergencyCareBedDto(EmergencyCareBedBo emergencyCareBedBo);
 
-	@Named("toEmergencyCareAttentionPlaceDetailDto")
+	@Named("toEmergencyCareBedDetailDto")
 	@Mapping(target = "type", ignore = true)
 	@Mapping(target = "state", ignore = true)
-	@Mapping(target = "lastTriage.id", source = "triageCategoryId")
-	@Mapping(target = "lastTriage.name", source = "triageName")
-	@Mapping(target = "lastTriage.color", source = "triageColorCode")
-	@Mapping(target = "lastTriage.reasons", source = "lastTriage.reasons")
-	@Mapping(target = "lastTriage.creator", source = "lastTriage.creator")
-	@Mapping(target = "lastTriage.clinicalSpecialtySector", source = "lastTriage.clinicalSpecialtySectorBo")
-	EmergencyCareAttentionPlaceDetailDto toEmergencyCareAttentionPlaceDetailDto(EmergencyCareAttentionPlaceDetailBo emergencyCareAttentionPlaceDetailBo);
-
-	@Named("toEmergencyCareBedDetailDto")
+	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
 	EmergencyCareBedDetailDto toEmergencyCareBedDetailDto(EmergencyCareBedDetailBo emergencyCareBedDetailBo);
 
 	@Named("toPersonAgeDto")
 	PersonAgeDto toPersonAgeDto(PersonAgeBo personAgeBo);
 
-	@Named("toEmergencyCareShockRoomDetailBo")
+	@Named("toEmergencyCareShockRoomDetailDto")
+	@Mapping(target = "type", ignore = true)
+	@Mapping(target = "state", ignore = true)
+	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
 	EmergencyCareShockRoomDetailDto toEmergencyCareShockRoomDetailDto(EmergencyCareShockRoomDetailBo emergencyCareShockRoomDetailBo);
+
+	@Named("toEmergencyCareDoctorsOfficeDetailDto")
+	@Mapping(target = "type", ignore = true)
+	@Mapping(target = "state", ignore = true)
+	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
+	EmergencyCareDoctorsOfficeDetailDto toEmergencyCareDoctorsOfficeDetailDto(EmergencyCareDoctorsOfficeDetailBo emergencyCareDoctorsOfficeDetailBo);
 
 	@AfterMapping
 	default void masterDataEmergencyCareAttentionMapping(@MappingTarget EmergencyCareAttentionPlaceDetailDto target,

@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.controller.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,5 @@ public class EmergencyCareEpisodeListTriageDto {
 	private List<OutpatientReasonDto> reasons;
 	private ProfessionalPersonDto creator;
 	private EmergencyCareClinicalSpecialtySectorDto clinicalSpecialtySector;
+	private DateTimeDto createdOn;
 }

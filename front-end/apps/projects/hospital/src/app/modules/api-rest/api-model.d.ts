@@ -1690,10 +1690,12 @@ export interface ElectronicSignatureInvolvedDocumentDto {
 export interface EmergencyCareAttentionPlaceDetailDto {
     lastTriage?: EmergencyCareEpisodeListTriageDto;
     patient?: EmergencyCarePatientDto;
+    personId: number;
     professional?: ProfessionalPersonDto;
     reason?: string;
     state?: MasterDataDto;
     type?: MasterDataDto;
+    updatedOn?: DateTimeDto;
 }
 
 export interface EmergencyCareAttentionPlaceDto {
@@ -1723,10 +1725,15 @@ export interface EmergencyCareClinicalSpecialtySectorDto {
     id: number;
 }
 
+export interface EmergencyCareDoctorsOfficeDetailDto extends EmergencyCareAttentionPlaceDetailDto {
+    doctorsOffice: EmergencyCareDoctorsOfficeDto;
+}
+
 export interface EmergencyCareDoctorsOfficeDto {
     available: boolean;
     description: string;
     id: number;
+    sectorDescription: string;
 }
 
 export interface EmergencyCareDocumentHeaderDto {
@@ -1783,6 +1790,7 @@ export interface EmergencyCareEpisodeInProgressDto {
 export interface EmergencyCareEpisodeListTriageDto {
     clinicalSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
     color: string;
+    createdOn: DateTimeDto;
     creator: ProfessionalPersonDto;
     id: number;
     name: string;

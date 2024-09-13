@@ -123,6 +123,7 @@ public class EmergencyCareBo {
         }
         this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 		this.reason = emergencyCareEpisode.getReason();
+		this.createdOn = emergencyCareEpisode.getCreatedOn();
     }
 
     public void setTriageRiskFactorIds(List<Integer> riskFactorIds) {

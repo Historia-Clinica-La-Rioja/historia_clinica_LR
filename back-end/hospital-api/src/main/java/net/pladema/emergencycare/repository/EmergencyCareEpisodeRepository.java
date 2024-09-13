@@ -297,4 +297,7 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Query("SELECT ece FROM EmergencyCareEpisode ece WHERE ece.shockroomId = :shockroomId AND ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION)
 	Optional<EmergencyCareEpisode> findByShockroomIdInAttention(@Param("shockroomId") Integer shockroomId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT ece FROM EmergencyCareEpisode ece WHERE ece.doctorsOfficeId = :doctorsOfficeId AND ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION)
+	Optional<EmergencyCareEpisode> findByDoctorsOfficeIdInAttention(@Param("doctorsOfficeId") Integer doctorsOfficeId);
 }
