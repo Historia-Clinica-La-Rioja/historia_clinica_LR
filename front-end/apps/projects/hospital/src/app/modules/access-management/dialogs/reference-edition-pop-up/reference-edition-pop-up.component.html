@@ -10,7 +10,7 @@
 		<div fxLayout="column" fxFlex="50%">
 			<app-home-institution-information [homeInstitutionInfo]="oldReferenceInfo.homeInstitutionInfo"></app-home-institution-information>
 			<app-patient-problems [problems]="oldReferenceInfo.problems"></app-patient-problems>
-			<app-priorization-criteria-select [oldPriorityId]="oldReferenceInfo.priorityId" (newPriority)="setPriorityId($event)"></app-priorization-criteria-select>
+			<app-priorization-criteria-select [disabled]="data.isGestor" [oldPriorityId]="oldReferenceInfo.priorityId" (newPriority)="setPriorityId($event)"></app-priorization-criteria-select>
 			<app-patient-phone [patientPhone]="oldReferenceInfo.patientPhone"></app-patient-phone> 
 		</div>
 		<div fxFlex="50%">
@@ -18,7 +18,7 @@
 			<app-destination-institution-information [destinationInstitutionInfo]="oldReferenceInfo.destinationInstitutionInfo" [submitForm]="submitForm" (institutionIdSelected)="setDestinationInstitutionId($event)"></app-destination-institution-information>
 		</div>
 	</div>
-	<app-observations [oldObservations]="oldReferenceInfo.note" (newObservations)="setNote($event)"></app-observations>
+	<app-observations [disabled]="data.isGestor" [oldObservations]="oldReferenceInfo.note" (newObservations)="setNote($event)"></app-observations>
 	<app-reference-files [oldFiles]="oldReferenceInfo.files" (selectedFiles)="setReferencesFiles($event)"></app-reference-files>
 </mat-dialog-content>
 

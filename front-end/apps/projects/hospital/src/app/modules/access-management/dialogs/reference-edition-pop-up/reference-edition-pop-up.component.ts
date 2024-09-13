@@ -48,7 +48,8 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 			return;
 		}
 
-		this.loadFilesAndModifyReference();
+		if (this.data.isGestor) this.modifyReferenceAsGestor();
+		else this.loadFilesAndModifyReference();
 	}
 
 	setPriorityId(priority: number) {
@@ -78,6 +79,10 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 			next: () => this.referenceEditionSuccess(),
 			error: () => this.snackBarService.showError("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_ERROR")
 		});
+	}
+
+	private modifyReferenceAsGestor() {
+		
 	}
 
 	private loadFilesAndModifyReference() {
@@ -129,6 +134,7 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 export interface ReferenceEditionPopUpData {
 	referenceDataDto: ReferenceDataDto,
 	referencePatientDto: ReferencePatientDto,
+	isGestor?: boolean,
 }
 
 export interface OldReferenceInformation {

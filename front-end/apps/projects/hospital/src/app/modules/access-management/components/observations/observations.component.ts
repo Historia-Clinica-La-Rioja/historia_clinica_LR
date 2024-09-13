@@ -13,6 +13,10 @@ export class ObservationsComponent {
 	set oldObservations(observations: string) {
 		this.form.controls.observations.setValue(observations);
 	}
+	@Input()
+	set disabled (disable: boolean) {
+		if (disable) this.form.disable();
+	};
 
 	@Output() newObservations = new EventEmitter<string>();
 
