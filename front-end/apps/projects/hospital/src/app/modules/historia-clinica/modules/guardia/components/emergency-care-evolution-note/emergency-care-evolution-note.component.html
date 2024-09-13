@@ -9,7 +9,7 @@
         <ng-container *ngIf="_evolutionNote.content.editedOn">
             <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
                 <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
-                <span>{{ _evolutionNote.content.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+                <span>{{ _evolutionNote.content.editedOn | viewDateDto: 'datetime' | dateFormat: 'datetime' }}</span>
             </div>
         </ng-container>
 
