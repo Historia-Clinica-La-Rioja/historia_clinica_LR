@@ -145,6 +145,9 @@ public class DiaryServiceImpl implements DiaryService {
         diary.setAlias(diaryBo.getAlias());
         diary.setPredecessorProfessionalId(diaryBo.getPredecessorProfessionalId());
         diary.setHierarchicalUnitId(diaryBo.getHierarchicalUnitId());
+        diary.setCreatedBy(getCurrentAuditor());
+        diary.setCreatedOn(LocalDateTime.now());
+        diary.setDeleted(false);
         return diary;
     }
 

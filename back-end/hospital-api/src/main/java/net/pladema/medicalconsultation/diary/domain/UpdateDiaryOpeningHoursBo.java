@@ -7,8 +7,11 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,12 +20,12 @@ import static java.util.stream.Collectors.groupingBy;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateDiaryOpeningHoursBo extends DiaryOpeningHoursBo {
 
-    private List<UpdateDiaryAppointmentBo> appointments;
+    private List<UpdateDiaryAppointmentBo> appointments = new ArrayList<>();
 
     public boolean isOverturnsOutOfLimit() {
         Map<LocalDate, Long> overturnsByDate = appointments.stream()
@@ -36,9 +39,19 @@ public class UpdateDiaryOpeningHoursBo extends DiaryOpeningHoursBo {
     public boolean tryToAdjustAppointment(UpdateDiaryAppointmentBo a) {
         if (this.belongsTo(a)) {
             appointments.add(a);
+            this.setMyOpeningHoursId(a);
             return true;
         }
         return false;
+    }
+
+    private void setMyOpeningHoursId(UpdateDiaryAppointmentBo a) {
+        var openingHoursId = this.getOpeningHoursId();
+        if (openingHoursId == null) {
+            throw new DiaryOpeningHoursException(DiaryOpeningHoursEnumException.OPENING_HOURS_ID_IS_NULL,
+                    "Se quiere asignar una franja horaria no almacenada a un turno");
+        }
+        a.setOpeningHoursId(this.getOpeningHoursId());
     }
 
 }

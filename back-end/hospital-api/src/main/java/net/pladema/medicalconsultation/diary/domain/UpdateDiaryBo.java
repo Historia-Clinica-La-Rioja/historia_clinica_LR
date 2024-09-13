@@ -8,15 +8,17 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateDiaryBo extends DiaryBo {
@@ -29,6 +31,13 @@ public class UpdateDiaryBo extends DiaryBo {
     };
 
     private List<UpdateDiaryOpeningHoursBo> updateDiaryOpeningHours;
+
+    @Override
+    public List<DiaryOpeningHoursBo> getDiaryOpeningHours() {
+        return updateDiaryOpeningHours.stream()
+                .map(updateDiaryOpeningHoursBo -> (DiaryOpeningHoursBo) updateDiaryOpeningHoursBo)
+                .collect(Collectors.toList());
+    }
 
     public void adjustAppointmentToDiaryOpeningHours(UpdateDiaryAppointmentBo a) {
         var diaryOpeningHoursBoWhereFits = updateDiaryOpeningHours.stream()

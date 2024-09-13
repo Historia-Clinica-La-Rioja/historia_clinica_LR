@@ -18,4 +18,6 @@ public interface AppointmentPort {
 
 	void deleteAppointmentById(Integer appointmentId);
 
+	void updateOpeningHoursId(Integer appointmentId, Integer openingHoursId);
+
 }

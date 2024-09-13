@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.application.port.AppointmentPort;
 
+import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class AppointmentPortImpl implements AppointmentPort {
 
 	private final AppointmentRepository appointmentRepository;
+	private final AppointmentAssnRepository appointmentAssnRepository;
 
 	@Override
 	public void updateAppointmentState(Integer appointmentId, Short appointmentStatusId) {
@@ -47,6 +49,11 @@ public class AppointmentPortImpl implements AppointmentPort {
 	@Override
 	public void deleteAppointmentById(Integer appointmentId) {
 		appointmentRepository.deleteById(appointmentId);
+	}
+
+	@Override
+	public void updateOpeningHoursId(Integer appointmentId, Integer openingHoursId) {
+		appointmentAssnRepository.updateOpeningHoursId(appointmentId, openingHoursId);
 	}
 
 }

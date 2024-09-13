@@ -3,17 +3,16 @@ package net.pladema.medicalconsultation.diary.application;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.appointment.application.UpdateAppointmentOpeningHours;
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.application.port.output.DiaryPort;
 import net.pladema.medicalconsultation.diary.domain.UpdateDiaryBo;
+import net.pladema.medicalconsultation.diary.domain.UpdateDiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
@@ -21,8 +20,6 @@ import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHours
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +34,7 @@ public class UpdateDiaryAndAppointments {
     private final DiaryService diaryService;
     private final DiaryOpeningHoursService diaryOpeningHoursService;
     private final AppointmentService appointmentService;
-    private final UpdateAppointmentOpeningHoursService updateApmtOHService;
+    private final UpdateAppointmentOpeningHours updateAppointmentOpeningHours;
     private final DiaryPort diaryPort;
 
     @Transactional
@@ -58,12 +55,11 @@ public class UpdateDiaryAndAppointments {
 
         handleDiaryOutOfBoundsAppointments.run(diaryToUpdate, appointments);
 
+        diaryService.persistDiary(diaryToUpdate);
         appointments.forEach(diaryToUpdate::adjustAppointmentToDiaryOpeningHours);
 
-        diaryService.persistDiary(diaryToUpdate);
+        updateAppointmentOpeningHours.run(diaryToUpdate);
 
-        // re-define
-        //updatedExistingAppointments(diaryToUpdate, apmtsByNewDOH);
         diaryService.setDiaryLabels(diaryToUpdate);
         deleteDiaryLabels(diaryToUpdate);
 
@@ -101,26 +97,6 @@ public class UpdateDiaryAndAppointments {
                 )
                 .findAny()
                 .isPresent();
-    }
-
-    private void updatedExistingAppointments(DiaryBo diaryToUpdate,
-                                             HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH) {
-        Collection<DiaryOpeningHoursBo> dohSavedList = diaryOpeningHoursService
-                .getDiariesOpeningHours(List.of(diaryToUpdate.getId()));
-
-        apmtsByNewDOH.forEach(
-                (doh, apmts) -> dohSavedList.stream()
-                                    .filter(doh::equals)
-                                    .findAny()
-                                    .ifPresent(savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHoursId())))
-        );
-
-        List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values()
-                .stream()
-                .flatMap(Collection::stream)
-                .collect(toList());
-
-        apmtsToUpdate.forEach(appointment -> updateApmtOHService.execute(appointment, false));
     }
 
     private void deleteDiaryLabels(DiaryBo diaryToUpdate) {

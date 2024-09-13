@@ -3,12 +3,14 @@ package net.pladema.medicalconsultation.appointment.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 public class UpdateDiaryAppointmentBo {
 
@@ -23,5 +25,9 @@ public class UpdateDiaryAppointmentBo {
 	private Short medicalAttentionTypeId;
 
 	private boolean overturn;
+
+	private Integer openingHoursId;
+
+	private Integer patientId;
 
 }

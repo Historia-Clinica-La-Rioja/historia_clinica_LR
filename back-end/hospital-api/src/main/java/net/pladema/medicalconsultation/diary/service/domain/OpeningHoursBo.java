@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true, exclude = "id")
 @NoArgsConstructor
 public class OpeningHoursBo extends TimeRangeBo {
