@@ -3,7 +3,9 @@ package net.pladema.clinichistory.hospitalization.controller;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -110,7 +115,13 @@ public class InternmentServiceRequestController {
 		result.setObservations(observations);
 		result.setStudyTypeId(studyType);
 		result.setRequiresTransfer(requiresTransfer);
-		result.setDeferredDate(localDateMapper.fromDateDto(deferredDate.getDate()).atTime(localDateMapper.fromTimeDto(deferredDate.getTime())) );
+		if (deferredDate != null) {
+			result.setDeferredDate(result.validateDeferredDate(
+					localDateMapper.fromDateDto(deferredDate.getDate())
+							.atTime(localDateMapper.fromTimeDto(deferredDate.getTime()))));
+		} else {
+			result.setDeferredDate(null);
+		}
 		log.debug("Output -> {}", result);
 		return result;
 	}
