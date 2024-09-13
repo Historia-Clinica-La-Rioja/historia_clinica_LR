@@ -873,7 +873,7 @@
                     "CONFIRM_ORDER": "Finalizar orden",
 					"URGENT": "Urgente",
 					"RUTINE": "Rutina",
-					"REQUIERES-TECHNICIAN-ON-SITE": "¿Requiere translado?",
+					"REQUIRES_TRANSFER": "¿Requiere traslado?",
 					"TYPE-OF-STUDY": "Tipo de estudio",
 					"PATIENT_DATA": "Datos del paciente",
                     "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
