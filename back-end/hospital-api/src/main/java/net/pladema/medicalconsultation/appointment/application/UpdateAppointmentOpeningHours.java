@@ -34,17 +34,21 @@ public class UpdateAppointmentOpeningHours {
     }
 
     private void updateAppointment(UpdateDiaryAppointmentBo appointmentBo) {
-        appointmentPort.updateOpeningHoursId(appointmentBo.getOpeningHoursId(), appointmentBo.getId());
 
-        if (AppointmentState.OUT_OF_DIARY == appointmentBo.getStateId()) {
+        if (appointmentBo.hasChangedOpeningHours()) {
+            appointmentPort.updateOpeningHoursId(appointmentBo.getNewOpeningHoursId(), appointmentBo.getId());
+        }
+
+        if (AppointmentState.OUT_OF_DIARY == appointmentBo.getStateId() && appointmentBo.isScheduledForTheFuture()) {
             this.reAssignedAppointmentsThatNowAreValid(appointmentBo);
         }
     }
 
     private void reAssignedAppointmentsThatNowAreValid(UpdateDiaryAppointmentBo appointmentBo) {
-            if (appointmentBo.getPatientId() != null)
-                appointmentPort.updateAppointmentState(appointmentBo.getId(), AppointmentState.ASSIGNED);
-            else
-                appointmentPort.updateAppointmentState(appointmentBo.getId(), AppointmentState.BOOKED);
+        var newState = appointmentBo.getPatientId() != null
+                ? AppointmentState.ASSIGNED
+                : AppointmentState.BOOKED;
+
+        appointmentPort.updateAppointmentState(appointmentBo.getId(), newState);
     }
 }

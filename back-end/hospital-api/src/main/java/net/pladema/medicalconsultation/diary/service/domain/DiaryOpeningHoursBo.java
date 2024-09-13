@@ -9,9 +9,6 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointment
 
 import java.time.LocalTime;
 
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
-
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"diaryId", "overturnCount"})
@@ -48,10 +45,6 @@ public class DiaryOpeningHoursBo {
 	}
 
 	public boolean fitsAppointmentHere(UpdateDiaryAppointmentBo a) {
-		return this.fitsIn(a) && this.sameMedicalAttention(a);
-	}
-
-	private boolean fitsIn(UpdateDiaryAppointmentBo a) {
 		LocalTime from = openingHours.getFrom();
 		LocalTime to = openingHours.getTo();
 		LocalTime appointmentLocalTime = a.getTime();
@@ -59,20 +52,10 @@ public class DiaryOpeningHoursBo {
 				&& appointmentLocalTime.isBefore(to);
 	}
 
-	private boolean sameMedicalAttention(UpdateDiaryAppointmentBo a) {
-		return this.getMedicalAttentionTypeId().equals(a.getMedicalAttentionTypeId());
-	}
-
 	public void updateMeWithDiaryInformation(DiaryBo diaryBo) {
 		var noCarelines = diaryBo.getCareLines().isEmpty();
 		if (this.getProtectedAppointmentsAllowed() != null && this.getProtectedAppointmentsAllowed() && noCarelines)
 			this.setProtectedAppointmentsAllowed(false);
 		this.setDiaryId(diaryBo.getId());
-	}
-
-	/* Probably duplicate fitsAppointmentHere() */
-	public boolean belongsTo(UpdateDiaryAppointmentBo a) {
-		return getWeekDay(a.getDate()).equals(this.getOpeningHours().getDayWeekId())
-				&& isBetween(a.getTime(), this.getOpeningHours().getFrom(), this.getOpeningHours().getTo());
 	}
 }

@@ -91,22 +91,10 @@ public class DiaryBo extends SelfValidating<DiaryBo> {
 		});
 	}
 
-	public boolean isAppointmentOutOfDiary(UpdateDiaryAppointmentBo a) {
-		return this.getDiaryOpeningHours() == null
-				|| this.isOutOfDiaryBounds(a)
-				|| this.isOutOfOpeningHoursBounds(a);
-	}
-
-	private boolean isOutOfDiaryBounds(UpdateDiaryAppointmentBo a) {
+	protected boolean isOutOfDiaryBounds(UpdateDiaryAppointmentBo a) {
 		LocalDate from = this.getStartDate();
 		LocalDate to = this.getEndDate();
 		return a.getDate().isBefore(from) || a.getDate().isAfter(to);
-	}
-
-	private boolean isOutOfOpeningHoursBounds(UpdateDiaryAppointmentBo a) {
-		return this.getDiaryOpeningHours()
-				.stream()
-				.noneMatch(diaryOpeningHoursBo -> diaryOpeningHoursBo.fitsAppointmentHere(a));
 	}
 
 	public void updateMyDiaryOpeningHours() {

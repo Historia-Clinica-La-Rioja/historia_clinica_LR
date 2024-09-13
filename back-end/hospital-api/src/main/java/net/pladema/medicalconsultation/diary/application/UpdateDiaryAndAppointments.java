@@ -1,10 +1,13 @@
 package net.pladema.medicalconsultation.diary.application;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.application.UpdateAppointmentOpeningHours;
+import net.pladema.medicalconsultation.appointment.application.port.AppointmentPort;
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.diary.application.port.output.DiaryPort;
 import net.pladema.medicalconsultation.diary.domain.UpdateDiaryBo;
@@ -30,12 +33,12 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class UpdateDiaryAndAppointments {
 
-    private final HandleDiaryOutOfBoundsAppointments handleDiaryOutOfBoundsAppointments;
     private final DiaryService diaryService;
     private final DiaryOpeningHoursService diaryOpeningHoursService;
     private final AppointmentService appointmentService;
     private final UpdateAppointmentOpeningHours updateAppointmentOpeningHours;
     private final DiaryPort diaryPort;
+    private final AppointmentPort appointmentPort;
 
     @Transactional
     public Integer run(UpdateDiaryBo diaryToUpdate) {
@@ -53,10 +56,11 @@ public class UpdateDiaryAndAppointments {
 
         List<UpdateDiaryAppointmentBo> appointments = diaryPort.getUpdateDiaryAppointments(diaryToUpdate.getId());
 
-        handleDiaryOutOfBoundsAppointments.run(diaryToUpdate, appointments);
-
         diaryService.persistDiary(diaryToUpdate);
-        appointments.forEach(diaryToUpdate::adjustAppointmentToDiaryOpeningHours);
+
+        appointments.stream()
+                .filter(a -> !diaryToUpdate.tryAdjustAppointmentToDiaryOpeningHours(a))
+                .forEach(this::updateToOutOfDiaryState);
 
         updateAppointmentOpeningHours.run(diaryToUpdate);
 
@@ -97,6 +101,15 @@ public class UpdateDiaryAndAppointments {
                 )
                 .findAny()
                 .isPresent();
+    }
+
+    private void updateToOutOfDiaryState(UpdateDiaryAppointmentBo appointmentOutOfDiary) {
+        if (AppointmentState.BLOCKED == appointmentOutOfDiary.getStateId()) {
+            appointmentPort.deleteAppointmentById(appointmentOutOfDiary.getId());
+            return;
+        }
+        if (appointmentOutOfDiary.isScheduledForTheFuture())
+            appointmentService.updateState(appointmentOutOfDiary.getId(), AppointmentState.OUT_OF_DIARY, UserInfo.getCurrentAuditor(), "Fuera de agenda");
     }
 
     private void deleteDiaryLabels(DiaryBo diaryToUpdate) {

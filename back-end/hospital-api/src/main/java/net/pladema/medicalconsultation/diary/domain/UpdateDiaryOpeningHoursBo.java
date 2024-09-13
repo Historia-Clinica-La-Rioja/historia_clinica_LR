@@ -37,7 +37,7 @@ public class UpdateDiaryOpeningHoursBo extends DiaryOpeningHoursBo {
     }
 
     public boolean tryToAdjustAppointment(UpdateDiaryAppointmentBo a) {
-        if (this.belongsTo(a)) {
+        if (this.fitsAppointmentHere(a)) {
             appointments.add(a);
             this.setMyOpeningHoursId(a);
             return true;
@@ -51,7 +51,7 @@ public class UpdateDiaryOpeningHoursBo extends DiaryOpeningHoursBo {
             throw new DiaryOpeningHoursException(DiaryOpeningHoursEnumException.OPENING_HOURS_ID_IS_NULL,
                     "Se quiere asignar una franja horaria no almacenada a un turno");
         }
-        a.setOpeningHoursId(this.getOpeningHoursId());
+        a.setNewOpeningHoursId(this.getOpeningHoursId());
     }
 
 }

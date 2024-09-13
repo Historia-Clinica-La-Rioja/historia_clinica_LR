@@ -39,7 +39,12 @@ public class UpdateDiaryBo extends DiaryBo {
                 .collect(Collectors.toList());
     }
 
-    public void adjustAppointmentToDiaryOpeningHours(UpdateDiaryAppointmentBo a) {
+    public boolean tryAdjustAppointmentToDiaryOpeningHours(UpdateDiaryAppointmentBo a) {
+
+        if (this.isOutOfDiaryBounds(a)) {
+            // out of diary
+            return false;
+        }
         var diaryOpeningHoursBoWhereFits = updateDiaryOpeningHours.stream()
                 .filter(updateDiaryOpeningHours -> updateDiaryOpeningHours.tryToAdjustAppointment(a))
                 .findFirst();
@@ -49,9 +54,8 @@ public class UpdateDiaryBo extends DiaryBo {
                 .map(UpdateDiaryOpeningHoursBo::getOpeningHours)
                 .ifPresent(THROW_EXCEPTION_OPENING_HOURS_OVERTURN_CONSUMER);
 
-        if (diaryOpeningHoursBoWhereFits.isEmpty()) {
-            // out of diary
-        }
+        // if not present then out of diary
+        return diaryOpeningHoursBoWhereFits.isPresent();
     }
 
 }

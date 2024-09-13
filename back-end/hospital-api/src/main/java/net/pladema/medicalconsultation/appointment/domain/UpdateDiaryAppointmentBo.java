@@ -30,4 +30,13 @@ public class UpdateDiaryAppointmentBo {
 
 	private Integer patientId;
 
+	private Integer newOpeningHoursId;
+
+	public boolean isScheduledForTheFuture() {
+		return date.isAfter(LocalDate.now());
+	}
+
+	public boolean hasChangedOpeningHours() {
+		return !openingHoursId.equals(newOpeningHoursId);
+	}
 }
