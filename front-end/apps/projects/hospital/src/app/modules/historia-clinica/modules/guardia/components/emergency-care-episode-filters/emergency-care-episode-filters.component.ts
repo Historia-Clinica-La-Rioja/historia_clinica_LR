@@ -14,6 +14,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 
 	readonly getError = getError;
 	readonly hasError = hasError;
+	isCleanFilters = false;
 
 	form: FormGroup<FiltersEpisodeForm>;
 	formControlsSubscription: Subscription[] = [];
@@ -50,6 +51,12 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 		return atLeastOneValueInFormGroup(this.form);
 	}
 
+	resetFilters() {
+		this.isCleanFilters = true;
+		this.form.reset();
+		this.filter();
+	}
+
 	private buildForm() {
 		this.form = new FormGroup<FiltersEpisodeForm>({
 			triageCategories: new FormControl(null),
@@ -72,7 +79,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 
 	private subscribeToFormControlsChanges(formControl: FormControlType) {
 		const controlSubscription = this.form.get(formControl).valueChanges.subscribe(selectedFilters => {
-			selectedFilters && this.updateFilters();
+			selectedFilters && !this.isCleanFilters && this.updateFilters();
 		});
 
 		this.formControlsSubscription.push(controlSubscription);
@@ -99,7 +106,9 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 		const episodeFilters = this.getFormValuesAsEpisodeFilters();
 		this.filterService.setFilters(episodeFilters);
 		this.updateEpisodes.emit();
+		this.isCleanFilters = false;
 	}
+
 }
 
 interface FiltersEpisodeForm {

@@ -1,0 +1,5 @@
+@import "./components/emergency-care-episode-filters/emergency-care-episode-filters.component.scss-theme.scss";
+
+@mixin guardia-mixins($theme) {
+    @include app-emergency-care-episode-filters($theme);
+}

@@ -8,16 +8,9 @@ input[type="number"]::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
 }
+
 input[type="number"] {
 	-moz-appearance: textfield;
-}
-
-.slide-toggle-wrapper {
-	padding: .25em .75em;
-}
-
-.triage-options {
-	padding-bottom: 5px;
 }
 
 .font-weigth {
@@ -26,4 +19,16 @@ input[type="number"] {
 
 .service-width {
 	display: block;
+}
+
+.clickeable {
+	cursor: pointer;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.margin-top {
+	margin-top: 12px;
 }

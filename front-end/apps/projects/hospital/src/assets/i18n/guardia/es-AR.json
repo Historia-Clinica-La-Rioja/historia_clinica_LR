@@ -146,7 +146,8 @@
 					"URGENCY": "Nivel de urgencia",
 					"STATES": "Estados de atención",
 					"EMERGENCY_CARE_SERVICE": "Servicios de guardia",
-					"EMERGENCY_CARE_SERVICE_PLACEHOLDER": "Seleccione un servicio"
+					"EMERGENCY_CARE_SERVICE_PLACEHOLDER": "Seleccione un servicio",
+					"CLEAN_FILTERS": "Limpiar filtros"
 				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",

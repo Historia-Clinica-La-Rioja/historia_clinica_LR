@@ -8,7 +8,7 @@
 
         <app-service-chips-autocomplete class="service-width" formControlName="clinicalSpecialtySectorIds"></app-service-chips-autocomplete>
 
-        <div>
+        <div class="margin-top">
             <span class="font-weigth"
                 translate="guardia.home.episodes.filters.FILTER_BY_PATIENT"></span>
 
@@ -94,11 +94,12 @@
 
         </div>
 
-        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px"
-            class="slide-toggle-wrapper">
+        <div fxLayout="row" fxLayoutGap="10px">
             <mat-label translate="guardia.home.episodes.filters.EMERGENCY_CARE_TEMPORARY"></mat-label>
             <mat-slide-toggle (change)="filter()" formControlName="emergencyCareTemporary">
             </mat-slide-toggle>
         </div>
+
+        <span class="clickeable span-color" (click)="resetFilters()">{{'guardia.home.episodes.filters.CLEAN_FILTERS' | translate}}</span>
     </form>
 </div>
