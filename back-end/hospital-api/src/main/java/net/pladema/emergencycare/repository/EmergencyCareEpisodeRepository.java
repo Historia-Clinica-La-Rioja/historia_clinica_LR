@@ -89,6 +89,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Query(value = " UPDATE EmergencyCareEpisode AS ece " +
 			" SET ece.emergencyCareStateId = :emergencyCareStateId, " +
 			" ece.doctorsOfficeId = :doctorsOfficeId, " +
+			" ece.bedId = NULL, " +
+			" ece.shockroomId = NULL, " +
 			" ece.updateable.updatedOn = CURRENT_TIMESTAMP " +
 			" WHERE ece.id = :episodeId "+
 			" AND ece.institutionId = :institutionId ")
@@ -102,6 +104,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Query(value = " UPDATE EmergencyCareEpisode AS ece " +
 			" SET ece.emergencyCareStateId = :emergencyCareStateId, " +
 			" ece.shockroomId = :shockroomId, " +
+			" ece.bedId = NULL, " +
+			" ece.doctorsOfficeId = NULL, " +
 			" ece.updateable.updatedOn = CURRENT_TIMESTAMP " +
 			" WHERE ece.id = :episodeId "+
 			" AND ece.institutionId = :institutionId ")
@@ -115,6 +119,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Query(value = " UPDATE EmergencyCareEpisode AS ece " +
 			" SET ece.emergencyCareStateId = :emergencyCareStateId, " +
 			" ece.bedId = :bedId, " +
+			" ece.shockroomId = NULL, " +
+			" ece.doctorsOfficeId = NULL, " +
 			" ece.updateable.updatedOn = CURRENT_TIMESTAMP " +
 			" WHERE ece.id = :episodeId "+
 			" AND ece.institutionId = :institutionId ")
