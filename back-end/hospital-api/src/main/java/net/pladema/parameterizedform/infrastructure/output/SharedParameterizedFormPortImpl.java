@@ -33,7 +33,8 @@ public class SharedParameterizedFormPortImpl implements SharedParameterizedFormP
 		return parameterizedFormParameterRepository.findAllByParameterizedFormId(parameterizedFormId).stream()
 				.map(pfp -> new SharedParameterDto(pfp.getParameterId(), pfp.getOrderNumber()))
 				.map(this::completeParameterData)
-				.sorted(Comparator.comparing(SharedParameterDto::getOrderNumber))
+				.sorted(Comparator.comparing(SharedParameterDto::getOrderNumber)
+				.thenComparing(SharedParameterDto::getId))
 				.collect(Collectors.toList());
 	}
 

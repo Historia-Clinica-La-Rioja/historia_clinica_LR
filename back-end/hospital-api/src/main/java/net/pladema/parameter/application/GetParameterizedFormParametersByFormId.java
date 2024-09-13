@@ -44,7 +44,8 @@ public class GetParameterizedFormParametersByFormId {
 		List<ParameterCompleteDataBo> result = parameterStorage.findAllByIds(parameterIds)
 				.stream()
 				.map(parameter -> completeParameterData(parameter, formId))
-				.sorted(Comparator.comparing(ParameterCompleteDataBo::getOrderNumber, Comparator.nullsLast(Comparator.naturalOrder())))
+				.sorted(Comparator.comparing(ParameterCompleteDataBo::getOrderNumber, Comparator.nullsLast(Comparator.naturalOrder()))
+						.thenComparing(ParameterCompleteDataBo::getId))
 				.collect(Collectors.toList());
 		
 		log.debug("Output -> {}", result);
