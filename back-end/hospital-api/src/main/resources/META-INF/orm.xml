@@ -500,7 +500,7 @@
 			oc.doctor_id, oc.created_on as start_date, reasons.description as reasons,  concat_ws('/split/', other_problems.description, diagnostics.description) as problems,
 			concat_ws('/split/', procedures.description, odontology_procedures.description) as procedures,
 			null as weight, null as height, null as systolicBloodPressure, null as diastolicBloodPressure,
-			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as bloodGlucose, null as headCircumference, concat_ws('-', oci.permanent_c, oci.permanent_p, oci.permanent_o) as cpo,  concat_ws('-', oci.temporary_c, oci.temporary_e, oci.temporary_o) as ceo,
+			null as cardiovascularRisk, null as glycosylatedHemoglobin, null as bloodGlucose, null as headCircunference, concat_ws('-', oci.permanent_c, oci.permanent_p, oci.permanent_o) as cpo,  concat_ws('-', oci.temporary_c, oci.temporary_e, oci.temporary_o) as ceo,
 			'odontology' as consultation_type, oc.hierarchical_unit_id as hierarchicalUnitId
 			FROM odontology_consultation oc
 			LEFT JOIN (
