@@ -145,6 +145,7 @@ public class DiaryServiceImpl implements DiaryService {
         diary.setAlias(diaryBo.getAlias());
         diary.setPredecessorProfessionalId(diaryBo.getPredecessorProfessionalId());
         diary.setHierarchicalUnitId(diaryBo.getHierarchicalUnitId());
+        // db cries with not-null values if not setted
         diary.setCreatedBy(getCurrentAuditor());
         diary.setCreatedOn(LocalDateTime.now());
         diary.setDeleted(false);
@@ -155,7 +156,13 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public Integer persistDiary(DiaryBo diaryToSave) {
         Diary diary = createDiaryInstance(diaryToSave);
-        return persistDiary(diaryToSave, diary);
+        diary = diaryRepository.save(diary);
+        Integer diaryId = diary.getId();
+        diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
+        diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
+        diaryPracticeService.updateDiaryPractices(diaryToSave.getPracticesId(), diaryId);
+        diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours()); // must be here at the end of method
+        return diaryId;
     }
 
     @Override
