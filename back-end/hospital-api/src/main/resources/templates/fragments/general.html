@@ -1276,7 +1276,7 @@
                         <strong><span th:text="${parameter.description}"></span></strong>
                     </dd>
                     <dd>
-                        <span th:if="${parameter.value != null}" th:text="${parameter.value}"></span>
+                        <p class="wide_wrapped_text" th:if="${parameter.value != null}" th:text="${parameter.value}"></p>
                         <span th:if="${parameter.value == null}">Sin información</span>
                     </dd>
                 </dl>
