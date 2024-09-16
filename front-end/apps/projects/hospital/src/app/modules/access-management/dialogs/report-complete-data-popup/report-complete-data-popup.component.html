@@ -31,7 +31,7 @@
 
 				<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !referenceCompleteData.reference.closureType
 					&& reportCompleteData.appointment.state.description === waitingAppointment">
-					<app-edit-reference [referenceCompleteData]="referenceCompleteData"></app-edit-reference>
+					<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="getReferenceDetails($event)"></app-edit-reference>
 				</div>
 			</div>
 	

@@ -19,7 +19,7 @@
 		</div>
 	</div>
 	<app-observations [disabled]="data.isGestor" [oldObservations]="oldReferenceInfo.note" (newObservations)="setNote($event)"></app-observations>
-	<app-reference-files [oldFiles]="oldReferenceInfo.files" (selectedFiles)="setReferencesFiles($event)"></app-reference-files>
+	<app-reference-files [oldFiles]="oldReferenceInfo.files" (selectedFiles)="setReferencesFiles($event)" (deletedIdFiles)="setDeletesFiles($event)"></app-reference-files>
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayoutAlign="end">

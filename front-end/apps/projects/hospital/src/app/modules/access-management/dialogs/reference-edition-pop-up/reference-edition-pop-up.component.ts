@@ -10,7 +10,7 @@ import { ReferenceCounterReferenceFileDto, ReferenceDataDto, ReferenceDto, Refer
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { switchMap, tap } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs';
 
 @Component({
 	selector: 'app-reference-edition-pop-up',
@@ -22,6 +22,7 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	submitForm = false;
 	newReferenceInfo: ReferenceDto;
 	referenceFiles: ReferenceFiles;
+	deletedIdsFiles: number[] = [];
 	oldReferenceInfo: OldReferenceInformation;
 
 	constructor(
@@ -40,15 +41,25 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 		this.submitForm = true;
 		if (!this.newReferenceInfo.destinationInstitutionId)
 			return;
-
 		if (!this.referenceFiles?.newFiles.length) {
 			if (this.referenceFiles?.oldFiles?.length)
 				this.newReferenceInfo = { ...this.newReferenceInfo, fileIds: this.referenceFiles.oldFiles.map(files => files.fileId) };
-			this.modifyReference();
+			
+			if (this.data.isGestor) {
+				this.referenceFileService.deleteReferenceFiles(this.deletedIdsFiles).pipe(take(1))
+				.subscribe(deleted => {
+						if (deleted) this.modifyReferenceAsGestor();
+					});
+			}
+			else this.modifyReference();
 			return;
 		}
-
-		if (this.data.isGestor) this.modifyReferenceAsGestor();
+		if (this.data.isGestor) {
+			this.referenceFileService.deleteReferenceFiles(this.deletedIdsFiles).pipe(take(1))
+				.subscribe(deleted => {
+					if (deleted) this.loadNewFilesAndModifyReferenceAsGestor();
+				});
+		}
 		else this.loadFilesAndModifyReference();
 	}
 
@@ -69,6 +80,10 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 		this.referenceFiles = referenceFiles;
 	}
 
+	setDeletesFiles(deletedIdFiles: number[]) {
+		this.deletedIdsFiles = deletedIdFiles;
+	}
+
 	private setOldReferenceInformation() {
 		this.oldReferenceInfo = toOldReferenceInformation(this.data.referenceDataDto, this.data.referencePatientDto);
 	}
@@ -82,7 +97,32 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	}
 
 	private modifyReferenceAsGestor() {
-		
+		this.institutionalReferenceReportService.modifyReferenceAsGestor(this.data.referenceDataDto.id, this.newReferenceInfo.destinationInstitutionId, []).subscribe({
+			next: () => this.referenceEditionSuccess(),
+			error: () => this.snackBarService.showError("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_ERROR")
+		});
+	}
+
+	private loadNewFilesAndModifyReferenceAsGestor() {
+		let filesIds: number[] = [];
+		const patientId = this.data.referencePatientDto.patientId;
+
+		const uploadObservables = this.referenceFileService.uploadReferenceFiles(patientId, this.referenceFiles.newFiles)
+			.pipe(
+				tap(newFileIds => {
+						filesIds = newFileIds;
+					}
+				)
+			);
+		uploadObservables.pipe(
+			switchMap(() => {
+				if (this.referenceFiles?.oldFiles) filesIds = this.concatOldAndNewFiles(this.referenceFiles.oldFiles, filesIds);
+				return this.institutionalReferenceReportService.modifyReferenceAsGestor(this.data.referenceDataDto.id, this.newReferenceInfo.destinationInstitutionId, filesIds)
+			})
+		).subscribe({
+			next: () => this.referenceEditionSuccess(),
+			error: () => this.referenceEditionError(filesIds)
+		});;
 	}
 
 	private loadFilesAndModifyReference() {

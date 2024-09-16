@@ -74,6 +74,11 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	ngOnInit(): void {
 		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
 		const referenceDetails$ = this.getObservable();
+		this.getReferenceDetails(referenceDetails$);
+		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
+	}
+
+	getReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
 		referenceDetails$.subscribe(
 			referenceDetails => {
 				this.setAppointment(referenceDetails.appointment);
@@ -84,7 +89,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
-		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 	}
 
 	private getObservable(): Observable<ReferenceCompleteDataDto> {

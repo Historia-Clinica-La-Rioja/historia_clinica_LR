@@ -1,7 +1,9 @@
 import { ReferenceEditionPopUpData, ReferenceEditionPopUpComponent } from '@access-management/dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReferenceCompleteDataDto } from '@api-rest/api-model';
+import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-edit-reference',
@@ -11,9 +13,11 @@ import { DialogService, DialogWidth } from '@presentation/services/dialog.servic
 export class EditReferenceComponent implements OnInit {
 
     @Input() referenceCompleteData: ReferenceCompleteDataDto;
+    @Output() newReferenceDetail: EventEmitter<Observable<ReferenceCompleteDataDto>> = new EventEmitter<Observable<ReferenceCompleteDataDto>>;
 
     constructor(
         private dialogService: DialogService<ReferenceEditionPopUpComponent>,
+        private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
     ) { }
 
     ngOnInit(): void {
@@ -30,7 +34,9 @@ export class EditReferenceComponent implements OnInit {
             referenceEditionData
 		)
 		editDialogRef.afterClosed().subscribe(edited => {
-			console.log('se edito la info?: ', edited)
+			if (edited) {
+                this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+            }
 		});
     }
 

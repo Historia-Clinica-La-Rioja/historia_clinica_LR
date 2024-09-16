@@ -61,4 +61,14 @@ export class InstitutionalReferenceReportService {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/modify`;
 		return this.http.put<boolean>(url, reference);
 	}
+
+	modifyReferenceAsGestor(referenceId: number, destinationInstitutionId: number, fileIds: number[]): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/reference/${referenceId}/update-by-manager`;
+		return this.http.put<boolean>(url, {}, { 
+			params: {
+				destinationInstitutionId: destinationInstitutionId,
+				fileIds: fileIds
+			}
+		});
+	}
 }
