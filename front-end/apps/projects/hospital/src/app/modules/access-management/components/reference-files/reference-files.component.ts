@@ -13,6 +13,7 @@ import { ReferenceFileService } from '@api-rest/services/reference-file.service'
 export class ReferenceFilesComponent {
 
 	referenceFiles: ReferenceFiles;
+	deletedFiles: number[] = [];
 
 	@Input()
 	set oldFiles(files: ReferenceCounterReferenceFileDto[]) {
@@ -21,6 +22,8 @@ export class ReferenceFilesComponent {
 	}
 
 	@Output() selectedFiles = new EventEmitter<ReferenceFiles>();
+	@Output() deletedIdFiles = new EventEmitter<number[]>();
+
 	constructor(
 		private readonly referenceFileService: ReferenceFileService,
 	) { }
@@ -38,13 +41,15 @@ export class ReferenceFilesComponent {
 		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
 	}
 
-	removeFile(files: File[] | ReferenceCounterReferenceFileDto[], positionOfFileToDelete: number) {
+	removeFile(files: File[] | ReferenceCounterReferenceFileDto[], positionOfFileToDelete: number, file: ReferenceCounterReferenceFileDto) {
 		files.splice(positionOfFileToDelete, 1);
+		this.deletedFiles.push(file.fileId);
 		this.emit();
 	}
 
 	private emit() {
 		this.selectedFiles.emit(this.referenceFiles);
+		this.deletedIdFiles.emit(this.deletedFiles)
 	}
 
 }

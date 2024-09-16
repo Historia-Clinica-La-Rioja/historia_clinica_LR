@@ -46,19 +46,25 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 				this.newReferenceInfo = { ...this.newReferenceInfo, fileIds: this.referenceFiles.oldFiles.map(files => files.fileId) };
 			
 			if (this.data.isGestor) {
+				if (this.deletedIdsFiles.length)
 				this.referenceFileService.deleteReferenceFiles(this.deletedIdsFiles).pipe(take(1))
 				.subscribe(deleted => {
 						if (deleted) this.modifyReferenceAsGestor();
 					});
+
+				else this.modifyReferenceAsGestor();
 			}
 			else this.modifyReference();
 			return;
 		}
 		if (this.data.isGestor) {
+			if (this.deletedIdsFiles.length)
 			this.referenceFileService.deleteReferenceFiles(this.deletedIdsFiles).pipe(take(1))
 				.subscribe(deleted => {
 					if (deleted) this.loadNewFilesAndModifyReferenceAsGestor();
 				});
+
+			else this.loadNewFilesAndModifyReferenceAsGestor();
 		}
 		else this.loadFilesAndModifyReference();
 	}

@@ -12,7 +12,7 @@
         <span class="span-clickable primary" (click)="downloadFile(file)">
             {{file.fileName}}
         </span>
-        <button id="delete-old-file" mat-icon-button color="warn" (click)="removeFile(referenceFiles.oldFiles, index)">
+        <button id="delete-old-file" mat-icon-button color="warn" (click)="removeFile(referenceFiles.oldFiles, index, file)">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -22,7 +22,7 @@
             <span class="mat-body element-light-color">
                 {{file.name}}
             </span>
-            <button id="delete-new-file" mat-icon-button color="warn" (click)="removeFile(referenceFiles.newFiles, index)">
+            <button id="delete-new-file" mat-icon-button color="warn" (click)="removeFile(referenceFiles.newFiles, index, file)">
                 <mat-icon>delete</mat-icon>
             </button>
         </div>
