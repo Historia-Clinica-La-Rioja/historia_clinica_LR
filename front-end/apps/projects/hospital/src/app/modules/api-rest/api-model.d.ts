@@ -5176,6 +5176,7 @@ export interface StudyOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;
     creationDate: Date;
+    deriveTo?: string;
     diagnosticReportId: number;
     doctor: DoctorInfoDto;
     hasActiveAppointment: boolean;
@@ -5185,6 +5186,7 @@ export interface StudyOrderReportInfoDto {
     isAvailableInPACS: boolean;
     localViewerUrl?: string;
     observationsFromServiceRequest: string;
+    reportStatus: number;
     serviceRequestId: number;
     snomed: string;
     source: string;
@@ -5196,6 +5198,7 @@ export interface StudyTranscribedOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;
     creationDate: Date;
+    deriveTo?: string;
     diagnosticReports: string[];
     hceDocumentDataDto?: HCEDocumentDataDto;
     healthCondition: string;
@@ -5203,6 +5206,7 @@ export interface StudyTranscribedOrderReportInfoDto {
     isAvailableInPACS: boolean;
     localViewerUrl?: string;
     professionalName: string;
+    reportStatus: number;
     snomed: string;
     status: boolean;
     viewReport: boolean;
@@ -5211,10 +5215,12 @@ export interface StudyTranscribedOrderReportInfoDto {
 export interface StudyWithoutOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;
+    deriveTo?: string;
     hceDocumentDataDto?: HCEDocumentDataDto;
     imageId?: string;
     isAvailableInPACS: boolean;
     localViewerUrl?: string;
+    reportStatus: number;
     snomed: string;
     status: boolean;
     viewReport: boolean;

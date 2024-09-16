@@ -87,6 +87,8 @@ public class TranscribedServiceRequestStorageImpl implements TranscribedServiceR
         result.setDocumentStatus((String) row[6]);
         result.setServiceRequestId((Integer) row[7]);
         result.setAppointmentId((Integer) row[8]);
+		result.setReportStatusId((Short) row[9]);
+		result.setDeriveToInstitution((String) row[10]);
         result.setDiagnosticReports(this.getDiagnosticReports(result.getServiceRequestId()));
         log.trace("Output -> {}", result);
         return result;

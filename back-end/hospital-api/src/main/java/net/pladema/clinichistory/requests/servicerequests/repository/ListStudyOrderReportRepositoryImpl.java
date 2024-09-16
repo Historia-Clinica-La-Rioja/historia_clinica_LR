@@ -20,7 +20,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
 
     private final EntityManager entityManager;
 
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
     @Override
     public List<Object[]> execute(Integer patientId) {
         log.debug("Input parameters -> patientId {}", patientId);
@@ -60,12 +60,15 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                   "       t.diagnosticReportId, " +
                   "       aoi.appointment_id, " +
 				  "		  COALESCE(aoi.active,false) as hasActiveAppointment, "+
-                  "       t.observations " +
+                  "       t.observations, " +
+				  "       aoi.report_status_id, " +
+				  "       i.name " +
                   "FROM temporal t " +
                   "JOIN snomed s ON t.diagnosticReport_snomed_id = s.id " +
                   "         JOIN snomed s2 ON t.healthCondition_snomed_id = s2.id " +
                   "         LEFT JOIN appointment_order_image aoi ON t.diagnosticReportId = aoi.study_id AND aoi.active = true " +
                   "         LEFT JOIN document_file df ON aoi.document_id = df.id " +
+				  "			LEFT JOIN Institution AS i ON (aoi.dest_institution_id = i.id) " +
 				  "WHERE t.status_id != :cancelledStatus " +
 				  "AND rw = 1";
 
