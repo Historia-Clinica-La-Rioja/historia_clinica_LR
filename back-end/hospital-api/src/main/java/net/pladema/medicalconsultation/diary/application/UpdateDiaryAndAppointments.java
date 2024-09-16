@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.diary.application;
 
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,17 +43,13 @@ public class UpdateDiaryAndAppointments {
     public Integer run(UpdateDiaryBo diaryToUpdate) {
         log.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 
-        diaryToUpdate.validateSelf();
+        this.assertContextValid(diaryToUpdate);
 
-        DiaryBo diarySaved = diaryPort.findById(diaryToUpdate.getId())
-                .orElseThrow(() -> new NotFoundException("diary-not-found", "diary.invalid.id"));
+        Integer diaryToUpdateId = diaryToUpdate.getId();
 
-        this.validateOverlapWithOccupation(diaryToUpdate, diarySaved);
-
-        diaryToUpdate.setId(diarySaved.getId());
         diaryToUpdate.updateMyDiaryOpeningHours();
 
-        List<UpdateDiaryAppointmentBo> appointments = diaryPort.getUpdateDiaryAppointments(diaryToUpdate.getId());
+        List<UpdateDiaryAppointmentBo> appointments = diaryPort.getUpdateDiaryAppointments(diaryToUpdateId);
 
         diaryService.persistDiary(diaryToUpdate);
 
@@ -67,15 +62,21 @@ public class UpdateDiaryAndAppointments {
         diaryService.setDiaryLabels(diaryToUpdate);
         deleteDiaryLabels(diaryToUpdate);
 
-        Integer result = diaryToUpdate.getId();
-
         log.trace("Diary updated -> {}", diaryToUpdate);
-        log.debug("Output -> result {}", result);
-        return result;
+        log.debug("Output -> diared updated id {}", diaryToUpdateId);
+        return diaryToUpdateId;
     }
 
-    private void validateOverlapWithOccupation(UpdateDiaryBo diaryToUpdate, DiaryBo diarySaved) {
-        boolean doctorsOfficeHasChanged = !diaryToUpdate.equalsDoctorsOffice(diarySaved);
+    private void assertContextValid(UpdateDiaryBo diaryToUpdate) {
+        diaryToUpdate.validateSelf();
+        this.validateOverlapWithOccupation(diaryToUpdate);
+    }
+
+    private void validateOverlapWithOccupation(UpdateDiaryBo diaryToUpdate) {
+        Integer doctorsOfficeSaved = diaryPort.findDoctorsOfficeByDiaryId(diaryToUpdate.getId())
+                .orElseThrow(() -> new DiaryException(DiaryEnumException.DOCTORS_OFFICE_NOT_FOUND, "No se ha encontrado un consultorio asociado a la agenda"));
+
+        boolean doctorsOfficeHasChanged = !doctorsOfficeSaved.equals(diaryToUpdate.getDoctorsOfficeId());
         if (doctorsOfficeHasChanged && foundOverlapWithOccupation(diaryToUpdate))
             throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, "Superposición de rango horario en consultorio");
     }

@@ -34,6 +34,11 @@ public class DiaryPortImpl implements DiaryPort {
 				.map(this::mapToBo);
 	}
 
+	@Override
+	public Optional<Integer> findDoctorsOfficeByDiaryId(Integer diaryId) {
+		return diaryRepository.findDoctorsOfficeByDiaryId(diaryId);
+	}
+
 	private DiaryBo mapToBo(Diary diaryEntity) {
 		DiaryBo diaryBo = new DiaryBo();
 		diaryBo.setId(diaryEntity.getId());

@@ -408,4 +408,11 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 	List<UpdateDiaryAppointmentBo> fetchUpdateDiaryAppointments(@Param("diaryId") Integer diaryId,
 																@Param("appointmentStateId") Short appointmentStateId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT d.doctorsOfficeId " +
+			"FROM Diary AS d " +
+			"WHERE d.deleteable.deleted = FALSE " +
+			"AND d.id = :diaryId")
+	Optional<Integer> findDoctorsOfficeByDiaryId(@Param("diaryId") Integer diaryId);
+
 }

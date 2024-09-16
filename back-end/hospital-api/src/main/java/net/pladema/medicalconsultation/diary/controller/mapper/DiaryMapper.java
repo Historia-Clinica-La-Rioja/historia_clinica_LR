@@ -37,7 +37,7 @@ public interface DiaryMapper {
 	@Mapping(target = "diaryLabelBo", source = "diaryLabelDto")
     DiaryBo toDiaryBo(DiaryADto diaryADto);
 
-    @Named("toDiaryBo")
+    @Named("toUpdateDiaryBo")
     @Mapping(target = "updateDiaryOpeningHours", source = "diaryOpeningHours")
     @Mapping(target = "diaryOpeningHours", ignore = true)
     @Mapping(target = "diaryLabelBo", source = "diaryLabelDto")

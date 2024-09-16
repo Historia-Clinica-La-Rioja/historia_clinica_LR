@@ -42,9 +42,9 @@ public class UpdateDiaryBo extends DiaryBo {
     public boolean tryAdjustAppointmentToDiaryOpeningHours(UpdateDiaryAppointmentBo a) {
 
         if (this.isOutOfDiaryBounds(a)) {
-            // out of diary
             return false;
         }
+
         var diaryOpeningHoursBoWhereFits = updateDiaryOpeningHours.stream()
                 .filter(updateDiaryOpeningHours -> updateDiaryOpeningHours.tryToAdjustAppointment(a))
                 .findFirst();

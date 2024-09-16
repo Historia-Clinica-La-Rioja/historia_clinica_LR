@@ -12,5 +12,7 @@ public interface DiaryPort {
 
 	Optional<DiaryBo> findById(Integer diaryId);
 
+	Optional<Integer> findDoctorsOfficeByDiaryId(Integer diaryId);
+
 	void deleteDiaryLabels(Integer diaryId, List<Integer> ids);
 }
