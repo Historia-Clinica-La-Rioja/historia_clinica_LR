@@ -12,9 +12,12 @@
                 <span>{{'image-network.worklist.details_study.VIEW_STUDY_LOCAL' | translate | uppercase }}</span>
             </button>
             <div class="report-status">
-                <span *ngIf="!reportStatus; else pendingReport" class="report-label">{{'image-network.worklist.PENDING_REPORT' |
-                    translate}}</span>
-                <ng-template #pendingReport>
+                <ng-container *ngIf="!this.studyInfo.infoOrderInstances.viewReport; else viewReport">
+                    <span class="report-adjust {{reportStatusDescription.color}}">
+                        {{reportStatusDescription.description}}{{reportStatusDescription.id == reportStates.DERIVED ? this.studyInfo.infoOrderInstances.deriveTo : null}}
+                    </span>
+                </ng-container>
+                <ng-template #viewReport>
                     <app-view-report
                         [buttonText]="'image-network.worklist.VIEW_REPORT'"
                         [appointmentId]="appointmentId"
