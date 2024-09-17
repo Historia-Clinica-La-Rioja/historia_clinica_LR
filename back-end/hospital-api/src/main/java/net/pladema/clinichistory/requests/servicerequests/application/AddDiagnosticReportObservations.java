@@ -172,8 +172,10 @@ public class AddDiagnosticReportObservations {
 		for (var value : addObservations.getValues()) {
 			var procedureParameter = procedureParametersById.get(value.getProcedureParameterId());
 			if (
-				(procedureParameter.getIsSnomed() && !value.isSnomed()) ||
-				(procedureParameter.getIsNumeric() && !value.isNumeric())
+				value.hasValue() && (
+					(procedureParameter.getIsSnomed() && !value.isSnomed()) ||
+					(procedureParameter.getIsNumeric() && !value.isNumeric())
+				)
 			)
 			{
 				throw new ParameterTypeAndValueMismatchException();

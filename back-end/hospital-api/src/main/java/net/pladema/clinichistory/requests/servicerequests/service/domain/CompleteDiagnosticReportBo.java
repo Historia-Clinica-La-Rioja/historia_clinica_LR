@@ -18,4 +18,10 @@ public class CompleteDiagnosticReportBo {
 
 	@Nullable
 	private ReferenceRequestClosureBo referenceClosure;
+
+	public static CompleteDiagnosticReportBo onlyObservations(String observation) {
+		var ret = new CompleteDiagnosticReportBo();
+		ret.setObservations(observation);
+		return ret;
+	}
 }

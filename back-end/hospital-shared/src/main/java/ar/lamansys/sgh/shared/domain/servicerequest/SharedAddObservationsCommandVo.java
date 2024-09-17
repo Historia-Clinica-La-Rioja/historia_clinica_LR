@@ -40,6 +40,10 @@ public class SharedAddObservationsCommandVo {
 				this.value = snomedToValue.apply(snomedSctid, snomedPt);
 			}
 		}
+
+		public boolean hasValue() {
+			return value != null && !value.isEmpty();
+		}
 	}
 
 	@Getter

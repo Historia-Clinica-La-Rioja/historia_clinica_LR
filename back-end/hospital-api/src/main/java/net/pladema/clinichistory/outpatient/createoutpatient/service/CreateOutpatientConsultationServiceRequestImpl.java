@@ -1,11 +1,16 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
+
+import net.pladema.clinichistory.requests.servicerequests.service.UpdateDiagnosticReportFileService;
+
+import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnosticReportCompletedFileService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +34,8 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Service
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -40,6 +47,8 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final AddDiagnosticReportObservations addDiagnosticReportObservations;
 	private final SharedHealthConditionPort sharedHealthConditionPort;
+	private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
+	private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
 
 	/**
 	 * Create an outpatient consultation service request
@@ -96,11 +105,11 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 	public Integer createOutpatientServiceRequest(Integer doctorId, String categoryId, Integer institutionId, String healthConditionSctid,
 												  String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
 												  String snomedPt, Boolean createAsFinal, Optional<SharedAddObservationsCommandVo> addObservationsCommand,
-												  Integer patientId, Short patientGenderId, Short patientAge)
+												  Integer patientId, Short patientGenderId, Short patientAge, List<MultipartFile> files, String textObservation)
 	{
 		return execute(doctorId, categoryId, institutionId, healthConditionSctid, healthConditionPt, medicalCoverageId,
 		outpatientConsultationId, snomedSctid, snomedPt, createAsFinal, addObservationsCommand, patientId, patientGenderId,
-		patientAge, SourceType.OUTPATIENT);
+		patientAge, SourceType.OUTPATIENT, textObservation, files);
 	}
 
 	@Override
@@ -112,7 +121,7 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 	{
 		return execute(doctorId, categoryId, institutionId, healthConditionSctid, healthConditionPt, medicalCoverageId,
 				outpatientConsultationId, snomedSctid, snomedPt, createAsFinal, addObservationsCommand, patientId, patientGenderId,
-				patientAge, SourceType.ODONTOLOGY);
+				patientAge, SourceType.ODONTOLOGY, null, Collections.emptyList());
 	}
 
 	@Override
@@ -124,13 +133,14 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 	{
 		return execute(doctorId, categoryId, institutionId, healthConditionSctid, healthConditionPt, medicalCoverageId,
 				outpatientConsultationId, snomedSctid, snomedPt, createAsFinal, addObservationsCommand, patientId, patientGenderId,
-				patientAge, SourceType.NURSING);
+				patientAge, SourceType.NURSING, null, Collections.emptyList());
 	}
 
 	private Integer execute(Integer doctorId, String categoryId, Integer institutionId, String healthConditionSctid,
 		String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
 		String snomedPt, Boolean createAsFinal, Optional<SharedAddObservationsCommandVo> addObservationsCommand,
-		Integer patientId, Short patientGenderId, Short patientAge, Short sourceTypeId)
+		Integer patientId, Short patientGenderId, Short patientAge, Short sourceTypeId, String textObservations,
+		List<MultipartFile> files)
 	{
 		log.debug("execute -> institutionId {}, doctorId {}, categoryId {}, " +
 						"medicalCoverageId {}, outpatientConsultationId {}, snomedSctid {}, snomedPt {}, " +
@@ -156,7 +166,7 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 
 		//Advance the diagnostic report's status if necessary
 		if (createAsFinal) {
-			transitionToFinal(newDiagnosticReportId, patientId, institutionId);
+			transitionToFinal(newDiagnosticReportId, patientId, institutionId, textObservations, files);
 		}
 
 		log.debug("Output -> {}", newServiceRequestId);
@@ -181,11 +191,24 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 
 	/**
 	 * Advance the new diagnostic report to status=FINAL
+	 *
+	 * Same operation as ServiceRequestController#uploadFile followed by ServiceRequestController.complete.
+	 * This two methods are called by the frontend:
+	 *  1 First to upload the files of an already created diagnostic report. This operation returns the ids
+	 *  of the stored files.
+	 *  2 Then to mark the diagnostic report as final. This method also attaches the file ids of the
+	 *  previous step.
 	 */
-	private void transitionToFinal(Integer diagnosticReportId, Integer patientId, Integer institutionId) {
-		//There are no observations, reference or link for this diagnostic report
-		CompleteDiagnosticReportBo completeDiagnosticReportBo = new CompleteDiagnosticReportBo();
-		completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportBo, institutionId);
+	private void transitionToFinal(Integer diagnosticReportId, Integer patientId, Integer institutionId,
+		String textObservation, List<MultipartFile> files) {
+
+		var fileIds = uploadDiagnosticReportCompletedFileService.execute(files, diagnosticReportId, patientId);
+
+		CompleteDiagnosticReportBo completeDiagnosticReportBo = CompleteDiagnosticReportBo
+			.onlyObservations(textObservation);
+		Integer result = completeDiagnosticReportService.run(patientId, diagnosticReportId,
+			completeDiagnosticReportBo, institutionId);
+		updateDiagnosticReportFileService.run(result, fileIds);
 	}
 
 	private Integer getCreatedDiagnosticReportId(Integer serviceRequestId, Integer outpatientConsultationId) throws CreateOutpatientConsultationServiceRequestException {
@@ -251,11 +274,6 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 	 * The frontend sends the sctid, pt pair to indicate the health condition. It can't send the health condition
 	 * id directly because the condition could be a new one assigned in the consultation being created.
 	 *
-	 * @param institutionId
-	 * @param patientId
-	 * @param healthConditionSctid
-	 * @param healthConditionPt
-	 * @return
 	 */
 	private Integer findHealthCondition(Integer institutionId, Integer patientId, String healthConditionSctid, String healthConditionPt) throws CreateOutpatientConsultationServiceRequestException {
 		return sharedHealthConditionPort
@@ -284,4 +302,6 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 		return CreateOutpatientConsultationServiceRequestException
 			.diagnosticReportObservationException(e.getCode(), e.getDomainObjectName(), e.getDomainObjectId(), outpatientConsultationId);
 	}
+
+
 }

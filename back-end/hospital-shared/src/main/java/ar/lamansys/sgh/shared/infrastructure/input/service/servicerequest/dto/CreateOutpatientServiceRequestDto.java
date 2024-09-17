@@ -2,13 +2,15 @@ package ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.AddDiagnosticReportObservationsCommandDto;
 
 import javax.annotation.Nullable;
+
+import java.util.List;
 
 @Getter
 @Setter
 public class CreateOutpatientServiceRequestDto {
+
 	//Same values as EDiagnosticReportStatus
 	public enum CreationStatus {
 		REGISTERED,
@@ -27,6 +29,12 @@ public class CreateOutpatientServiceRequestDto {
 	private String healthConditionPt;
 	private String categoryId;
 	private CreationStatus creationStatus;
+	private String snomedSctid;
+	private String snomedPt;
 	@Nullable
 	private AddDiagnosticReportObservationsCommandDto observations;
+	@Nullable
+	private String observation;
+	@Nullable
+	private List<String> fileNames;
 }

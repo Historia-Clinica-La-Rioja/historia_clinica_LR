@@ -1158,20 +1158,24 @@ export interface CreateOutpatientDto {
     reasons: OutpatientReasonDto[];
     references: ReferenceDto[];
     riskFactors?: OutpatientRiskFactorDto;
+    serviceRequests?: CreateOutpatientServiceRequestDto[];
 }
 
 export interface CreateOutpatientProcedureDto {
     performedDate?: string;
-    serviceRequest?: CreateOutpatientServiceRequestDto;
     snomed: SnomedDto;
 }
 
 export interface CreateOutpatientServiceRequestDto {
     categoryId: string;
     creationStatus: CreationStatus;
+    fileNames?: string[];
     healthConditionPt: string;
     healthConditionSctid: string;
+    observation?: string;
     observations?: AddDiagnosticReportObservationsCommandDto;
+    snomedPt: string;
+    snomedSctid: string;
 }
 
 export interface CreationableDto extends Serializable {
@@ -5942,6 +5946,7 @@ export const enum AppFeature {
     HABILITAR_FINANCIACION_DE_MEDICAMENTOS = "HABILITAR_FINANCIACION_DE_MEDICAMENTOS",
     HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS = "HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS",
     HABILITAR_REPORTES_NACION_CUBE = "HABILITAR_REPORTES_NACION_CUBE",
+    HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO = "HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO",
 }
 
 export const enum CreationStatus {

@@ -243,7 +243,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS,
 
 	@Label("Indica si se encuentran habilitados los reportes que utilizan Cube solicitados por Nación")
-	HABILITAR_REPORTES_NACION_CUBE
+	HABILITAR_REPORTES_NACION_CUBE,
+
+	@Label("Indica si se debe mostrar la sección de carga de estudios en el formulario de consulta ambulatoria")
+	HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO
 
 	;
 

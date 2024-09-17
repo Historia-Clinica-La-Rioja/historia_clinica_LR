@@ -92,6 +92,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS, false);
 		map.put(AppFeature.HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS, false);
 		map.put(AppFeature.HABILITAR_REPORTES_NACION_CUBE, false);
+		map.put(AppFeature.HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO, false);
 	}
 
 	@Override
