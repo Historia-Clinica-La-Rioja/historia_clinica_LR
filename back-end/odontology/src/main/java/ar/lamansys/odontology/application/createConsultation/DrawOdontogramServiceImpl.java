@@ -31,11 +31,18 @@ public class DrawOdontogramServiceImpl implements DrawOdontogramService {
         List<ToothDrawingsBo> previousDrawings = odontogramDrawingStorage.getDrawings(patientId);
         List<ToothDrawingsBo> updatedDrawings = computeDrawings(previousDrawings, actions);
         odontogramDrawingStorage.save(patientId, updatedDrawings);
+		updateConsultationId(consultationId, toToothDrawingsBoList(actions, new HashMap<>()), patientId);
 		saveHistoricOdontogramDrawing(actions, patientId, consultationId);
         LOG.debug("Output size -> {}", updatedDrawings.size());
         LOG.trace("Output -> {}", updatedDrawings);
         return updatedDrawings;
     }
+
+	private void updateConsultationId(Integer consultationId, List<ToothDrawingsBo> actions, Integer patientId) {
+		actions.forEach(action -> {
+			odontogramDrawingStorage.updateConsultationId(consultationId, action.getToothId(), patientId);
+		});
+	}
 
 	private void saveHistoricOdontogramDrawing(List<ConsultationDentalActionBo> actions, Integer patientId, Integer consultationId) {
 		var result = toToothDrawingsBoList(actions, new HashMap<>());

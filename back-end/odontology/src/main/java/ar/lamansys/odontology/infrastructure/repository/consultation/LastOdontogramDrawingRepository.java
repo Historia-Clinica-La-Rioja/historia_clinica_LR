@@ -29,4 +29,20 @@ public interface LastOdontogramDrawingRepository extends JpaRepository<LastOdont
 			"WHERE lod.patientId = :patientId ")
 	void deleteByPatientId(@Param("patientId") Integer patientId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT hod.toothId " +
+			" FROM HistoricOdontogramDrawing hod" +
+			" JOIN OdontologyConsultation oc ON oc.id = hod.odontologyConsultationId" +
+			" JOIN Document d ON oc.id = d.sourceId" +
+			" JOIN DocumentHealthCondition dhc ON d.id = dhc.pk.documentId" +
+			" WHERE dhc.pk.healthConditionId = :healthConditionId")
+	List<String> getToothIdByHealthConditionId(@Param("healthConditionId") Integer healthConditionId);
+
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM LastOdontogramDrawing lod " +
+			"WHERE lod.patientId = :patientId " +
+			"AND lod.toothId = :toothId ")
+	void deleteByPatientIdAndToothId(@Param("patientId") Integer patientId, @Param("toothId") String toothId);
+
 }

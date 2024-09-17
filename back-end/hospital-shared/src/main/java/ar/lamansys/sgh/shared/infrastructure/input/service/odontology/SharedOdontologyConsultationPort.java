@@ -11,4 +11,5 @@ public interface SharedOdontologyConsultationPort {
 	void deleteToothIndicesFromPatient(Integer patientId);
 	void modifyLastOdontogramDrawing(List<OdontologyDiagnosticProcedureInfoDto> odp, Integer newPatientId);
 	Optional<Integer> getPatientMedicalCoverageId(Integer id);
+	void updateOdontogramDrawingFromHistoric(Integer patientId, Integer healthConditionId);
 }

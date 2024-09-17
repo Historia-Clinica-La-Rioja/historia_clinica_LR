@@ -2,6 +2,7 @@ package ar.lamansys.odontology.domain.consultation.odontogramDrawings;
 
 import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.infrastructure.repository.consultation.HistoricOdontogramDrawing;
 import ar.lamansys.odontology.infrastructure.repository.consultation.LastOdontogramDrawing;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +48,22 @@ public class ToothDrawingsBo {
         if (lastOdontogramDrawing.getRightSurface() != null)
             this.rightSurfaceDrawing = new DrawingBo(lastOdontogramDrawing.getRightSurface());
     }
+
+	public ToothDrawingsBo(HistoricOdontogramDrawing historicOdontogramDrawing) {
+		this.toothId = historicOdontogramDrawing.getToothId();
+		if (historicOdontogramDrawing.getWholeTooth() != null)
+			this.wholeDrawing = new DrawingBo(historicOdontogramDrawing.getWholeTooth());
+		if (historicOdontogramDrawing.getInternalSurface() != null)
+			this.internalSurfaceDrawing = new DrawingBo(historicOdontogramDrawing.getInternalSurface());
+		if (historicOdontogramDrawing.getExternalSurface() != null)
+			this.externalSurfaceDrawing = new DrawingBo(historicOdontogramDrawing.getExternalSurface());
+		if (historicOdontogramDrawing.getCentralSurface() != null)
+			this.centralSurfaceDrawing = new DrawingBo(historicOdontogramDrawing.getCentralSurface());
+		if (historicOdontogramDrawing.getLeftSurface() != null)
+			this.leftSurfaceDrawing = new DrawingBo(historicOdontogramDrawing.getLeftSurface());
+		if (historicOdontogramDrawing.getRightSurface() != null)
+			this.rightSurfaceDrawing = new DrawingBo(historicOdontogramDrawing.getRightSurface());
+	}
 
     private void eraseAllDrawings() {
         this.wholeDrawing = null;

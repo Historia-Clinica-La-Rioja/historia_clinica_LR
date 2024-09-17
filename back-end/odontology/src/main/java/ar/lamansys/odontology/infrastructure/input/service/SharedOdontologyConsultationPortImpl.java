@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.odontology.application.odontogram.UpdateLastOdontogramDrawingFromHistoric;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.odontology.application.modifyOdontogramAndIndices.ModifyOdontogramAndIndices;
@@ -23,6 +25,7 @@ public class SharedOdontologyConsultationPortImpl implements SharedOdontologyCon
 	private final OdontogramDrawingStorage odontogramDrawingStorage;
 	private final ToothIndicesStorage toothIndicesStorage;
 	private final ModifyOdontogramAndIndices modifyOdontogramAndIndices;
+	private final UpdateLastOdontogramDrawingFromHistoric updateLastOdontogramDrawingFromHistoric;
 
 	@Override
 	public List<Integer> getOdontologyConsultationIdsFromPatients(List<Integer> patients) {
@@ -60,6 +63,11 @@ public class SharedOdontologyConsultationPortImpl implements SharedOdontologyCon
 	@Override
 	public Optional<Integer> getPatientMedicalCoverageId(Integer id){
 		return odontologyConsultationStorage.getPatientMedicalCoverageId(id);
+	}
+
+	@Override
+	public void updateOdontogramDrawingFromHistoric(Integer patientId, Integer healthConditionId) {
+		updateLastOdontogramDrawingFromHistoric.run(patientId, healthConditionId);
 	}
 
 }
