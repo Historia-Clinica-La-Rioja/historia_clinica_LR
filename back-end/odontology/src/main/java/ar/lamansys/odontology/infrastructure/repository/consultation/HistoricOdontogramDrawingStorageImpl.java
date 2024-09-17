@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
-import ar.lamansys.odontology.domain.consultation.HistoricOdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.HistoricOdontogramDrawingStorage;
 
 import lombok.AllArgsConstructor;
 
@@ -27,7 +27,7 @@ public class HistoricOdontogramDrawingStorageImpl implements HistoricOdontogramD
 	@Override
 	public Optional<HistoricOdontogramDrawing> getLastActiveHistoricOdontogramDrawingByPatientAndTooth(Integer patientId, String toothId) {
 		log.debug("Input parameters -> patientId {}, toothId {}", patientId, toothId);
-		Page<HistoricOdontogramDrawing> historicOdontogramDrawing = historicOdontogramDrawingRepository.getLastActiveHistoricOdontogramDrawingByPatientAndTooth(patientId, toothId, PageRequest.of(0, 2));
+		Page<HistoricOdontogramDrawing> historicOdontogramDrawing = historicOdontogramDrawingRepository.getLastActiveHistoricOdontogramDrawingByPatientAndTooth(patientId, toothId, PageRequest.of(0, 1));
 		Optional<HistoricOdontogramDrawing> result = historicOdontogramDrawing.getContent().stream().findFirst();
 		log.debug("Output -> {}", result);
 		return result;

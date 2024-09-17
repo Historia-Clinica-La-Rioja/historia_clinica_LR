@@ -1,14 +1,13 @@
 package ar.lamansys.odontology.application.createConsultation;
 
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
-import ar.lamansys.odontology.domain.consultation.HistoricOdontogramDrawingStorage;
-import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.HistoricOdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import ar.lamansys.odontology.infrastructure.repository.consultation.HistoricOdontogramDrawing;
 import lombok.AllArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,25 +15,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @AllArgsConstructor
 @Service
-public class DrawOdontogramServiceImpl implements DrawOdontogramService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DrawOdontogramServiceImpl.class);
+public class DrawOdontogramServiceImpl {
 
     private final OdontogramDrawingStorage odontogramDrawingStorage;
 
 	private final HistoricOdontogramDrawingStorage historicOdontogramDrawingStorage;
 
     public List<ToothDrawingsBo> run(Integer patientId, List<ConsultationDentalActionBo> actions, Integer consultationId) {
-        LOG.debug("Input parameters -> patientId {}, actions {}", patientId, actions);
+        log.debug("Input parameters -> patientId {}, actions {}", patientId, actions);
         List<ToothDrawingsBo> previousDrawings = odontogramDrawingStorage.getDrawings(patientId);
         List<ToothDrawingsBo> updatedDrawings = computeDrawings(previousDrawings, actions);
         odontogramDrawingStorage.save(patientId, updatedDrawings);
 		updateConsultationId(consultationId, toToothDrawingsBoList(actions, new HashMap<>()), patientId);
 		saveHistoricOdontogramDrawing(actions, patientId, consultationId);
-        LOG.debug("Output size -> {}", updatedDrawings.size());
-        LOG.trace("Output -> {}", updatedDrawings);
+        log.debug("Output size -> {}", updatedDrawings.size());
+		log.trace("Output -> {}", updatedDrawings);
         return updatedDrawings;
     }
 
@@ -65,12 +63,12 @@ public class DrawOdontogramServiceImpl implements DrawOdontogramService {
 	}
 
     private List<ToothDrawingsBo> computeDrawings(List<ToothDrawingsBo> previousDrawings, List<ConsultationDentalActionBo> actions) {
-        LOG.debug("Input parameters -> previousDrawings {}, actions {}", previousDrawings, actions);
+		log.debug("Input parameters -> previousDrawings {}, actions {}", previousDrawings, actions);
         if (actions == null) return new ArrayList<>();
         Map<String, ToothDrawingsBo> teethDrawings = toToothDrawingsMap(previousDrawings);
 		List<ToothDrawingsBo> result = toToothDrawingsBoList(actions, teethDrawings);
-        LOG.debug("Output size -> {}", result.size());
-        LOG.trace("Output -> {}", result);
+		log.debug("Output size -> {}", result.size());
+		log.trace("Output -> {}", result);
         return result;
     }
 

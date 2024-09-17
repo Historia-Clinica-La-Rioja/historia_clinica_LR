@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemExceptionEnum;
+import net.pladema.clinichistory.outpatient.application.port.output.GetOdontologyDocumentIdPort;
 import net.pladema.clinichistory.outpatient.application.port.output.UpdateLastOdontogramDrawingFromHistoricPort;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
@@ -55,6 +56,7 @@ public class MarkAsErrorAProblem {
     private final OutpatientConsultationRepository outpatientConsultationRepository;
     private final RebuildFile rebuildFile;
 	private final UpdateLastOdontogramDrawingFromHistoricPort updateLastOdontogramDrawingFromHistoricPort;
+	private final GetOdontologyDocumentIdPort getOdontologyDocumentIdPort;
 
     @Transactional
     public boolean run(Integer institutionId, Integer patientId, ProblemErrorBo problem) {
@@ -75,6 +77,7 @@ public class MarkAsErrorAProblem {
 
         this.regenerateOutpatientDocument(problem.getId());
 		updateLastOdontogramDrawingFromHistoricPort.run(patientId, problem.getId());
+		regenerateOdontologyDocument(problem.getId());
         log.debug("Output -> {}", true);
         return true;
     }
@@ -136,4 +139,8 @@ public class MarkAsErrorAProblem {
                 .orElseThrow(() -> new NotFoundException("OutpatientConsultationDocument-not-found", "OutpatientConsultationDocument not found"));
         rebuildFile.run(documentId);
     }
+
+	private void regenerateOdontologyDocument(Integer healthConditionId) {
+		getOdontologyDocumentIdPort.run(healthConditionId).ifPresent(rebuildFile::run);
+	}
 }

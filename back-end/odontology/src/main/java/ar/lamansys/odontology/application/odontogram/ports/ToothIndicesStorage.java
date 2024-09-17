@@ -1,5 +1,7 @@
-package ar.lamansys.odontology.domain.consultation;
+package ar.lamansys.odontology.application.odontogram.ports;
 
+import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
+import ar.lamansys.odontology.domain.consultation.CpoCeoIndicesBo;
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ToothIndicesBo;
 
 import java.util.List;

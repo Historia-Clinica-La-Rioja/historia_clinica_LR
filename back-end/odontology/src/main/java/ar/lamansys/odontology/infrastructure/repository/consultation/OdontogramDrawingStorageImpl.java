@@ -1,7 +1,8 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
-import ar.lamansys.odontology.application.odontogram.GetLastActiveHistoricOdontogramDrawing;
-import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.GetLastActiveHistoricOdontogramDrawingImpl;
+import ar.lamansys.odontology.application.odontogram.ports.OdontogramDrawingStorage;
+import ar.lamansys.odontology.domain.consultation.odontogramDrawings.DrawingBo;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import lombok.AllArgsConstructor;
 
@@ -24,7 +25,7 @@ public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
 
     private final LastOdontogramDrawingRepository lastOdontogramDrawingRepository;
 
-	private final GetLastActiveHistoricOdontogramDrawing getLastActiveHistoricOdontogramDrawing;
+	private final GetLastActiveHistoricOdontogramDrawingImpl getLastActiveHistoricOdontogramDrawing;
 
     @Override
     public void save(Integer patientId, List<ToothDrawingsBo> teethDrawings) {
@@ -81,12 +82,24 @@ public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
 		toothIds.forEach(
 				toothId -> {
 					getLastActiveHistoricOdontogramDrawing.run(patientId, toothId).ifPresentOrElse(historicOdontogramDrawing -> {
-						save(patientId, List.of(new ToothDrawingsBo(historicOdontogramDrawing)));
+						save(patientId, List.of(mapToToothDrawingsBo(historicOdontogramDrawing)));
 						updateConsultationId(historicOdontogramDrawing.getOdontologyConsultationId(), historicOdontogramDrawing.getToothId(), patientId);
 					}, () -> {
 						lastOdontogramDrawingRepository.deleteByPatientIdAndToothId(patientId, toothId);
 					});
 				}
 		);
+	}
+
+	private ToothDrawingsBo mapToToothDrawingsBo(HistoricOdontogramDrawing historicOdontogramDrawing) {
+		var toothDrawingsBo = new ToothDrawingsBo();
+		toothDrawingsBo.setToothId(historicOdontogramDrawing.getToothId());
+		toothDrawingsBo.setWholeDrawing(new DrawingBo(historicOdontogramDrawing.getWholeTooth()));
+		toothDrawingsBo.setInternalSurfaceDrawing(new DrawingBo(historicOdontogramDrawing.getInternalSurface()));
+		toothDrawingsBo.setExternalSurfaceDrawing(new DrawingBo(historicOdontogramDrawing.getExternalSurface()));
+		toothDrawingsBo.setCentralSurfaceDrawing(new DrawingBo(historicOdontogramDrawing.getCentralSurface()));
+		toothDrawingsBo.setLeftSurfaceDrawing(new DrawingBo(historicOdontogramDrawing.getLeftSurface()));
+		toothDrawingsBo.setRightSurfaceDrawing(new DrawingBo(historicOdontogramDrawing.getRightSurface()));
+		return toothDrawingsBo;
 	}
 }

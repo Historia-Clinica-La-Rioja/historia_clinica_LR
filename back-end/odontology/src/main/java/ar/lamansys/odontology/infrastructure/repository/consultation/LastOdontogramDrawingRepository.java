@@ -1,5 +1,7 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,7 +37,8 @@ public interface LastOdontogramDrawingRepository extends JpaRepository<LastOdont
 			" JOIN OdontologyConsultation oc ON oc.id = hod.odontologyConsultationId" +
 			" JOIN Document d ON oc.id = d.sourceId" +
 			" JOIN DocumentHealthCondition dhc ON d.id = dhc.pk.documentId" +
-			" WHERE dhc.pk.healthConditionId = :healthConditionId")
+			" WHERE d.typeId = '" + DocumentType.ODONTOLOGY + "'" +
+			" AND dhc.pk.healthConditionId = :healthConditionId")
 	List<String> getToothIdByHealthConditionId(@Param("healthConditionId") Integer healthConditionId);
 
 	@Transactional

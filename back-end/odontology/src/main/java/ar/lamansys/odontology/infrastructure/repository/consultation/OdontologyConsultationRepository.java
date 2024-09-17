@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +37,12 @@ public interface OdontologyConsultationRepository extends SGXAuditableEntityJPAR
 			"WHERE oc.id = :id")
 	Optional<Integer> getPatientMedicalCoverageId(@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT d.id " +
+			"FROM DocumentHealthCondition dhc " +
+			"JOIN Document d ON (dhc.pk.documentId = d.id) " +
+			"JOIN OdontologyConsultation oc ON (d.sourceId = oc.id) " +
+			"WHERE dhc.pk.healthConditionId = :healthConditionId " +
+			"AND d.typeId = '" + DocumentType.ODONTOLOGY + "'")
+	Optional<Long> getOdontologyDocumentId(@Param("healthConditionId") Integer healthConditionId);
 }

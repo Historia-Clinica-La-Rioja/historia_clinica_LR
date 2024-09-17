@@ -1,4 +1,4 @@
-package ar.lamansys.odontology.domain.consultation;
+package ar.lamansys.odontology.application.odontogram.ports;
 
 import ar.lamansys.odontology.infrastructure.repository.consultation.HistoricOdontogramDrawing;
 

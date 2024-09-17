@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyAppointmentStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 
 @Service

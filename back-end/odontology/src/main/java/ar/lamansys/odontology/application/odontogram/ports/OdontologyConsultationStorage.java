@@ -1,5 +1,6 @@
-package ar.lamansys.odontology.domain.consultation;
+package ar.lamansys.odontology.application.odontogram.ports;
 
+import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.infrastructure.repository.consultation.OdontologyConsultation;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface OdontologyConsultationStorage {
 	OdontologyConsultation getLastByPatientId(Integer patientId);
 
 	Optional<Integer> getPatientMedicalCoverageId(Integer id);
+
+	Optional<Long> getOdontologyDocumentId(Integer healthCondition);
 
 }

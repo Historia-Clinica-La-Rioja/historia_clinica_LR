@@ -3,8 +3,7 @@ package ar.lamansys.odontology.application.createConsultation;
 import ar.lamansys.odontology.domain.ESurfacePositionBo;
 import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
-import ar.lamansys.odontology.domain.consultation.HistoricOdontogramDrawingStorage;
-import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.DrawingBo;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import org.junit.jupiter.api.Assertions;
@@ -21,13 +20,13 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class DrawOdontogramServiceImplTest {
 
-    private DrawOdontogramService drawOdontogramService;
+    private DrawOdontogramServiceImpl drawOdontogramService;
 
     @Mock
     private OdontogramDrawingStorage odontogramDrawingStorage;
 
 	@Mock
-	private ar.lamansys.odontology.domain.consultation.HistoricOdontogramDrawingStorage HistoricOdontogramDrawingStorage;
+	private ar.lamansys.odontology.application.odontogram.ports.HistoricOdontogramDrawingStorage HistoricOdontogramDrawingStorage;
 
     @BeforeEach
     void setUp() {
