@@ -1894,6 +1894,12 @@ export interface EmergencyCarePersonDto {
     photo?: PersonPhotoDto;
 }
 
+export interface EmergencyCareSectorHasAttentionPlaceDto {
+    hasBeds: boolean;
+    hasDoctorsOffices: boolean;
+    hasShockRooms: boolean;
+}
+
 export interface EmergencyCareShockRoomDetailDto extends EmergencyCareAttentionPlaceDetailDto {
     shockroom: ShockroomDto;
 }

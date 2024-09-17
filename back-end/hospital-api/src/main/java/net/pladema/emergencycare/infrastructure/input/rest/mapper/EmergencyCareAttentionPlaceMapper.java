@@ -10,6 +10,7 @@ import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareBedDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareDoctorsOfficeDetailBo;
+import net.pladema.emergencycare.domain.EmergencyCareSectorHasAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareShockRoomDetailBo;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDto;
@@ -19,6 +20,7 @@ import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareBedD
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoctorsOfficeDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoctorsOfficeDto;
 
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareSectorHasAttentionPlaceDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareShockRoomDetailDto;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
@@ -82,6 +84,9 @@ public interface EmergencyCareAttentionPlaceMapper {
 	@Mapping(target = "state", ignore = true)
 	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
 	EmergencyCareDoctorsOfficeDetailDto toEmergencyCareDoctorsOfficeDetailDto(EmergencyCareDoctorsOfficeDetailBo emergencyCareDoctorsOfficeDetailBo);
+
+	@Named("toEmergencyCareSectorHasAttentionPlaceDto")
+	EmergencyCareSectorHasAttentionPlaceDto toEmergencyCareSectorHasAttentionPlaceDto(EmergencyCareSectorHasAttentionPlaceBo emergencyCareSectorHasAttentionPlaceBo);
 
 	@AfterMapping
 	default void masterDataEmergencyCareAttentionMapping(@MappingTarget EmergencyCareAttentionPlaceDetailDto target,
