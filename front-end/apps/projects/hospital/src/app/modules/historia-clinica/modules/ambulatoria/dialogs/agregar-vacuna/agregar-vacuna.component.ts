@@ -139,9 +139,8 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 				this.vaccineService.vaccineInformation(this.newVaccineSnomedConcept.sctid).subscribe(
 					(vaccineInformation: VaccineInformationDto) => {
-
 						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
-						if (vaccineInformation.conditions.length > 0) {
+						if (vaccineInformation?.conditions.length > 0) {
 							this.conditions = vaccineInformation.conditions;
 							this.billableForm.get("condition").enable();
 							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
@@ -189,7 +188,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 					(vaccineInformation: VaccineInformationDto) => {
 
 						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
-						if (vaccineInformation.conditions.length > 0) {
+						if (vaccineInformation?.conditions.length > 0) {
 							this.conditions = vaccineInformation.conditions;
 							this.previousForm.get("condition").enable();
 							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
