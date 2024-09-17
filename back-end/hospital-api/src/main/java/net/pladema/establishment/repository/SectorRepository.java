@@ -96,4 +96,13 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 	List<EmergencyCareAttentionPlaceBo> findAllEmergencyCareSectorByInstitutionOrderByHierarchy(@Param("institutionId") Integer institutionId,
 																								@Param("sectorType") Short sectorType);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo(s.id, s.description, s.sectorOrganizationId, s.sectorId) " +
+			"FROM Sector s " +
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.sectorTypeId = :sectorType " +
+			"AND s.deleteable.deleted IS FALSE ")
+	List<EmergencyCareAttentionPlaceBo> findAllEmergencyCareSectorByInstitution(@Param("institutionId") Integer institutionId,
+																								@Param("sectorType") Short sectorType);
+
 }

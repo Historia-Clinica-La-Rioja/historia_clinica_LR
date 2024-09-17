@@ -7,4 +7,5 @@ import java.util.List;
 public interface EmergencyCareSectorStorage {
 
 	List<EmergencyCareAttentionPlaceBo>  getAllByInstitutionOrderByHierarchy(Integer institutionId);
+	List<EmergencyCareAttentionPlaceBo>  getAllByInstitution(Integer institutionId);
 }

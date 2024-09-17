@@ -24,4 +24,9 @@ public class EmergencyCareSectorStorageImpl implements EmergencyCareSectorStorag
 	public List<EmergencyCareAttentionPlaceBo> getAllByInstitutionOrderByHierarchy(Integer institutionId) {
 		return sectorRepository.findAllEmergencyCareSectorByInstitutionOrderByHierarchy(institutionId, ESectorType.GUARDIA.getId());
 	}
+
+	@Override
+	public List<EmergencyCareAttentionPlaceBo> getAllByInstitution(Integer institutionId) {
+		return sectorRepository.findAllEmergencyCareSectorByInstitution(institutionId, ESectorType.GUARDIA.getId());
+	}
 }
