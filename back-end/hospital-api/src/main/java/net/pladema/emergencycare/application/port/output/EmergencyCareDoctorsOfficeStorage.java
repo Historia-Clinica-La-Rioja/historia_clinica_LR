@@ -9,4 +9,5 @@ public interface EmergencyCareDoctorsOfficeStorage {
 
 	List<DoctorsOfficeBo> getAllBySectorId(Integer sectorId);
 	Optional<DoctorsOfficeBo> getById(Integer id);
+	List<DoctorsOfficeBo> getAllAvailableBySectorId(Integer sectorId);
 }

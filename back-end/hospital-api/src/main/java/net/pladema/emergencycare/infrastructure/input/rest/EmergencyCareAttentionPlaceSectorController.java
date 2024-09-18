@@ -3,11 +3,13 @@ package net.pladema.emergencycare.infrastructure.input.rest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.emergencycare.application.getallavailabledoctorsofficesbysector.GetAllAvailableDoctorsOfficesBySector;
 import net.pladema.emergencycare.application.getallavailableshockroomsbysector.GetAllAvailableShockroomsBySector;
 import net.pladema.emergencycare.application.getallemergencycaresectorbyinstitution.GetAllEmergencyCareSectorByInstitution;
 import net.pladema.emergencycare.application.sectorhasattentionplaces.SectorHasAttentionPlaces;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDto;
 
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoctorsOfficeDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareSectorHasAttentionPlaceDto;
 import net.pladema.emergencycare.infrastructure.input.rest.mapper.EmergencyCareAttentionPlaceMapper;
 
@@ -31,6 +33,7 @@ public class EmergencyCareAttentionPlaceSectorController {
 	private final EmergencyCareAttentionPlaceMapper emergencyCareAttentionPlaceMapper;
 	private final SectorHasAttentionPlaces sectorHasAttentionPlaces;
 	private final GetAllAvailableShockroomsBySector getAllAvailableShockroomsBySector;
+	private final GetAllAvailableDoctorsOfficesBySector getAllAvailableDoctorsOfficesBySector;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -57,9 +60,20 @@ public class EmergencyCareAttentionPlaceSectorController {
 	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public List<ShockroomDto> getAllAvailableShockRooms(@PathVariable(name = "institutionId") Integer institutionId,
 														@PathVariable(name = "sectorId") Integer sectorId){
-		log.debug("Input get if emergency care sector has attention places -> institutionId {}, sectorId {}", institutionId, sectorId);
+		log.debug("Input get all available shockrooms by sector -> institutionId {}, sectorId {}", institutionId, sectorId);
 		List<ShockroomDto> result = emergencyCareAttentionPlaceMapper.toShockroomDto(
 				getAllAvailableShockroomsBySector.run(sectorId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/{sectorId}/doctors-offices")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public List<EmergencyCareDoctorsOfficeDto> getAllAvailableDoctorsOffices(@PathVariable(name = "institutionId") Integer institutionId,
+																			 @PathVariable(name = "sectorId") Integer sectorId){
+		log.debug("Input get all available doctors offices by sector -> institutionId {}, sectorId {}", institutionId, sectorId);
+		List<EmergencyCareDoctorsOfficeDto> result = emergencyCareAttentionPlaceMapper.toDoctorsOfficeDtoList(
+				getAllAvailableDoctorsOfficesBySector.run(sectorId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
