@@ -5229,6 +5229,16 @@ export interface StudyOrderReportInfoDto {
     viewReport: boolean;
 }
 
+export interface StudyOrderWorkListDto {
+    deferredDate?: DateTimeDto;
+    requiresTransfer: boolean;
+    snomed: SnomedDto;
+    sourceTypeId: number;
+    status: number;
+    studyId: number;
+    studyTypeId: number;
+}
+
 export interface StudyTranscribedOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;

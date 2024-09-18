@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderWorkListDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -24,13 +28,18 @@ import java.util.List;
 public class ServiceRequestWorkListController {
 
 	private StudyWorkListService studyWorkListService;
+	private StudyMapper studyMapper;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
-	public ResponseEntity<List<Object>> getList(@PathVariable(name = "institutionId") Integer institutionId,
-												@RequestParam(value = "categories", required = true) List<String> categories){
+	public ResponseEntity<List<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
+															   @RequestParam(value = "categories", required = true) List<String> categories){
 		log.debug("Input parameters -> institutionId {}", institutionId);
-		List<Object> result = studyWorkListService.execute();
+		List<StudyOrderWorkListBo> resultService = studyWorkListService.execute();
+		List<StudyOrderWorkListDto> result = resultService
+				.stream()
+				.map(studyOrderWorkListBo -> studyMapper.toStudyOrderWorkListDto(studyOrderWorkListBo))
+				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}

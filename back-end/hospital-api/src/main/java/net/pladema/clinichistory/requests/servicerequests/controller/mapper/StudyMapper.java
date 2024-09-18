@@ -12,6 +12,8 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
 import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportSummaryDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderWorkListDto;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
 import org.mapstruct.IterableMapping;
@@ -63,5 +65,15 @@ public interface StudyMapper {
 	@Mapping(target = "studyTypeId", expression = "java(serviceRequestDto.getStudyType().getId())")
 	@Mapping(target = "requiresTransfer", expression = "java(serviceRequestDto.getRequiresTransfer())")
 	ExtendedServiceRequestBo toExtendedServiceRequestBo(BasicPatientDto patientDto, Integer doctorId, String categoryId, PrescriptionDto serviceRequestDto, List<PrescriptionItemDto> studies);
+
+	@Named("toStudyOrderWorkListDto")
+	@Mapping(target = "studyId", source = "studyId")
+	@Mapping(target = "snomed", source = "snomed")
+	@Mapping(target = "studyTypeId", source = "studyTypeId")
+	@Mapping(target = "requiresTransfer", source = "requiresTransfer")
+	@Mapping(target = "sourceTypeId", source = "sourceTypeId")
+	@Mapping(target = "deferredDate", source = "deferredDate")
+	@Mapping(target = "status", source = "status")
+	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }

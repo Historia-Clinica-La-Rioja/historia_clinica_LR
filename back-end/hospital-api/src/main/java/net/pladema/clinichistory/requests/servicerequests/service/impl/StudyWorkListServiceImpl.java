@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
 import org.springframework.stereotype.Service;
@@ -11,8 +12,9 @@ import java.util.List;
 public class StudyWorkListServiceImpl implements StudyWorkListService {
 
 	@Override
-	public List<Object> execute(){
+	public List<StudyOrderWorkListBo> execute(){
 		return new ArrayList<>();
 	};
+
 
 }
