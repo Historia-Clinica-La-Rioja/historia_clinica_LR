@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Stud
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,11 @@ public class ServiceRequestWorkListController {
 	public ResponseEntity<List<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
 															   @RequestParam(value = "categories", required = true) List<String> categories){
 		log.debug("Input parameters -> institutionId {}", institutionId);
+
+		if (!AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO.isActive()) {
+			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
+		}
+
 		List<StudyOrderWorkListBo> resultService = studyWorkListService.execute();
 		List<StudyOrderWorkListDto> result = resultService
 				.stream()
