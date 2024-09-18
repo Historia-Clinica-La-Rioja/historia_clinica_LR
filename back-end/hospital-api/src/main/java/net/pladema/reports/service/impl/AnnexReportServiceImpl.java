@@ -1,6 +1,7 @@
 package net.pladema.reports.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -327,13 +328,15 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     @Override
     public Map<String, Object> createConsultationContext(AnnexIIDto reportDataDto){
         Map<String, Object> ctx = this.createAppointmentContext(reportDataDto);
-        ctx.put("consultationDate",
-				reportDataDto.getConsultationDate() != null ? reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-						: null);
+        ctx.put("consultationDate", reportDataDto.getConsultationDate() != null ? formatConsultationDate(reportDataDto.getConsultationDate()) : null);
         return ctx;
     }
 
-    private Map<String, Object> loadBasicContext(AnnexIIDto reportDataDto) {
+	private String formatConsultationDate(LocalDateTime consultationDate) {
+		return consultationDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+	}
+
+	private Map<String, Object> loadBasicContext(AnnexIIDto reportDataDto) {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("establishment", reportDataDto.getEstablishment());
         ctx.put("completePatientName", reportDataDto.getCompletePatientName());

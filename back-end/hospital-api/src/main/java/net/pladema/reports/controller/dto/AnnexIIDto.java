@@ -40,7 +40,7 @@ public class AnnexIIDto {
 
     private String specialty;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String sisaCode;
 
