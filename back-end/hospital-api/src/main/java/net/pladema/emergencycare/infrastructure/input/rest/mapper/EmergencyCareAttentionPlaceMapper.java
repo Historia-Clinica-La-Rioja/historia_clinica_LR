@@ -28,6 +28,8 @@ import net.pladema.emergencycare.triage.infrastructure.input.rest.mapper.TriageM
 import net.pladema.establishment.domain.bed.EmergencyCareBedBo;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 
+import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;
+import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.ShockroomDto;
 import net.pladema.person.repository.domain.PersonAgeBo;
 
 import org.mapstruct.AfterMapping;
@@ -87,6 +89,9 @@ public interface EmergencyCareAttentionPlaceMapper {
 
 	@Named("toEmergencyCareSectorHasAttentionPlaceDto")
 	EmergencyCareSectorHasAttentionPlaceDto toEmergencyCareSectorHasAttentionPlaceDto(EmergencyCareSectorHasAttentionPlaceBo emergencyCareSectorHasAttentionPlaceBo);
+
+	@Named("toShockroomDto")
+	List<ShockroomDto> toShockroomDto(List<ShockRoomBo> shockRoomBo);
 
 	@AfterMapping
 	default void masterDataEmergencyCareAttentionMapping(@MappingTarget EmergencyCareAttentionPlaceDetailDto target,

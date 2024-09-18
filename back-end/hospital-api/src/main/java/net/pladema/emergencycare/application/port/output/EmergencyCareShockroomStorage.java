@@ -9,4 +9,5 @@ public interface EmergencyCareShockroomStorage {
 
 	List<ShockRoomBo> getAllBySectorId(Integer sectorId);
 	Optional<ShockRoomBo> getById(Integer id);
+	List<ShockRoomBo> getAllAvailableBySectorId(Integer sectorId);
 }
