@@ -96,6 +96,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MODULO_INTERNACION, true);
 		map.put(AppFeature.HABILITAR_SOLICITUD_REFERENCIA, true);
 		map.put(AppFeature.HABILITAR_MODULO_CAMAS, true);
+		map.put(AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO, false);
 	}
 
 	@Override

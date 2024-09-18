@@ -257,6 +257,8 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitado el módulo de camas")
 	HABILITAR_MODULO_CAMAS,
 
+	@Label("Indica si se encuentra habilitada la lista de estudios a realizar en guardia e internación")
+	HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO
 	;
 
 	public boolean isActive() {
