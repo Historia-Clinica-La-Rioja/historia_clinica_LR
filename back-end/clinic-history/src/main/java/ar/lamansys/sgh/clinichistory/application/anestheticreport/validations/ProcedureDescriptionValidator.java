@@ -19,6 +19,9 @@ public class ProcedureDescriptionValidator {
     private final String SURGERY = "cirugía";
 
     public void assertStartEndDatesTimes(ProcedureDescriptionBo procedureDescription) {
+        if (procedureDescription == null) {
+            return;
+        }
         this.assertStartBeforeEnd(ANESTHESIA, procedureDescription.getAnesthesiaStartDate(), procedureDescription.getAnesthesiaStartTime(), procedureDescription.getAnesthesiaEndDate(), procedureDescription.getAnesthesiaEndTime());
         this.assertStartBeforeEnd(SURGERY, procedureDescription.getSurgeryStartDate(), procedureDescription.getSurgeryStartTime(), procedureDescription.getSurgeryEndDate(), procedureDescription.getSurgeryEndTime());
     }
