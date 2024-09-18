@@ -41,7 +41,6 @@ public class ReferenceDto implements Serializable {
     private List<Integer> fileIds;
 
 	@Valid
-	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
 	@Nullable

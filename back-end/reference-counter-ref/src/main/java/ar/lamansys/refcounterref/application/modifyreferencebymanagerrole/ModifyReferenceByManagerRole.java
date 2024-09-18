@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +33,8 @@ public class ModifyReferenceByManagerRole {
 	public void run(Integer referenceId, Integer destinationInstitutionId, List<Integer> fileIds) {
 		log.debug("Input parameter -> referenceId {},  destinationInstitutionId {}, fileIds {} ", referenceId, destinationInstitutionId, fileIds);
 		assertValid(referenceId, destinationInstitutionId);
-		if (destinationInstitutionId != null)
+		var oldDestinationInstitutionId = referenceStorage.getDestinationInstitutionId(referenceId);
+		if (!Objects.equals(oldDestinationInstitutionId, destinationInstitutionId))
 			referenceStorage.updateDestinationInstitution(referenceId, destinationInstitutionId);
 		if (fileIds != null && !fileIds.isEmpty())
 			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, fileIds);

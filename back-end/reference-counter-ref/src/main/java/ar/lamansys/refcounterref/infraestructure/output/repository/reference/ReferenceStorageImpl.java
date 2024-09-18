@@ -317,4 +317,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		this.referenceRepository.save(reference);
 	}
 
+	@Override
+	public Integer getDestinationInstitutionId(Integer referenceId) {
+		log.debug("Input parameteres -> referenceId {}", referenceId);
+		return this.referenceRepository.getDestinationInstitutionId(referenceId);
+	}
+
 }

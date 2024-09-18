@@ -39,4 +39,5 @@ public interface ReferenceStorage {
 
 	void updateDestinationInstitution(Integer referenceId, Integer institutionId);
 
+	Integer getDestinationInstitutionId(Integer referenceId);
 }

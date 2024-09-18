@@ -512,4 +512,10 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND d.typeId = " + DocumentType.ORDER)
 	Optional<ReferenceStudyBo> getReferenceStudy(@Param("referenceId") Integer referenceId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT r.destinationInstitutionId " +
+			"FROM Reference r " +
+			"WHERE r.id = :referenceId")
+	Integer getDestinationInstitutionId(@Param("referenceId") Integer referenceId);
+
 }

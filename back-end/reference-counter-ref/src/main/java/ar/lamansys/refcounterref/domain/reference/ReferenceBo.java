@@ -37,7 +37,6 @@ public class ReferenceBo {
 
     private List<Integer> fileIds;
 
-	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
 	private String phoneNumber;
