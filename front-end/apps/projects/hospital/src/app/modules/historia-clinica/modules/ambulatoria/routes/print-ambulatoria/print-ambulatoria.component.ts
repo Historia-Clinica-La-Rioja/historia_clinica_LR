@@ -24,8 +24,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
-import { Observable, take } from 'rxjs';
+import { finalize, Observable, take } from 'rxjs';
 import { MatSort, MatSortable } from '@angular/material/sort';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -75,6 +76,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	dataSource: MatTableDataSource<CHDocumentSummaryDto>;
 
 	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
+
+	isDownloadingDocuments = false;
+	ButtonType = ButtonType.RAISED;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -299,8 +303,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		const selectedIds = selectedItems.map(item => item.id);
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe(()=>this.updateLastDownload());
-
+		this.isDownloadingDocuments = true;
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds)
+			.pipe(finalize(() => this.isDownloadingDocuments = false))
+			.subscribe(()=>this.updateLastDownload());
 	}
 
 }
