@@ -8,7 +8,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
 
@@ -253,20 +252,20 @@ public class ReportsController {
 
     @GetMapping("/institution/{institutionId}/patient/{patientId}/consultations-list")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-    public ResponseEntity<List<ConsultationsDto>> getConsultations(
+    public List<ConsultationsDto> getConsultations(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){
-		log.debug("Input parameter -> patientId {}", patientId);
+		log.debug("Input parameter -> institution {}, patientId {}", institutionId, patientId);
         List<ConsultationsBo> consultations = fetchConsultations.run(patientId);
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)){
-			consultations.stream().map(consultationsBo -> {
+			consultations.forEach(consultationsBo -> {
 			if (consultationsBo.getCompleteProfessionalNameSelfDetermination() != null)
 				consultationsBo.setCompleteProfessionalName(consultationsBo.getCompleteProfessionalNameSelfDetermination());
-			return consultationsBo;
-		}).collect(Collectors.toList());
+			});
 		}
         List<ConsultationsDto> result = reportsMapper.fromListConsultationsBo(consultations);
-        return ResponseEntity.ok(result);
+		log.debug(OUTPUT, result);
+        return result;
     }
 
 	@GetMapping("/institution/{institutionId}/diabetes")

@@ -1027,7 +1027,7 @@ export interface ConsultationResponseDto {
 
 export interface ConsultationsDto extends Serializable {
     completeProfessionalName: string;
-    consultationDate: Date;
+    consultationDate: DateTimeDto;
     documentId: number;
     id: number;
     specialty: string;

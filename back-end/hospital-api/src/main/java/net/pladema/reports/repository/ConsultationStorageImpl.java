@@ -1,29 +1,28 @@
 package net.pladema.reports.repository;
 
 import java.math.BigInteger;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
 
-@Service
+import org.springframework.stereotype.Repository;
+
+@RequiredArgsConstructor
+@Repository
 public class ConsultationStorageImpl implements ConsultationStorage {
 
     private final EntityManager entityManager;
-
-    public ConsultationStorageImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public List<ConsultationsVo> fetchAllByPatientId(Integer patientId) {
 		List<ConsultationsVo> result = new ArrayList<>();
 
         String outpatientSqlString = "WITH t AS ("
-                +"  SELECT oc.id, d.id as doc_id, oc.start_date AS start_date, oc.patient_id, "
+                +"  SELECT oc.id, d.id as doc_id, oc.created_on AS start_date, oc.patient_id, "
                 +"  oc.clinical_specialty_id, oc.doctor_id "
                 +"  FROM {h-schema}outpatient_consultation AS oc "
                 +  "JOIN {h-schema}document AS d ON (d.source_id = oc.id AND d.source_type_id = 1)"
@@ -52,7 +51,7 @@ public class ConsultationStorageImpl implements ConsultationStorage {
 				result.add(new ConsultationsVo(
 						(Integer) a[0],
 						a[1] != null ? ((BigInteger)a[1]).longValue() : null,
-						a[2] != null ? ((Date)a[2]).toLocalDate() : null,
+						a[2] != null ? ((Timestamp)a[2]).toLocalDateTime() : null,
 						(String) a[3],
 						(String) a[4],
 						(String) a[5],
@@ -62,7 +61,7 @@ public class ConsultationStorageImpl implements ConsultationStorage {
 		);
 
 		String odontologySqlString = "WITH t AS ("
-				+"  SELECT oc.id, d.id as doc_id, oc.performed_date AS start_date, oc.patient_id, "
+				+"  SELECT oc.id, d.id as doc_id, oc.created_on AS start_date, oc.patient_id, "
 				+"  oc.clinical_specialty_id, oc.doctor_id "
 				+"  FROM {h-schema}odontology_consultation AS oc "
 				+  "JOIN {h-schema}document AS d ON (d.source_id = oc.id AND d.source_type_id = 6)"
@@ -83,7 +82,7 @@ public class ConsultationStorageImpl implements ConsultationStorage {
 				result.add(new ConsultationsVo(
 						(Integer) a[0],
 						a[1] != null ? ((BigInteger)a[1]).longValue() : null,
-						a[2] != null ? ((Date)a[2]).toLocalDate() : null,
+						a[2] != null ? ((Timestamp)a[2]).toLocalDateTime() : null,
 						(String) a[3],
 						(String) a[4],
 						(String) a[5],
@@ -93,7 +92,7 @@ public class ConsultationStorageImpl implements ConsultationStorage {
 		);
 
 		String nursingSqlString = "WITH t AS ("
-				+"  SELECT nc.id, d.id as doc_id, nc.performed_date AS start_date, nc.patient_id, "
+				+"  SELECT nc.id, d.id as doc_id, nc.created_on AS start_date, nc.patient_id, "
 				+"  nc.clinical_specialty_id, nc.doctor_id "
 				+"  FROM {h-schema}nursing_consultation AS nc "
 				+  "JOIN {h-schema}document AS d ON (d.source_id = nc.id AND d.source_type_id = 7)"
@@ -113,7 +112,7 @@ public class ConsultationStorageImpl implements ConsultationStorage {
 				result.add(new ConsultationsVo(
 						(Integer) a[0],
 						a[1] != null ? ((BigInteger)a[1]).longValue() : null,
-						a[2] != null ? ((Date)a[2]).toLocalDate() : null,
+						a[2] != null ? ((Timestamp)a[2]).toLocalDateTime() : null,
 						(String) a[3],
 						(String) a[4],
 						(String) a[5],
