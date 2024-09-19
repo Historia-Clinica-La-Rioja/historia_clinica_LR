@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.pladema.reports.repository.ConsultationsVo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,7 +17,7 @@ public class ConsultationsBo {
 
     private Long documentId;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String specialty;
 
