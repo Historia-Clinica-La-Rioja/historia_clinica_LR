@@ -8,9 +8,11 @@ public interface SharedLoggedUserPort {
 
 	boolean hasLocalManagerRoleOrRegionalManagerRole(Integer userId);
 
-	 boolean hasDomainManagerRole(Integer userId);
+	boolean hasDomainManagerRole(Integer userId);
 
 	boolean hasManagerRole(Integer userId);
+
+	boolean hasInstitutionalManagerRole(Integer userId);
 
 	List<RoleInfoDto> getRoles(Integer userId);
 

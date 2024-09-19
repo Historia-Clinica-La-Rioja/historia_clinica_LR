@@ -66,7 +66,8 @@ public class PracticesController {
 	}
 
 	@GetMapping()
-	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO', 'ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', " +
+			"'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO', 'ABORDAJE_VIOLENCIAS', 'GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<SharedSnomedDto>> getAll(@RequestParam(name = "careLineId", required = false) Integer careLineId) {
 		log.debug("Input parameteres -> careLineId {}", careLineId);
 		List<SharedSnomedDto> result = getPracticesFromInstitutionsByCareLineId.run(careLineId);

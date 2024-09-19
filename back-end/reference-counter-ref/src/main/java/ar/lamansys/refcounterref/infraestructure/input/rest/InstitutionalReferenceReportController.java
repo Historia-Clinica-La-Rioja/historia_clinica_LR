@@ -59,7 +59,7 @@ public class InstitutionalReferenceReportController {
 	private final ReferenceMapper referenceMapper;
 
 	@GetMapping("/received")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<PageDto<ReferenceReportDto>> getAllReceivedReferences(@PathVariable(name = "institutionId") Integer institutionId,
 																				 @RequestParam(name = "filter") String filter,
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
@@ -73,7 +73,8 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@GetMapping("/requested")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, " +
+			"PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<PageDto<ReferenceReportDto>> getAllRequestedReferences(@PathVariable(name = "institutionId") Integer institutionId,
 																				 @RequestParam(name = "filter") String filter,
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
@@ -87,7 +88,8 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@GetMapping("/reference-detail/{referenceId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, " +
+			"ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<ReferenceCompleteDataDto> getReferenceDetail(@PathVariable(name = "institutionId") Integer institutionId,
 																	   @PathVariable(name = "referenceId") Integer referenceId) {
 		log.debug("Input parameters -> institutionId {}, referenceId {} ", institutionId, referenceId);
@@ -98,7 +100,8 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@PostMapping("/{referenceId}/add-observation")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, " +
+			"ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<Boolean> addObservation(@PathVariable(name = "institutionId") Integer institutionId,
 												  @PathVariable(name = "referenceId") Integer referenceId,
 												  @RequestParam(name = "observation") String observation) {

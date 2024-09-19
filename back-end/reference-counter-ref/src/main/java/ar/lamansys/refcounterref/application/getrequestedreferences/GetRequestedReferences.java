@@ -23,11 +23,17 @@ public class GetRequestedReferences {
 	private final SharedStaffPort sharedStaffPort;
 
 	public Page<ReferenceReportBo> run(Integer institutionId, ReferenceReportFilterBo filter, Pageable pageable) {
-		boolean hasAdministrativeRole = sharedLoggedUserPort.hasAdministrativeRole(institutionId);
-		if (!hasAdministrativeRole) {
+		if (!userHasAdministrativeOrManagerRole(institutionId)) {
 			var healthcareProfessionalId = sharedStaffPort.getProfessionalId(UserInfo.getCurrentAuditor());
 			filter.setHealthcareProfessionalId(healthcareProfessionalId);
 		}
 		return referenceReportStorage.fetchReferencesReport(filter, pageable);
 	}
+
+	private boolean userHasAdministrativeOrManagerRole(Integer institutionId) {
+		boolean hasAdministrativeRole = sharedLoggedUserPort.hasAdministrativeRole(institutionId);
+		boolean hasInstitutionManagerRole = sharedLoggedUserPort.hasInstitutionalManagerRole(UserInfo.getCurrentAuditor());
+		return hasAdministrativeRole || hasInstitutionManagerRole;
+	}
+
 }

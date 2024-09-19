@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class GetReceivedReferences {
 
 	private final ReferenceReportStorage referenceReportStorage;
-
+	
 	public Page<ReferenceReportBo> run(ReferenceReportFilterBo filter, Pageable pageable) {
 		return referenceReportStorage.fetchReferencesReport(filter, pageable);
 	}

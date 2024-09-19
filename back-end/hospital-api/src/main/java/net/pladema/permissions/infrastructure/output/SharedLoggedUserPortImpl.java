@@ -52,7 +52,15 @@ public class SharedLoggedUserPortImpl implements SharedLoggedUserPort {
 				.stream()
 				.anyMatch(ur -> ur.getRoleId() == ERole.GESTOR_DE_ACCESO_REGIONAL.getId() ||
 						ur.getRoleId() == ERole.GESTOR_DE_ACCESO_LOCAL.getId() ||
-						ur.getRoleId() == ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId());
+						ur.getRoleId() == ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId() ||
+						ur.getRoleId() == ERole.GESTOR_DE_ACCESO_INSTITUCIONAL.getId());
+	}
+
+	@Override
+	public boolean hasInstitutionalManagerRole(Integer userId) {
+		return userRoleStorage.getRolesByUser(userId)
+				.stream()
+				.anyMatch(ur -> ur.getRoleId() == ERole.GESTOR_DE_ACCESO_INSTITUCIONAL.getId());
 	}
 
 	@Override
