@@ -29,6 +29,7 @@ import { EmergencyCareAttentionPlacesComponent } from './components/emergency-ca
 import { EmergencyCareAttentionPlacesDashboardComponent } from './components/emergency-care-attention-places-dashboard/emergency-care-attention-places-dashboard.component';
 import { EmergencyCareAttentionPlaceSectorComponent } from './components/emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { EmergencyCareAttentionPlaceSpaceComponent } from './components/emergency-care-attention-place-space/emergency-care-attention-place-space.component';
+import { EmergencyCareChangeAttentionPlaceButtonComponent } from './components/emergency-care-change-attention-place-button/emergency-care-change-attention-place-button.component';
 import { EmergencyCareDashboardActionsComponent } from './components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { EmergencyCareDetailPlaceTypeComponent } from './components/emergency-care-detail-place-type/emergency-care-detail-place-type.component';
 import { EmergencyCareElapsedTimeStateComponent } from './components/emergency-care-elapsed-time-state/emergency-care-elapsed-time-state.component';
@@ -66,6 +67,7 @@ import { SpecialtySummaryComponent } from './components/specialty-summary/specia
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
+import { EmergencyCareChangeAttentionPlaceDialogComponent } from './dialogs/emergency-care-change-attention-place-dialog/emergency-care-change-attention-place-dialog.component';
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 // services
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from './services/emergency-care-attention-place-availability-button-selection.service';
@@ -107,6 +109,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		EmergencyCareAttentionPlacesDashboardComponent,
 		EmergencyCareAttentionPlaceSectorComponent,
 		EmergencyCareAttentionPlaceSpaceComponent,
+		EmergencyCareChangeAttentionPlaceButtonComponent,
 		EmergencyCareDashboardActionsComponent,
 		EmergencyCareDetailPlaceTypeComponent,
 		EmergencyCareElapsedTimeStateComponent,
@@ -142,6 +145,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
 		PediatricTriageDialogComponent,
+		EmergencyCareChangeAttentionPlaceDialogComponent,
 		EmergencyCareEvolutionsComponent,
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,

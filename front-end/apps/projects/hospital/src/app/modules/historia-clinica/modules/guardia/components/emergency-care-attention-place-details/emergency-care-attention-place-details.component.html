@@ -20,6 +20,8 @@
 				<div *ngIf="details.moreDetails?.lastTriage">
 					<app-emergency-care-attention-place-last-triage [lastTriage]="details.moreDetails.lastTriage"></app-emergency-care-attention-place-last-triage>
 				</div>
+
+				<app-emergency-care-change-attention-place-button [patient]="details.moreDetails?.patient"></app-emergency-care-change-attention-place-button>
 			</div>
 		</div>
 	</div>

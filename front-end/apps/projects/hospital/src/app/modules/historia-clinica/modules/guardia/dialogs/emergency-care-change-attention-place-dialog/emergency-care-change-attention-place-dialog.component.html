@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title class="mat-h2" [translate]="'guardia.home.attention_places.change-attention-place.TITLE'"></span>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>clear</mat-icon>
+	</button>
+</div>
+<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+   <!-- aca componente del stepper -->
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <app-button id="save-form" text="guardia.home.attention_places.change-attention-place.BUTTON_CONTINUE" buttonType="mat-raised-button" (clicked)="save()"></app-button>
+</mat-dialog-actions>

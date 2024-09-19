@@ -169,6 +169,11 @@
 				},
 				"last_triage": {
 					"TITLE": "Último triage"
+				},
+				"change-attention-place":{
+					"TITLE": "Cambiar lugar de atención",
+					"BUTTON_CONTINUE": "Continuar",
+					"SUCESS": "Cambio de lugar de atencion realizado con exito"
 				}
             },
 			"tabs": {
