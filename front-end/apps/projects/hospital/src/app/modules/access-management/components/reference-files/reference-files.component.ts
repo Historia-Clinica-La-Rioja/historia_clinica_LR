@@ -41,9 +41,11 @@ export class ReferenceFilesComponent {
 		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
 	}
 
-	removeFile(files: File[] | ReferenceCounterReferenceFileDto[], positionOfFileToDelete: number, file: ReferenceCounterReferenceFileDto) {
+	removeFile(files: File[] | ReferenceCounterReferenceFileDto[], positionOfFileToDelete: number, removedFile: ReferenceCounterReferenceFileDto) {
+		if (this.referenceFiles.oldFiles.find( file => file.fileId === removedFile.fileId))
+			this.deletedFiles.push(removedFile.fileId);
+		
 		files.splice(positionOfFileToDelete, 1);
-		this.deletedFiles.push(file.fileId);
 		this.emit();
 	}
 
