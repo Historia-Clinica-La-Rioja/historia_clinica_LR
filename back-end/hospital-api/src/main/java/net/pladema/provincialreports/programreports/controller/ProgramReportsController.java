@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("new-programreports")
+@RequestMapping("programreports")
 @Tag(name = "Reports - program", description = "Reportes de programa, program reports")
 public class ProgramReportsController {
 	private static final Logger logger = LoggerFactory.getLogger(ProgramReportsController.class);
