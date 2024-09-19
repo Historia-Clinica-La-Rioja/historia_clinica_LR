@@ -1069,7 +1069,7 @@
                         <dd><strong>Unidad: </strong><span th:text="${substance.dosage.quantity.unit}"></span></dd>
                         <dd th:if="${substance.viaDescription}">
                             <strong>Fecha de administración: </strong>
-                            <span th:text="${substance.performedTime} ? ${#temporals.format(substance.performedTime, 'HH:mm') + ' hs.'} : _"></span>
+                            <span th:text="${substance.performedTime} ? ${#temporals.format(substance.performedTime, 'dd/MM/yyyy') + ' - ' + #temporals.format(substance.performedTime, 'HH:mm') + ' hs.'} : _"></span>
                         </dd>
                     </dl>
                 </dd>
