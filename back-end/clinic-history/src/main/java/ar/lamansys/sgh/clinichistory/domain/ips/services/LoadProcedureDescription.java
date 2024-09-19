@@ -33,6 +33,7 @@ public class LoadProcedureDescription {
 
     private boolean hasToSaveEntity(ProcedureDescriptionBo procedureDescription) {
         return nonNull(procedureDescription.getFoodIntake())
+                || nonNull(procedureDescription.getFoodIntakeDate())
                 || nonNull(procedureDescription.getNote())
                 || nonNull(procedureDescription.getAsa())
                 || nonNull(procedureDescription.getVenousAccess())
@@ -56,6 +57,7 @@ public class LoadProcedureDescription {
         Boolean nasogastricTube = procedureDescriptionBo.getNasogastricTube();
         Boolean urinaryCatheter = procedureDescriptionBo.getUrinaryCatheter();
         LocalTime foodIntake = procedureDescriptionBo.getFoodIntake();
+        LocalDate foodIntakeDate = procedureDescriptionBo.getFoodIntakeDate();
         LocalDate anesthesiaStartDate = procedureDescriptionBo.getAnesthesiaStartDate();
         LocalTime anesthesiaStartTime = procedureDescriptionBo.getAnesthesiaStartTime();
         LocalDate anesthesiaEndDate = procedureDescriptionBo.getAnesthesiaEndDate();
@@ -67,7 +69,7 @@ public class LoadProcedureDescription {
 
         DocumentProcedureDescription saved = documentProcedureDescriptionRepository.save(new DocumentProcedureDescription(
                 documentId, noteId, asa, venousAccess, nasogastricTube, urinaryCatheter, foodIntake,
-                anesthesiaStartDate, anesthesiaStartTime, anesthesiaEndDate, anesthesiaEndTime,
+                foodIntakeDate, anesthesiaStartDate, anesthesiaStartTime, anesthesiaEndDate, anesthesiaEndTime,
                 surgeryStartDate, surgeryStartTime, surgeryEndDate, surgeryEndTime));
         procedureDescriptionBo.setId(saved.getDocumentId());
     }

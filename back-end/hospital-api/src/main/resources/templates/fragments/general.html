@@ -1078,10 +1078,12 @@
     </div>
 
     <!-- Última hora ingesta alimentaria -->
-    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${procedureDescription != null && procedureDescription.foodIntakeClockTime != null}">
+    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${procedureDescription != null && (procedureDescription.foodIntakeClockDate != null || procedureDescription.foodIntakeClockTime != null)}" th:with="pd=${procedureDescription}">
         <p class="section-title" th:text="${preMedications == null || #lists.isEmpty(preMedications)} ? ${message} : _"></p>
         <strong>Última ingesta de comida: </strong>
-        <span th:text="${#temporals.format(procedureDescription.foodIntakeClockTime, 'HH:mm') + ' hs.'}"></span>
+        <span th:text="${pd.foodIntakeClockDate} ? ${#temporals.format(pd.foodIntakeClockDate, 'dd/MM/yyyy')} : _"> </span>
+        <span th:text="${pd.foodIntakeClockDate != null && pd.foodIntakeClockTime != null} ? ' - ' : _"> </span>
+        <span th:text="${pd.foodIntakeClockTime} ? ${#temporals.format(pd.foodIntakeClockTime, 'HH:mm') + ' hs.'} : _"> </span>
     </div>
 
     <!-- Antecedentes (histories) -->

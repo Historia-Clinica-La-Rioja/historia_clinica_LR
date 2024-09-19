@@ -19,11 +19,15 @@ public interface ProcedureDescriptionMapper {
     @Mapping(target = "surgeryStartLocalTime", source = "surgeryStartTime")
     @Mapping(target = "surgeryEndLocalDate", source = "surgeryEndDate")
     @Mapping(target = "surgeryEndLocalTime", source = "surgeryEndTime")
+    @Mapping(target = "foodIntake", source = "foodIntake")
+    @Mapping(target = "foodIntakeDate", source = "foodIntakeDate")
     @Mapping(target = "foodIntakeClockTime", source = "foodIntake")
+    @Mapping(target = "foodIntakeClockDate", source = "foodIntakeDate")
     ProcedureDescriptionDto toProcedureDescriptionDto(ProcedureDescriptionBo procedureDescriptionBo);
 
     @Named("toProcedureDescriptionBo")
     @Mapping(target = "foodIntake", source = "foodIntake")
+    @Mapping(target = "foodIntakeDate", source = "foodIntakeDate")
     ProcedureDescriptionBo toProcedureDescriptionBo(ProcedureDescriptionDto procedureDescriptionDto);
 
 }

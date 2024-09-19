@@ -21,3 +21,15 @@ databaseChangeLog:
               tableName: emergency_care_episode
               validate: true
               defaultNullValue: -1
+
+    - changeSet:
+          id: addColumn-food_intake_date-procedure_description
+          author: mromero
+          changes:
+              - addColumn:
+                    tableName: procedure_description
+                    columns:
+                      - column:
+                          name: food_intake_date
+                          type: date
+

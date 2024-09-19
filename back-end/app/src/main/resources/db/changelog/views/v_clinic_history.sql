@@ -1,11 +1,10 @@
 --liquibase formatted sql
 
--- Changeset mromero:create-view-clinic_history_2_31_0
+-- Changeset mromero:create-view-clinic_history_2_31_0_2
 -- runOnChange:false # NO TOCAR
 -- splitStatements:true
 -- endDelimiter:;
--- comment: Desde este punto, las vistas tienen cada una su archivo. Por cada cambio agregado, se debe crear un nuevo changeset que sustituya el anterior.
--- Se deja sin efecto runOnChange, ya que de esta forma se hace un chequeo de integridad y nos aseguramos que quede registrado cada cambio que se realiza en la bd.
+-- comment: se agregan fecha y hora en algunas secciones del parte anestésico. (Se crea un nuevo changeset para su testing)
 --
 DROP VIEW IF EXISTS v_clinic_history;
 CREATE VIEW v_clinic_history AS (
@@ -515,7 +514,7 @@ SELECT d.id AS id,
                          (SELECT coalesce((SELECT string_agg((s.pt) ||
                                                              ' (vía: ' || v.description ||
                                                              CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                                             ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
+                                                             ', dosis: ' || q.value || q.unit || ', fecha: ' || to_char(dg.start_date, 'dd/MM/yyyy') || ' - ' || to_char(dg.start_date, 'HH24:MI') ||
                                                              ' hs.)', ', ')
                                            FROM anesthetic_substance a
                                                     JOIN snomed s ON (s.id = a.snomed_id)
@@ -524,9 +523,12 @@ SELECT d.id AS id,
                                                     JOIN via v ON (v.id = a.via_id)
                                                     LEFT JOIN note n ON (a.via_note_id = n.id)
                                            WHERE a.document_id = d.id AND a.type_id = 1 AND d.type_id IN (20) GROUP BY a.document_id),'') ||
-                                 coalesce((SELECT '\n- Última ingesta de comida: ' || to_char(pd.food_intake, 'HH24:MI') || ' hs'
+                                          (SELECT CASE WHEN pd.food_intake_date IS NOT NULL OR pd.food_intake IS NOT NULL THEN '\n- Última ingesta de comida: ' ELSE '' END ||
+                                                  CASE WHEN pd.food_intake_date IS NOT NULL THEN to_char(pd.food_intake_date, 'dd/MM/yyyy') ELSE '' END ||
+                                                  CASE WHEN pd.food_intake_date IS NOT NULL AND pd.food_intake IS NOT NULL THEN ' - ' ELSE '' END ||
+                                                  CASE WHEN pd.food_intake IS NOT NULL THEN to_char(pd.food_intake, 'HH24:MI') || ' hs' ELSE '' END
                                            FROM procedure_description pd
-                                           WHERE pd.document_id = d.id AND d.type_id IN (20) AND pd.food_intake IS NOT NULL), '') AS result
+                                           WHERE pd.document_id = d.id AND d.type_id IN (20) AND pd.food_intake IS NOT NULL) AS result
                          )
                 SELECT CASE WHEN t.result <> '' THEN t.result || '\n' END FROM t GROUP BY t.result), '') AS pre_medications,
       coalesce('Antecedentes: ' ||
@@ -544,7 +546,7 @@ SELECT d.id AS id,
                (SELECT string_agg((s.pt) ||
                                   ' (vía: ' || v.description ||
                                   CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                  ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
+                                  ', dosis: ' || q.value || q.unit || ', fecha: ' || to_char(dg.start_date, 'dd/MM/yyyy') || ' - ' || to_char(dg.start_date, 'HH24:MI') ||
                                   ' hs.)', ', ')
                 FROM anesthetic_substance a
                          JOIN snomed s ON (s.id = a.snomed_id)
@@ -593,7 +595,7 @@ SELECT d.id AS id,
                (SELECT string_agg((s.pt) ||
                                   ' (vía: ' || v.description ||
                                   CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                  ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
+                                  ', dosis: ' || q.value || q.unit || ', fecha: ' || to_char(dg.start_date, 'dd/MM/yyyy') || ' - ' || to_char(dg.start_date, 'HH24:MI') ||
                                   ' hs.)', ', ')
                 FROM anesthetic_substance a
                          JOIN snomed s ON (s.id = a.snomed_id)
@@ -606,7 +608,7 @@ SELECT d.id AS id,
                (SELECT string_agg((s.pt) ||
                                   ' (vía: ' || v.description ||
                                   CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                  ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
+                                  ', dosis: ' || q.value || q.unit || ', fecha: ' || to_char(dg.start_date, 'dd/MM/yyyy') || ' - ' || to_char(dg.start_date, 'HH24:MI') ||
                                   ' hs.)', ', ')
                 FROM anesthetic_substance a
                          JOIN snomed s ON (s.id = a.snomed_id)
@@ -626,7 +628,7 @@ SELECT d.id AS id,
                (SELECT string_agg((s.pt) ||
                                   ' (vía: ' || v.description ||
                                   CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                  ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
+                                  ', dosis: ' || q.value || q.unit || ', fecha: ' || to_char(dg.start_date, 'dd/MM/yyyy') || ' - ' || to_char(dg.start_date, 'HH24:MI') ||
                                   ' hs.)', ', ')
                 FROM anesthetic_substance a
                          JOIN snomed s ON (s.id = a.snomed_id)

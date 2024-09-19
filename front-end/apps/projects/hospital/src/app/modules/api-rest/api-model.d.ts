@@ -4173,6 +4173,7 @@ export interface ProcedureDescriptionDto {
     anesthesiaStartTime?: TimeDto;
     asa?: number;
     foodIntake?: TimeDto;
+    foodIntakeDate?: DateDto;
     nasogastricTube?: boolean;
     note?: string;
     surgeryEndDate?: DateDto;

@@ -45,6 +45,9 @@ public class DocumentProcedureDescription {
     @Column(name = "food_intake")
     private LocalTime foodIntake;
 
+    @Column(name = "food_intake_date")
+    private LocalDate foodIntakeDate;
+
     @Column(name = "anesthesia_start_date")
     private LocalDate anesthesiaStartDate;
 
