@@ -83,9 +83,8 @@ public class InstitutionalNetworkReferenceReportController {
 														  @RequestParam(name = "stateId") Short stateId,
 														  @RequestParam(name = "reason", required = false) String reason) {
 		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
-		Boolean result = updateReferenceRegulationState.run(referenceId, stateId, reason);
-		log.debug("Output -> {}", result);
-		return result;
+		this.updateReferenceRegulationState.run(referenceId, stateId, reason);
+		return Boolean.TRUE;
 	}
 
 	@PostMapping(value = "/{referenceId}/add-observation")

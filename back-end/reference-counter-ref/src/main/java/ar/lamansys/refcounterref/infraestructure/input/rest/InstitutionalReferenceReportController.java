@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedRe
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getrequestedreferences.GetRequestedReferences;
 import ar.lamansys.refcounterref.application.modifyReference.ModifyReference;
+import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.infraestructure.input.ReferenceReportFilterUtils;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
@@ -51,6 +52,8 @@ public class InstitutionalReferenceReportController {
 	private final GetReferenceMapper getReferenceMapper;
 
 	private final CancelReference cancelReference;
+
+	private final UpdateReferenceRegulationState updateReferenceRegulationState;
 
 	private final ObjectMapper objectMapper;
 
@@ -130,6 +133,17 @@ public class InstitutionalReferenceReportController {
 		Integer currentUserId = SecurityContextUtils.getUserDetails().getUserId();
 		modifyReference.run(currentUserId, referenceId, referenceMapper.fromReferenceDto(referenceDto));
 		return ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PutMapping("/{referenceId}/change-regulation-state")
+	@PreAuthorize("hasPermission(#institutionId, 'GESTOR_DE_ACCESO_INSTITUCIONAL')")
+	public boolean updateRegulationState(@PathVariable(name = "institutionId") Integer institutionId,
+										 @PathVariable(name = "referenceId") Integer referenceId,
+										 @RequestParam(name = "stateId") Short stateId,
+										 @RequestParam(name = "reason", required = false) String reason) {
+		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
+		this.updateReferenceRegulationState.run(referenceId, stateId, reason);
+		return Boolean.TRUE;
 	}
 
 }
