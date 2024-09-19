@@ -1173,7 +1173,8 @@
 				"ALL": "Todos",
 				"SELECTED_ROWS": "Filas seleccionadas:",
 				"DOWNLOAD": "Descargar",
-				"LAST_PRINTED": "Última impresión realizada por "
+				"LAST_PRINTED": "Última impresión realizada por ",
+                "MAX_DOCUMENTS_SELECTED": "No es posible descargar más de 20 documentos por vez"
 			}
 		},
         "screen_change_warning_dialog": {

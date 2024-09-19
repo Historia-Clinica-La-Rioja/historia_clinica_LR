@@ -27,7 +27,9 @@ import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-re
 import { finalize, Observable, take } from 'rxjs';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
+const MAX_DOCUMENTS_TO_BE_SELECTED = 20;
 @Component({
 	selector: 'app-print-ambulatoria',
 	templateUrl: './print-ambulatoria.component.html',
@@ -79,6 +81,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	isDownloadingDocuments = false;
 	ButtonType = ButtonType.RAISED;
+	MAX_DOCUMENTS_TO_BE_SELECTED = 3;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -90,6 +93,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		readonly datePipe: DatePipe,
 		private featureFlagService: FeatureFlagService,
 		private readonly printAmbulatoryService: PrintAmbulatoryService,
+		private readonly snackBar: SnackBarService
 	) {
 		this.route.paramMap.pipe(take(1)).subscribe(
 			(params) => {
@@ -193,20 +197,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.hideEncounterListSection();
 	}
 
-	isAllTableSelected(): boolean {
-		const numSelected = this.selection.selected.length;
-		const numRows = this.dataSource.data.length;
-		return numSelected === numRows;
-	}
-
-	toggleAllRows(): void {
-		if (this.isAllTableSelected()) {
-			this.selection.clear();
-			return;
-		}
-		this.selection.select(...this.dataSource.data);
-	}
-
 	goBack(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
 		this.router.navigate([url]);
@@ -259,7 +249,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
-				this.toggleAllRows();
 				this.loadingTable = false;
 				this.updateLastDownload();
 			});
@@ -309,4 +298,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			.subscribe(()=>this.updateLastDownload());
 	}
 
+	toggleCheck = (row) => {
+		this.selection.toggle(row);
+		this.checkMaxDocumentsQuantity();
+	}
+
+	private checkMaxDocumentsQuantity = () => {
+		if (this.selection.selected.length >= MAX_DOCUMENTS_TO_BE_SELECTED) 
+			this.snackBar.showError("ambulatoria.print.encounter-list.MAX_DOCUMENTS_SELECTED");
+	}
 }
