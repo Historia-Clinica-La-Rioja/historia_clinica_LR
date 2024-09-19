@@ -29,7 +29,6 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
-const MAX_DOCUMENTS_TO_BE_SELECTED = 20;
 @Component({
 	selector: 'app-print-ambulatoria',
 	templateUrl: './print-ambulatoria.component.html',
@@ -81,7 +80,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	isDownloadingDocuments = false;
 	ButtonType = ButtonType.RAISED;
-	MAX_DOCUMENTS_TO_BE_SELECTED = 3;
+	MAX_DOCUMENTS_TO_BE_SELECTED = 20;
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -270,10 +269,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		return null;
 	}
 
-	download(document) {
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe(()=>this.updateLastDownload());
-	}
-
 	downloadSelected() {
 		const activeSortColumn = this.sort.active;
 		const activeSortDirection = this.sort.direction;
@@ -304,7 +299,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	private checkMaxDocumentsQuantity = () => {
-		if (this.selection.selected.length >= MAX_DOCUMENTS_TO_BE_SELECTED) 
+		if (this.selection.selected.length >= this.MAX_DOCUMENTS_TO_BE_SELECTED) 
 			this.snackBar.showError("ambulatoria.print.encounter-list.MAX_DOCUMENTS_SELECTED");
 	}
 }
