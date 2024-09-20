@@ -33,3 +33,14 @@ databaseChangeLog:
                           name: food_intake_date
                           type: date
 
+    - changeSet:
+          id: addColumn-created_by-report_queue
+          author: mromero
+          changes:
+          - addColumn:
+                columns:
+                - column:
+                      name: created_by
+                      type: int
+                tableName: report_queue
+

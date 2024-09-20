@@ -3,6 +3,7 @@ package net.pladema.reports.infrastructure.output.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -53,6 +54,7 @@ public class InstitutionReportQueueStorageImpl implements InstitutionReportQueue
 	private ReportQueue queueInstitutionReport() {
 		ReportQueue newReportQueue = new ReportQueue();
 		newReportQueue.setCreatedOn(LocalDateTime.now());
+		newReportQueue.setCreatedBy(UserInfo.getCurrentAuditor());
 		var queueItem = reportQueueRepository.save(newReportQueue);
 		return queueItem;
 	}
