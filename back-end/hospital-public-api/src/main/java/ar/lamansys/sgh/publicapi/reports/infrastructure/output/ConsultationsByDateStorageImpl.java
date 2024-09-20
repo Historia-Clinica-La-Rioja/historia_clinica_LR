@@ -1,5 +1,4 @@
 package ar.lamansys.sgh.publicapi.reports.infrastructure.output;
-
 import static java.util.stream.Collectors.groupingBy;
 
 import java.sql.Date;
@@ -30,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorage {
+
+	private static final String ATENDIDO = "Atendido";
+	private static final String VENCIDO = "Vencido";
 
 	private final EntityManager entityManager;
 
@@ -137,6 +139,15 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 							.flatMap(consultation -> consultation.getProblems().stream()).distinct().collect(Collectors.toList());
 
 					ConsultationBo mergedConsultation = consultationByInstitutionBos.get(0); // Get the first element since all have the same appointmentId
+
+					// salvar casos de turnos vencidos que se guardan como atendidos
+					// hsi-11697
+					if(mergedConsultation.getConsultationId() == null
+							&& mergedConsultation.getAppointmentState().equals(ATENDIDO)) {
+						mergedConsultation.setAge(null);
+						mergedConsultation.setAppointmentState(VENCIDO);
+					}
+
 					mergedConsultation.setReasons(mergedReasons);
 					mergedConsultation.setProcedures(mergedProcedures);
 					mergedConsultation.setProblems(mergedProblems);
