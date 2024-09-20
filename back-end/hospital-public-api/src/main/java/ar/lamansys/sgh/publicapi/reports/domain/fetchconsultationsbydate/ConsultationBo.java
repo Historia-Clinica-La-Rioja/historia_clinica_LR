@@ -30,9 +30,11 @@ public class ConsultationBo {
 	private MedicalCoverageBo medicalCoverage;
 	private String officialGender;
 	private DateBo birthdate;
+	@Setter
 	private Integer age;
 	private String department;
 	private String city;
+	@Setter
 	private String appointmentState;
 	private String appointmentBookingChannel;
 	@Setter
