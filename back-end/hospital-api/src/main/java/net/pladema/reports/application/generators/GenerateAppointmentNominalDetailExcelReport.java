@@ -2,6 +2,7 @@ package net.pladema.reports.application.generators;
 
 import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
 
+import net.pladema.reports.domain.InstitutionReportType;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.files.StreamsUtils;
@@ -26,7 +27,7 @@ public class GenerateAppointmentNominalDetailExcelReport implements InstitutionE
 	) {
 		IWorkbook wb = generateReport(institutionMonthlyReportParams, "DNT");
 		// armo la respuesta con el workbook obtenido
-		String filename = "Detalle Nominal de Turnos." + wb.getExtension();
+		String filename = InstitutionReportType.AppointmentNominalDetail.getDescription() + "." + wb.getExtension();
 		return new StoredFileBo(
 				buildReport(wb),
 				wb.getContentType(),
