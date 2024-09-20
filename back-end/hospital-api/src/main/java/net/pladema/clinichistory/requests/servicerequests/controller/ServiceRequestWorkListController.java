@@ -36,18 +36,21 @@ public class ServiceRequestWorkListController {
 	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
 	public ResponseEntity<List<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
 															   @RequestParam(value = "categories", required = true) List<String> categories){
+
 		log.debug("Input parameters -> institutionId {}", institutionId);
 
 		if (!AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO.isActive()) {
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 		}
 
-		List<StudyOrderWorkListBo> resultService = studyWorkListService.execute();
+		List<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, categories);
 		List<StudyOrderWorkListDto> result = resultService
 				.stream()
 				.map(studyOrderWorkListBo -> studyMapper.toStudyOrderWorkListDto(studyOrderWorkListBo))
 				.collect(Collectors.toList());
+
 		log.debug("Output -> {}", result);
+
 		return ResponseEntity.ok(result);
 	}
 

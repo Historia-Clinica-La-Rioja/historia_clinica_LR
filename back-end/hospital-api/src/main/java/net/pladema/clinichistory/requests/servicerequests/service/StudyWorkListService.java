@@ -5,6 +5,6 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkL
 import java.util.List;
 
 public interface StudyWorkListService {
-	List<StudyOrderWorkListBo> execute();
+	List<StudyOrderWorkListBo> execute(Integer institutionId, List<String> categories);
 }
 
