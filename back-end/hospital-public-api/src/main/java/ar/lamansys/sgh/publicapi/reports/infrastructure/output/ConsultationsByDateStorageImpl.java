@@ -47,7 +47,7 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				" coalesce(mc_consultation.name, mc.name) as m_cov, coalesce(hi_consultation.rnos, hi.rnos) as rnos, " +
 				" coalesce (g.description, gb.description) as gender, " +
 				" coalesce (pp.birth_date, bp.birth_date) as birthdate, " +
-				" CASE WHEN a.appointment_state_id = 5 THEN (a.date_type_id - cast(pp.birth_date as date)) / 365 ELSE NULL END AS edad, " +
+				" CASE WHEN a.appointment_state_id = 5 THEN EXTRACT(YEAR FROM AGE(a.date_type_id, cast(pp.birth_date as date))) ELSE NULL END AS edad, " +
 				" d2.description as depto, c.description as ciudad, " +
 				" as2.description as as_desc, r.id, r.description as motivo, s3.sctid, proc.cie10_codes as cie_proc, s3.pt as procedimiento, " +
 				" s2.sctid as hc_snomed, hc.cie10_codes as hc_cie, s2.pt as problema, " +
@@ -201,7 +201,7 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				((Date) row [14]).toLocalDate().getMonthValue(),
 				((Date) row [14]).toLocalDate().getDayOfMonth()
 		) : null;
-		Integer age = (Integer) row [15];
+		Integer age = row[15] == null ? null : ((Double) row [15]).intValue();
 		String department = (String) row [16];
 		String city = (String) row [17];
 		String appointmentState = (String) row [18];
