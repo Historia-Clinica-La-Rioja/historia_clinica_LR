@@ -240,7 +240,11 @@ public enum AppFeature implements Feature {
 	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA,
 
 	@Label("Indica si se encuentra habilitada la financiacion de medicamentos")
-	HABILITAR_FINANCIACION_DE_MEDICAMENTOS
+	HABILITAR_FINANCIACION_DE_MEDICAMENTOS,
+
+	@Label("Indica si se debe avisar por mail que se encuentra disponible el reporte generado al solicitante, para su descarga")
+	HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS,
+
 	;
 
 	public boolean isActive() {
