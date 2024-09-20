@@ -6,5 +6,7 @@ import lombok.Getter;
 public enum EmergencyCareEpisodeStateExceptionEnum {
 	ADMINISTRATIVE_DISCHARGE,
 	MEDICAL_DISCHARGE,
-	WAITING_ROOM
+	WAITING_ROOM,
+	ATTENTION,
+	CALLED
 }

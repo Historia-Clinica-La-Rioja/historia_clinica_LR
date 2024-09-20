@@ -69,10 +69,45 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM, "El episodio ha sido movido a sala de espera");
 			}
 
-			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()) && episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId())
-					&& emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId)) {
-				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM, "El episodio ha sido movido a sala de espera y tiene una nota de evolución asociada.");
+			Boolean hasEvolutionNote = emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
+
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()) &&
+				episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId()) &&
+				hasEvolutionNote
+			) {
+				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM, "El episodio ha sido movido a sala de espera y tiene una nota de evolución asociada");
 			}
+
+			//Dest: ALTA_ADMINISTRATIVA
+			//Current: AUSENTE (with evolution note)
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()) &&
+					episode.getEmergencyCareStateId().equals(EEmergencyCareState.AUSENTE.getId()) &&
+					hasEvolutionNote
+			) {
+				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM,
+					"El episodio se encuentra en estado ausente y tiene una nota de evolución asociada");
+			}
+
+			//Dest: ALTA_ADMINISTRATIVA
+			//Current: ATENCION
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()) &&
+				episode.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())
+			) {
+				throw new EmergencyCareEpisodeStateException(
+					EmergencyCareEpisodeStateExceptionEnum.ATTENTION,
+					"El episodio se encuentra en atención");
+			}
+
+			//Dest: ALTA_ADMINISTRATIVA
+			//Current: LLAMADO
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()) &&
+					episode.getEmergencyCareStateId().equals(EEmergencyCareState.LLAMADO.getId())
+			) {
+				throw new EmergencyCareEpisodeStateException(
+						EmergencyCareEpisodeStateExceptionEnum.CALLED,
+						"El episodio se encuentra en estado llamado");
+			}
+
 		});
 	}
 
