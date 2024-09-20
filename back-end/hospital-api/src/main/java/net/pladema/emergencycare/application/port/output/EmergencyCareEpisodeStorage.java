@@ -19,4 +19,5 @@ public interface EmergencyCareEpisodeStorage {
 	ProfessionalPersonBo getProfessionalByEpisodeId(Integer id);
 	Optional<EmergencyCareBo> getByShockroomIdInAttention(Integer shockroomId);
 	Optional<EmergencyCareBo> getByDoctorsOfficeIdInAttention(Integer doctorsOfficeId);
+	Optional<EmergencyCareBo> getById(Integer episodeId);
 }

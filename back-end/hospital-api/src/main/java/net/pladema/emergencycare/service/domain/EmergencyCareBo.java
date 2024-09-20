@@ -125,6 +125,10 @@ public class EmergencyCareBo {
         this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 		this.reason = emergencyCareEpisode.getReason();
 		this.createdOn = emergencyCareEpisode.getCreatedOn();
+		Integer shockroomId = emergencyCareEpisode.getShockroomId();
+		this.shockroom = shockroomId != null ? ShockRoomBo.builder().id(shockroomId).build() : null;
+		Integer bedId = emergencyCareEpisode.getBedId();
+		this.bed = bedId != null ? BedBo.builder().id(bedId).build() : null;
     }
 
     public void setTriageRiskFactorIds(List<Integer> riskFactorIds) {
@@ -142,6 +146,14 @@ public class EmergencyCareBo {
 
 	public String getBedNumber() {
 		return bed != null ? bed.getBedNumber(): null;
+	}
+
+	public Integer getShockRoomId() {
+		return (this.getShockroom() != null) ? this.getShockroom().getId() : null;
+	}
+
+	public Integer getBedId() {
+		return (this.getBed() != null) ? this.getBed().getId() : null;
 	}
 
 }

@@ -820,6 +820,11 @@ export interface CareLineProblemDto {
     snomedId: number;
 }
 
+export interface ChangeEmergencyCareEpisodeAttentionPlaceDto {
+    emergencyCareEpisodeAttentionPlace: EmergencyCareEpisodeAttentionPlaceDto;
+    episodeId: number;
+}
+
 export interface ChangeStateMedicationRequestDto extends Serializable {
     dayQuantity?: number;
     medicationsIds: number[];

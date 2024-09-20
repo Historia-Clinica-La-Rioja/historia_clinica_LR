@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.shockroom.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,6 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class ShockRoomBo {
 
 	private Integer id;

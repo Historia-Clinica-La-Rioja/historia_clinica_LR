@@ -6,12 +6,14 @@ import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareClinicalSpecialtySectorMapper;
 import net.pladema.emergencycare.controller.mapper.MasterDataMapper;
+import net.pladema.emergencycare.domain.ChangeEmergencyCareEpisodeAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareBedDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareDoctorsOfficeDetailBo;
 import net.pladema.emergencycare.domain.EmergencyCareSectorHasAttentionPlaceBo;
 import net.pladema.emergencycare.domain.EmergencyCareShockRoomDetailBo;
+import net.pladema.emergencycare.infrastructure.input.rest.dto.ChangeEmergencyCareEpisodeAttentionPlaceDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareAttentionPlaceDto;
 
@@ -92,6 +94,9 @@ public interface EmergencyCareAttentionPlaceMapper {
 
 	@Named("toShockroomDto")
 	List<ShockroomDto> toShockroomDto(List<ShockRoomBo> shockRoomBo);
+
+	@Named("toChangeEmergencyCareEpisodeAttentionPlaceBo")
+	ChangeEmergencyCareEpisodeAttentionPlaceBo toChangeEmergencyCareEpisodeAttentionPlaceBo(ChangeEmergencyCareEpisodeAttentionPlaceDto changeEmergencyCareEpisodeAttentionPlaceDto);
 
 	@AfterMapping
 	default void masterDataEmergencyCareAttentionMapping(@MappingTarget EmergencyCareAttentionPlaceDetailDto target,
