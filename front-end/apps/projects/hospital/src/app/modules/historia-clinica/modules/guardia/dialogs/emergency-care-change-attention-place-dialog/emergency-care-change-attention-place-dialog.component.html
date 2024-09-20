@@ -4,9 +4,7 @@
 		<mat-icon>clear</mat-icon>
 	</button>
 </div>
+
 <mat-dialog-content fxLayout="column" fxLayoutGap="10px">
-   <!-- aca componente del stepper -->
+	<app-emergency-care-change-attention-place-stepper [patient]="patient" (formEmitter)="saveNewSelectedSpace($event)"></app-emergency-care-change-attention-place-stepper>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-    <app-button id="save-form" text="guardia.home.attention_places.change-attention-place.BUTTON_CONTINUE" buttonType="mat-raised-button" (clicked)="save()"></app-button>
-</mat-dialog-actions>

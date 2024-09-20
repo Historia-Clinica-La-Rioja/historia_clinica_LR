@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { EmergencyCarePatientDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-dialog',
@@ -10,11 +11,13 @@ export class EmergencyCareChangeAttentionPlaceDialogComponent {
 
 	constructor(
 		private dialogRef: MatDialogRef<boolean>,
+		@Inject(MAT_DIALOG_DATA) public patient: EmergencyCarePatientDto,
 	) { }
 
-	save(){
-		//aca enviar el formulario con sus datos
-		this.dialogRef.close(true);
+	//el dto del dato a enviar BE aun no esta listo, ChangeEmergencyCareEpisodeAttentionPlaceDto
+	saveNewSelectedSpace(newSelectedSpace: boolean){
+		if(newSelectedSpace)
+			this.dialogRef.close(newSelectedSpace);
 	}
 
 }
