@@ -20,14 +20,16 @@ import net.pladema.reports.service.NominalDetailExcelService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.math.BigInteger;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -66,93 +68,40 @@ public class NominalAppointmentDetailStorageImpl implements NominalAppointmentDe
 	}
 
 	public List<NominalAppointmentDetailBo> fetchNominalAppointmentsDetail(ReportSearchFilterBo filter) {
-
-		String sqlQuery = "SELECT p.description as province, " +
-				"dp.description as department, " +
-				"i.sisa_code, " +
-				"i.name AS institution, " +
-				"hut.description, " +
-				"hu.alias, " +
-				"CONCAT(p3.first_name, ' ', p3.middle_names) AS patientNames, " +
-				"CONCAT(p3.last_name, ' ', p3.other_last_names) AS patientSurnames, " +
-				"pe.name_self_determination AS patientNameSelfDetermination, " +
-				"it.description AS identificationType, " +
-				"p3.identification_number, " +
-				"p3.birth_date, " +
-				"spg.description AS selfPerceivedGender, " +
-				"apt.date_type_id, " +
-				"apt.hour, " +
-				"as2.description AS appointmentState, " +
-				"CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c.description) AS address, " +
-				"CASE WHEN (apt.phone_prefix IS NOT NULL AND apt.phone_number IS NOT NULL) THEN CONCAT(apt.phone_prefix, apt.phone_number) " +
-				"ELSE CONCAT(pe.phone_prefix, pe.phone_number) END AS phone, " +
-				"CASE WHEN apt.patient_email IS NOT NULL THEN apt.patient_email ELSE pe.email END, " +
-				"mc.name AS coverageName, " +
-				"pmc.affiliate_number AS affiliateNumber, " +
-				"cs.name AS clinicalSpecialty, " +
-				"p4.first_name AS professionalFirstName, " +
-				"p4.middle_names AS professionalMiddleNames, " +
-				"p4.last_name AS professionalLastName, " +
-				"p4.other_last_names AS professionalOtherLastNames, " +
-				"pe2.name_self_determination AS professionalNameSelfDetermination, " +
-				"problems.description AS problems, " +
-				"p5.first_name, p5.middle_names, p5.last_name, p5.other_last_names, pe3.name_self_determination " +
-				"FROM {h-schema}institution i " +
-				"JOIN {h-schema}address a ON (i.address_id = a.id) " +
-				"JOIN {h-schema}city c ON (a.city_id = c.id)" +
-				"JOIN {h-schema}department dp ON (c.department_id = dp.id) " +
-				"JOIN {h-schema}province p ON (dp.province_id = p.id) " +
-				"JOIN {h-schema}doctors_office dof ON (i.id = dof.institution_id) " +
-				"JOIN {h-schema}diary d2 ON (dof.id = d2.doctors_office_id) " +
-				"JOIN {h-schema}appointment_assn aa ON (d2.id = aa.diary_id) " +
-				"JOIN {h-schema}appointment apt ON (aa.appointment_id = apt.id) " +
-				"LEFT JOIN {h-schema}hierarchical_unit hu ON (d2.hierarchical_unit_id = hu.id) " +
-				"LEFT JOIN {h-schema}hierarchical_unit_type hut ON (hu.type_id = hut.id) " +
-				"JOIN {h-schema}patient p2 ON (apt.patient_id = p2.id) " +
-				"JOIN {h-schema}person p3 ON (p2.person_id = p3.id) " +
-				"JOIN {h-schema}person_extended pe ON (p3.id = pe.person_id) " +
-				"JOIN {h-schema}address a2 ON (pe.address_id = a2.id) " +
-				"LEFT JOIN {h-schema}self_perceived_gender spg ON (pe.gender_self_determination = spg.id) " +
-				"LEFT JOIN {h-schema}identification_type it ON (p3.identification_type_id = it.id) " +
-				"JOIN {h-schema}appointment_state as2 ON (apt.appointment_state_id = as2.id) " +
-				"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (apt.patient_medical_coverage_id  = pmc.id) " +
-				"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-				"LEFT JOIN {h-schema}clinical_specialty cs ON (d2.clinical_specialty_id = cs.id) " +
-				"JOIN {h-schema}healthcare_professional hp ON (hp.id = d2.healthcare_professional_id) " +
-				"JOIN {h-schema}person p4 ON (hp.person_id = p4.id) " +
-				"JOIN {h-schema}person_extended pe2 ON (p4.id = pe2.person_id) " +
-				"LEFT JOIN {h-schema}document_appointment da ON (da.appointment_id = apt.id) " +
-				"LEFT JOIN {h-schema}document d ON (da.document_id  = d.id) " +
-				"LEFT JOIN (SELECT dhc.document_id, STRING_AGG(s.pt, ', ') as description " +
-							"FROM {h-schema}document_health_condition dhc " +
-							"JOIN {h-schema}health_condition hc ON (hc.id = dhc.health_condition_id) " +
-							"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
-							"GROUP BY dhc.document_id) AS problems ON (problems.document_id = d.id) " +
-				"LEFT JOIN {h-schema}user_person up ON (apt.created_by = up.user_id) " +
-				"LEFT JOIN {h-schema}person p5 ON (up.person_id = p5.id) " +
-				"JOIN {h-schema}person_extended pe3 ON (p5.id = pe3.person_id) " +
- 				"WHERE i.id = :institutionId  " +
-				"AND apt.date_type_id BETWEEN :startDate AND :endDate ";
+		String sqlQuery = "SELECT NEW net.pladema.reports.domain.NominalAppointmentDetailBo(hut.description, hu.alias, a.dateTypeId, a.hour, as1.description, " +
+				"a.phoneNumber, a.phonePrefix, a.patientEmail, mc.name, pmc.affiliateNumber, cs.name, a.patientId, a.creationable.createdBy, " +
+				"d.healthcareProfessionalId, a.id, da.pk.documentId) " +
+				"FROM DoctorsOffice dof " +
+				"JOIN Diary d ON (d.doctorsOfficeId = dof.id) " +
+				"JOIN AppointmentAssn aa ON (d.id = aa.pk.diaryId) " +
+				"JOIN Appointment a ON (aa.pk.appointmentId = a.id) " +
+				"LEFT JOIN HierarchicalUnit hu ON (hu.id = d.hierarchicalUnitId) " +
+				"LEFT JOIN HierarchicalUnitType hut ON (hut.id = hu.typeId) " +
+				"JOIN AppointmentState as1 ON (as1.id = a.appointmentStateId) " +
+				"LEFT JOIN PatientMedicalCoverageAssn pmc ON (pmc.id = a.patientMedicalCoverageId) " +
+				"LEFT JOIN MedicalCoverage mc ON (mc.id = pmc.medicalCoverageId) " +
+				"LEFT JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+				"LEFT JOIN DocumentAppointment da ON (da.pk.appointmentId = a.id) " +
+ 				"WHERE dof.institutionId = :institutionId " +
+				"AND a.dateTypeId BETWEEN :startDate AND :endDate " +
+				"AND a.patientId IS NOT NULL " +
+				(filter.getHierarchicalUnitId() != null ? filter.isIncludeHierarchicalUnitDescendants() ? " AND hu.id IN (:hierarchicalUnitIds) " : " AND hu.id = " + filter.getHierarchicalUnitId() : "");
 
 		if (filter.getHierarchicalUnitTypeId() != null)
-			sqlQuery += " AND hu.type_id = " + filter.getHierarchicalUnitTypeId();
-
-		sqlQuery += filter.getHierarchicalUnitId() != null
-				? filter.isIncludeHierarchicalUnitDescendants()
-					? " AND hu.id IN (:hierarchicalUnitIds) "
-					: " AND hu.id = " + filter.getHierarchicalUnitId()
-				: "";
+			sqlQuery += " AND hu.typeId = " + filter.getHierarchicalUnitTypeId();
 
 		if (filter.getClinicalSpecialtyId() != null)
-			sqlQuery += " AND d2.clinical_specialty_id = " + filter.getClinicalSpecialtyId();
+			sqlQuery += " AND d.clinicalSpecialtyId = " + filter.getClinicalSpecialtyId();
 
 		if (filter.getDoctorId() != null)
-			sqlQuery += " AND hp.id = " + filter.getDoctorId();
+			sqlQuery += " AND d.healthcareProfessionalId = " + filter.getDoctorId();
 
 		if (filter.getAppointmentStateId() != null)
-			sqlQuery += " AND apt.appointment_state_id = " + filter.getAppointmentStateId();
+			sqlQuery += " AND a.appointmentStateId = " + filter.getAppointmentStateId();
 
-		var nativeQuery = entityManager.createNativeQuery(sqlQuery)
+		sqlQuery += " ORDER BY a.dateTypeId, a.hour ";
+
+		Query nativeQuery = entityManager.createQuery(sqlQuery)
 				.setParameter("institutionId", filter.getInstitutionId())
 				.setParameter("startDate", filter.getFromDate())
 				.setParameter("endDate", filter.getToDate());
@@ -160,43 +109,111 @@ public class NominalAppointmentDetailStorageImpl implements NominalAppointmentDe
 		if (filter.getHierarchicalUnitId() != null && filter.isIncludeHierarchicalUnitDescendants())
 			nativeQuery.setParameter("hierarchicalUnitIds", getHierarchicalUnitIds(filter.getHierarchicalUnitId()));
 
-		List<Object[]> appointmentsData = nativeQuery.getResultList();
-
-		List<NominalAppointmentDetailBo> result = new ArrayList<>();
-		appointmentsData.forEach(a ->
-				result.add(new NominalAppointmentDetailBo(
-						(String) a[0],
-						(String) a[1],
-						(String) a[2],
-						(String) a[3],
-						(String) a[4],
-						(String) a[5],
-						(String) a[6],
-						(String) a[7],
-						(String) a[8],
-						(String) a[9],
-						(String) a[10],
-						a[11] != null ? ((Date)a[11]).toLocalDate() : null,
-						(String) a[12],
-						((Date)a[13]).toLocalDate(),
-						((Time)a[14]).toLocalTime(),
-						(String) a[15],
-						(String) a[16],
-						(String) a[17],
-						(String) a[18],
-						(String) a[19],
-						(String) a[20],
-						(String) a[21],
-						sharedPersonPort.parseCompletePersonName((String) a[22], (String) a[23],
-								(String) a[24], (String) a[25], (String) a[26]),
-						(String) a[27],
-						sharedPersonPort.parseCompletePersonName((String) a[28], (String) a[29],
-								(String) a[30], (String) a[31], (String) a[32]))
-				)
-		);
+		List<NominalAppointmentDetailBo> result = nativeQuery.getResultList();
+		if (!result.isEmpty())
+			fetchAndCompleteNominalAppointmentDetails(result, filter.getInstitutionId());
 		log.debug("Nominal appointments detail size -> {} ", result.size());
-		result.sort(Comparator.comparing(NominalAppointmentDetailBo::getAppointmentDate).thenComparing(NominalAppointmentDetailBo::getAppointmentHour));
 		return result;
+	}
+
+	private void fetchAndCompleteNominalAppointmentDetails(List<NominalAppointmentDetailBo> result, Integer institutionId) {
+		String queryString = "SELECT p.description AS province, d.description AS department, i.sisa_code, i.name AS institution " +
+				"FROM {h-schema}institution i " +
+				"JOIN {h-schema}address a ON (a.id = i.address_id) " +
+				"JOIN {h-schema}city c ON (c.id = a.city_id) " +
+				"JOIN {h-schema}department d ON (d.id = c.department_id) " +
+				"JOIN {h-schema}province p ON (p.id = d.province_id) " +
+				"where i.id = :institutionId";
+		Object[] institutionData = (Object[]) entityManager.createNativeQuery(queryString)
+				.setParameter("institutionId", institutionId)
+				.getSingleResult();
+
+		List<Integer> patientIds = result.stream()
+				.map(NominalAppointmentDetailBo::getPatientId)
+				.collect(Collectors.toList());
+		queryString = "SELECT p.id, CONCAT(p2.first_name, ' ', p2.middle_names) AS patientNames, CONCAT(p2.last_name, ' ', p2.other_last_names) AS patientSurnames, " +
+				"pe.name_self_determination, it.description AS identification_type, p2.identification_number, p2.birth_date, spg.description, " +
+				"CONCAT(a.street, ' ', a.number, ' ', a.floor, ' ', a.apartment, ' ', c.description) AS address, pe.phone_prefix, pe.phone_number, " +
+				"pe.email " +
+				"FROM {h-schema}patient p " +
+				"JOIN {h-schema}person p2 ON (p2.id = p.person_id) " +
+				"JOIN {h-schema}person_extended pe ON (pe.person_id = p2.id) " +
+				"LEFT JOIN {h-schema}identification_type it ON (it.id = p2.identification_type_id) " +
+				"LEFT JOIN {h-schema}self_perceived_gender spg ON (spg.id = pe.gender_self_determination) " +
+				"JOIN {h-schema}address a ON (a.id = pe.address_id) " +
+				"LEFT JOIN {h-schema}city c ON (c.id = a.city_id) " +
+				"WHERE p.id IN :patientIds";
+		List<Object[]> patientsData = entityManager.createNativeQuery(queryString)
+				.setParameter("patientIds", patientIds)
+				.getResultList();
+
+		List<Integer> diaryHealthcareProfessionalIds = result.stream().map(NominalAppointmentDetailBo::getDiaryHealthcareProfessionalId).collect(Collectors.toList());
+		queryString = "SELECT hp.id, p.first_name, p.middle_names, p.last_name, p.other_last_names, pe.name_self_determination " +
+				"FROM {h-schema}healthcare_professional hp " +
+				"JOIN {h-schema}person p ON (p.id = hp.person_id) " +
+				"JOIN {h-schema}person_extended pe ON (pe.person_id = p.id) " +
+				"WHERE hp.id IN :diaryHealthcareProfessionalIds";
+		List<Object[]> diaryHealthcareProfessionalsData = entityManager.createNativeQuery(queryString)
+				.setParameter("diaryHealthcareProfessionalIds", diaryHealthcareProfessionalIds)
+				.getResultList();
+
+		List<Integer> appointmentHealthcareProfessionalIds = result.stream().map(NominalAppointmentDetailBo::getAppointmentHealthcareProfessionalUserId).collect(Collectors.toList());
+		queryString = "SELECT up.user_id, p.first_name, p.middle_names, p.last_name, p.other_last_names, pe.name_self_determination " +
+				"FROM {h-schema}user_person up " +
+				"JOIN {h-schema}person p ON (p.id = up.person_id) " +
+				"JOIN {h-schema}person_extended pe ON (pe.person_id = p.id) " +
+				"WHERE up.user_id IN :appointmentHealthcareProfessionalIds";
+		List<Object[]> appointmentHealthcareProfessionalsData = entityManager.createNativeQuery(queryString)
+				.setParameter("appointmentHealthcareProfessionalIds", appointmentHealthcareProfessionalIds)
+				.getResultList();
+
+		List<Long> appointmentDocumentIds = result.stream()
+				.map(NominalAppointmentDetailBo::getDocumentId)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+		queryString = "SELECT dhc.document_id, STRING_AGG(s.pt, ', ') AS description " +
+				"FROM {h-schema}document_health_condition dhc " +
+				"JOIN {h-schema}health_condition hc ON (hc.id = dhc.health_condition_id) " +
+				"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
+				"WHERE dhc.document_id IN :appointmentDocumentIds " +
+				"GROUP BY dhc.document_id";
+		List<Object[]> documentsProblems = entityManager.createNativeQuery(queryString)
+				.setParameter("appointmentDocumentIds", appointmentDocumentIds)
+				.getResultList();
+
+		result.forEach(appointment -> completeNominalAppointmentDetails(appointment, institutionData, patientsData, diaryHealthcareProfessionalsData, appointmentHealthcareProfessionalsData, documentsProblems));
+	}
+
+	private void completeNominalAppointmentDetails(NominalAppointmentDetailBo appointment, Object[] institutionData,
+												   List<Object[]> patientsData, List<Object[]> diaryHealthcareProfessionalsData,
+												   List<Object[]> appointmentHealthcareProfessionalsData, List<Object[]> documentsProblems) {
+		appointment.setInstitutionData(institutionData);
+		Optional<Object[]> patientData = patientsData.stream()
+				.filter(patient -> appointment.getPatientId().equals(patient[0]))
+				.findFirst();
+		patientData.ifPresent(appointment::setPatientData);
+		Optional<Object[]> diaryHealthcareProfessionalData = diaryHealthcareProfessionalsData.stream()
+				.filter(diaryProfessional -> appointment.getDiaryHealthcareProfessionalId().equals(diaryProfessional[0]))
+				.findFirst();
+		diaryHealthcareProfessionalData.ifPresent(professional -> setDiaryProfessionalName(appointment, professional));
+		Optional<Object[]> appointmentHealthcareProfessionalData = appointmentHealthcareProfessionalsData.stream()
+				.filter(appointmentProfessional -> appointment.getAppointmentHealthcareProfessionalUserId().equals(appointmentProfessional[0]))
+				.findFirst();
+		appointmentHealthcareProfessionalData.ifPresent(professional -> setAppointmentProfessionalName(appointment, professional));
+		Optional<Object[]> documentProblems = documentsProblems.stream()
+				.filter(document -> appointment.getDocumentId() != null && appointment.getDocumentId().equals(((BigInteger)document[0]).longValue()))
+				.findFirst();
+		documentProblems.ifPresent(document -> appointment.setDiagnoses((String) document[1]));
+	}
+
+	private void setAppointmentProfessionalName(NominalAppointmentDetailBo appointment, Object[] professional) {
+		String professionalName = sharedPersonPort.parseCompletePersonName((String) professional[1], (String) professional[2], (String) professional[3], (String) professional[4], (String) professional[5]);
+		appointment.setIssuerAppointmentFullName(professionalName);
+	}
+
+	private void setDiaryProfessionalName(NominalAppointmentDetailBo appointment, Object[] professional) {
+		String professionalName = sharedPersonPort.parseCompletePersonName((String) professional[1], (String) professional[2], (String) professional[3], (String) professional[4], (String) professional[5]);
+		appointment.setProfessionalName(professionalName);
 	}
 
 	private List<Integer> getHierarchicalUnitIds(Integer hierarchicalUnitId) {
