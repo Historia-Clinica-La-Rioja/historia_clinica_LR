@@ -28,11 +28,6 @@
 								{{emergencyCareType.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_emergency_care_type" type="button" *ngIf="form.value.emergencyCareTypeId"
-							matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.emergencyCareTypeId); $event.stopPropagation()">
-							<mat-icon>close</mat-icon>
-						</button>
 					</mat-form-field>
 
 					<mat-form-field appearance="outline">

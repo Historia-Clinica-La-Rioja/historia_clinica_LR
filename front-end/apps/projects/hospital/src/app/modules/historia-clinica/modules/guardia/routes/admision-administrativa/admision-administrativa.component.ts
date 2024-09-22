@@ -18,6 +18,8 @@ import { EmergencyCarePatient } from '../../components/emergency-care-patient/em
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { ActivatedRoute } from '@angular/router';
 
+const UNDEFINED_EMERGENCY_CARE_TYPE = -1;
+
 @Component({
 	selector: 'app-admision-administrativa',
 	templateUrl: './admision-administrativa.component.html',
@@ -80,7 +82,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 
 		this.form = this.formBuilder.group({
 			patientMedicalCoverageId: [null],
-			emergencyCareTypeId: [{ value: null, disabled: !this.isEmergencyCareTypeEditable }],
+			emergencyCareTypeId: [{ value: UNDEFINED_EMERGENCY_CARE_TYPE, disabled: !this.isEmergencyCareTypeEditable }],
 			emergencyCareEntranceTypeId: [null],
 			doctorsOfficeId: [{ value: null, disabled: !this.isDoctorOfficeEditable }],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)],
