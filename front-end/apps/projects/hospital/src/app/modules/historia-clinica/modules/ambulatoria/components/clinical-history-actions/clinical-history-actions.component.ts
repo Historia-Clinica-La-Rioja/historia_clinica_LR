@@ -58,7 +58,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasMedicalRole = false;
 	hasAdministrativeRole = false;
 	hasRoleAbleToSeeTriage: boolean;
-	hasNurseRoleEvolutionNoteEnabled = true;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
@@ -67,9 +66,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	isEmergencyCareTemporaryPatient = false;
 	isAnestheticReportEnabledFF: boolean;
-	isEvolutionNoteEnabled: boolean;
 	isAdministrativeAndHasTriageFFInFalse: boolean;
-	hasGuardButtons: boolean;
 
 	@Input() patientId: number;
 	@Input()
@@ -139,8 +136,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		const refNotificationInfo = { patientId: this.patientId, consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY };
 		this.referenceNotificationService = new ReferenceNotificationService(refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
 
-		this.checkEvolutionNotePermission()
-
 		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
 			if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY)
 				this.openNuevaConsulta();
@@ -154,19 +149,11 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.internmentActions.dialogRef$.subscribe(dialogRef => this.popUpOpen.next(dialogRef));
 
 		this.checkAdministrativeFF();
-
-		this.hasGuardButtons = this.hasGuardOptionButtons();
-	}
-
-	private hasGuardOptionButtons(): boolean {
-		return (!this.isAdministrativeAndHasTriageFFInFalse || this.isEvolutionNoteEnabled);
 	}
 
 	private checkAdministrativeFF() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.hasRoleAbleToSeeTriage
-				? this.isAdministrativeAndHasTriageFFInFalse = false
-				: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+			this.isAdministrativeAndHasTriageFFInFalse = this.hasRoleAbleToSeeTriage ? false : (!isEnabled && this.hasAdministrativeRole)
 		)
 	}
 
@@ -428,17 +415,5 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		});
 	}
 
-	private checkEvolutionNotePermission(): void {
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			const hasProfessionalRole = (anyMatch<ERole>(userRoles, [
-				ERole.ESPECIALISTA_MEDICO,
-				ERole.PROFESIONAL_DE_SALUD,
-				ERole.ESPECIALISTA_EN_ODONTOLOGIA]))
-			const hasNurseRole = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]))
-
-			hasProfessionalRole ? this.isEvolutionNoteEnabled = true :
-				hasNurseRole ? this.isEvolutionNoteEnabled = this.hasNurseRoleEvolutionNoteEnabled : false
-		});
-	}
 
 }

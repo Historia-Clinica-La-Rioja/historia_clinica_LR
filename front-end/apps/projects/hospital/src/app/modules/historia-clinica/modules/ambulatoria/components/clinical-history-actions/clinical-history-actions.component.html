@@ -20,7 +20,7 @@
 	</ng-template>
 
 	<mat-menu #menu="matMenu">
-		<div *ngIf="anyEmergencyCareAction && hasGuardButtons" id="emergencyCare">
+		<div *ngIf="anyEmergencyCareAction && !isAdministrativeAndHasTriageFFInFalse" id="emergencyCare">
 			<mat-label class="actions-labels color-grey">
 				GUARDIA
 			</mat-label>
@@ -31,8 +31,8 @@
 				</button>
 			</ng-container>
 
-			<ng-container *ngIf="isEvolutionNoteEnabled">
-				<button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item
+			<ng-container *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION">
+				<button mat-menu-item
 					id="evolution_note" color="primary" (click)="openNotaDeEvolucion()" class="actions">
 					Nota de evolución
 				</button>
