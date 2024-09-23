@@ -29,7 +29,8 @@
 			}
 		},
 		"monthly-report": {
-			"TITLE": "Mensuales descargables"
+			"TITLE": "Mensuales descargables",
+			"PREPARING_MESSAGE": "Estamos generando su reporte, este proceso puede demorar unos minutos. Si lo desea, puede regresar más tarde para visualizarlo, a su vez, le enviaremos un correo electrónico cuando esté listo para su descarga."
 		},
 		"diabetic-patients": {
 			"TITLE": "Pacientes diabéticos"

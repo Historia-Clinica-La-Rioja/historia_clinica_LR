@@ -14,8 +14,7 @@
 				<mat-spinner color="primary"></mat-spinner>
 			</div>
 			<p class="spinner primary">Generando reporte...</p>
-			<p class="mat-caption">
-				La generación del reporte puede demorar. Si lo desea, puede regresar más tarde y visualizar el reporte generado.
+			<p class="mat-body" translate="reportes.monthly-report.PREPARING_MESSAGE">
 			</p>
 			<p class="mat-caption" *ngIf="showStatus.toDownload?.report">
 				También puede ver el reporte generado <app-datetime-relative [datetime]="showStatus.toDownload.report.createdOn"></app-datetime-relative>.
