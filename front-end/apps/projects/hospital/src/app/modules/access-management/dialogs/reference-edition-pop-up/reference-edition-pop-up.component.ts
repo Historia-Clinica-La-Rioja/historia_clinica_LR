@@ -39,8 +39,6 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 
 	save() {
 		this.submitForm = true;
-		if (!this.newReferenceInfo.destinationInstitutionId)
-			return;
 		if (!this.referenceFiles?.newFiles.length) {
 			if (this.referenceFiles?.oldFiles?.length)
 				this.newReferenceInfo = { ...this.newReferenceInfo, fileIds: this.referenceFiles.oldFiles.map(files => files.fileId) };
@@ -103,10 +101,17 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	}
 
 	private modifyReferenceAsGestor() {
-		this.institutionalReferenceReportService.modifyReferenceAsGestor(this.data.referenceDataDto.id, this.newReferenceInfo.destinationInstitutionId, []).subscribe({
-			next: () => this.referenceEditionSuccess(),
-			error: () => this.snackBarService.showError("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_ERROR")
-		});
+		if (this.newReferenceInfo.destinationInstitutionId)
+			this.institutionalReferenceReportService.modifyReferenceWidhInstitutionAsGestor(this.data.referenceDataDto.id, this.newReferenceInfo.destinationInstitutionId, []).subscribe({
+				next: () => this.referenceEditionSuccess(),
+				error: () => this.snackBarService.showError("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_ERROR")
+			});
+
+		else
+			this.institutionalReferenceReportService.modifyReferenceAsGestor(this.data.referenceDataDto.id, []).subscribe({
+				next: () => this.referenceEditionSuccess(),
+				error: () => this.snackBarService.showError("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_ERROR")
+			});
 	}
 
 	private loadNewFilesAndModifyReferenceAsGestor() {
@@ -120,15 +125,27 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 					}
 				)
 			);
-		uploadObservables.pipe(
-			switchMap(() => {
-				if (this.referenceFiles?.oldFiles) filesIds = this.concatOldAndNewFiles(this.referenceFiles.oldFiles, filesIds);
-				return this.institutionalReferenceReportService.modifyReferenceAsGestor(this.data.referenceDataDto.id, this.newReferenceInfo.destinationInstitutionId, filesIds)
-			})
-		).subscribe({
-			next: () => this.referenceEditionSuccess(),
-			error: () => this.referenceEditionError(filesIds)
-		});;
+		if (this.newReferenceInfo.destinationInstitutionId)
+			uploadObservables.pipe(
+				switchMap(() => {
+					if (this.referenceFiles?.oldFiles) filesIds = this.concatOldAndNewFiles(this.referenceFiles.oldFiles, filesIds);
+					return this.institutionalReferenceReportService.modifyReferenceWidhInstitutionAsGestor(this.data.referenceDataDto.id, this.newReferenceInfo.destinationInstitutionId, filesIds)
+				})
+			).subscribe({
+				next: () => this.referenceEditionSuccess(),
+				error: () => this.referenceEditionError(filesIds)
+			});
+		
+		else 
+			uploadObservables.pipe(
+				switchMap(() => {
+					if (this.referenceFiles?.oldFiles) filesIds = this.concatOldAndNewFiles(this.referenceFiles.oldFiles, filesIds);
+					return this.institutionalReferenceReportService.modifyReferenceAsGestor(this.data.referenceDataDto.id, filesIds)
+				})
+			).subscribe({
+				next: () => this.referenceEditionSuccess(),
+				error: () => this.referenceEditionError(filesIds)
+			});
 	}
 
 	private loadFilesAndModifyReference() {
