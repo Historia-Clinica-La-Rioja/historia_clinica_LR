@@ -21,7 +21,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class})
+@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class, StudyOrderPatientMapper.class})
 public interface StudyMapper {
     @Named("parseToList")
     @IterableMapping(qualifiedByName = "parseTo")
@@ -74,6 +74,7 @@ public interface StudyMapper {
 	@Mapping(target = "sourceTypeId", source = "sourceTypeId")
 	@Mapping(target = "deferredDate", source = "deferredDate")
 	@Mapping(target = "status", source = "status")
+	@Mapping(target = "patientDto", source = "patientBo")
 	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }

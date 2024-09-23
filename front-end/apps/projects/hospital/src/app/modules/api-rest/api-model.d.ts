@@ -5207,6 +5207,11 @@ export interface StudyIntanceUIDDto {
     uid: string;
 }
 
+export interface StudyOrderBasicPatientDto {
+    id: number;
+    person: BasicPersonalDataDto;
+}
+
 export interface StudyOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;
@@ -5231,6 +5236,7 @@ export interface StudyOrderReportInfoDto {
 
 export interface StudyOrderWorkListDto {
     deferredDate?: DateTimeDto;
+    patientDto: StudyOrderBasicPatientDto;
     requiresTransfer: boolean;
     snomed: SnomedDto;
     sourceTypeId: number;

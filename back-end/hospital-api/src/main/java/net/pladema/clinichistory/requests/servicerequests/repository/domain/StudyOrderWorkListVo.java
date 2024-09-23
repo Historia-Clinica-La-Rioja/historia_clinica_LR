@@ -1,35 +1,52 @@
 package net.pladema.clinichistory.requests.servicerequests.repository.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
 import net.pladema.vademecum.domain.SnomedBo;
 
 import javax.annotation.Nullable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 public class StudyOrderWorkListVo {
 
 	private Integer studyId;
 
+	private StudyOrderBasicPatientBo patientVo;
+
 	private SnomedBo snomed;
 
-	private Integer studyTypeId;
+	private Short studyTypeId;
 
-	private boolean requiresTransfer;
+	private Boolean requiresTransfer;
 
-	private Integer sourceTypeId;
+	private Short sourceTypeId;
 
 	@Nullable
 	private LocalDateTime deferredDate;
 
 	private Integer status;
+
+	public StudyOrderWorkListVo(Integer studyId, Integer patientId, String firstName, String lastName,
+								String identificationNumber, Short identificationTypeId, Short genderId, LocalDate birthDate,
+								String sctid, String pt, Short studyTypeId, Boolean requiresTransfer,
+								Short sourceTypeId, @Nullable LocalDateTime deferredDate) {
+		this.studyId = studyId;
+		this.patientVo = new StudyOrderBasicPatientBo(patientId, firstName, lastName,
+				identificationNumber, identificationTypeId, genderId, birthDate);
+		this.snomed = new SnomedBo(sctid, pt);
+		this.studyTypeId = studyTypeId;
+		this.requiresTransfer = requiresTransfer != null ? requiresTransfer : false;
+		this.sourceTypeId = sourceTypeId;
+		this.deferredDate = deferredDate;
+		this.status = 1;
+
+	}
 
 }

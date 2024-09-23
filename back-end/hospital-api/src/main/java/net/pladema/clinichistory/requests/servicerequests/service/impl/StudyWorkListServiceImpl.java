@@ -9,9 +9,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListS
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,21 +21,26 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 
 	@Override
 	public List<StudyOrderWorkListBo> execute(Integer institutionId, List<String> categories){
-		log.debug("Input parameters -> institutionId {}", institutionId);
+
+		log.debug("Input parameters -> institutionId: {}, categories: {}", institutionId, categories);
+
 		List<StudyOrderWorkListBo> result= studyWorkListRepository.execute(institutionId,categories)
 				.stream()
 				.map(this::mapToBo)
 				.collect(Collectors.toList());
+
 		log.debug("Output -> {}", result);
+
 		return result;
 	};
 
 	private StudyOrderWorkListBo mapToBo(StudyOrderWorkListVo studyOrderWorkListVo){
 		return new StudyOrderWorkListBo(
 				studyOrderWorkListVo.getStudyId(),
+				studyOrderWorkListVo.getPatientVo(),
 				studyOrderWorkListVo.getSnomed(),
 				studyOrderWorkListVo.getStudyTypeId(),
-				studyOrderWorkListVo.isRequiresTransfer(),
+				studyOrderWorkListVo.getRequiresTransfer(),
 				studyOrderWorkListVo.getSourceTypeId(),
 				studyOrderWorkListVo.getDeferredDate(),
 				studyOrderWorkListVo.getStatus()

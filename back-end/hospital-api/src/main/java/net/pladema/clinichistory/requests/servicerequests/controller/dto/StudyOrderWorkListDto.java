@@ -19,13 +19,15 @@ public class StudyOrderWorkListDto {
 
 	private Integer studyId;
 
+	private StudyOrderBasicPatientDto patientDto;
+
 	private SnomedDto snomed;
 
-	private Integer studyTypeId;
+	private Short studyTypeId;
 
 	private boolean requiresTransfer;
 
-	private Integer sourceTypeId;
+	private Short sourceTypeId;
 
 	@Nullable
 	private DateTimeDto deferredDate;

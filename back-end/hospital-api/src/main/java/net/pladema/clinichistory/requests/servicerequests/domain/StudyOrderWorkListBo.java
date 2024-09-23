@@ -18,13 +18,15 @@ public class StudyOrderWorkListBo {
 
 	private Integer studyId;
 
+	private StudyOrderBasicPatientBo patientBo;
+
 	private SnomedBo snomed;
 
-	private Integer studyTypeId;
+	private Short studyTypeId;
 
 	private boolean requiresTransfer;
 
-	private Integer sourceTypeId;
+	private Short sourceTypeId;
 
 	@Nullable
 	private LocalDateTime deferredDate;
