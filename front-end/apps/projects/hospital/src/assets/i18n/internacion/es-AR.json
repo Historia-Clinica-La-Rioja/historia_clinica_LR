@@ -981,6 +981,7 @@
 				"DELETE_TITLE": "Aclarar motivo de eliminación",
 				"EDIT_TITLE": "Aclarar motivo de edición",
 				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál edita este documento.",
+				"DELETE_SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál elimina este documento.",
 				"REASON": "Motivo"
 			}
 		},
