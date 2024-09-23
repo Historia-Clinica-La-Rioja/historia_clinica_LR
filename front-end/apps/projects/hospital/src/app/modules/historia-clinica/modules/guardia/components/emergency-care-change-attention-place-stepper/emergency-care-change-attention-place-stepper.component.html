@@ -1,7 +1,7 @@
 <mat-stepper orientation="horizontal" linear>
 	<mat-step>
 		<app-emergency-care-change-attention-place-patient [patient]="patient"></app-emergency-care-change-attention-place-patient>
-		<!-- aca componente del form -->
+		<app-emergency-care-change-attention-place-select-sector (selectedSector)="setSector($event)"></app-emergency-care-change-attention-place-select-sector>
 	</mat-step>
 	<mat-step *ngIf="false">
 		<!-- aca iria condiionalmente componente de mostar camas -->

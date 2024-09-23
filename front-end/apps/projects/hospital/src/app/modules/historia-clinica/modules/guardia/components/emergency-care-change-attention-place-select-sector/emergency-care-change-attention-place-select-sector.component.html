@@ -1,0 +1,11 @@
+<p class="mat-body-strong">{{"guardia.home.attention_places.change-attention-place.SECTOR" | translate}}</p>
+<form [formGroup]="form">
+	<mat-form-field appearance="outline" fxFlex="100%">
+		<mat-label>{{"guardia.home.attention_places.change-attention-place.SELECT_SECTOR" | translate}}</mat-label>
+		<mat-select formControlName="sector">
+			<mat-option *ngFor="let sector of sectors$ | async" [value]="sector.originalSector">
+				{{ sector.mappedDescription }}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>

@@ -173,7 +173,9 @@
 				"change-attention-place":{
 					"TITLE": "Cambiar lugar de atención",
 					"BUTTON_CONTINUE": "Continuar",
-					"SUCESS": "Cambio de lugar de atencion realizado con exito"
+					"SUCESS": "Cambio de lugar de atencion realizado con exito",
+					"SECTOR": "Sector",
+					"SELECT_SECTOR": "Seleccione sector"
 				}
             },
 			"tabs": {
