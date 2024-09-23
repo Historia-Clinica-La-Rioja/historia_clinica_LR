@@ -354,6 +354,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.dialog.open(this.triageComponent, { autoFocus: false, disableClose: true, data: this.episode.id })
 	}
 
+	openEvolutionNoteByNurse() {
+		//to do
+	}
+
 	private hasToDoInternmentAction() {
 		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;

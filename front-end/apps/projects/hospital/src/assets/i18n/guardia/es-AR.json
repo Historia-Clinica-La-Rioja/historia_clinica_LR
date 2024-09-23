@@ -360,6 +360,10 @@
 				"PERFUSION": "Perfusión",
 				"HEART_RATE": "Frecuencia cardíaca"
 			}
+		},
+		"actions": {
+			"EVOLUTION_NOTE": "Nota de evolución",
+			"EVOLUTION_NOTE_BY_NURSE": "Nota de evolución de enfermería"
 		}
 	}
 }
