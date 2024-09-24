@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateDto, MeasuringPointDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
-import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateToDateDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { getArrayCopyWithoutElementAtIndex, removeFrom } from '@core/utils/array.utils';
-import { isEqualDate } from '@core/utils/date.utils';
+import { isEqualDate, sameDayMonthAndYear, sameHourAndMinute } from '@core/utils/date.utils';
 import { ToFormGroup } from '@core/utils/form.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { TimePickerData, TimePickerDto } from '@presentation/components/time-picker/time-picker.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { isAfter } from 'date-fns';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 
 const vitalSignsData: VitalSignsDataWithTimePicker = {
@@ -41,7 +42,7 @@ const vitalSignsData: VitalSignsDataWithTimePicker = {
 export class AnestheticReportVitalSignsService {
 
     private form: FormGroup<MeasuringPointForm>;
-    private vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>;
+    private vitalSignsForm: FormGroup<VitalSignsForm>;
     private measuringPoints: MeasuringPointData[] = [];
 
     private measuringPointsSource = new BehaviorSubject<MeasuringPointData[]>([]);
@@ -75,6 +76,11 @@ export class AnestheticReportVitalSignsService {
         isRequired: true,
     }
 
+	anesthesiaStartDate: Date | null = null;
+	anesthesiaEndDate: Date | null = null;
+	surgeryStartDate: Date | null = null;
+	surgeryEndDate: Date | null = null;
+
     constructor(
 		private readonly translateService: TranslateService,
         private readonly snackBarService: SnackBarService,
@@ -89,7 +95,7 @@ export class AnestheticReportVitalSignsService {
             endTidal: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.endTidal), Validators.max(VITAL_SIGNS.MAX.endTidal), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
         });
 
-        this.vitalSignsForm = new FormGroup<ToFormGroup<VitalSignsData>>({
+        this.vitalSignsForm = new FormGroup<VitalSignsForm>({
             anesthesiaStartDate: new FormControl(null),
             anesthesiaEndDate: new FormControl(null),
             anesthesiaStartTime: new FormControl(null),
@@ -425,6 +431,34 @@ export class AnestheticReportVitalSignsService {
             minutes: timeDto.minutes
         };
     }
+
+	validateDates(vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>): void {
+		this.validateDate(vitalSignsForm, 'anesthesiaStartDate', 'anesthesiaEndDate', 'anesthesiaStartTime', 'anesthesiaEndTime');
+		this.validateDate(vitalSignsForm, 'surgeryStartDate', 'surgeryEndDate', 'surgeryStartTime', 'surgeryEndTime');
+	}
+
+	private validateDate(vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>, startDateKey: string, endDateKey: string, startTimeKey: string, endTimeKey: string): void {
+		const startDate = vitalSignsForm.controls[startDateKey].value;
+		const endDate = vitalSignsForm.controls[endDateKey].value;
+		const startTime = vitalSignsForm.controls[startTimeKey].value;
+		const endTime = vitalSignsForm.controls[endTimeKey].value;
+
+		const startTimeDate = startTime ? timeDtoToDate(startTime) : null;
+		const endTimeDate = endTime ? timeDtoToDate(endTime) : null;
+
+		this[startDateKey] = startDate ? new Date(startDate) : null;
+		this[endDateKey] = endDate ? new Date(endDate) : null;
+
+		if ((this[startDateKey] && this[endDateKey]) && sameDayMonthAndYear(this[startDateKey], this[endDateKey])) {
+			if (!(startTime && endTime) || sameHourAndMinute(startTimeDate, endTimeDate) || isAfter(startTimeDate, endTimeDate)) {
+				vitalSignsForm.controls[endDateKey].setErrors({ endTimeBeforeStartTime: true });
+			} else {
+				vitalSignsForm.controls[endDateKey].setErrors(null);
+			}
+		} else {
+			vitalSignsForm.controls[endDateKey].setErrors(null);
+		}
+	}
 }
 
 export interface MeasuringPointForm {
@@ -449,6 +483,16 @@ export interface MeasuringPointData {
 
 export type VitalSignsAttribute = keyof VitalSignsData;
 
+export interface VitalSignsForm {
+    anesthesiaStartDate?: FormControl<Date>;
+    anesthesiaEndDate?: FormControl<Date>;
+    anesthesiaStartTime?: FormControl<TimeDto>;
+    anesthesiaEndTime?: FormControl<TimeDto>;
+    surgeryStartDate?: FormControl<Date>;
+    surgeryEndDate?: FormControl<Date>;
+    surgeryStartTime?: FormControl<TimeDto>;
+    surgeryEndTime?: FormControl<TimeDto>;
+}
 export interface VitalSignsData {
     anesthesiaStartDate?: Date;
     anesthesiaEndDate?: Date;
