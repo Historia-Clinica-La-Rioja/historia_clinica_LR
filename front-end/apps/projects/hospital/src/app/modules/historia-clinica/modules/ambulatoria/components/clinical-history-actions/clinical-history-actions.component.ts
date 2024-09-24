@@ -30,6 +30,7 @@ import { PatientType } from '@historia-clinica/constants/summaries';
 import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { EmergencyCareStateChangedService } from '../../services/emergency-care-state-changed.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { EvolutionNoteDockPopupByNurseComponent } from '@historia-clinica/components/evolution-note-dock-popup-by-nurse/evolution-note-dock-popup-by-nurse.component';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -355,7 +356,17 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	}
 
 	openEvolutionNoteByNurse() {
-		//to do
+		if (!this.notaDeEvolucionDialogRef) {
+			this.notaDeEvolucionDialogRef = this.dockPopupService.open(EvolutionNoteDockPopupByNurseComponent, { patientId: this.patientId, episodeId: this.episode.id });
+			this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			this.notaDeEvolucionDialogRef.afterClosed().subscribe(_ => {
+				delete this.notaDeEvolucionDialogRef;
+				this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			})
+		} else {
+			if (this.notaDeEvolucionDialogRef.isMinimized())
+				this.notaDeEvolucionDialogRef.maximize();
+		}
 	}
 
 	private hasToDoInternmentAction() {

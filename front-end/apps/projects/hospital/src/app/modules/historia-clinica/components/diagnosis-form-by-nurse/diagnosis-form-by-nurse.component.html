@@ -1,0 +1,22 @@
+<div class="expansion-section">
+	<app-new-consultation-expansion-section id="diagnosticos"
+		title="{{'guardia.nursing_evolution_note.DIAGNOSIS' | translate}}" icon="error_outlined" [collapsed]="false"
+		[isEmpty]="false" [hideBorder]="true">
+
+		<app-titled-content-card title="{{'guardia.nursing_evolution_note.MAIN_DIAGNOSIS' | translate}}">
+			<div fxLayout="column" fxLayoutGap="5px">
+				<div class="diagnosis-text" fxLayout="row" fxLayoutGap="10px">
+					<mat-checkbox id="{{ form.value.mainDiagnostico.snomed.pt }}" color="primary" [checked]="true"
+						[disabled]="true"></mat-checkbox>
+					<strong class="capitalize-first-letter">{{ form.value.mainDiagnostico.snomed.pt }}</strong>
+				</div>
+				<span *ngIf="form.value.mainDiagnostico.statusId === ACTIVE">
+					{{'internaciones.anamnesis.diagnosticos.ACTIVE' | translate}} 
+				</span>
+				<span *ngIf="form.value.mainDiagnostico.verificationId === CONFIRMED">
+					{{'internaciones.anamnesis.diagnosticos.CONFIRMED' | translate}} 
+				</span>
+			</div>
+		</app-titled-content-card>
+	</app-new-consultation-expansion-section>
+</div>

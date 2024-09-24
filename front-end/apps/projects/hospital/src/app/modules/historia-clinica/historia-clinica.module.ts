@@ -24,6 +24,7 @@ import { CustomFormComponent } from './components/custom-form/custom-form.compon
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
+import { DiagnosisFormByNurseComponent } from './components/diagnosis-form-by-nurse/diagnosis-form-by-nurse.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
@@ -41,6 +42,7 @@ import { EvolutionChartOptionsComponent } from './components/evolution-chart-opt
 import { EvolutionChartSelectComponent } from './components/evolution-chart-select/evolution-chart-select.component';
 import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-type-select/evolution-chart-type-select.component';
 import { EvolutionNoteDocumentSummaryComponent } from './components/evolution-note-document-summary/evolution-note-document-summary.component';
+import { EvolutionNoteDockPopupByNurseComponent } from './components/evolution-note-dock-popup-by-nurse/evolution-note-dock-popup-by-nurse.component';
 import { ExternalCauseSummaryComponent } from './components/external-cause-summary/external-cause-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
@@ -193,6 +195,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		CreateOrderComponent,
 		CustomFormComponent,
         DescriptionItemDataSummaryComponent,
+    	DiagnosisFormByNurseComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		DocumentSummaryHeaderComponent,
@@ -204,6 +207,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		EvolutionChartTypeSelectComponent,
 		EvolutionChartOptionsComponent,
         EvolutionNoteDocumentSummaryComponent,
+		EvolutionNoteDockPopupByNurseComponent,
         ExternalCauseSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,

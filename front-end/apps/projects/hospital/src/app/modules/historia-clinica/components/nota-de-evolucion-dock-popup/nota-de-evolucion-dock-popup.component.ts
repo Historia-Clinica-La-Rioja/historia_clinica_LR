@@ -9,9 +9,8 @@ import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { toOutpatientMedicationDto, toOutpatientAnthropometricDataDto, toOutpatientFamilyHistoryDto, toOutpatientRiskFactorDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
+import { buildEmergencyCareEvolutionNoteDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
 import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
-import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -82,42 +81,12 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	save() {
 		if (this.form.value.evolutionNote) {
 			this.disableConfirmButton = true;
-			const emergencyCareEvolutionNoteDto = this.buildEmergencyCareEvolutionNoteDto();
+			const emergencyCareEvolutionNoteDto = buildEmergencyCareEvolutionNoteDto(this.form, this.isFamilyHistoriesNoRefer, this.isAllergyNoRefer, this.data.patientId, EEmergencyCareEvolutionNoteType.DOCTOR);
 			this.persist(emergencyCareEvolutionNoteDto)
 		}
 		else {
 			this.markAsTouched = true;
 			this.snackBarService.showError('La nota de evolución de guardia debe tener una evolución');
-		}
-	}
-
-	private buildEmergencyCareEvolutionNoteDto(): EmergencyCareEvolutionNoteDto {
-		const value = this.form.value;
-		const allDiagnosis = this.getDiagnosis(value.diagnosis);
-		const medications = toOutpatientMedicationDto(value.medications?.data);
-		const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
-		const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
-		const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
-		return {
-			clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
-			reasons: value.reasons?.motivo || [],
-			diagnosis: allDiagnosis.diagnosis,
-			mainDiagnosis: allDiagnosis.mainDiagnosis,
-			evolutionNote: value.evolutionNote?.evolucion,
-			anthropometricData,
-			familyHistories: {
-				isReferred: (this.isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null: this.isFamilyHistoriesNoRefer,
-				content: familyHistories,
-			},
-			procedures: value.procedures?.data.map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}) || [],
-			medications,
-			riskFactors,
-			allergies: {
-				isReferred: (this.isAllergyNoRefer && (value.allergies?.data || []).length === 0) ? null: this.isAllergyNoRefer,
-				content: value.allergies?.data || []
-			},
-			patientId: this.data.patientId,
-			type: EEmergencyCareEvolutionNoteType.DOCTOR
 		}
 	}
 
@@ -144,13 +113,6 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 
 	setIsFamilyHistoriesNoRefer = ($event) => {
 		this.isFamilyHistoriesNoRefer = $event;
-	}
-
-	private getDiagnosis(diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } {
-		return {
-			diagnosis: diagnosisFormValue?.otrosDiagnosticos?.filter(d => d.isAdded) || [],
-			mainDiagnosis: diagnosisFormValue?.mainDiagnostico
-		}
 	}
 
 	private setDiagnosis(mainDiagnosis: HealthConditionDto, otherDiagnoses: DiagnosisDto[]) {

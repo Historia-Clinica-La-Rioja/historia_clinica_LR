@@ -1,4 +1,5 @@
-import { EffectiveClinicalObservationDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
+import { FormGroup } from "@angular/forms";
+import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EffectiveClinicalObservationDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
 import { dateISOParseDate } from "@core/utils/moment.utils";
@@ -23,6 +24,37 @@ export const toOutpatientRiskFactorDto = (riskFactors: OutpatientRiskFactorDto):
 		return result;
 	}
 	return null;
+}
+
+
+export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHistoriesNoRefer: boolean, isAllergyNoRefer: boolean, patientId: number , evolutionNoteType: EEmergencyCareEvolutionNoteType): EmergencyCareEvolutionNoteDto =>{
+	const value = form.value;
+	const allDiagnosis = toAllDiagnosis(value.diagnosis);
+	const medications = toOutpatientMedicationDto(value.medications?.data);
+	const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
+	const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
+	const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
+	return {
+		clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
+		reasons: value.reasons?.motivo || [],
+		diagnosis: allDiagnosis.diagnosis,
+		mainDiagnosis: allDiagnosis.mainDiagnosis,
+		evolutionNote: value.evolutionNote?.evolucion,
+		anthropometricData,
+		familyHistories: {
+			isReferred: (isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null : isFamilyHistoriesNoRefer,
+			content: familyHistories,
+		},
+		procedures: value.procedures?.data.map(p => { return { ...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null } }) || [],
+		medications,
+		riskFactors,
+		allergies: {
+			isReferred: (isAllergyNoRefer && (value.allergies?.data || []).length === 0) ? null : isAllergyNoRefer,
+			content: value.allergies?.data || []
+		},
+		patientId,
+		type: evolutionNoteType,
+	}
 }
 
 export const toOutpatientFamilyHistoryDto = (familyHistories: any[]): OutpatientFamilyHistoryDto[] => {
@@ -131,5 +163,12 @@ export const toAnthropometricDataValues = (antropometricData: OutpatientAnthropo
 		height: antropometricData?.height?.value || null,
 		weight: antropometricData?.weight?.value || null,
 		headCircumference: antropometricData?.headCircumference?.value || null,
+	}
+}
+
+export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
+	return {
+		diagnosis: diagnosisFormValue?.otrosDiagnosticos?.filter(d => d.isAdded) || [],
+		mainDiagnosis: diagnosisFormValue?.mainDiagnostico
 	}
 }

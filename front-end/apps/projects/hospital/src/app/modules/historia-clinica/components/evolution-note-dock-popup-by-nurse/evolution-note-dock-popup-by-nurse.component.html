@@ -1,0 +1,39 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="header">
+	<div body>
+		<form [formGroup]="form">
+
+			<app-especialidad-form formControlName="clinicalSpecialty"></app-especialidad-form>
+
+			<app-motivo-form formControlName="reasons"></app-motivo-form>
+
+			<mat-divider></mat-divider>
+
+			<app-diagnosis-form-by-nurse formControlName="diagnosis"></app-diagnosis-form-by-nurse>
+
+			<app-evolucion-form [markAsTouched]="markAsTouched" formControlName="evolutionNote"></app-evolucion-form>
+
+			<app-datos-antropometricos-form formControlName="anthropometricData" [patientId]="data.patientId"> </app-datos-antropometricos-form>
+
+			<app-antecedentes-familiares-form formControlName="familyHistories" (isFamilyHistoriesNoRefer)="isFamilyHistoriesNoRefer = $event"></app-antecedentes-familiares-form>
+
+			<app-medicaciones-form formControlName="medications"></app-medicaciones-form>
+
+			<app-procedimientos-form formControlName="procedures"></app-procedimientos-form>
+
+			<app-factores-de-riesgo-form-v2 formControlName="riskFactors"></app-factores-de-riesgo-form-v2>
+
+			<app-alergias-form formControlName="allergies" (isAllergyNoRefer)="isAllergyNoRefer = $event"></app-alergias-form>
+
+		</form>
+	</div>
+
+	
+    <div actions id="buttons">
+		<div fxLayoutAlign="end">
+			<app-button [color]="'primary'" [isLoading]="disableConfirmButton" [text]="'buttons.CONFIRM' | translate | uppercase"
+				[buttonType]="'mat-raised-button'" (clicked)="save()">
+			</app-button>
+		</div>
+	</div>
+	
+</app-dock-popup>

@@ -364,6 +364,12 @@
 		"actions": {
 			"EVOLUTION_NOTE": "Nota de evolución",
 			"EVOLUTION_NOTE_BY_NURSE": "Nota de evolución de enfermería"
+		},
+		"nursing_evolution_note": {
+			"MAIN_DIAGNOSIS": "Diagnóstico principal",
+			"DIAGNOSIS": "Diagnóstico",
+			"SAVE_SUCCESS": "Nota de evolución de enfermería guardada correctamente",
+			"SAVE_ERROR": "Error al guardar la nota de evolución de enfermería"
 		}
 	}
 }
