@@ -1634,6 +1634,12 @@ export interface ECPediatricDto extends Serializable {
     triage: TriagePediatricDto;
 }
 
+export interface EDiagnosticReportStatus {
+    description: string;
+    final: boolean;
+    id: string;
+}
+
 export interface EReferenceClosureType {
     description: string;
     id: number;
@@ -5235,14 +5241,15 @@ export interface StudyOrderReportInfoDto {
 }
 
 export interface StudyOrderWorkListDto {
+    createdDate: DateTimeDto;
     deferredDate?: DateTimeDto;
     patientDto: StudyOrderBasicPatientDto;
     requiresTransfer: boolean;
     snomed: SnomedDto;
-    sourceTypeId: number;
-    status: number;
+    sourceTypeId: ESourceType;
+    status: EDiagnosticReportStatus;
     studyId: number;
-    studyTypeId: number;
+    studyTypeId: EStudyType;
 }
 
 export interface StudyTranscribedOrderReportInfoDto {
@@ -6409,6 +6416,19 @@ export const enum ESignatureStatus {
     PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     SIGNED = "SIGNED",
+}
+
+export const enum ESourceType {
+    HOSPITALIZATION = "HOSPITALIZATION",
+    OUTPATIENT = "OUTPATIENT",
+    RECIPE = "RECIPE",
+    ORDER = "ORDER",
+    EMERGENCY_CARE = "EMERGENCY_CARE",
+    IMMUNIZATION = "IMMUNIZATION",
+    ODONTOLOGY = "ODONTOLOGY",
+    NURSING = "NURSING",
+    COUNTER_REFERENCE = "COUNTER_REFERENCE",
+    MEDICAL_IMAGE = "MEDICAL_IMAGE",
 }
 
 export const enum EStudyType {

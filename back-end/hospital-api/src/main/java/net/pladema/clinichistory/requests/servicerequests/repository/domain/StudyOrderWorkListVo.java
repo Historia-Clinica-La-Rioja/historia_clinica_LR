@@ -31,12 +31,14 @@ public class StudyOrderWorkListVo {
 	@Nullable
 	private LocalDateTime deferredDate;
 
-	private Integer status;
+	private String status;
+
+	private LocalDateTime createdDate;
 
 	public StudyOrderWorkListVo(Integer studyId, Integer patientId, String firstName, String lastName,
 								String identificationNumber, Short identificationTypeId, Short genderId, LocalDate birthDate,
 								String sctid, String pt, Short studyTypeId, Boolean requiresTransfer,
-								Short sourceTypeId, @Nullable LocalDateTime deferredDate) {
+								Short sourceTypeId, @Nullable LocalDateTime deferredDate, LocalDateTime createdDate) {
 		this.studyId = studyId;
 		this.patientVo = new StudyOrderBasicPatientBo(patientId, firstName, lastName,
 				identificationNumber, identificationTypeId, genderId, birthDate);
@@ -45,8 +47,8 @@ public class StudyOrderWorkListVo {
 		this.requiresTransfer = requiresTransfer != null ? requiresTransfer : false;
 		this.sourceTypeId = sourceTypeId;
 		this.deferredDate = deferredDate;
-		this.status = 1;
-
+		this.status = "1";
+		this.createdDate = createdDate;
 	}
 
 }

@@ -69,12 +69,13 @@ public interface StudyMapper {
 	@Named("toStudyOrderWorkListDto")
 	@Mapping(target = "studyId", source = "studyId")
 	@Mapping(target = "snomed", source = "snomed")
-	@Mapping(target = "studyTypeId", source = "studyTypeId")
+	@Mapping(target = "studyTypeId", expression = "java(EStudyType.map(studyOrderWorkListBo.getStudyTypeId()))")
 	@Mapping(target = "requiresTransfer", source = "requiresTransfer")
-	@Mapping(target = "sourceTypeId", source = "sourceTypeId")
+	@Mapping(target = "sourceTypeId", expression = "java(ESourceType.map(studyOrderWorkListBo.getSourceTypeId()))")
 	@Mapping(target = "deferredDate", source = "deferredDate")
-	@Mapping(target = "status", source = "status")
+	@Mapping(target = "status", expression = "java(EDiagnosticReportStatus.map(studyOrderWorkListBo.getStatus()))")
 	@Mapping(target = "patientDto", source = "patientBo")
+	@Mapping(target = "createdDate", source = "createdDate")
 	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }

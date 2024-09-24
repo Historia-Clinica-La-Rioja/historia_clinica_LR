@@ -29,7 +29,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 		String sqlString = "SELECT NEW net.pladema.clinichistory.requests.servicerequests.repository.domain.StudyOrderWorkListVo( "
 				+ "sr.id, sr.patientId, pe.firstName, pe.lastName, pe.identificationNumber, pe.identificationTypeId, pe.genderId, pe.birthDate, "
-				+ "s.sctid, s.pt, sr.studyType, COALESCE(sr.requiresTransfer, false), sr.sourceTypeId, sr.deferredDate) "
+				+ "s.sctid, s.pt, sr.studyType, COALESCE(sr.requiresTransfer, false), sr.sourceTypeId, sr.deferredDate, sr.creationable.createdOn) "
 				+ "FROM ServiceRequest sr "
 				+ "JOIN Document d ON sr.id = d.sourceId "
 				+ "JOIN DocumentDiagnosticReport ddr ON d.id = ddr.id.documentId "
@@ -40,10 +40,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 				+ "WHERE sr.institutionId = :institutionId "
 				+ "AND dr.statusId = '1' "
 				+ "AND sr.categoryId IN :categories "
-				+ "AND (sr.sourceTypeId = 0 OR sr.sourceTypeId = 4) "
-				+ "AND (sr.deferredDate < CURRENT_TIMESTAMP OR sr.deferredDate IS NULL) "
-				+ "ORDER BY dr.statusId ASC, "
-				+ "CASE sr.studyType WHEN 1 THEN 0 WHEN 2 THEN 1 ELSE 2 END";
+				+ "AND (sr.sourceTypeId = 0 OR sr.sourceTypeId = 4) ";
 
 		Query query = entityManager.createQuery(sqlString, StudyOrderWorkListVo.class);
 		query.setParameter("institutionId", institutionId)

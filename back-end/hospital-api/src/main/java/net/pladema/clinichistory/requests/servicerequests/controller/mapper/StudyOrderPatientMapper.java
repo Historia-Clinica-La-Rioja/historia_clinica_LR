@@ -5,7 +5,6 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasic
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper
 public interface StudyOrderPatientMapper {

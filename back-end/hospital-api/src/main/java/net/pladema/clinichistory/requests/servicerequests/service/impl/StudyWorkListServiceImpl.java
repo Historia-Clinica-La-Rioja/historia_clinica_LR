@@ -43,7 +43,8 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				studyOrderWorkListVo.getRequiresTransfer(),
 				studyOrderWorkListVo.getSourceTypeId(),
 				studyOrderWorkListVo.getDeferredDate(),
-				studyOrderWorkListVo.getStatus()
+				studyOrderWorkListVo.getStatus(),
+				studyOrderWorkListVo.getCreatedDate()
 		);
 	}
 

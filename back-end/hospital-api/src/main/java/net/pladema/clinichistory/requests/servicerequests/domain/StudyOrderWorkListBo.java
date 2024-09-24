@@ -31,6 +31,8 @@ public class StudyOrderWorkListBo {
 	@Nullable
 	private LocalDateTime deferredDate;
 
-	private Integer status;
+	private String status;
+
+	private LocalDateTime createdDate;
 
 }
