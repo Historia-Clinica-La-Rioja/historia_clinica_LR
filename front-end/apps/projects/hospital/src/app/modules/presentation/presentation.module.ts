@@ -125,6 +125,7 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
+import { RowContentComponent } from './components/row-content/row-content.component';
 
 @NgModule({
 	declarations: [
@@ -203,6 +204,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		RouteBackComponent,
 		RouteMenuComponent,
 		RouteMenuItemComponent,
+		RowContentComponent,
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
@@ -336,6 +338,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		RichTextEditorComponent,
 		RouteBackComponent,
 		RouteMenuComponent,
+		RowContentComponent,
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
