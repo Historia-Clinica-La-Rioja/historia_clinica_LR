@@ -60,7 +60,10 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", episodeId);
 		List<EmergencyCareEvolutionNoteDocumentBo> result = emergencyCareEvolutionNoteRepository.findAllByEpisodeId(episodeId)
 				.stream().map(evolutionNote -> {
-					EmergencyCareEvolutionNoteBo evolutionNoteBo = toEmergencyCareEvolutionNoteBo(evolutionNote);
+					EmergencyCareEvolutionNoteBo evolutionNoteBo = toEmergencyCareEvolutionNoteBo(
+						evolutionNote.getEvolutionNote(),
+						evolutionNote.getDocument()
+					);
 					return getEmergencyCareEvolutionNoteDocumentRelatedData(evolutionNoteBo);
 				}).collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
@@ -71,8 +74,8 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 	public Optional<EmergencyCareEvolutionNoteDocumentBo> getByDocumentId(Long documentId) {
 		LOG.debug("Input parameters -> documentId {}", documentId);
 		Optional<EmergencyCareEvolutionNoteDocumentBo> result = emergencyCareEvolutionNoteRepository.findByDocumentId(documentId)
-				.map(this::toEmergencyCareEvolutionNoteBo)
-				.map(this::getEmergencyCareEvolutionNoteDocumentRelatedData);
+			.map(evolutionNote -> this.toEmergencyCareEvolutionNoteBo(evolutionNote.getEvolutionNote(), evolutionNote.getDocument()))
+			.map(this::getEmergencyCareEvolutionNoteDocumentRelatedData);
 		LOG.debug("Output -> result {}", result);
 		return result;
 	}
@@ -84,7 +87,10 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 	}
 
 
-	private EmergencyCareEvolutionNoteBo toEmergencyCareEvolutionNoteBo(EmergencyCareEvolutionNote evolutionNote) {
+	private EmergencyCareEvolutionNoteBo toEmergencyCareEvolutionNoteBo(
+		EmergencyCareEvolutionNote evolutionNote,
+		Document document
+	) {
 		EmergencyCareEvolutionNoteBo result = new EmergencyCareEvolutionNoteBo();
 		result.setId(evolutionNote.getId());
 		result.setDocumentId(evolutionNote.getDocumentId());
@@ -94,6 +100,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		result.setPatientId(evolutionNote.getPatientId());
 		result.setInstitutionId(evolutionNote.getInstitutionId());
 		result.setPatientMedicalCoverageId(evolutionNote.getPatientMedicalCoverageId());
+		result.setDocumentType(document.getTypeEnum());
 		return result;
 	}
 
@@ -120,6 +127,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		evolutionNoteBo.setClinicalSpecialtyName(clinicalSpecialtyService.getClinicalSpecialty(evolutionNote.getClinicalSpecialtyId())
 				.map(ClinicalSpecialtyBo::getName).orElse(null));
 		setEditedOn(evolutionNoteBo);
+		evolutionNoteBo.setType(evolutionNote.getDocumentType());
 		return evolutionNoteBo;
 	}
 

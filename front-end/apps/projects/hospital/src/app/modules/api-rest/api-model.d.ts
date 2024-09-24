@@ -1829,6 +1829,7 @@ export interface EmergencyCareEvolutionNoteDocumentDto {
     fileName: string;
     performedDate: DateTimeDto;
     professional: HealthcareProfessionalDto;
+    type: EEmergencyCareEvolutionNoteType;
 }
 
 export interface EmergencyCareEvolutionNoteDto {
@@ -1844,6 +1845,7 @@ export interface EmergencyCareEvolutionNoteDto {
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
     riskFactors: OutpatientRiskFactorDto;
+    type: EEmergencyCareEvolutionNoteType;
 }
 
 export interface EmergencyCareHistoricDocumentDto {
@@ -5896,7 +5898,6 @@ export const enum AppFeature {
     HABILITAR_ANEXO_II_MENDOZA = "HABILITAR_ANEXO_II_MENDOZA",
     HABILITAR_VISTA_COBERTURA_TURNOS = "HABILITAR_VISTA_COBERTURA_TURNOS",
     HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL = "HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL",
-    HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO = "HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO",
     HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO = "HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO",
     HABILITAR_ATENDER_TURNO_MANUAL = "HABILITAR_ATENDER_TURNO_MANUAL",
     HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO = "HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO",
@@ -6014,6 +6015,11 @@ export const enum EElectronicSignatureStatus {
     SIGNED = "SIGNED",
     REJECTED = "REJECTED",
     OUTDATED = "OUTDATED",
+}
+
+export const enum EEmergencyCareEvolutionNoteType {
+    DOCTOR = "DOCTOR",
+    NURSE = "NURSE",
 }
 
 export const enum EEventLocation {

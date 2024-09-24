@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { DiagnosisDto, EmergencyCareEvolutionNoteDto, HealthConditionDto } from '@api-rest/api-model';
+import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EmergencyCareEvolutionNoteDto, HealthConditionDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
@@ -117,6 +117,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 				content: value.allergies?.data || []
 			},
 			patientId: this.data.patientId,
+			type: EEmergencyCareEvolutionNoteType.DOCTOR
 		}
 	}
 

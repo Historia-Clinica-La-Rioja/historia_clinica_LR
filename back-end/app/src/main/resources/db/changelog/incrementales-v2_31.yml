@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_31
+    - logicalFilePath: incrementales-v2_31 
 
 
     - changeSet:
@@ -44,3 +44,11 @@ databaseChangeLog:
                       type: int
                 tableName: report_queue
 
+    - changeSet:
+        id: document_type-nursing_emergency_care_evolution_note
+        author: efernandez
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (21, 'Nota de evolución de enfermería de guardia');

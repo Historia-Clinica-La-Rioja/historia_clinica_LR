@@ -58,7 +58,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasMedicalRole = false;
 	hasAdministrativeRole = false;
 	hasRoleAbleToSeeTriage: boolean;
-	hasNurseRoleEvolutionNoteEnabled = false;
+	hasNurseRoleEvolutionNoteEnabled = true;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
@@ -127,9 +127,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
 			this.isAnestheticReportEnabledFF = isEnabled
-		);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO).subscribe(isEnabled =>
-			this.hasNurseRoleEvolutionNoteEnabled = isEnabled
 		);
 	}
 

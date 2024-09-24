@@ -14,9 +14,11 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEvolutionNoteType;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 import java.time.LocalDateTime;
@@ -83,6 +85,8 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private Map<String, Object> contextMap;
 
+	private EEmergencyCareEvolutionNoteType type;
+
 	@Override
 	public Integer getPatientId() {
 		if (patientInfo != null)
@@ -99,9 +103,17 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 		return notes;
 	}
 
+	/**
+	 * The document type depends on the role of the note's creator.
+	 * For a doctor the document type is EMERGENCY_CARE_EVOLUTION_NOTE.
+	 * For a nurse, NURSING_EMERGENCY_CARE_EVOLUTION.
+	 */
 	@Override
 	public short getDocumentType() {
-		return DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE;
+		if (EEmergencyCareEvolutionNoteType.DOCTOR.equals(this.getType()))
+			return DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE;
+		else
+			return DocumentType.NURSING_EMERGENCY_CARE_EVOLUTION;
 	}
 
 	@Override
@@ -109,4 +121,14 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 		return SourceType.EMERGENCY_CARE;
 	}
 
+	/**
+	 * The inverse of getDocumentType.
+	 */
+	public void setType(EDocumentType documentType) {
+		this.type = EEmergencyCareEvolutionNoteType.fromDocumentType(documentType);
+	}
+
+	public void setType(EEmergencyCareEvolutionNoteType type) {
+		this.type = type;
+	}
 }

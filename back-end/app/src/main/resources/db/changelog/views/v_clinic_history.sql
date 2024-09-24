@@ -5,6 +5,15 @@
 -- splitStatements:true
 -- endDelimiter:;
 -- comment: se agregan fecha y hora en algunas secciones del parte anestésico. (Se crea un nuevo changeset para su testing)
+
+-- Changeset efernandez:create-view-clinic_history_2_31_1
+-- runOnChange:false # NO TOCAR
+-- splitStatements:true
+-- endDelimiter:;
+-- comment: Desde este punto, las vistas tienen cada una su archivo. Por cada cambio agregado, se debe crear un nuevo changeset que sustituya el anterior.
+-- Se deja sin efecto runOnChange, ya que de esta forma se hace un chequeo de integridad y nos aseguramos que quede registrado cada cambio que se realiza en la bd.
+-- 2_31_1: Hay un nuevo tipo de documento para las notas de evolución de enfermería de guardia: NURSING_EMERGENCY_CARE_EVOLUTION 21.
+-- Se agrega el nuevo id (21) a todos los WHEREs donde se busquen notas de evolución de guardia.
 --
 DROP VIEW IF EXISTS v_clinic_history;
 CREATE VIEW v_clinic_history AS (
@@ -69,7 +78,7 @@ SELECT d.id AS id,
                                     FROM document_health_condition dhc
                                              JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
                                              JOIN snomed s ON (s.id = hc.snomed_id)
-                                    WHERE dhc.document_id = d.id AND d.type_id IN (1, 2, 3, 13, 16, 20) AND hc.problem_id = '439401001' GROUP BY dhc.document_id), '') ||
+                                    WHERE dhc.document_id = d.id AND d.type_id IN (1, 2, 3, 13, 16, 20, 21) AND hc.problem_id = '439401001' GROUP BY dhc.document_id), '') ||
       coalesce(CASE WHEN d.type_id = 10 THEN 'Problema asociado: ' ELSE 'Problemas: ' END ||
                (SELECT string_agg(s.pt || (CASE WHEN hc.status_id = '-55607006' THEN '|(Crónico)' ELSE '' END) ||
                                   (CASE WHEN hc.start_date IS NOT NULL AND d.type_id <> 10 THEN '|(desde ' || to_char(hc.start_date ,'dd/MM/yyyy') ELSE '' END) ||
@@ -122,7 +131,7 @@ SELECT d.id AS id,
                                                                   JOIN health_condition hc ON (hc.id = dhc.health_condition_id)
                                                                   JOIN snomed s ON (s.id = hc.snomed_id)
                                                          WHERE dhc.document_id = d.id
-                                                           AND d.type_id IN (1, 3, 4, 16)
+                                                           AND d.type_id IN (1, 3, 4, 16, 21)
                                                            AND hc.problem_id = '57177007'
                                                          GROUP BY dhc.document_id),
                                                         (SELECT CASE WHEN drc.is_referred IS FALSE THEN 'No refiere' ELSE NULL END
@@ -155,7 +164,7 @@ SELECT d.id AS id,
                                       FROM document_procedure dp
                                                LEFT OUTER JOIN "procedures" p  ON (p.id=dp.procedure_id)
                                                LEFT OUTER JOIN snomed s ON (s.id=p.snomed_id)
-                                      WHERE dp.document_id = d.id AND d.type_id IN (1, 2, 3, 4, 9, 10, 11, 16) GROUP BY dp.document_id),'') AS procedures,
+                                      WHERE dp.document_id = d.id AND d.type_id IN (1, 2, 3, 4, 9, 10, 11, 16, 21) GROUP BY dp.document_id),'') AS procedures,
       coalesce((SELECT string_agg(s.pt ||
                                   (CASE WHEN dos.period_unit = 'd' THEN '\nUna aplicación por día' ELSE '' END) ||
                                   (CASE WHEN dos.period_unit = 'h' THEN '\nUna aplicación cada ' || dos.frequency || 'hs.' ELSE '' END) ||
@@ -183,14 +192,14 @@ SELECT d.id AS id,
                                                    JOIN medication_statement_status mss ON (ms.status_id=mss.id)
                                                    JOIN snomed s ON (s.id=ms.snomed_id)
                                                    LEFT OUTER JOIN note n ON (n.id = ms.note_id)
-                                          WHERE dms.document_id = d.id AND d.type_id IN (1, 3, 4, 9, 11, 16, 20) GROUP BY dms.document_id),'') AS medicines,
+                                          WHERE dms.document_id = d.id AND d.type_id IN (1, 3, 4, 9, 11, 16, 20, 21) GROUP BY dms.document_id),'') AS medicines,
       coalesce('Alergias: '|| coalesce ((
                                             SELECT string_agg(s.pt,', ')
                                             FROM document_allergy_intolerance dai
                                                      JOIN allergy_intolerance ai ON (ai.id=dai.allergy_intolerance_id)
                                                      JOIN snomed s ON (s.id=ai.snomed_id)
                                             WHERE dai.document_id = d.id
-                                              AND d.type_id IN (1, 2, 3, 4, 9, 11, 16)
+                                              AND d.type_id IN (1, 2, 3, 4, 9, 11, 16, 21)
                                             GROUP BY dai.document_id),
                                         (SELECT CASE WHEN drc.is_referred IS FALSE THEN 'No refiere' ELSE NULL END
                                          FROM document_referable_concept drc
@@ -206,7 +215,7 @@ SELECT d.id AS id,
                                                FROM document_lab dl
                                                         JOIN observation_lab ol ON (ol.id=dl.observation_lab_id)
                                                         JOIN snomed s ON (s.id=ol.snomed_id)
-                                               WHERE dl.document_id = d.id AND d.type_id IN (1, 2, 4, 10, 13, 16, 20) AND ol.status_id = '261782000' GROUP BY dl.document_id),'') AS blood_type,
+                                               WHERE dl.document_id = d.id AND d.type_id IN (1, 2, 4, 10, 13, 16, 20, 21) AND ol.status_id = '261782000' GROUP BY dl.document_id),'') AS blood_type,
       coalesce('Datos antropométricos: '|| (SELECT string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value || coalesce(CASE WHEN s.sctid IN ('50373000', '363812007') THEN 'cm' ELSE 'kg' END,''), ', ')
                                             FROM document_vital_sign dvs
                                                      JOIN observation_vital_sign ovs ON (ovs.id=dvs.observation_vital_sign_id)
@@ -222,7 +231,7 @@ SELECT d.id AS id,
                                                           FROM document_vital_sign dvs
                                                                    JOIN observation_vital_sign ovs ON (ovs.id=dvs.observation_vital_sign_id)
                                                                    JOIN snomed s ON (s.id=ovs.snomed_id)
-                                                          WHERE dvs.document_id = d.id AND d.type_id IN (1, 2, 4, 10, 13, 16, 20) AND s.sctid NOT IN ('50373000', '27113001', '363812007') AND ovs.status_id = '261782000' GROUP BY dvs.document_id),'') ||
+                                                          WHERE dvs.document_id = d.id AND d.type_id IN (1, 2, 4, 10, 13, 16, 20, 21) AND s.sctid NOT IN ('50373000', '27113001', '363812007') AND ovs.status_id = '261782000' GROUP BY dvs.document_id),'') ||
       coalesce('Signos vitales y factores de riesgo: '|| (SELECT string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value ||
                                                                             coalesce(CASE WHEN s.sctid IN ('364075005', '86290005') THEN '/min' ELSE
                                                                                 CASE WHEN s.sctid IN ('703421000') THEN '°C' ELSE
@@ -351,7 +360,7 @@ SELECT d.id AS id,
                                            FROM emergency_care_evolution_note ecen
                                                     JOIN emergency_care_evolution_note_reason ecenr ON (ecenr.emergency_care_evolution_note_id = ecen.id)
                                                     JOIN reasons r ON (r.id  = ecenr.reason_id)
-                                           WHERE ecen.document_id = d.id AND d.type_id = 16 GROUP BY ecen.document_id),'') AS consultation_reasons,
+                                           WHERE ecen.document_id = d.id AND d.type_id IN (16, 21) GROUP BY ecen.document_id),'') AS consultation_reasons,
       coalesce('Procedimientos sobre tejidos dentales: '|| (SELECT string_agg(DISTINCT('\n' || s.pt || ' en ' || s1.pt),'' )
                                                             FROM document_odontology_procedure dop
                                                                      JOIN odontology_procedure op ON (op.id=dop.odontology_procedure_id)
@@ -493,7 +502,7 @@ SELECT d.id AS id,
                                             WHERE n.id = d.other_note_id AND d.type_id IN (1, 2, 3)), '') ||
       coalesce('Evolución: ' || (SELECT string_agg(n.description, ', ')
                                  FROM note n
-                                 WHERE n.id = d.other_note_id AND d.type_id IN (4, 15, 16)), '') ||
+                                 WHERE n.id = d.other_note_id AND d.type_id IN (4, 15, 16, 21)), '') ||
       coalesce('Evolución: '|| (SELECT string_agg(n.description, ', ' )
                                 FROM note n
                                 WHERE n.id = d.evolution_note_id AND d.type_id IN (9, 10, 13)), '') AS notes,

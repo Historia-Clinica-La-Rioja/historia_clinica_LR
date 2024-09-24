@@ -14,6 +14,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientProcedureDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientRiskFactorDto;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEvolutionNoteType;
 
 import java.util.List;
 
@@ -46,5 +47,7 @@ public class EmergencyCareEvolutionNoteDto {
 	private ReferableItemDto<OutpatientAllergyConditionDto> allergies;
 
 	private List<OutpatientProcedureDto> procedures;
+
+	private EEmergencyCareEvolutionNoteType type;
 
 }
