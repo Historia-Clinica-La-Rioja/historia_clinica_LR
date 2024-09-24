@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject, forkJoin, take } from 'rxjs';
 import { scrollIntoError } from '@core/utils/form.utils';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
-import { AnestheticHistoryDto, AnestheticReportDto, DiagnosisDto, HealthConditionDto, MasterDataDto, PostAnesthesiaStatusDto, PostCloseAnestheticReportDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticHistoryDto, AnestheticReportDto, DateDto, DiagnosisDto, HealthConditionDto, MasterDataDto, PostAnesthesiaStatusDto, PostCloseAnestheticReportDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
@@ -69,12 +69,15 @@ export class AnestheticReportService {
     collapsedAnthropometricDataSection$: Observable<boolean> = this.collapsedAnthropometricDataSectionSource.asObservable();
     private collapsedClinicalEvaluationSectionSource = new BehaviorSubject<boolean>(true);
     collapsedClinicalEvaluationSection$: Observable<boolean> = this.collapsedClinicalEvaluationSectionSource.asObservable();
+	private collapsedVitalSignsSectionSource = new BehaviorSubject<boolean>(true);
+    collapsedVitalSignsSection$: Observable<boolean> = this.collapsedVitalSignsSectionSource.asObservable();
     private isAnestheticReportLoadingSource = new BehaviorSubject<boolean>(false);
 	isAnestheticReportLoading$: Observable<boolean> = this.isAnestheticReportLoadingSource.asObservable();
 	private isAnestheticReportLoadingDraftSource = new BehaviorSubject<boolean>(false);
 	isAnestheticReportLoadingDraft$: Observable<boolean> = this.isAnestheticReportLoadingDraftSource.asObservable();
 
     lastFoodIntakeTimeSelected: TimeDto;
+	lastFoodIntakeDateSelected: DateDto;
 
     private isProposedSurgeryEmptySource = new BehaviorSubject<boolean>(true);
 	isProposedSurgeryEmpty$ = this.isProposedSurgeryEmptySource.asObservable();
@@ -117,12 +120,15 @@ export class AnestheticReportService {
 	private lastIntakeSubject: BehaviorSubject<TimeDto> = new BehaviorSubject<TimeDto>(null);
     lastIntake$ = this.lastIntakeSubject.asObservable();
 
+	private lastIntakeDateSubject: BehaviorSubject<DateDto> = new BehaviorSubject<DateDto>(null);
+    lastIntakeDate$ = this.lastIntakeDateSubject.asObservable();
+
 	private intrasurgicalAnestheticProceduresSubject: BehaviorSubject<ProcedureDescriptionDto> = new BehaviorSubject<ProcedureDescriptionDto>(null);
     intrasurgicalAnestheticProcedures$ = this.intrasurgicalAnestheticProceduresSubject.asObservable();
 
 	private postAnesthesiaSubject: BehaviorSubject<PostAnesthesiaStatusDto> = new BehaviorSubject<PostAnesthesiaStatusDto>(null);
     postAnesthesia$ = this.postAnesthesiaSubject.asObservable();
-    
+
 	private isConfirmedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
     isConfirmed$ = this.isConfirmedSubject.asObservable();
 
@@ -144,7 +150,7 @@ export class AnestheticReportService {
 			this.setAnestheticPreviousData(dialogData, viasData);
 		});
 	}
-    
+
     private loadMainDiagnosis() {
         this.internmentStateService.getDiagnosesGeneralState(this.internmentActions.internmentEpisodeId).subscribe(diagnoses => {
 			this.internmentActions.mainDiagnosis = getElementAtPosition(diagnoses.filter(diagnosis => diagnosis.main), MAIN_DIAGNOSIS_POSITION);
@@ -168,6 +174,7 @@ export class AnestheticReportService {
 					this.anestheticHistorySubject.next(data.anestheticHistory);
 					this.medicacionesNuevaConsultaService.setData(data.medications);
 					this.lastIntakeSubject.next(data.procedureDescription?.foodIntake)
+					this.lastIntakeDateSubject.next(data.procedureDescription?.foodIntakeDate)
 					this.anestheticReportPremedicationAndFoodIntakeService.setData(data.preMedications, viasData.preMedicationVias);
 					this.anestheticReportRecordService.setData(data.histories, data.procedureDescription);
 					this.anestheticPlanService.setData(data.anestheticPlans, viasData.anestheticPlanVias);
@@ -193,6 +200,7 @@ export class AnestheticReportService {
 	private resetDraftSubjects() {
 		this.anestheticHistorySubject.next(null);
 		this.lastIntakeSubject.next(null);
+		this.lastIntakeDateSubject.next(null);
 		this.intrasurgicalAnestheticProceduresSubject.next(null);
 		this.postAnesthesiaSubject.next(null);
 	}
@@ -225,7 +233,7 @@ export class AnestheticReportService {
         this.anestheticReportClinicalEvaluationService.isEmpty$.subscribe(isEmpty => this.isClinicalEvaluationEmptySource.next(isEmpty));
         this.anestheticReportAnestheticHistoryService.isEmpty$.subscribe(isEmpty => this.isAnestheticHistoryEmptySource.next(isEmpty));
         this.medicacionesNuevaConsultaService.isEmpty$.subscribe(isEmpty => this.isMedicationEmptySource.next(isEmpty));
-        this.anestheticReportPremedicationAndFoodIntakeService.isEmpty$.subscribe(isEmpty => this.isPremedicationAndFoodIntakeEmptySource.next(isEmpty && !this.lastFoodIntakeTimeSelected));
+        this.anestheticReportPremedicationAndFoodIntakeService.isEmpty$.subscribe(isEmpty => this.isPremedicationAndFoodIntakeEmptySource.next(isEmpty && !this.lastFoodIntakeTimeSelected && !this.lastFoodIntakeDateSelected));
         this.anestheticReportRecordService.isEmpty$.subscribe(isEmpty => this.isRecordEmptySource.next(isEmpty));
         this.anestheticPlanList$.subscribe(anestheticPlanList => this.isAnestheticPlanEmptySource.next(!anestheticPlanList.length));
         this.analgesicTechniqueList$.subscribe(analgesicTechnique => this.isAnalgesicTechniqueEmptySource.next(!analgesicTechnique.length));
@@ -258,6 +266,13 @@ export class AnestheticReportService {
             this.collapsedClinicalEvaluationSectionSource.next(false);
             setTimeout(() => {
                 scrollIntoError(this.anestheticReportClinicalEvaluationService.getForm(), elementRef)
+                this.setIsLoading(false)
+            }, 300);
+        }
+		else if (this.anestheticReportVitalSignsService.getVitalSignsForm().invalid) {
+            this.collapsedVitalSignsSectionSource.next(false);
+            setTimeout(() => {
+                elementRef.nativeElement.querySelector('.ng-invalid').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 this.setIsLoading(false)
             }, 300);
         }
@@ -311,7 +326,7 @@ export class AnestheticReportService {
     }
 
     isValidConsultation(): boolean {
-        if (this.anesthesicReportAnthropometricDataService.getForm().invalid || this.anestheticReportClinicalEvaluationService.getForm().invalid)
+        if (this.anesthesicReportAnthropometricDataService.getForm().invalid || this.anestheticReportClinicalEvaluationService.getForm().invalid || this.anestheticReportVitalSignsService.getVitalSignsForm().invalid)
 			return false;
 		return true;
     }
@@ -361,6 +376,7 @@ export class AnestheticReportService {
             surgeryStartTime: vitalSignsForm.surgeryStartTime,
             surgeryEndTime: vitalSignsForm.surgeryEndTime,
             foodIntake: this.lastFoodIntakeTimeSelected ? this.lastFoodIntakeTimeSelected : null,
+			foodIntakeDate: this.lastFoodIntakeDateSelected ? this.lastFoodIntakeDateSelected : null,
         }
     }
 
@@ -368,8 +384,13 @@ export class AnestheticReportService {
         this.lastFoodIntakeTimeSelected = newLastFoodIntakeTimeSelected;
     }
 
+	setLastFoodIntakeDate(newLastFoodIntakeDateSelected: DateDto) {
+        this.lastFoodIntakeDateSelected = newLastFoodIntakeDateSelected;
+    }
+
     private resetValues() {
         this.setLastFoodIntakeTime(null);
+		this.setLastFoodIntakeDate(null);
     }
 
 	private setIsLoading(loading: boolean): void {

@@ -5,10 +5,14 @@
         <app-title-description-list *ngIf="premedicationList?.length"
             title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION"
             [descriptionData]="premedicationList"></app-title-description-list>
-        <div *ngIf="lastFoodIntake">
+        <div *ngIf="lastFoodIntakeTime || lastFoodIntakeDate">
             <app-title-description-list
                 title="internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE"></app-title-description-list>
-            <div><span>{{ lastFoodIntake | dateFormat : 'time' }}</span></div>
+            <div>
+				<span>{{ lastFoodIntakeDate | dateFormat : 'date' }}</span>
+				<span *ngIf="lastFoodIntakeTime && lastFoodIntakeDate"> - </span>
+				<span>{{ lastFoodIntakeTime | dateFormat : 'time' }}</span>
+			</div>
         </div>
     </div>
 </div>

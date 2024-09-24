@@ -41,9 +41,10 @@
                 [descriptionItemDataSummary]="summary.anestheticReport.usualMedication"></app-description-item-data-summary>
 
             <app-premedication-and-food-intake-summary data-id="premedication-and-food-intake-summary"
-                *ngIf="summary.anestheticReport.premedicationList || summary.anestheticReport.lastFoodIntake"
+                *ngIf="summary.anestheticReport.premedicationList || summary.anestheticReport.lastFoodIntakeTime || summary.anestheticReport.lastFoodIntakeDate"
                 [premedicationList]="summary.anestheticReport.premedicationList"
-                [lastFoodIntake]="summary.anestheticReport.lastFoodIntake"></app-premedication-and-food-intake-summary>
+                [lastFoodIntakeTime]="summary.anestheticReport.lastFoodIntakeTime"
+				[lastFoodIntakeDate]="summary.anestheticReport.lastFoodIntakeDate"></app-premedication-and-food-intake-summary>
 
             <app-histories-summary data-id="histories-summary" *ngIf="summary.anestheticReport.histories"
                 [histories]="summary.anestheticReport.histories"></app-histories-summary>
