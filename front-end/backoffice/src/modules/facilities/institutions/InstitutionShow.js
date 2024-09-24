@@ -134,13 +134,13 @@ const InstitutionShow = props => {
         );
     }
 
-    const SectorsSection = () => {
+    const SectorsSection = ({ record }) => {
         return (
             <>
                 <SectionTitle label="resources.institutions.fields.sectors" />
                     <CreateRelatedButton
+                        customRecord={{ institutionId: record.id}}
                         reference="sectors"
-                        refFieldName="institutionId"
                         label="resources.sectors.createRelated"
                     />
                 <ShowSectors />
@@ -271,7 +271,7 @@ const InstitutionShow = props => {
                 </Grid>
                 
                 {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
-                {showSectors && <SectorsSection/>}
+                {showSectors && <SectorsSection />}
                 {showOtherSections && <OtherSections {...props} />}
                 
             </SimpleShowLayout>
