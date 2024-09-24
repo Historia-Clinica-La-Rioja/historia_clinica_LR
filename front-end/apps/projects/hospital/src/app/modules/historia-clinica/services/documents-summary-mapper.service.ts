@@ -97,7 +97,7 @@ export class DocumentsSummaryMapperService {
     }
 
     mapDateTimeDtoToDateToShow(date: DateTimeDto): DateToShow {
-        return date ? { date: dateTimeDtoToDate(date), format: DateFormat.DATE } : null;
+        return date ? { date: dateTimeDtoToDate(date), format: DateFormat.DATE_TIME } : null;
     }
 
     mapToAnthropometricData(anthropometricData: AnthropometricDataDto): AnthropometricData {
