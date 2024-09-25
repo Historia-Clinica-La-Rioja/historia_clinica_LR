@@ -79,11 +79,14 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo(" +
 			"d.id, d.description, d.openingTime, d.closingTime, " +
-			"CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END) " +
+			"CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END, "+
+			"s.description "+
+			") " +
 			"FROM DoctorsOffice d " +
 			"LEFT JOIN EmergencyCareEpisode e ON e.doctorsOfficeId = d.id AND e.emergencyCareStateId = :emergencyCareStateId AND e.deleteable.deleted = false " +
+			"LEFT JOIN Sector s ON d.sectorId = s.id " +
 			"WHERE d.sectorId = :sectorId AND d.deleteable.deleted = false " +
-			"GROUP BY d.id, d.description, d.openingTime, d.closingTime")
+			"GROUP BY d.id, d.description, d.openingTime, d.closingTime, s.description")
 	List<DoctorsOfficeBo> getAllBySectorId(@Param("sectorId") Integer sectorId, @Param("emergencyCareStateId") Short emergencyCareStateId);
 
 	@Transactional(readOnly = true)

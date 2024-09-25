@@ -33,12 +33,17 @@ public interface ShockroomRepository extends SGXAuditableEntityJPARepository<Sho
 	Integer getSectorId(@Param("shockRoomId") Integer shockRoomId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo(s.id, s.description, " +
-			"CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END) " +
+	@Query("SELECT new net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo(" +
+	 		"	s.id, " +
+	 		"	s.description, " +
+			"	CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END, " +
+			"	se.description" +
+			") " +
 			"FROM Shockroom s " +
 			"LEFT JOIN EmergencyCareEpisode e ON e.shockroomId = s.id AND e.emergencyCareStateId = :emergencyCareStateId AND e.deleteable.deleted = false " +
+			"LEFT JOIN Sector se ON s.sectorId = se.id " +
 			"WHERE s.sectorId = :sectorId AND s.deleteable.deleted = false " +
-			"GROUP BY s.id, s.description")
+			"GROUP BY s.id, s.description, se.description")
 	List<ShockRoomBo> findAllBySectorId(@Param("sectorId") Integer sectorId, @Param("emergencyCareStateId") Short emergencyCareStateId);
 
 	@Transactional(readOnly = true)
