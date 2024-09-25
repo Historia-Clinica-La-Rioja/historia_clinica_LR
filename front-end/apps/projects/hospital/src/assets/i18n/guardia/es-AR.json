@@ -161,6 +161,9 @@
 					"NO_ASSOCIATED_SPECIALTY": "Sin servicio asociado"
 				},
 				"space": {
+					"DOCTOR_OFFICE": "Consultorio",
+					"SHOCKROOM": "Shockroom",
+					"BED": "Habitacion",
 					"FREE": "Libre",
 					"NOT_FREE": "Ocupada"
 				},
@@ -175,7 +178,8 @@
 					"BUTTON_CONTINUE": "Continuar",
 					"SUCESS": "Cambio de lugar de atencion realizado con exito",
 					"SECTOR": "Sector",
-					"SELECT_SECTOR": "Seleccione sector"
+					"SELECT_SECTOR": "Seleccione sector",
+					"TYPE": "Tipo"
 				}
             },
 			"tabs": {

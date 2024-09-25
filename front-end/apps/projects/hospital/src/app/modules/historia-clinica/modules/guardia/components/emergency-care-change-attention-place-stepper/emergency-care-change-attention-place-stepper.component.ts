@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCarePatientDto } from '@api-rest/api-model';
+import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-stepper',
@@ -8,6 +9,8 @@ import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlac
 })
 export class EmergencyCareChangeAttentionPlaceStepperComponent {
 
+	sectorId: number = null;
+	selectedSpaceType: SpaceType;
 	newPlace: ChangeEmergencyCareEpisodeAttentionPlaceDto;
 
 	@Input() patient: EmergencyCarePatientDto;
@@ -22,5 +25,9 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 
 	setSector(sector: EmergencyCareAttentionPlaceDto) {
 		console.log(sector)
+	}
+
+	setSelectedSpaceType(selectedSpaceType: SpaceType) {
+		this.selectedSpaceType = selectedSpaceType;
 	}
 }
