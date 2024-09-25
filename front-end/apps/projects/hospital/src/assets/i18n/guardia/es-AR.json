@@ -179,6 +179,8 @@
 					"SUCESS": "Cambio de lugar de atencion realizado con exito",
 					"SECTOR": "Sector",
 					"SELECT_SECTOR": "Seleccione sector",
+					"SELECT_DOCTOR_OFFICE": "Seleccione consultorio",
+					"PREPOSITION_OF": " de ",
 					"TYPE": "Tipo"
 				}
             },
