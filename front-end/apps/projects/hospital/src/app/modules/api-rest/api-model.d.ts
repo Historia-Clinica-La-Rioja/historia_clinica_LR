@@ -5214,8 +5214,16 @@ export interface StudyIntanceUIDDto {
 }
 
 export interface StudyOrderBasicPatientDto {
+    birthDate: DateDto;
+    firstName: string;
+    gender: GenderDto;
     id: number;
-    person: BasicPersonalDataDto;
+    identificationNumber: string;
+    identificationTypeId: number;
+    lastName: string;
+    middleNames: string;
+    nameSelfDetermination: string;
+    otherLastNames: string;
 }
 
 export interface StudyOrderReportInfoDto {

@@ -8,9 +8,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Value
 @Builder
 @ToString
@@ -23,7 +25,13 @@ public class StudyOrderBasicPatientBo {
 
 	private String firstName;
 
+	private String middleNames;
+
 	private String lastName;
+
+	private String otherLastNames;
+
+	private String nameSelfDetermination;
 
 	private String identificationNumber;
 
@@ -31,6 +39,9 @@ public class StudyOrderBasicPatientBo {
 
 	private Short genderId;
 
+	private String genderDescription;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
+
 }

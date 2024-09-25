@@ -35,7 +35,7 @@ public class ServiceRequestWorkListController {
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
 	public ResponseEntity<List<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
-															   @RequestParam(value = "categories", required = true) List<String> categories){
+															   @RequestParam(value = "categories") List<String> categories){
 
 		log.debug("Input parameters -> institutionId {}", institutionId);
 

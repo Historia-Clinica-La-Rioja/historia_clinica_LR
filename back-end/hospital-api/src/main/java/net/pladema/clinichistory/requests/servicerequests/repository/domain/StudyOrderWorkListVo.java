@@ -35,13 +35,13 @@ public class StudyOrderWorkListVo {
 
 	private LocalDateTime createdDate;
 
-	public StudyOrderWorkListVo(Integer studyId, Integer patientId, String firstName, String lastName,
-								String identificationNumber, Short identificationTypeId, Short genderId, LocalDate birthDate,
+	public StudyOrderWorkListVo(Integer studyId, Integer patientId, String firstName, String middleNames, String lastName, String otherLastNames, String nameSelfDetermination,
+								String identificationNumber, Short identificationTypeId, Short genderId, String genderDescription, LocalDate birthDate,
 								String sctid, String pt, Short studyTypeId, Boolean requiresTransfer,
 								Short sourceTypeId, @Nullable LocalDateTime deferredDate, LocalDateTime createdDate) {
 		this.studyId = studyId;
-		this.patientVo = new StudyOrderBasicPatientBo(patientId, firstName, lastName,
-				identificationNumber, identificationTypeId, genderId, birthDate);
+		this.patientVo = new StudyOrderBasicPatientBo(patientId, firstName, middleNames, lastName, otherLastNames, nameSelfDetermination,
+				identificationNumber, identificationTypeId, genderId, genderDescription, birthDate);
 		this.snomed = new SnomedBo(sctid, pt);
 		this.studyTypeId = studyTypeId;
 		this.requiresTransfer = requiresTransfer != null ? requiresTransfer : false;

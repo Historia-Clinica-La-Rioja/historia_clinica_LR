@@ -1,7 +1,10 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.domain.StudyOrderWorkListVo;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 public class StudyWorkListServiceImpl implements StudyWorkListService {
 
 	private final StudyWorkListRepository studyWorkListRepository;
+	private final FeatureFlagsService featureFlagsService;
 
 	@Override
 	public List<StudyOrderWorkListBo> execute(Integer institutionId, List<String> categories){
@@ -35,9 +39,24 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 	};
 
 	private StudyOrderWorkListBo mapToBo(StudyOrderWorkListVo studyOrderWorkListVo){
+		boolean featureFlagEnabled = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
+
+		StudyOrderBasicPatientBo patientBo = StudyOrderBasicPatientBo.builder()
+				.id(studyOrderWorkListVo.getPatientVo().getId())
+				.firstName(studyOrderWorkListVo.getPatientVo().getFirstName())
+				.lastName(studyOrderWorkListVo.getPatientVo().getLastName())
+				.identificationNumber(studyOrderWorkListVo.getPatientVo().getIdentificationNumber())
+				.middleNames(featureFlagEnabled ? studyOrderWorkListVo.getPatientVo().getMiddleNames() : null)
+				.otherLastNames(featureFlagEnabled ? studyOrderWorkListVo.getPatientVo().getOtherLastNames() : null)
+				.nameSelfDetermination(featureFlagEnabled ? studyOrderWorkListVo.getPatientVo().getNameSelfDetermination() : null)
+				.genderId(studyOrderWorkListVo.getPatientVo().getGenderId())
+				.genderDescription(studyOrderWorkListVo.getPatientVo().getGenderDescription())
+				.birthDate(studyOrderWorkListVo.getPatientVo().getBirthDate())
+				.build();
+
 		return new StudyOrderWorkListBo(
 				studyOrderWorkListVo.getStudyId(),
-				studyOrderWorkListVo.getPatientVo(),
+				patientBo,
 				studyOrderWorkListVo.getSnomed(),
 				studyOrderWorkListVo.getStudyTypeId(),
 				studyOrderWorkListVo.getRequiresTransfer(),
