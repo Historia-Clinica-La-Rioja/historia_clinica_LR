@@ -530,7 +530,7 @@ SELECT d.id AS id,
                                            FROM procedure_description pd
                                            WHERE pd.document_id = d.id AND d.type_id IN (20) AND pd.food_intake IS NOT NULL) AS result
                          )
-                SELECT CASE WHEN t.result <> '' THEN t.result || '\n' END FROM t GROUP BY t.result), '') AS pre_medications,
+                SELECT CASE WHEN t.result <> '' THEN t.result END FROM t GROUP BY t.result), '') AS pre_medications,
       coalesce('Antecedentes: ' ||
                (SELECT string_agg(s.pt, ', ')
                 FROM document_health_condition dhc
@@ -668,7 +668,7 @@ SELECT d.id AS id,
                                            WHERE mp.document_id = d.id
                                            GROUP BY mp.document_id),'') AS result
                          )
-                SELECT CASE WHEN t.result <> '' THEN t.result || '\n' END FROM t GROUP BY t.result), '') AS vital_signs_anesthesia,
+                SELECT CASE WHEN t.result <> '' THEN t.result END FROM t GROUP BY t.result), '') AS vital_signs_anesthesia,
       coalesce('Estado al finalizar la anestesia: ' ||
                (SELECT CASE WHEN dpas.intentional_sensitivity IS NOT NULL THEN '\n- Sensibilidad dolorosa: ' || CASE WHEN dpas.intentional_sensitivity = TRUE THEN 'Si' ELSE 'No' END  ELSE '' END ||
                        CASE WHEN dpas.corneal_reflex IS NOT NULL THEN '\n- Reflejo corneal: ' || CASE WHEN dpas.corneal_reflex = TRUE THEN 'Si' ELSE 'No' END  ELSE '' END ||
