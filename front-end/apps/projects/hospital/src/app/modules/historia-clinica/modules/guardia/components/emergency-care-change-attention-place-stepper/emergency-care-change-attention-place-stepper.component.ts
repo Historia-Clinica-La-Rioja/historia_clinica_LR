@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareDoctorsOfficeDto, EmergencyCarePatientDto } from '@api-rest/api-model';
+import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareDoctorsOfficeDto, EmergencyCarePatientDto, ShockroomDto } from '@api-rest/api-model';
 import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 
 @Component({
@@ -13,7 +13,6 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 
 	sectorId: number = null;
 	selectedSpaceType: SpaceType;
-	selectedDoctorOffice: EmergencyCareDoctorsOfficeDto;
 	newPlace: ChangeEmergencyCareEpisodeAttentionPlaceDto;
 
 	@Input() patient: EmergencyCarePatientDto;
@@ -38,6 +37,11 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	setSelectedDoctorOffice(selectedDoctorOffice: EmergencyCareDoctorsOfficeDto) {
 		this.resetNewPlace();
 		this.newPlace.emergencyCareEpisodeAttentionPlace.doctorsOfficeId = selectedDoctorOffice.id;
+	}
+
+	setSelectedShockroom(selectedShockroom: ShockroomDto) {
+		this.resetNewPlace();
+		this.newPlace.emergencyCareEpisodeAttentionPlace.shockroomId = selectedShockroom.id;
 		console.log(this.newPlace)
 	}
 

@@ -3,9 +3,15 @@
 		<app-emergency-care-change-attention-place-patient [patient]="patient"></app-emergency-care-change-attention-place-patient>
 		<app-emergency-care-change-attention-place-select-sector (selectedSector)="setSector($event)"></app-emergency-care-change-attention-place-select-sector>
 		<app-emergency-care-change-attention-place-select-place-type [sectorId]="sectorId" (selectedSpaceType)="setSelectedSpaceType($event)"></app-emergency-care-change-attention-place-select-place-type>
+
 		<ng-container *ngIf="selectedSpaceType === spaceType.DoctorsOffices">
 			<app-emergency-care-change-attention-place-select-doctor-office [sectorId]="sectorId" (selectedDoctorOffice)="setSelectedDoctorOffice($event)"></app-emergency-care-change-attention-place-select-doctor-office>
 		</ng-container>
+
+		<ng-container *ngIf="selectedSpaceType === spaceType.ShockRooms">
+			<app-emergency-care-change-attention-place-select-shockroom [sectorId]="sectorId" (selectedShockroom)="setSelectedShockroom($event)"></app-emergency-care-change-attention-place-select-shockroom>
+		</ng-container>
+
 	</mat-step>
 	<mat-step *ngIf="false">
 		<!-- aca iria condiionalmente componente de mostar camas -->
