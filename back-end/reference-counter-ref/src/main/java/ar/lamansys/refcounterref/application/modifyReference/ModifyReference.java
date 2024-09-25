@@ -99,9 +99,6 @@ public class ModifyReference {
 
 		if(referenceData.getPriority() == null)
 			throw new ModifyReferenceException(ModifyReferenceExceptionEnum.PRIORITY_REQUIRED, "Se debe indicar un nivel de prioridad");
-
-		if(referenceData.getInstitutionDestination() == null || referenceData.getInstitutionDestination().getId() == null)
-			throw new ModifyReferenceException(ModifyReferenceExceptionEnum.DESTINATION_INSTITUTION_REQUIRED, "Se debe indicar una institución de destino");
 		
 	}
 
