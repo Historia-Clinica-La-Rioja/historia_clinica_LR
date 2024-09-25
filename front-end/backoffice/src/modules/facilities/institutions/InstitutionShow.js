@@ -197,7 +197,6 @@ const InstitutionShow = props => {
     const OtherSections = (props) => {
         return (
             <>
-                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
                 <PharmacosSection/>
             </>
         );
