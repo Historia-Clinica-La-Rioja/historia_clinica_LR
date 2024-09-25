@@ -1,6 +1,7 @@
 package net.pladema.reports.controller.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class FormVDto {
 
     private String affiliateNumber;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String problems;
 

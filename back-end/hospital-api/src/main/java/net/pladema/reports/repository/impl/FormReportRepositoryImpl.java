@@ -1,6 +1,7 @@
 package net.pladema.reports.repository.impl;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 +
                 "               pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, " +
                 "               pe.identificationNumber, ad.street, ad.number, ci.description, mc.name, pmca.affiliateNumber, i.sisaCode, " +
-				"				CASE WHEN a.appointmentStateId = " + AppointmentState.SERVED + " THEN a.updateable.updatedOn ELSE a.dateTypeId END) "
+				"				CASE WHEN a.appointmentStateId = " + AppointmentState.SERVED + " THEN a.updateable.updatedOn ELSE a.creationable.createdOn END) "
                 +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
@@ -70,8 +71,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 				"        END as id, " +
 				"        d.id as doc_id, " +
 				"        CASE " +
-				"            WHEN d.source_type_id = :outPatientValue THEN oc.start_date " +
-				"            WHEN d.source_type_id = :vaccineValue THEN vc.performed_date " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.created_on " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.created_on " +
 				"        END as start_date, " +
 				"        COALESCE(oc.institution_id, vc.institution_id) as institution_id, " +
 				"        COALESCE(oc.patient_id, vc.patient_id) as patient_id, " +
@@ -129,7 +130,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 a[6] != null ? ((Date) a[6]).toLocalDate() : null,
                 (String) a[7],
                 (String) a[8],
-                a[9] != null ? ((Date) a[9]).toLocalDate() : null,
+                a[9] != null ? ((Timestamp) a[9]).toLocalDateTime() : null,
                 (String) a[10],
                 (String) a[11],
                 (String) a[12],
@@ -147,7 +148,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 	@Transactional(readOnly = true)
     public Optional<FormVOutpatientVo> getOdontologyConsultationFormVGeneralInfo(Long documentId) {
         String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
+                "       SELECT d.id as doc_id, oc.created_on, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
                 +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}odontology_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 6)"
@@ -155,7 +156,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "       WHERE d.id = :documentId)" +
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
-                "              t.performed_date, null as problems, " +
+                "              t.created_on, null as problems, " +
                 "              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes, " +
 				"				mc.name as medicalCoverageName, pmc.affiliate_number " +
                 "       FROM t " +
@@ -184,7 +185,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 a[6] != null ? ((Date) a[6]).toLocalDate() : null,
                 (String) a[7],
                 (String) a[8],
-                a[9] != null ? ((Date) a[9]).toLocalDate() : null,
+                a[9] != null ? ((Timestamp) a[9]).toLocalDateTime() : null,
                 (String) a[10],
                 (String) a[11],
                 (String) a[12],
@@ -236,13 +237,13 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 	@Transactional(readOnly = true)
 	public Optional<FormVOutpatientVo> getNursingConsultationFormVGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT d.id as doc_id, nc.performed_date, nc.institution_id, nc.patient_id, nc.clinical_specialty_id, nc.patient_medical_coverage_id " +
+				"       SELECT d.id as doc_id, nc.created_on, nc.institution_id, nc.patient_id, nc.clinical_specialty_id, nc.patient_medical_coverage_id " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}nursing_consultation AS nc ON (d.source_id = nc.id  AND d.source_type_id = 7)" +
 				"       WHERE d.id = :documentId)" +
 				"       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
 				"              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
-				"              t.performed_date, null as problems, "+
+				"              t.created_on, null as problems, "+
 				"              ad.street, ad.number, ci.description as city, i.sisa_code, null as cie10Codes, "+
 				"				mc.name as medicalCoverageName, pmc.affiliate_number " +
 				"       FROM t "+
@@ -271,7 +272,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 				a[6] != null ? ((Date) a[6]).toLocalDate() : null,
 				(String) a[7],
 				(String) a[8],
-				a[9] != null ? ((Date) a[9]).toLocalDate() : null,
+				a[9] != null ? ((Timestamp) a[9]).toLocalDateTime() : null,
 				(String) a[10],
 				(String) a[11],
 				(String) a[12],
