@@ -450,7 +450,7 @@ export class AnestheticReportVitalSignsService {
 		this[endDateKey] = endDate ? new Date(endDate) : null;
 
 		if ((this[startDateKey] && this[endDateKey]) && sameDayMonthAndYear(this[startDateKey], this[endDateKey])) {
-			if (!(startTime && endTime) || sameHourAndMinute(startTimeDate, endTimeDate) || isAfter(startTimeDate, endTimeDate)) {
+			if (!(startTime || endTime) || sameHourAndMinute(startTimeDate, endTimeDate) || isAfter(startTimeDate, endTimeDate)) {
 				vitalSignsForm.controls[endDateKey].setErrors({ endTimeBeforeStartTime: true });
 			} else {
 				vitalSignsForm.controls[endDateKey].setErrors(null);
