@@ -27,6 +27,7 @@ public class InstitutionMedicineGroupBo implements Serializable {
 	private Boolean message;
 	private Boolean allDiagnoses;
 	private Boolean enabled;
+	private String requiredDocumentation;
 
 	public InstitutionMedicineGroupBo(Integer id, Integer medicineGroupId, Integer institutionId, String name, Boolean isDomain, Boolean deleted)
 	{
@@ -36,6 +37,12 @@ public class InstitutionMedicineGroupBo implements Serializable {
 		this.name = name;
 		this.isDomain = isDomain;
 		this.enabled = !deleted;
+	}
+
+	public InstitutionMedicineGroupBo(String name, String requiredDocumentation)
+	{
+		this.requiredDocumentation = requiredDocumentation;
+		this.name = name;
 	}
 
 }
