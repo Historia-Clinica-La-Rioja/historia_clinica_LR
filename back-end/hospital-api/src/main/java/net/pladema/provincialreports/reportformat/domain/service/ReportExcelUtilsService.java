@@ -64,7 +64,8 @@ public class ReportExcelUtilsService {
 															 @NonNull Integer mainTitleColumns,
 															 Integer rowsBetweenTitleAndHeaders,
 															 String formattedPeriod,
-															 @NonNull Integer institutionId) {
+															 @NonNull Integer institutionId,
+															 String customObservation) {
 		// recommended minimum mainTitleColumns = 7
 		Institution institution = institutionRepository.findById(institutionId)
 				.orElseThrow(() -> new IllegalArgumentException("Institution not found with id " + institutionId));
@@ -84,7 +85,15 @@ public class ReportExcelUtilsService {
 
 		data.add(new CellContent(rowNum, 0, 1, 1, "FECHA DE EMISIÓN:", boldTitleStyle));
 		data.add(new CellContent(rowNum, 1, 1, 2, newCurrentDateAsDDMMYYYY("dash"), fieldStyle));
-		data.add(new CellContent(rowNum, 3, 2 + rowsBetweenTitleAndHeaders, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
+		if (customObservation == null || customObservation.isEmpty()) {
+			// No observation
+			data.add(new CellContent(rowNum, 3, 2 + rowsBetweenTitleAndHeaders, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
+		} else {
+			// Observation present
+			data.add(new CellContent(rowNum, 3, 1, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
+			rowNum++;
+			data.add(new CellContent(rowNum, 3, 1 + rowsBetweenTitleAndHeaders, mainTitleColumns, customObservation, fieldStyle));
+		}
 
 		rowNum++;
 
