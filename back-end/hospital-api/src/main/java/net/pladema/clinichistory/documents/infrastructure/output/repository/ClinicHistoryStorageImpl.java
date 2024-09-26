@@ -122,7 +122,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
             return new CHAnamnesisBo(row, encounterType, documentType);
         if (row.getDocumentTypeId().equals(EDocumentType.EVALUATION_NOTE.getId()) ||
                 row.getDocumentTypeId().equals(EDocumentType.NURSING_EVOLUTION_NOTE.getId()) ||
-                row.getDocumentTypeId().equals(EDocumentType.EMERGENCY_CARE_EVOLUTION.getId()))
+                row.getDocumentTypeId().equals(EDocumentType.EMERGENCY_CARE_EVOLUTION.getId()) ||
+				row.getDocumentTypeId().equals(EDocumentType.NURSING_EMERGENCY_CARE_EVOLUTION.getId()))
             return new CHEvolutionNoteBo(row, encounterType, documentType);
         if (row.getDocumentTypeId().equals(EDocumentType.EPICRISIS.getId()))
             return new CHEpicrisisBo(row, encounterType, documentType);
