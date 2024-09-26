@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareDoctorsOfficeDto, EmergencyCarePatientDto, ShockroomDto } from '@api-rest/api-model';
 import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-stepper',
@@ -10,6 +11,7 @@ import { SpaceType } from '../emergency-care-attention-place-sector/emergency-ca
 export class EmergencyCareChangeAttentionPlaceStepperComponent {
 
 	spaceType = SpaceType;
+	buttonType = ButtonType;
 
 	sectorId: number = null;
 	selectedSpaceType: SpaceType;
@@ -31,6 +33,7 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	}
 
 	setSelectedSpaceType(selectedSpaceType: SpaceType) {
+		this.newPlace = null;
 		this.selectedSpaceType = selectedSpaceType;
 	}
 
@@ -42,12 +45,11 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	setSelectedShockroom(selectedShockroom: ShockroomDto) {
 		this.resetNewPlace();
 		this.newPlace.emergencyCareEpisodeAttentionPlace.shockroomId = selectedShockroom.id;
-		console.log(this.newPlace)
 	}
 
 	private resetSelections(){
 		this.selectedSpaceType = null;
-		this.resetNewPlace();
+		this.newPlace = null;
 	}
 
 	private resetNewPlace(){

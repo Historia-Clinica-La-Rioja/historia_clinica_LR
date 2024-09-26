@@ -175,7 +175,12 @@
 				},
 				"change-attention-place":{
 					"TITLE": "Cambiar lugar de atención",
+					"NEW_ATTENTION_PLACE": "Nuevo lugar de atencion",
+					"PREVIEW": "Vista previa",
 					"BUTTON_CONTINUE": "Continuar",
+					"BUTTON_BACK": "Volver",
+					"BUTTON_CONFIRM": "Confirmar cambio de lugar",
+					"ASSIGN_BED": "Asignar cama",
 					"SUCESS": "Cambio de lugar de atencion realizado con exito",
 					"SECTOR": "Sector",
 					"SELECT_SECTOR": "Seleccione sector",
