@@ -35,7 +35,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 26, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 26, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
@@ -55,7 +55,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 24, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 24, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
@@ -75,7 +75,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 12, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 12, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
@@ -95,7 +95,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 25, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 25, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
@@ -115,7 +115,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 12, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 12, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
