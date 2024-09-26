@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EmergencyCarePatientDto } from '@api-rest/api-model';
+import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCarePatientDto } from '@api-rest/api-model';
 import { PlacePreview } from '../../components/emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
 
 @Component({
@@ -11,12 +11,11 @@ import { PlacePreview } from '../../components/emergency-care-change-attention-p
 export class EmergencyCareChangeAttentionPlaceDialogComponent {
 
 	constructor(
-		private dialogRef: MatDialogRef<boolean>,
-		@Inject(MAT_DIALOG_DATA) public data: { patient: EmergencyCarePatientDto, lastPlacePreview: PlacePreview }
+		private dialogRef: MatDialogRef<ChangeEmergencyCareEpisodeAttentionPlaceDto>,
+		@Inject(MAT_DIALOG_DATA) public data: { patient: EmergencyCarePatientDto, lastPlacePreview: PlacePreview, episodeId: number }
 	) { }
 
-	//el dto del dato a enviar BE aun no esta listo, ChangeEmergencyCareEpisodeAttentionPlaceDto
-	saveNewSelectedSpace(newSelectedSpace: boolean){
+	saveNewSelectedSpace(newSelectedSpace: ChangeEmergencyCareEpisodeAttentionPlaceDto){
 		if(newSelectedSpace)
 			this.dialogRef.close(newSelectedSpace);
 	}

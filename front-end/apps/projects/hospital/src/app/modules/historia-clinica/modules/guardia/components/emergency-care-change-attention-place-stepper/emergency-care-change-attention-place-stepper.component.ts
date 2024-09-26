@@ -21,13 +21,13 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 
 	@Input() patient: EmergencyCarePatientDto;
 	@Input() lastPlacePreview: PlacePreview;
-	@Output() formEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Input() episodeId: number;
+	@Output() formEmitter: EventEmitter<ChangeEmergencyCareEpisodeAttentionPlaceDto> = new EventEmitter<ChangeEmergencyCareEpisodeAttentionPlaceDto>();
 
 	constructor() { }
 
 	save() {
-		//eventemitter del form al dialogo
-		this.formEmitter.emit(true);
+		this.formEmitter.emit(this.newPlace);
 	}
 
 	setSector(sector: EmergencyCareAttentionPlaceDto) {
@@ -69,7 +69,7 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 				doctorsOfficeId: null,
 				shockroomId: null
 			},
-			episodeId: null //pasar como input desde componente padre
+			episodeId: this.episodeId
 		};
 	}
 

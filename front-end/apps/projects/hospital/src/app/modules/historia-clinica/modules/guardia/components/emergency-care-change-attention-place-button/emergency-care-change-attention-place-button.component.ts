@@ -4,6 +4,7 @@ import { DialogService, DialogWidth } from '@presentation/services/dialog.servic
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { EmergencyCareChangeAttentionPlaceDialogComponent } from '../../dialogs/emergency-care-change-attention-place-dialog/emergency-care-change-attention-place-dialog.component';
 import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
+import { EmergencyCareAttentionPlaceService } from '../../services/emergency-care-attention-place.service';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-button',
@@ -14,9 +15,11 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 
 	@Input() patient: EmergencyCarePatientDto;
 	@Input() lastPlacePreview: PlacePreview;
+	@Input() episodeId: number;
 
 	constructor(
 		private readonly dialogService: DialogService<EmergencyCareChangeAttentionPlaceDialogComponent>,
+		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
 		private readonly snackBarService: SnackBarService,
 	) { }
 
@@ -25,15 +28,17 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 			{ dialogWidth: DialogWidth.MEDIUM },
 			{
 				patient: this.patient,
-				lastPlacePreview: this.lastPlacePreview
+				lastPlacePreview: this.lastPlacePreview,
+				episodeId: this.episodeId
 			}
 		)
-		editDialogRef.afterClosed().subscribe(edited => {
-			if (edited) {
-				//enviar datos al BE
-				this.snackBarService.showSuccess('guardia.home.attention_places.change-attention-place.SUCESS');
+		editDialogRef.afterClosed().subscribe(newAttentionPlace => {
+			if (newAttentionPlace) {
+				this.emergencyCareAttentionPlaceService.changeAttentionPlace(newAttentionPlace).subscribe(
+					_ => this.snackBarService.showSuccess('guardia.home.attention_places.change-attention-place.SUCESS'),
+					_ => this.snackBarService.showError('guardia.home.attention_places.change-attention-place.ERROR')
+				);
             }
 		});
 	}
-
 }
