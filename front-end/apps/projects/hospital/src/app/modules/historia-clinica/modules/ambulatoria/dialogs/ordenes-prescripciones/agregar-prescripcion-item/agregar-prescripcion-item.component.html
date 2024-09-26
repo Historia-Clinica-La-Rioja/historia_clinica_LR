@@ -61,17 +61,24 @@
 		</ng-template>
 
 		<ng-template #commercialPharmaco>
-			<app-commercial-pharmaco-typeahead *ngIf="prescriptionItemForm.value.pharmacoSearchType === OTHER_RADIO_OPTION && snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
+			<app-commercial-pharmaco-typeahead
+				*ngIf="prescriptionItemForm.value.pharmacoSearchType === OTHER_RADIO_OPTION && snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
 				[ecl]="data.eclTerm"
 				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
-				[required]="true"
-				(conceptSelected)="setCommercialMedicationConcept($event)">
+				[required]="true" (conceptSelected)="setCommercialMedicationConcept($event)">
 			</app-commercial-pharmaco-typeahead>
 		</ng-template>
 
-		<mat-checkbox *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn" formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="changeCheckboxValue($event)">
+		<app-audit-required-medicine
+			*ngIf="isEnabledFinancedPharmaco && this.prescriptionItemForm.value.healthProblem && snomedConcept"
+			[auditRequiredData]="auditRequiredInput">
+		</app-audit-required-medicine>
+
+		<mat-checkbox *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
+			formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="changeCheckboxValue($event)">
 			<span id="suggest-commercial-checkbox">
-				{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION' | translate}}
+				{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION' |
+				translate}}
 			</span>
 		</mat-checkbox>
 

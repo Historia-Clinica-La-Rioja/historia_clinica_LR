@@ -72,6 +72,7 @@ import { ViolenceSituationPersonInformationComponent } from './components/violen
 import { ViolenceSituationRelevantInformationSectionComponent } from './components/violence-situation-relevant-information-section/violence-situation-relevant-information-section.component';
 import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
 import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
+import { AuditRequiredMedicationComponent } from './dialogs/ordenes-prescripciones/audit-required-medication/audit-required-medicine.component';
 //pipes
 import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
@@ -123,6 +124,7 @@ import { ExternalSummaryCardComponent } from '@presentation/components/external-
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
 import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms-template/show-closed-forms-template.component';
+
 @NgModule({
 	declarations: [
 		AssociatedParameterizedFormInformationComponent,
@@ -219,6 +221,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		OptionListParameterComponent,
 		//pipe
 		TranslateDeviceTextPipe,
+  AuditRequiredMedicationComponent,
 	],
 	imports: [
 		CommonModule,

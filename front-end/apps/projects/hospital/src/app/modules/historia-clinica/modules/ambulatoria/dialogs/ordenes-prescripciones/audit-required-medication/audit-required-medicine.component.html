@@ -1,0 +1,14 @@
+<ng-container *ngIf="(groupAuditRequired$ | async) as groupAuditRequired">
+  <ng-container *ngIf="groupAuditRequired.length > 0 ">
+    <div class="colored-area-audit" *ngFor="let item of groupAuditRequired">
+      <app-colored-icon-text class="icon-text-size icon-text-layout"
+        [coloredIconText]="{icon: 'error_outline', color: 'blue', text: 'Auditoria requerida'}"></app-colored-icon-text>
+      <div class="margin-subtitle">
+        {{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.AUDIT_REQUIRED_TEXT' | translate}}
+      </div>
+      <div class="margin-subtitle" *ngIf="item.requiredDocumentation">
+        <div> - {{item.requiredDocumentation}}</div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
