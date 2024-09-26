@@ -60,8 +60,6 @@ public class ReportExcelUtilsService {
 		}
 	}
 
-	// new code with reduced boilerplate
-
 	public List<CellContent> newGetHeaderDataWithoutObservation(String[] subtitles, String title,
 															 @NonNull Integer mainTitleColumns,
 															 Integer rowsBetweenTitleAndHeaders,
