@@ -103,6 +103,7 @@ public class EmergencyCareBo {
 		this.reason = emergencyCareVo.getReason();
 		this.stateUpdatedOn = emergencyCareVo.getStateUpdatedOn();
 		this.sector = emergencyCareVo.getSector() != null ? new SectorBo(emergencyCareVo.getSector()) : null;
+		this.triage = emergencyCareVo.getTriage() != null ? new TriageBo(emergencyCareVo.getTriage()) : null;
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {

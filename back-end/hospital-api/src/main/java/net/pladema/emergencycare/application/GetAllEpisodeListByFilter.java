@@ -16,19 +16,17 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
-import net.pladema.emergencycare.triage.application.fetchlasttriagebyemergencycareepisodeid.FetchLastTriageByEmergencyCareEpisodeId;
+import net.pladema.emergencycare.triage.application.fetchtriagereasons.FetchTriageReasons;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -41,13 +39,13 @@ public class GetAllEpisodeListByFilter {
 
 	private final InstitutionExternalService institutionExternalService;
 
-	private final FetchLastTriageByEmergencyCareEpisodeId fetchLastTriageByEmergencyCareEpisodeId;
-
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 
 	private final EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService;
 
 	private final FeatureFlagsService featureFlagsService;
+
+	private final FetchTriageReasons fetchTriageReasons;
 
 	public Page<EmergencyCareBo> run(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		log.debug("Input parameters -> institutionId {}, filter {}, pageable {}", institutionId, filter, pageable);
@@ -55,7 +53,7 @@ public class GetAllEpisodeListByFilter {
 		Page<EmergencyCareBo> result = emergencyCareEpisodeListStorage.getAllEpisodeListByFilter(institutionId, filter, pageable);
 		result.forEach(ec -> {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
-			ec.setTriage(fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId()));
+			ec.getTriage().setReasons(fetchTriageReasons.run(ec.getTriage().getTriageId()));
 			ec.setCanBeAbsent(getCanBeAbsent(ec.getId(), ec.getEmergencyCareStateId()));
 			setStateUpdatedOnAndCalls(ec,institutionId);
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
@@ -67,15 +65,6 @@ public class GetAllEpisodeListByFilter {
 			}
 			if (selfPerceivedFF) setSelfDeterminationNames(ec);
 		});
-		if (filter.getClinicalSpecialtySectorIds().isEmpty()) {
-			log.debug("Output -> {}", result);
-			return result;
-		}
-
-		var episodeFilters = result.stream()
-				.filter(episode -> filter.getClinicalSpecialtySectorIds().contains(episode.getTriage().getClinicalSpecialtySectorId()))
-				.collect(Collectors.toList());
-		result = new PageImpl<>(episodeFilters, pageable, episodeFilters.size());
 
 		log.debug("Output -> {}", result);
 		return result;
