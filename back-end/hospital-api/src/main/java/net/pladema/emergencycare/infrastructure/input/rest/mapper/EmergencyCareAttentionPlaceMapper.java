@@ -35,6 +35,7 @@ import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.S
 import net.pladema.person.repository.domain.PersonAgeBo;
 
 import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -72,7 +73,10 @@ public interface EmergencyCareAttentionPlaceMapper {
 	@Mapping(target = "type", ignore = true)
 	@Mapping(target = "state", ignore = true)
 	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
-	EmergencyCareBedDetailDto toEmergencyCareBedDetailDto(EmergencyCareBedDetailBo emergencyCareBedDetailBo);
+	EmergencyCareBedDetailDto toEmergencyCareBedDetailDto(
+		EmergencyCareBedDetailBo emergencyCareBedDetailBo,
+		@Context Boolean selfDeterminedNameFFIsOn
+	);
 
 	@Named("toPersonAgeDto")
 	PersonAgeDto toPersonAgeDto(PersonAgeBo personAgeBo);
@@ -81,13 +85,18 @@ public interface EmergencyCareAttentionPlaceMapper {
 	@Mapping(target = "type", ignore = true)
 	@Mapping(target = "state", ignore = true)
 	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
-	EmergencyCareShockRoomDetailDto toEmergencyCareShockRoomDetailDto(EmergencyCareShockRoomDetailBo emergencyCareShockRoomDetailBo);
+	EmergencyCareShockRoomDetailDto toEmergencyCareShockRoomDetailDto(
+		EmergencyCareShockRoomDetailBo emergencyCareShockRoomDetailBo,
+		@Context Boolean selfDeterminedNameFFIsOn
+	);
 
 	@Named("toEmergencyCareDoctorsOfficeDetailDto")
 	@Mapping(target = "type", ignore = true)
 	@Mapping(target = "state", ignore = true)
 	@Mapping(target = "lastTriage", source = "lastTriage", qualifiedByName = "toEmergencyCareEpisodeListTriageDto")
-	EmergencyCareDoctorsOfficeDetailDto toEmergencyCareDoctorsOfficeDetailDto(EmergencyCareDoctorsOfficeDetailBo emergencyCareDoctorsOfficeDetailBo);
+	EmergencyCareDoctorsOfficeDetailDto toEmergencyCareDoctorsOfficeDetailDto(
+		EmergencyCareDoctorsOfficeDetailBo emergencyCareDoctorsOfficeDetailBo,
+		@Context Boolean selfDeterminedNameFFIsOn);
 
 	@Named("toEmergencyCareSectorHasAttentionPlaceDto")
 	EmergencyCareSectorHasAttentionPlaceDto toEmergencyCareSectorHasAttentionPlaceDto(EmergencyCareSectorHasAttentionPlaceBo emergencyCareSectorHasAttentionPlaceBo);
@@ -103,5 +112,16 @@ public interface EmergencyCareAttentionPlaceMapper {
 														 EmergencyCareAttentionPlaceDetailBo emergencyCareAttentionPlaceDetailBo) {
 		target.setType(EnumWriter.write(EEmergencyCareType.getById(emergencyCareAttentionPlaceDetailBo.getEmergencyCareTypeId())));
 		target.setState(EnumWriter.write(EEmergencyCareState.getById(emergencyCareAttentionPlaceDetailBo.getEmergencyCareStateId())));
+	}
+
+	@AfterMapping
+	default void emergencyCareDoctorsOfficeDetailDtoAfterMapping(
+		@MappingTarget EmergencyCareAttentionPlaceDetailDto target,
+		EmergencyCareAttentionPlaceDetailBo source,
+		@Context Boolean selfDeterminedNameFFIsOn
+	) {
+		if (source.getProfessional() != null && target.getProfessional() != null) {
+			target.getProfessional().setFullName(source.getProfessional().getFullName(selfDeterminedNameFFIsOn));
+		}
 	}
 }

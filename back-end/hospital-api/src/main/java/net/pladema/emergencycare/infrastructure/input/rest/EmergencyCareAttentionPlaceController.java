@@ -1,6 +1,8 @@
 package net.pladema.emergencycare.infrastructure.input.rest;
 
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,7 @@ public class EmergencyCareAttentionPlaceController {
 	private final PersonExternalService personExternalService;
 	private final GetEmergencyCareShockRoomDetail getEmergencyCareShockRoomDetail;
 	private final GetEmergencyCareDoctorsOfficeDetail getEmergencyCareDoctorsOfficeDetail;
+	private final FeatureFlagsService featureFlagsService;
 	private final ChangeEmergencyCareAttentionPlace changeEmergencyCareAttentionPlace;
 	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
 	private final AttentionPlaceMapper attentionPlaceMapper;
@@ -66,7 +69,8 @@ public class EmergencyCareAttentionPlaceController {
 												  @PathVariable(name = "bedId") Integer bedId){
 		log.debug("Input get emergency care bed detail parameters -> institutionId {}, bedId {}", institutionId, bedId);
 		EmergencyCareBedDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareBedDetailDto(
-			getEmergencyCareBedDetail.run(bedId)
+			getEmergencyCareBedDetail.run(bedId),
+			featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)
 		);
 		var statusDto = attentionPlaceMapper.toDto(fetchAttentionPlaceBlockStatus.findForBed(institutionId, bedId).orElse(null));
 		result.setStatus(statusDto);
@@ -81,7 +85,8 @@ public class EmergencyCareAttentionPlaceController {
 															  @PathVariable(name = "shockroomId") Integer shockroomId){
 		log.debug("Input get emergency care shockroom detail parameters -> institutionId {}, shockroomId {}", institutionId, shockroomId);
 		EmergencyCareShockRoomDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareShockRoomDetailDto(
-				getEmergencyCareShockRoomDetail.run(shockroomId)
+			getEmergencyCareShockRoomDetail.run(shockroomId),
+			featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)
 		);
 		var statusDto = attentionPlaceMapper.toDto(fetchAttentionPlaceBlockStatus.findForShockRoom(institutionId, shockroomId).orElse(null));
 		result.setStatus(statusDto);
@@ -96,7 +101,8 @@ public class EmergencyCareAttentionPlaceController {
 																	  @PathVariable(name = "doctorsOfficeId") Integer doctorsOfficeId){
 		log.debug("Input get emergency care doctors office detail parameters -> institutionId {}, doctorsOfficeId {}", institutionId, doctorsOfficeId);
 		EmergencyCareDoctorsOfficeDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareDoctorsOfficeDetailDto(
-				getEmergencyCareDoctorsOfficeDetail.run(doctorsOfficeId)
+			getEmergencyCareDoctorsOfficeDetail.run(doctorsOfficeId),
+			featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)
 		);
 		var statusDto = attentionPlaceMapper.toDto(fetchAttentionPlaceBlockStatus.findForDoctorsOffice(institutionId, doctorsOfficeId).orElse(null));
 		result.setStatus(statusDto);
