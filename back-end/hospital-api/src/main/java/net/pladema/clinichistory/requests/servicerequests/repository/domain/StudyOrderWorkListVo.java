@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @ToString
 public class StudyOrderWorkListVo {
 
+	public static final String STATUS_PENDING = "1";
+
 	private Integer studyId;
 
 	private StudyOrderBasicPatientBo patientVo;
@@ -47,7 +49,7 @@ public class StudyOrderWorkListVo {
 		this.requiresTransfer = requiresTransfer != null ? requiresTransfer : false;
 		this.sourceTypeId = sourceTypeId;
 		this.deferredDate = deferredDate;
-		this.status = "1";
+		this.status = STATUS_PENDING;
 		this.createdDate = createdDate;
 	}
 

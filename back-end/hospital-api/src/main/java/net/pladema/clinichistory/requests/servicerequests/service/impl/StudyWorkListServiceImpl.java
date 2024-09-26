@@ -1,9 +1,12 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
@@ -28,7 +31,14 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 
 		log.debug("Input parameters -> institutionId: {}, categories: {}", institutionId, categories);
 
-		List<StudyOrderWorkListBo> result= studyWorkListRepository.execute(institutionId,categories)
+		String statusId = EDiagnosticReportStatus.REGISTERED.getId();
+		List<Short> sourceTypeIds = List.of(
+				ESourceType.HOSPITALIZATION.getId(),
+				ESourceType.EMERGENCY_CARE.getId()
+		);
+		Short documentType = EDocumentType.ORDER.getId();
+
+		List<StudyOrderWorkListBo> result= studyWorkListRepository.execute(institutionId,categories, sourceTypeIds, statusId, documentType)
 				.stream()
 				.map(this::mapToBo)
 				.collect(Collectors.toList());
