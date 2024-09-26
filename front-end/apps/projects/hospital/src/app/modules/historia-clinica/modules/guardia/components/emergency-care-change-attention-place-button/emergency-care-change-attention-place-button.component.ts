@@ -3,6 +3,7 @@ import { EmergencyCarePatientDto } from '@api-rest/api-model';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { EmergencyCareChangeAttentionPlaceDialogComponent } from '../../dialogs/emergency-care-change-attention-place-dialog/emergency-care-change-attention-place-dialog.component';
+import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-button',
@@ -12,6 +13,7 @@ import { EmergencyCareChangeAttentionPlaceDialogComponent } from '../../dialogs/
 export class EmergencyCareChangeAttentionPlaceButtonComponent {
 
 	@Input() patient: EmergencyCarePatientDto;
+	@Input() lastPlacePreview: PlacePreview;
 
 	constructor(
 		private readonly dialogService: DialogService<EmergencyCareChangeAttentionPlaceDialogComponent>,
@@ -21,7 +23,10 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 	openChangeAttentionPlaceDialog(){
 		const editDialogRef = this.dialogService.open(EmergencyCareChangeAttentionPlaceDialogComponent,
 			{ dialogWidth: DialogWidth.MEDIUM },
-            this.patient
+			{
+				patient: this.patient,
+				lastPlacePreview: this.lastPlacePreview
+			}
 		)
 		editDialogRef.afterClosed().subscribe(edited => {
 			if (edited) {

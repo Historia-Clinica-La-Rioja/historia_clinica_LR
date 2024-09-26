@@ -70,23 +70,29 @@
 
 	<mat-step label="{{'guardia.home.attention_places.change-attention-place.PREVIEW' | translate}}">
 
-		<app-emergency-care-change-attention-place-patient [patient]="patient">
-		</app-emergency-care-change-attention-place-patient>
+		<div fxLayout="column" fxLayoutGap="20px">
+			<app-emergency-care-change-attention-place-patient [patient]="patient">
+			</app-emergency-care-change-attention-place-patient>
 
-		<!-- aca iria componente de vista previa y confirmar  -->
+			<app-emergency-care-change-attention-place-preview-change
+				[lastAttentionPlace]="lastPlacePreview"
+				[newAttentionPlace]="newPlacePreview">
+			</app-emergency-care-change-attention-place-preview-change>
 
-		<div class="actions">
-			<app-button
-				(click)="stepper.previous()"
-				[text]="'guardia.home.attention_places.change-attention-place.BUTTON_BACK'"
-				[buttonType]="buttonType.STROKED">
-			</app-button>
+			<div class="actions">
+				<app-button
+					(click)="stepper.previous()"
+					[text]="'guardia.home.attention_places.change-attention-place.BUTTON_BACK'"
+					[buttonType]="buttonType.STROKED">
+				</app-button>
 
-			<app-button
-				(click)="save()"
-				[text]="'guardia.home.attention_places.change-attention-place.BUTTON_CONFIRM'"
-				[buttonType]="buttonType.RAISED">
-			</app-button>
+				<app-button
+					(click)="save()"
+					[text]="'guardia.home.attention_places.change-attention-place.BUTTON_CONFIRM'"
+					[buttonType]="buttonType.RAISED">
+				</app-button>
+			</div>
 		</div>
+
 	</mat-step>
 </mat-stepper>

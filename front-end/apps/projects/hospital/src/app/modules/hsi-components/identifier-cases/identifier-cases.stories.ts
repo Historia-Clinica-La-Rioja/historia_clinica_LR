@@ -210,6 +210,22 @@ export const roomFull: Story = {
 	}
 };
 
+export const doctorOfficeMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.DOCTOR_OFFICE,
+		description: "Ejemplo de consultorio",
+	}
+};
+
+export const doctorOfficeFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.DOCTOR_OFFICE,
+		showLegend: true,
+		description: "Ejemplo de consultorio",
+		position: Position.COLUMN
+	}
+};
+
 export const sectorMin: Story = {
 	args: {
 		identifierCase: IDENTIFIER_CASES.SECTOR,

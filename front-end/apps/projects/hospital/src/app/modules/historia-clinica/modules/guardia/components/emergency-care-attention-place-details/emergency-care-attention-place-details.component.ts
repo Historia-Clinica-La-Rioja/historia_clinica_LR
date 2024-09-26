@@ -4,6 +4,7 @@ import { EmergencyCareAttentionPlaceService } from '../../services/emergency-car
 import { map, Observable } from 'rxjs';
 import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { EmergencyCareAttentionPlaceDetailDto, EmergencyCareBedDetailDto, EmergencyCareDoctorsOfficeDetailDto, EmergencyCareShockRoomDetailDto } from '@api-rest/api-model';
+import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
 
 @Component({
 	selector: 'app-emergency-care-attention-place-details',
@@ -15,6 +16,7 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 	@Input() selectedSpace: SelectedSpace;
 	details$: Observable<EmergencyCareDetails>;
 	spaceTypeDetails: SpaceTypeDetails;
+	lastPlacePreview: PlacePreview = this.initializePlacePreview();
 
 	constructor(private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService) { }
 
@@ -26,6 +28,14 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 		if (changes.selectedSpace && !changes.selectedSpace.isFirstChange()) {
 			this.loadDetails();
 		}
+	}
+
+	private initializePlacePreview(): PlacePreview {
+		return {
+			placeType: null,
+			placeTypeDescription: null,
+			sectorDescription: null
+		};
 	}
 
 	loadDetails() {
@@ -54,12 +64,19 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 			this.details$ = loadDetailsMethod();
 			this.details$.subscribe(details => {
 				this.loadSpaceTypeDetails(details);
+				this.loadLastPlacePreview(details);
 			});
 		}
 	}
 
 	loadSpaceTypeDetails(details: EmergencyCareDetails) {
 		this.spaceTypeDetails = details.bed || details.doctorsOffice || details.shockroom;
+	}
+
+	loadLastPlacePreview(details: EmergencyCareDetails) {
+		this.lastPlacePreview.placeType = this.selectedSpace.spaceType;
+		this.lastPlacePreview.placeTypeDescription = details.bed?.description || details.doctorsOffice?.description || details.shockroom?.description;
+		this.lastPlacePreview.sectorDescription = details.bed?.sectorDescription || details.doctorsOffice?.sectorDescription || details.shockroom?.sectorDescription;
 	}
 }
 

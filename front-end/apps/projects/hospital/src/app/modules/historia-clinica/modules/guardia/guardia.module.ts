@@ -31,6 +31,8 @@ import { EmergencyCareAttentionPlaceSectorComponent } from './components/emergen
 import { EmergencyCareAttentionPlaceSpaceComponent } from './components/emergency-care-attention-place-space/emergency-care-attention-place-space.component';
 import { EmergencyCareChangeAttentionPlaceButtonComponent } from './components/emergency-care-change-attention-place-button/emergency-care-change-attention-place-button.component';
 import { EmergencyCareChangeAttentionPlacePatientComponent } from './components/emergency-care-change-attention-place-patient/emergency-care-change-attention-place-patient.component';
+import { EmergencyCareChangeAttentionPlacePreviewChangeComponent } from './components/emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
+import { EmergencyCareChangeAttentionPlacePreviewPlaceComponent } from './components/emergency-care-change-attention-place-preview-place/emergency-care-change-attention-place-preview-place.component';
 import { EmergencyCareChangeAttentionPlaceSelectDoctorOfficeComponent } from './components/emergency-care-change-attention-place-select-doctor-office/emergency-care-change-attention-place-select-doctor-office.component';
 import { EmergencyCareChangeAttentionPlaceSelectPlaceTypeComponent } from './components/emergency-care-change-attention-place-select-place-type/emergency-care-change-attention-place-select-place-type.component';
 import { EmergencyCareChangeAttentionPlaceSelectSectorComponent } from './components/emergency-care-change-attention-place-select-sector/emergency-care-change-attention-place-select-sector.component';
@@ -117,6 +119,8 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		EmergencyCareAttentionPlaceSpaceComponent,
 		EmergencyCareChangeAttentionPlaceButtonComponent,
 		EmergencyCareChangeAttentionPlacePatientComponent,
+		EmergencyCareChangeAttentionPlacePreviewChangeComponent,
+		EmergencyCareChangeAttentionPlacePreviewPlaceComponent,
 		EmergencyCareChangeAttentionPlaceSelectDoctorOfficeComponent,
 		EmergencyCareChangeAttentionPlaceSelectPlaceTypeComponent,
 		EmergencyCareChangeAttentionPlaceSelectSectorComponent,

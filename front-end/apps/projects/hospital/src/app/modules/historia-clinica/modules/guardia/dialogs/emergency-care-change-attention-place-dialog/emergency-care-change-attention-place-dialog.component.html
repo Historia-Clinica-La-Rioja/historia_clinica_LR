@@ -6,5 +6,9 @@
 </div>
 
 <mat-dialog-content fxLayout="column" fxLayoutGap="10px">
-	<app-emergency-care-change-attention-place-stepper [patient]="patient" (formEmitter)="saveNewSelectedSpace($event)"></app-emergency-care-change-attention-place-stepper>
+	<app-emergency-care-change-attention-place-stepper
+		[patient]="data.patient"
+		[lastPlacePreview]="data.lastPlacePreview"
+		(formEmitter)="saveNewSelectedSpace($event)">
+	</app-emergency-care-change-attention-place-stepper>
 </mat-dialog-content>

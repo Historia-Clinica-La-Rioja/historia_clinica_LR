@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareDoctorsOfficeDto, EmergencyCarePatientDto, ShockroomDto } from '@api-rest/api-model';
 import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-stepper',
@@ -16,8 +17,10 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	sectorId: number = null;
 	selectedSpaceType: SpaceType;
 	newPlace: ChangeEmergencyCareEpisodeAttentionPlaceDto;
+	newPlacePreview: PlacePreview;
 
 	@Input() patient: EmergencyCarePatientDto;
+	@Input() lastPlacePreview: PlacePreview;
 	@Output() formEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor() { }
@@ -28,28 +31,35 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	}
 
 	setSector(sector: EmergencyCareAttentionPlaceDto) {
-		this.resetSelections();
+		this.resetAll();
+		this.newPlace = null;
 		this.sectorId = sector.id;
+		this.newPlacePreview.sectorDescription = sector.description;
 	}
 
 	setSelectedSpaceType(selectedSpaceType: SpaceType) {
 		this.newPlace = null;
+		this.resetNewPlacePreview();
 		this.selectedSpaceType = selectedSpaceType;
+		this.newPlacePreview.placeType = selectedSpaceType;
 	}
 
 	setSelectedDoctorOffice(selectedDoctorOffice: EmergencyCareDoctorsOfficeDto) {
 		this.resetNewPlace();
 		this.newPlace.emergencyCareEpisodeAttentionPlace.doctorsOfficeId = selectedDoctorOffice.id;
+		this.newPlacePreview.placeTypeDescription = selectedDoctorOffice.description;
 	}
 
 	setSelectedShockroom(selectedShockroom: ShockroomDto) {
 		this.resetNewPlace();
 		this.newPlace.emergencyCareEpisodeAttentionPlace.shockroomId = selectedShockroom.id;
+		this.newPlacePreview.placeTypeDescription = selectedShockroom.description;
 	}
 
-	private resetSelections(){
+	private resetAll(){
 		this.selectedSpaceType = null;
-		this.newPlace = null;
+		this.resetNewPlace()
+		this.resetNewPlacePreview();
 	}
 
 	private resetNewPlace(){
@@ -61,5 +71,13 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 			},
 			episodeId: null //pasar como input desde componente padre
 		};
+	}
+
+	private resetNewPlacePreview(){
+		this.newPlacePreview = {
+			...this.newPlacePreview,
+			placeType : null,
+			placeTypeDescription: null,
+		}
 	}
 }

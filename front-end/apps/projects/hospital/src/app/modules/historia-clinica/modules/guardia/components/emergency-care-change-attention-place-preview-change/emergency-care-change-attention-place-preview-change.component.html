@@ -1,0 +1,13 @@
+<p class="mat-h2">{{"guardia.home.attention_places.change-attention-place.DETAIL" | translate}}</p>
+
+<div fxLayout="row" fxLayoutGap="80px">
+	<app-emergency-care-change-attention-place-preview-place
+		[title]="'guardia.home.attention_places.change-attention-place.DETAIL_ORIGIN'"
+		[placeInfo]="lastAttentionPlace">
+	</app-emergency-care-change-attention-place-preview-place>
+
+	<app-emergency-care-change-attention-place-preview-place
+		[title]="'guardia.home.attention_places.change-attention-place.DETAIL_DESTINATION'"
+		[placeInfo]="newAttentionPlace">
+	</app-emergency-care-change-attention-place-preview-place>
+</div>
