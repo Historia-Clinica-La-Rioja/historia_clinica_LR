@@ -523,25 +523,28 @@ SELECT d.id AS id,
                                                     JOIN via v ON (v.id = a.via_id)
                                                     LEFT JOIN note n ON (a.via_note_id = n.id)
                                            WHERE a.document_id = d.id AND a.type_id = 1 AND d.type_id IN (20) GROUP BY a.document_id),'') ||
-                                          (SELECT CASE WHEN pd.food_intake_date IS NOT NULL OR pd.food_intake IS NOT NULL THEN '\n- Última ingesta de comida: ' ELSE '' END ||
+                                 coalesce((SELECT CASE WHEN pd.food_intake_date IS NOT NULL OR pd.food_intake IS NOT NULL THEN '\n- Última ingesta de comida: ' ELSE '' END ||
                                                   CASE WHEN pd.food_intake_date IS NOT NULL THEN to_char(pd.food_intake_date, 'dd/MM/yyyy') ELSE '' END ||
                                                   CASE WHEN pd.food_intake_date IS NOT NULL AND pd.food_intake IS NOT NULL THEN ' - ' ELSE '' END ||
                                                   CASE WHEN pd.food_intake IS NOT NULL THEN to_char(pd.food_intake, 'HH24:MI') || ' hs' ELSE '' END
                                            FROM procedure_description pd
-                                           WHERE pd.document_id = d.id AND d.type_id IN (20) AND pd.food_intake IS NOT NULL) AS result
+                                           WHERE pd.document_id = d.id AND d.type_id IN (20) AND pd.food_intake IS NOT NULL),'') AS result
                          )
                 SELECT CASE WHEN t.result <> '' THEN t.result END FROM t GROUP BY t.result), '') AS pre_medications,
       coalesce('Antecedentes: ' ||
-               (SELECT string_agg(s.pt, ', ')
-                FROM document_health_condition dhc
-                         JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
-                         JOIN snomed s ON (s.id = hc.snomed_id)
-                WHERE dhc.document_id = d.id AND d.type_id IN (20) AND hc.problem_id = '00000003' GROUP BY dhc.document_id) ||
-               (SELECT CASE WHEN n.description IS NOT NULL THEN '\n- Observaciones: \n' || n.description END || '\n' ||
-                       CASE WHEN pd.asa IS NOT NULL THEN '- ASA: ' || pd.asa END
-                FROM procedure_description pd
-                         LEFT JOIN note n ON (pd.note_id = n.id)
-                WHERE pd.document_id = d.id AND d.type_id IN (20)), '') AS histories,
+               (WITH t AS
+                       (SELECT coalesce((SELECT string_agg(s.pt, ', ')
+                                            FROM document_health_condition dhc
+                                                     JOIN health_condition hc ON (dhc.health_condition_id = hc.id)
+                                                     JOIN snomed s ON (s.id = hc.snomed_id)
+                                            WHERE dhc.document_id = d.id AND d.type_id IN (20) AND hc.problem_id = '00000003' GROUP BY dhc.document_id),'') ||
+                               coalesce((SELECT CASE WHEN n.description IS NOT NULL THEN '\n- Observaciones: \n' || n.description ELSE '' END ||
+                                       CASE WHEN pd.asa IS NOT NULL THEN '\n- ASA: ' || pd.asa ELSE '' END
+                                    FROM procedure_description pd
+                                             LEFT JOIN note n ON (pd.note_id = n.id)
+                                    WHERE pd.document_id = d.id AND d.type_id IN (20)),'') AS result
+                      )
+                SELECT CASE WHEN t.result <> '' THEN t.result END FROM t GROUP BY t.result), '') AS histories,
       coalesce('Plan anestésico: ' ||
                (SELECT string_agg((s.pt) ||
                                   ' (vía: ' || v.description ||
