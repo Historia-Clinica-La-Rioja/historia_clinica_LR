@@ -277,7 +277,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 				this.showSpecialtyError = true;
 			}
 
-			if (!this.searchForm.value.praticeId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
+			if (!this.searchForm.value.practiceId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
 				this.showPracticeError = true;
 			}
 
