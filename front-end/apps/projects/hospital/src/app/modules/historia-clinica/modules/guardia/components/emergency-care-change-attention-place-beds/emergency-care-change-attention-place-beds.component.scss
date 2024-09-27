@@ -1,0 +1,42 @@
+@import '../../../../../../../assets/styles/mixins';
+div.spinner {
+	@include centered-spinner;
+}
+
+.filter-panel {
+    background-color: #f3efef8e;
+    padding: 20px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 20%;
+    min-width: 10%;
+
+    .results {
+        margin-top: 1rem;
+    }
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+}
+
+.beds {
+    width: 50%;
+    min-width: 50%;
+    padding: 20px;
+    margin-top: 0px;
+    overflow-y: auto;
+    height: 40rem;
+    background-color: white;
+}
+
+.margin-left {
+    margin-left: 1rem;
+}
+
+app-bed-detail {
+    width: 30%;
+	min-width: 20%;
+}

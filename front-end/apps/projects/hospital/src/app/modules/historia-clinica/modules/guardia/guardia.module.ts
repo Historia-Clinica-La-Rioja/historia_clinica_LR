@@ -29,6 +29,7 @@ import { EmergencyCareAttentionPlacesComponent } from './components/emergency-ca
 import { EmergencyCareAttentionPlacesDashboardComponent } from './components/emergency-care-attention-places-dashboard/emergency-care-attention-places-dashboard.component';
 import { EmergencyCareAttentionPlaceSectorComponent } from './components/emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { EmergencyCareAttentionPlaceSpaceComponent } from './components/emergency-care-attention-place-space/emergency-care-attention-place-space.component';
+import { EmergencyCareChangeAttentionPlaceBedsComponent } from './components/emergency-care-change-attention-place-beds/emergency-care-change-attention-place-beds.component';
 import { EmergencyCareChangeAttentionPlaceButtonComponent } from './components/emergency-care-change-attention-place-button/emergency-care-change-attention-place-button.component';
 import { EmergencyCareChangeAttentionPlacePatientComponent } from './components/emergency-care-change-attention-place-patient/emergency-care-change-attention-place-patient.component';
 import { EmergencyCareChangeAttentionPlacePreviewChangeComponent } from './components/emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
@@ -117,6 +118,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		EmergencyCareAttentionPlacesDashboardComponent,
 		EmergencyCareAttentionPlaceSectorComponent,
 		EmergencyCareAttentionPlaceSpaceComponent,
+		EmergencyCareChangeAttentionPlaceBedsComponent,
 		EmergencyCareChangeAttentionPlaceButtonComponent,
 		EmergencyCareChangeAttentionPlacePatientComponent,
 		EmergencyCareChangeAttentionPlacePreviewChangeComponent,
