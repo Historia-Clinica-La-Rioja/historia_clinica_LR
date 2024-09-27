@@ -290,7 +290,7 @@ const InstitutionShow = props => {
                 {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
                 {showButtons && <ActionButton onClick={toggleShowHierarchicalUnit} label="Unidades jerárquicas" />}
                 {(parameterizedFormFF && showButtons) && <ActionButton onClick={toggleShowParameterizedForm} label="Formularios configurables" />}
-                {showButtons && <ActionButton onClick={toggleShowPharmacosSection} label="Fármacos" />}
+                {showButtons && <ActionButton onClick={toggleShowPharmacosSection} label="Fármacos y Grupos de fármacos" />}
                 {showSectors && <SectorsSection/>}
                 {showHierarchicalUnit && <HierarchicalUnitSection {...props} />}
                 {showParameterizedForm && <ParameterizedFormsSection {...props} />}
