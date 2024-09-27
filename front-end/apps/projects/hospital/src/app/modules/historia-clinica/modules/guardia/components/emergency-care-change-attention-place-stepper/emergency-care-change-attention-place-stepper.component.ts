@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareDoctorsOfficeDto, EmergencyCarePatientDto, ShockroomDto } from '@api-rest/api-model';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareBedDto, EmergencyCareDoctorsOfficeDto, EmergencyCarePatientDto, ShockroomDto } from '@api-rest/api-model';
 import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-stepper',
@@ -24,7 +25,9 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	@Input() episodeId: number;
 	@Output() formEmitter: EventEmitter<ChangeEmergencyCareEpisodeAttentionPlaceDto> = new EventEmitter<ChangeEmergencyCareEpisodeAttentionPlaceDto>();
 
-	constructor() { }
+	constructor(
+		private changeDetectorRef: ChangeDetectorRef
+	) { }
 
 	save() {
 		this.formEmitter.emit(this.newPlace);
@@ -54,6 +57,15 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 		this.resetNewPlace();
 		this.newPlace.emergencyCareEpisodeAttentionPlace.shockroomId = selectedShockroom.id;
 		this.newPlacePreview.placeTypeDescription = selectedShockroom.description;
+	}
+
+	setSelectedBed(selectedBed: EmergencyCareBedDto, stepper: MatStepper) {
+		this.resetNewPlace();
+		this.newPlace.emergencyCareEpisodeAttentionPlace.bedId = selectedBed.id;
+		this.newPlacePreview.sectorDescription = selectedBed.sectorDescription;
+		this.newPlacePreview.placeTypeDescription = selectedBed.description;
+		this.changeDetectorRef.detectChanges();
+		stepper.next();
 	}
 
 	private resetAll(){

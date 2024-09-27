@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BedManagementFacadeService } from '@institucion/services/bed-management-facade.service';
 import { SECTOR_GUARDIA } from '../../constants/masterdata';
 import { Subscription, tap } from 'rxjs';
-import { BedInfoDto } from '@api-rest/api-model';
+import { BedInfoDto, EmergencyCareBedDto } from '@api-rest/api-model';
 
 @Component({
   selector: 'app-emergency-care-change-attention-place-beds',
@@ -12,6 +12,8 @@ import { BedInfoDto } from '@api-rest/api-model';
 })
 export class EmergencyCareChangeAttentionPlaceBedsComponent implements OnInit, OnDestroy {
 
+	@Input() sectorId: number;
+	@Output() selectedBedInfo: EventEmitter<EmergencyCareBedDto> = new EventEmitter<EmergencyCareBedDto>();
 	public selectedBed: number;
 	public existBedManagementList = false;
 	public bedsAmount: number;
@@ -23,12 +25,12 @@ export class EmergencyCareChangeAttentionPlaceBedsComponent implements OnInit, O
 		private bedManagementFacadeService: BedManagementFacadeService,
   	) {}
 
-	ngOnInit(): void {
+	ngOnInit(){
 		this.bedManagementFacadeService.setInitialFilters({
-			sector: null,
+			sector: this.sectorId,
 			service: null,
 			probableDischargeDate: null,
-			filled: false,
+			filled: true,
 			hierarchicalUnits: null
 		});
 		this.managementBed$ = this.bedManagementFacadeService.getBedManagement([this.emergencyCareSector]).pipe(
@@ -38,15 +40,21 @@ export class EmergencyCareChangeAttentionPlaceBedsComponent implements OnInit, O
 		});
 	}
 
-	onSelectBed(bedId: number): void {
+	onSelectBed(bedId: number) {
 		this.selectedBed = bedId;
 	}
 
-	onAssignedBed(bedInfo: BedInfoDto): void {
-		// this.dialogRef.close(bedInfo);
+	onAssignedBed(bedInfo: BedInfoDto) {
+		const selectedBedDto: EmergencyCareBedDto = {
+			id: bedInfo.bed.id,
+			sectorDescription: bedInfo.bed.room.sector.description,
+			available: bedInfo.bed.free,
+			description: `${bedInfo.bed.room.description} - ${bedInfo.bed.bedNumber}`
+		};
+		this.selectedBedInfo.emit(selectedBedDto);
 	}
 
-	ngOnDestroy(): void {
+	ngOnDestroy(){
 		this.managementBed$.unsubscribe();
   	}
 

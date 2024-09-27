@@ -50,20 +50,19 @@
 		label="{{'guardia.home.attention_places.change-attention-place.ASSIGN_BED' | translate}}"
 		[completed]="newPlace">
 
-		<!-- aca iria condiionalmente componente de mostar camas -->
+		<app-emergency-care-change-attention-place-patient [patient]="patient">
+		</app-emergency-care-change-attention-place-patient>
+
+		<app-emergency-care-change-attention-place-beds
+			[sectorId]="sectorId"
+			(selectedBedInfo)="setSelectedBed($event, stepper)">
+		</app-emergency-care-change-attention-place-beds>
 
 		<div class="actions">
 			<app-button
 				(click)="stepper.previous()"
 				[text]="'guardia.home.attention_places.change-attention-place.BUTTON_BACK'"
 				[buttonType]="buttonType.STROKED">
-			</app-button>
-
-			<app-button
-				(click)="stepper.next()"
-				[disabled]="!newPlace"
-				[text]="'guardia.home.attention_places.change-attention-place.BUTTON_CONTINUE'"
-				[buttonType]="buttonType.RAISED">
 			</app-button>
 		</div>
 	</mat-step>

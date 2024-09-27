@@ -18,7 +18,7 @@
 				<h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
 			</section>
 		</mat-card>
-		<app-bed-detail class="margin-left" [bedId]="selectedBed" [bedAssign]="true" (assignedBed)="onAssignedBed($event)"></app-bed-detail>
+		<app-bed-detail [bedId]="selectedBed" [bedAssign]="true" (assignedBed)="onAssignedBed($event)"></app-bed-detail>
 	</div>
 
 </section>

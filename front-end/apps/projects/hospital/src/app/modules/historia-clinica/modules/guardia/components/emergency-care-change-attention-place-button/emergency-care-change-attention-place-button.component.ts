@@ -25,7 +25,7 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 
 	openChangeAttentionPlaceDialog(){
 		const editDialogRef = this.dialogService.open(EmergencyCareChangeAttentionPlaceDialogComponent,
-			{ dialogWidth: DialogWidth.MEDIUM },
+			{ dialogWidth: DialogWidth.LARGE },
 			{
 				patient: this.patient,
 				lastPlacePreview: this.lastPlacePreview,
