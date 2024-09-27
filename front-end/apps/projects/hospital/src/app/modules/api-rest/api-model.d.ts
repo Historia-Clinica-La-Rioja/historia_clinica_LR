@@ -4968,6 +4968,17 @@ export interface SharedParameterDto {
 export interface SharedParameterizedFormDto {
 }
 
+export interface SharedPatientMedicalCoverageDto {
+    affiliateNumber: string;
+    affiliationType: string;
+    cuit: string;
+    endDate: string;
+    name: string;
+    plan: string;
+    startDate: string;
+    type: string;
+}
+
 export interface SharedRiskFactorDto {
     diastolicBloodPressure: string;
     systolicBloodPressure: string;
