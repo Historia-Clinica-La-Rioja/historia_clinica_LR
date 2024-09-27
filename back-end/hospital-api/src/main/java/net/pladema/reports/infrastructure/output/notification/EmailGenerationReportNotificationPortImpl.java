@@ -1,5 +1,6 @@
 package net.pladema.reports.infrastructure.output.notification;
 
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.reports.application.ports.GenerationReportNotificationPort;
@@ -13,6 +14,7 @@ import net.pladema.user.infrastructure.output.notification.UserRecipient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class EmailGenerationReportNotificationPortImpl implements GenerationRepo
         }
 
         var notificationArgs = GenerationReportNotificationArgs.builder();
-        notificationArgs.createdOn(createdOn);
+        notificationArgs.createdOn(this.mapUTCLocalDateTime(createdOn));
         notificationArgs.reportType(reportType.getDescription());
         var subject = this.getSubject(reportType);
 
@@ -49,5 +51,13 @@ public class EmailGenerationReportNotificationPortImpl implements GenerationRepo
 
     private String getSubject(InstitutionReportType reportType) {
         return String.format("HSI - Reporte %s disponible para descarga", reportType.getDescription());
+    }
+
+    private LocalDateTime mapUTCLocalDateTime(LocalDateTime createdOn) {
+        if (createdOn == null) return null;
+        return createdOn
+                .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
+                .withZoneSameInstant(ZoneId.of(JacksonDateFormatConfig.ZONE_ID))
+                .toLocalDateTime();
     }
 }
