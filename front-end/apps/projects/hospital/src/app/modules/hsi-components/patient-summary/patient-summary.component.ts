@@ -39,7 +39,7 @@ const concatIdentifications = (id: number, identification: { type: string, numbe
 	if (identification) {
 		identificationText = `${identification?.type} ${identification?.number ? identification.number : 'Sin información' }`
 	}
-	return (idText && identificationText) ? `${idText} - ${identificationText}` : (idText || identificationText);
+	return (idText && identificationText) ? `${identificationText} - ${idText} ` : (idText || identificationText);
 }
 
 const concatAgeAndGender = (gender: string, age: number): string => {
