@@ -4,6 +4,8 @@ import { SpaceType } from '../emergency-care-attention-place-sector/emergency-ca
 import { ButtonType } from '@presentation/components/button/button.component';
 import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
 import { MatStepper } from '@angular/material/stepper';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-stepper',
@@ -14,6 +16,11 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 
 	spaceType = SpaceType;
 	buttonType = ButtonType;
+
+	hasAvailableDoctorOffices = true;
+	doctorOfficeBoxMessageInfo: BoxMessageInformation = this.setDoctorsOfficeBoxMessage();
+	hasAvailableShockrooms = true;
+	shockroomBoxMessageInfo: BoxMessageInformation = this.setShockroomBoxMessage();
 
 	sectorId: number = null;
 	selectedSpaceType: SpaceType;
@@ -26,7 +33,8 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 	@Output() formEmitter: EventEmitter<ChangeEmergencyCareEpisodeAttentionPlaceDto> = new EventEmitter<ChangeEmergencyCareEpisodeAttentionPlaceDto>();
 
 	constructor(
-		private changeDetectorRef: ChangeDetectorRef
+		private changeDetectorRef: ChangeDetectorRef,
+		private readonly translateService: TranslateService
 	) { }
 
 	save() {
@@ -68,8 +76,38 @@ export class EmergencyCareChangeAttentionPlaceStepperComponent {
 		stepper.next();
 	}
 
+	handleNoAvailableDoctorOffices(isAllOcuppied: boolean){
+		this.hasAvailableDoctorOffices = !isAllOcuppied;
+	}
+
+	private setDoctorsOfficeBoxMessage() : BoxMessageInformation {
+		const boxMessage = {
+			title: "guardia.home.attention_places.change-attention-place.ALL_DOCTOR_OFFICES_OCCUPIED",
+			message: this.translateService.instant('guardia.home.attention_places.change-attention-place.ALL_DOCTOR_OFFICES_OCCUPIED_SUGGESTION'),
+			viewError: false,
+			showButtons: false
+		}
+		return boxMessage;
+	}
+
+	handleNoAvailableShockrooms(isAllOcuppied: boolean){
+		this.hasAvailableShockrooms = !isAllOcuppied;
+	}
+
+	private setShockroomBoxMessage() : BoxMessageInformation {
+		const boxMessage = {
+			title: "guardia.home.attention_places.change-attention-place.ALL_SHOCKROOMS_OCCUPIED",
+			message: this.translateService.instant('guardia.home.attention_places.change-attention-place.ALL_SHOCKROOMS_OCCUPIED_SUGGESTION'),
+			viewError: false,
+			showButtons: false
+		}
+		return boxMessage;
+	}
+
 	private resetAll(){
 		this.selectedSpaceType = null;
+		this.hasAvailableDoctorOffices = true;
+		this.hasAvailableShockrooms = true;
 		this.resetNewPlace()
 		this.resetNewPlacePreview();
 	}

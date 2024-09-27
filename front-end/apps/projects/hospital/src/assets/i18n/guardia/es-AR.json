@@ -163,7 +163,7 @@
 				"space": {
 					"DOCTOR_OFFICE": "Consultorio",
 					"SHOCKROOM": "Shockroom",
-					"BED": "Habitacion",
+					"BED": "Habitación",
 					"FREE": "Libre",
 					"NOT_FREE": "Ocupada"
 				},
@@ -179,7 +179,7 @@
 					"PREVIEW": "Vista previa",
 					"DETAIL": "Detalle de cambio de lugar de atención:",
 					"DETAIL_ORIGIN": "Origen:",
-					"DETAIL_DESTINATION": "Destino",
+					"DETAIL_DESTINATION": "Destino:",
 					"BUTTON_CONTINUE": "Continuar",
 					"BUTTON_BACK": "Volver",
 					"BUTTON_CONFIRM": "Confirmar cambio de lugar",
@@ -191,7 +191,11 @@
 					"SELECT_DOCTOR_OFFICE": "Seleccione consultorio",
 					"SELECT_SHOCKROOM": "Seleccione shockroom",
 					"PREPOSITION_OF": " de ",
-					"TYPE": "Tipo"
+					"TYPE": "Tipo",
+					"ALL_DOCTOR_OFFICES_OCCUPIED": "Consultarios ocupados",
+					"ALL_DOCTOR_OFFICES_OCCUPIED_SUGGESTION": "Le sugerimos buscar consultorios en otros sectores.",
+					"ALL_SHOCKROOMS_OCCUPIED": "Shockrooms ocupados",
+					"ALL_SHOCKROOMS_OCCUPIED_SUGGESTION": "Le sugerimos buscar shockrooms en otros sectores."
 				}
             },
 			"tabs": {

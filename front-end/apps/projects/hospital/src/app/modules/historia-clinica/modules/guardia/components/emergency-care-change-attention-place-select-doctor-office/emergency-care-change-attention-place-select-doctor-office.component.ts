@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { EmergencyCareAttentionPlaceService } from '../../services/emergency-care-attention-place.service';
 import { EmergencyCareDoctorsOfficeDto } from '@api-rest/api-model';
 
@@ -16,6 +16,7 @@ export class EmergencyCareChangeAttentionPlaceSelectDoctorOfficeComponent implem
 
 	@Input() sectorId: number;
 	@Output() selectedDoctorOffice = new EventEmitter<EmergencyCareDoctorsOfficeDto>();
+	@Output() noAvailableDoctorOffices = new EventEmitter<boolean>();
 
 	constructor(
 		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
@@ -26,6 +27,7 @@ export class EmergencyCareChangeAttentionPlaceSelectDoctorOfficeComponent implem
 
 	ngOnInit() {
 		this.availableDoctorsOffices$ = this.emergencyCareAttentionPlaceService.getFreeDoctorsOffices(this.sectorId);
+		this.availableDoctorsOffices$.pipe(map(doctorsOffices => doctorsOffices.length === 0)).subscribe(isEmpty => this.noAvailableDoctorOffices.emit(isEmpty));
 	}
 
 	private createForm() {

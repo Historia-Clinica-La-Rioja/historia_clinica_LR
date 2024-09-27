@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ShockroomDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { EmergencyCareAttentionPlaceService } from '../../services/emergency-care-attention-place.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class EmergencyCareChangeAttentionPlaceSelectShockroomComponent implement
 
 	@Input() sectorId: number;
 	@Output() selectedShockroom = new EventEmitter<ShockroomDto>();
+	@Output() noAvailableShockrooms = new EventEmitter<boolean>();
 
 	constructor(
 		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
@@ -26,6 +27,7 @@ export class EmergencyCareChangeAttentionPlaceSelectShockroomComponent implement
 
 	ngOnInit() {
 		this.availableShockrooms$ = this.emergencyCareAttentionPlaceService.getFreeShockrooms(this.sectorId);
+		this.availableShockrooms$.pipe(map(shockrooms => shockrooms.length === 0)).subscribe(isEmpty => this.noAvailableShockrooms.emit(isEmpty));
 	}
 
 	private createForm() {
