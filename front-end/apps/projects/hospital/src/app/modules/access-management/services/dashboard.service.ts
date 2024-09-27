@@ -40,7 +40,7 @@ export class DashboardService {
 
 	initializeService() {
 		this.initializeFilters();
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO,ERole.ABORDAJE_VIOLENCIAS]).pipe(take(1)).subscribe(hasRole => {
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO,ERole.ABORDAJE_VIOLENCIAS, ERole.GESTOR_DE_ACCESO_INSTITUCIONAL]).pipe(take(1)).subscribe(hasRole => {
 			this.hasRolePermissionToReceive = hasRole
 			this.updateReports();
 		});
