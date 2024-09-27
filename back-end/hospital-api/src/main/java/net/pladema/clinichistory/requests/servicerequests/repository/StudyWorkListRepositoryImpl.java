@@ -29,7 +29,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 		String sqlString = "SELECT NEW net.pladema.clinichistory.requests.servicerequests.repository.domain.StudyOrderWorkListVo( "
 				+ "sr.id, sr.patientId, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, pe.identificationNumber, pe.identificationTypeId, pe.genderId, g.description, pe.birthDate, "
-				+ "s.sctid, s.pt, sr.studyType, COALESCE(sr.requiresTransfer, false), sr.sourceTypeId, sr.deferredDate, sr.creationable.createdOn) "
+				+ "s.sctid, s.pt, sr.studyType, sr.requiresTransfer, sr.sourceTypeId, sr.deferredDate, sr.creationable.createdOn) "
 				+ "FROM ServiceRequest sr "
 				+ "JOIN Document d ON sr.id = d.sourceId "
 				+ "JOIN DocumentDiagnosticReport ddr ON d.id = ddr.id.documentId "
@@ -51,7 +51,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 				+ "    HAVING COUNT(ddr1.id.documentId) = 1 "
 				+ ") ";
 
-		Query query = entityManager.createQuery(sqlString, StudyOrderWorkListVo.class);
+		Query query = entityManager.createQuery(sqlString);
 		query.setParameter("institutionId", institutionId)
 				.setParameter("categories", categories)
 				.setParameter("sourceTypeIds", sourceTypeIds)

@@ -46,7 +46,7 @@ public class StudyOrderWorkListVo {
 				identificationNumber, identificationTypeId, genderId, genderDescription, birthDate);
 		this.snomed = new SnomedBo(sctid, pt);
 		this.studyTypeId = studyTypeId;
-		this.requiresTransfer = requiresTransfer != null ? requiresTransfer : false;
+		this.requiresTransfer = requiresTransfer;
 		this.sourceTypeId = sourceTypeId;
 		this.deferredDate = deferredDate;
 		this.status = STATUS_PENDING;

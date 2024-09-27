@@ -24,7 +24,7 @@ public class StudyOrderWorkListBo {
 
 	private Short studyTypeId;
 
-	private boolean requiresTransfer;
+	private Boolean requiresTransfer;
 
 	private Short sourceTypeId;
 

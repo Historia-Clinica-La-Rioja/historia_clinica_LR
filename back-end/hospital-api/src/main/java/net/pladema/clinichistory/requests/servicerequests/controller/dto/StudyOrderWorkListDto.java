@@ -29,7 +29,7 @@ public class StudyOrderWorkListDto {
 
 	private EStudyType studyTypeId;
 
-	private boolean requiresTransfer;
+	private Boolean requiresTransfer;
 
 	private ESourceType sourceTypeId;
 
