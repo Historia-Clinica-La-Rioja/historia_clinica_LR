@@ -230,6 +230,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		this.loadingTable = true;
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
+			.pipe(finalize(() => this.loadingTable = false))
 			.subscribe(response => {
 				this.noInfo = response.length > 0 ? false : true;
 				const tableData = response.map(data => this.mapToDocumentSummary(data));
@@ -248,7 +249,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
-				this.loadingTable = false;
 				this.updateLastDownload();
 			});
 	}
