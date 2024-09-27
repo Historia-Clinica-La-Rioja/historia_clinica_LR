@@ -1693,6 +1693,7 @@ export interface ElectronicSignatureInvolvedDocumentDto {
 }
 
 export interface EmergencyCareAttentionPlaceDetailDto {
+    episodeId?: number;
     lastTriage?: EmergencyCareEpisodeListTriageDto;
     patient?: EmergencyCarePatientDto;
     personId: number;

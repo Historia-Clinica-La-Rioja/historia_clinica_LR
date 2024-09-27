@@ -30,7 +30,7 @@ public class GetEmergencyCareDoctorsOfficeDetail {
 		EmergencyCareDoctorsOfficeDetailBo result = new EmergencyCareDoctorsOfficeDetailBo(doctorsOffice);
 		if (!doctorsOffice.isAvailable()){
 			EmergencyCareBo ec = getEmergencyCareEpisodeOrFail(doctorsOfficeId);
-			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result,ec);
+			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result, ec);
 		}
 		log.debug("Output -> result {}", result);
 		return result;

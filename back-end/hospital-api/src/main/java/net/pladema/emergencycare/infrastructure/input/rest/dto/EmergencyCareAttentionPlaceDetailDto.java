@@ -39,6 +39,9 @@ public class EmergencyCareAttentionPlaceDetailDto {
 	@Nullable
 	private EmergencyCareEpisodeListTriageDto lastTriage;
 
+	@Nullable
+	private Integer episodeId;
+
 	public Boolean hasPersonId(){
 		return this.patient != null &&
 				this.patient.getPerson() != null &&

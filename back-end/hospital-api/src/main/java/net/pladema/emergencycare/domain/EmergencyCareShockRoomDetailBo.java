@@ -6,7 +6,7 @@ import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;
 
 @Getter
 @Setter
-public class EmergencyCareShockRoomDetailBo extends EmergencyCareAttentionPlaceDetailBo{
+public class EmergencyCareShockRoomDetailBo extends EmergencyCareAttentionPlaceDetailBo {
 
 	private ShockRoomBo shockroom;
 

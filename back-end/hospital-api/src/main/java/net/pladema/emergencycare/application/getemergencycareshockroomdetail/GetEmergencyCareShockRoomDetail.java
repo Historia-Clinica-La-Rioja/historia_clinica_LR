@@ -31,7 +31,7 @@ public class GetEmergencyCareShockRoomDetail {
 		EmergencyCareShockRoomDetailBo result = new EmergencyCareShockRoomDetailBo(shockroom);
 		if (!shockroom.isAvailable()){
 			EmergencyCareBo ec = getEmergencyCareEpisodeOrFail(shockroomId);
-			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result,ec);
+			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result, ec);
 		}
 		log.debug("Output -> result {}", result);
 		return result;
