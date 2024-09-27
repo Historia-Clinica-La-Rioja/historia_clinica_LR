@@ -5,6 +5,14 @@ const meta: Meta<RowContentComponent> = {
     title: 'Presentation/RowContentComponent',
     component: RowContentComponent,
     tags: ['autodocs'],
+    parameters: {
+      docs: {
+          description: {
+              component: "La buena practica de este componente implica generar un div para cada columna para que en los casos en que la misma se oculte, no se pierda la estructura de las columnas."
+          }
+      }
+  },
+
 };
  
 export default meta;
@@ -20,12 +28,13 @@ export const WithMinWidthStyle: Meta<RowContentComponent> = {
             <style>
               .custom-class {
                 min-width: 350px;
+                background-color:#FEFFCB
               }
             </style>
 
             <app-row-content>
-                <span style="min-width: 300px">min-width: 300px.</span>
-                <span style="min-width: 200px">min-width: 200px.</span>
+                <span style="min-width: 300px; background-color:#FECBFF">min-width: 300px.</span>
+                <span style="min-width: 200px ; background-color:#D4FFCB">min-width: 200px.</span>
                 <span class="custom-class">custom class (350px) </span>
             </app-row-content>
           `
