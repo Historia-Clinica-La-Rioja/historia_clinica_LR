@@ -6,4 +6,6 @@ public interface UserInformationPublicApiPermission {
 	boolean canAccessUserInfoFromToken();
 
 	boolean canAccessUserAuthoritiesFromToken();
+
+	boolean canFetchProfessionalLicenses();
 }

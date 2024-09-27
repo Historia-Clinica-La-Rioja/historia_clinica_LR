@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.LicenseNumberDto;
+
+import net.pladema.staff.application.getallprofessionalregistrationnumbers.GetAllProfessionalRegistrationNumbers;
+
+import net.pladema.staff.domain.ProfessionalRegistrationNumbersBo;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
@@ -121,6 +127,21 @@ public class SharedStaffImpl implements SharedStaffPort {
 	@Override
 	public String getShockRoomDescription(Integer shockRoomId) {
 		return fetchShockRoomDescription.execute(shockRoomId);
+	}
+
+	@Override
+	public Optional<List<LicenseNumberDto>> getLicenses(Integer healthcareProfessionalId) {
+		return Optional.of(
+				healthcareProfessionalExternalService.getProfessionalCompleteInfoById(healthcareProfessionalId)
+				.getAllLicenses()
+				.stream()
+				.map(l -> new LicenseNumberDto(
+						l.getId(),
+						l.getNumber(),
+						l.getType()
+				))
+				.collect(Collectors.toList())
+		);
 	}
 
 	private Optional<String> getCompleteName(ProfessionalCompleteDto professionalInfo) {
