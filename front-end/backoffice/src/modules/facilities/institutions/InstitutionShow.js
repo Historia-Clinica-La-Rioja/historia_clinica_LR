@@ -20,6 +20,7 @@ import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 import UnidadesJerarquicas from './UnidadesJerarquicas';
 import { Grid, Divider } from '@material-ui/core';
 import { MedicineTabs } from './MedicineTabs';
+import { ParameterizedFormSection } from './ParameterizedFormSection';
 import {Button} from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -190,6 +191,7 @@ const InstitutionShow = props => {
     const ParameterizedFormsSection = (props) => {
         return (
             <>
+                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
                 <BackButton />
             </>
         );
