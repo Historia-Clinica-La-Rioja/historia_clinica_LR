@@ -5,6 +5,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { EmergencyCareChangeAttentionPlaceDialogComponent } from '../../dialogs/emergency-care-change-attention-place-dialog/emergency-care-change-attention-place-dialog.component';
 import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
 import { EmergencyCareAttentionPlaceService } from '../../services/emergency-care-attention-place.service';
+import { AttentionPlaceUpdateService } from '../../services/attention-place-update.service';
 
 @Component({
 	selector: 'app-emergency-care-change-attention-place-button',
@@ -21,6 +22,7 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 		private readonly dialogService: DialogService<EmergencyCareChangeAttentionPlaceDialogComponent>,
 		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
 		private readonly snackBarService: SnackBarService,
+		private attentionPlaceUpdateService: AttentionPlaceUpdateService
 	) { }
 
 	openChangeAttentionPlaceDialog(){
@@ -35,7 +37,10 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 		editDialogRef.afterClosed().subscribe(newAttentionPlace => {
 			if (newAttentionPlace) {
 				this.emergencyCareAttentionPlaceService.changeAttentionPlace(newAttentionPlace).subscribe(
-					_ => this.snackBarService.showSuccess('guardia.home.attention_places.change-attention-place.SUCESS'),
+					_ => {
+						this.attentionPlaceUpdateService.notifyUpdate(newAttentionPlace);
+						this.snackBarService.showSuccess('guardia.home.attention_places.change-attention-place.SUCESS')
+					},
 					_ => this.snackBarService.showError('guardia.home.attention_places.change-attention-place.ERROR')
 				);
             }

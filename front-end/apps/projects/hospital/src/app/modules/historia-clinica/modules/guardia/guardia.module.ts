@@ -79,6 +79,7 @@ import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/
 import { EmergencyCareChangeAttentionPlaceDialogComponent } from './dialogs/emergency-care-change-attention-place-dialog/emergency-care-change-attention-place-dialog.component';
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 // services
+import { AttentionPlaceUpdateService } from './services/attention-place-update.service';
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from './services/emergency-care-attention-place-availability-button-selection.service';
 import { EpisodeFilterService } from './services/episode-filter.service';
 import { EpisodeStateService } from './services/episode-state.service';
@@ -197,6 +198,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 	],
 	providers: [
 		// services
+		AttentionPlaceUpdateService,
 		EmergencyCareAttentionPlaceAvailabilityButtonSelectionService,
 		EpisodeFilterService,
 		EpisodeStateService,

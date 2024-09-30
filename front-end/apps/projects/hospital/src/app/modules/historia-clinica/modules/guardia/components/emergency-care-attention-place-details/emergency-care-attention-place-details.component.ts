@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 import { SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { EmergencyCareAttentionPlaceDetailDto, EmergencyCareBedDetailDto, EmergencyCareDoctorsOfficeDetailDto, EmergencyCareShockRoomDetailDto } from '@api-rest/api-model';
 import { PlacePreview } from '../emergency-care-change-attention-place-preview-change/emergency-care-change-attention-place-preview-change.component';
+import { AttentionPlaceUpdateService } from '../../services/attention-place-update.service';
 
 @Component({
 	selector: 'app-emergency-care-attention-place-details',
@@ -18,10 +19,14 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 	spaceTypeDetails: SpaceTypeDetails;
 	lastPlacePreview: PlacePreview = this.initializePlacePreview();
 
-	constructor(private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService) { }
+	constructor(
+		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
+		private attentionPlaceUpdateService: AttentionPlaceUpdateService
+	) { }
 
 	ngOnInit() {
 		this.loadDetails();
+		this.listenToUpdates();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -77,6 +82,12 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 		this.lastPlacePreview.placeType = this.selectedSpace.spaceType;
 		this.lastPlacePreview.placeTypeDescription = details.bed?.description || details.doctorsOffice?.description || details.shockroom?.description;
 		this.lastPlacePreview.sectorDescription = details.bed?.sectorDescription || details.doctorsOffice?.sectorDescription || details.shockroom?.sectorDescription;
+	}
+
+	private listenToUpdates(){
+		this.attentionPlaceUpdateService.update$.subscribe(() => {
+			this.loadDetails();
+		});
 	}
 }
 
