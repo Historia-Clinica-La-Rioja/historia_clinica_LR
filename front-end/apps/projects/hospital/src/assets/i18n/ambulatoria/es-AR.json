@@ -285,7 +285,11 @@
 					"dialog": {
 						"TITLE": "Agregar estudio realizado",
 						"PATIENT_DATA": "Datos del paciente",
-						"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica"
+						"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+						"MEDICAL_COVERAGE": "Cobertura médica",
+						"UPDATE_COVERAGE": "Actualizar cobertura",
+						"HEALTH_PROBLEM": "Problema asociado",
+						"NEXT": "Siguiente"
 					}
 				}
             },

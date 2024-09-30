@@ -161,6 +161,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 import { AddStudyComponent } from './dialogs/add-study/add-study.component';
+import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 
 @NgModule({
 	declarations: [
@@ -353,6 +354,7 @@ import { AddStudyComponent } from './dialogs/add-study/add-study.component';
 		IdentifierCasesComponent,
 		ConceptTypeaheadSearchComponent,
 		ConceptsListComponent,
+		PatientSummaryComponent
 	],
 	exports: [
 		// components
