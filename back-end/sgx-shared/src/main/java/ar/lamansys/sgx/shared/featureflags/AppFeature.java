@@ -242,6 +242,9 @@ public enum AppFeature implements Feature {
 	@Label("Indica si se debe avisar por mail que se encuentra disponible el reporte generado al solicitante, para su descarga")
 	HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS,
 
+	@Label("Indica si se encuentran habilitados los reportes que utilizan Cube solicitados por Nación")
+	HABILITAR_REPORTES_NACION_CUBE
+
 	;
 
 	public boolean isActive() {

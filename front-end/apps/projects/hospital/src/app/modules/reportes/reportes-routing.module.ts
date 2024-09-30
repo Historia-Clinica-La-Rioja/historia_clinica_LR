@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ERole } from '@api-rest/api-model';
+import { AppFeature, ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
 import { CubeReportComponent } from './routes/cube-report/cube-report.component';
@@ -47,6 +47,7 @@ const routes: Routes = [
 				component: CubeReportComponent,
 				data: {
 					label: {key: 'reportes.diabetic-patients.TITLE'},
+					featureFlag: AppFeature.HABILITAR_REPORTES_NACION_CUBE
 				},
 			},
 			{
@@ -54,6 +55,7 @@ const routes: Routes = [
 				component: CubeReportComponent,
 				data: {
 					label: {key: 'reportes.hypertensive-patients.TITLE'},
+					featureFlag: AppFeature.HABILITAR_REPORTES_NACION_CUBE
 				},
 			},
 			{
@@ -61,6 +63,7 @@ const routes: Routes = [
 				component: CubeReportComponent,
 				data: {
 					label: {key: 'reportes.weekly-epidemiological-report.TITLE'},
+					featureFlag: AppFeature.HABILITAR_REPORTES_NACION_CUBE
 				},
 			},
 		],
