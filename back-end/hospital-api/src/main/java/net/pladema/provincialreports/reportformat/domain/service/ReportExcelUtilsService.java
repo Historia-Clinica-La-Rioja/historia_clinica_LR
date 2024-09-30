@@ -92,7 +92,8 @@ public class ReportExcelUtilsService {
 			// Observation present
 			data.add(new CellContent(rowNum, 3, 1, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
 			rowNum++;
-			data.add(new CellContent(rowNum, 3, 1 + rowsBetweenTitleAndHeaders, mainTitleColumns, customObservation, fieldStyle));
+			data.add(new CellContent(rowNum, 0, 1, 3, " ", sourceNoteStyle));
+			data.add(new CellContent(rowNum, 3, 2 + rowsBetweenTitleAndHeaders, mainTitleColumns, customObservation, observationStyle));
 		}
 
 		rowNum++;
