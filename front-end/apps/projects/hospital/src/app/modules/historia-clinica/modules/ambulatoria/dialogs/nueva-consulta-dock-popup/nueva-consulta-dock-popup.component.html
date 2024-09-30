@@ -148,6 +148,11 @@
 			[title]="'ambulatoria.paciente.nueva-consulta.studies.TITLE' | translate" icon="library_add"
 			[isEmpty]="createOrderService.isEmpty()">
 
+			<app-titled-content-card *ngIf="!createOrderService.isEmpty()"
+				title="{{ 'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' }}">
+				<app-procedure-list [service]="createOrderService"> </app-procedure-list>
+			</app-titled-content-card>
+
 			<div>
 				<button mat-button type="button" id="add-study-button" color="primary" class="add-button"
 					(click)="openStudiesComponent()">

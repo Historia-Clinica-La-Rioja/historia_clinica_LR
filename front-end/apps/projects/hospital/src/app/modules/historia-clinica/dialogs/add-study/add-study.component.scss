@@ -2,6 +2,16 @@
 	margin-top: 20px;
 }
 
+.span-clickable {
+
+	span:hover {
+		text-decoration: underline;
+	}
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
 .no-scroll {
 	overflow: hidden;
 }
@@ -15,7 +25,6 @@
 	font-size: 13px;
 	font-weight: lighter;
 }
-
 
 .template-name {
 	color: gray;

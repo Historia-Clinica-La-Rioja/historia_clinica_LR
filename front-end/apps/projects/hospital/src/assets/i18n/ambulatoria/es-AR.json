@@ -289,13 +289,21 @@
 						"MEDICAL_COVERAGE": "Cobertura médica",
 						"UPDATE_COVERAGE": "Actualizar cobertura",
 						"HEALTH_PROBLEM": "Problema asociado",
+						"BACK": "Volver",
 						"NEXT": "Siguiente",
 						"STUDIES_LABEL": "Estudios realizados",
 						"CATEGORY": "Categoría de estudio",
 						"SELECT_CATEGORY": "Seleccionar categoría",
 						"STUDY": "Estudio",
-						"SEARCH_STUDY":"Buscar estudio..."
-
+						"SEARCH_STUDY":"Buscar estudio...",
+						"RESULT": "Resultados",
+						"LOAD_RESULT": "¿Cargar resultados?",
+						"OPTION_NO": "No, dejar resultados pendientes",
+						"OPTION_YES": "Si, cargar resultado de estudio ahora",
+						"ADD": "Agregar estudio realizado",
+						"OBSERVATIONS": "Observaciones",
+						"OBSERVATIONS_DESCRIPTION": "Descripción de los resultados",
+						"UPLOAD_FILE": "Adjuntar archivo"
 					}
 				}
             },

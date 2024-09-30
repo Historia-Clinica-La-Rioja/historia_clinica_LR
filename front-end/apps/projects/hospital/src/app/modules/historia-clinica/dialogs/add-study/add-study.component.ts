@@ -50,7 +50,7 @@ export class AddStudyComponent implements OnInit {
 
 	) {
 		this.radioControl = new FormGroup<RadioControl>({
-			controlButton: new FormControl<STUDY_STATUS_ENUM | null>(null)});
+			controlButton: new FormControl<STUDY_STATUS_ENUM>(this.study_status.REGISTERED)});
 
 		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
 			patient => {
@@ -64,8 +64,7 @@ export class AddStudyComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			patientMedicalCoverage: [null],
 			healthProblem: [null, Validators.required],
-			studyCategory: [null, Validators.required],
-			studySelection: [null, Validators.required],
+			observations: [null, Validators.required]
 		});
 
 		this.setMedicalCoverages();
