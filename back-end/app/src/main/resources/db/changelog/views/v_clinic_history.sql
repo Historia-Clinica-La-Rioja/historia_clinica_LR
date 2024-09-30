@@ -1,18 +1,11 @@
 --liquibase formatted sql
 
--- Changeset mromero:create-view-clinic_history_2_31_0_2
+-- Changeset efernandez:create-view-clinic_history_2_31_0_3
 -- runOnChange:false # NO TOCAR
 -- splitStatements:true
 -- endDelimiter:;
--- comment: se agregan fecha y hora en algunas secciones del parte anestésico. (Se crea un nuevo changeset para su testing)
-
--- Changeset efernandez:create-view-clinic_history_2_31_1
--- runOnChange:false # NO TOCAR
--- splitStatements:true
--- endDelimiter:;
--- comment: Desde este punto, las vistas tienen cada una su archivo. Por cada cambio agregado, se debe crear un nuevo changeset que sustituya el anterior.
--- Se deja sin efecto runOnChange, ya que de esta forma se hace un chequeo de integridad y nos aseguramos que quede registrado cada cambio que se realiza en la bd.
--- 2_31_1: Hay un nuevo tipo de documento para las notas de evolución de enfermería de guardia: NURSING_EMERGENCY_CARE_EVOLUTION 21.
+-- comment:
+-- 2_31_0: Hay un nuevo tipo de documento para las notas de evolución de enfermería de guardia: NURSING_EMERGENCY_CARE_EVOLUTION 21.
 -- Se agrega el nuevo id (21) a todos los WHEREs donde se busquen notas de evolución de guardia.
 --
 DROP VIEW IF EXISTS v_clinic_history;
