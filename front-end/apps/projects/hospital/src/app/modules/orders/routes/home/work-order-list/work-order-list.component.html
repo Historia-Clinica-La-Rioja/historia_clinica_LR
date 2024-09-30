@@ -1,0 +1,37 @@
+<app-content width="full">
+	<mat-card>
+		<app-row-content>
+			<div *ngIf="allOrders?.length > 0 else noInfo">
+
+				<div *ngFor="let order of ordersCurrentPage; last as isLast">
+
+					<div fxLayoutAlign="row">
+						<div fxFlex="40%" fxLayoutAlign="column" fxLayoutAlign=" center center">
+							<app-patient-summary [person]="order.patientDto|patientSummary">
+							</app-patient-summary>
+						</div>
+
+						<div fxFlex="60%">
+							<app-order-detail [orderDetails]="order|studyOrderWorkListDtoToOrderDetails">
+							</app-order-detail>
+						</div>
+					</div>
+
+					<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+
+				</div>
+
+				<mat-divider></mat-divider>
+
+				<mat-paginator [length]="allOrders.length" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
+					(page)="onPageChange($event)">
+				</mat-paginator>
+
+			</div>
+
+			<ng-template #noInfo>
+				<app-no-data></app-no-data>
+			</ng-template>
+		</app-row-content>
+	</mat-card>
+</app-content>
