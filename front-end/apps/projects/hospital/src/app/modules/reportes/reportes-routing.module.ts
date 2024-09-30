@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
+import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
 import { CubeReportComponent } from './routes/cube-report/cube-report.component';
@@ -11,6 +12,7 @@ import { MonthlyReportComponent } from './routes/monthly-report/monthly-report.c
  */
 export enum ReportesRoutes {
 	MonthlyReport = 'monthly-report',
+	ReportesEstadisticos = 'reportes-estadisticos',
 	DiabeticPatients = 'diabetes',
 	HypertensivePatients = 'hypertension',
 	WeeklyEpidemiologicalReport = 'epidemiological_week',
@@ -43,8 +45,18 @@ const routes: Routes = [
 				},
 			},
 			{
+				path: ReportesRoutes.ReportesEstadisticos,
+				component: CubeReportComponent,
+				canActivate: [ FeatureFlagGuard ],
+				data: {
+					featureFlag: AppFeature.HABILITAR_REPORTES_ESTADISTICOS,
+					label: {key: 'reportes.reportes-estadisticos.TITLE'},
+				},
+			},
+			{
 				path: ReportesRoutes.DiabeticPatients,
 				component: CubeReportComponent,
+				canActivate: [ FeatureFlagGuard ],
 				data: {
 					label: {key: 'reportes.diabetic-patients.TITLE'},
 					featureFlag: AppFeature.HABILITAR_REPORTES_NACION_CUBE
@@ -53,6 +65,7 @@ const routes: Routes = [
 			{
 				path: ReportesRoutes.HypertensivePatients,
 				component: CubeReportComponent,
+				canActivate: [ FeatureFlagGuard ],
 				data: {
 					label: {key: 'reportes.hypertensive-patients.TITLE'},
 					featureFlag: AppFeature.HABILITAR_REPORTES_NACION_CUBE
@@ -61,6 +74,7 @@ const routes: Routes = [
 			{
 				path: ReportesRoutes.WeeklyEpidemiologicalReport,
 				component: CubeReportComponent,
+				canActivate: [ FeatureFlagGuard ],
 				data: {
 					label: {key: 'reportes.weekly-epidemiological-report.TITLE'},
 					featureFlag: AppFeature.HABILITAR_REPORTES_NACION_CUBE

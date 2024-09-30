@@ -24,8 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtensionPlugin;
-import net.pladema.hsi.extensions.configuration.plugins.InstitutionMenuExtensionPluginBuilder;
 
 @Slf4j
 @Getter
@@ -66,16 +64,5 @@ public class CubejsAutoConfiguration {
 				tokenExpiration
 		);
     }
-
-	@Bean
-	public InstitutionMenuExtensionPlugin reportesEstadisticos(FeatureFlagsService featureFlagsService){
-    	var result = isEnabled(featureFlagsService.isOn(AppFeature.HABILITAR_REPORTES_ESTADISTICOS)) ? InstitutionMenuExtensionPluginBuilder.fromResources("reportesEstadisticos" ) : null;
-		if (result != null) {
-			log.info("Cubejs InstitutionMenuExtensionPlugin {}", result.menu());
-		} else {
-			log.warn("Cubejs InstitutionMenuExtensionPlugin not defined");
-		}
-		return result;
-	}
 
 }

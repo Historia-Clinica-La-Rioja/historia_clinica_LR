@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
-		<lombok.version>1.18.22</lombok.version>
+		<lombok.version>1.18.10</lombok.version>
 		<mapstruct.version>1.4.2.Final</mapstruct.version>
 		<jacoco-plugin.version>0.8.2</jacoco-plugin.version>
 		<maven-surefire-version>2.22.0</maven-surefire-version>

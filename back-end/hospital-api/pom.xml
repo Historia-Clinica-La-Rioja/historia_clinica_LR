@@ -32,17 +32,6 @@
 			<version>${revision}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>ar.lamansys.hsi</groupId>
-			<artifactId>sgx-dashboards</artifactId>
-			<version>${revision}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ar.lamansys.hsi</groupId>
-			<artifactId>extensions</artifactId>
-			<version>${revision}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>ar.lamansys.hsi</groupId>

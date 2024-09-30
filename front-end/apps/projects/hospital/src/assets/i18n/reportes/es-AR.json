@@ -32,6 +32,9 @@
 			"TITLE": "Mensuales descargables",
 			"PREPARING_MESSAGE": "Estamos generando su reporte, este proceso puede demorar unos minutos. Si lo desea, puede regresar más tarde para visualizarlo, a su vez, le enviaremos un correo electrónico cuando esté listo para su descarga."
 		},
+		"reportes-estadisticos": {
+			"TITLE": "Reportes estadísticos"
+		},
 		"diabetic-patients": {
 			"TITLE": "Pacientes diabéticos"
 		},

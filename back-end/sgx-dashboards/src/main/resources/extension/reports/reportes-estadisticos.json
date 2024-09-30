@@ -1,6 +1,3 @@
-{
-  "layout" : "components",
-  "content" : [
     {
       "type" : "tabs",
       "args" : {
@@ -811,5 +808,3 @@
         ]
       }
     }
-  ]
-}

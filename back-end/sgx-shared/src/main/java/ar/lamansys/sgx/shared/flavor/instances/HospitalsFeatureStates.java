@@ -23,8 +23,9 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE, true);
 		map.put(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD, false);
 		map.put(AppFeature.HABILITAR_ODONTOLOGY, false);
-		map.put(AppFeature.HABILITAR_REPORTES, false);
+		map.put(AppFeature.HABILITAR_REPORTES, true);
 		map.put(AppFeature.HABILITAR_REPORTES_INSTANTANEOS, false);
+		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, true);
 		map.put(AppFeature.HABILITAR_INFORMES, false);
 		map.put(AppFeature.HABILITAR_LLAMADO, false);
 		map.put(AppFeature.HABILITAR_HISTORIA_CLINICA_EXTERNA, false);
@@ -48,7 +49,6 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, true);
 		map.put(AppFeature.HABILITAR_NOTIFICACIONES_TURNOS, false);
 		map.put(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA, true);
-		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
 		map.put(AppFeature.HABILITAR_RECUPERAR_PASSWORD, true);
 		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
 		map.put(AppFeature.HABILITAR_SIP_PLUS, false);
