@@ -9,7 +9,7 @@ import { RequestMasterDataService } from '@api-rest/services/request-masterdata.
 import { MapperService } from '@core/services/mapper.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { STUDY_STATUS_ENUM } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
-import { COMLETE_NOW, CreateOrderService } from '@historia-clinica/services/create-order.service';
+import { COMPLETE_NOW, CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { Size } from '@presentation/components/item-summary/item-summary.component';
@@ -25,7 +25,7 @@ import { map } from "rxjs/operators";
 export class AddStudyComponent implements OnInit {
 	studyCategoryOptions = [];
 	study_status = STUDY_STATUS_ENUM;
-	completeNow = COMLETE_NOW;
+	completeNow = COMPLETE_NOW;
 	radioControl : FormGroup<RadioControl>;
 	isLinear = false;
 	size = Size.SMALL;
@@ -35,6 +35,8 @@ export class AddStudyComponent implements OnInit {
 	form: UntypedFormGroup;
 	healthProblemOptions = [];
 	readonly ecl = SnomedECL.PROCEDURE;
+	selectedFiles: File[] = [];
+	selectedFilesShow: any[] = [];
 
 	constructor(
 		public dialogRef: MatDialogRef<AddStudyComponent>,
@@ -78,14 +80,6 @@ export class AddStudyComponent implements OnInit {
 		this.requestMasterDataService.categoriesWithoutDiagnosticImaging().subscribe((categories: ServiceRequestCategoryDto[]) => {
 			this.studyCategoryOptions = categories;
 		});
-
-		this.radioControl.controls.controlButton.setValue(this.study_status.FINAL);
-		this.data.createOrderService.setCreationStatus(this.study_status.FINAL);
-
-		this.data.createOrderService.hasTemplate$.subscribe(_ => {
-			this.radioControl.controls.controlButton.setValue(this.study_status.FINAL);
-			this.data.createOrderService.setCreationStatus(this.study_status.FINAL);
-		})
 	}
 
 	private setMedicalCoverages(): void {
@@ -138,6 +132,8 @@ export class AddStudyComponent implements OnInit {
 	}
 
 	addOrder() {
+		this.data.createOrderService.setFileNames(this.selectedFilesShow);
+		this.data.createOrderService.setObservation(this.form.controls.observations.value);
 		this.data.createOrderService.addToList();
 		this.close();
 	}
@@ -150,6 +146,17 @@ export class AddStudyComponent implements OnInit {
 		this.data.createOrderService.setProblem(healthProblem);
 	}
 
+	onSelectFileFormData($event): void {
+		Array.from($event.target.files).forEach((file: File) => {
+			this.selectedFiles.push(file);
+			this.selectedFilesShow.push(file.name);
+		});
+	}
+
+	removeSelectedFile(index): void {
+		this.selectedFiles.splice(index, 1);
+		this.selectedFilesShow.splice(index, 1);
+	}
 }
 
 export interface CreateOrder {

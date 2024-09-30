@@ -594,6 +594,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				}
 			),
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(procedimiento => this.mapProcedimientoToNursingProcedure(procedimiento)),
+			serviceRequests: this.createOrderService.getStudies(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
@@ -784,7 +785,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					problems: problems,
 				},
 				autoFocus: false,
-				width: '45%',
+				width: DialogWidth.MEDIUM,
 				disableClose: true,
 			});
 	}

@@ -31,7 +31,7 @@ export class CreateOrderComponent implements OnInit {
 		this.data.createOrderService.setConcept(conceptProblem);
 	}
 
-	setStudyCategory(studyCategoryId: number | string) {
+	setStudyCategory(studyCategoryId: string) {
 		this.data.createOrderService.setStudyCategory(studyCategoryId);
 	}
 

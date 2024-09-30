@@ -98,7 +98,7 @@
 				<div>
 					<h2>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.LOAD_RESULT' | translate}} </h2>
 
-					<mat-dialog-content class="no-scroll">
+					<mat-dialog-content>
 						<mat-radio-group [formControl]="radioControl.controls.controlButton" aria-label="Select an option" fxLayout="column"
 							fxLayoutGap="15px" (change)="setCreationStatus($event)">
 							<mat-radio-button [value]=study_status.REGISTERED color="primary">
@@ -124,9 +124,26 @@
 								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 							</mat-form-field>
 
-							<div class="span-clickable primary" fxLayout="row">
-								<mat-icon>attachment_icon</mat-icon>
-								<span [translate]="'ambulatoria.paciente.nueva-consulta.studies.dialog.UPLOAD_FILE'"></span>
+							<div id="attach_files" fxLayout="column">
+								<div class="span-clickable primary" fxLayout="row">
+									<mat-icon>attachment_icon</mat-icon>
+									<span [translate]="'ambulatoria.paciente.nueva-consulta.studies.dialog.UPLOAD_FILE'"
+										(click)="fileInput.click()">
+									</span>
+									<span [hidden]="true">
+										<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)" />
+									</span>
+								</div>
+
+								<div *ngIf="selectedFilesShow" class="selected-files">
+									<div *ngFor="let fileName of selectedFilesShow; let index = index">
+										<span class="mat-body element-light-color">
+											{{fileName}}
+										</span>
+										<button mat-icon-button color="warn"
+											(click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</mat-dialog-content>
