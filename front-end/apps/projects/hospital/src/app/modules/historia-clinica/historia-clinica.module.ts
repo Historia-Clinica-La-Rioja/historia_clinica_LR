@@ -160,6 +160,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
+import { AddStudyComponent } from './dialogs/add-study/add-study.component';
 
 @NgModule({
 	declarations: [
@@ -338,6 +339,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		ShowSpaceDetailTitlePipe,
 		ShowTitleByPatientDataPipe,
   		ShowTimeElapsedPipe,
+    	AddStudyComponent,
 	],
 	imports: [
 		CommonModule,
@@ -350,7 +352,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		//standalone
 		IdentifierCasesComponent,
 		ConceptTypeaheadSearchComponent,
-		ConceptsListComponent
+		ConceptsListComponent,
 	],
 	exports: [
 		// components

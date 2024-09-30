@@ -278,10 +278,15 @@
                     "REGISTERED_FORM": "Formularios registrado/s"
                 },
 				"studies": {
+					"TITLE": "Estudios",
 					"buttons": {
 						"ADD": "Agregar estudio"
 					},
-					"TITLE": "Estudios"
+					"dialog": {
+						"TITLE": "Agregar estudio realizado",
+						"PATIENT_DATA": "Datos del paciente",
+						"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica"
+					}
 				}
             },
             "reference-notification": {

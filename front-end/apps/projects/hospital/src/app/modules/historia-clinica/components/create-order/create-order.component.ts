@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ServiceRequestCategoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { MIN_DATE } from '@core/utils/date.utils';
-import { CreateOrder } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+import { CreateOrder } from '@historia-clinica/dialogs/add-study/add-study.component';
 
 const DEFAULT_STUDY = {
 	id: "71388002",

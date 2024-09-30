@@ -52,13 +52,13 @@ import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
-// import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { DialogWidth } from '@presentation/services/dialog.service';
 import { getElementAtPosition, pushIfNotExists } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '../search-snomed-concept/search-snomed-concept.component';
 import { Concept, ConceptDateFormComponent } from '../../modules/internacion/dialogs/concept-date-form/concept-date-form.component';
+import { AddStudyComponent } from '@historia-clinica/dialogs/add-study/add-study.component';
 
 const TIME_OUT = 5000;
 const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO]}];
@@ -775,7 +775,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	openStudiesComponent(): void {
+			const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
 
+			this.dialog.open(AddStudyComponent, {
+				data: {
+					patientId: this.data.idPaciente,
+					createOrderService: this.createOrderService,
+					problems: problems,
+				},
+				autoFocus: false,
+				width: '45%',
+				disableClose: true,
+			});
 	}
 
 	private openConceptDateFormComponent = (snomedConcept: SnomedDto) => {
