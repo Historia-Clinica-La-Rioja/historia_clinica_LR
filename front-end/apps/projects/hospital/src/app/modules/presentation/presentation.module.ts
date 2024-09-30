@@ -126,6 +126,7 @@ import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { RowContentComponent } from './components/row-content/row-content.component';
+import { PatientSummaryPipe } from './pipes/patient-summary.pipe';
 
 @NgModule({
 	declarations: [
@@ -245,6 +246,7 @@ import { RowContentComponent } from './components/row-content/row-content.compon
 		IsoToDatePipe,
 		PaginatePipe,
 		PatientToPersonPipe,
+		PatientSummaryPipe,
 		PersonIdentificationPipe,
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
@@ -369,6 +371,7 @@ import { RowContentComponent } from './components/row-content/row-content.compon
 		IsoToDatePipe,
 		PaginatePipe,
 		PatientToPersonPipe,
+		PatientSummaryPipe,
 		PersonIdentificationPipe,
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
