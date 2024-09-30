@@ -45,7 +45,7 @@ public class GeneralReportsExcelService {
 			fillEmergencyRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newFillRow(sheet, excelUtilsService.addTotalCountRow(workbook, sheet, 4, 16, 7));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.addTotalCountRow(workbook, sheet, 4, 7));
 
 		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
 		excelUtilsService.newSetSheetDimensions(sheet);

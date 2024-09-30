@@ -125,7 +125,7 @@ public class ReportExcelUtilsService {
 		return data;
 	}
 
-	public List<CellContent> addTotalCountRow(IWorkbook wb, ISheet sheet, Integer rowIndex, Integer mainTitleColumns, Integer headerRows) {
+	public List<CellContent> addTotalCountRow(IWorkbook wb, ISheet sheet, Integer rowIndex, Integer headerRows) {
 
 		List<CellContent> data = new ArrayList<>();
 
