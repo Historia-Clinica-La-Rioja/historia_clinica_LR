@@ -276,7 +276,13 @@
                         "TYPEAHEAD_PLACEHOLDER": "Formulario"
                     },
                     "REGISTERED_FORM": "Formularios registrado/s"
-                }
+                },
+				"studies": {
+					"buttons": {
+						"ADD": "Agregar estudio"
+					},
+					"TITLE": "Estudios"
+				}
             },
             "reference-notification": {
                 "title": {

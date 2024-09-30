@@ -774,6 +774,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		dialogRef.afterClosed().subscribe((snomedConcept: SnomedDto) => this.openConceptDateFormComponent(snomedConcept));
 	}
 
+	openStudiesComponent(): void {
+
+	}
+
 	private openConceptDateFormComponent = (snomedConcept: SnomedDto) => {
 		if (!snomedConcept) return;
 
