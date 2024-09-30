@@ -5,12 +5,13 @@ import {
     TextField,
     ReferenceField,
     SelectField,
-    DateField,
     TextInput,
     Filter,
     SelectInput
 } from 'react-admin';
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
+import SgxDateField from '../../../dateComponents/sgxDateField';
+
 const StudyFilter = props =>(
     <Filter {...props}>
         <TextInput source="imageId" />
@@ -42,7 +43,7 @@ const MoveStudiesList = props => {
                 <TextField source="identificationNumber" />
                 <TextField source="firstName" />
                 <TextField source="lastName" />
-                <DateField source="appoinmentDate"/>
+                <SgxDateField source="appoinmentDate"/>
                 <TextField source="appoinmentTime" type="time"/>
                 <TextField source="imageId" />
                 <SelectField source="status" choices={[

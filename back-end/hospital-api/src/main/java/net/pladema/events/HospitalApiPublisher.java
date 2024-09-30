@@ -21,8 +21,8 @@ public class HospitalApiPublisher {
 		simplePublishService.publish(patientId, institutionId, eHospitalApiTopicDto.toString());
 	}
 
-	public void appointmentCaller(NotifyPatientDto notifyPatientDto) {
-		simplePublishService.appointmentCallerPublish(EHospitalApiTopicDto.PACIENTE_LLAMADO.toString(), notifyPatientDto);
+	public void appointmentCaller(NotifyPatientDto notifyPatientDto, Integer institutionId) {
+		simplePublishService.appointmentCallerPublish(EHospitalApiTopicDto.PACIENTE_LLAMADO.toString(), notifyPatientDto, institutionId);
 	}
 
 	public void emergencyCareAppointmentCaller(EmergencyCareEpisodeNotificationDto notification, Integer institutionId) {

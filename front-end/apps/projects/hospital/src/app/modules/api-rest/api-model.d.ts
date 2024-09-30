@@ -1813,8 +1813,8 @@ export interface EmergencyCareEpisodeNotificationDto {
     episodeId: number;
     patientName: string;
     placeName: string;
-    topic: string;
     triageCategory: SharedTriageCategoryDto;
+    tvMonitor: string;
 }
 
 export interface EmergencyCareEvolutionNoteClinicalData {
@@ -3342,7 +3342,7 @@ export interface NotifyPatientDto {
     doctorsOfficeName: string;
     patientName: string;
     sectorId: number;
-    topic: string;
+    tvMonitor: string;
 }
 
 export interface NursingAnthropometricDataDto extends Serializable {

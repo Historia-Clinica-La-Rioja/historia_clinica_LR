@@ -9,19 +9,19 @@ public class NotifyPatientBo {
     private final Integer sectorId;
     private final String doctorName;
     private final String doctorsOfficeName;
-    private final String topic;
+    private final String tvMonitor;
 
-    public NotifyPatientBo(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String topic) {
+    public NotifyPatientBo(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String tvMonitor) {
         this.appointmentId = appointmentId;
         this.patientName = patientName;
         this.sectorId = sectorId;
         this.doctorName = doctorName;
         this.doctorsOfficeName = doctorsOfficeName;
-        this.topic = topic;
+        this.tvMonitor = tvMonitor;
     }
 
-	public boolean hasTopic() {
-		return topic != null;
+	public boolean hasTVMonitor() {
+		return tvMonitor != null;
 	}
 
 }

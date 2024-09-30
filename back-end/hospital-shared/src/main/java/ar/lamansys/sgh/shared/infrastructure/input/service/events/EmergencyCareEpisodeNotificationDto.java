@@ -19,7 +19,7 @@ public class EmergencyCareEpisodeNotificationDto {
 
 	private String placeName;
 
-	private String topic;
+	private String tvMonitor;
 
 	private SharedTriageCategoryDto triageCategory;
 
@@ -28,7 +28,7 @@ public class EmergencyCareEpisodeNotificationDto {
 		this.patientName = notificationData.getPatientName();
 		this.doctorName = notificationData.getDoctorName();
 		this.placeName = notificationData.getPlaceName();
-		this.topic = notificationData.getTopic();
+		this.tvMonitor = notificationData.getTvMonitor();
 		this.triageCategory = new SharedTriageCategoryDto(notificationData.getTriageCategory());
 	}
 

@@ -11,7 +11,6 @@ import {
     TextInput, 
     useGetOne, 
     usePermissions,
-    DateInput,
     AutocompleteInput
 } from 'react-admin';
 import {
@@ -19,6 +18,7 @@ import {
     CreateRelatedButton,
     SectionTitle,
 } from '../../components';
+import SgxDateInput from '../../../dateComponents/sgxDateInput';
 
 const INTERNACION = 2;
 
@@ -46,7 +46,7 @@ const RoomEdit = props => {
                 <TextInput source="roomNumber" validate={[required()]} />
                 <TextInput source="description" validate={[required()]} />
                 <TextInput source="type" validate={[required()]} />
-                <DateInput source="dischargeDate" />
+                <SgxDateInput source="dischargeDate" />
                 <SectorField/>
 
 

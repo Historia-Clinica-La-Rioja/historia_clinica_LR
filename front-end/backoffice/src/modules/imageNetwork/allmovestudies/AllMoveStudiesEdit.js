@@ -5,14 +5,13 @@ import {
     ReferenceInput,
     SimpleForm,
     TextInput,
-    DateInput,
     ReferenceManyField,
     Datagrid,
     TextField,
-    DateField
-
 } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
+import SgxDateField from '../../../dateComponents/sgxDateField';
+import SgxDateInput from '../../../dateComponents/sgxDateInput';
 
 const MoveStudiesEdit = props => {
 
@@ -25,7 +24,7 @@ const MoveStudiesEdit = props => {
                 <TextInput source="identificationNumber" disabled/>
                 <TextInput source="firstName" disabled/>
                 <TextInput source="lastName" disabled/>
-                <DateInput  disabled source="appoinmentDate"/>
+                <SgxDateInput  disabled source="appoinmentDate"/>
                 <TextInput source="appoinmentTime" type="time" disabled/>
                 <TextInput source="imageId"/>
                 <TextInput source="result" disabled/>
@@ -46,7 +45,7 @@ const MoveStudiesEdit = props => {
                         <Datagrid>
                             <TextField source="patientId" sortable={false}/>
                             <TextField source="patientName" sortable={false}/>
-                            <DateField source="studyDate" />
+                            <SgxDateField source="studyDate" />
                             <TextField source="studyTime" sortable={false} />
                             <TextField source="studyInstanceUid" />
                             <TextField source="modality"/>

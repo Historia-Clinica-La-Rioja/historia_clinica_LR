@@ -28,16 +28,18 @@ public class SimplePublishService {
 		mqttCallExternalService.publish(mqttMetadataDto);
 	}
 
-	public void appointmentCallerPublish(String topic, NotifyPatientDto notifyPatientDto) {
-		String fullTopic = "/HSI/" + namePrefix + "/" + topic + "/" + notifyPatientDto.getTopic();
-		notifyPatientDto.setTopic(fullTopic);
-		mqttCallExternalService.publish(mapTo(notifyPatientDto.getTopic(), getMessage(notifyPatientDto)));
+	public void appointmentCallerPublish(String topic, NotifyPatientDto notifyPatientDto, Integer institutionId) {
+		String fullTopic = callerTopic(topic, institutionId, notifyPatientDto.getTvMonitor());
+		mqttCallExternalService.publish(mapTo(fullTopic, getMessage(notifyPatientDto)));
 	}
 
 	public void emergencyCareCallerPublish(String topic, EmergencyCareEpisodeNotificationDto emergencyCareEpisodeNotificationDto, Integer institutionId) {
-		String fullTopic = "/HSI/" + namePrefix + "/" + topic + "/" + institutionId + "/" + emergencyCareEpisodeNotificationDto.getTopic();
-		emergencyCareEpisodeNotificationDto.setTopic(fullTopic);
-		mqttCallExternalService.publish(mapTo(emergencyCareEpisodeNotificationDto.getTopic(), getEmergencyCareSchedulerMessage(emergencyCareEpisodeNotificationDto)));
+		String fullTopic = callerTopic(topic, institutionId, emergencyCareEpisodeNotificationDto.getTvMonitor());
+		mqttCallExternalService.publish(mapTo(fullTopic, getEmergencyCareSchedulerMessage(emergencyCareEpisodeNotificationDto)));
+	}
+
+	private String callerTopic(String topicCall, Integer institutionId, String tvMonitor) {
+		return "/HSI/" + namePrefix + "/" + topicCall + "/" + institutionId + "/" + tvMonitor;
 	}
 
 	private String getEmergencyCareSchedulerMessage(EmergencyCareEpisodeNotificationDto notification) {

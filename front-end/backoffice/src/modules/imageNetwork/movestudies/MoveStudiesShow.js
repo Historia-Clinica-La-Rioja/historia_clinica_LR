@@ -9,11 +9,11 @@ import {
     ReferenceField,
     SimpleShowLayout,
     SelectField,
-    DateField,
     useRedirect
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {makeStyles} from "@material-ui/core/styles";
+import SgxDateField from '../../../dateComponents/sgxDateField';
 
 const MoveStudiesActions = ({ data }) => {
     const useStyles = makeStyles({
@@ -61,7 +61,7 @@ const MoveStudiesShow = (props) => (
             <ReferenceField link={false} source="institutionId" reference="institutions">
                 <TextField source="name" />
             </ReferenceField>
-            <DateField source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
+            <SgxDateField source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
             <TextField source="imageId" />
             <TextField source="sizeImage" />
             <TextField source="result" />

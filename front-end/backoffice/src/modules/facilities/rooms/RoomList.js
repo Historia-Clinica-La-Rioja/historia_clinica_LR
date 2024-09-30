@@ -23,7 +23,7 @@ const RoomFilter = props =>(
     </Filter>
 );
 
-const InstitutionList = props => {
+const RoomList = props => {
     const { permissions } = usePermissions();
     return (
         <List {...props} hasCreate={false} filters={<RoomFilter/>}>
@@ -41,4 +41,4 @@ const InstitutionList = props => {
     )
 };
 
-export default InstitutionList;
+export default RoomList;

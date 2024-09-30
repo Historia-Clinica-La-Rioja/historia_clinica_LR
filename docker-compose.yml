@@ -1,7 +1,7 @@
 version: '3.6'
 services:
   hsi-db:
-    image: postgres:11
+    image: postgres:16
     container_name: hsi-db
     environment:
       POSTGRES_PASSWORD: Local123

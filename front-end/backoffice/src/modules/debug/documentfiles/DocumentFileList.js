@@ -25,6 +25,9 @@ const DocumentFileList = props => (
             <ReferenceField source="typeId" reference="documenttypes" link={false}>
                 <TextField source="description" />
             </ReferenceField>
+            <ReferenceField source="sourceTypeId" reference="sourcetypes" link={false}>
+                <TextField source="description" />
+            </ReferenceField>
             <SgxDateField source="creationable.createdOn" showTime/>
         </Datagrid>
     </List>

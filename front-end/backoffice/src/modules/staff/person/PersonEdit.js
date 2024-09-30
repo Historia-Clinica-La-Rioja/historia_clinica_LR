@@ -5,12 +5,12 @@ import {
     required,
     maxLength,
     number,
-    DateInput,
     minValue,
     maxValue
 } from 'react-admin';
 import CustomToolbar from "../../components/CustomToolbar";
 import SgxSelectInput from "../../../sgxSelectInput/SgxSelectInput";
+import SgxDateInput from '../../../dateComponents/sgxDateInput';
 
 const formatDateToString = props => {
     const date = new Date();
@@ -37,7 +37,7 @@ const PersonEdit = props => (
                 number(),
                 maxLength(11)]}/>
             <SgxSelectInput source="genderId" element="genders" optionText="description" alwaysOn allowEmpty={false}/>
-            <DateInput source="birthDate" validate={[required(), minValue(getMinValue()), maxValue(formatDateToString())]} />
+            <SgxDateInput source="birthDate" validate={[required(), minValue(getMinValue()), maxValue(formatDateToString())]} />
             <TextInput source="email" validate={[maxLength(100)]}/>
         </SimpleForm>
     </Edit>
