@@ -60,6 +60,10 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }
 			},
+			{
+				path: 'ordenes/lista-trabajos',
+				loadChildren: () => import('../orders/orders.module').then(m => m.OrdersModule),
+			},
 			{ path: 'web-components/:wcId', component: InstitutionRoutedExternalComponent },
 			{
 				path: 'telesalud',

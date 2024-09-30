@@ -109,7 +109,15 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: [AppFeature.HABILITAR_REPORTES]
 	},
 	{
-		text: 'app.menu.LISTADO_DE_TRABAJO',
+		text: 'app.menu.LISTA_DE_TRABAJO',
+		icon: 'assignment_ind',
+		id: 'listadoTrabajo',
+		url: './ordenes/lista-trabajos',
+		permissions: [ERole.PERSONAL_DE_LABORATORIO, ERole.TECNICO, ERole.INFORMADOR, ERole.INDEXADOR],
+		featureFlag: [AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO]
+	},
+	{
+		text: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES ? 'app.menu.LISTADO_DE_TRABAJO_DE_IMAGENES' : 'app.menu.LISTADO_DE_TRABAJO',
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './imagenes/lista-trabajos',
