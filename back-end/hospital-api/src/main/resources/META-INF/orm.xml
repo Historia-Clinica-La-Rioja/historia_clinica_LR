@@ -2159,14 +2159,14 @@
 			concat(pp.first_name, ' ', pp.middle_names) as patientFirstName,
 			pp.birth_date as patientBirthDate,
 			case
-			when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
-			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			end as patientAgeToday,
+			when (EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM b.created_on) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' años, ', 12 +(EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pp.birth_date)), ' meses')
+			else concat((EXTRACT(YEAR FROM b.created_on) - EXTRACT(YEAR FROM pp.birth_date)), ' años, ', (EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pp.birth_date)), ' meses')
+			end as patientAgeAtAttention,
 			concat(ap.street, ' N° ', ap.number, case when ap.floor is not null then concat(' Piso: ', ap.floor, 'Departamento: ', ap.apartment) end) as patientAddress,
 			pex.phone_number as phoneNumber,
 			c.description as patientLocation,
-			b.created_on AT TIME ZONE 'UTC-3' as attentionDate,
+			TO_CHAR(b.created_on AT TIME ZONE 'UTC-3', 'DD-MM-YYYY') as attentionDate,
 			concat(mc.name, '(RNOS: ', hi.rnos, ')') as patientMedicalCoverage,
 			(select string_agg(r.description, ', ') from outpatient_consultation_reasons ocr inner join reasons r on ocr.reason_id=r.id where ocr.outpatient_consultation_id=b.id) as reasons,
 			(select string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date, ' - Tipo: ', pt.description,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
@@ -2220,10 +2220,10 @@
 			concat(pp.first_name, ' ', pp.middle_names) as patientFirstName,
 			pp.birth_date as patientBirthDate,
 			case
-			when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
-			concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses')
-			end as patientAgeToday,
+			when (EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pp.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM b.created_on) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' años, ', 12 +(EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pp.birth_date)), ' meses')
+			else concat((EXTRACT(YEAR FROM b.created_on) - EXTRACT(YEAR FROM pp.birth_date)), ' años, ', (EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pp.birth_date)), ' meses')
+			end as patientAgeAtAttention,
 			concat(ap.street, ' N° ', ap.number, case when ap.floor is not null then concat(' Piso: ', ap.floor, 'Departamento: ', ap.apartment) end) as patientAddress,
 			pex.phone_number as phoneNumber,
 			c.description as patientLocation,
@@ -3285,7 +3285,7 @@
 			<column name="patientLastName" class="java.lang.String"/>
 			<column name="patientFirstName" class="java.lang.String"/>
 			<column name="patientBirthDate" class="java.lang.String"/>
-			<column name="patientAgeToday" class="java.lang.String"/>
+			<column name="patientAgeAtAttention" class="java.lang.String"/>
 			<column name="patientAddress" class="java.lang.String"/>
 			<column name="phoneNumber" class="java.lang.String"/>
 			<column name="patientLocation" class="java.lang.String"/>
@@ -3303,7 +3303,7 @@
 			<column name="patientLastName" class="java.lang.String"/>
 			<column name="patientFirstName" class="java.lang.String"/>
 			<column name="patientBirthDate" class="java.lang.String"/>
-			<column name="patientAgeToday" class="java.lang.String"/>
+			<column name="patientAgeAtAttention" class="java.lang.String"/>
 			<column name="patientAddress" class="java.lang.String"/>
 			<column name="phoneNumber" class="java.lang.String"/>
 			<column name="patientLocation" class="java.lang.String"/>
