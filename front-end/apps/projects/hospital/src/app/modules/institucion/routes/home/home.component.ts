@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
 		this.permissionsService.contextRoleAssignments$.subscribe(
 			roles => this.roles = roles.map(role => role.roleDescription)
 		);
-		this.extensions$ = this.wcExtensionsService.getInstitutionHomeComponents(1);
+		this.extensions$ = this.wcExtensionsService.getInstitutionHomeComponents(this.contextService.institutionId);
 	}
 
 	address(institution: InstitutionDto) {
