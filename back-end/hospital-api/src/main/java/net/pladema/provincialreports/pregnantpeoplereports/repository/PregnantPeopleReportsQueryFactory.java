@@ -15,7 +15,6 @@ public class PregnantPeopleReportsQueryFactory {
 
 	private final ReportsRepositoryUtils repositoryUtils;
 
-
 	public PregnantPeopleReportsQueryFactory(ReportsRepositoryUtils repositoryUtils) {
 		this.repositoryUtils = repositoryUtils;
 	}
