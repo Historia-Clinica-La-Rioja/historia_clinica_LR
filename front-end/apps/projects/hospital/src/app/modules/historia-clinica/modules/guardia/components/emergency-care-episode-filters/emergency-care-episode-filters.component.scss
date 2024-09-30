@@ -29,6 +29,16 @@ input[type="number"] {
 	}
 }
 
+.triage-options {
+	width: 100%;
+}
+
+.flex-container {
+	display: flex;
+	flex-direction: column;
+	height: auto;
+}
+
 .margin-top {
 	margin-top: 12px;
 }
