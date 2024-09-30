@@ -23,7 +23,7 @@ public class PregnantAttentionsConsultationDetail {
 
 	private String patientBirthDate;
 
-	private String patientAgeToday;
+	private String patientAgeAtAttention;
 
 	private String patientAddress;
 
