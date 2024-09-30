@@ -27,16 +27,8 @@ export class CreateOrderComponent implements OnInit {
 		this.setStudyCategory(DEFAULT_STUDY.id);
 	}
 
-	dateChanged(date: Date) {
-		this.data.createOrderService.setDate(date);
-	}
-
 	setConcept(conceptProblem: SnomedDto) {
 		this.data.createOrderService.setConcept(conceptProblem);
-	}
-
-	setProblem(healthProblem: SnomedDto) {
-		this.data.createOrderService.setProblem(healthProblem);
 	}
 
 	setStudyCategory(studyCategoryId: number | string) {

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
-import { BasicPatientDto, PatientMedicalCoverageDto, ServiceRequestCategoryDto, SnomedDto } from '@api-rest/api-model';
+import { BasicPatientDto, PatientMedicalCoverageDto, ServiceRequestCategoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
@@ -34,6 +34,7 @@ export class AddStudyComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	form: UntypedFormGroup;
 	healthProblemOptions = [];
+	readonly ecl = SnomedECL.PROCEDURE;
 
 	constructor(
 		public dialogRef: MatDialogRef<AddStudyComponent>,
@@ -63,6 +64,8 @@ export class AddStudyComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			patientMedicalCoverage: [null],
 			healthProblem: [null, Validators.required],
+			studyCategory: [null, Validators.required],
+			studySelection: [null, Validators.required],
 		});
 
 		this.setMedicalCoverages();
@@ -142,6 +145,10 @@ export class AddStudyComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	setProblem(healthProblem: SnomedDto) {
+		this.data.createOrderService.setProblem(healthProblem);
 	}
 
 }

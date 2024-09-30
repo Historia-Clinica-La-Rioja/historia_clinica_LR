@@ -289,7 +289,13 @@
 						"MEDICAL_COVERAGE": "Cobertura médica",
 						"UPDATE_COVERAGE": "Actualizar cobertura",
 						"HEALTH_PROBLEM": "Problema asociado",
-						"NEXT": "Siguiente"
+						"NEXT": "Siguiente",
+						"STUDIES_LABEL": "Estudios realizados",
+						"CATEGORY": "Categoría de estudio",
+						"SELECT_CATEGORY": "Seleccionar categoría",
+						"STUDY": "Estudio",
+						"SEARCH_STUDY":"Buscar estudio..."
+
 					}
 				}
             },

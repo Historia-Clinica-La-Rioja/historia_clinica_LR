@@ -52,7 +52,7 @@
 						</span>
 						<mat-form-field appearance="outline" class="full-width">
 							<mat-select formControlName="healthProblem" id="healthproblem">
-								<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem">
+								<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem" (click)="setProblem(healthProblem)">
 									{{ healthProblem.pt | translate }}
 								</mat-option>
 							</mat-select>
@@ -71,16 +71,18 @@
 		</mat-step>
 
 		<mat-step>
-			<ng-template matStepLabel>{{'historia-clinica.add_procedure.PROCEDURE' | translate}}</ng-template>
+			<ng-template matStepLabel>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' | translate}}</ng-template>
 
 			<mat-dialog-content>
-
+				<h2> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' |
+							translate}}</h2>
 				<app-create-order [data]="data" [studyCategoryOptions]="studyCategoryOptions"
 					[problems]="data.problems"></app-create-order>
 
 			</mat-dialog-content>
 
-			<mat-dialog-actions fxLayoutAlign="end center">
+			<mat-dialog-actions fxLayoutAlign="end center" fxLayoutAlign="space-between center">
+				<button mat-raised-button mat-button color="primary" matStepperPrevious>Volver</button>
 				<button [disabled]="!data.createOrderService.firstPartAreCompleted" id="next" mat-raised-button
 					matStepperNext color="primary">
 					<span class="uppercase"> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
