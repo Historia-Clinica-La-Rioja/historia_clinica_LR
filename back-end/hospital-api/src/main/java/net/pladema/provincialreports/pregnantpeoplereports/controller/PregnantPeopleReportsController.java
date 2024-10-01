@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("newpregnantpeoplereports")
+@RequestMapping("pregnantpeoplereports")
 @Tag(name = "Reports - pregnant people", description = "Reportes de persona gestante, pregnant people reports")
 public class PregnantPeopleReportsController {
 	private static final Logger logger = LoggerFactory.getLogger(PregnantPeopleReportsController.class);
