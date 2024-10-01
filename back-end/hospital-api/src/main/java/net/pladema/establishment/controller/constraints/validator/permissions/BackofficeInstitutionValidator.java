@@ -85,10 +85,10 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	@Override
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertCreate(Institution entity) {
-		verifyUniqueSISACode(entity);
+		assertExistsSISACode(entity);
 	}
 
-	private void verifyUniqueSISACode(Institution entity) {
+	private void assertExistsSISACode(Institution entity) {
 		boolean SISACodeAlreadyUsed = !repository.findIdsBySisaCode(entity.getSisaCode()).isEmpty();
 		if (SISACodeAlreadyUsed)
 			throw new PermissionDeniedException(SISA_CODE_ALREADY_USED);
@@ -97,7 +97,18 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	@Override
 	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertUpdate(Integer id, Institution entity) {
-		verifyUniqueSISACode(entity);
+		assertSISACodeCanChange(id, entity);
+	}
+
+	private void assertSISACodeCanChange(Integer id, Institution entity) {
+		boolean SISACodeChanged = repository.findById(id)
+				.map(Institution::getSisaCode)
+				.filter(sisaCodeSaved -> !sisaCodeSaved.equals(entity.getSisaCode()))
+				.isPresent();
+		if (SISACodeChanged) {
+			assertExistsSISACode(entity);
+		}
+
 	}
 
 	@Override
