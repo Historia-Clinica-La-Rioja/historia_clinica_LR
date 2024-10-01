@@ -3,7 +3,8 @@
 </h3>
 
 <div fxLayoutGap="2px">
-	<app-identifier [identifier]="{iconLegend: {icon: 'error'},
+
+	<app-identifier *ngIf="orderDetails?.EStudyType" [identifier]="{iconLegend: {icon: 'error'},
 		description: orderDetails.EStudyType}"></app-identifier>
 
 	<app-identifier *ngIf="orderDetails.requiresTransfer" [identifier]="{iconLegend: {icon: 'pin_drop'},
@@ -12,10 +13,9 @@
 
 	<app-identifier [identifier]="{iconLegend: {icon: 'local_hospital'},
 		description: orderDetails.sourceTypeId}"></app-identifier>
-
 	<div>
 		<span class="gray">
-			{{orderDetails.date.time | viewDateDto: 'time' | dateFormat: 'datetime'}}
+			{{orderDetails.date | viewDateDto: 'datetime' | dateFormat: 'datetime'}}
 		</span>
 	</div>
 </div>

@@ -11,7 +11,7 @@ export class StudyOrderWorkListDtoToOrderDetailsPipe implements PipeTransform {
 	transform(studyOrder: StudyOrderWorkListDto): OrderDetails {
 		const date = studyOrder.deferredDate ? studyOrder.deferredDate : studyOrder.createdDate;
 		const sourceTypeId = (studyOrder.sourceTypeId === ESourceType.HOSPITALIZATION) ? "Internación" : "Guardia";
-		const studyType = (studyOrder.studyTypeId === EStudyType.URGENT) ? "Urgente" : "Rutina";
+		const studyType = (studyOrder.studyTypeId === EStudyType.URGENT) ? "Urgente" : null;
 		return {
 			status: studyOrder.status.description,
 			sourceTypeId: sourceTypeId,
