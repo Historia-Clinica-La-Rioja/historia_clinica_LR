@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
-import { BasicPatientDto, PatientMedicalCoverageDto, ServiceRequestCategoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { BasicPatientDto, CreationStatus, PatientMedicalCoverageDto, ServiceRequestCategoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
@@ -81,6 +81,8 @@ export class AddStudyComponent implements OnInit {
 		this.requestMasterDataService.categoriesWithoutDiagnosticImaging().subscribe((categories: ServiceRequestCategoryDto[]) => {
 			this.studyCategoryOptions = categories;
 		});
+
+		this.data.createOrderService.setCreationStatus(CreationStatus.REGISTERED);
 	}
 
 	private setMedicalCoverages(): void {

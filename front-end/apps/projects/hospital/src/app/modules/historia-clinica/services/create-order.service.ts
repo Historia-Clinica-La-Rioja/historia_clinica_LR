@@ -41,7 +41,7 @@ export class CreateOrderService {
 				healthConditionPt: new FormControl<string | null>(null, [Validators.required]),
 				healthConditionSctid: new FormControl<string | null>(null, [Validators.required]),
 				categoryId: new FormControl<string | null>(null, [Validators.required]),
-				creationStatus: new FormControl<CreationStatus | null>(null, [Validators.required]),
+				creationStatus: new FormControl<CreationStatus | null>(CreationStatus.REGISTERED, [Validators.required]),
 				observations: new FormControl<AddDiagnosticReportObservationsCommandDto | null>(null, [Validators.required]),
 				fileNames: new FormControl<string[] | null>(null),
 				observation: new FormControl<string | null>(null)

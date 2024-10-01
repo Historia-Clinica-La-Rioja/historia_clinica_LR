@@ -149,6 +149,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	ButtonType = ButtonType;
 	isSaving = false;
 	isEnabledParameterizedFormFF = false;
+	isEnabledStudiesFF = false;
 	completeFormsData: CompleteParameterizedFormDto[] = []
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
@@ -187,6 +188,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO).subscribe(isEnabled => this.isEnabledStudiesFF = isEnabled);
 		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 	}
 
