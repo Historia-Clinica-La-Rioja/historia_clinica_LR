@@ -78,8 +78,10 @@ public class ReportExcelUtilsService {
 
 		rowNum++;
 
+		String periodText = (formattedPeriod == null || formattedPeriod.isEmpty()) ? "Período no especificado" : formattedPeriod;
+
 		data.add(new CellContent(rowNum, 0, 1, 1, "PERÍODO:", boldTitleStyle));
-		data.add(new CellContent(rowNum, 1, 1, 2, formattedPeriod, fieldStyle));
+		data.add(new CellContent(rowNum, 1, 1, 2, periodText, fieldStyle));
 
 		rowNum++;
 

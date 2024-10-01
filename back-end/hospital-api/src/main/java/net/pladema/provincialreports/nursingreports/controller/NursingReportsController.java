@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("nursingreports")
@@ -50,9 +51,9 @@ public class NursingReportsController {
 			String[] headers = {"Ambulancia", "Oficina", "Sector", "Intervención policial", "Fecha", "Hora", "Profesional que registró la atención", "Último profesional que lo atendió", "Identificación", "Apellido de paciente", "Nombre de paciente", "Sexo", "Género", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a hoy", "Etnia", "Domicilio", "Localidad", "Obra social", "Medio de ingreso", "Estado", "Tipo", "Notas de triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida"};
 			logger.debug("building nursing emergency excel report");
 			// no filtering by date interval, date is mainly a decorative
-			IWorkbook wb = excelService.buildNursingEmergencyExcel(title, headers, queryFactory.queryNursingEmergency(institutionId), institutionId, fromDate, toDate);
+			IWorkbook wb = excelService.buildNursingEmergencyExcel(title, headers, queryFactory.queryNursingEmergency(institutionId), institutionId);
 
-			String filename = "Enfermería - Emergencias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Enfermería - Emergencias diarias - " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

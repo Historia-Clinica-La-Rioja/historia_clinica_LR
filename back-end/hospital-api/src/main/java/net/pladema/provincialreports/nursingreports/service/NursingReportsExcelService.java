@@ -21,6 +21,7 @@ import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtil
 
 @Service
 public class NursingReportsExcelService {
+	private static final String NURSING_EMERGENCY_OBSERVATION = "Observación: este reporte contiene información recolectada durante las últimas 24 horas, incluyendo los datos más recientes hasta la fecha de emisión";
 
 	private final DateFormat dateTools;
 
@@ -31,11 +32,11 @@ public class NursingReportsExcelService {
 		this.excelUtilsService = excelUtilsService;
 	}
 
-	public IWorkbook buildNursingEmergencyExcel(String title, String[] headers, List<NursingEmergencyConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+	public IWorkbook buildNursingEmergencyExcel(String title, String[] headers, List<NursingEmergencyConsultationDetail> result, Integer institutionId) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 26, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 26, 0, null, institutionId, NURSING_EMERGENCY_OBSERVATION));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
