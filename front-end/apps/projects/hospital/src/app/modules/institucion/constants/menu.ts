@@ -113,11 +113,11 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './ordenes/lista-trabajos',
-		permissions: [ERole.PERSONAL_DE_LABORATORIO, ERole.TECNICO, ERole.INFORMADOR, ERole.INDEXADOR],
+		permissions: [ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_IMAGENES],
 		featureFlag: [AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO]
 	},
 	{
-		text: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES ? 'app.menu.LISTADO_DE_TRABAJO_DE_IMAGENES' : 'app.menu.LISTADO_DE_TRABAJO',
+		text: AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO ? 'app.menu.LISTADO_DE_TRABAJO_DE_IMAGENES' : 'app.menu.LISTADO_DE_TRABAJO',
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './imagenes/lista-trabajos',
