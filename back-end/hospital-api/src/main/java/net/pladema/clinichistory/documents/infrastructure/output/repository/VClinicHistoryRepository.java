@@ -17,7 +17,7 @@ import java.util.List;
 public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, Long> {
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, d.patientId, ie.creationable.createdOn, COALESCE(pd.administrativeDischargeDate, pd.medicalDischargeDate), p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
+	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, d.patientId, ie.creationable.createdOn, COALESCE(pd.administrativeDischargeDate, pd.medicalDischargeDate, ie.creationable.createdOn), p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
 			" FROM InternmentEpisode ie" +
 			" LEFT JOIN PatientDischarge pd ON pd.internmentEpisodeId = ie.id" +
 			" JOIN Document d ON d.sourceId = ie.id" +
@@ -27,13 +27,13 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" WHERE d.patientId = :patientId" +
 			" AND d.sourceTypeId = '"+ SourceType.HOSPITALIZATION +"'" +
 			" AND d.creationable.createdOn >= :startDate" +
-			" AND COALESCE(pd.administrativeDischargeDate, pd.medicalDischargeDate) <= :endDate")
+			" AND COALESCE(pd.administrativeDischargeDate, pd.medicalDischargeDate, ie.creationable.createdOn) <= :endDate")
 	List<CHDocumentSummaryBo> getInternmentPatientClinicHistory(@Param("patientId") Integer patientId,
 													  			@Param("startDate") LocalDateTime startDate,
 													  			@Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, ece.patientId, d.creationable.createdOn, COALESCE(ecd.administrativeDischargeOn, ecd.medicalDischargeOn), p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
+	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, ece.patientId, d.creationable.createdOn, COALESCE(ecd.administrativeDischargeOn, ecd.medicalDischargeOn, ece.creationable.createdOn), p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
 			" FROM EmergencyCareEpisode ece" +
 			" LEFT JOIN EmergencyCareDischarge ecd ON ece.id = ecd.emergencyCareEpisodeId" +
 			" JOIN Document d ON d.sourceId = ece.id" +
@@ -44,7 +44,7 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" AND d.sourceTypeId = '"+ SourceType.EMERGENCY_CARE +"'" +
 			" AND d.typeId = '"+ DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE +"'" +
 			" AND ece.creationable.createdOn >= :startDate" +
-			" AND COALESCE(ecd.administrativeDischargeOn, ecd.medicalDischargeOn) <= :endDate")
+			" AND COALESCE(ecd.administrativeDischargeOn, ecd.medicalDischargeOn, ece.creationable.createdOn) <= :endDate")
 	List<CHDocumentSummaryBo> getEmergencyCarePatientClinicHistory(@Param("patientId") Integer patientId,
 																@Param("startDate") LocalDateTime startDate,
 																@Param("endDate") LocalDateTime endDate);
