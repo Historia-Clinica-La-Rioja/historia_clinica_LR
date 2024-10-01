@@ -18,6 +18,7 @@ export class CreateOrderService {
 	customForms$ = new Subject<Templates[] | []>();
 	firstPartAreCompleted = false;
 	templates = [];
+	selectedFiles: File[] = [];
 	private form: FormGroup<ProcedureForm>;
 	private data: CreateOutpatientServiceRequestDto[] = [];
 	private snomedConcept = null;
@@ -48,7 +49,6 @@ export class CreateOrderService {
 		});
 
 		this.subscribeFirstPartTheForm();
-
 	}
 
 	setConcept(selectedConcept: SnomedDto) {
@@ -181,6 +181,10 @@ export class CreateOrderService {
 		);
 	}
 
+	getSelectedFiles(): File[] {
+		return this.selectedFiles;
+	}
+
 	remove(index: number) {
 		this.hasTemplate.next(false);
 		this.customForms$.next(null);
@@ -226,6 +230,10 @@ export class CreateOrderService {
 			this.customForms$.next(templates);
 			this.templates = templates;
 		});
+	}
+
+	addSelectedFiles(files: File[]): void {
+		this.selectedFiles = [...this.selectedFiles, ...files];
 	}
 
 	getTemplates() {

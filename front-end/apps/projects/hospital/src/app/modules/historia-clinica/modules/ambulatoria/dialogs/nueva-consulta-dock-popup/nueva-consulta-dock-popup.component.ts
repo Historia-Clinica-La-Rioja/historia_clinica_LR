@@ -100,7 +100,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	collapsedReferenceRequest = true;
 	isEnablePopUpConfirm: boolean = true;
 	boxMessageInfo: BoxMessageInformation;
-
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
@@ -435,12 +434,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
 		const problemsToUpdate = (!nuevaConsulta.references.length) ? nuevaConsulta.problems : this.problemsToUpdate(nuevaConsulta);
+		const selectedFiles = this.createOrderService.getSelectedFiles();
 
 		if (nuevaConsulta.references.length) {
 			nuevaConsulta.problems = problemsToUpdate;
 		}
 
-		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
+		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente, selectedFiles).subscribe(
 			res => {
 				res.orderIds.forEach((orderId) => {
 					this.openNewEmergencyCareStudyConfirmationDialog([orderId]);

@@ -134,6 +134,7 @@ export class AddStudyComponent implements OnInit {
 	addOrder() {
 		this.data.createOrderService.setFileNames(this.selectedFilesShow);
 		this.data.createOrderService.setObservation(this.form.controls.observations.value);
+		this.data.createOrderService.addSelectedFiles(this.selectedFiles);
 		this.data.createOrderService.addToList();
 		this.close();
 	}
