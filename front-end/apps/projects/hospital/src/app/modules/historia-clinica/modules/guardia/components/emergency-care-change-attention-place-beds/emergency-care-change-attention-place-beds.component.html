@@ -12,13 +12,13 @@
 		</div>
 		<mat-card class="beds" id="bed-management-card">
 			<section id="bed-mapping" *ngIf="existBedManagementList && bedsAmount">
-				<app-bed-mapping (selectedBed)="onSelectBed($event)" [sectorsType]="[emergencyCareSector]"></app-bed-mapping>
+				<app-bed-mapping (selectedBed)="setSelectBed($event)" [sectorsType]="[emergencyCareSector]"></app-bed-mapping>
 			</section>
 			<section class="beds" *ngIf="existBedManagementList && !bedsAmount" fxLayout="column">
 				<h2 [translate]="'gestion-camas.home.NO_FILTERED_BEDS'"></h2>
 			</section>
 		</mat-card>
-		<app-bed-detail [bedId]="selectedBed" [bedAssign]="true" (assignedBed)="onAssignedBed($event)"></app-bed-detail>
+		<app-bed-detail [bedId]="selectedBed" [bedAssign]="true" (assignedBed)="emitAssignedBed($event)"></app-bed-detail>
 	</div>
 
 </section>

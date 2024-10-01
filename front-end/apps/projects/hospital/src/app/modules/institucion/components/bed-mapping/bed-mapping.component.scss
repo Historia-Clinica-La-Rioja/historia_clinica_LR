@@ -54,7 +54,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: auto;
-    grid-template-areas: 
+    grid-template-areas:
       "services services hierarchical hierarchical"
       "divider divider divider divider"
       "permanence care-type organization age-group";
@@ -62,7 +62,7 @@
     .services {
         grid-area: services;
     }
-    
+
     .hierarchical-units {
         grid-area: hierarchical;
     }
@@ -118,7 +118,7 @@
 
 @media (max-width: 1500px) {
     .grid-beds-container {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 
@@ -137,7 +137,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: auto;
-        grid-template-areas: 
+        grid-template-areas:
           "services hierarchical"
           "divider divider"
           "permanence care-type"

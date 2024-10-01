@@ -88,7 +88,7 @@
                     <span class="mat-body-2" *ngIf="bedInfo.probableDischargeDate">
                         {{bedInfo.probableDischargeDate | isoToDate | dateFormat : 'date'}}
                     </span>
-                    <span *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
+                    <span mat-line *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
                 </div>
             </mat-list-item>
             <mat-list-item *ngIf="bedInfo.bedNurse" id="nurse-info">

@@ -10,8 +10,8 @@ div.spinner {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 20%;
-    min-width: 10%;
+    width: 23%;
+    min-width: 23%;
 
     .results {
         margin-top: 1rem;
@@ -23,8 +23,8 @@ div.spinner {
 }
 
 .beds {
-    width: 50%;
-    min-width: 50%;
+    width: 40%;
+    min-width: 30%;
     padding: 20px;
     margin-top: 0px;
     overflow-y: auto;
@@ -33,6 +33,6 @@ div.spinner {
 }
 
 app-bed-detail {
-    width: 30%;
-	min-width: 30%;
+    width: 27%;
+	min-width: 27%;
 }

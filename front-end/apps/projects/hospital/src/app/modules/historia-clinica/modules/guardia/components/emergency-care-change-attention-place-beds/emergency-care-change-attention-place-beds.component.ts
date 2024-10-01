@@ -40,11 +40,11 @@ export class EmergencyCareChangeAttentionPlaceBedsComponent implements OnInit, O
 		});
 	}
 
-	onSelectBed(bedId: number) {
+	setSelectBed(bedId: number) {
 		this.selectedBed = bedId;
 	}
 
-	onAssignedBed(bedInfo: BedInfoDto) {
+	emitAssignedBed(bedInfo: BedInfoDto) {
 		const selectedBedDto: EmergencyCareBedDto = {
 			id: bedInfo.bed.id,
 			sectorDescription: bedInfo.bed.room.sector.description,
