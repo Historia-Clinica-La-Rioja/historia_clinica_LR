@@ -508,6 +508,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
 					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
 					prescriptionType: PrescriptionTypes.STUDY,
+					timeout: TIME_OUT,
 					patientId: this.data.idPaciente,
 					prescriptionRequest: order,
 				},
