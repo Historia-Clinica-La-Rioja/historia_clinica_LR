@@ -51,7 +51,7 @@
 							translate}}
 						</span>
 						<mat-form-field appearance="outline" class="full-width">
-							<mat-select formControlName="healthProblem" id="healthproblem">
+							<mat-select formControlName="healthProblem" id="healthproblem" placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.SELECT_PROBLEM' | translate}}">
 								<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem" (click)="setProblem(healthProblem)">
 									{{ healthProblem.pt | translate }}
 								</mat-option>

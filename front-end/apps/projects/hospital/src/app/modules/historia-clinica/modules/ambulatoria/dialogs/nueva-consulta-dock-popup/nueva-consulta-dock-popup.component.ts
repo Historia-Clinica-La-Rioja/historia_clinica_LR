@@ -777,12 +777,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	openStudiesComponent(): void {
 			const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
-
+			const medicalCoverageId = this.episodeData.medicalCoverageId;
 			this.dialog.open(AddStudyComponent, {
 				data: {
 					patientId: this.data.idPaciente,
 					createOrderService: this.createOrderService,
 					problems: problems,
+					medicalCoverageId: medicalCoverageId
 				},
 				autoFocus: false,
 				width: DialogWidth.MEDIUM,

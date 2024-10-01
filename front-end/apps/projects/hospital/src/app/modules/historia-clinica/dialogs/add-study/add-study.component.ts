@@ -26,7 +26,7 @@ export class AddStudyComponent implements OnInit {
 	studyCategoryOptions = [];
 	study_status = STUDY_STATUS_ENUM;
 	completeNow = COMPLETE_NOW;
-	radioControl : FormGroup<RadioControl>;
+	radioControl: FormGroup<RadioControl>;
 	isLinear = false;
 	size = Size.SMALL;
 	patient: PatientSummary;
@@ -52,15 +52,16 @@ export class AddStudyComponent implements OnInit {
 
 	) {
 		this.radioControl = new FormGroup<RadioControl>({
-			controlButton: new FormControl<STUDY_STATUS_ENUM>(this.study_status.REGISTERED)});
+			controlButton: new FormControl<STUDY_STATUS_ENUM>(this.study_status.REGISTERED)
+		});
 
 		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
 			patient => {
 				this.patientService.getPatientPhoto(patient.id).subscribe(photo => {
-					this.patient = this.mapperService.toPatientSummary(patient,photo, this.patientNameService);
+					this.patient = this.mapperService.toPatientSummary(patient, photo, this.patientNameService);
 				})
 			});
-	 }
+	}
 
 	ngOnInit() {
 		this.form = this.formBuilder.group({
@@ -90,7 +91,20 @@ export class AddStudyComponent implements OnInit {
 						patientMedicalCoveragesDto.map(s => this.mapperService.toPatientMedicalCoverage(s))
 				)
 			)
-			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => this.patientMedicalCoverages = patientMedicalCoverages);
+			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) => {
+				this.patientMedicalCoverages = patientMedicalCoverages;
+				this.setDefaultMedicalCoverage();
+			});
+	}
+
+	setDefaultMedicalCoverage() {
+		const defaultCoverage = this.patientMedicalCoverages.find(
+			coverage => coverage.id === this.data.medicalCoverageId
+		);
+
+		if (defaultCoverage) {
+			this.form.controls['patientMedicalCoverage'].setValue(defaultCoverage);
+		}
 	}
 
 	openMedicalCoverageDialog(): void {
@@ -163,6 +177,7 @@ export class AddStudyComponent implements OnInit {
 export interface CreateOrder {
 	patientId: number,
 	createOrderService: CreateOrderService,
+	medicalCoverageId: number,
 	problems: SnomedDto[]
 }
 
