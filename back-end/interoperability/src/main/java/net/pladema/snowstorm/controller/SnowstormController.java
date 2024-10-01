@@ -123,6 +123,7 @@ public class SnowstormController {
                 .collect(Collectors.toList());
     }
 
+
 	@GetMapping(value = "/search-medication-concepts")
 	public List<SnomedMedicationSearchDto> getMedicationConceptsWithFinancingData(@RequestParam(value = "term") String term,
 																				  @RequestParam(value = "institutionId") Integer institutionId,
@@ -160,6 +161,7 @@ public class SnowstormController {
 		result.setPt(new PreferredTermDto(snomedFinancedMedicineBo.getPt().getTerm(), "es"));
 		result.setFsn(new FullySpecifiedNamesDto(snomedFinancedMedicineBo.getPt().getTerm(), "es"));
 		result.setFinanced(snomedFinancedMedicineBo.isFinanced());
+		result.setAuditRequiredText(snomedFinancedMedicineBo.getAuditRequiredText());
 		return result;
 	}
 

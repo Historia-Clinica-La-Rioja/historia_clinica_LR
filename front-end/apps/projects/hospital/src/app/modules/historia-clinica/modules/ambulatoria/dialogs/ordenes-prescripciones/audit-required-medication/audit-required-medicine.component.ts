@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MedicineGroupAuditRequiredDto, SnomedDto } from '@api-rest/api-model';
-import { MedicineGroupService } from '@api-rest/services/medicine-group.service';
-import { Observable } from 'rxjs';
+import { SnomedDto } from '@api-rest/api-model';
+import { Observable, of } from 'rxjs';
 
 @Component({
 	selector: 'app-audit-required-medicine',
@@ -11,14 +10,14 @@ import { Observable } from 'rxjs';
 })
 export class AuditRequiredMedicationComponent implements OnInit {
 
-	groupAuditRequired$:Observable<MedicineGroupAuditRequiredDto[]>
+	groupAuditRequired$:Observable<string[]>
 
-	@Input() set auditRequiredData( value: DataMedicationGroup) {
-		this.groupAuditRequired$ = this.medicineGroupService.getMedicineGroupAuditRequired(value.medication.sctid,value.problem)
+
+	@Input() set auditRequiredData( requiredTexts: string[]) {
+		this.groupAuditRequired$ =  of(requiredTexts)
 	};
 
 	constructor(
-		private readonly medicineGroupService: MedicineGroupService,
 	) {}
 
 	ngOnInit(): void {

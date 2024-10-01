@@ -21,7 +21,7 @@ import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } 
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { DataMedicationGroup } from '../audit-required-medication/audit-required-medicine.component';
+import { SnomedFinancedAuditRequired } from '@historia-clinica/modules/ambulatoria/components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -67,7 +67,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	private MIN_INPUT_LENGTH = 1;
 
-	auditRequiredInput: DataMedicationGroup
+	auditRequiredInput: string[]
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -140,8 +140,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 		});
 
-		this.prescriptionItemForm.controls.healthProblem.valueChanges
-		.subscribe(healthProblem  => this.auditRequiredInput = {problem: healthProblem, medication: this.snomedConcept})
 	}
 
 	resetCommercialMedication(): void {
@@ -328,7 +326,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	setConcept(selectedConcept: SnomedDto, commercialPt?: string): void {
 		if (selectedConcept) {
 			this.snomedConcept = selectedConcept;
-			this.auditRequiredInput = {problem: this.prescriptionItemForm.value.healthProblem, medication: this.snomedConcept}
 			const pt = selectedConcept ? selectedConcept.pt : '';
 			this.prescriptionItemForm.controls.snomed.setValue(selectedConcept);
 			this.prescriptionItemForm.controls.snomed.disable();
@@ -348,6 +345,12 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.snomedConcept = undefined
 			this.resetCommercialMedication();
 		}
+	}
+
+
+	setConceptFinancedPharmaco(selectedConcept: SnomedFinancedAuditRequired, commercialPt?: string): void {
+		this.auditRequiredInput = selectedConcept && selectedConcept.auditRequiredText
+		this.setConcept(selectedConcept?.snomed,commercialPt)
 	}
 
 	setCommercialMedicationConcept(selectedConcept: GetCommercialMedicationSnomedDto): void {

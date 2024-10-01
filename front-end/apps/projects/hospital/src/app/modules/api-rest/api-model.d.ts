@@ -5061,6 +5061,7 @@ export interface SnomedEclDto {
 }
 
 export interface SnomedMedicationSearchDto extends SnomedSearchItemDto {
+    auditRequiredText: string[];
     financed: boolean;
 }
 
