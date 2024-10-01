@@ -1,8 +1,10 @@
-<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<h2 [translate]="'historia-clinica.evolution-charts-popup.TITLE'" [translateParams]="{ gender: patientData$ | async | showTitleByPatientData }"></h2>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<h2 mat-dialog-title [translate]="'historia-clinica.evolution-charts-popup.TITLE'" [translateParams]="{ gender: patientData$ | async | showTitleByPatientData }"></h2>
 	<button id="close" mat-icon-button mat-dialog-close>
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
-<app-patient-evolution-charts [patientId]="data.patientId" [anthropometricData]="data.anthropometricDataUploaded"></app-patient-evolution-charts>
+<div mat-dialog-content>
+	<app-patient-evolution-charts [patientId]="data.patientId" [anthropometricData]="data.anthropometricDataUploaded"></app-patient-evolution-charts>
+</div>
