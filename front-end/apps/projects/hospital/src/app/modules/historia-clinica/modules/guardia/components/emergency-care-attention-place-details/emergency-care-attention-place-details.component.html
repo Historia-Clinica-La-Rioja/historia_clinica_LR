@@ -1,6 +1,9 @@
 <div *ngIf="details$ | async as details">
 	<div *ngIf="spaceTypeDetails" class="flex-container">
-		<app-emergency-care-detail-place-type [spaceType]="selectedSpace.spaceType" [spaceTypeDetails]="spaceTypeDetails"></app-emergency-care-detail-place-type>
+		<app-emergency-care-detail-place-type
+			[spaceType]="_selectedSpace.spaceType"
+			[spaceTypeDetails]="spaceTypeDetails">
+		</app-emergency-care-detail-place-type>
 
 		<div *ngIf="spaceTypeDetails.state === SpaceState.NOT_AVAILABLE" class="more-details">
             <div *ngIf="details.moreDetails?.patient">
