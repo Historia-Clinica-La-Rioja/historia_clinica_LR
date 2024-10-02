@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
-import { AntecedentesServices } from '@api-rest/services/antecedentes.service';
+ import { AntecedentesServices } from '@api-rest/services/antecedentes.service';
 import Swal from 'sweetalert2';
 
 
@@ -35,14 +34,11 @@ export class BackgroundFamilyComponent {
 
   constructor(
     private antecedentesServices: AntecedentesServices,
-    private readonly route: ActivatedRoute,
-
+ 
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    this.route.paramMap.subscribe(params => {
-      this.patientId = Number(params.get('idPaciente'));
+    this.patientId = data.patientId
 
-    });
   }
 
   familyMembers = [
