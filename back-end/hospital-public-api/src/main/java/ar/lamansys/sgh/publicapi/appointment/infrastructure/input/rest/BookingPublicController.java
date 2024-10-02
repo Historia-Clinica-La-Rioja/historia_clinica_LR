@@ -85,7 +85,7 @@ public class BookingPublicController {
 			@PathVariable(name = "medicalCoverageId") Integer medicalCoverageId,
 			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
 			@RequestParam(name = "all", required = false, defaultValue = "true") boolean all) {
-		List<PracticeDto> result = fetchBookingPracticesByProfessionalAndHealthInsurance.run(healthcareProfessionalId, medicalCoverageId, clinicalSpecialtyId, all);
+		List<PracticeDto> result = fetchBookingPracticesByProfessionalAndHealthInsurance.run(healthcareProfessionalId, clinicalSpecialtyId, medicalCoverageId, all);
 		log.debug("Get all practices by healthcareProfessionalId {} and by HealthInsurance {} and by clinical specialty {} => {}", healthcareProfessionalId, medicalCoverageId, clinicalSpecialtyId,
 				result);
 		return ResponseEntity.ok(result);
