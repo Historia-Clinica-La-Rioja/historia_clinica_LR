@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { DateTimeDto, MasterDataDto, ProfessionalPersonDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { PatientNameService } from '@core/services/patient-name.service';
 import { EmergencyCareStatusLabels } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
 import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 
@@ -40,18 +39,12 @@ export class EmergencyCareAttentionPlaceAttentionStateComponent{
 		}
 	}
 
-	constructor(private readonly patientNameService: PatientNameService) { }
+	constructor() { }
 
 	private updateRegisterEditorInfo() {
 		if (this._professional && this._date) {
 			this.registerEditorInfo = {
-				createdBy: this.patientNameService.completeName(
-					this._professional.firstName,
-					this._professional.nameSelfDetermination,
-					this._professional.lastName,
-					this._professional.middleNames,
-					this._professional.otherLastNames
-				),
+				createdBy: this._professional.fullName,
 				date: dateTimeDtotoLocalDate(this._date)
 			};
 		}
