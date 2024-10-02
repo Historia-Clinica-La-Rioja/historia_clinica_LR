@@ -1,3 +1,4 @@
+
 <app-content width="full">
 	<section id="title" fxLayout="row" fxLayoutAlign="space-between">
 		<h2 class="page-title" [translate]="'ambulatoria.paciente.TITLE'"></h2>
@@ -264,13 +265,13 @@
 								(consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
 
-					<section *appFeatureFlag="'HABILITAR_ANTECEDENTES_FAMILIARES'">
+					<section>
 						<mat-tab id="antecedentes">
 							<ng-template mat-tab-label>
 								<span>ANTECEDENTES</span>
 							</ng-template>
 							<ng-template matTabContent>
-								<app-background-family></app-background-family>
+								<app-get-backgrounds></app-get-backgrounds>
 							</ng-template>
 						</mat-tab>
 					</section>
