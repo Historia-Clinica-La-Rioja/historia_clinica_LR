@@ -11,15 +11,20 @@
 			<mat-divider></mat-divider>
 
 			<div fxLayout="column" fxLayoutGap="25px">
-				<app-emergency-care-attention-place-attention-state [state]="details.moreDetails.state" [professional]="details.moreDetails.professional" [date]="details.moreDetails.updatedOn"></app-emergency-care-attention-place-attention-state>
+				<app-emergency-care-attention-place-attention-state
+					[state]="details.moreDetails.state"
+					[professional]="details.moreDetails.professional"
+					[date]="details.moreDetails.updatedOn">
+				</app-emergency-care-attention-place-attention-state>
 
-				<div *ngIf="details.moreDetails?.reason || details.moreDetails?.type">
-					<app-emergency-care-attention-place-entry-details [reason]="details.moreDetails.reason" [type]="details.moreDetails.type"></app-emergency-care-attention-place-entry-details>
-				</div>
+				<app-emergency-care-attention-place-entry-details *ngIf="details.moreDetails?.reason || details.moreDetails?.type"
+					[reason]="details.moreDetails.reason"
+					[type]="details.moreDetails.type">
+				</app-emergency-care-attention-place-entry-details>
 
-				<div *ngIf="details.moreDetails?.lastTriage">
-					<app-emergency-care-attention-place-last-triage [lastTriage]="details.moreDetails.lastTriage"></app-emergency-care-attention-place-last-triage>
-				</div>
+				<app-emergency-care-attention-place-last-triage *ngIf="details.moreDetails?.lastTriage"
+					[lastTriage]="details.moreDetails.lastTriage">
+				</app-emergency-care-attention-place-last-triage>
 
 				<app-emergency-care-change-attention-place-button
 					[patient]="details.moreDetails?.patient"
