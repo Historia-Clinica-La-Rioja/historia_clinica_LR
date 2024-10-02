@@ -32,7 +32,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	readonly APPLY_VACCINE_TAB_VALUE: number = 0;
 	readonly REGISTER_PREVIOUS_VACCINE_TAB_VALUE: number = 1;
 
-	selectedTab: number = this.APPLY_VACCINE_TAB_VALUE;
+	selectedTab: number = this.REGISTER_PREVIOUS_VACCINE_TAB_VALUE;
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
 	conditions: VaccineConditionsDto[];

@@ -344,7 +344,7 @@
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
 	<ng-container *ngIf="selectedTab === APPLY_VACCINE_TAB_VALUE">
 		<div *appHasRole="['ENFERMERO']">
-			<button (click)="submit()" mat-flat-button color="primary">
+			<button id="add-only-nurse" type="submit" (click)="submit()" mat-flat-button color="primary">
 				{{ 'buttons.ADD' | translate | uppercase }}
 			</button>
 		</div>
@@ -352,7 +352,7 @@
 
 	<ng-container *ngIf="selectedTab === REGISTER_PREVIOUS_VACCINE_TAB_VALUE">
 		<div *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<button (click)="submitPreviousForm()" mat-flat-button color="primary">
+			<button id="add" type="submit"  (click)="submitPreviousForm()" mat-flat-button color="primary">
 				{{ 'buttons.ADD' | translate | uppercase }}
 			</button>
 		</div>

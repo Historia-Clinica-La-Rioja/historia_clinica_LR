@@ -75,7 +75,7 @@
 	<button mat-button type="button" (click)="addVaccine()" color="primary" id="add-button" onclick="this.blur()">
 		+ {{ 'ambulatoria.paciente.vacunas.agregar_vacunas.ADD' | translate }}
 	</button>
-	<button (click)="save()" mat-flat-button color="primary" [disabled]="this.appliedVaccines.length == 0">
+	<button type="submit" (click)="save()" mat-flat-button color="primary" [disabled]="this.appliedVaccines.length == 0">
 		{{ 'buttons.CONFIRM' | translate | uppercase }}
 	</button>
 </mat-dialog-actions>
