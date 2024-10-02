@@ -402,6 +402,10 @@ databaseChangeLog:
     file: incrementales-v2_31.yml
     relativeToChangelogFile: true
 
+- include:
+    file: incrementales-v2_32.yml
+    relativeToChangelogFile: true
+
 - includeAll: # DEBE quedar al final
       path: views/
       relativeToChangelogFile: true
