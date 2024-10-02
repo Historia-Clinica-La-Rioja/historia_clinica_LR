@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DateTimeDto, MasterDataDto, ProfessionalPersonDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { PatientNameService } from '@core/services/patient-name.service';
@@ -10,7 +10,7 @@ import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/
 	templateUrl: './emergency-care-attention-place-attention-state.component.html',
 	styleUrls: ['./emergency-care-attention-place-attention-state.component.scss']
 })
-export class EmergencyCareAttentionPlaceAttentionStateComponent implements OnInit {
+export class EmergencyCareAttentionPlaceAttentionStateComponent{
 
 	readonly REGISTER_EDITOR_CASES = REGISTER_EDITOR_CASES;
 
@@ -29,20 +29,18 @@ export class EmergencyCareAttentionPlaceAttentionStateComponent implements OnIni
 	@Input() set professional(professional: ProfessionalPersonDto) {
 		if (professional) {
 			this._professional = professional;
+			this.updateRegisterEditorInfo();
 		}
 	}
 
 	@Input() set date(date: DateTimeDto) {
 		if (date) {
 			this._date = date;
+			this.updateRegisterEditorInfo();
 		}
 	}
 
 	constructor(private readonly patientNameService: PatientNameService) { }
-
-	ngOnInit() {
-		this.updateRegisterEditorInfo();
-	}
 
 	private updateRegisterEditorInfo() {
 		if (this._professional && this._date) {
