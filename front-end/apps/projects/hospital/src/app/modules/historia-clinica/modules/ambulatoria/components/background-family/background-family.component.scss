@@ -88,7 +88,7 @@ mat-card {
   left: 4px;
   background: linear-gradient(to bottom, #fff11c 0%, #fff11c 100%);
   border-radius: 2px;
-  border: 1.3px solid rgba(159, 152, 152, 0.54);
+  border: 1.3px solid rgb(159 152 152);
 
 }
 
@@ -133,7 +133,7 @@ input[type="radio"].yellow-alert-radio {
   height: 15px;
   -moz-appearance: none;
   appearance: none;
-  border: 1px solid #000;
+  border: 1.3px solid rgb(159 152 152);
   border-radius: 50%;
   transition: background-color 0.3s ease;
 
@@ -142,12 +142,12 @@ input[type="radio"].yellow-alert-radio {
 input[type="radio"].yellow-alert-radio:checked::before {
   content: "";
   display: inline-block;
-  width: 5px;
+  width: 4px;
   height: 4px;
   background-color: black;
   border-radius: 50%;
   position: relative;
-  top: -3px;
+  bottom: 4px;
   left: 4.5px;
   transform: scale(0);
 
@@ -229,13 +229,13 @@ table {
 
   background-color: #fff11c;
   border: 1px solid rgb(48 53 57);
-  width: 19.5%;
+  width: 16.2%;
   max-width: none;
 }
 
 .hermanos-name {
   position: relative;
-  right: 23%;
+  right: 30%;
 }
 
 .title-section4 {
@@ -318,7 +318,7 @@ table {
 .Vivienda {
 
   display: table-column;
-  margin-left: 33%;
+  margin-left: 27%;
 }
 
 .check-vivienda {
@@ -365,7 +365,7 @@ table {
 
 .container-instruccion {
   position: relative;
-  left: 2.5%;
+  right: 15px;
   display: flex;
 }
 
