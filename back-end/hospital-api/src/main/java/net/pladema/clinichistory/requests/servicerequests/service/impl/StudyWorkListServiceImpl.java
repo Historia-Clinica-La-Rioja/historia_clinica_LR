@@ -10,8 +10,9 @@ import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
-import net.pladema.clinichistory.requests.servicerequests.repository.domain.StudyOrderWorkListVo;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
+
+import net.pladema.vademecum.domain.SnomedBo;
 
 import org.springframework.stereotype.Service;
 
@@ -38,44 +39,44 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 		);
 		Short documentType = EDocumentType.ORDER.getId();
 
-		List<StudyOrderWorkListBo> result= studyWorkListRepository.execute(institutionId,categories, sourceTypeIds, statusId, documentType)
+		List<StudyOrderWorkListBo> result = studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType)
 				.stream()
-				.map(this::mapToBo)
+				.map(this::createStudyOrderWorkListBo)
 				.collect(Collectors.toList());
 
 		log.debug("Output -> {}", result);
 
 		return result;
-	};
+	}
 
-	private StudyOrderWorkListBo mapToBo(StudyOrderWorkListVo studyOrderWorkListVo){
+	private StudyOrderWorkListBo createStudyOrderWorkListBo(Object[] row) {
 		boolean featureFlagEnabled = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 
 		StudyOrderBasicPatientBo patientBo = StudyOrderBasicPatientBo.builder()
-				.id(studyOrderWorkListVo.getPatientVo().getId())
-				.firstName(studyOrderWorkListVo.getPatientVo().getFirstName())
-				.lastName(studyOrderWorkListVo.getPatientVo().getLastName())
-				.identificationNumber(studyOrderWorkListVo.getPatientVo().getIdentificationNumber())
-				.middleNames(featureFlagEnabled ? studyOrderWorkListVo.getPatientVo().getMiddleNames() : null)
-				.otherLastNames(featureFlagEnabled ? studyOrderWorkListVo.getPatientVo().getOtherLastNames() : null)
-				.nameSelfDetermination(featureFlagEnabled ? studyOrderWorkListVo.getPatientVo().getNameSelfDetermination() : null)
-				.genderId(studyOrderWorkListVo.getPatientVo().getGenderId())
-				.genderDescription(studyOrderWorkListVo.getPatientVo().getGenderDescription())
-				.birthDate(studyOrderWorkListVo.getPatientVo().getBirthDate())
+				.id((Integer) row[1])
+				.firstName((String) row[2])
+				.middleNames(featureFlagEnabled ? (String) row[3] : null)
+				.lastName((String) row[4])
+				.otherLastNames(featureFlagEnabled ? (String) row[5] : null)
+				.nameSelfDetermination(featureFlagEnabled ? (String) row[6] : null)
+				.identificationNumber((String) row[7])
+				.identificationTypeId((Short) row[8])
+				.genderId((Short) row[9])
+				.genderDescription((String) row[10])
+				.birthDate(row[11] != null ? ((java.sql.Date) row[11]).toLocalDate() : null)
 				.build();
 
 		return new StudyOrderWorkListBo(
-				studyOrderWorkListVo.getStudyId(),
+				(Integer) row[0],
 				patientBo,
-				studyOrderWorkListVo.getSnomed(),
-				studyOrderWorkListVo.getStudyTypeId(),
-				studyOrderWorkListVo.getRequiresTransfer(),
-				studyOrderWorkListVo.getSourceTypeId(),
-				studyOrderWorkListVo.getDeferredDate(),
-				studyOrderWorkListVo.getStatus(),
-				studyOrderWorkListVo.getCreatedDate()
+				new SnomedBo((String) row[12], (String) row[13]),
+				row[14] instanceof Short ? (Short) row[14] : null,
+				row[15] instanceof Boolean ? (Boolean) row[15] : null,
+				row[16] instanceof Short ? (Short) row[16] : null,
+				row[17] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[17]).toLocalDateTime() : null,
+				(String) row[19],
+				row[18] instanceof java.sql.Timestamp ?
+						((java.sql.Timestamp) row[18]).toLocalDateTime() : null
 		);
 	}
-
-
 }

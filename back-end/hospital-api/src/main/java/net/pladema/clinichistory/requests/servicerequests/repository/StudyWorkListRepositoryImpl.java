@@ -3,7 +3,6 @@ package net.pladema.clinichistory.requests.servicerequests.repository;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.requests.servicerequests.repository.domain.StudyOrderWorkListVo;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,43 +22,63 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<StudyOrderWorkListVo> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType) {
+	public List<Object[]> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType) {
 
 		log.debug("Input parameters -> institutionId: {}, categories: {}, sourceTypeIds: {}, statusId: {}, documentType: {}", institutionId, categories, sourceTypeIds, statusId, documentType);
 
-		String sqlString = "SELECT NEW net.pladema.clinichistory.requests.servicerequests.repository.domain.StudyOrderWorkListVo( "
-				+ "sr.id, sr.patientId, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination, pe.identificationNumber, pe.identificationTypeId, pe.genderId, g.description, pe.birthDate, "
-				+ "s.sctid, s.pt, sr.studyType, sr.requiresTransfer, sr.sourceTypeId, sr.deferredDate, sr.creationable.createdOn) "
-				+ "FROM ServiceRequest sr "
-				+ "JOIN Document d ON sr.id = d.sourceId "
-				+ "JOIN DocumentDiagnosticReport ddr ON d.id = ddr.id.documentId "
-				+ "JOIN DiagnosticReport dr ON ddr.id.diagnosticReportId = dr.id "
-				+ "JOIN Snomed s ON dr.snomedId = s.id "
-				+ "JOIN Patient AS p ON (sr.patientId = p.id) "
-				+ "JOIN Person AS pe ON (pe.id = p.personId) "
-				+ "JOIN PersonExtended pex ON (pe.id = pex.id) "
-				+ "LEFT JOIN Gender g ON (pe.genderId = g.id) "
-				+ "WHERE sr.institutionId = :institutionId "
-				+ "AND dr.statusId = :statusId "
-				+ "AND sr.categoryId IN :categories "
-				+ "AND sr.sourceTypeId IN :sourceTypeIds "
-				+ "AND d.typeId = :documentType "
-				+ "AND d.id IN ( "
-				+ "    SELECT ddr1.id.documentId "
-				+ "    FROM DocumentDiagnosticReport ddr1 "
-				+ "    GROUP BY ddr1.id.documentId "
-				+ "    HAVING COUNT(ddr1.id.documentId) = 1 "
-				+ ") ";
+		String sqlString =
+			"WITH diagnostic_report_last_modification AS (SELECT DISTINCT ON " +
+				"(sr.id, dr.snomed_id, dr.health_condition_id) dr.id, dr.status_id " +
+				"FROM diagnostic_report dr " +
+				"JOIN document_diagnostic_report ddr ON ddr.diagnostic_report_id = dr.id " +
+				"JOIN document d ON d.id = ddr.document_id " +
+				"JOIN service_request sr ON sr.id = d.source_id " +
+				"ORDER BY sr.id, dr.snomed_id, dr.health_condition_id, dr.created_on DESC ) " +
+				"SELECT " +
+				"    sr.id AS studyId, " +
+				"    sr.patient_id AS patientId, " +
+				"    pe.first_name AS firstName, " +
+				"    pe.middle_names AS middleNames, " +
+				"    pe.last_name AS lastName, " +
+				"    pe.other_last_names AS otherLastNames, " +
+				"    pex.name_self_determination AS nameSelfDetermination, " +
+				"    pe.identification_number AS identificationNumber, " +
+				"    pe.identification_type_id AS identificationTypeId, " +
+				"    pe.gender_id AS genderId, " +
+				"    g.description AS genderDescription, " +
+				"    pe.birth_date AS birthDate, " +
+				"    s.sctid AS snomedSctid, " +
+				"    s.pt AS snomedPt, " +
+				"    sr.study_type_id AS studyType, " +
+				"    sr.requires_transfer AS requiresTransfer, " +
+				"    sr.source_type_id AS sourceTypeId, " +
+				"    sr.deferred_date AS deferredDate, " +
+				"    sr.created_on AS createdDate, " +
+				"    dr.status_id AS statusId " +
+				"FROM service_request sr " +
+				"JOIN document d ON sr.id = d.source_id " +
+				"JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
+				"JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
+				"JOIN snomed s ON dr.snomed_id = s.id " +
+				"JOIN patient p ON sr.patient_id = p.id " +
+				"JOIN person pe ON pe.id = p.person_id " +
+				"JOIN person_extended pex ON pe.id = pex.person_id " +
+				"LEFT JOIN gender g ON pe.gender_id = g.id " +
+				"JOIN diagnostic_report_last_modification drlm ON drlm.id = dr.id " +
+				"WHERE sr.institution_id = :institutionId " +
+				"AND dr.status_id = :statusId " +
+				"AND sr.category_id IN (:categories) " +
+				"AND sr.source_type_id IN (:sourceTypeIds) " +
+				"AND d.type_id = :documentType ";
 
-		Query query = entityManager.createQuery(sqlString);
+		Query query = entityManager.createNativeQuery(sqlString);
 		query.setParameter("institutionId", institutionId)
 				.setParameter("categories", categories)
 				.setParameter("sourceTypeIds", sourceTypeIds)
 				.setParameter("statusId", statusId)
 				.setParameter("documentType", documentType);
 
-		return query.getResultList();
-
+		return (List<Object[]>) query.getResultList();
 	}
 
 
