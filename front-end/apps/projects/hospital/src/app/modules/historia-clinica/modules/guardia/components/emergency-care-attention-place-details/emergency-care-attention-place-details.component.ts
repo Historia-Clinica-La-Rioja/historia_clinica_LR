@@ -50,6 +50,15 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 	}
 
 	private loadDetails() {
+		const loadDetailsMethod = this.getDetailsLoaderForSpaceType(this._selectedSpace.spaceType);
+
+		if (loadDetailsMethod) {
+			this.details$ = loadDetailsMethod();
+			this.details$.subscribe(details => this.handleDetailsLoaded(details));
+		}
+	}
+
+	private getDetailsLoaderForSpaceType(spaceType: SpaceType): () => Observable<EmergencyCareDetails> {
 		const serviceMethodMap = {
 			[SpaceType.Beds]: () => this.emergencyCareAttentionPlaceService.getBedDetails(this._selectedSpace.id).pipe(
 				map((details: EmergencyCareBedDetailDto) => ({
@@ -74,16 +83,15 @@ export class EmergencyCareAttentionPlaceDetailsComponent implements OnInit {
 				}))
 			)
 		};
-		const loadDetailsMethod = serviceMethodMap[this._selectedSpace.spaceType];
-		if (loadDetailsMethod) {
-			this.details$ = loadDetailsMethod();
-			this.details$.subscribe(details => {
-				this.loadSpaceTypeDetails(details);
-				this.loadLastPlacePreview(details);
-				if (this.spaceTypeDetails.state === SpaceState.BLOCKED)
-					this.blockedAttentionPlaceDetails = this.getBlockedAttentionPlaceDetails(details);
-			});
-		}
+
+		return serviceMethodMap[spaceType];
+	}
+
+	private handleDetailsLoaded(details: EmergencyCareDetails) {
+		this.loadSpaceTypeDetails(details);
+		this.loadLastPlacePreview(details);
+		if (this.spaceTypeDetails.state === SpaceState.BLOCKED)
+			this.blockedAttentionPlaceDetails = this.getBlockedAttentionPlaceDetails(details);
 	}
 
 	private loadSpaceTypeDetails(details: EmergencyCareDetails) {
