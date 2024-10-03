@@ -45,7 +45,7 @@
 			"TEMPORARY": "Temporal",
 			"reasons": {
 				"TITLE": "Motivo de ingreso",
-				"PLACEHOLDER": "Descripción del paciente"
+				"PLACEHOLDER": "Indicar motivo de ingreso"
 			},
 			"form": {
 				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
