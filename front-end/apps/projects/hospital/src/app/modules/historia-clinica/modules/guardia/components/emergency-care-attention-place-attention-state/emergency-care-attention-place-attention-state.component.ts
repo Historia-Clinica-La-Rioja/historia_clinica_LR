@@ -13,7 +13,7 @@ export class EmergencyCareAttentionPlaceAttentionStateComponent{
 
 	readonly REGISTER_EDITOR_CASES = REGISTER_EDITOR_CASES;
 
-	registerEditorInfo: RegisterEditor | null = null;
+	registerEditorInfo: RegisterEditor;
 	statusLabel: EmergencyCareStatusLabels;
 
 	private _professional: ProfessionalPersonDto;

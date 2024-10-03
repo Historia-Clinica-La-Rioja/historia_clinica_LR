@@ -17,7 +17,7 @@ export class EmergencyCareAttentionPlaceLastTriageComponent {
 
 	_lastTriage: EmergencyCareEpisodeListTriageDto;
 	reasons: string[] = [];
-	registerEditorInfo: RegisterEditor | null = null;
+	registerEditorInfo: RegisterEditor;
 
 	@Input() set lastTriage(lastTriage: EmergencyCareEpisodeListTriageDto) {
 		if (lastTriage) {
