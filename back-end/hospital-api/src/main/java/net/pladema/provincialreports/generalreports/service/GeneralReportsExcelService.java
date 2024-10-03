@@ -33,82 +33,82 @@ public class GeneralReportsExcelService {
 
 	public IWorkbook buildEmergencyExcel(String title, String[] headers, List<EmergencyConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 16, 1, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 16, 1, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillEmergencyRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newFillRow(sheet, excelUtilsService.addTotalCountRow(workbook, sheet, 4, 7));
+		excelUtilsService.fillRow(sheet, excelUtilsService.addTotalCountRow(workbook, sheet, 4, 7));
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildDiabeticsOrHypertensivesExcel(String title, String[] headers, List<DiabeticHypertensionConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillDiabeticsOrHypertensivesRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildComplementaryStudiesExcel(String title, String[] headers, List<ComplementaryStudiesConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 16, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 16, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillComplementaryStudiesRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildMedicinesPrescriptionExcel(String title, String[] headers, List<MedicinesPrescriptionConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 20, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 20, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillMedicinesPrescriptionRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}

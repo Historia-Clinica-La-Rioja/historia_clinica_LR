@@ -52,7 +52,7 @@ public class ProgramReportsController {
 			logger.debug("building epidemiology one excel report");
 			IWorkbook wb = excelService.buildEpidemiologyOneExcel(title, headers, queryFactory.queryEpidemiologyOne(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Programas - Vigilancia epidemiológica - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Programas - Vigilancia epidemiológica - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -77,7 +77,7 @@ public class ProgramReportsController {
 			logger.debug("building epidemiology two excel report");
 			IWorkbook wb = excelService.buildEpidemiologyTwoExcel(title, headers, queryFactory.queryEpidemiologyTwo(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Programas - Notificación colectiva de epidemiología - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Programas - Notificación colectiva de epidemiología - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -102,7 +102,7 @@ public class ProgramReportsController {
 			logger.debug("building recupero general excel report");
 			IWorkbook wb = excelService.buildRecuperoGeneralExcel(title, headers, queryFactory.queryRecuperoGeneral(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Programas - Recupero de obras sociales - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Programas - Recupero de obras sociales - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -132,7 +132,7 @@ public class ProgramReportsController {
 			logger.debug("building sumar general excel report");
 			IWorkbook wb = excelService.buildSumarGeneralExcel(title, headers, queryFactory.querySumarGeneral(institutionId, fromDate, toDate, clinicalSpecialtyId, doctorId), institutionId, fromDate, toDate);
 
-			String filename = "Programas - Sumar general - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Programas - Sumar general - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -159,7 +159,7 @@ public class ProgramReportsController {
 			logger.debug("building recupero odontologico excel report");
 			IWorkbook wb = excelService.buildRecuperoOdontologicoExcel(title, headers, queryFactory.queryRecuperoOdontologico(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Programas - Sumar odontológico - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Programas - Sumar odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -186,7 +186,7 @@ public class ProgramReportsController {
 			logger.debug("building sumar odontologico excel report");
 			IWorkbook wb = excelService.buildSumarOdontologicoExcel(title, headers, queryFactory.querySumarOdontologico(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Programas - Sumar odontológico - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Programas - Sumar odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

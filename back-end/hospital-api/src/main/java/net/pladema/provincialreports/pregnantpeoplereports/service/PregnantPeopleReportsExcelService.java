@@ -31,40 +31,40 @@ public class PregnantPeopleReportsExcelService {
 
 	public IWorkbook buildPregnantAttentionsExcel(String title, String[] headers, List<PregnantAttentionsConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillPregnantAttentionsRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildPregnantControlsExcel(String title, String[] headers, List<PregnantControlsConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 6, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, PREGNANT_CONTROLS_OBSERVATION));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 6, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, PREGNANT_CONTROLS_OBSERVATION));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillPregnantControlsRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}

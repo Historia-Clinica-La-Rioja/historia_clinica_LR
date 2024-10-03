@@ -30,60 +30,60 @@ public class OlderAdultReportsExcelService {
 
 	public IWorkbook buildOlderAdultOutpatientExcel(String title, String[] headers, List<OlderAdultsOutpatientConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 12, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 12, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillOlderAdultsOutpatientRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildOlderAdultHospitalizationExcel(String title, String[] headers, List<OlderAdultsHospitalizationConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillOlderAdultsHospitalizationRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildPolypharmacyExcel(String title, String[] headers, List<PolypharmacyConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillPolypharmacyRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}

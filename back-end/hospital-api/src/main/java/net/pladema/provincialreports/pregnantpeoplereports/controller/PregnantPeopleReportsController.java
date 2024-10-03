@@ -52,7 +52,7 @@ public class PregnantPeopleReportsController {
 			logger.debug("building pregnant people attentions excel report");
 			IWorkbook wb = excelService.buildPregnantAttentionsExcel(title, headers, queryFactory.queryPregnantAttentions(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Personas gestantes - Atenciones - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Personas gestantes - Atenciones - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -77,7 +77,7 @@ public class PregnantPeopleReportsController {
 			logger.debug("building pregnant people controls excel report");
 			IWorkbook wb = excelService.buildPregnantControlsExcel(title, headers, queryFactory.queryPregnantControls(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Personas gestantes - Controles - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Personas gestantes - Controles - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

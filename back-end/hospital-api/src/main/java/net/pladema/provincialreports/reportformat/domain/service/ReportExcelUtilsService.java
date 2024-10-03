@@ -60,7 +60,7 @@ public class ReportExcelUtilsService {
 		}
 	}
 
-	public List<CellContent> newGetHeaderDataWithoutObservation(String[] subtitles, String title,
+	public List<CellContent> getHeaderDataWithoutObservation(String[] subtitles, String title,
 															 @NonNull Integer mainTitleColumns,
 															 Integer rowsBetweenTitleAndHeaders,
 															 String formattedPeriod,
@@ -86,7 +86,7 @@ public class ReportExcelUtilsService {
 		rowNum++;
 
 		data.add(new CellContent(rowNum, 0, 1, 1, "FECHA DE EMISIÓN:", boldTitleStyle));
-		data.add(new CellContent(rowNum, 1, 1, 2, newCurrentDateAsDDMMYYYY("dash"), fieldStyle));
+		data.add(new CellContent(rowNum, 1, 1, 2, currentDateAsDDMMYYYY("dash"), fieldStyle));
 		if (customObservation == null || customObservation.isEmpty()) {
 			// No observation
 			data.add(new CellContent(rowNum, 3, 2 + rowsBetweenTitleAndHeaders, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
@@ -140,7 +140,7 @@ public class ReportExcelUtilsService {
 		return data;
 	}
 
-	public void newFillRow(ISheet sheet, List<CellContent> data) {
+	public void fillRow(ISheet sheet, List<CellContent> data) {
 		Map<Integer, List<CellContent>> cellByRow = data.stream()
 				.collect(Collectors.groupingBy(CellContent::getRow));
 
@@ -151,7 +151,7 @@ public class ReportExcelUtilsService {
 		}
 	}
 
-	public ICellStyle newCreateDataCellsStyle(IWorkbook workbook) {
+	public ICellStyle createDataCellsStyle(IWorkbook workbook) {
 		ICellStyle cellStyle = workbook.createStyle();
 		cellStyle.setFontSize((short) 12);
 		cellStyle.setBorders(true);
@@ -160,7 +160,7 @@ public class ReportExcelUtilsService {
 		return cellStyle;
 	}
 
-	public void newCreateHeaderCellsStyle(IWorkbook workbook) {
+	public void createHeaderCellsStyle(IWorkbook workbook) {
 		fieldStyle = createStyle(workbook, (short) 12, false, ICellStyle.HALIGNMENT.LEFT, ICellStyle.VALIGNMENT.CENTER);
 		boldTitleStyle = createStyle(workbook, (short) 13, true, ICellStyle.HALIGNMENT.LEFT, ICellStyle.VALIGNMENT.CENTER);
 		mainTitleStyle = createStyle(workbook, (short) 24, true, ICellStyle.HALIGNMENT.CENTER, ICellStyle.VALIGNMENT.CENTER);
@@ -168,7 +168,7 @@ public class ReportExcelUtilsService {
 		sourceNoteStyle = createStyle(workbook, (short) 12, false, ICellStyle.HALIGNMENT.CENTER, ICellStyle.VALIGNMENT.TOP);
 	}
 
-	public void newSetSheetDimensions(ISheet sheet) {
+	public void setSheetDimensions(ISheet sheet) {
 		sheet.autoSizeColumns();
 
 		sheet.setRowHeight(0, 40);
@@ -177,7 +177,7 @@ public class ReportExcelUtilsService {
 		}
 	}
 
-	public void newSetMinimalHeaderDimensions(ISheet sheet) {
+	public void setMinimalHeaderDimensions(ISheet sheet) {
 		sheet.setColumnWidth(0, 175);
 		for (int columnNumber = 1; columnNumber < 10; columnNumber++) {
 			sheet.setColumnWidth(columnNumber, 125);
@@ -190,7 +190,7 @@ public class ReportExcelUtilsService {
 		cell.setCellValue(value);
 	}
 
-	public static String newCurrentDateAsDDMMYYYY(String separator) {
+	public static String currentDateAsDDMMYYYY(String separator) {
 		LocalDate currentDate = LocalDate.now();
 		String pattern;
 		switch (separator) {
@@ -206,12 +206,12 @@ public class ReportExcelUtilsService {
 		return currentDate.format(DateTimeFormatter.ofPattern(pattern));
 	}
 
-	public String newPeriodStringFromLocalDates(LocalDate startDate, LocalDate endDate) {
+	public String periodStringFromLocalDates(LocalDate startDate, LocalDate endDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_SLASH);
 		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
 	}
 
-	public String newGetPeriodForFilenameFromDates(LocalDate startDate, LocalDate endDate) {
+	public String getPeriodForFilenameFromDates(LocalDate startDate, LocalDate endDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_DOT);
 		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
 	}
