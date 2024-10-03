@@ -19,7 +19,7 @@ import net.pladema.provincialreports.epidemiologyreports.service.EpidemiologyRep
 import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
 
 @RestController
-@RequestMapping("new-epidemiologyreports")
+@RequestMapping("epidemiologyreports")
 @Tag(name = "Reports - epidemiology", description = "Reportes de epidemiología/epidemiológicos, epidemiology reports")
 public class EpidemiologyReportsController {
 	private static final Logger logger = LoggerFactory.getLogger(EpidemiologyReportsController.class);
