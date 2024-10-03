@@ -4,6 +4,7 @@ package net.pladema.clinichistory.requests.medicationrequests.service.domain;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class MedicationRequestBo implements IDocumentBo {
@@ -72,5 +74,23 @@ public class MedicationRequestBo implements IDocumentBo {
             return null;
         return patientInfo.getId();
     }
+
+	public MedicationRequestBo(MedicationRequestBo medicationRequestBo, Integer key, LocalDate value) {
+		this.id = medicationRequestBo.getId();
+		this.medicationRequestId = medicationRequestBo.getMedicationRequestId();
+		this.patientInfo = medicationRequestBo.getPatientInfo();
+		this.medicalCoverageId = medicationRequestBo.getMedicalCoverageId();
+		this.doctorId = medicationRequestBo.getDoctorId();
+		this.institutionId = medicationRequestBo.getInstitutionId();
+		this.medications = medicationRequestBo.getMedications();
+		this.hasRecipe = medicationRequestBo.isHasRecipe();
+		this.isPostDated = medicationRequestBo.getIsPostDated();
+		this.repetitions = medicationRequestBo.getRepetitions();
+		this.clinicalSpecialtyId = medicationRequestBo.getClinicalSpecialtyId();
+		this.isArchived = medicationRequestBo.getIsArchived();
+		this.uuid = medicationRequestBo.getUuid();
+		this.encounterId = key;
+		this.requestDate = value;
+	}
 
 }
