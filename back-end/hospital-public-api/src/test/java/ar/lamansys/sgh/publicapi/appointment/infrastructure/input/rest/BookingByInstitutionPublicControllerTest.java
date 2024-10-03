@@ -3,6 +3,7 @@ package ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchbookingbyinstitution.FetchBookingByInstitution;
 import ar.lamansys.sgh.publicapi.appointment.application.makeBooking.MakeBooking;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
@@ -49,7 +50,7 @@ public class BookingByInstitutionPublicControllerTest {
 	}
 
 	@Test
-	void testBookPreappointment() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+	void testBookPreappointment() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		Integer institutionId = 1;
 		BookingDto bookingDto = new BookingDto();
 		SavedBookingAppointmentDto expectedSavedBookingAppointmentDto = new SavedBookingAppointmentDto(1,1,"uuid");
@@ -62,7 +63,7 @@ public class BookingByInstitutionPublicControllerTest {
 	}
 
 	@Test
-	void testBookPreappointmentThrowsProfessionalAlreadyBookedException() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+	void testBookPreappointmentThrowsProfessionalAlreadyBookedException() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		Integer institutionId = 1;
 		BookingDto bookingDto = new BookingDto();
 
@@ -74,7 +75,7 @@ public class BookingByInstitutionPublicControllerTest {
 	}
 
 	@Test
-	void testBookPreappointmentThrowsBookingPersonMailNotExistsException() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+	void testBookPreappointmentThrowsBookingPersonMailNotExistsException() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		Integer institutionId = 1;
 		BookingDto bookingDto = new BookingDto();
 
@@ -86,7 +87,7 @@ public class BookingByInstitutionPublicControllerTest {
 	}
 
 	@Test
-	void testBookPreappointmentThrowsSaveExternalBookingException() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+	void testBookPreappointmentThrowsSaveExternalBookingException() throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		Integer institutionId = 1;
 		BookingDto bookingDto = new BookingDto();
 

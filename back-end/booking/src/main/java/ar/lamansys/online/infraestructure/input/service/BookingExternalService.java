@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 import ar.lamansys.online.application.FetchIfAppointmentCanBeAssignedAsOverturn;
 import ar.lamansys.online.application.FetchIfAppointmentWereAlreadyAssigned;
 import ar.lamansys.online.application.FetchIfOpeningHoursAllowsWebAppointments;
+import ar.lamansys.online.application.booking.CheckIfMailExists;
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingExceptionEnum;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
@@ -66,7 +68,6 @@ public class BookingExternalService implements SharedBookingPort {
 	private final BookAppointment bookAppointment;
 	private final CancelBooking cancelBooking;
 	private final FetchBookingInstitutions fetchBookingInstitutions;
-
 	private final FetchBookingInstitutionsExtended fetchBookingInstitutionsExtended;
 	private final FetchHealthcareInsurances fetchHealthcareInsurances;
 	private final FetchPracticesBySpecialtyAndHealthInsurance fetchPracticesBySpecialtyAndHealthInsurance;
@@ -79,10 +80,11 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchIfOpeningHoursAllowsWebAppointments fetchIfOpeningHoursAllowsWebAppointments;
 	private final FetchIfAppointmentWereAlreadyAssigned fetchIfAppointmentWereAlreadyAssigned;
 	private final FetchIfAppointmentCanBeAssignedAsOverturn fetchIfAppointmentCanBeAssignedAsOverturn;
+	private final CheckIfMailExists checkIfMailExists;
 
 	private final FeatureFlagsService featureFlagsService;
 
-	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		assertValidAppointment(bookingDto.getBookingAppointmentDto());
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
@@ -278,6 +280,14 @@ public class BookingExternalService implements SharedBookingPort {
 				.collect(Collectors.toList());
 		log.debug("Get availability by practiceId{} => {}", practiceId, result);
 		return result;
+	}
+
+	@Override
+	public boolean checkMailExists(String email) {
+		log.debug("Input {} =>", email);
+		boolean exists = checkIfMailExists.run(email);
+		log.debug("Output {} =>", exists);
+		return exists;
 	}
 
 	private static BookingAppointmentBo mapToAppointment(BookingAppointmentDto bookingAppointmentDto) {

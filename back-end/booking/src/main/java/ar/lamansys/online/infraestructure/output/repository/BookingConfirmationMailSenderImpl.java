@@ -47,11 +47,14 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 				.concat(uuid);
 
 		ConfirmarReservaTemplateInput message = loadDataEmail(bookingBo, cancelationLink, uuid);
+		String patientFullName = getPatientName(bookingBo, uuid);
+		String patientName = patientFullName.split(" ")[0];
+		String patientLastName = patientFullName.split(" ")[1];
 
 		this.bookingNotificationSender.send(
 				new RecipientBo(
-						bookingBo.bookingPerson.getFirstName(),
-						bookingBo.bookingPerson.getLastName(),
+						patientName,
+						patientLastName,
 						bookingBo.appointmentDataEmail,
 						bookingBo.bookingAppointment.getPhoneNumber()
 				),
@@ -63,7 +66,7 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
     protected ConfirmarReservaTemplateInput loadDataEmail(BookingBo bookingBo, String cancelationLink, String uuid) {
 		var args = ConfirmarReservaNotificationArgs.builder()
 				.cancelationLink(cancelationLink)
-				.namePatient(getPatienName(bookingBo, uuid))
+				.namePatient(getPatientName(bookingBo, uuid))
 				.date(getDate(bookingBo))
 				.nameProfessional(getProfessionalName(bookingBo))
 				.specialty(getSpecialty(bookingBo) + " - " + getPractice(bookingBo))
@@ -124,7 +127,7 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 				+ " a las " + bookingBo.bookingAppointment.getHour() + " h";
 	}
 
-    private String getPatienName(BookingBo bookingBo, String uuid) {
+    private String getPatientName(BookingBo bookingBo, String uuid) {
         var bookingPatient = bookingBo.bookingPerson;
         if(bookingPatient != null)
             return bookingPatient.getFirstName() + " " + bookingPatient.getLastName();

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
@@ -952,7 +953,7 @@ public class AppointmentsController {
 	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
 	@ResponseStatus(HttpStatus.CREATED)
 	public SavedBookingAppointmentDto createThirdPartyAppointment(@PathVariable("institutionId") Integer institutionId,
-													  @RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+													  @RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		log.debug("Input parameters -> institutionId {}, bookingDto {}", institutionId, bookingDto);
 		SavedBookingAppointmentDto result = sharedBookingPort.makeBooking(bookingDto, false);
 		log.debug("Output -> {}", result);

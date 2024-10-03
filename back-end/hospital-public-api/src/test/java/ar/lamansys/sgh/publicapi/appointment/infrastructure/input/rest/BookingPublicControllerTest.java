@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest;
 
+import ar.lamansys.sgh.publicapi.appointment.application.checkmailexists.CheckMailExists;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchBookingPracticesBySpecialtyAndHealthInsurance.FetchBookingPracticesBySpecialtyAndHealthInsurance;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchallbookinginstitutions.FetchAllBookingInstitutions;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchallbookinginstitutionsextended.FetchAllBookingInstitutionsExtended;
@@ -51,11 +52,14 @@ public class BookingPublicControllerTest {
 	@Mock
 	private FetchBookingSpecialtiesByProfessional fetchBookingSpecialtiesByProfessional;
 
+	@Mock
+	private CheckMailExists checkMailExists;
+
 	private BookingPublicController bookingPublicController;
 
 	@BeforeEach
 	public void setUp() {
-		bookingPublicController = new BookingPublicController(fetchAllBookingInstitutions, fetchAllBookingInstitutionsExtended, fetchMedicalCoverages, fetchBookingSpecialties, fetchBookingPracticesBySpecialtyAndHealthInsurance, fetchBookingPracticesByProfessionalAndHealthInsurance, fetchBookingSpecialtiesByProfessional);
+		bookingPublicController = new BookingPublicController(fetchAllBookingInstitutions, fetchAllBookingInstitutionsExtended, fetchMedicalCoverages, fetchBookingSpecialties, fetchBookingPracticesBySpecialtyAndHealthInsurance, fetchBookingPracticesByProfessionalAndHealthInsurance, fetchBookingSpecialtiesByProfessional, checkMailExists);
 	}
 
 	@Test

@@ -3,6 +3,7 @@ package ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest;
 
 import java.util.List;
 
+import ar.lamansys.sgh.publicapi.appointment.application.checkmailexists.CheckMailExists;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchBookingPracticesBySpecialtyAndHealthInsurance.FetchBookingPracticesBySpecialtyAndHealthInsurance;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchallbookinginstitutions.FetchAllBookingInstitutions;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchallbookinginstitutionsextended.FetchAllBookingInstitutionsExtended;
@@ -17,6 +18,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +44,7 @@ public class BookingPublicController {
 	private final FetchBookingPracticesBySpecialtyAndHealthInsurance fetchBookingPracticesBySpecialtyAndHealthInsurance;
 	private final FetchBookingPracticesByProfessionalAndHealthInsurance fetchBookingPracticesByProfessionalAndHealthInsurance;
 	private final FetchBookingSpecialtiesByProfessional fetchBookingSpecialtiesByProfessional;
+	private final CheckMailExists checkIfMailExists;
 
 	@GetMapping("/institution")
 	public List<BookingInstitutionDto> getAllBookingInstitutions() {
@@ -98,5 +102,12 @@ public class BookingPublicController {
 		List<BookingSpecialtyDto> result = fetchBookingSpecialtiesByProfessional.run(healthcareProfessionalId);
 		log.debug("Get all practices for professional {} => {}", healthcareProfessionalId, result);
 		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/exists/email")
+	public ResponseEntity<Boolean> existsEmail(@RequestBody String email) {
+		boolean exists = checkIfMailExists.run(email);
+		log.debug("Email {} exists : {}", email, exists);
+		return ResponseEntity.ok(exists);
 	}
 }
