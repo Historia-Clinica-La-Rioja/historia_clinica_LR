@@ -42,7 +42,10 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" JOIN Person p ON up.pk.personId = p.id" +
 			" WHERE d.patientId = :patientId" +
 			" AND d.sourceTypeId = '"+ SourceType.EMERGENCY_CARE +"'" +
-			" AND d.typeId = '"+ DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE +"'" +
+			" AND d.typeId IN (" +
+				DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE + ", " +
+				DocumentType.NURSING_EMERGENCY_CARE_EVOLUTION +
+			")" +
 			" AND ece.creationable.createdOn >= :startDate" +
 			" AND COALESCE(ecd.administrativeDischargeOn, ecd.medicalDischargeOn, ece.creationable.createdOn) <= :endDate")
 	List<CHDocumentSummaryBo> getEmergencyCarePatientClinicHistory(@Param("patientId") Integer patientId,
