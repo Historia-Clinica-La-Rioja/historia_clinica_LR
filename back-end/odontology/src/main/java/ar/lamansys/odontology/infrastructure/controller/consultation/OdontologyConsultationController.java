@@ -1,10 +1,15 @@
 package ar.lamansys.odontology.infrastructure.controller.consultation;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.mapper.ServiceRequestToFileMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +20,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +32,6 @@ import ar.lamansys.odontology.domain.consultation.CpoCeoIndicesBo;
 import ar.lamansys.odontology.domain.consultation.CreateOdontologyConsultationServiceRequestBo;
 import ar.lamansys.odontology.infrastructure.controller.consultation.dto.OdontologyConsultationDto;
 import ar.lamansys.odontology.infrastructure.controller.consultation.dto.OdontologyConsultationIndicesDto;
-import ar.lamansys.odontology.infrastructure.controller.consultation.dto.OdontologyProcedureDto;
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.CpoCeoIndicesMapper;
 import ar.lamansys.odontology.infrastructure.controller.consultation.mapper.OdontologyConsultationMapper;
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
@@ -35,6 +39,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseD
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Validated
@@ -69,38 +75,49 @@ public class OdontologyConsultationController {
     public ResponseEntity<ConsultationResponseDto> createConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId")  Integer patientId,
-            @RequestBody @Valid OdontologyConsultationDto consultationDto) {
+            @RequestPart("createConsultationDto") @Valid OdontologyConsultationDto consultationDto,
+			@RequestPart(value = "serviceRequestFiles", required = false) MultipartFile[] serviceRequestFiles
+	) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, odontologyConsultationDto {}", institutionId, patientId, consultationDto);
 
         ConsultationBo consultationBo = odontologyConsultationMapper.fromOdontologyConsultationDto(consultationDto);
 
         consultationBo.setInstitutionId(institutionId);
         consultationBo.setPatientId(patientId);
-		var newOdontologyConsultation = createOdontologyConsultation.run(consultationBo, toConsultationServiceRequestsBo(consultationDto.getProcedures()));
+		var newOdontologyConsultation = createOdontologyConsultation.run(
+			consultationBo,
+			toConsultationServiceRequestsBo(consultationDto.getServiceRequests(), asList(serviceRequestFiles))
+		);
 		ConsultationResponseDto result = new ConsultationResponseDto(newOdontologyConsultation.getEncounterId(), newOdontologyConsultation.getOrderIds());
 		return ResponseEntity.ok(result);
     }
 
+	private List<MultipartFile> asList(MultipartFile[] serviceRequestFiles) {
+		if (serviceRequestFiles == null) return Collections.emptyList();
+		else return Arrays.asList(serviceRequestFiles);
+	}
+
 	/**
 	 * Maps the service request and observations data from the DTO to one or more BOs
-	 * Creates a list of {@link CreateOdontologyConsultationServiceRequestBo} for each procedure.
-	 * @param procedures
-	 * @return
+	 * Links each service request with its corresponding file
 	 */
-	private List<CreateOdontologyConsultationServiceRequestBo> toConsultationServiceRequestsBo(List<OdontologyProcedureDto> procedures) {
-		return procedures.stream().map(procedure -> {
-			CreateOutpatientServiceRequestDto procedureServiceRequest = procedure.getServiceRequest();
+	private List<CreateOdontologyConsultationServiceRequestBo> toConsultationServiceRequestsBo(List<CreateOutpatientServiceRequestDto> serviceRequests, List<MultipartFile> serviceRequestFiles) {
 
-			if (procedureServiceRequest != null) {
+		Map<CreateOutpatientServiceRequestDto, List<MultipartFile>> requestFiles = ServiceRequestToFileMapper.
+				buildRequestFilesMap(serviceRequests, serviceRequestFiles);
+
+		return serviceRequests.stream().map(serviceRequest -> {
+
+			if (serviceRequest != null) {
 				var ret = new CreateOdontologyConsultationServiceRequestBo();
-				ret.setCategoryId(procedureServiceRequest.getCategoryId());
-				ret.setHealthConditionSctid(procedureServiceRequest.getHealthConditionSctid());
-				ret.setHealthConditionPt(procedureServiceRequest.getHealthConditionPt());
-				ret.setCreationStatusIsFinal(procedureServiceRequest.getCreationStatus().isFinal());
-				ret.setSnomedSctid(procedure.getSnomed().getSctid());
-				ret.setSnomedPt(procedure.getSnomed().getPt());
-				if (procedureServiceRequest.getObservations() != null) {
-					var observationsDto = procedureServiceRequest.getObservations();
+				ret.setCategoryId(serviceRequest.getCategoryId());
+				ret.setHealthConditionSctid(serviceRequest.getHealthConditionSctid());
+				ret.setHealthConditionPt(serviceRequest.getHealthConditionPt());
+				ret.setCreationStatusIsFinal(serviceRequest.getCreationStatus().isFinal());
+				ret.setSnomedSctid(serviceRequest.getSnomedSctid());
+				ret.setSnomedPt(serviceRequest.getSnomedPt());
+				if (serviceRequest.getObservations() != null) {
+					var observationsDto = serviceRequest.getObservations();
 					var observationData = new SharedAddObservationsCommandVo();
 					observationData.setIsPartialUpload(observationsDto.getIsPartialUpload());
 					observationData.setProcedureTemplateId(observationsDto.getProcedureTemplateId());
@@ -120,6 +137,8 @@ public class OdontologyConsultationController {
 					}
 					ret.setSharedAddObservationsCommandVo(observationData);
 				}
+				ret.setFiles(requestFiles.get(serviceRequest));
+				ret.setObservation(serviceRequest.getObservation());
 				return ret;
 			}
 			return null;

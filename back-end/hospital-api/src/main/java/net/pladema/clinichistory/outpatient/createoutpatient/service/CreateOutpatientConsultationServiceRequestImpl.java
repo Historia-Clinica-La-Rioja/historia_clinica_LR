@@ -117,11 +117,11 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 	public Integer createOdontologyServiceRequest(Integer doctorId, String categoryId, Integer institutionId, String healthConditionSctid,
 												  String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
 												  String snomedPt, Boolean createAsFinal, Optional<SharedAddObservationsCommandVo> addObservationsCommand,
-												  Integer patientId, Short patientGenderId, Short patientAge)
+												  Integer patientId, Short patientGenderId, Short patientAge, List<MultipartFile> files, String textObservation)
 	{
 		return execute(doctorId, categoryId, institutionId, healthConditionSctid, healthConditionPt, medicalCoverageId,
 				outpatientConsultationId, snomedSctid, snomedPt, createAsFinal, addObservationsCommand, patientId, patientGenderId,
-				patientAge, SourceType.ODONTOLOGY, null, Collections.emptyList());
+				patientAge, SourceType.ODONTOLOGY, textObservation, files);
 	}
 
 	@Override

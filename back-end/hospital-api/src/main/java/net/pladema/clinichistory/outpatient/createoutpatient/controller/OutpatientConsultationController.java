@@ -24,6 +24,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.Cr
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.mapper.ServiceRequestToFileMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
@@ -58,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -184,6 +186,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 		List<MultipartFile> serviceRequestFiles
 	) {
 		List<Integer> orderIds = new ArrayList<>();
+		Map<CreateOutpatientServiceRequestDto, List<MultipartFile>> requestFiles = ServiceRequestToFileMapper.
+			buildRequestFilesMap(serviceRequests, serviceRequestFiles);
 		for (int i = 0; i < serviceRequests.size(); i++) {
 			CreateOutpatientServiceRequestDto serviceRequest = serviceRequests.get(i);
 			if (serviceRequest != null) {
@@ -201,7 +205,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 				Short patientAge = patientDto.getPerson().getAge();
 				String sctid = serviceRequest.getSnomedSctid();
 				String pt = serviceRequest.getSnomedPt();
-				List<MultipartFile> files = findServiceRequestFiles(serviceRequestFiles, serviceRequest.getFileNames());
+				List<MultipartFile> files = requestFiles.get(serviceRequest);
 				String textObservation = serviceRequest.getObservation();
 
 				Integer orderId = sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(
@@ -215,13 +219,6 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 		}
 
 		return orderIds;
-	}
-
-	private List<MultipartFile> findServiceRequestFiles(List<MultipartFile> serviceRequestFiles, List<String> fileNames) {
-		return serviceRequestFiles
-		.stream()
-		.filter(file -> fileNames.contains(file.getOriginalFilename()))
-		.collect(Collectors.toList());
 	}
 
 	@Override

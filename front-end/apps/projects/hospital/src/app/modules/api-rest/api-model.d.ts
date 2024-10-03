@@ -3494,6 +3494,7 @@ export interface OdontologyConsultationDto {
     procedures?: OdontologyProcedureDto[];
     reasons?: OdontologyReasonDto[];
     references?: ReferenceDto[];
+    serviceRequests?: CreateOutpatientServiceRequestDto[];
     temporaryTeethPresent?: number;
 }
 
@@ -3567,7 +3568,6 @@ export interface OdontologyPersonalHistoryDto {
 
 export interface OdontologyProcedureDto extends Serializable {
     performedDate?: string;
-    serviceRequest?: CreateOutpatientServiceRequestDto;
     snomed: SnomedDto;
 }
 

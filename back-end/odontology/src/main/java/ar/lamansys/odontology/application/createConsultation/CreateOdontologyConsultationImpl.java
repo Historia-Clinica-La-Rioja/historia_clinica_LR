@@ -32,7 +32,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -209,38 +208,36 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		return result;
     }
 
-	/**
-	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
-	 *
-	 * @return
-	 */
 	private List<Integer> createServiceRequest(
 			Integer doctorId,
-			List<CreateOdontologyConsultationServiceRequestBo> procedures,
+			List<CreateOdontologyConsultationServiceRequestBo> serviceRequests,
 			Integer medicalCoverageId,
 			BasicPatientDto patientDto,
 			Integer institutionId,
 			Integer newConsultationId)
 	{
 		List<Integer> orderIds = new ArrayList<>();
-		for (int i = 0; i < procedures.size(); i++) {
-			var procedure = procedures.get(i);
-			if (procedure != null) {
+		for (int i = 0; i < serviceRequests.size(); i++) {
+			var serviceRequest = serviceRequests.get(i);
+			if (serviceRequest != null) {
 
-				String categoryId = procedure.getCategoryId();
-				String healthConditionSctid = procedure.getHealthConditionSctid();
-				String healthConditionPt = procedure.getHealthConditionPt();
-				SnomedDto snomed = new SnomedDto(procedure.getSnomedSctid(), procedure.getSnomedPt());
-				Boolean createWithStatusFinal = procedure.getCreationStatusIsFinal();
-				Optional<SharedAddObservationsCommandVo> addObservationsCommand = procedure.getObservations();
+				String categoryId = serviceRequest.getCategoryId();
+				String healthConditionSctid = serviceRequest.getHealthConditionSctid();
+				String healthConditionPt = serviceRequest.getHealthConditionPt();
+				SnomedDto snomed = new SnomedDto(serviceRequest.getSnomedSctid(), serviceRequest.getSnomedPt());
+				Boolean createWithStatusFinal = serviceRequest.getCreationStatusIsFinal();
+				Optional<SharedAddObservationsCommandVo> addObservationsCommand = serviceRequest.getObservations();
 
 				Integer patientId = patientDto.getId();
 				Short patientGenderId = patientDto.getPerson().getGender().getId();
 				Short patientAge = patientDto.getPerson().getAge();
 
+				var files = serviceRequest.getFiles();
+				String textObservation = serviceRequest.getObservation();
+
 				Integer orderId = sharedCreateConsultationServiceRequest.createOdontologyServiceRequest(doctorId, categoryId, institutionId,
 						healthConditionSctid, healthConditionPt, medicalCoverageId, newConsultationId, snomed.getSctid(), snomed.getPt(),
-						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge, files, textObservation);
 				orderIds.add(orderId);
 			}
 		}
