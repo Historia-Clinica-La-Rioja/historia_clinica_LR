@@ -84,9 +84,7 @@ public class OdontogramDrawingStorageImpl implements OdontogramDrawingStorage {
 					getLastActiveHistoricOdontogramDrawing.run(patientId, toothId).ifPresentOrElse(historicOdontogramDrawing -> {
 						save(patientId, List.of(mapToToothDrawingsBo(historicOdontogramDrawing)));
 						updateConsultationId(historicOdontogramDrawing.getOdontologyConsultationId(), historicOdontogramDrawing.getToothId(), patientId);
-					}, () -> {
-						lastOdontogramDrawingRepository.deleteByPatientIdAndToothId(patientId, toothId);
-					});
+					}, () -> lastOdontogramDrawingRepository.deleteByPatientIdAndToothId(patientId, toothId));
 				}
 		);
 	}

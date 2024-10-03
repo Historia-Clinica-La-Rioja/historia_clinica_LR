@@ -46,7 +46,8 @@ public class HCEToothRecordStorageImpl implements HCEToothRecordStorage {
                         "LEFT JOIN {h-schema}snomed snomed_surface ON (od.surface_id = snomed_surface.id) " +
                         "WHERE t.sctid = :toothSctid " +
                         "AND od.patient_id = :patientId " +
-						"AND hc.status_id = '55561003') " +
+						"AND hc.status_id = '55561003' " +
+						"AND hc.snomed_id = '1242') " +
                         "UNION " +
                         "(SELECT snomed_procedure.sctid as snomed_procedure_sctid , snomed_procedure.pt , " +
                         "           snomed_surface.sctid as snomed_surface_sctid , op.performed_date , op.updated_on " +
@@ -62,7 +63,8 @@ public class HCEToothRecordStorageImpl implements HCEToothRecordStorage {
                         "LEFT JOIN {h-schema}snomed snomed_surface ON (op.surface_id = snomed_surface.id) " +
                         "WHERE t.sctid = :toothSctid " +
                         "AND op.patient_id = :patientId " +
-						"AND hc.status_id = '55561003') " +
+						"AND hc.status_id = '55561003' " +
+						"AND hc.snomed_id = '1242') " +
                         "ORDER BY updated_on DESC " );
         query.setParameter("toothSctid", toothSctid);
         query.setParameter("patientId", patientId);
