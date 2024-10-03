@@ -56,7 +56,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 24, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 29, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
@@ -191,8 +191,11 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 22, style, content.getHeight());
 		excelUtilsService.setCellValue(row, 23, style, content.getWeight());
 		excelUtilsService.setCellValue(row, 24, style, content.getBmi());
-		excelUtilsService.setCellValue(row, 25, style, content.getProcedures());
-		excelUtilsService.setCellValue(row, 26, style, content.getEvolution());
+		excelUtilsService.setCellValue(row, 24, style, content.getGlycosylatedHemoglobin());
+		excelUtilsService.setCellValue(row, 25, style, content.getCardiovascularRisk());
+		excelUtilsService.setCellValue(row, 26, style, content.getBloodSugar());
+		excelUtilsService.setCellValue(row, 27, style, content.getProcedures());
+		excelUtilsService.setCellValue(row, 28, style, content.getEvolution());
 	}
 
 	public void fillNursingHospitalizationRow(IRow row, NursingHospitalizationConsultationDetail content, ICellStyle style) {

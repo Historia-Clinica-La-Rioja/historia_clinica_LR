@@ -73,7 +73,7 @@ public class NursingReportsController {
 
 		try {
 			String title = "Reporte de enfermería ambulatoria";
-			String[] headers = {"Prestador", "DNI de prestador", "Fecha de atención", "Hora", "N° de consulta", "DNI de paciente", "Nombre de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Edad a hoy", "Etnia", "Obra(s) social(es)", "Domicilio", "Localidad", "Frecuencia cardíaca (lpm)", "Frecuencia respiratoria (rpm)", "Temperatura (°C)", "Saturación periférica de hemoglobina con oxígeno (SpO2)", "Presión sistólica (mmHg)", "Presión diastólica (mmHg)", "Presión arterial media (mmHg)", "Altura (cm)", "Peso (kg)", "Índice de masa corporal", "Procedimientos", "Evolución"};
+			String[] headers = {"Prestador", "DNI de prestador", "Fecha de atención", "Hora", "N° de consulta", "DNI de paciente", "Nombre de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Edad a hoy", "Etnia", "Obra(s) social(es)", "Domicilio", "Localidad", "Frecuencia cardíaca (lpm)", "Frecuencia respiratoria (rpm)", "Temperatura (°C)", "Saturación periférica de hemoglobina con oxígeno (SpO2)", "Presión sistólica (mmHg)", "Presión diastólica (mmHg)", "Presión arterial media (mmHg)", "Altura (cm)", "Peso (kg)", "Índice de masa corporal", "Hemoglobina glicosilada (%)", "Riesgo cardiovascular (%)", "Glucemia (mg/dl)", "Procedimientos", "Evolución"};
 			logger.debug("building nursing outpatient excel report");
 			IWorkbook wb = excelService.buildNursingOutpatientExcel(title, headers, queryFactory.queryNursingOutpatient(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
