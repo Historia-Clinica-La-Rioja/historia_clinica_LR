@@ -33,9 +33,7 @@ public class ModifyReferenceByManagerRole {
 	public void run(Integer referenceId, Integer destinationInstitutionId, List<Integer> fileIds) {
 		log.debug("Input parameter -> referenceId {},  destinationInstitutionId {}, fileIds {} ", referenceId, destinationInstitutionId, fileIds);
 		assertValid(referenceId, destinationInstitutionId);
-		var oldDestinationInstitutionId = referenceStorage.getDestinationInstitutionId(referenceId);
-		if (!Objects.equals(oldDestinationInstitutionId, destinationInstitutionId))
-			referenceStorage.updateDestinationInstitution(referenceId, destinationInstitutionId);
+		referenceStorage.updateDestinationInstitution(referenceId, destinationInstitutionId);
 		if (fileIds != null && !fileIds.isEmpty())
 			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, fileIds);
 		log.debug("reference successfully modified");

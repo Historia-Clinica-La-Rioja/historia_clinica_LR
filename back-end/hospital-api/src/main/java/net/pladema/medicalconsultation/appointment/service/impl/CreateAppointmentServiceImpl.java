@@ -14,6 +14,8 @@ import net.pladema.medicalconsultation.appointment.service.exceptions.Appointmen
 
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
 
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -49,6 +51,8 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 	private final SendVirtualAppointmentEmailService sendVirtualAppointmentEmailService;
 
 	private final AppointmentService appointmentService;
+
+	private final DiaryService diaryService;
 
 	private final AppointmentReferenceStorage appointmentReferenceStorage;
 
@@ -90,7 +94,8 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private void associateReference(Integer appointmentId, Integer referenceId, Integer openingHoursId, Integer diaryId, boolean appointmentHasPhone) {
 		boolean isProtected = appointmentService.openingHourAllowedProtectedAppointment(openingHoursId, diaryId);
-		appointmentReferenceStorage.associateReferenceToAppointment(referenceId, appointmentId, isProtected);
+		Integer institutionId = diaryService.getInstitution(diaryId);
+		appointmentReferenceStorage.associateReferenceToAppointment(referenceId, appointmentId, isProtected, institutionId);
 		if (!appointmentHasPhone) {
 			ReferencePhoneBo phoneReference = appointmentReferenceStorage.getReferencePhoneData(referenceId);
 			appointmentService.updatePhoneNumber(appointmentId, phoneReference.getPhonePrefix(), phoneReference.getPhoneNumber(), UserInfo.getCurrentAuditor());

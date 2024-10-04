@@ -160,9 +160,9 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	}
 
 	@Override
-	public void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, boolean isProtected) {
+	public void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, boolean isProtected, Integer institutionId) {
 		log.debug("Associate reference to appointment {}, ", appointmentId);
-		associateReferenceAppointment.run(referenceId, appointmentId, isProtected);
+		associateReferenceAppointment.run(referenceId, appointmentId, isProtected, institutionId);
 	}
 
 	@Override

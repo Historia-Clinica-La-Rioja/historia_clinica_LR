@@ -39,7 +39,7 @@ public interface SharedReferenceCounterReference {
 
 	void updateProtectedAppointment(Integer appointment);
 
-	void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, boolean isProtected);
+	void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, boolean isProtected, Integer institutionId);
 
 	ReferencePhoneDto getReferencePhoneData(Integer referenceId);
 }

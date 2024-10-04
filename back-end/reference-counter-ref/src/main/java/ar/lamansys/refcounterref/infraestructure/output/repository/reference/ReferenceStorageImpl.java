@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -313,8 +314,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		log.debug("Input parameteres -> referenceId {}, institutionId {}", referenceId, institutionId);
 		var reference = this.referenceRepository.findById(referenceId).orElseThrow(() ->
 				new ReferenceException(ReferenceExceptionEnum.INVALID_REFERENCE_ID,  String.format("La referencia con id %s no existe", referenceId)));
-		reference.setDestinationInstitutionId(institutionId);
-		this.referenceRepository.save(reference);
+		if (!Objects.equals(reference.getDestinationInstitutionId(), institutionId)) {
+			reference.setDestinationInstitutionId(institutionId);
+			this.referenceRepository.save(reference);
+		}
 	}
 
 	@Override
