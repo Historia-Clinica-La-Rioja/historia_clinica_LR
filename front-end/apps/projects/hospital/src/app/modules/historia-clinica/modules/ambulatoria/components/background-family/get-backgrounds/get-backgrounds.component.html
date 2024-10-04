@@ -1,0 +1,55 @@
+<app-content width="full">
+    <mat-card style="padding: 0%;" class="roll">
+
+        <div class="box">
+
+            <img src="../assets/icons/icon_cuestionario.png" alt="icono_cuestionario"> Cuestionario de antecedentes
+            familiares
+
+        </div>
+
+        <div>
+            <button mat-button [matMenuTriggerFor]="menu" class="buttonAdd" mat-icon-button color="primary">
+                <mat-icon>add_circle_outlined</mat-icon>
+                <mat-menu #menu="matMenu" >
+                    <button (click)="mostrarPopup()" mat-menu-item>Completar nuevo formulario</button>
+                    <button *ngIf="lastBackgroundsFamily.length > 0" 
+                        (click)="downloadBackgroundsPdf(lastBackgroundsFamily[0].id)" 
+                        mat-menu-item>Descargar ultimo formulario</button>
+
+                </mat-menu>
+            </button>
+
+        </div>
+        <div>
+            <ul>
+                <li style="list-style-type: none" *ngFor="let questionnaire of this.lastBackgroundsFamily">
+
+                    <div>
+                        {{ questionnaire | uppercase }}
+
+                    </div>
+
+                    <div class="fecha">
+                        Fecha de registro: {{ questionnaire.createdOn | date:'short' }}
+                    </div>
+
+                    <div>
+                        Profesional: {{ questionnaire.createdByFullName }}
+                    </div>
+
+                    <button class="buttonDescarga" mat-button (click)="downloadBackgroundsPdf(questionnaire.id)">
+                        <mat-icon color="primary" fontSet="material-icons-outlined">visibility</mat-icon>
+                    </button>
+
+                    <mat-divider></mat-divider>
+
+                </li>
+            </ul>
+            <app-no-data *ngIf="this.lastBackgroundsFamily.length === 0"></app-no-data>
+
+        </div>
+
+    </mat-card>
+
+</app-content>
