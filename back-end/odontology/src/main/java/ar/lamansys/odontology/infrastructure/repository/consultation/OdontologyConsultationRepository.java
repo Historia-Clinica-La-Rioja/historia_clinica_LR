@@ -40,8 +40,8 @@ public interface OdontologyConsultationRepository extends SGXAuditableEntityJPAR
 	@Transactional(readOnly = true)
 	@Query("SELECT d.id " +
 			"FROM DocumentHealthCondition dhc " +
-			"JOIN Document d ON (dhc.pk.documentId = d.id) " +
-			"JOIN OdontologyConsultation oc ON (d.sourceId = oc.id) " +
+			"JOIN Document d ON dhc.pk.documentId = d.id " +
+			"JOIN OdontologyConsultation oc ON d.sourceId = oc.id AND oc.patientId = d.patientId " +
 			"WHERE dhc.pk.healthConditionId = :healthConditionId " +
 			"AND d.typeId = '" + DocumentType.ODONTOLOGY + "'")
 	Optional<Long> getOdontologyDocumentId(@Param("healthConditionId") Integer healthConditionId);

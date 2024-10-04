@@ -19,6 +19,8 @@ public class HistoricOdontogramDrawingStorageImpl implements HistoricOdontogramD
 
 	private final HistoricOdontogramDrawingRepository historicOdontogramDrawingRepository;
 
+	private final String REGISTRO_DE_ODONTOGRAMA_SCTID = "401281000221107";
+
 	@Override
 	public void save(HistoricOdontogramDrawing historicOdontogramDrawing) {
 		historicOdontogramDrawingRepository.save(historicOdontogramDrawing);
@@ -27,7 +29,7 @@ public class HistoricOdontogramDrawingStorageImpl implements HistoricOdontogramD
 	@Override
 	public Optional<HistoricOdontogramDrawing> getLastActiveHistoricOdontogramDrawingByPatientAndTooth(Integer patientId, String toothId) {
 		log.debug("Input parameters -> patientId {}, toothId {}", patientId, toothId);
-		Page<HistoricOdontogramDrawing> historicOdontogramDrawing = historicOdontogramDrawingRepository.getLastActiveHistoricOdontogramDrawingByPatientAndTooth(patientId, toothId, PageRequest.of(0, 1));
+		Page<HistoricOdontogramDrawing> historicOdontogramDrawing = historicOdontogramDrawingRepository.getLastActiveHistoricOdontogramDrawingByPatientAndTooth(patientId, toothId, REGISTRO_DE_ODONTOGRAMA_SCTID, PageRequest.of(0, 1));
 		Optional<HistoricOdontogramDrawing> result = historicOdontogramDrawing.getContent().stream().findFirst();
 		log.debug("Output -> {}", result);
 		return result;

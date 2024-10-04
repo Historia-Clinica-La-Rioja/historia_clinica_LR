@@ -77,7 +77,7 @@ public class MarkAsErrorAProblem {
 
         this.regenerateOutpatientDocument(problem.getId());
 		updateLastOdontogramDrawingFromHistoricPort.run(patientId, problem.getId());
-		regenerateOdontologyDocument(problem.getId());
+//		regenerateOdontologyDocument(problem.getId());
         log.debug("Output -> {}", true);
         return true;
     }

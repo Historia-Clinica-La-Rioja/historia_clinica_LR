@@ -21,17 +21,19 @@ public interface HistoricOdontogramDrawingRepository extends JpaRepository<Histo
 			"JOIN Document d ON oc.id = d.sourceId AND oc.patientId = d.patientId " +
 			"JOIN DocumentHealthCondition dhc ON d.id = dhc.pk.documentId " +
 			"JOIN HealthCondition hc ON dhc.pk.healthConditionId = hc.id " +
+			"JOIN Snomed s ON s.id = hc.snomedId " +
 			"WHERE hc.statusId = '" + ConditionClinicalStatus.ACTIVE + "' " +
 			"AND hod.toothId = :toothId " +
 			"AND hod.patientId = :patientId " +
 			"AND hc.patientId = :patientId " +
 			"AND d.typeId = '" + DocumentType.ODONTOLOGY + "' " +
 			"AND d.sourceTypeId = '" + SourceType.ODONTOLOGY + "' " +
-			"AND hc.snomedId = 1242 " +
+			"AND s.sctid LIKE :sctid " +
 			"GROUP BY hod.id " +
 			"ORDER BY hod.id DESC")
 	Page<HistoricOdontogramDrawing> getLastActiveHistoricOdontogramDrawingByPatientAndTooth(
 			@Param("patientId") Integer patientId,
 			@Param("toothId") String toothId,
+			@Param("sctid") String sctid,
 			Pageable pageable);
 }
