@@ -246,7 +246,16 @@ public enum AppFeature implements Feature {
 	HABILITAR_REPORTES_NACION_CUBE,
 
 	@Label("Indica si se debe mostrar la sección de carga de estudios en el formulario de consulta ambulatoria")
-	HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO
+	HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO,
+
+	@Label("Indica si está habilitado el módulo de internación")
+	HABILITAR_MODULO_INTERNACION,
+
+	@Label("Indica si está habilitado la funcionalidad asociada a la solicitud de referencias")
+	HABILITAR_SOLICITUD_REFERENCIA,
+
+	@Label("Indica si está habilitado el módulo de camas")
+	HABILITAR_MODULO_CAMAS,
 
 	;
 
