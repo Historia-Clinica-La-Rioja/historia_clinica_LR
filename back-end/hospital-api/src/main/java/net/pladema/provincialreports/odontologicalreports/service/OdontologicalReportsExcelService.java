@@ -29,40 +29,40 @@ public class OdontologicalReportsExcelService {
 
 	public IWorkbook buildOdontologyExcel(String title, String[] headers, List<OdontologyConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 7, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 7, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillOdontologyRow(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
 
 	public IWorkbook buildOdontologicalProceduresExcel(String title, String[] headers, List<OdontologicalProceduresConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
-		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 20, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 20, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
-		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
 			fillOdontologicalProceduresExcel(row, resultData, dataCellsStyle);
 		});
 
-		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
-		excelUtilsService.newSetSheetDimensions(sheet);
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}

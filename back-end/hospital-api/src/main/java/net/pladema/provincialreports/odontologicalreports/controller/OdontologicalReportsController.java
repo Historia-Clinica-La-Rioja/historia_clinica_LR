@@ -51,7 +51,7 @@ public class OdontologicalReportsController {
 			logger.debug("building first level promotion excel report");
 			IWorkbook wb = excelService.buildOdontologyExcel(title, headers, queryFactory.queryFirstLevelPromotion(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Odontología - Promoción de primer nivel - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Odontología - Promoción de primer nivel - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -76,7 +76,7 @@ public class OdontologicalReportsController {
 			logger.debug("building first level prevention excel report");
 			IWorkbook wb = excelService.buildOdontologyExcel(title, headers, queryFactory.queryFirstLevelPrevention(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Odontología - Prevención de primer nivel - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Odontología - Prevención de primer nivel - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -101,7 +101,7 @@ public class OdontologicalReportsController {
 			logger.debug("building first level group prevention excel report");
 			IWorkbook wb = excelService.buildOdontologyExcel(title, headers, queryFactory.queryFirstLevelGroupPrevention(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Odontología - Prevención grupal de primer nivel - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Odontología - Prevención grupal de primer nivel - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -126,7 +126,7 @@ public class OdontologicalReportsController {
 			logger.debug("building second level operation excel report");
 			IWorkbook wb = excelService.buildOdontologyExcel(title, headers, queryFactory.querySecondLevelOperation(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Odontología - Operatoria de segundo nivel - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Odontología - Operatoria de segundo nivel - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -151,7 +151,7 @@ public class OdontologicalReportsController {
 			logger.debug("building second level endodontics excel report");
 			IWorkbook wb = excelService.buildOdontologyExcel(title, headers, queryFactory.querySecondLevelEndodontics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Odontología - Endodoncia de segundo nivel - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Odontología - Endodoncia de segundo nivel - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -176,7 +176,7 @@ public class OdontologicalReportsController {
 			logger.debug("building odontological procedures excel report");
 			IWorkbook wb = excelService.buildOdontologicalProceduresExcel(title, headers, queryFactory.queryOdontologicalProcedures(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Odontología - Procedimientos odontológicos - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Odontología - Procedimientos odontológicos - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

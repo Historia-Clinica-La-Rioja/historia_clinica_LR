@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("nursingreports")
@@ -50,9 +51,9 @@ public class NursingReportsController {
 			String[] headers = {"Ambulancia", "Oficina", "Sector", "Intervención policial", "Fecha", "Hora", "Profesional que registró la atención", "Último profesional que lo atendió", "Identificación", "Apellido de paciente", "Nombre de paciente", "Sexo", "Género", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a hoy", "Etnia", "Domicilio", "Localidad", "Obra social", "Medio de ingreso", "Estado", "Tipo", "Notas de triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida"};
 			logger.debug("building nursing emergency excel report");
 			// no filtering by date interval, date is mainly a decorative
-			IWorkbook wb = excelService.buildNursingEmergencyExcel(title, headers, queryFactory.queryNursingEmergency(institutionId), institutionId, fromDate, toDate);
+			IWorkbook wb = excelService.buildNursingEmergencyExcel(title, headers, queryFactory.queryNursingEmergency(institutionId), institutionId);
 
-			String filename = "Enfermería - Emergencias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Enfermería - Emergencias diarias - " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -72,11 +73,11 @@ public class NursingReportsController {
 
 		try {
 			String title = "Reporte de enfermería ambulatoria";
-			String[] headers = {"Prestador", "DNI de prestador", "Fecha de atención", "Hora", "N° de consulta", "DNI de paciente", "Nombre de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Edad a hoy", "Etnia", "Obra(s) social(es)", "Domicilio", "Localidad", "Frecuencia cardíaca (lpm)", "Frecuencia respiratoria (rpm)", "Temperatura (°C)", "Saturación periférica de hemoglobina con oxígeno (SpO2)", "Presión sistólica (mmHg)", "Presión diastólica (mmHg)", "Presión arterial media (mmHg)", "Altura (cm)", "Peso (kg)", "Índice de masa corporal", "Procedimientos", "Evolución"};
+			String[] headers = {"Prestador", "DNI de prestador", "Fecha de atención", "Hora", "N° de consulta", "DNI de paciente", "Nombre de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Edad a hoy", "Etnia", "Obra(s) social(es)", "Domicilio", "Localidad", "Frecuencia cardíaca (lpm)", "Frecuencia respiratoria (rpm)", "Temperatura (°C)", "Saturación periférica de hemoglobina con oxígeno (SpO2)", "Presión sistólica (mmHg)", "Presión diastólica (mmHg)", "Presión arterial media (mmHg)", "Altura (cm)", "Peso (kg)", "Índice de masa corporal", "Hemoglobina glicosilada (%)", "Riesgo cardiovascular (%)", "Glucemia (mg/dl)", "Procedimientos", "Evolución"};
 			logger.debug("building nursing outpatient excel report");
 			IWorkbook wb = excelService.buildNursingOutpatientExcel(title, headers, queryFactory.queryNursingOutpatient(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Enfermería - Ambulatoria - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Enfermería - Ambulatoria - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -100,7 +101,7 @@ public class NursingReportsController {
 			logger.debug("building nursing hospitalization excel report");
 			IWorkbook wb = excelService.buildNursingHospitalizationExcel(title, headers, queryFactory.queryNursingHospitalization(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Enfermería - Internaciones - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Enfermería - Internaciones - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -124,7 +125,7 @@ public class NursingReportsController {
 			logger.debug("building nursing procedures excel report");
 			IWorkbook wb = excelService.buildNursingProceduresExcel(title, headers, queryFactory.queryNursingProcedures(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Enfermería - Procedimientos realizados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Enfermería - Procedimientos realizados - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -148,7 +149,7 @@ public class NursingReportsController {
 			logger.debug("building nursing vaccines excel report");
 			IWorkbook wb = excelService.buildNursingVaccinesExcel(title, headers, queryFactory.queryNursingVaccines(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Enfermería - Vacunas aplicadas - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Enfermería - Vacunas aplicadas - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

@@ -50,7 +50,7 @@ public class OlderAdultReportsController {
 			logger.debug("building older adult outpatient excel report");
 			IWorkbook wb = excelService.buildOlderAdultOutpatientExcel(title, headers, queryFactory.queryOlderAdultOutpatient(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Adulto mayor - Ambulatoria - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Adulto mayor - Ambulatoria - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -75,7 +75,7 @@ public class OlderAdultReportsController {
 			logger.debug("building older adult hospitalization excel report");
 			IWorkbook wb = excelService.buildOlderAdultHospitalizationExcel(title, headers, queryFactory.queryOlderAdultHospitalization(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Adulto mayor - Internación - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Adulto mayor - Internación - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
@@ -100,7 +100,7 @@ public class OlderAdultReportsController {
 			logger.debug("building polypharmacy excel report");
 			IWorkbook wb = excelService.buildPolypharmacyExcel(title, headers, queryFactory.queryPolypharmacy(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
-			String filename = "Adulto mayor - Polifarmacia - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			String filename = "Adulto mayor - Polifarmacia - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
