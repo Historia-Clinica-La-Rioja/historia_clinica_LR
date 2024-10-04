@@ -265,7 +265,7 @@
 								(consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
 
-					<section>
+					<section *appFeatureFlag="'HABILITAR_ANTECEDENTES_FAMILIARES'">
 						<mat-tab id="antecedentes">
 							<ng-template mat-tab-label>
 								<span>ANTECEDENTES</span>
