@@ -15,7 +15,6 @@ import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summ
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MenuItem } from '@presentation/components/menu/menu.component';
-import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
@@ -127,7 +126,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		private readonly interoperabilityBusService: InteroperabilityBusService,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly extensionPatientService: ExtensionPatientService,
 		private readonly odontogramService: OdontogramService,
 		private readonly permissionsService: PermissionsService,
 		private readonly dialog: MatDialog,
@@ -268,9 +266,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_ODONTOLOGY)
 			.subscribe(isOn => this.odontologyEnabled = isOn);
-
-		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
-
 
 		this.extensionWCTabs$ = this.wcExtensionsService.getClinicHistoryComponents(this.patientId);
 

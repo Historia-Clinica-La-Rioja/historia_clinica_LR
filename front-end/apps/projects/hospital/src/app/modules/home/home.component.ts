@@ -12,8 +12,6 @@ import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.comp
 import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
 import { mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
 
-import { MenuService } from '@extensions/services/menu.service';
-
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants/menu';
 
@@ -39,7 +37,6 @@ export class HomeComponent implements OnInit {
 
 	homeExtensions$: Observable<MenuItem[]>;
 	constructor(
-		private extensionMenuService: MenuService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
@@ -64,9 +61,6 @@ export class HomeComponent implements OnInit {
 				.pipe(
 					map(menu => filterItems<MenuItemDef>(menu, roleAssignment.map(r => r.role))),
 					map((menu: MenuItemDef[]) => menu.map(defToMenuItem)),
-					switchMap(items => this.extensionMenuService.getSystemMenuItems().pipe(
-						map((extesionItems: MenuItem[]) => [...items, ...extesionItems]),
-					)),
 					switchMap(items => this.homeExtensions$.pipe(
 						map((wcExtensionesMenu: MenuItem[]) => [...items, ...wcExtensionesMenu,]),
 					)),

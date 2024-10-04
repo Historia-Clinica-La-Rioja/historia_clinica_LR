@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { InstitutionExtensionComponent } from '@extensions/routes/extension/extension.component';
 
 import { InstitucionComponent } from './institucion.component';
 import { HomeComponent } from './routes/home/home.component';
@@ -49,7 +48,6 @@ const routes: Routes = [
 				canActivate: [ FeatureFlagGuard ],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
-			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent, data: { enableDownloadCSV: true } },
 			{
 				path: 'auditoria',
 				loadChildren: () => import('../auditoria/auditoria.module').then(m => m.AuditoriaModule),

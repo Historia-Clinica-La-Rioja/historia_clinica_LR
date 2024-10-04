@@ -244,17 +244,6 @@
 							<app-vacunas></app-vacunas>
 						</ng-template>
 					</mat-tab>
-					<mat-tab *ngFor="let extensionTab of extensionTabs$ | async" [id]="extensionTab.head.id">
-						<ng-template mat-tab-label>
-							<mat-icon>{{extensionTab.head.icon}}</mat-icon>
-							<app-label [label]="extensionTab.head.label"></app-label>
-						</ng-template>
-						<ng-template matTabContent>
-							<ng-container *ngIf="(extensionTab.body$ | async) as tabPage; else loading">
-								<app-page-layout [page]="tabPage"></app-page-layout>
-							</ng-container>
-						</ng-template>
-					</mat-tab>
 					<mat-tab id="tab_odontologia" *ngIf="odontologyEnabled && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>ODONTOLOGÍA</span>
