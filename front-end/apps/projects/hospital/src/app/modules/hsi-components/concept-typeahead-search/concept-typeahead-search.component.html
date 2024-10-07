@@ -23,5 +23,6 @@
 			(click)="emitButton()" matSuffix>
 			{{ buttonMessage | translate | uppercase }}
 		</button>
+		<mat-spinner *ngIf="loading" matSuffix [diameter]="25" color="primary"></mat-spinner>
 	</mat-form-field>
 </form>

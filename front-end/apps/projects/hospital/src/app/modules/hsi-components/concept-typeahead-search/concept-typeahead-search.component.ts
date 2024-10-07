@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Observable, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, mergeMap, startWith } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, mergeMap, startWith, tap } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { SnomedECL, SnomedDto, SnomedSearchItemDto } from "@api-rest/api-model";
 import { PresentationModule } from '@presentation/presentation.module';
@@ -35,15 +35,17 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 	opts: SnomedDto[] = [];
 	formGroup: UntypedFormGroup;
 
+	loading = false;
 	private readonly MIN_SEARCH_LENGTH = 3;
 
 	constructor(private readonly snowstormService: SnowstormService) {
 		this.filteredOptions = this.myControl.valueChanges.pipe(
 			startWith(''),
 			debounceTime(this.debounceTime),
+			tap(_ => this.loading = true),
 			distinctUntilChanged(),
 			mergeMap(searchValue => {
-				return this.filter(searchValue || '')
+				return this.filter(searchValue || '').pipe(tap(_ => this.loading = false))
 			})
 		);
 
