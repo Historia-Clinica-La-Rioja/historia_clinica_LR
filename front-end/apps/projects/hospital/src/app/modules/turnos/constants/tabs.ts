@@ -18,9 +18,9 @@ const allowedRolesForImageNetwork = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole
 export const ALL_TABS: Tabs[] = [
 	{ rules: { roles: allowedRolesForProfessional }, label: TabsLabel.PROFESSIONAL },
 	{ rules: { roles: allowedRolesForInstitution }, label: TabsLabel.INSTITUTION },
-	{ rules: { roles: allowedRolesForCareNetwork }, label: TabsLabel.CARE_NETWORK },
-	{ rules: { roles: allowedRolesForReport }, label: TabsLabel.REQUESTS },
+	{ rules: { roles: allowedRolesForCareNetwork , featureFlag: AppFeature.HABILITAR_SOLICITUD_REFERENCIA}, label: TabsLabel.CARE_NETWORK },
+	{ rules: { roles: allowedRolesForReport , featureFlag: AppFeature.HABILITAR_SOLICITUD_REFERENCIA}, label: TabsLabel.REQUESTS },
 	{ rules: { roles: allowedRolesForImageNetwork, featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }, label: TabsLabel.IMAGE_NETWORK },
 ];
 
-export const FF_TABS = [{ featureFlag: [AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES] }];
+export const FF_TABS = [{ featureFlag: [AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, AppFeature.HABILITAR_SOLICITUD_REFERENCIA] }];

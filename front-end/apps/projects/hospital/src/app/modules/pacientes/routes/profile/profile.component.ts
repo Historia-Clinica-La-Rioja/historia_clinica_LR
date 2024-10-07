@@ -144,6 +144,8 @@ export class ProfileComponent implements OnInit {
 
 	extensions$: Observable<WCParams[]>;
 
+	isHabilitarInternacionOn = false;
+
 	constructor(
 		private patientService: PatientService,
 		private mapperService: MapperService,
@@ -175,6 +177,7 @@ export class ProfileComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
 		this.featureFlagService.isActive(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP).subscribe(isOn => this.hideProfessions = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_INTERNACION).subscribe(isOn => this.isHabilitarInternacionOn = isOn);
 	}
 
 	ngOnInit(): void {

@@ -208,25 +208,27 @@
 			</form>
 		</app-new-consultation-expansion-section>
 
-		<app-new-consultation-expansion-section id="reference_request"
-			[title]="'odontologia.odontology-consultation-dock-popup.REFERENCE_REQUEST' | translate" icon="forum"
-			[isEmpty]="odontologyReferenceService.isEmpty()">
-			<div fxLayout="column" fxLayoutGap="2vh">
-
-				<app-titled-content-card *ngIf="!odontologyReferenceService.isEmpty()"
-					title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_REQUEST' }}">
-					<app-reference-request-list [service]="odontologyReferenceService">
-					</app-reference-request-list>
-				</app-titled-content-card>
-
-				<div>
-					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
-						(click)="odontologyReferenceService.openReferenceDialog()">
-						+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_REQUEST' | translate }}
-					</button>
+		<ng-container *ngIf="isHabilitarSolicitudReferenciaOn">
+			<app-new-consultation-expansion-section id="reference_request"
+				[title]="'odontologia.odontology-consultation-dock-popup.REFERENCE_REQUEST' | translate" icon="forum"
+				[isEmpty]="odontologyReferenceService.isEmpty()">
+				<div fxLayout="column" fxLayoutGap="2vh">
+	
+					<app-titled-content-card *ngIf="!odontologyReferenceService.isEmpty()"
+						title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_REQUEST' }}">
+						<app-reference-request-list [service]="odontologyReferenceService">
+						</app-reference-request-list>
+					</app-titled-content-card>
+	
+					<div>
+						<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
+							(click)="odontologyReferenceService.openReferenceDialog()">
+							+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_REQUEST' | translate }}
+						</button>
+					</div>
 				</div>
-			</div>
-		</app-new-consultation-expansion-section>
+			</app-new-consultation-expansion-section>
+		</ng-container>
 
 	</div>
 

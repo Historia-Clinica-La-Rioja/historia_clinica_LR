@@ -16,11 +16,13 @@
 				></app-search-create>
 			</div>
 		</section>
-		<section *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-			<h2 class="page-title">{{ 'pacientes.home.TITLE_SEARCH' | translate}}</h2>
-			<div>
-				<app-internment-patient-card  [redirect]="redirect"></app-internment-patient-card>
-			</div>
-		</section>
+		<ng-container *ngIf="isHabilitarInternacionOn">
+			<section *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+				<h2 class="page-title">{{ 'pacientes.home.TITLE_SEARCH' | translate}}</h2>
+				<div>
+					<app-internment-patient-card  [redirect]="redirect"></app-internment-patient-card>
+				</div>
+			</section>
+		</ng-container>
 	</ng-template>
 </app-content>

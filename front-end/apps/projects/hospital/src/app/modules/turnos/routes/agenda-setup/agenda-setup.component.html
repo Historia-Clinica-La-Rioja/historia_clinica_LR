@@ -157,7 +157,7 @@
 					</mat-error>
 				</div>
 
-				<div fxLayout="column" class="padding">
+				<div *ngIf="isHabilitarSolicitudReferenciaOn" fxLayout="column" class="padding">
 					<span [translate]="'turnos.agenda-setup.OPTIONAL_CARELINE'"></span>
 					<mat-form-field appearance="outline">
 						<mat-select id="care_lines" name="careLines" formControlName="careLines" multiple

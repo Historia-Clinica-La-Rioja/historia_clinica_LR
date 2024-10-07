@@ -115,6 +115,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 	}
 	isPersonalHistories: boolean = true;
+	isHabilitarSolicitudReferenciaOn = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
@@ -178,6 +179,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isOn => this.isHabilitarSolicitudReferenciaOn = isOn);
 	}
 
 	save() {

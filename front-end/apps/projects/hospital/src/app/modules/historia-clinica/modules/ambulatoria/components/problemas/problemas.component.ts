@@ -57,7 +57,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public readonly activos = PROBLEMAS_ACTIVOS;
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
 	public readonly internacion = PROBLEMAS_INTERNACION;
-	private readonly routePrefix;
 	public activeProblems$: Observable<HCEHealthConditionDto[]>;
 	public solvedProblems$: Observable<HCEHealthConditionDto[]>;
 	public chronicProblems$: Observable<HCEHealthConditionDto[]>;
@@ -65,11 +64,15 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public historicalProblemsList: HistoricalProblems[];
 	public historicalProblemsAmount: number;
 	public hideFilterPanel = false;
+	public selectedTab: number = 0;
+	isHabilitarGuardiaOn = false;
+	isHabilitarInternacionOn = false;
+
+	private readonly routePrefix;
 	private historicalProblems$: Subscription;
 	patientId: number;
 	private severityTypeMasterData: any[];
 
-	public selectedTab: number = 0;
 
 	// External clinical history attributes
 	public externalClinicalHistoryList: ExternalClinicalHistorySummaryDto[];
@@ -131,6 +134,10 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 				if (this.showExternalClinicalHistoryTab) this.loadExternalClinicalHistoryList();
 			}
 		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA).subscribe(
+            (enable) => this.isHabilitarGuardiaOn = enable);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_INTERNACION).subscribe(
+            (enable) => this.isHabilitarInternacionOn = enable);
 	}
 
 	ngOnDestroy(): void {

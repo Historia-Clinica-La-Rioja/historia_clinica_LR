@@ -150,6 +150,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	isSaving = false;
 	isEnabledParameterizedFormFF = false;
 	isEnabledStudiesFF = false;
+	isHabilitarSolicitudReferenciaOn = false
 	completeFormsData: CompleteParameterizedFormDto[] = []
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
@@ -189,6 +190,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO).subscribe(isEnabled => this.isEnabledStudiesFF = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isEnabled => this.isHabilitarSolicitudReferenciaOn = isEnabled);
 		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 	}
 

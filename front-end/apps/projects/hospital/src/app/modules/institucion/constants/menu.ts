@@ -45,6 +45,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ENFERMERO,
 			ERole.ESPECIALISTA_EN_ODONTOLOGIA
 		],
+		featureFlag: [AppFeature.HABILITAR_MODULO_INTERNACION]
 	},
 	{
 		text: 'app.menu.TURNOS',
@@ -74,6 +75,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ADMINISTRADOR_DE_CAMAS,
 			ERole.ADMINISTRATIVO_RED_DE_IMAGENES
 		],
+		featureFlag: [AppFeature.HABILITAR_MODULO_CAMAS]
 	},
 	{
 		text: 'app.menu.GUARDIA',

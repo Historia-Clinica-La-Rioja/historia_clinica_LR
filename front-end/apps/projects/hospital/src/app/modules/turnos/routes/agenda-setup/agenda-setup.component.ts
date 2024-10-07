@@ -102,6 +102,8 @@ export class AgendaSetupComponent implements OnInit {
 	diaryStartDate: Date;
 	diaryEndDate: Date;
 
+	isHabilitarSolicitudReferenciaOn = false;
+
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -129,6 +131,9 @@ export class AgendaSetupComponent implements OnInit {
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService, EDiaryType.CLASSIC);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
 			this.fieldHierarchicalUnitRequired = isOn
+		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isOn =>
+			this.isHabilitarSolicitudReferenciaOn = isOn
 		);
 	}
 

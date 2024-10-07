@@ -22,6 +22,8 @@ const routes: Routes = [
 			{
 				path: 'internaciones',
 				loadChildren: () => import('../historia-clinica/modules/ambulatoria/modules/internacion/internaciones.module').then(m => m.InternacionesModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_MODULO_INTERNACION }
 			},
 			{
 				path: 'ambulatoria',
@@ -34,6 +36,8 @@ const routes: Routes = [
 			{
 				path: 'camas',
 				loadChildren: () => import('../camas/camas.module').then(m => m.CamasModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_MODULO_CAMAS }
 			},
 			{
 				path: 'guardia',
