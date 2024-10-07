@@ -1,4 +1,7 @@
 .text {
-    word-wrap: break-word;
-    white-space: pre-wrap;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

@@ -15,7 +15,7 @@
                         <mat-list-item *ngFor="let episode of episodes" class="flex-container" (click)="goToEpisode(episode, episode?.patient)">
                             <div class="padding" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="30px" fxFlex="100%">
 
-                                <app-emergency-care-patient-summary-item id="patient" fxFlex="35%" [patient]="episode.patient" [reason]="episode.reason" [episodeTypeDescription]="episode.type?.description"></app-emergency-care-patient-summary-item>
+                                <app-emergency-care-patient-summary-item id="patient" [patient]="episode.patient" [reason]="episode.reason" [episodeTypeDescription]="episode.type?.description"></app-emergency-care-patient-summary-item>
                                 <app-emergency-care-triage-summary-item id="triage" fxFlex="30%" [episodeListTriage]="episode.triage"></app-emergency-care-triage-summary-item>
                                 <app-emergency-care-state-summary-item id="status" fxFlex="30%" [episode]="episode"></app-emergency-care-state-summary-item>
                                 <app-emergency-care-dashboard-actions fxFlex="5%"

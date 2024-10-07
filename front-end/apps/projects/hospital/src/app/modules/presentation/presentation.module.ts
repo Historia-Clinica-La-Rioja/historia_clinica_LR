@@ -343,6 +343,7 @@ import { RowContentComponent } from './components/row-content/row-content.compon
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
+		TextEllipsisTooltipComponent,
 		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,

@@ -3,3 +3,8 @@
    flex-direction: column;
    gap: 4px;
 }
+
+.full-text {
+   word-break: break-word;
+	white-space: pre-line;
+}
