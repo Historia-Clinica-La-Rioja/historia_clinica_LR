@@ -25,7 +25,7 @@ public class GetEvolutionNoteByDocumentId {
 		EmergencyCareEvolutionNoteDocumentBo result = emergencyCareEvolutionNoteDocumentService.getByDocumentId(documentId)
 				.orElseThrow(() -> new GetEvolutionNoteByDocumentIdException(GetEvolutionNoteByDocumentIdExceptionEnum.INVALID_DOCUMENT_ID, ""));
 		if (
-			result.getDocumentType() != EDocumentType.EMERGENCY_CARE_EVOLUTION.getId() ||
+			result.getDocumentType() != EDocumentType.EMERGENCY_CARE_EVOLUTION.getId() &&
 			result.getDocumentType() != EDocumentType.NURSING_EMERGENCY_CARE_EVOLUTION.getId()
 		)
 			throw new GetEvolutionNoteByDocumentIdException(GetEvolutionNoteByDocumentIdExceptionEnum.INVALID_DOCUMENT_TYPE, "");
