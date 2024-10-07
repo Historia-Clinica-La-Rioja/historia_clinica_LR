@@ -2,7 +2,6 @@ package net.pladema.staff.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,10 +22,11 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " LEFT JOIN PersonExtended pe ON p.id = pe.id"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
 			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId"
-			+ " WHERE ur.roleId = 3 " // Role 'Especialista Medico'
+			+ " WHERE ur.roleId IN :roles "
 			+ " AND ur.institutionId = :institutionId "
-			+ " AND hp.deleteable.deleted = false")
-	List<HealthcarePersonBo> getAllDoctors(@Param("institutionId") Integer institutionId);
+			+ " AND hp.deleteable.deleted = false "
+			+ " GROUP BY hp.id, hp.licenseNumber,p.id, p, pe.nameSelfDetermination")
+	List<HealthcarePersonBo> getAllDoctors(@Param("institutionId") Integer institutionId, @Param("roles") List<Short> roles);
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT(hp.id) "
