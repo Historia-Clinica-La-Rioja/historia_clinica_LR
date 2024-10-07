@@ -4,6 +4,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
+import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestStatus;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -63,6 +65,34 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" AND oc.creationable.createdOn >= :startDate")
 	List<CHDocumentSummaryBo> getOutpatientConsultationPatientClinicHistory(@Param("patientId") Integer patientId,
 																   @Param("startDate") LocalDateTime startDate);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, sr.patientId, sr.creationable.createdOn, sr.creationable.createdOn, p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
+			" FROM ServiceRequest sr" +
+			" JOIN Document d ON sr.id = d.sourceId" +
+			" JOIN Institution i ON sr.institutionId = i.id " +
+			" JOIN UserPerson up ON d.creationable.createdBy = up.pk.userId" +
+			" JOIN Person p ON up.pk.personId = p.id" +
+			" WHERE sr.patientId = :patientId" +
+			" AND sr.sourceTypeId = " + SourceType.OUTPATIENT +
+			" AND d.typeId = " + DocumentType.ORDER +
+			" AND sr.statusId IN ('" + ServiceRequestStatus.ACTIVE + "', '" + ServiceRequestStatus.COMPLETED + "')" +
+			" AND sr.creationable.createdOn >= :startDate")
+	List<CHDocumentSummaryBo> getOutpatientServiceRequestPatientClinicHistory(@Param("patientId") Integer patientId,
+																			  @Param("startDate") LocalDateTime startDate);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, cr.patientId, cr.creationable.createdOn, cr.creationable.createdOn, p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
+			" FROM ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReference cr" +
+			" JOIN Document d ON cr.id = d.sourceId" +
+			" JOIN Institution i ON cr.institutionId = i.id " +
+			" JOIN UserPerson up ON d.creationable.createdBy = up.pk.userId" +
+			" JOIN Person p ON up.pk.personId = p.id" +
+			" WHERE cr.patientId = :patientId" +
+			" AND d.typeId = " + DocumentType.COUNTER_REFERENCE +
+			" AND cr.creationable.createdOn >= :startDate")
+	List<CHDocumentSummaryBo> getCounterReferencePatientClinicHistory(@Param("patientId") Integer patientId,
+																	  @Param("startDate") LocalDateTime startDate);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.id as documentId, nc.patient_id, nc.created_on as startDate, nc.created_on as endDate, p.id as personId, i.name, d.type_id, d.source_type_id as sourceTypeId, d.source_type_id as dSourceTypeId" +
