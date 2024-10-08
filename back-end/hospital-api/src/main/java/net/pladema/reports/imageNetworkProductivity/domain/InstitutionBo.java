@@ -17,9 +17,9 @@ public class InstitutionBo {
 
 	public InstitutionBo(String name, String departmentName, String sisaCode, String stateName) {
 		this.name = name.toUpperCase();
-		this.departmentName = departmentName.toUpperCase();
+		this.departmentName = departmentName != null ? departmentName.toUpperCase() : "";
 		this.sisaCode = sisaCode;
-		this.stateName = stateName.toUpperCase();
+		this.stateName = stateName != null ? stateName.toUpperCase() : "";
 	}
 
 }

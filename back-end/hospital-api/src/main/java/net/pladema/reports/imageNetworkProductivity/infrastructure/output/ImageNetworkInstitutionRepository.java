@@ -17,9 +17,9 @@ public interface ImageNetworkInstitutionRepository extends JpaRepository<Institu
 	@Query(" SELECT NEW net.pladema.reports.imageNetworkProductivity.domain.InstitutionBo(i.name, d.description, i.sisaCode, p.description) " +
 			"FROM Institution i " +
 			"LEFT JOIN Address a ON (a.id = i.addressId) " +
-			"LEFT JOIN Province p ON (p.id = a.provinceId) " +
-			"LEFT JOIN Department d ON (d.id = a.departmentId) " +
+			"LEFT JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN Department d ON (c.departmentId = d.id) " +
+			"LEFT JOIN Province p ON (d.provinceId = p.id) " +
 			"WHERE i.id = :institutionId")
 	InstitutionBo getImageNetworkProductivityReportInstitution(@Param("institutionId") Integer institutionId);
-
 }

@@ -1,3 +1,12 @@
 databaseChangeLog:
     - logicalFilePath: incrementales-v2_32
 
+    - changeSet:
+          id: update-generated_error-report_queue
+          author: mromero
+          changes:
+              - modifyDataType:
+                    columnName:  generated_error
+                    newDataType:  TEXT
+                    tableName:  report_queue
+
