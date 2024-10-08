@@ -51,11 +51,11 @@
 			<ng-container *ngIf="!epicrisisDoc">
 				<ng-container *ngIf="!anamnesisDoc?.confirmed">
 					<button mat-menu-item class="actions"
-						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']" (click)="openAnamnesis()">
+						*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="openAnamnesis()">
 						{{'ambulatoria.paciente.card.buttons.actions.ANAMNESIS' | translate}}</button>
 				</ng-container>
 				<ng-container *ngIf="anamnesisDoc?.confirmed && lastEvolutionNoteDoc?.confirmed">
-					<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+					<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
 						(click)="openEpicrisis()">
 						{{'ambulatoria.paciente.card.buttons.actions.EPICRISIS' | translate}}
 					</button>
@@ -68,14 +68,14 @@
 						{{'ambulatoria.paciente.card.buttons.actions.EVOLUTION_NOTE' | translate}}</button>
 				</ng-container>
 				<ng-container *ngIf="this.documentEpicrisisDraft">
-					<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+					<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
 						(click)="openEpicrisisDraft()">
 						{{'ambulatoria.paciente.card.buttons.actions.EPICRISIS_DRAFT' | translate}}
 					</button>
 				</ng-container>
 			</ng-container>
 			<ng-container *ngIf="epicrisisDoc?.confirmed && !hasMedicalDischarge">
-				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
+				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
 					(click)="openMedicalDischarge()">
 					{{'ambulatoria.paciente.card.buttons.actions.MEDICAL_DISCHARGE' | translate}}
 				</button>

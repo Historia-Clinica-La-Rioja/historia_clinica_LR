@@ -47,7 +47,7 @@
             <app-obstetric-event-summary *ngIf="summary.epicrisis.obstetricEvent" data-id="obstetric-event-summary"
                 [eventData]="summary.epicrisis.obstetricEvent"></app-obstetric-event-summary>
 
-            <ng-container *appHasRole="['ESPECIALISTA_MEDICO']">
+            <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
                 <button *ngIf="!(_activeDocument?.document?.confirmed)" mat-flat-button color="primary" data-id="edit-epicrisis-button"
                     class="draft-button" type="button" (click)="editDraft()">
                     <span> {{'internaciones.epicrisis.CONTINUE_DRAFT' | translate}}</span>
