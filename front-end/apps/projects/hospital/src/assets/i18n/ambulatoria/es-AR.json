@@ -283,7 +283,7 @@
 						"ADD": "Agregar estudio"
 					},
 					"dialog": {
-						"TITLE": "Agregar estudio realizado",
+						"TITLE": "Estudios realizados",
 						"PATIENT_DATA": "Datos del paciente",
 						"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
 						"MEDICAL_COVERAGE": "Cobertura médica",

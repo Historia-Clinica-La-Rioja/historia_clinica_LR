@@ -82,10 +82,12 @@
 			</mat-dialog-content>
 
 			<mat-dialog-actions fxLayoutAlign="end center" fxLayoutAlign="space-between center">
-				<button mat-raised-button mat-button color="primary" matStepperPrevious>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.BACK' | translate}}</button>
+				<button mat-stroked-button color="primary" matStepperPrevious>
+					{{'ambulatoria.paciente.nueva-consulta.studies.dialog.BACK' | translate}}
+				</button>
 				<button [disabled]="!data.createOrderService.firstPartAreCompleted" id="next" mat-raised-button
 					matStepperNext color="primary">
-					<span class="uppercase"> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
+					<span> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
 				</button>
 			</mat-dialog-actions>
 		</mat-step>
@@ -146,15 +148,14 @@
 			</mat-dialog-content>
 
 			<mat-dialog-actions fxLayoutAlign="end center" fxLayoutAlign="space-between center">
-				<button mat-raised-button mat-button color="primary" matStepperPrevious>
+				<button mat-stroked-button color="primary" matStepperPrevious>
 					{{'ambulatoria.paciente.nueva-consulta.studies.dialog.BACK' | translate}}
 				</button>
 
 				<div *ngIf="(radioControl.controls.controlButton.value !== null && data.createOrderService.hasConcept())">
 					<button id="add_order" mat-raised-button mat-button matStepperNext color="primary"
-							(click)="addOrder()" class="uppercase" [disabled]="radioControl.controls.controlButton.value === completeNow && !form.valid">
-							<span class="uppercase">{{'ambulatoria.paciente.nueva-consulta.studies.dialog.ADD' |
-								translate}}</span>
+							(click)="addOrder()" [disabled]="radioControl.controls.controlButton.value === completeNow && !form.valid">
+							<span>+ {{'ambulatoria.paciente.nueva-consulta.studies.dialog.ADD' | translate}}</span>
 					</button>
 				</div>
 			</mat-dialog-actions>
