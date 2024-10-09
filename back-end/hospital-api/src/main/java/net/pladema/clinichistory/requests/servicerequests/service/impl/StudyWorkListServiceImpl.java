@@ -54,11 +54,10 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 
 		StudyOrderBasicPatientBo patientBo = StudyOrderBasicPatientBo.builder()
 				.id((Integer) row[1])
-				.firstName((String) row[2])
-				.middleNames(featureFlagEnabled ? (String) row[3] : null)
+				.firstName((featureFlagEnabled && row[6] != null) ? (String) row[6] : (String) row[2])
+				.middleNames((String) row[3])
 				.lastName((String) row[4])
-				.otherLastNames(featureFlagEnabled ? (String) row[5] : null)
-				.nameSelfDetermination(featureFlagEnabled ? (String) row[6] : null)
+				.otherLastNames((String) row[5])
 				.identificationNumber((String) row[7])
 				.identificationTypeId((Short) row[8])
 				.genderId((Short) row[9])
@@ -75,8 +74,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				row[16] instanceof Short ? (Short) row[16] : null,
 				row[17] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[17]).toLocalDateTime() : null,
 				(String) row[19],
-				row[18] instanceof java.sql.Timestamp ?
-						((java.sql.Timestamp) row[18]).toLocalDateTime() : null
+				row[18] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[18]).toLocalDateTime() : null
 		);
 	}
 }

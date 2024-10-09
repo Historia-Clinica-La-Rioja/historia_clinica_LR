@@ -32,8 +32,6 @@ public class StudyOrderBasicPatientDto {
 
 	private String otherLastNames;
 
-	private String nameSelfDetermination;
-
 	private String identificationNumber;
 
 	private Short identificationTypeId;

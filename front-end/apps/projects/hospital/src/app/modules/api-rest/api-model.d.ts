@@ -5222,7 +5222,6 @@ export interface StudyOrderBasicPatientDto {
     identificationTypeId: number;
     lastName: string;
     middleNames: string;
-    nameSelfDetermination: string;
     otherLastNames: string;
 }
 

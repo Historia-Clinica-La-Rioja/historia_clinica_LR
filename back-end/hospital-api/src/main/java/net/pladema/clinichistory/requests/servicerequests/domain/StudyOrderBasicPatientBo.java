@@ -31,8 +31,6 @@ public class StudyOrderBasicPatientBo {
 
 	private String otherLastNames;
 
-	private String nameSelfDetermination;
-
 	private String identificationNumber;
 
 	private Short identificationTypeId;

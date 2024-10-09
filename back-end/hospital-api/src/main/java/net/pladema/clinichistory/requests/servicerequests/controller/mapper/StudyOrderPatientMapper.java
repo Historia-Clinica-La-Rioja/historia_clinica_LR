@@ -16,7 +16,6 @@ public interface StudyOrderPatientMapper {
 	@Mapping(target = "middleNames", source = "middleNames")
 	@Mapping(target = "lastName", source = "lastName")
 	@Mapping(target = "otherLastNames", source = "otherLastNames")
-	@Mapping(target = "nameSelfDetermination", source = "nameSelfDetermination")
 	@Mapping(target = "identificationNumber", source = "identificationNumber")
 	@Mapping(target = "identificationTypeId", source = "identificationTypeId")
 	@Mapping(target = "gender", source = ".")
