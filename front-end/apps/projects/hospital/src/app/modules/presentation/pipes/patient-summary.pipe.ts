@@ -32,8 +32,8 @@ export class PatientSummaryPipe implements PipeTransform {
 
 	private getGender(genderId: number): string {
 		switch (genderId) {
-			case 1: return Gender.MALE;
-			case 2: return Gender.FEMALE;
+			case 1: return Gender.FEMALE;
+			case 2: return Gender.MALE;
 			default: return Gender.INDETERMINATE;
 		}
 	}
