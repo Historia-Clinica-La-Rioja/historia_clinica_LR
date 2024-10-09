@@ -14,6 +14,7 @@ export class SelectTemplateComponent implements OnInit {
 
 	selectedTemplate$: BehaviorSubject<ProcedureTemplateFullSummaryDto> = new BehaviorSubject<ProcedureTemplateFullSummaryDto>(null);
 	@Input() template: Templates;
+	@Input() hideName = false;
 	@Output() selectedTemplateEmit: EventEmitter<ProcedureTemplateFullSummaryDto> = new EventEmitter<ProcedureTemplateFullSummaryDto>();
 	@Output() changeValuesEmit: EventEmitter<ResultTemplate> = new EventEmitter<ResultTemplate>();
 	constructor() { }

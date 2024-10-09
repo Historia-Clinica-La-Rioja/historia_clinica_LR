@@ -110,16 +110,16 @@
 
 				<div *ngIf="radioControl.controls.controlButton.value === completeNow">
 
-					<h2 class="margin-top">{{(data.createOrderService.procedure$ | async)?.pt}}</h2>
+					<h2 class="margin-top capitalize-first-letter">{{(data.createOrderService.procedure$ | async)?.pt}}</h2>
 
-					<app-custom-form *ngIf="(data.createOrderService.hasTemplate$ | async)" [templates]="data.createOrderService.templates"
+					<app-custom-form class="margin-top" *ngIf="(data.createOrderService.hasTemplate$ | async)"
+						[templates]="data.createOrderService.templates"
 						[createOrderService]="data.createOrderService">
 					</app-custom-form>
 
 					<p class="margin-top">{{'ambulatoria.paciente.nueva-consulta.studies.dialog.OBSERVATIONS' | translate}}</p>
 					<mat-form-field appearance="outline" class="full-width">
-						<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.studies.dialog.OBSERVATIONS_DESCRIPTION'"></mat-label>
-						<textarea matInput formControlName="observations" type="text"></textarea>
+						<textarea matInput formControlName="observations" type="text" placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.OBSERVATIONS_DESCRIPTION' | translate}}"></textarea>
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 

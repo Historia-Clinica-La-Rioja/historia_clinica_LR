@@ -1,5 +1,6 @@
 <app-select-template
 	[template]="templates"
+	[hideName]="true"
 	(selectedTemplateEmit)="selectedProcedureTemplate($event, $event.id)"
 	(changeValuesEmit)="changeValues($event)">
 </app-select-template>

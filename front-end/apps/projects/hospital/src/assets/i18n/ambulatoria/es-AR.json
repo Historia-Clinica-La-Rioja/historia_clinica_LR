@@ -769,7 +769,8 @@
                     "EDUCATION": "Educación"
                 },
 				"select_template": {
-                    "TITLE": "Plantilla de resultados"
+                    "TITLE": "Plantilla de resultados",
+					"PLACEHOLDER": "Seleccione una plantilla"
 				},
                 "dialog": {
                     "TITLE_DELETE_STUDY_CONFIRM": "¿Seguro que desea eliminar el estudio?"
