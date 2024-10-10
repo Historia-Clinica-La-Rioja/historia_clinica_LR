@@ -81,7 +81,7 @@
 				</button>
 			</ng-container>
 		</div>
-		<ng-container *ngIf="hasInternmentActionsToDo || enableReports">
+		<ng-container *ngIf="anamnesisDoc && hasMedicalRole">
 			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions" (click)="openSurgicalReport()">
 				{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
 			</button>
