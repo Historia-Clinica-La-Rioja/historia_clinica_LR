@@ -64,7 +64,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchAllBookingInstitutions(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
@@ -72,7 +72,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchAllBookingInstitutionsExtended(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
@@ -80,7 +80,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchMedicalCoverages(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
@@ -88,7 +88,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchBookingSpecialties(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
@@ -96,7 +96,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchBookingPracticesBySpecialtyAndHealthInsurance(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
@@ -104,7 +104,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchBookingPracticesByProfessionalAndHealthInsurance(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
@@ -112,7 +112,7 @@ public class AppAppointmentPublicApiPermissions implements AppointmentPublicApiP
 	@Override
 	public boolean canAccessFetchBookingSpecialtiesByProfessional(){
 		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_TURNOS, -1)
+				roleAssigment -> roleAssigment.isRole(ERole.API_TURNOS)
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
