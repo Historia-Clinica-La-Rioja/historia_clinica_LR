@@ -9,7 +9,7 @@ import { Observable, switchMap } from 'rxjs';
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 
 const LABORATORIO = "108252007";
-const DIAGNOSTICO_POR_IMAGEN = "108252007";
+const DIAGNOSTICO_POR_IMAGEN = "363679005";
 
 @Component({
 	selector: 'app-work-order-list',
