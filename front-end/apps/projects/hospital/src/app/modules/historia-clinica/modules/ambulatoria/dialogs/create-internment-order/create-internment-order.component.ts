@@ -145,26 +145,27 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	private loadSelectedConceptsIntoOrderStudiesService() {
-		let conceptsToLoad: Study[];
+		const addStudy = (study: Study) => {
+			const added = this.orderStudiesService.add(study);
+			if (!added) {
+				this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED');
+			}
+		};
+
+		const mapConceptToStudy = (concept: any): Study => ({
+			snomed: {
+				sctid: concept.conceptId,
+				pt: concept.pt.term,
+			}
+		});
+
 		if (this.selectedStudyIsTemplate()) {
-			conceptsToLoad = this.selectedStudy.data.concepts.map(concept => ({
-				snomed: {
-					sctid: concept.conceptId,
-					pt: concept.pt.term
-				}
-			}));
+			const conceptsToLoad = this.selectedStudy.data.concepts.map(mapConceptToStudy);
+			conceptsToLoad.forEach(addStudy);
+		} else {
+			const conceptToLoad = mapConceptToStudy(this.selectedStudy.data);
+			addStudy(conceptToLoad);
 		}
-		else {
-			conceptsToLoad = [
-				{
-					snomed: {
-						sctid: this.selectedStudy.data.conceptId,
-						pt: this.selectedStudy.data.pt.term
-					}
-				}
-			];
-		}
-		this.orderStudiesService.addAll(conceptsToLoad);
 	}
 
 	removeStudy(i) {
