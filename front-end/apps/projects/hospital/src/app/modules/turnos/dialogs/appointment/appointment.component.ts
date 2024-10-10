@@ -686,15 +686,15 @@ export class AppointmentComponent implements OnInit {
 		})
 	}
 
-	updateAppointmentOverturn(appointmentId: number, appointmentStateId: number, overturn: boolean, patientId: number): void {
+	updateAppointmentOverturn(calendarEvent: CalendarEvent, overturn: boolean, coverageId: number): void {
 		const appointment: UpdateAppointmentDto = {
-			appointmentId: appointmentId,
-			appointmentStateId: appointmentStateId,
-			overturn: overturn,
-			patientId: patientId,
-			phonePrefix: this.data.appointmentData.phonePrefix,
-			phoneNumber: this.data.appointmentData.phoneNumber,
-			patientMedicalCoverageId: this.appointment.patientMedicalCoverageId
+			appointmentId: calendarEvent.meta.appointmentId,
+			appointmentStateId: calendarEvent.meta.appointmentStateId,
+			overturn,
+			patientId: calendarEvent.meta.patient.id,
+			phonePrefix: calendarEvent.meta.phonePrefix,
+			phoneNumber: calendarEvent.meta.phoneNumber,
+			patientMedicalCoverageId: coverageId
 		}
 		this.appointmentFacade.updateAppointment(appointment).subscribe(() => { },
 			error => {
@@ -807,14 +807,7 @@ export class AppointmentComponent implements OnInit {
 					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
 						.filter(appointment => appointment.start.getTime() == previousDate.getTime());
 
-					if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
-						this.updateAppointmentOverturn(
-							appointmentsInDate[0].meta.appointmentId,
-							appointmentsInDate[0].meta.appointmentStateId,
-							false,
-							appointmentsInDate[0].meta.patient.id
-						);
-					}
+					this.checkAndUpdateAppointmentOverturn(appointmentsInDate);
 					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 					this.data.appointmentData.date = this.selectedDate;
 					this.selectedModality = this.modalitys.find(m => m.value === updateAppointmentDate.modality);
@@ -833,6 +826,20 @@ export class AppointmentComponent implements OnInit {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
 		this.dateFormToggle();
+	}
+
+	private checkAndUpdateAppointmentOverturn = (appointmentsInDate: CalendarEvent[]) => {
+		if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
+			this.appointmentService.get(appointmentsInDate[0].meta.appointmentId).subscribe({
+				next: (app) => {
+					this.updateAppointmentOverturn(
+						appointmentsInDate[0],
+						false,
+						app.patientMedicalCoverageId
+					);
+				}
+			})
+		}
 	}
 
 	private changeRecurringTypeText(appointment: AppointmentDto) {
@@ -1092,15 +1099,7 @@ export class AppointmentComponent implements OnInit {
 						.subscribe((appointments: AppointmentListDto[]) => {
 							const appointmentsInDate = this.generateEventsFromAppointments(appointments)
 								.filter(appointment => appointment.start.getTime() == new Date(this.data.appointmentData.date).getTime());
-
-							if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
-								this.updateAppointmentOverturn(
-									appointmentsInDate[0].meta.appointmentId,
-									appointmentsInDate[0].meta.appointmentStateId,
-									false,
-									appointmentsInDate[0].meta.patient.id
-								);
-							}
+							this.checkAndUpdateAppointmentOverturn(appointmentsInDate);
 						});
 					this.closeDialog('statuschanged');
 				}
