@@ -2,6 +2,8 @@ package net.pladema.hsi.extensions.infrastructure.controller.exception;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.hsi.extensions.domain.exception.ExtensionException;
+import net.pladema.hsi.extensions.infrastructure.controller.constraint.BackofficeValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -28,6 +30,13 @@ public class ExtensionExceptionHandler {
 	protected ApiErrorMessageDto handleExtensionException(ExtensionException ex, Locale locale) {
 		logger.debug("ExtensionException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BackofficeValidationException.class })
+	protected ApiErrorMessageDto handleBackofficeValidationException(BackofficeValidationException ex, Locale locale) {
+		logger.debug("BackofficeValidationException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getMessage(), ex.getMessage());
 	}
 }
 
