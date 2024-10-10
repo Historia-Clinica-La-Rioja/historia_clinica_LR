@@ -74,10 +74,11 @@
 			<ng-template matStepLabel>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' | translate}}</ng-template>
 
 			<mat-dialog-content>
-				<h2> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' |
-							translate}}</h2>
-				<app-create-order [data]="data" [studyCategoryOptions]="studyCategoryOptions"
-					[problems]="data.problems"></app-create-order>
+				<h2> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' |	translate}}</h2>
+				<app-create-order [data]="data"
+					[studyCategoryOptions]="studyCategoryOptions"
+					[problems]="data.problems">
+				</app-create-order>
 
 			</mat-dialog-content>
 

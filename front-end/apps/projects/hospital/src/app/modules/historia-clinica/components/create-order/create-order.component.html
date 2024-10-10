@@ -12,10 +12,12 @@
 
 	<div>
 		<span>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDY' | translate}}</span>
-		<app-concept-typeahead-search [ecl]="PROCEDURE"
-			[showSearchIcon]="true" [appearanceOutline]="true"
-			[placeholder]="'ambulatoria.paciente.nueva-consulta.studies.dialog.SEARCH_STUDY'" [clearButton]="true"
-			(conceptSelected)="setConcept($event)">
-		</app-concept-typeahead-search>
+		<app-template-concept-typeahead-search
+			placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.SEARCH_STUDY' | translate}}"
+			[clearButton]="true"
+			[hideTemplateOptions]="true"
+			[showSelectedOption]="true"
+			[debounceTime]="0" [ecl]="PROCEDURE" (optionSelected)="handleStudySelected($event)">
+		</app-template-concept-typeahead-search>
 	</div>
 </form>

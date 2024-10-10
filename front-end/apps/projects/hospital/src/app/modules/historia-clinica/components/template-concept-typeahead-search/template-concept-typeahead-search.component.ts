@@ -19,6 +19,9 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() debounceTime = 300;
+	@Input() hideTemplateOptions = false;
+	@Input() clearButton = false;
+	@Input() showSelectedOption = false;
 	@Output() optionSelected = new EventEmitter<TemplateOrConceptOption>();
 
 	myControl = new UntypedFormControl();
@@ -27,6 +30,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	mostFrequentStudies: TemplateOrConceptOption[] = [];
 	initialMostFrequentStudies: TemplateOrConceptOption[] = [];
 	opts = [];
+	selectedOption: TemplateOrConceptOption;
 
 	initialTemplateOptions: TemplateOrConceptOption[] = [];
 	initialOptionsLoaded = false;
@@ -162,9 +166,24 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	}
 
 	handleOptionSelected(event) {
-		const option: TemplateOrConceptOption = event.option.value;
-		this.optionSelected.emit(option);
+		this.selectedOption = event.option.value;
+
+		if (this.selectedOption.type === TemplateOrConceptType.CONCEPT) {
+			this.myControl.setValue(this.selectedOption.data.pt.term);
+		} else if (this.selectedOption.type === TemplateOrConceptType.TEMPLATE) {
+			this.myControl.setValue(this.selectedOption.data.description);
+		}
+
+		if (!this.showSelectedOption)
+			this.myControl.reset();
+
+		this.optionSelected.emit(this.selectedOption);
+	}
+
+	clear() {
+		this.selectedOption = null;
 		this.myControl.reset();
+		this.optionSelected.emit(this.selectedOption);
 	}
 }
 

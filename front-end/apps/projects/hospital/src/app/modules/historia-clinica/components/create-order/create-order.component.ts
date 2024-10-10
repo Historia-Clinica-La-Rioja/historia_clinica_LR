@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ServiceRequestCategoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { MIN_DATE } from '@core/utils/date.utils';
 import { CreateOrder } from '@historia-clinica/dialogs/add-study/add-study.component';
+import { TemplateOrConceptOption } from '../template-concept-typeahead-search/template-concept-typeahead-search.component';
 
 const DEFAULT_STUDY = {
 	id: "71388002",
@@ -27,13 +28,18 @@ export class CreateOrderComponent implements OnInit {
 		this.setStudyCategory(DEFAULT_STUDY.id);
 	}
 
-	setConcept(conceptProblem: SnomedDto) {
-		this.data.createOrderService.setConcept(conceptProblem);
-	}
-
 	setStudyCategory(studyCategoryId: string) {
 		this.data.createOrderService.setStudyCategory(studyCategoryId);
 	}
 
+	handleStudySelected(study: TemplateOrConceptOption) {
+		let concept: SnomedDto;
+		if (study)
+			concept = {
+				pt: study.data.pt.term,
+				sctid: study.data.conceptId,
+			}
+		this.data.createOrderService.setConcept(concept);
+	}
 }
 
