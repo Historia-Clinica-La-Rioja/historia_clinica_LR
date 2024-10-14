@@ -29,6 +29,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   form: FormGroup;
   provinces$: Observable<MasterDataDto[]>;
   departments$: Observable<MasterDataDto[]>;
+  localitys$: Observable<MasterDataDto[]>;
 
   constructor(public dialogRef: MatDialogRef<NewViolentPersonInfomationComponent>,
     private addressMasterDataService: AddressMasterDataService,
@@ -42,6 +43,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
       address: new FormControl(null, Validators.required),
       addressProvinceId: new FormControl(null, Validators.required),
       addressDepartment: new FormControl(null, Validators.required),
+      addressLocality: new FormControl(null,Validators.required),
       hasAfirearm: new FormControl(null),
       hasBeenTreated: new FormControl(null),
       belongsToSecurityForces: new FormControl(null),
@@ -71,12 +73,18 @@ export class NewViolentPersonInfomationComponent implements OnInit {
         	actorPersonalData: {
           		firstName: this.form.value.name,
 				lastName: this.form.value.lastname,
-				address: this.form.value.address,
 				age: this.form.value.age,
-				municipality: {
-					id: this.form.value.addressDepartment ? this.form.value.addressDepartment.id : null,
-					provinceId: null,
-					description: null
+				address: {
+          municipality: {
+            id: this.form.value.addressDepartment ? this.form.value.addressDepartment.id : null,
+            provinceId: null,
+            description: null
+          },
+          city: {
+            id: this.form.value.addressLocality ? this.form.value.addressLocality.id : null,
+            description: this.form.value.addressLocality ? this.form.value.addressLocality.description : null,
+          },
+          homeAddress: this.form.value.address,
 				},
         	},
 			relationshipWithVictim: this.form.value.aggressorRelation,
@@ -94,7 +102,8 @@ export class NewViolentPersonInfomationComponent implements OnInit {
       	},
       	violenceViolenceFrequency: this.form.value.violenceFrequency,
       	descriptionMunicipality: this.form.value.addressDepartment ? this.form.value.addressDepartment.description : FormOption.WITHOUT_DATA,
-		canBeDeleted: true
+        descriptionLocality: this.form.value.addressLocality ? this.form.value.addressLocality.description : FormOption.WITHOUT_DATA,
+		    canBeDeleted: true,
     }
   }
 
@@ -108,6 +117,10 @@ export class NewViolentPersonInfomationComponent implements OnInit {
     this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
   }
 
+  setLocalitys(){
+    this.localitys$ = this.addressMasterDataService.getCitiesByDepartment(this.form.value.addressDepartment.id);
+  }
+
   resetAllLocaltyControls(event: Event) {
     this.resetDepartmentControl(event);
     this.form.controls.addressProvinceId.reset();
@@ -116,6 +129,11 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   resetDepartmentControl(event: Event) {
     event.stopPropagation();
     this.form.controls.addressDepartment.reset();
+  }
+
+  resetLocalityControl(event: Event){
+    event.stopPropagation();
+    this.form.controls.locality.reset();
   }
 
   resetSecurityForceTypesControl(event: Event) {

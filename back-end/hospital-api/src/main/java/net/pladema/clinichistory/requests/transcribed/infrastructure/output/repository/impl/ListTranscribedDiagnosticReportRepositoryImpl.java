@@ -61,7 +61,7 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
         log.debug("Input parameters -> patientId {}", patientId);
 
         String sqlString = "SELECT DISTINCT aoi.completed, tsr.healthcare_professional_name, tsr.creation_date, " +
-                "aoi.image_id, aoi.document_id, df.file_name, d.status_id, tsr.id " +
+                "aoi.image_id, aoi.document_id, df.file_name, d.status_id, tsr.id, aoi.appointment_id " +
                 "FROM {h-schema}appointment_order_image aoi " +
                 "JOIN {h-schema}transcribed_service_request tsr on tsr.id = aoi.transcribed_order_id " +
                 "LEFT JOIN {h-schema}document_file df ON df.id = aoi.document_id " +

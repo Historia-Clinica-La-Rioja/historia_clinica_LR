@@ -14,7 +14,9 @@ import javax.validation.ConstraintValidatorContext;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.diary.application.port.output.DiaryPort;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -25,8 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
@@ -38,8 +38,6 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 
 	private static final Logger LOG = LoggerFactory.getLogger(DiaryEmptyAppointmentsValidator.class);
 
-	private final AppointmentService appointmentService;
-
 	private final LocalDateMapper localDateMapper;
 
 	private final FeatureFlagsService featureFlagsService;
@@ -47,6 +45,8 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	private final DiaryService diaryService;
 
 	private final DiaryOpeningHoursService diaryOpeningHoursService;
+
+	private final DiaryPort diaryPort;
 
 	@Override
 	public void initialize(DiaryEmptyAppointmentsValid constraintAnnotation) {
@@ -72,14 +72,14 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 		LocalDate newStartDate = localDateMapper.fromStringToLocalDate(diaryToUpdate.getStartDate());
 		LocalDate newEndDate = localDateMapper.fromStringToLocalDate(diaryToUpdate.getEndDate());
 
-		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), null, null).stream()
-				.filter(a -> !a.getAppointmentStateId().equals(AppointmentState.BLOCKED)).collect(Collectors.toList());
+		List<UpdateDiaryAppointmentBo> appointments = diaryPort.getUpdateDiaryAppointments(diaryToUpdate.getId()).stream()
+				.filter(a -> !a.getStateId().equals(AppointmentState.BLOCKED)).collect(Collectors.toList());
 
 		HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday = diaryToUpdate.getDiaryOpeningHours().stream()
 				.collect(groupingBy(doh -> doh.getOpeningHours().getDayWeekId(),
 						HashMap<Short, List<DiaryOpeningHoursDto>>::new, Collectors.toList()));
 
-		Optional<AppointmentBo> appointmentOutOfDiaryBounds = Optional.empty();
+		Optional<UpdateDiaryAppointmentBo> appointmentOutOfDiaryBounds = Optional.empty();
 
 		if (hasChangeInDateBounds)
 			appointmentOutOfDiaryBounds = appointments.stream().filter(a -> isAppointmentOutOfNewDiaryBounds(a, newStartDate, newEndDate, diaryBo)).findFirst();
@@ -88,12 +88,12 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 			return parseErrorResponse(context, "{diary.appointments.invalid}");
 
 		if (hasChangeInOpeningHours) {
-			Optional<AppointmentBo> appointmentOutOfBoundsOpeningHours = appointments.stream().filter(a -> filterOutOfBoundsOpeningHours(a, appointmentsByWeekday, newStartDate, newEndDate)).findFirst();
+			Optional<UpdateDiaryAppointmentBo> appointmentOutOfBoundsOpeningHours = appointments.stream().filter(a -> filterOutOfBoundsOpeningHours(a, appointmentsByWeekday, newStartDate, newEndDate)).findFirst();
 
 			if (appointmentOutOfBoundsOpeningHours.isPresent())
 				return parseErrorResponse(context, "{diary.appointments.invalid}");
 
-			Optional<AppointmentBo> appointmentWithDifferentTypeOfMedicalAttention = appointments.stream().filter(a -> filterOpeningHours(a, appointmentsByWeekday)).findFirst();
+			Optional<UpdateDiaryAppointmentBo> appointmentWithDifferentTypeOfMedicalAttention = appointments.stream().filter(a -> filterOpeningHours(a, appointmentsByWeekday)).findFirst();
 
 			if (appointmentWithDifferentTypeOfMedicalAttention.isPresent())
 				return parseErrorResponse(context, "{diary.appointments.invalid.type}");
@@ -107,44 +107,44 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 		return false;
 	}
 
-	private boolean isAppointmentOutOfNewDiaryBounds(AppointmentBo appointmentBo, LocalDate newStartDate, LocalDate newEndDate, DiaryBo diaryBo){
+	private boolean isAppointmentOutOfNewDiaryBounds(UpdateDiaryAppointmentBo appointmentBo, LocalDate newStartDate, LocalDate newEndDate, DiaryBo diaryBo){
 		return (newStartDate.isAfter(diaryBo.getStartDate()) && appointmentBo.getDate().isBefore(newStartDate) && !appointmentBo.getDate().isBefore(diaryBo.getStartDate())) ||
 				(newEndDate.isBefore(diaryBo.getEndDate()) && appointmentBo.getDate().isAfter(newEndDate) && !appointmentBo.getDate().isAfter(diaryBo.getEndDate()));
 	}
-	private boolean filterOutOfBoundsOpeningHours(AppointmentBo a, HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday, LocalDate from, LocalDate to) {
+	private boolean filterOutOfBoundsOpeningHours(UpdateDiaryAppointmentBo a, HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday, LocalDate from, LocalDate to) {
 		List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
 		return newHours == null || outOfDiaryBounds(from, to, a) || outOfOpeningHoursBounds(a, newHours);
 	}
 
-	private boolean filterOpeningHours(AppointmentBo a, HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday) {
+	private boolean filterOpeningHours(UpdateDiaryAppointmentBo a, HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday) {
 		List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
 		return newHours == null || differentTypeOfMedicalAttention(a, newHours);
 	}
 
-	private boolean outOfOpeningHoursBounds(AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
+	private boolean outOfOpeningHoursBounds(UpdateDiaryAppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
 		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()));
 	}
 
-	private boolean differentTypeOfMedicalAttention (AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
+	private boolean differentTypeOfMedicalAttention (UpdateDiaryAppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
 		return newHours.stream().noneMatch(newOH -> sameMedicalAttention(a, newOH));
 	}
 
-	private boolean sameMedicalAttention(AppointmentBo a, DiaryOpeningHoursDto newOH) {
+	private boolean sameMedicalAttention(UpdateDiaryAppointmentBo a, DiaryOpeningHoursDto newOH) {
 		return newOH.getMedicalAttentionTypeId().equals(a.getMedicalAttentionTypeId());
 	}
 
-	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, AppointmentBo a) {
+	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, UpdateDiaryAppointmentBo a) {
 		return !isBetween(from, to, a);
 	}
 
-	private boolean isBetween(LocalDate from, LocalDate to, AppointmentBo a) {
+	private boolean isBetween(LocalDate from, LocalDate to, UpdateDiaryAppointmentBo a) {
 		return !a.getDate().isBefore(from) && !a.getDate().isAfter(to);
 	}
 
-	private boolean fitsIn(AppointmentBo appointment, OpeningHoursDto openingHours) {
+	private boolean fitsIn(UpdateDiaryAppointmentBo appointment, OpeningHoursDto openingHours) {
 		LocalTime from = localDateMapper.fromStringToLocalTime(openingHours.getFrom());
 		LocalTime to = localDateMapper.fromStringToLocalTime(openingHours.getTo());
-		return (appointment.getHour().equals(from) || appointment.getHour().isAfter(from)) && appointment.getHour().isBefore(to);
+		return (appointment.getTime().equals(from) || appointment.getTime().isAfter(from)) && appointment.getTime().isBefore(to);
 	}
 
 	private void buildResponse(ConstraintValidatorContext context, String message) {

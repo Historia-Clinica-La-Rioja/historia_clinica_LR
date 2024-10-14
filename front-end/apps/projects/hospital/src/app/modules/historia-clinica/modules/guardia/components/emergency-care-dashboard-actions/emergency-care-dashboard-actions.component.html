@@ -1,0 +1,21 @@
+<div id="actions-container" fxFlex="5%" *ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA && showActionsButton(episode)">
+	<button id="actions" mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actions">
+		<mat-icon>more_vert</mat-icon>
+	</button>
+
+	<mat-menu #actions="matMenu">
+		<ng-container *ngIf="getEpisodeActions(episode) as categorizedActions">
+			<div *ngFor="let item of categorizedActions; trackBy: trackbyFn; let i = index">
+				<ng-container *ngIf="showDivider(categorizedActions, i)">
+					<mat-divider class="custom-divider"></mat-divider>
+				</ng-container>
+				<button mat-menu-item (click)="item.episodeAction.callback()">
+					<mat-icon class="material-icons-outlined">
+						{{ item.episodeAction.icon }}
+					</mat-icon>
+					{{ item.episodeAction.label }}
+				</button>
+			</div>
+		</ng-container>
+	</mat-menu>
+</div>

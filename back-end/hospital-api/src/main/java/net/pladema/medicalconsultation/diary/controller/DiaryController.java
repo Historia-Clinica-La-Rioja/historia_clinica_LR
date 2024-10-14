@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,6 +44,7 @@ import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursFre
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryOpeningHoursMapper;
 import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
+import net.pladema.medicalconsultation.diary.domain.UpdateDiaryBo;
 import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
@@ -97,7 +99,7 @@ public class DiaryController {
     private final ObjectMapper objectMapper;
 
 	private final UpdateDiaryAndAppointments updateDiaryAndAppointments;
-
+	
     @GetMapping("/{diaryId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<CompleteDiaryDto> getDiary(@PathVariable(name = "institutionId") Integer institutionId,
@@ -128,7 +130,7 @@ public class DiaryController {
             @ValidDiary @PathVariable(name = "diaryId") Integer diaryId,
             @RequestBody @Valid @ExistingDiaryPeriodValid @EditDiaryOpeningHoursValid @DiaryEmptyAppointmentsValid DiaryDto diaryDto) {
         log.debug("Input parameters -> institutionId {}, diaryId {}, diaryDto {}", institutionId, diaryId, diaryDto);
-        DiaryBo diaryToUpdate = diaryMapper.toDiaryBo(diaryDto);
+        UpdateDiaryBo diaryToUpdate = diaryMapper.toUpdateDiaryBo(diaryDto);
         diaryToUpdate.setId(diaryId);
 		Integer result = updateDiaryAndAppointments.run(diaryToUpdate);
 		log.debug(OUTPUT, result);
@@ -221,6 +223,43 @@ public class DiaryController {
         log.debug("Get all aliases by active diaries and Institution {} ", institutionId);
         return ResponseEntity.ok(activeDiariesAliases);
     }
+
+	@GetMapping("/active-diaries-clinical-specialties")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	public List<MasterDataDto> getClinicalSpecialtiesWithActiveDiaries(
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		var clinicalSpecialties = diaryService.getActiveDiariesClinicalSpecialties(institutionId);
+		log.debug("Get all clinical specialties by active diaries and Institution {} ", institutionId);
+		return clinicalSpecialties
+			.stream()
+				.map(x -> {
+					var specialtyDto = new MasterDataDto();
+					specialtyDto.setDescription(x.getName());
+					specialtyDto.setId(x.getId());
+					return specialtyDto;
+				})
+				.collect(Collectors.toList());
+	}
+
+	@GetMapping("/clinical-specialty/{clinicalSpecialtyId}/active-diaries-aliases")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	public List<MasterDataDto> getClinicalSpecialtyAliasesWithActiveDiaries(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
+			@RequestParam(name = "withPractices") Boolean withPractices
+	) {
+		var activeDiariesAliases = diaryService.getActiveDiariesAliasesByClinicalSpecialty(institutionId, clinicalSpecialtyId, withPractices);
+		log.debug("Get all active diaries aliases by Institution {} and clinical specialty id {}", institutionId, clinicalSpecialtyId);
+		return activeDiariesAliases
+			.stream()
+			.map(x -> {
+				var aliasDto = new MasterDataDto();
+				aliasDto.setDescription(x.getName());
+				aliasDto.setId(x.getId());
+				return aliasDto;
+			})
+			.collect(Collectors.toList());
+	}
 
     @PostMapping("/generate-empty-appointments")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")

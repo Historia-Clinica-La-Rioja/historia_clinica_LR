@@ -3,10 +3,9 @@ package net.pladema.medicalconsultation.equipmentdiary.controller.constraints.va
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.constraints.validator.DiaryEmptyAppointmentsValidator;
 
+import net.pladema.medicalconsultation.equipmentdiary.application.port.output.EquipmentDiaryPort;
 import net.pladema.medicalconsultation.equipmentdiary.controller.constraints.EquipmentDiaryEmptyAppointmentsValid;
 
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryDto;
@@ -14,6 +13,8 @@ import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDi
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryOpeningHoursDto;
 
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentOpeningHoursDto;
+
+import net.pladema.medicalconsultation.equipmentdiary.domain.UpdateEquipmentDiaryAppointmentBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,6 @@ import javax.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +38,9 @@ public class EquipmentDiaryEmptyAppointmentsValidator implements ConstraintValid
 
 	private static final Logger LOG = LoggerFactory.getLogger(DiaryEmptyAppointmentsValidator.class);
 
-	private final AppointmentService appointmentService;
-
 	private final LocalDateMapper localDateMapper;
+
+	private final EquipmentDiaryPort equipmentDiaryPort;
 
 	@Override
 	public void initialize(EquipmentDiaryEmptyAppointmentsValid constraintAnnotation) {
@@ -50,7 +50,7 @@ public class EquipmentDiaryEmptyAppointmentsValidator implements ConstraintValid
 	@Override
 	public boolean isValid(EquipmentDiaryDto equipmentDiaryToUpdate, ConstraintValidatorContext context) {
 		LOG.debug("Input parameters -> equipmentDiaryToUpdate {}", equipmentDiaryToUpdate);
-		Collection<AppointmentBo> appointments = appointmentService.getFutureActiveAppointmentsByEquipmentDiary(equipmentDiaryToUpdate.getId());
+		List<UpdateEquipmentDiaryAppointmentBo> appointments = equipmentDiaryPort.getUpdateEquipmentDiaryAppointments(equipmentDiaryToUpdate.getId());
 
 		LocalDate from = localDateMapper.fromStringToLocalDate(equipmentDiaryToUpdate.getStartDate());
 		LocalDate to = localDateMapper.fromStringToLocalDate(equipmentDiaryToUpdate.getEndDate());
@@ -59,7 +59,7 @@ public class EquipmentDiaryEmptyAppointmentsValidator implements ConstraintValid
 				.collect(groupingBy(edoh -> edoh.getOpeningHours().getDayWeekId(),
 						HashMap<Short, List<EquipmentDiaryOpeningHoursDto>>::new, Collectors.toList()));
 
-		Optional<AppointmentBo> appointmentOutOfBounds = appointments.stream().filter(a -> {
+		Optional<UpdateEquipmentDiaryAppointmentBo> appointmentOutOfBounds = appointments.stream().filter(a -> {
 			List<EquipmentDiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
 			return newHours == null
 					|| outOfDiaryBounds(from, to, a)
@@ -73,26 +73,26 @@ public class EquipmentDiaryEmptyAppointmentsValidator implements ConstraintValid
 		return true;
 	}
 
-	private boolean outOfOpeningHoursBounds(AppointmentBo a, List<EquipmentDiaryOpeningHoursDto> newHours) {
+	private boolean outOfOpeningHoursBounds(UpdateEquipmentDiaryAppointmentBo a, List<EquipmentDiaryOpeningHoursDto> newHours) {
 		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()) && sameMedicalAttention(a, newOH));
 	}
 
-	private boolean sameMedicalAttention(AppointmentBo a, EquipmentDiaryOpeningHoursDto newOH) {
+	private boolean sameMedicalAttention(UpdateEquipmentDiaryAppointmentBo a, EquipmentDiaryOpeningHoursDto newOH) {
 		return newOH.getMedicalAttentionTypeId().equals(a.getMedicalAttentionTypeId());
 	}
 
-	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, AppointmentBo a) {
+	private boolean outOfDiaryBounds(LocalDate from, LocalDate to, UpdateEquipmentDiaryAppointmentBo a) {
 		return !isBetween(from, to, a);
 	}
 
-	private boolean isBetween(LocalDate from, LocalDate to, AppointmentBo a) {
+	private boolean isBetween(LocalDate from, LocalDate to, UpdateEquipmentDiaryAppointmentBo a) {
 		return a.getDate().compareTo(from)>=0 && a.getDate().compareTo(to)<=0;
 	}
 
-	private boolean fitsIn(AppointmentBo appointment, EquipmentOpeningHoursDto openingHours) {
+	private boolean fitsIn(UpdateEquipmentDiaryAppointmentBo appointment, EquipmentOpeningHoursDto openingHours) {
 		LocalTime from = localDateMapper.fromStringToLocalTime(openingHours.getFrom());
 		LocalTime to = localDateMapper.fromStringToLocalTime(openingHours.getTo());
-		return (appointment.getHour().equals(from) || appointment.getHour().isAfter(from)) && appointment.getHour().isBefore(to);
+		return (appointment.getTime().equals(from) || appointment.getTime().isAfter(from)) && appointment.getTime().isBefore(to);
 	}
 
 	private void buildResponse(ConstraintValidatorContext context, String message) {

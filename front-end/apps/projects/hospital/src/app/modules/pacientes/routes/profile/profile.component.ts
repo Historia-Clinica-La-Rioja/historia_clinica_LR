@@ -57,9 +57,8 @@ import { combineLatest, Observable } from 'rxjs';
 import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { AuditablePatientInfo } from '../edit-patient/edit-patient.component';
-import { DatePipe } from '@angular/common';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -165,7 +164,7 @@ export class ProfileComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private readonly internmentService: InternacionService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
@@ -191,7 +190,7 @@ export class ProfileComponent implements OnInit {
 							this.auditablePatientInfo = {
 								message: completeData.auditablePatientInfo.message,
 								createdBy: completeData.auditablePatientInfo.createdBy,
-								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								createdOn: this.dateFormatPipe.transform(this.auditableFullDate, 'datetime'),
 								institutionName: completeData.auditablePatientInfo.institutionName
 							};
 						}

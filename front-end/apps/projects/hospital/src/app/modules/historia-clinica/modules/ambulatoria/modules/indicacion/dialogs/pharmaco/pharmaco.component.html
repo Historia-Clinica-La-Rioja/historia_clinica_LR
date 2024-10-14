@@ -20,7 +20,7 @@
 
 						<input matInput type="text" formControlName="pharmaco" id="pharmaco" readonly>
 
-						<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+						<button id="clear"  matSuffix color="warn" mat-icon-button
 							*ngIf="searchSnomedConcept.pharmacoForm.value.pharmaco" (click)="returnToPharmacosDialog()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -102,7 +102,7 @@
 										<mat-error *ngIf="searchSnomedConcept.solventForm.hasError('required', 'solvent')"
 										[translate]="'forms.REQUIRED'"></mat-error>
 
-										<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+										<button id="clear"  matSuffix color="warn" mat-icon-button
 											*ngIf="searchSnomedConcept.solventForm.value.solvent"
 											(click)="resetSolventForm()">
 											<mat-icon>close</mat-icon>
@@ -203,7 +203,7 @@
 
 										<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-										<button id="clear-frequency-hour" type="button" mat-button matSuffix
+										<button id="clear-frequency-hour" type="button"  matSuffix
 											*ngIf="form.controls.frequencyHour.value" color="warn" mat-icon-button
 											(click)="clearFilterField(form.controls.frequencyHour); $event.stopPropagation()">
 											<mat-icon>close</mat-icon>
@@ -392,3 +392,4 @@
 		</app-concepts-search>
 	</ng-container>
 </ng-template>
+

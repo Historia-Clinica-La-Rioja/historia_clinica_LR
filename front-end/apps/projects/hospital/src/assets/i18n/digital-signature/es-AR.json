@@ -4,7 +4,7 @@
         "UNSELECTED_DOCUMENT": "Seleccione un documento para ver el detalle del mismo.",
         "NO_DOCUMENTS": "No hay documentos pendientes para firmar.",
         "card-information": {
-            "NO_SNOMED_CONCEPT": "No informado",
+            "NO_SNOMED_CONCEPT": "Sin problemas registrados",
             "PROBLEM": "Diagnóstico/problema",
             "CREATED": "Creación",
             "PROFESSIONAL": "Profesional",
@@ -33,7 +33,7 @@
             "FAMILY_HISTORIES": "Antecedentes familiares",
             "PERSONAL_HISTORIES": "Antecedentes personales",
             "PROCEDURES": "Procedimientos",
-            "CLINICAL_EVALUATION": "Evaluación clínica",
+            "EVOLUTION": "Evolución",
             "ALLERGIES": "Alergias",
             "MEDICATION": "Medicación habitual"
         }

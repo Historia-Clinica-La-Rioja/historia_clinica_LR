@@ -1,16 +1,22 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ApiErrorDto, PrescriptionDto } from "@api-rest/api-model";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto, PrescriptionItemDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
+import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PatientService } from '@api-rest/services/patient.service';
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
+import { MapperService } from '@core/services/mapper.service';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
-import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { PatientBasicData } from '@presentation/utils/patient.utils';
+
+const MAX_DATE = 45;
 
 @Component({
 	selector: 'app-create-order',
@@ -21,35 +27,76 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 	readonly ecl = SnomedECL.PROCEDURE;
 	hasError = hasError;
-
+	patientMedicalCoverages: PatientMedicalCoverageDto[];
+	patient: PatientBasicData;
+	selectedCoverage: PatientMedicalCoverageDto;
+	ROUTINE = EStudyType.ROUTINE
+	URGENT = EStudyType.URGENT
 	form: UntypedFormGroup;
-	firstStepCompleted = false;
 
 	studyCategoryOptions = [];
 	healthProblemOptions = [];
 	selectedStudy: TemplateOrConceptOption = null;
 
 	orderStudiesService: OrderStudiesService;
-	title = this.data.emergencyCareId ? 'Nueva orden de Guardia': 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
+	title = this.data.emergencyCareId ? 'Nueva orden de Guardia' : 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
+	today = new Date();
+	isSelectedDateInThePast = false;
+	maxDate: Date = this.setMaxDay(new Date());
+	setDateWithTime = false;
+	private selectedDateTime: Date;
+
+	private setMaxDay(today: Date): Date {
+		const maxDate = new Date(today);
+		maxDate.setDate(maxDate.getDate() + MAX_DATE);
+		return maxDate;
+	}
+
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number },
+		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number, patientInternmentEpisodeMedicalCoverageId?: number, patientEmergencyCareMedicalCoverageId?: number },
 		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly internmentOrderService: InternmentOrderService,
 		private readonly snackBarService: SnackBarService,
-		private readonly dialog: MatDialog,
-		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService
+		private readonly mapperService: MapperService,
+		private readonly patientService: PatientService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService,
+
 	) {
+		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
+			(patient: BasicPatientDto) => {
+				this.patient = this.mapperService.toPatientBasicData(patient);
+			});
+
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.data.patientId).subscribe(
+			(medicalCoverage: PatientMedicalCoverageDto[]) => {
+				this.patientMedicalCoverages = medicalCoverage;
+
+				if (data?.patientInternmentEpisodeMedicalCoverageId || data?.patientEmergencyCareMedicalCoverageId) {
+
+					const medicalCoverageSelected = data.patientInternmentEpisodeMedicalCoverageId ?? data.patientEmergencyCareMedicalCoverageId;
+
+					this.selectedCoverage = medicalCoverage.find(mc => mc.id === medicalCoverageSelected);
+				}
+			})
+
 		this.orderStudiesService = new OrderStudiesService();
 	}
 
 	ngOnInit(): void {
+
 		this.form = this.formBuilder.group({
+			patientMedicalCoverage: [null],
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			healthProblem: [null, Validators.required],
-			notes: [null]
+			studyType: [EStudyType.ROUTINE, Validators.required],
+			requiresTechnical: [false, Validators.required],
+			notes: [null],
+			selectSectionDeferredDate: [false],
+			date: [null],
 		});
 
 		this.requestMasterDataService.categories().subscribe(categories => {
@@ -58,6 +105,13 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 		this.healthProblemOptions = this.data.diagnoses;
 		this.setMainDiagnosisAsDefaultHealthProblem();
+
+		this.form.controls.selectSectionDeferredDate.valueChanges.subscribe((selectSectionDeferredDate: boolean) => {
+			if (!selectSectionDeferredDate)
+				this.form.controls.date.setValue(null);
+		}
+		)
+
 	}
 
 	private setMainDiagnosisAsDefaultHealthProblem() {
@@ -68,6 +122,8 @@ export class CreateInternmentOrderComponent implements OnInit {
 	handleStudySelected(study) {
 		this.selectedStudy = study;
 		this.form.controls.studySelection.setValue(this.getStudyDisplayName());
+		this.loadSelectedConceptsIntoOrderStudiesService();
+		this.resetStudySelector();
 	}
 
 	resetStudySelector() {
@@ -76,6 +132,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	selectedStudyIsTemplate(): boolean {
+
 		return this.selectedStudy.type === TemplateOrConceptType.TEMPLATE;
 	}
 
@@ -85,11 +142,6 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 	getTemplateIncludedConceptsDisplayText(): string {
 		return this.selectedStudy.data.concepts.map(c => c.pt.term).join(', ');
-	}
-
-	goToConfirmationStep() {
-		this.firstStepCompleted = true;
-		this.loadSelectedConceptsIntoOrderStudiesService();
 	}
 
 	private loadSelectedConceptsIntoOrderStudiesService() {
@@ -132,25 +184,81 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	confirmOrder() {
-		let prescriptionLineNumberAux = 0;
-		const newInternmentOrder: PrescriptionDto = {
-			medicalCoverageId: null,
-			hasRecipe: true,
-			observations: this.form.controls.notes.value,
-			items: this.orderStudiesService.getStudies().map(study => {
-				return {
-					healthConditionId: this.form.controls.healthProblem.value.id,
-					snomed: study.snomed,
-					categoryId: this.form.controls.studyCategory.value,
-					prescriptionLineNumber: ++prescriptionLineNumberAux,
-				};
-			})
-		};
+		const selectedDate = this.form.controls.date?.value;
+
+		if (this.form.controls.selectSectionDeferredDate.value) {
+			if (selectedDate && this.setDateWithTime) {
+				this.isSelectedDateInThePast = this.isDateInThePast(selectedDate);
+				if (!this.isSelectedDateInThePast)
+					this.saveOrder();
+			}
+		} else {
+			this.saveOrder();
+		}
+
+	}
+
+	handleDateChange(selectedDate: Date) {
+		this.selectedDateTime = selectedDate;
+		this.form.controls.date.setValue(this.selectedDateTime);
+		this.isSelectedDateInThePast = this.isDateInThePast(this.selectedDateTime);
+	}
+
+	handleTimeChange(selectedTime: { hours: number; minutes: number }) {
+		this.isSelectedDateInThePast = false;
+
+		if (this.selectedDateTime) {
+			this.setDateWithTime = true;
+			const dateWithTime = new Date(this.selectedDateTime);
+			dateWithTime.setHours(selectedTime.hours);
+			dateWithTime.setMinutes(selectedTime.minutes);
+			this.selectedDateTime = dateWithTime;
+			this.form.controls.date.setValue(this.selectedDateTime);
+		}
+	}
+
+	handleDeferredSectionToggle(isSelected: boolean) {
+		this.form.controls.selectSectionDeferredDate.setValue(isSelected);
+	}
+
+	private isDateInThePast(selectedDate: Date): boolean {
+		return this.today > selectedDate;
+	}
+
+	private saveOrder() {
+		const newInternmentOrder = this.createNewInternmentOrder();
 		if (this.data.emergencyCareId) {
 			this.saveEmergencyCareOrder(newInternmentOrder);
 		} else {
 			this.saveInternmentOrder(newInternmentOrder);
 		}
+	}
+
+	private createNewInternmentOrder(): PrescriptionDto {
+		const { patientMedicalCoverage, notes, studyType, requiresTechnical, healthProblem, studyCategory } = this.form.controls;
+		const studies = this.orderStudiesService.getStudies();
+
+		return {
+			medicalCoverageId: patientMedicalCoverage.value?.id,
+			hasRecipe: true,
+			observations: notes.value,
+			studyType: studyType.value,
+			requiresTransfer: requiresTechnical.value,
+			...(this.form.controls.date?.value && {
+				deferredDate: dateToDateTimeDto(this.form.controls.date.value)
+			}),
+			items: this.createPrescriptionItems(studies, healthProblem.value.id, studyCategory.value)
+		};
+	}
+
+	private createPrescriptionItems(studies: Study[], healthConditionId: number, categoryId: string): PrescriptionItemDto[] {
+		let prescriptionLineNumber = 0;
+		return studies.map(study => ({
+			healthConditionId,
+			snomed: study.snomed,
+			categoryId,
+			prescriptionLineNumber: ++prescriptionLineNumber,
+		}));
 	}
 
 	private saveEmergencyCareOrder(newInternmentOrder: PrescriptionDto) {
@@ -175,24 +283,6 @@ export class CreateInternmentOrderComponent implements OnInit {
 		this.dialogRef.close(newInternmentOrder);
 	}
 
-	openAddAnotherStudyDialog() {
-		const addStudy = this.dialog.open(ConceptsTypeaheadSearchDialogComponent, {
-			width: '25%',
-			data: {
-				ecl: this.ecl,
-				placeholder: 'ambulatoria.paciente.internment-order.create-order-dialog.STUDY',
-				title: 'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY_DIALOG_TITLE'
-			},
-		});
-
-		addStudy.afterClosed().subscribe((addStudyDialogData) => {
-			if (addStudyDialogData?.selectedConcept) {
-				let added = this.orderStudiesService.add({ snomed: addStudyDialogData.selectedConcept });
-				if (!added)
-					this.snackBarService.showError('ambulatoria.paciente.internment-order.create-order-dialog.STUDY_REPEATED')
-			}
-		})
-	}
 
 }
 

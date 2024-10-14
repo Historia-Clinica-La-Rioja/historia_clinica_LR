@@ -1,11 +1,9 @@
+import { Episode } from '../components/emergency-care-patients-summary/emergency-care-patients-summary.component';
 import { EpisodeFilterService } from './episode-filter.service';
-import { Episode } from '../routes/home/home.component';
 
 describe('EpisodeFilterService', () => {
 
 	const episode = {
-		waitingTime: null,
-		waitingHours: null,
 		creationDate: null,
 		doctorsOffice: null,
 		id: null,

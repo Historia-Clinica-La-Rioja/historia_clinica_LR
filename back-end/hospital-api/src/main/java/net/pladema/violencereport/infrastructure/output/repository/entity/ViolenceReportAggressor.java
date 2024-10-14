@@ -47,6 +47,9 @@ public class ViolenceReportAggressor implements Serializable {
 	@Column(name = "municipality_id")
 	private Short municipalityId;
 
+	@Column(name = "city_id")
+	private Integer cityId;
+
 	@Column(name = "relationship_with_victim_id", nullable = false)
 	private Short relationshipWithVictimId;
 

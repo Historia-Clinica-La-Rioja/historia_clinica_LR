@@ -6,6 +6,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { MotivoConsulta, MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { ButtonType } from '@presentation/components/button/button.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 })
 export class ReasonsFormComponent {
 
+	readonly BUTTON_TYPE_BASIC = ButtonType.BASIC;
 	motivoNuevaConsultaService = new MotivoNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFFIsOn = false;
 	form = new FormGroup<ReasonsForm>({

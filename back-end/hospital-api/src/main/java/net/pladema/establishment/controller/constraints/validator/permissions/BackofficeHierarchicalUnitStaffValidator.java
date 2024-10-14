@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -86,13 +85,9 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<HierarchicalUnitStaff> entitiesByExample = repository.findAllByHierarchicalUnitId(entity.getHierarchicalUnitId());
+
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-		List<Integer> resultIds = entitiesByExample.stream()
-				.filter(hus -> idsAllowed.contains(hus.getId()))
-				.map(HierarchicalUnitStaff::getId)
-				.collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	@Override

@@ -11,10 +11,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.createEpisodeDocument.CreateEpisodeDocument;
+import net.pladema.clinichistory.hospitalization.application.createinternmentepisode.CreateInternmentEpisode;
 import net.pladema.clinichistory.hospitalization.application.deleteEpisodeDocument.DeleteEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.application.getDocumentType.FetchDocumentType;
 import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.FetchEpisodeDocument;
@@ -31,12 +31,11 @@ import net.pladema.clinichistory.hospitalization.controller.dto.ProbableDischarg
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
+import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.EpisodeDocumentDtoMapper;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
@@ -48,7 +47,6 @@ import net.pladema.clinichistory.hospitalization.service.patientdischarge.Patien
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -82,36 +80,19 @@ public class InternmentEpisodeController {
 	public static final String INPUT_PARAMETERS_INSTITUTION_ID_INTERNMENT_EPISODE_ID = "Input parameters -> institutionId {}, internmentEpisodeId {} ";
 
 	private final InternmentEpisodeService internmentEpisodeService;
-
-	private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
-
 	private final InternmentEpisodeMapper internmentEpisodeMapper;
-
 	private final PatientDischargeMapper patientDischargeMapper;
-
 	private final BedExternalService bedExternalService;
-
-	private final ResponsibleContactService responsibleContactService;
-
 	private final FeatureFlagsService featureFlagsService;
-
 	private final PatientDischargeService patientDischargeService;
-
-	private final ResponsibleContactMapper responsibleContactMapper;
-
 	private final LocalDateMapper localDateMapper;
-
 	private final HospitalApiPublisher hospitalApiPublisher;
-
 	private final FetchEpisodeDocument fetchEpisodeDocument;
-
 	private final CreateEpisodeDocument createEpisodeDocument;
-
 	private final FetchDocumentType fetchDocumentType;
-
 	private final DeleteEpisodeDocument deleteEpisodeDocument;
-
 	private final EpisodeDocumentDtoMapper mapper;
+	private final CreateInternmentEpisode createInternmentEpisode;
 
 	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}/consent/{consentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
@@ -178,23 +159,19 @@ public class InternmentEpisodeController {
 		return ResponseEntity.ok().body(result);
 	}
 
-    @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
-	@Transactional
-    public ResponseEntity<InternmentEpisodeDto> addInternmentEpisode(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @Valid @RequestBody InternmentEpisodeADto internmentEpisodeADto) {
+	@PostMapping
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	public ResponseEntity<InternmentEpisodeDto> createInternmentEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestBody InternmentEpisodeADto internmentEpisodeADto) {
 		log.debug("Input parameters -> institutionId {}, internmentEpisodeADto {} ", institutionId, internmentEpisodeADto);
-        InternmentEpisode internmentEpisodeToSave = internmentEpisodeMapper.toInternmentEpisode(internmentEpisodeADto);
-        internmentEpisodeToSave = internmentEpisodeService.addInternmentEpisode(internmentEpisodeToSave, institutionId);
-        InternmentEpisodeDto result = internmentEpisodeMapper.toInternmentEpisodeDto(internmentEpisodeToSave);
-        bedExternalService.updateBedStatusOccupied(internmentEpisodeADto.getBedId());
-        if (internmentEpisodeADto.getResponsibleDoctorId() != null)
-        	healthcareProfessionalExternalService.addHealthcareProfessionalGroup(result.getId(), internmentEpisodeADto.getResponsibleDoctorId());
-		responsibleContactService.addResponsibleContact(responsibleContactMapper.toResponsibleContactBo(internmentEpisodeADto.getResponsibleContact()), result.getId());
-        log.debug(OUTPUT, result);
-        return  ResponseEntity.ok().body(result);
-    }
+		InternmentEpisodeBo episodeBo = internmentEpisodeMapper.toInternmentEpisodeBo(internmentEpisodeADto);
+		episodeBo.setInstitutionId(institutionId);
+		episodeBo = createInternmentEpisode.run(episodeBo);
+		InternmentEpisodeDto result = internmentEpisodeMapper.toInternmentEpisodeDto(episodeBo);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
 
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")

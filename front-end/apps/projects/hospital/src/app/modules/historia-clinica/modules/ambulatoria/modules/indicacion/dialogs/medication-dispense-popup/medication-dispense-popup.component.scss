@@ -1,0 +1,28 @@
+@import '../../../../../../../../../assets/styles/mixins';
+
+.actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.indicated-medication {
+    @include font-weight-bold;
+    font-size: medium;
+}
+
+.pharmaco-details {
+    margin-top: 1rem;
+}
+
+.problem {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.observations {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

@@ -60,3 +60,9 @@ export const PRESCRIPTION_STATES = {
 		description: 'Dispensado provisorio'
 	}
 }
+
+export enum STUDY_STATUS_ENUM {
+	REGISTERED = 'Pendiente',
+	FINAL = 'Completado',
+	PARTIAL = 'Completado Parcialmente'
+}

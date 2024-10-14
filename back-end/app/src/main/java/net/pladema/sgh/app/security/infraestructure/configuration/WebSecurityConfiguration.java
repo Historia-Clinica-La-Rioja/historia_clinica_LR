@@ -135,9 +135,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/bed/reports/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
 				.antMatchers("/fhir/**").permitAll()
-				.antMatchers(BOOKING_API_RESOURCES).permitAll()
-				.antMatchers("/public-api/digital-signature/callback/**").permitAll()
 				.antMatchers(PUBLIC_API_CONTEXT_MATCHER).hasAnyAuthority(publicApiRolesAuthorities)
+				.antMatchers("/public-api/digital-signature/callback/**").permitAll()
+				.antMatchers(BOOKING_API_RESOURCES).permitAll()
 				.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 

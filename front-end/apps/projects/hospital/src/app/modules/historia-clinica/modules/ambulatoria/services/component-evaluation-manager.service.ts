@@ -98,8 +98,7 @@ export class ComponentEvaluationManagerService {
 	}
 
 	set externalCause(externalCause: ExternalCauseDto) {
-		const { eventLocation, externalCauseType, snomed } = externalCause;
-		const isExternalCauseEmpty = !(eventLocation || externalCauseType || snomed);
+		const isExternalCauseEmpty = externalCause ?  !(externalCause.eventLocation || externalCause.externalCauseType || externalCause.snomed) : true;
 		this.externalCauseSubject.next(isExternalCauseEmpty);
 	}
 

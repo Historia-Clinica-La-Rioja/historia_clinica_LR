@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { EViolenceEvaluationRiskLevel, ViolenceReportSituationDto } from '@api-rest/api-model';
-import { DateFormat } from '@core/utils/date.utils';
 import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { ViolenceSituationDockPopupComponent } from '../../dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
 import { ActivatedRoute } from '@angular/router';
@@ -18,8 +17,6 @@ export class ViolenceSituationListComponent implements OnInit {
 	@Input() violenceSituations: ViolenceReportSituationDto[] = [];
 
 	patientId: number;
-	
-	DateFormat = DateFormat;
 	
 	LOW = EViolenceEvaluationRiskLevel.LOW;
 	MEDIUM = EViolenceEvaluationRiskLevel.MEDIUM;

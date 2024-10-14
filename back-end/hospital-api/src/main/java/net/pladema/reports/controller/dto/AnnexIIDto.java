@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.reports.infrastructure.input.AnnexIIProfessionalDto;
 
 @Getter
 @Setter
@@ -39,7 +40,7 @@ public class AnnexIIDto {
 
     private String specialty;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String sisaCode;
 
@@ -58,4 +59,9 @@ public class AnnexIIDto {
 	private Boolean showProcedures;
 
 	private Integer missingProcedures;
+
+	private Short patientIdentityAccreditationStatusId;
+
+	private AnnexIIProfessionalDto professional;
+
 }

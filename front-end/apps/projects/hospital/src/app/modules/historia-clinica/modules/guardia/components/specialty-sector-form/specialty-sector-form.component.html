@@ -1,0 +1,14 @@
+<div *ngIf="(hasProffesionalRole || isAdministrativeAndHasTriageFFInTrue)">
+	<form [formGroup]="form" fxLayout="column">
+		<label class="formLabel" [translate]="'guardia.triage.SPECIALTY_SECTOR'"></label>
+		<mat-form-field class="simple-form-field" appearance="outline">
+			<mat-label [translate]="'guardia.triage.SELECT_SPECIALTY_SECTOR'"></mat-label>
+			<mat-select formControlName="specialtySector">
+				<mat-option *ngFor="let specialtySector of _specialtySectors" [value]="specialtySector">
+					{{ specialtySector.description }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-error *ngIf="hasError(form, 'required', 'specialtySector') && form.get('specialtySector').touched">{{ "forms.REQUIRED" | translate }}</mat-error>
+	</form>
+</div>

@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ProcedureVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ProcedureBo extends ClinicalTerm {
+public class ProcedureBo extends ClinicalTerm implements IpsBo {
 
     private LocalDate performedDate;
 
@@ -63,5 +64,10 @@ public class ProcedureBo extends ClinicalTerm {
 		return super.equals(bo)
 				&& datesAreEquals
 				&& notesAreEquals;
+	}
+
+	@Override
+	public void accept(IpsVisitor visitor) {
+		visitor.visitProcedure(this);
 	}
 }

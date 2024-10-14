@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service.domain;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +27,5 @@ public class DocumentsSummaryBo {
         this.anamnesis = new AnamnesisSummaryBo(documents.getAnamnesis());
         this.epicrisis = new EpicrisisSummaryBo(documents.getEpicrisis());
         this.lastEvaluationNote = new EvaluationNoteSummaryBo(documents.getLastEvaluationNote());
-        this.lastAnestheticReport = new AnestheticReportSummaryBo(documents.getLastAnestheticReport());
     }
 }

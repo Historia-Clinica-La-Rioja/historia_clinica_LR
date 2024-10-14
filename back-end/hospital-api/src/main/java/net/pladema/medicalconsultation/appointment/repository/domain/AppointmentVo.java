@@ -30,6 +30,8 @@ public class AppointmentVo {
 	
 	private Short recurringAppointmentTypeId;
 
+	private Short patientIdentityAccreditationStatusId;
+
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy) {
 		this.appointment = appointment;
 		this.stateChangeReason = stateChangeReason;
@@ -39,6 +41,7 @@ public class AppointmentVo {
 		this.observationBy = observationBy;
 		this.diaryLabel = null;
 		this.recurringAppointmentTypeId = null;
+		patientIdentityAccreditationStatusId = null;
 	}
 
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String observation, Integer observationBy) {
@@ -50,6 +53,7 @@ public class AppointmentVo {
 		this.stateChangeReason = null;
 		this.diaryLabel = null;
 		this.recurringAppointmentTypeId = null;
+		patientIdentityAccreditationStatusId = null;
 	}
 
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy, DiaryLabel diaryLabel, Short recurringAppointmentTypeId) {
@@ -61,6 +65,19 @@ public class AppointmentVo {
 		this.observationBy = observationBy;
 		this.diaryLabel = diaryLabel;
 		this.recurringAppointmentTypeId = recurringAppointmentTypeId;
+		patientIdentityAccreditationStatusId = null;
+	}
+
+	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy, DiaryLabel diaryLabel, Short recurringAppointmentTypeId, Short patientIdentityAccreditationStatusId) {
+		this.appointment = appointment;
+		this.stateChangeReason = stateChangeReason;
+		this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.diaryId = diaryId;
+		this.observation = observation;
+		this.observationBy = observationBy;
+		this.diaryLabel = diaryLabel;
+		this.recurringAppointmentTypeId = recurringAppointmentTypeId;
+		this.patientIdentityAccreditationStatusId = patientIdentityAccreditationStatusId;
 	}
 
 	public Integer getId() {

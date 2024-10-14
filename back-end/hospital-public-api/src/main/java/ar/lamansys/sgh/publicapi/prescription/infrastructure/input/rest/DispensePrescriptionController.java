@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstate.ChangePrescriptionState;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
-import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.BadPrescriptionIdFormatException;
-import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionDispenseException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionIdMatchException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.PrescriptionPublicApiPermissions;

@@ -23,4 +23,6 @@ public interface MoveStudiesService extends SharedLoadStudiesResultPort {
 	Integer getInstitutionByAppointmetId(Integer appointmentId);
 
 	Optional<Integer> getSizeImageByAppointmentId(Integer appointmentId);
+
+	void updateFailedCurrentDate(Integer institutionId);
 }

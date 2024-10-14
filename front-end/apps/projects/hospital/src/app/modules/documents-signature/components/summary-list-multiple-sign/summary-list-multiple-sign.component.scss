@@ -1,0 +1,75 @@
+header {
+    display: flex;
+    align-items: center;
+
+    input {
+        cursor: pointer;
+        margin-right: .75rem;
+        transform: scale(1.5);
+    }
+}
+
+.checkbox {
+	margin-top: 0.6rem;
+}
+
+.no-information-container {
+    height: 60vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border-bottom: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
+
+    h3 {
+        color: #9A9A9A;
+    }
+}
+
+mat-selection-list {
+	mat-list-option {
+		height: auto;
+		border-bottom: 1px solid #d3d3d3;
+	}
+
+	.mat-list-single-selected-option {
+		background-color: #E9F3F9;
+	}
+}
+
+::ng-deep .mat-list-item-content {
+    padding: .75rem!important;
+}
+
+.mat-list-base {
+    padding-top: 0;
+}
+
+.bold {
+    font-weight: 500;
+}
+
+mat-list-item {
+    height: auto!important;
+    border-bottom: 1px solid #d3d3d3;
+
+    .title {
+        min-width: 12rem;
+        color: rgba(0, 0, 0, 0.54);
+    }
+
+    .value-container {
+        display: flex;
+        flex-direction: column;
+        min-width: 8rem;
+    }
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    .important {
+        font-weight: 500;
+        color: #333;
+    }
+}

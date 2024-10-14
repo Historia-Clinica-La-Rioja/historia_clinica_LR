@@ -17,6 +17,7 @@ export class DocumentSummaryHeaderComponent {
     @Input() isPopUpOpen: boolean;
     @Output() deleteDocument = new EventEmitter<boolean>();
     @Output() editDocument = new EventEmitter<boolean>();
+    @Output() downloadDocument = new EventEmitter<boolean>();
     identiferCases = IDENTIFIER_CASES;
     position = Position;
     _headerData: HeaderIdentifierData;
@@ -31,5 +32,9 @@ export class DocumentSummaryHeaderComponent {
 
     edit() {
         this.editDocument.emit(true);
+    }
+
+    download() {
+        this.downloadDocument.emit(true);
     }
 }

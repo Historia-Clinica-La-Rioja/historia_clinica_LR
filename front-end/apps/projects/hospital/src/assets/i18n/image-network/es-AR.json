@@ -67,7 +67,17 @@
         "queue_list": {
         "TRY_AGAIN": "Reintentar",
         "INDEX": "Indexar",
-        "DO_FILTER":"Aplicar filtros"
+        "DO_FILTER":"Aplicar filtros",
+		"image_indexing": {
+			"INDEX_IMAGE": "Indexar imagen",
+			"INDEX_IMAGE_DIALOG_TITLE": "Indexar imagen manualmente",
+			"INDEX_IMAGE_BUTTON": "Indexar manualmente",
+			"INDEX_IMAGE_MANUALLY_PLACEHOLDER": "Ingrese el UID del estudio a indexar",
+			"INDEX_IMAGE_MANUALLY_INPUT_TITLE": "UID estudio",
+			"INDEX_IMAGE_MANUALLY_VERIFY": "Verifica en algunos minutos si la imagen se movió correctamente.",
+			"INDEX_IMAGE_MANUALLY_VERIFY_INDEXED": "La imagen se ha indexado manualmente.",
+			"INDEX_IMAGE_MANUALLY_ERROR_INDEXING": "Ocurrió un error al indexar la imagen."
+		}
         },
         "worklist": {
             "status": {
@@ -90,6 +100,7 @@
                 "CONCLUTIONS": "Conclusiones:",
                 "OBSERVATIONS": "Detalle de informe:",
                 "VIEW_STUDY": "ver estudio",
+                "VIEW_STUDY_LOCAL": "ver estudio local",
                 "DOWNLOAD_STUDY": "descargar estudio",
                 "TECHNICIAN_OBSERVATIONS": "Observaciones del técnico",
                 "IMAGE_SIZE": "Peso de la imagen:",
@@ -118,8 +129,15 @@
                 "SELECT_TEMPLATE_DELETE": "Seleccione plantilla a eliminar",
                 "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente",
                 "SNACKBAR_SUCCESS_DELETE_TEMPLATE": "Plantilla eliminada exitosamente",
-                "DETAIL_ORDER":"Detalle orden"
-
+                "DETAIL_ORDER":"Detalle orden",
+                "asynchronous_download": {
+                    "REQUESTING_STUDY": "Solicitando estudio...",
+                    "SETTING_UP_STUDY": "Preparando el archivo...",
+                    "REQUEST_WAIT": "Esta solicitud puede demorar, una vez verificado el estudio se descargará automáticamente",
+                    "RETRY_DOWNLOAD": "Reintentar descarga",
+                    "DOWNLOAD_FAILED": "La preparación del archivo falló",
+                    "STUDY_NOT_AVAILABLE": "Estudio no disponible"
+                }
             },
             "filters": {
                 "MODALITY": "Seleccione modalidad",

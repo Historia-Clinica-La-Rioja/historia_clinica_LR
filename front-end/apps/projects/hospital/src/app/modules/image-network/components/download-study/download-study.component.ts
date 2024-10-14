@@ -1,10 +1,11 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, Input } from '@angular/core';
-import { PacsListDto, StudyFileInfoDto } from '@api-rest/api-model';
+import { PacsDto, StudyFileInfoDto } from '@api-rest/api-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
 import { catchError, switchMap } from 'rxjs';
+import { DownloadStudyService } from '../../services/download-study.service';
 
 @Component({
     selector: 'app-download-study',
@@ -21,6 +22,7 @@ export class DownloadStudyComponent {
     constructor(
         translateService: TranslateService,
 		private readonly studyPACAssociationService: StudyPACAssociationService,
+        private readonly downloadStudyService: DownloadStudyService,
         public dialog: MatDialog
     ) {
         this.buttonText = translateService.instant('image-network.worklist.details_study.DOWNLOAD_STUDY').toUpperCase();
@@ -30,10 +32,10 @@ export class DownloadStudyComponent {
         if (this.imageId){
             this.isLoading = true;
             this.studyPACAssociationService.getPacGlobalURL(this.imageId).pipe(
-                switchMap((pacs: PacsListDto) => 
+                switchMap((pacs: PacsDto[]) =>
                     this.studyPACAssociationService.getStudyInfo(this.imageId, pacs).pipe(
-                        switchMap((studyInfo: StudyFileInfoDto) => 
-                            this.studyPACAssociationService.downloadStudy(studyInfo.uuid, this.imageId, studyInfo.url, studyInfo.token).pipe(
+                        switchMap((studyInfo: StudyFileInfoDto) =>
+                            this.downloadStudyService.downloadStudy(studyInfo, this.imageId).pipe(
                                 catchError((error) => {
                                     throw error;
                                 })

@@ -25,7 +25,7 @@ import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.s
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.transcribed.application.getbyappointmentid.GetTranscribedServiceRequestByAppointmentId;
 import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
-import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacsWhereStudyIsHosted;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
@@ -56,7 +56,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final GetTranscribedServiceRequestByAppointmentId getTranscribedServiceRequestByAppointmentId;
 	private final PersonService personService;
 	private final MoveStudiesService moveStudiesService;
-	private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
+	private final GetPacsWhereStudyIsHosted getPacsWhereStudyIsHosted;
 
 	@Override
 	public StudyAppointmentBo getStudyByAppointment(Integer appointmentId) {
@@ -92,7 +92,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 				.ifPresent(result::setSizeImage);
 
 		appointmentOrderImageRepository.getIdImage(appointmentId).ifPresent(studyInstanceUID -> {
-			result.setIsAvailableInPACS(getPacWhereStudyIsHosted.run(studyInstanceUID, false).isAvailableInPACS());
+			result.setIsAvailableInPACS(getPacsWhereStudyIsHosted.run(studyInstanceUID, false).isAvailableInPACS());
 			result.setImageId(studyInstanceUID);
 		});
 

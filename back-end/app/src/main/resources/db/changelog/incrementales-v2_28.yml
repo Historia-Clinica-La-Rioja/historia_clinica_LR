@@ -1,0 +1,553 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_28
+
+    - changeSet:
+        id: addColumn-study-type-and-require-tech-to-service-request
+        author: lvenere
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: study_type_id
+                    type: smallint
+                    constraints:
+                      nullable: true
+                - column:
+                    name: requires_technician
+                    type: boolean
+                    constraints:
+                      nullable: true
+
+
+    - changeSet:
+          id: replaceView-v_clinic_history_17
+          author: mromero
+          changes:
+              - sqlFile:
+                    encoding: UTF-8
+                    path: data/v_clinic_history/create_v_clinic_history_17.sql
+                    relativeToChangelogFile: true
+                    splitStatements: false
+
+    - changeSet:
+        id: replaceView-v_clinic_history_18
+        author: mromero
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/v_clinic_history/create_v_clinic_history_18.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
+    - changeSet:
+        id: addColumn-is_domain-medicine_group
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: medicine_group
+              columns:
+                - column:
+                    name: is_domain
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.true}
+
+    - changeSet:
+        id: createTable-institution_medicine_financing_status
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institution_medicine_financing_status
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institution_medicine_financing_status
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_medicine_financing
+                - column:
+                    name: medicine_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: medicine_financing_status(id)
+                      foreignKeyName: FK_institution_medicine_financing_status_medicine_id
+                - column:
+                    name: financed
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: createTable-institution_medicine_group
+        author: fsimaro
+        changes:
+          createTable:
+            tableName: institution_medicine_group
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_institution_medicine_group
+              - column:
+                  name: institution_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    references: institution(id)
+                    foreignKeyName: FK_institution_medicine_group_institution_id
+              - column:
+                  name: medicine_group_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    references: medicine_group(id)
+                    foreignKeyName: FK_institution_medicine_group_medicine_group_id
+              - column:
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: int
+                  defaultValue: -1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: ${boolean.false}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_by
+                  type: int
+              - column:
+                  name: deleted_on
+                  type: datetime
+
+    - changeSet:
+        id: institution_medicine_group-metadata
+        comment : Populate table institution_medicine_group
+        author: fsimaro
+        context: "!schema-only"
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO institution_medicine_group (institution_id, medicine_group_id)
+                SELECT i.id, m.id
+                FROM institution i
+                CROSS JOIN medicine_group m
+                WHERE m.deleted IS FALSE;
+
+    - changeSet:
+        id: institution_medicine_financing_status-metadata
+        comment : Populate table institution_medicine_financing_status
+        author: fsimaro
+        context: "!schema-only"
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO institution_medicine_financing_status (institution_id, medicine_id, financed)
+                SELECT i.id, m.id, false
+                FROM institution i
+                CROSS JOIN medicine_financing_status m;
+
+    - changeSet:
+        id: createIndex-institution-monthly-report
+        author: efernandez
+        changes:
+            - sql:
+                sql: |-
+                    CREATE INDEX IF NOT EXISTS "IDX_document_odontology_diagnostic__document_id" ON document_odontology_diagnostic(document_id);
+                    CREATE INDEX IF NOT EXISTS "IDX_document_health_condition__document_id" ON document_health_condition(document_id);
+                    CREATE INDEX  IF NOT EXISTS "IDX_document_odontology_procedure__document_id" ON document_odontology_procedure(document_id);
+
+    - changeSet:
+        id: emergency_care_state-addOrderColumn
+        comment: Create column order in table emergency_care_state
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: order
+                    type: smallint
+              tableName: emergency_care_state
+
+    - changeSet:
+        id: insert-order-in-table-emergency_care_state
+        author: tomasbecher
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-               
+                UPDATE emergency_care_state SET "order" = 1 WHERE id = 1;
+                UPDATE emergency_care_state SET "order" = 2 WHERE id = 6;
+                UPDATE emergency_care_state SET "order" = 3 WHERE id = 2;
+                UPDATE emergency_care_state SET "order" = 4 WHERE id = 5;
+                UPDATE emergency_care_state SET "order" = 5 WHERE id = 4;
+                UPDATE emergency_care_state SET "order" = 6 WHERE id = 3;
+
+
+    - changeSet:
+        id: addColumn-city_id-to-violence_report_aggressor
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report_aggressor
+              columns:
+                - column:
+                    name: city_id
+                    type: int
+
+    - changeSet:
+        id: addColumn-city_id-to-violence_report_keeper
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report_keeper
+              columns:
+                - column:
+                    name: city_id
+                    type: int
+
+    - changeSet:
+        id: add-table-medication_statement_commercial_prescription
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: medication_statement_commercial_prescription
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_commercial_prescription
+                    name: medication_statement_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: presentation_unit_quantity
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medication_pack_quantity
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: medication_statement_id
+              baseTableName: medication_statement_commercial_prescription
+              constraintName: FK_medication_statement_commercial_prescription_medication_statement_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medication_statement
+              validate: true
+
+    - changeSet:
+        id: addColumn-suggested_commercial_medication_snomed_id-medication_statement
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: suggested_commercial_medication_snomed_id
+                    type: int
+
+    - changeSet:
+        id: correct_negative_snomed_id_medication_statement_validated
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  negative_sctid_snomed_row RECORD;
+                  non_negative_sctid_snomed_row INTEGER;
+                BEGIN
+                  FOR negative_sctid_snomed_row IN (
+                    SELECT s.id, s.pt 
+                    FROM snomed s
+                    WHERE s.sctid = '-1'
+                  ) LOOP
+                    SELECT s.id INTO non_negative_sctid_snomed_row
+                    FROM snomed s
+                    JOIN snomed_related_group srg ON (srg.snomed_id = s.id)
+                    JOIN snomed_group sg ON (sg.id = srg.group_id)
+                    WHERE s.pt = negative_sctid_snomed_row.pt
+                    AND s.sctid != '-1'
+                    AND sg.description = 'MEDICINE'
+                    AND sg.institution_id = -1
+                    LIMIT 1;
+                    IF non_negative_sctid_snomed_row IS NOT NULL THEN
+                      UPDATE medication_statement SET snomed_id = non_negative_sctid_snomed_row WHERE snomed_id = negative_sctid_snomed_row.id;
+                      DELETE FROM snomed WHERE id = negative_sctid_snomed_row.id;
+                    END IF;
+                  END LOOP;
+                END $$;
+
+    - changeSet:
+        id: createTable-completed_parameterized_form
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: completed_parameterized_form
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_completed_parameterized_form
+                - column:
+                    name: parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_parameterized_form_form_id
+                      references: parameterized_form(id)
+                - column:
+                    name: document_id
+                    type: bigint
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_parameterized_form_document_id
+                      references: document(id)
+
+    - changeSet:
+        id: createTable-completed_parameter
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: completed_parameter
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_completed_parameter
+                - column:
+                    name: parameter_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_form_parameter_parameter_id
+                      references: parameter(id)
+                - column:
+                    name: completed_parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_parameter_completed_parameterized_form_id
+                      references: completed_parameterized_form(id)
+                - column:
+                    name: parameter_text_option_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_completed_parameter_parameter_text_option_id
+                      references: parameter_text_option(id)
+                - column:
+                    name: numeric_value
+                    type: float
+                - column:
+                    name: snomed_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_completed_parameter_snomed_id
+                      references: snomed(id)
+                - column:
+                    name: text_value
+                    type: text
+
+    - changeSet:
+        id: createIndex-annex-and-formv-appointment
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_appointment_appointment_id" ON document_appointment(appointment_id);
+
+
+    - changeSet:
+        id: create-table-medication_statement_institutional_supply
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: medication_statement_institutional_supply
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_institutional_supply
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medication_statement_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: quantity
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                - column:
+                    name: created_by
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_on
+                    type: datetime
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_by
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_on
+                    type: datetime
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: medication_statement_id
+              baseTableName: medication_statement_institutional_supply
+              constraintName: FK_medication_statement_institutional_supply_medication_statement_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medication_statement
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: medication_statement_institutional_supply
+              constraintName: FK_medication_statement_institutional_supply_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: medication_statement_institutional_supply
+              constraintName: FK_medication_statement_institutional_supply_snomed_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
+              validate: true
+
+    - changeSet:
+        id: triage-addClinicalSpecialtySectorIdColumn
+        comment: Create column clinical_specialty_sector_id in table triage
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: clinical_specialty_sector_id
+                    type: int
+              tableName: triage

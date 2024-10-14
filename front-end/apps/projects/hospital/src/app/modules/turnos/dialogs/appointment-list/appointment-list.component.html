@@ -10,7 +10,7 @@
 <mat-dialog-content>
 	<div fxLayout="center">
 		<mat-icon class="icon">event</mat-icon> 
-		<h3>{{data.date | date:medium}}</h3>
+		<h3>{{data.date | dateFormat: 'datetime'}}</h3>
 	</div>
 
 	<app-appointment-list-detail *ngFor="let detail of appointments" [detail]="detail" [diary]="data.agenda" [hasPermissionToAssignShift]="data.hasPermissionToAssignShift" [appointments]="data.appointments" [diaryIdAndDate]="diaryIdAndDate" [date]="data.date"></app-appointment-list-detail>

@@ -8,7 +8,7 @@ import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.snvs.infrastructure.output.repository.report.SnvsReport;
 import net.pladema.snvs.infrastructure.output.repository.report.SnvsReportRepository;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
-import org.springframework.data.domain.Example;
+
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -101,10 +101,8 @@ public class BackofficeSnvsValidator implements BackofficePermissionValidator<Sn
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<SnvsReport> entitiesByExample = repository.findAll(Example.of(entity));
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-		List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(SnvsReport::getId).collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	@Override

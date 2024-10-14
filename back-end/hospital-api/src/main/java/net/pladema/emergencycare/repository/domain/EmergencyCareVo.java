@@ -10,10 +10,14 @@ import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.establishment.repository.domain.BedVo;
 import net.pladema.establishment.repository.domain.RoomVo;
+import net.pladema.establishment.repository.domain.SectorVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.Room;
+import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
+import net.pladema.medicalconsultation.doctorsoffice.repository.entity.DoctorsOffice;
 import net.pladema.medicalconsultation.shockroom.domain.ShockroomVo;
+import net.pladema.medicalconsultation.shockroom.infrastructure.repository.entity.Shockroom;
 import net.pladema.person.repository.entity.Person;
 
 import java.io.Serializable;
@@ -68,11 +72,15 @@ public class EmergencyCareVo implements Serializable {
 
 	private String reason;
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
-						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
-						   String shockroomDescription, Bed bed){
+	private LocalDateTime stateUpdatedOn;
+
+	private SectorVo sector;
+
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, String personIdentificationType,
+						   Short patientTypeId, String nameSelfDetermination, DoctorsOffice doctorsOffice, TriageCategory triage,
+						   Shockroom shockroom, Bed bed, Room room, Sector sector){
 		this.id = emergencyCareEpisode.getId();
-		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person, nameSelfDetermination, emergencyCareEpisode.getPatientDescription()) : null;
+		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person, personIdentificationType, nameSelfDetermination, emergencyCareEpisode.getPatientDescription()) : null;
 		this.triageCategoryId = triage.getId();
 		this.triageName = triage.getName();
 		this.triageColorCode = triage.getColorCode();
@@ -82,20 +90,21 @@ public class EmergencyCareVo implements Serializable {
 		this.emergencyCareEntranceTypeId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
 		this.ambulanceCompanyId = emergencyCareEpisode.getAmbulanceCompanyId();
 		this.createdOn = emergencyCareEpisode.getCreatedOn();
-		this.doctorsOffice = emergencyCareEpisode.getDoctorsOfficeId() != null ? new DoctorsOfficeVo(emergencyCareEpisode.getDoctorsOfficeId(), doctorsOfficeDescription) : null;
+		this.doctorsOffice = emergencyCareEpisode.getDoctorsOfficeId() != null ? new DoctorsOfficeVo(doctorsOffice.getId(), doctorsOffice.getDescription()) : null;
 		this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
-		this.shockroom = emergencyCareEpisode.getShockroomId() != null ? new ShockroomVo(emergencyCareEpisode.getShockroomId(), shockroomDescription) : null;
+		this.shockroom = emergencyCareEpisode.getShockroomId() != null ? new ShockroomVo(shockroom.getId(), shockroom.getDescription()) : null;
 		this.bed = emergencyCareEpisode.getBedId() != null ? new BedVo(bed) : null;
 		this.reason = emergencyCareEpisode.getReason();
+		this.room = room != null ? new RoomVo(room): null;
+		this.sector = sector != null ? new SectorVo(sector) : null;
 	}
 
-	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
-						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
-						   String shockroomDescription, Bed bed, LocalDateTime endDate, Room room){
-		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, shockroomDescription, bed);
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSelfDetermination,
+						   DoctorsOffice doctorsOffice, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
+						   Shockroom shockroom, Bed bed, LocalDateTime endDate, Room room){
+		this(emergencyCareEpisode, person, null, patientTypeId, nameSelfDetermination, doctorsOffice, triage, shockroom, bed, room, null);
 		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
 		this.endDate = endDate;
-		this.room = room != null ? new RoomVo(room): null;
 	}
 
 	public EmergencyCareVo(Integer id, Integer institutionId){
@@ -104,9 +113,9 @@ public class EmergencyCareVo implements Serializable {
 	}
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
-						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
-						   String shockroomDescription, Bed bed, LocalDateTime endDate, Room room, String institutionName){
-		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, policeInterventionDetails, shockroomDescription, bed, endDate, room);
+						   DoctorsOffice doctorsOffice, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
+						   Shockroom shockroom, Bed bed, LocalDateTime endDate, Room room, String institutionName){
+		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOffice, triage, policeInterventionDetails, shockroom, bed, endDate, room);
 		this.institutionName = institutionName ;
 	}
 	

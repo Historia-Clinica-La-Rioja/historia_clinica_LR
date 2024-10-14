@@ -15,10 +15,11 @@ import { CacheTerminologyComponent } from './routes/snomed/cache-terminology/cac
 import { DocumentImagesComponent } from './routes/appearance/document-images/document-images.component';
 import { FaviconsComponent } from './routes/appearance/favicons/favicons.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
-import { TemplateRenderComponent } from './routes/template-render/template-render.component';
 import { ManageKeysComponent } from './routes/manage-keys/manage-keys.component';
+import { NotificationTemplatesComponent } from './routes/appearance/notification-templates/notification-templates.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SponsorComponent } from './routes/appearance/sponsor/sponsor.component';
+import { TemplateRenderComponent } from './routes/template-render/template-render.component';
 // components
 import { HomeComponent } from './home.component';
 import { AssetFormComponent } from './components/asset-form/asset-form.component';
@@ -43,10 +44,11 @@ import { GenerateApiKeyFormComponent } from './dialogs/generate-api-key-form/gen
 		DocumentImagesComponent,
 		FaviconsComponent,
 		InstitucionesComponent,
+		ManageKeysComponent,
+		NotificationTemplatesComponent,
 		ProfileComponent,
 		SponsorComponent,
 		TemplateRenderComponent,
-		ManageKeysComponent,
 		// components
 		HomeComponent,
 		AssetFormComponent,

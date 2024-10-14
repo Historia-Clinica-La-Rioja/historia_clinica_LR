@@ -28,7 +28,7 @@
 								{{emergencyCareType.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_emergency_care_type" type="button" mat-button *ngIf="form.value.emergencyCareTypeId"
+						<button id="clear_emergency_care_type" type="button" *ngIf="form.value.emergencyCareTypeId"
 							matSuffix color="warn" mat-icon-button
 							(click)="clear(form.controls.emergencyCareTypeId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -44,7 +44,7 @@
 								[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_emergency_care_entrance" type="button" mat-button
+						<button id="clear_emergency_care_entrance" type="button"
 							*ngIf="form.value.emergencyCareEntranceTypeId" matSuffix color="warn" mat-icon-button
 							(click)="clear(form.controls.emergencyCareEntranceTypeId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -67,7 +67,7 @@
 								{{office.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_waiting_room" type="button" mat-button *ngIf="form.value.doctorsOfficeId" matSuffix
+						<button id="clear_waiting_room" type="button" *ngIf="form.value.doctorsOfficeId" matSuffix
 							color="warn" mat-icon-button
 							(click)="clear(form.controls.doctorsOfficeId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>

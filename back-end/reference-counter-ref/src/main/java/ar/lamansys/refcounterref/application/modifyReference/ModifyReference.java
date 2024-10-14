@@ -4,7 +4,6 @@ import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyRe
 import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
-import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;

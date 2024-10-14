@@ -14,7 +14,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.MedicationStatementValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.MedicationStatementValidator;
 import net.pladema.clinichistory.requests.medicationrequests.service.ChangeStateMedicationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;

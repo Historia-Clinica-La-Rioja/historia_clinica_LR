@@ -211,4 +211,10 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 		  	"AND igi.deleteable.deleted IS FALSE")
 	List<InstitutionBasicInfoBo> getInstitutionsRelatedToInstitutionalGroups(@Param("institutionalGroupsIds") List<Integer> institutionalGroupsIds);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT i.id "+
+			"FROM Institution AS i " +
+			"WHERE i.sisaCode = :sisaCode ")
+	List<Integer> findIdsBySisaCode(@Param("sisaCode") String sisaCode);
+
 }

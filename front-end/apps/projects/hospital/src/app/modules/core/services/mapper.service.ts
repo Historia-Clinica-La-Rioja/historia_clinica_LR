@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DateFormat, dateISOParseDate, dateParse, newDate } from '@core/utils/moment.utils';
 import { EMedicalCoverageType, HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
+import { BasicPatientDto, HealthInsuranceDto, PatientMedicalCoverageDto, PersonPhotoDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
+import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
+import { PatientNameService } from './patient-name.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,7 +14,8 @@ export class MapperService {
 
 	toPatientMedicalCoverageDto: (s: PatientMedicalCoverage) => PatientMedicalCoverageDto = MapperService._toPatientMedicalCoverageDto;
 	toPatientMedicalCoverage: (s: PatientMedicalCoverageDto) => PatientMedicalCoverage = MapperService._toPatientMedicalCoverage;
-
+	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
+	toPatientSummary: (p: BasicPatientDto, f: PersonPhotoDto, s: PatientNameService) => PatientSummary = MapperService._toPatientSummary;
 	constructor() { }
 
 
@@ -52,5 +56,37 @@ export class MapperService {
 				: new PrivateHealthInsurance(dto.id, dto.name, dto.type,dto.cuit);
 		}
 
+	}
+
+	private static _toPatientBasicData<T extends BasicPatientDto>(patient: T): PatientBasicData {
+		return {
+			id: patient.id,
+			firstName: patient.person?.firstName,
+			middleNames: patient.person?.middleNames,
+			lastName: patient.person?.lastName,
+			otherLastNames: patient.person?.otherLastNames,
+			gender: patient.person?.gender?.description,
+			age: patient.person?.age,
+			nameSelfDetermination: patient.person?.nameSelfDetermination,
+			selfPerceivedGender: patient.person?.selfPerceivedGender,
+			personAge: patient.person?.personAge
+		};
+	}
+
+	private static _toPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoDto, patientNameService: PatientNameService): PatientSummary {
+		const { firstName, nameSelfDetermination, lastName, middleNames, otherLastNames } = basicData.person;
+		return {
+			fullName: patientNameService.completeName(firstName, nameSelfDetermination, lastName, middleNames, otherLastNames),
+			...(basicData.identificationType && {
+				identification: {
+					type: basicData.identificationType,
+					number: basicData.identificationNumber
+				}
+			}),
+			id: basicData.id,
+			gender: basicData.person.gender?.description || null,
+			age: basicData.person.age || null,
+			photo: photo.imageData
+		}
 	}
 }

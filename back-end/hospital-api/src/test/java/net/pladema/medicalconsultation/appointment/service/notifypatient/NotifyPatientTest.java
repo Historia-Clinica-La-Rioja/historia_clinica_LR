@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import net.pladema.medicalconsultation.appointment.infraestructure.output.notification.AppointmentNotificationStorageImpl;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.notification.AppointmentNotificationStorageImpl;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.NotifyPatientVo;
 import net.pladema.medicalconsultation.appointment.service.domain.notifypatient.SendAppointmentNotification;

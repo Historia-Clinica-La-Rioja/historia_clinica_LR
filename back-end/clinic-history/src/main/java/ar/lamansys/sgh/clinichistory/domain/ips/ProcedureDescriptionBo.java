@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class ProcedureDescriptionBo {
+public class ProcedureDescriptionBo implements IpsBo {
 
     private Long id;
     private String note;
@@ -32,4 +34,9 @@ public class ProcedureDescriptionBo {
     private LocalTime surgeryStartTime;
     private LocalDate surgeryEndDate;
     private LocalTime surgeryEndTime;
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitProcedureDescription(this);
+    }
 }

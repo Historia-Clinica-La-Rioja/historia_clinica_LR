@@ -233,6 +233,9 @@ public class ClinicHistoryContextBuilder {
 			} else {
 				professionalRelatedProfessions.forEach(profession -> specialties.addAll(profession.getSpecialties()));
 				specialties.forEach(specialty -> licenses.addAll(specialty.getLicenses()));
+				if (licenses.isEmpty()){
+					professionalRelatedProfessions.forEach(profession -> licenses.addAll(profession.getLicenses()));
+				}
 			}
 			List<String> professions = professionalRelatedProfessions.stream().map(ProfessionBo::getDescription).collect(Collectors.toList());
 			context.put("professionalProfessions", professions.toString().substring(1, professions.toString().length() - 1));

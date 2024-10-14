@@ -4,7 +4,7 @@ import { ActionDisplays, TableModel } from "@presentation/components/table/table
 import { ConsultationsDto } from "@api-rest/api-model";
 import { PatientReportsService } from "@api-rest/services/patient-reports.service";
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-reports',
@@ -24,7 +24,6 @@ export class ReportsComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, patientName: string },
 		private readonly patientReportsService: PatientReportsService,
 		private readonly dateFormatPipe: DateFormatPipe,
-		private readonly isoToDatePipe: IsoToDatePipe,
 	) {
 	}
 
@@ -39,7 +38,6 @@ export class ReportsComponent implements OnInit {
 	}
 
 	private buildTable(data: ConsultationsDto[]): TableModel<ConsultationsDto> {
-		const consultationsData = data.map(consultationDto => this.toConsultationDtoWithIsoDate(consultationDto));
 		return {
 			columns: [
 				{
@@ -65,7 +63,7 @@ export class ReportsComponent implements OnInit {
 					columnDef: 'date',
 					header: 'pacientes.reports.table.columns.DATE',
 					text: (row) => {
-						return this.dateFormatPipe.transform(row.consultationDate, 'date')
+						return this.dateFormatPipe.transform(dateTimeDtotoLocalDate(row.consultationDate), 'date')
 					}
 				},
 				{
@@ -79,7 +77,7 @@ export class ReportsComponent implements OnInit {
 					text: (row) => row.completeProfessionalName
 				},
 			],
-			data: consultationsData,
+			data,
 			enablePagination: true
 		};
 	}
@@ -103,13 +101,6 @@ export class ReportsComponent implements OnInit {
 				this.patientReportsService.getAnnexPdf(oc, this.data.patientName).subscribe();
 			}
 		})
-	}
-
-	private toConsultationDtoWithIsoDate(consultationDto: ConsultationsDto): ConsultationsDto {
-		return {
-			...consultationDto,
-			consultationDate: this.isoToDatePipe.transform(consultationDto.consultationDate.toString())
-		}
 	}
 
 }

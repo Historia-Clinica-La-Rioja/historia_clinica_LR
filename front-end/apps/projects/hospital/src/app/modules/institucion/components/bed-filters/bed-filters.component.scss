@@ -10,6 +10,8 @@ form {
 	max-width: 85%;
 }
 
-::ng-deep .mat-form-field-wrapper {
-	padding: 0;
+.beds-form {
+    ::ng-deep .mat-form-field-wrapper {
+        padding: 0;
+    }
 }

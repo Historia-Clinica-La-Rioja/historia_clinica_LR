@@ -44,5 +44,10 @@
 				"GENERATED_SUCCESSFULLY": "Clave generada satisfactoriamente"
 			}
 		}
+	},
+	"warning-refresh": {
+		"TITLE":"Nueva versión disponible",
+		"CONTENT":"Una nueva versión de la aplicación está disponible. Para continuar, por favor recarga la página.Este proceso no tomará mucho tiempo, pero ten en cuenta que cualquier cambio no guardado se perderá. ¡Gracias por tu paciencia!",
+		"BUTTON_REFRESH":"Recargar página"
 	}
 }

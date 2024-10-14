@@ -32,6 +32,7 @@ import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHours
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -48,7 +49,13 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
     @Override
-    public void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+    @Transactional
+    public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+        diaryOpeningHoursRepository.deleteAll(diaryId);
+        load(diaryId, diaryOpeningHours);
+    }
+
+    private void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
         Sort sort = Sort.by("dayWeekId", "from");
         List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
@@ -75,12 +82,6 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
             log.error("DataIntegrityViolationException -> {}", ex.getMessage(), ex);
             log.debug("Ignore situation because openinghours {}, is already saved with diary {}", openingHoursBo, diaryId);
         }
-    }
-
-    @Override
-    public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
-        diaryOpeningHoursRepository.deleteAll(diaryId);
-        load(diaryId, diaryOpeningHours);
     }
 
     private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh) {

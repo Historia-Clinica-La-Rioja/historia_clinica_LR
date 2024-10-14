@@ -123,11 +123,11 @@
             </div>
             <div class="row-content">
                 <div class="data-title">Fecha inicio</div>
-                <div class="data-text" th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></div>
+                <div class="data-text" th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(startDate, 'HH:mm')} + ' hs.'"></div>
             </div>
             <div class="row-content">
                 <div class="data-title">Fecha fin</div>
-                <div class="data-text" th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></div>
+                <div class="data-text" th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(endDate, 'HH:mm')} + ' hs.'"></div>
             </div>
         </div>
         <div>
@@ -196,7 +196,7 @@
 
 <div class="page-footer" th:fragment="footer">
     <hr/>
-    <div th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd-MM-yyyy HH:mm')} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></div>
+    <div th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(printDate, 'HH:mm')} + ' hs.' + ' por ' + ${user} + ' en ' + ${currentInstitution}"></div>
 </div>
 
 </body>

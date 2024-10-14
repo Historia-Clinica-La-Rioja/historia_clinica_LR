@@ -19,11 +19,11 @@ import java.util.Collections;
 import javax.validation.ConstraintViolationException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
-import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.getanestheticreportdraft.GetLastAnestheticReportDraftFromInternmentEpisode;
+import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
@@ -102,7 +102,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
     @Mock
-    private AnestheticStorage anestheticStorage;
+    private GetLastAnestheticReportDraftFromInternmentEpisode getLastAnestheticReportDraftFromInternmentEpisode;
 
     @Mock
     private ValidateAdministrativeDischarge validateAdministrativeDischarge;
@@ -111,7 +111,6 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
 				internmentEpisodeRepository,
-				dateTimeProvider,
 				evolutionNoteDocumentRepository,
 				patientDischargeRepository,
 				medicalCoveragePlanRepository,
@@ -125,8 +124,8 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
 				getLicenseNumberByProfessional,
-                anestheticStorage,
-                validateAdministrativeDischarge
+                validateAdministrativeDischarge,
+                getLastAnestheticReportDraftFromInternmentEpisode
         );
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,

@@ -17,7 +17,6 @@ export class SurgicalReportProsthesisComponent implements OnInit {
 			this.collapsed = false;
 		}
 	}
-
 	@Output() validProsthesis = new EventEmitter();
 
 	form = new FormGroup({
@@ -27,9 +26,7 @@ export class SurgicalReportProsthesisComponent implements OnInit {
 
 	collapsed = true;
 
-	constructor() {
-
-	}
+	constructor() { }
 
 	ngOnInit(): void {
 		this.form.controls.prosthesis.valueChanges.subscribe(value => {
@@ -40,16 +37,21 @@ export class SurgicalReportProsthesisComponent implements OnInit {
 			} else {
 				descriptionControl.disable();
 				descriptionControl.clearValidators();
+				descriptionControl.setValue('');
 			}
 			descriptionControl.updateValueAndValidity();
 		});
 
-		this.form.controls.description.setValue(this.surgicalReport.prosthesisDescription);
-		this.form.controls.prosthesis.setValue(!!this.surgicalReport.prosthesisDescription);
+		this.form.controls.description.setValue(this.surgicalReport.prosthesisInfo?.description);
+		this.form.controls.prosthesis.setValue(this.surgicalReport.prosthesisInfo?.hasProsthesis);
 
 		this.form.valueChanges.subscribe(data => {
 			this.form.get('description')?.markAsTouched();
-			this.surgicalReport.prosthesisDescription = data.prosthesis ? data.description : null;
+			this.surgicalReport.prosthesisInfo = {
+                ...this.surgicalReport.prosthesisInfo,
+                description: data.description,
+                hasProsthesis: data.prosthesis
+            };
 			this.validateForm();
 		});
 	}

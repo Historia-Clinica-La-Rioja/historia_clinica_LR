@@ -1,0 +1,42 @@
+
+
+.container {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    border-top: 1px solid #d3d3d3;
+    border-left: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
+}
+
+.summary-list{
+    border-right: 1px solid #d3d3d3;
+}
+
+.no-information-container {
+    height: 60vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border-bottom: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
+
+    h3 {
+        color: #9A9A9A;
+    }
+}
+
+.no-detailed-information {
+    display: grid;
+    place-items: center;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.detailed-information {
+    border-bottom: 1px solid #d3d3d3;
+    max-width: 700px;
+}
+
+mat-divider {
+	margin: 0 2rem;
+}

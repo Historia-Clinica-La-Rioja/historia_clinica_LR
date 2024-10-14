@@ -1,0 +1,41 @@
+<button mat-button color="primary" id="button-back" *ngIf="buttonBack" (click)="goToBackDocumentsSignature()">
+    <mat-icon color="primary">arrow_back</mat-icon>
+    <span>{{ 'firmas.BACK_DOCUMENTS_SIGNATURE' | translate }}</span>
+</button>
+
+<section *ngIf="hasProfessionalCuil">
+    <header>
+        <h1 translate="digital-signature.TITLE" class="bold"></h1>
+        <div *ngIf="documents.length" class="action-container">
+            <button [disabled]="!selectedDocumentsId.length" (click)="downloadPdf()" mat-stroked-button color="primary" class="uppercase" id="pdf-download">
+                {{'buttons.PDF_DOWNLOAD' | translate}}
+            </button>
+            <button [disabled]="!selectedDocumentsId.length" (click)="sign()" mat-raised-button color="primary" class="uppercase" id="sign">
+                {{'buttons.SIGN' | translate}}
+            </button>
+        </div>
+    </header>
+    <app-summary-card-multiple-sign
+        *ngIf="!isLoading else loading"
+        [dataList]="documents"
+        [noDataMessage]="'digital-signature.NO_DOCUMENTS'"
+        (downloadId)="download($event)"
+        [detailedInformation]="detailedInformation"
+		(selectedIdOnChange)="seeDetails($event)"
+		(checkedIdsOnChange)="selectedIds($event)">
+        <span translate="digital-signature.UNSELECTED_DOCUMENT" class="unselected-document-message"></span>
+    </app-summary-card-multiple-sign>
+	<mat-paginator #paginator
+               (page)="handlePageEvent($event)"
+               [length]="elementsAmount"
+               [pageSize]="PAGE_SIZE"
+			   [hidePageSize]="true"
+			   [showFirstLastButtons]="true">
+	</mat-paginator>
+</section>
+
+<ng-template #loading>
+    <div class="spinner">
+		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+	</div>
+</ng-template>

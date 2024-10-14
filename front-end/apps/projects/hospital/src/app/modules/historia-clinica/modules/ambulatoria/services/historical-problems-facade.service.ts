@@ -11,9 +11,10 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
-import { MapperService } from './../../../../presentation/services/mapper.service';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 import { isSameDay } from 'date-fns';
+import { AssociatedParameterizedFormInformation } from '../components/associated-parameterized-form-information/associated-parameterized-form-information.component';
+import { toHistoricalProblems } from '@historia-clinica/mappers/problems.mapper';
 
 
 @Injectable({ providedIn: 'root' })
@@ -34,7 +35,6 @@ export class HistoricalProblemsFacadeService {
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private readonly mapperService: MapperService,
 	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
 		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();
@@ -49,7 +49,7 @@ export class HistoricalProblemsFacadeService {
 	public loadEvolutionSummaryList(patientId: number) {
 		this.hceGeneralStateService.getEvolutionSummaryList(patientId).pipe(
 			tap((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => this.filterOptions(hceEvolutionSummaryDto)),
-			map((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => hceEvolutionSummaryDto.length ? this.mapperService.toHistoricalProblems(hceEvolutionSummaryDto) : null)
+			map((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => hceEvolutionSummaryDto.length ? toHistoricalProblems(hceEvolutionSummaryDto) : null)
 		).subscribe(data => {
 			this.originalHistoricalProblems = data;
 			this.sendHistoricalProblems(this.originalHistoricalProblems);
@@ -216,6 +216,7 @@ export class HistoricalProblems {
 	headerInfoDetails?: Detail[];
 	professionalsThatDidNotSignAmount: number;
 	professionalsThatSignedNames: string[];
+	parameterizedForms: AssociatedParameterizedFormInformation[];
 }
 
 export interface FilterOptions {

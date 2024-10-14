@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.dto.*;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
-import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
@@ -25,7 +24,8 @@ import org.mapstruct.Named;
 import java.util.List;
 
 @Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class,
-		LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class, OutpatientConsultationMapper.class})
+		LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class, OutpatientConsultationMapper.class,
+		EmergencyCareClinicalSpecialtySectorMapper.class})
 public interface EmergencyCareMapper {
 
     @Named("toResponseEmergencyCareDto")
@@ -35,6 +35,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionDto")
     @Mapping(target = "creationDate", source = "createdOn")
     @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
+	@Mapping(target = "patient.person.photo", ignore = true)
     ResponseEmergencyCareDto toResponseEmergencyCareDto(EmergencyCareBo emergencyCareBo);
 
     @AfterMapping
@@ -44,14 +45,17 @@ public interface EmergencyCareMapper {
         target.setEntranceType(EnumWriter.write(EEmergencyCareEntrance.getById(emergencyCareBo.getEmergencyCareEntranceId())));
     }
 
-    @Named("toEmergencyCareListDto")
-    @Mapping(target = "type", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "creationDate", source = "createdOn")
-    @Mapping(target = "triage.id", source = "triageCategoryId")
-    @Mapping(target = "triage.name", source = "triageName")
-    @Mapping(target = "triage.color", source = "triageColorCode")
+	@Named("toEmergencyCareListDto")
+	@Mapping(target = "type", ignore = true)
+	@Mapping(target = "state", ignore = true)
+	@Mapping(target = "creationDate", source = "createdOn")
+	@Mapping(target = "triage.id", source = "triageCategoryId")
+	@Mapping(target = "triage.name", source = "triageName")
+	@Mapping(target = "triage.color", source = "triageColorCode")
 	@Mapping(target = "triage.reasons", source = "triage.reasons")
+	@Mapping(target = "triage.creator", source = "triage.creator")
+	@Mapping(target = "triage.clinicalSpecialtySector", source = "triage.clinicalSpecialtySectorBo")
+	@Mapping(target = "patient.person.photo", ignore = true)
     EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 
     @Named("toListEmergencyCareListDto")

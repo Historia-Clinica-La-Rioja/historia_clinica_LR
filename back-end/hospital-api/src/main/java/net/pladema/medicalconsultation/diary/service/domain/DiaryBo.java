@@ -1,21 +1,23 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
+
+import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.domain.IDiaryBo;
-import net.pladema.medicalconsultation.diary.domain.IDiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class DiaryBo implements IDiaryBo {
+public class DiaryBo extends SelfValidating<DiaryBo> {
 
     protected Integer id;
 
@@ -77,8 +79,30 @@ public class DiaryBo implements IDiaryBo {
 		this.endDate = endDate;
 	}
 
-	public List<IDiaryOpeningHoursBo> getIDiaryOpeningHours() {
-		return Collections.unmodifiableList(diaryOpeningHours);
+	@Override
+	public void validateSelf() {
+		super.validateSelf();
+		if (this.getPredecessorProfessionalId() != null && this.getHierarchicalUnitId() == null)
+			throw new DiaryException(DiaryEnumException.PREDECESSOR_PROFESSIONAL_WITHOUT_HIERARCHICAL_UNIT,
+					"No se puede ingresar un profesional a reemplazar sin seleccionar la unidad jerárquica a la que pertenece");
+		this.getDiaryOpeningHours().forEach(openingHour -> {
+			if (openingHour.getOnSiteAttentionAllowed() == null && openingHour.getPatientVirtualAttentionAllowed() == null && openingHour.getSecondOpinionVirtualAttentionAllowed() == null)
+				throw new DiaryException(DiaryEnumException.MODALITY_NOT_FOUND, "Una de las franjas horarias no cuenta con una modalidad definida");
+		});
 	}
 
+	protected boolean isOutOfDiaryBounds(UpdateDiaryAppointmentBo a) {
+		LocalDate from = this.getStartDate();
+		LocalDate to = this.getEndDate();
+		return a.getDate().isBefore(from) || a.getDate().isAfter(to);
+	}
+
+	public void updateMyDiaryOpeningHours() {
+		this.getDiaryOpeningHours()
+				.forEach(doh -> doh.updateMeWithDiaryInformation(this));
+	}
+
+	public boolean equalsDoctorsOffice(DiaryBo other) {
+		return this.getDoctorsOfficeId().equals(other.getDoctorsOfficeId());
+	}
 }

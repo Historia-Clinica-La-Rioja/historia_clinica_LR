@@ -14,7 +14,7 @@
 				<p>{{document.createdOn |
 					viewDateDto:
 					'date' | dateFormat: 'date'}}</p>
-				<button mat-button mat-icon-button color="warn" [disabled]="hasAdministrativeDischarge" (click)="openDeleteDialog(document.id)">
+				<button  mat-icon-button color="warn" [disabled]="hasAdministrativeDischarge" (click)="openDeleteDialog(document.id)">
 					<mat-icon>delete_outline</mat-icon>
 				</button>
 			</div>
@@ -25,3 +25,4 @@
 		</ng-template>
 	</article>
 </section>
+

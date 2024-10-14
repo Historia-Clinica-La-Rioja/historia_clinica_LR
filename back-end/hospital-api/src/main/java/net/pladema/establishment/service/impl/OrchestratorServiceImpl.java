@@ -8,6 +8,9 @@ import net.pladema.establishment.service.domain.OrchestratorBO;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class OrchestratorServiceImpl implements OrchestratorService {
@@ -26,6 +29,17 @@ public class OrchestratorServiceImpl implements OrchestratorService {
 		return null;
 	}
 
+	public List<Integer> getOrchestratorActiveMassiveRetry() {
+		List<Orchestrator> orchestrators = orchestratorRepository.findAll();
+
+		List<Integer> orchestratorsId = orchestrators.stream()
+				.filter(Orchestrator::getMassiveRetry)
+				.map(Orchestrator::getId)
+				.collect(Collectors.toList());
+
+		return orchestratorsId;
+	}
+
 	private OrchestratorBO createOrchestratorBoInstance(Orchestrator orchestrator){
 
 		log.debug("Input parameters -> Orchestrator {}", orchestrator);
@@ -42,6 +56,7 @@ public class OrchestratorServiceImpl implements OrchestratorService {
 		orchestratorBO.setWeightSize((double)orchestrator.getWeightSize());
 		orchestratorBO.setWeightPriority((double)orchestrator.getWeightPriority());
 		orchestratorBO.setNumberToMove(orchestrator.getNumberToMove());
+		orchestratorBO.setFindStudies(orchestrator.getFindStudies());
 
 		log.debug("Output -> OrchestratorBo {}", orchestratorBO);
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 
 @Component({
 	selector: 'app-route-back',
@@ -7,8 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 	styleUrls: ['./route-back.component.scss']
 })
 export class RouteBackComponent implements OnInit {
-	parentData: any;
-	currentData: any;
+	parentData: Data;
+	currentData: Data;
 
 	constructor(
 		private route: ActivatedRoute,

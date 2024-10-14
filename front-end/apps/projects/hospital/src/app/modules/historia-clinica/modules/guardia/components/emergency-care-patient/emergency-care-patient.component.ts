@@ -170,7 +170,7 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 			...(basicData.identificationType && {
 				identification: {
 					type: basicData.identificationType,
-					number: +basicData.identificationNumber
+					number: basicData.identificationNumber
 				}
 			}),
 			id: basicData.id,

@@ -1,24 +1,26 @@
 <app-content width="full">
-	<section>
-		<h2 class="page-title">{{ 'pacientes.home.TITLE' | translate | patientToPerson}}</h2>
-		<div  fxLayout="row">
-			<app-search-create
-				fxFlex.xs="100%"
-				fxFlex.sm="90%"
-				fxFlex.md="70%"
-				fxFlex.lg="60%"
-				fxFlex.xl="50%"
-			></app-search-create>
-		</div>
-	</section>
-	<section *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-		<h2 class="page-title">{{ 'pacientes.home.TITLE_SEARCH' | translate}}</h2>
-		<div  *ngIf="!ffOfCardsIsOn else internmentCard" fxLayout="row">
-			<app-internment-patient-table fxFlex="100%" [redirect]="redirect"></app-internment-patient-table>
-		</div>
-	</section>
+	<ng-container *ngIf="(patientSearchNavigateService.showSpinner$ | async) else showSearchCard">
+		<mat-spinner></mat-spinner>
+	</ng-container>
+	<ng-template #showSearchCard>
+		<section>
+			<h2 class="page-title">{{ 'pacientes.home.TITLE' | translate | patientToPerson}}</h2>
+			<div  fxLayout="row">
+				<app-search-create
+					fxFlex.xs="100%"
+					fxFlex.sm="90%"
+					fxFlex.md="70%"
+					fxFlex.lg="60%"
+					fxFlex.xl="50%"
+					[searchPerson]="paramsToSearchPerson"
+				></app-search-create>
+			</div>
+		</section>
+		<section *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+			<h2 class="page-title">{{ 'pacientes.home.TITLE_SEARCH' | translate}}</h2>
+			<div>
+				<app-internment-patient-card  [redirect]="redirect"></app-internment-patient-card>
+			</div>
+		</section>
+	</ng-template>
 </app-content>
-
-<ng-template #internmentCard>
-	<app-internment-patient-card  [redirect]="redirect"></app-internment-patient-card>
-</ng-template>

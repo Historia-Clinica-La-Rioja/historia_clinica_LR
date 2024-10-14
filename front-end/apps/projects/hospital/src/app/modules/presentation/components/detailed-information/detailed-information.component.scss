@@ -27,6 +27,7 @@ header {
 .one-column {
     display: flex;
     flex-direction: column;
+    overflow-wrap: break-word;
 }
 
 .two-columns {

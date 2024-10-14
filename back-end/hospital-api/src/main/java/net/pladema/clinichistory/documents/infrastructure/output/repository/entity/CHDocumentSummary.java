@@ -39,5 +39,19 @@ public class CHDocumentSummary {
 	private String referenceCounterReference;
 	private String counterReferenceClosure;
 	private String notes;
+	private String surgeryProcedures;
+	private String anestheticHistory;
+	private String preMedications;
+	private String histories;
+	private String anestheticPlans;
+	private String analgesicTechniques;
+	private String anestheticTechniques;
+	private String fluidAdministrations;
+	private String anestheticAgents;
+	private String nonAnestheticDrugs;
+	private String intrasurgicalAnestheticProcedures;
+	private String antibioticProphylaxis;
+	private String vitalSignsAnesthesia;
+	private String postAnesthesiaStatus;
 
 }

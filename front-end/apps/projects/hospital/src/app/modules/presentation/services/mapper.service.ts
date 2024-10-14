@@ -3,7 +3,6 @@ import {
 	BasicPatientDto,
 	BedSummaryDto,
 	CompletePatientDto,
-	HCEEvolutionSummaryDto,
 	InternmentEpisodeDto,
 	InternmentPatientDto,
 	InternmentSummaryDto,
@@ -14,11 +13,9 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { BedManagement } from '../../camas/routes/home/home.component';
 import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
-import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
 import { PatientBasicData } from '@presentation/utils/patient.utils';
-import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
+import { InternmentPatientTableData } from '@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-card/internment-patient-card.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,7 +28,7 @@ export class MapperService {
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
 	toInternmentPatientTableData: (patient: InternmentPatientDto | InternmentEpisodeDto) => InternmentPatientTableData = MapperService._toInternmentPatientTableData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
-	toHistoricalProblems: (hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
+
 
 	constructor() {
 	}
@@ -217,54 +214,6 @@ export class MapperService {
 		return bedManagement;
 	}
 
-	private static _toHistoricalProblems(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): HistoricalProblems[] {
-		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
-			currentOutpatientEvolutionSummary.healthConditions.length ?
-				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
-					consultationDate: currentOutpatientEvolutionSummary.startDate ? dateTimeDtoToDate(currentOutpatientEvolutionSummary.startDate) : null,
-					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
-					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
-					document: currentOutpatientEvolutionSummary.document,
-					institutionName: currentOutpatientEvolutionSummary.institutionName,
-					problemId: problem.snomed.sctid,
-					problemPt: problem.snomed.pt,
-					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
-					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
-					reference: problem.references?.length > 0 ? problem.references : null,
-					markedAsError: problem.isMarkedAsError,
-					color: problem.isMarkedAsError ? 'grey-text' : 'primary',
-					errorProblem: problem.errorProblem,
-					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
-					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
-				}))] : historicalProblemsList = [...historicalProblemsList, {
-					consultationDate: currentOutpatientEvolutionSummary.startDate ? dateTimeDtoToDate(currentOutpatientEvolutionSummary.startDate) : null,
-					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
-					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
-					document: currentOutpatientEvolutionSummary.document,
-					institutionName: currentOutpatientEvolutionSummary.institutionName,
-					problemId: 'Problema no informado',
-					problemPt: 'Problema no informado',
-					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
-					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
-					reference: null,
-					color: 'primary',
-					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
-					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
-				}];
-			return historicalProblemsList;
-		}, []);
-
-
-	}
-
 	private static sortBeds(bedManagement: BedManagement[]): BedManagement[] {
 		bedManagement.forEach(bd => {
 			bd.beds.sort((b1, b2)=> {
@@ -291,4 +240,5 @@ export class MapperService {
 		})
 		return bedManagement;
 	}
+
 }

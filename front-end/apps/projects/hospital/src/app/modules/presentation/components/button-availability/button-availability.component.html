@@ -1,0 +1,8 @@
+<button mat-raised-button
+		[matTooltip]="description"
+		[ngClass]="[type,
+					isSelected ? 'selected' : '',
+					size === AvailableButtonWidth.SMALL ? 'small' : 'large']"
+		(click)="onSelection()">
+  {{ description }}
+</button>

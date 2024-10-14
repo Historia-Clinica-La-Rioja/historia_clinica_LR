@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
-@Table(name = "study_pac_association")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "study_pac_association")
+@Entity
 public class StudyPacAssociation {
 
 	@EmbeddedId

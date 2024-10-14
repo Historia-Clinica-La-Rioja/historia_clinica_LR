@@ -32,4 +32,8 @@ export class QueueImageListComponent implements OnInit {
 		this.imageQueueManagementStateService.tryAgainItemImage(image)
 	}
 
+	indexImage(image: ItemImageQueue) {
+		this.imageQueueManagementStateService.indexImage(image)
+	}
+
 }

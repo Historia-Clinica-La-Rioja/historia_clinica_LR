@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -22,6 +23,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
@@ -64,7 +66,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<Appointment> hasAppointment(@Param("dni") String dni, @Param("id") Integer id);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl, a.recurringAppointmentTypeId)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl, a.recurringAppointmentTypeId, apias.patientIdentityAccreditationStatusId)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
@@ -72,6 +74,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"LEFT JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
 			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
+			"LEFT JOIN AppointmentPatientIdentityAccreditationStatus apias ON (apias.appointmentId = a.id) " +
             "WHERE a.id = :appointmentId " +
 			"AND a.deleteable.deleted = FALSE " +
             "AND ( has.pk.changedStateDate IS NULL OR has.pk.changedStateDate = " +
@@ -940,4 +943,33 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	void updateOverturnCharacteristic(@Param("appointmentId") Integer appointmentId,
 									  @Param("overturn") boolean overturn);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT a.parentAppointmentId " +
+			"FROM Appointment a " +
+			"WHERE a.id = :appointmentId")
+	Integer fetchAppointmentParentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a.modalityId " +
+			"FROM Appointment a " +
+			"WHERE a.id = :appointmentId")
+    Short getModalityById(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo(" +
+			"	a.id," +
+			"	a.dateTypeId," +
+			"	a.hour" +
+			") " +
+			"FROM Appointment a " +
+			"WHERE a.id IN :appointmentIds")
+	List<AppointmentDateHourBo> findAppointmentDateAndHoyByAppointmentIds(
+		@Param("appointmentIds") Set<Integer> appointmentIds
+	);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a.appointmentStateId  " +
+            "FROM Appointment AS a " +
+            "WHERE a.id = :appointmentId ")
+	Optional<Short> getAppointmentStateId(@Param("appointmentId") Integer appointmentId);
 }

@@ -15,7 +15,7 @@
 								placeholder="{{'pacientes.form.SELECT' | translate}}"
 								(selectionChange)="getProfessionalSpecialties()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-									<span class="mat-body">{{getFullName(professional)}}</span>
+									<span class="uppercase">{{professional.fullName}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -83,7 +83,7 @@
 							*ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
 							<div [formGroupName]="currentProfessional">
 								<mat-form-field class="mat-form-field-on-div" appearance="outline">
-									<button type="button" mat-button matSuffix color="warn" mat-icon-button
+									<button type="button"  matSuffix color="warn" mat-icon-button
 										(click)="clear(currentProfessional); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
@@ -319,3 +319,4 @@
 		</form>
 	</section>
 </app-content>
+

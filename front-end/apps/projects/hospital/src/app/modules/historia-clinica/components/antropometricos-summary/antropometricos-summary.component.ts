@@ -6,10 +6,11 @@ import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
 
+const URL_ACCESO_PACIENTE = "/paciente";
 @Component({
 	selector: 'app-antropometricos-summary',
 	templateUrl: './antropometricos-summary.component.html',
@@ -37,20 +38,23 @@ export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 		public dialog: MatDialog,
 		readonly patientEvolutionChartService: PatientEvolutionChartsService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly activatedRoute: ActivatedRoute
+		private readonly activatedRoute: ActivatedRoute,
+		public readonly router: Router,
 	) { }
 
 	ngOnDestroy(): void {
-		this.subscriptionAnthropometricData.unsubscribe();
+		this.subscriptionAnthropometricData?.unsubscribe();
 	}
 
 	ngOnInit(): void {
 		this.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
 		this.patientEvolutionChartService.patientId = this.patientId;
-		this.subscriptionAnthropometricData = this.anthropometricDataList$.subscribe(list => {
-			this.updateAnthropometricData(list);
-			this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
-		});
+		if(this.router.url !== URL_ACCESO_PACIENTE ){
+			this.subscriptionAnthropometricData = this.anthropometricDataList$.subscribe(list => {
+				this.updateAnthropometricData(list);
+				this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
+			});
+		}
 	}
 
 	openDialog(): void {

@@ -30,7 +30,7 @@
 								{{bodyTemperature.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_body_temperature" type="button" mat-button
+						<button id="clear_body_temperature" type="button" 
 							*ngIf="pediatricForm.value.appearance.bodyTemperatureId" matSuffix color="warn"
 							mat-icon-button
 							(click)="clear(pediatricForm.controls.appearance, 'bodyTemperatureId'); $event.stopPropagation()">
@@ -60,7 +60,7 @@
 								{{muscleHypertonya.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_body_temperature" type="button" mat-button
+						<button id="clear_body_temperature" type="button" 
 							*ngIf="pediatricForm.value.appearance.muscleHypertoniaId" matSuffix color="warn"
 							mat-icon-button
 							(click)="clear(pediatricForm.controls.appearance, 'muscleHypertoniaId'); $event.stopPropagation()">
@@ -99,7 +99,7 @@
 								{{respiratoryRetraction.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_respiratory_retraction" type="button" mat-button
+						<button id="clear_respiratory_retraction" type="button" 
 							*ngIf="pediatricForm.value.breathing.respiratoryRetractionId" matSuffix color="warn"
 							mat-icon-button
 							(click)="clear(pediatricForm.controls.breathing, 'respiratoryRetractionId'); $event.stopPropagation()">
@@ -148,7 +148,7 @@
 								{{perfusion.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_perfusion" type="button" mat-button
+						<button id="clear_perfusion" type="button" 
 							*ngIf="pediatricForm.value.circulation.perfusionId" matSuffix color="warn" mat-icon-button
 							(click)="clear(pediatricForm.controls.circulation, 'perfusionId'); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -176,13 +176,5 @@
 
 	</form>
 
-	<div class="simple-form-field" fxLayoutGap="10px" fxLayout="row" fxLayoutAlign="flex-end">
-		<button mat-stroked-button class="uppercase" (click)="back()">
-			<span [translate]="cancelLabel"></span>
-		</button>
-		<button mat-raised-button class="uppercase" color="primary" (click)="confirmPediatricTriage()"
-			[disabled]="disableConfirmButton">
-			<span [translate]="confirmLabel"></span>
-		</button>
-	</div>
 </div>
+

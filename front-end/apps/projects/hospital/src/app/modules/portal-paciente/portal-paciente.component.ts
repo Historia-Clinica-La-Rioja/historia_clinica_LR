@@ -8,7 +8,7 @@ import { mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper'
 
 import { ROLES_USER_SIDEBAR_MENU, NO_ROLES_USER_SIDEBAR_MENU } from '../portal-paciente/constants/menu';
 import { LoggedUserService } from '../auth/services/logged-user.service';
-import { HomeRoutes } from '../home/home-routing.module';
+import { HomeRoutes } from '../home/constants/menu';
 import { AppRoutes } from '../../app-routing.module';
 import {FeatureFlagService} from "@core/services/feature-flag.service";
 

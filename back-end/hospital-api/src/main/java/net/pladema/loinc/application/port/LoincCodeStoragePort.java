@@ -10,4 +10,7 @@ public interface LoincCodeStoragePort {
 	Optional<FetchLoincCodeBo> findByCode(String loincCode);
 
     Map<String, FetchLoincCodeBo> findByCodes(List<String> codes);
+
+	Optional<String> getDescriptionById(Integer id);
+
 }

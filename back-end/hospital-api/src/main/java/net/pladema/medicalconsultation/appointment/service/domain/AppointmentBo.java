@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"expiredRegister"})
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
@@ -107,6 +107,8 @@ public class AppointmentBo {
 
 	private boolean expiredRegister;
 
+	private Short patientIdentityAccreditationStatusId;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
 						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;
@@ -183,6 +185,7 @@ public class AppointmentBo {
 				)
 				.parentAppointmentId(appointmentVo.getAppointment().getParentAppointmentId())
 				.updatedOn(appointmentVo.getAppointment().getUpdatedOn())
+				.patientIdentityAccreditationStatusId(appointmentVo.getPatientIdentityAccreditationStatusId())
 				.build();
 	}
 

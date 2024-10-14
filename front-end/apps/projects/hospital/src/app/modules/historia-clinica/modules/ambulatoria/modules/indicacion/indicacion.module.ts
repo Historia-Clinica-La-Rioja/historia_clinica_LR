@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
 //standalone componentes
 import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { PharmacoDetailComponent } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
 //components
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
 import { CardPharmacoComponent } from './components/card-pharmaco/card-pharmaco.component';
@@ -39,12 +40,18 @@ import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmac
 import { PatientInformationComponent } from './components/patient-information/patient-information.component';
 import { PrescriptionInformationComponent } from './components/prescription-information/prescription-information.component';
 import { MedicationInformationComponent } from './components/medication-information/medication-information.component';
+import { CommercialPharmacoTypeaheadComponent } from './components/commercial-pharmaco-typeahead/commercial-pharmaco-typeahead.component';
+import { DispenseButtonComponent } from './components/dispense-button/dispense-button.component';
+import { MedicationDispensePopupComponent } from './dialogs/medication-dispense-popup/medication-dispense-popup.component';
+import { PharmacosToDispenseComponent } from './components/pharmacos-to-dispense/pharmacos-to-dispense.component';
 
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
 		CardPharmacoComponent,
+		CommercialPharmacoTypeaheadComponent,
 		DayDisplayComponent,
+		DispenseButtonComponent,
 		GeneralNursingRecordComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
@@ -71,8 +78,10 @@ import { MedicationInformationComponent } from './components/medication-informat
 		WarningMessageComponent,
 		EmergencyCareIndicationsCardComponent,
 		PatientInformationComponent,
-  PrescriptionInformationComponent,
-  MedicationInformationComponent,
+		PrescriptionInformationComponent,
+		MedicationInformationComponent,
+  		MedicationDispensePopupComponent,
+    	PharmacosToDispenseComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
@@ -80,6 +89,7 @@ import { MedicationInformationComponent } from './components/medication-informat
 		InternmentIndicationsCardComponent,
 		EmergencyCareIndicationsCardComponent,
 		NursingCareComponent,
+		CommercialPharmacoTypeaheadComponent
 	],
 	imports: [
 		CommonModule,
@@ -87,7 +97,8 @@ import { MedicationInformationComponent } from './components/medication-informat
 		PresentationModule,
 		HistoriaClinicaModule,
 		//Standalone Component
-		PatientSummaryComponent
+		PatientSummaryComponent,
+		PharmacoDetailComponent,
 	],
 	providers: [
 		NursingRecordFacadeService

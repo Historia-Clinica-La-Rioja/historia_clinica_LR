@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.TranscribedServiceRequestSummaryDto;
+import net.pladema.medicalconsultation.appointment.domain.enums.EPatientIdentityAccreditationStatus;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 
 @Getter
@@ -58,4 +59,7 @@ public class AppointmentDto extends CreateAppointmentDto {
 	private TranscribedServiceRequestSummaryDto transcribedOrderData;
 	
 	private DateTimeDto updatedOn;
+
+	private EPatientIdentityAccreditationStatus patientIdentityAccreditationStatus;
+
 }

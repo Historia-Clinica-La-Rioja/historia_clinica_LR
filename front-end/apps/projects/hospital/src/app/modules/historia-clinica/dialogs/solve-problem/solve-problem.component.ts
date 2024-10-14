@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { format } from "date-fns";
 
 import { hasError } from '@core/utils/form.utils';
-import { DateFormat, MIN_DATE } from "@core/utils/date.utils";
+import { MIN_DATE } from "@core/utils/date.utils";
 import { HCEHealthConditionDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -52,11 +51,11 @@ export class SolveProblemComponent implements OnInit {
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.today = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE));
+		this.today = new Date();
 		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required],
+			snomed: [{value: null, disabled: true}, Validators.required],
 			severidad: [null],
-			cronico: [null, Validators.required],
+			cronico: [{value: null, disabled: true}, Validators.required],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null, Validators.required]
 		});
@@ -165,9 +164,9 @@ export class SolveProblemComponent implements OnInit {
 		return hasError(this.form, type, controlName);
 	}
 
-
 	toFormatDate = (dateStr) => {
 		const [day, month, year] = dateStr.split('/');
 		return new Date(year, month - 1, day);
 	}
+
 }

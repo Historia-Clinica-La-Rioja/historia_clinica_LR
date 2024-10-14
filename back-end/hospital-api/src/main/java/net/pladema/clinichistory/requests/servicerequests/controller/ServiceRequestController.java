@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.requests.servicerequests.application.GetDiagnosticReportResults;
+import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticReportResultsBo;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,7 +52,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.dto.Diagnos
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationsCommandDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.AddDiagnosticReportObservationsCommandDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.GetDiagnosticReportObservationGroupDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
@@ -59,14 +63,12 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Stud
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyOrderReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.GetDiagnosticReportObservationGroupBo;
-import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.InvalidProcedureTemplateChangeException;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
@@ -111,7 +113,6 @@ public class ServiceRequestController {
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
-    private final DiagnosticReportInfoService diagnosticReportInfoService;
     private final FileMapper fileMapper;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
@@ -121,6 +122,7 @@ public class ServiceRequestController {
 	private final GetDiagnosticReportObservationGroup getDiagnosticReportObservationGroup;
 	private final AddDiagnosticReportObservations addDiagnosticReportObservations;
 	private final DiagnosticReportObservationsMapper diagnosticReportObservationsMapper;
+	private final GetDiagnosticReportResults getDiagnosticReportResults;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -165,11 +167,13 @@ public class ServiceRequestController {
                          @PathVariable(name = "patientId") Integer patientId,
                          @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
                          @RequestBody() CompleteRequestDto completeRequestDto) {
+
         log.debug("Input parameters ->  {} institutionIdpatientId {}, diagnosticReportId {}, completeRequestDto {}",
                 institutionId,
                 patientId,
                 diagnosticReportId,
                 completeRequestDto);
+
 		if (completeRequestDto.getReferenceClosure() != null)
 			completeRequestDto.getReferenceClosure().setFileIds(completeRequestDto.getFileIds());
 
@@ -229,7 +233,7 @@ public class ServiceRequestController {
         log.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
 
 
-        DiagnosticReportBo resultService = diagnosticReportInfoService.run(diagnosticReportId);
+        DiagnosticReportResultsBo resultService = getDiagnosticReportResults.run(diagnosticReportId);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(resultService.getUserId());
 		ReferenceRequestDto reference = sharedReferenceCounterReference.getReferenceByServiceRequestId(resultService.getEncounterId()).orElse(null);
 		DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(
@@ -257,8 +261,8 @@ public class ServiceRequestController {
 						"category {}, categoriesToBeExcluded {}",
                 institutionId, patientId, status, study, healthCondition, category, categoriesToBeExcluded);
 
-        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getListIncludingConfidential(new DiagnosticReportFilterBo(
-                patientId, status, study, healthCondition, category, categoriesToBeExcluded), institutionId);
+        List<DiagnosticReportResultsBo> resultService = listDiagnosticReportInfoService.getListIncludingConfidential(new DiagnosticReportFilterBo(
+                patientId, status, study, healthCondition, category, categoriesToBeExcluded,  null, null), institutionId);
 
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
@@ -288,7 +292,7 @@ public class ServiceRequestController {
 				institutionId, patientId, status, category);
 
 		List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getMedicalOrderList(new DiagnosticReportFilterBo(
-				patientId, status, null, null, category, null));
+				patientId, status, null, null, category, null, null, null));
 
 		List<DiagnosticReportInfoDto> result = resultService.stream()
 				.map(diagnosticReportBo -> {
@@ -370,8 +374,8 @@ public class ServiceRequestController {
 				diagnosticReportId,
 				observations);
 
-		AddObservationsCommandVo observationsBo = diagnosticReportObservationsMapper.fromDto(observations);
-		addDiagnosticReportObservations.run(diagnosticReportId, observationsBo);
+		SharedAddObservationsCommandVo observationsBo = diagnosticReportObservationsMapper.fromDto(observations);
+		addDiagnosticReportObservations.run(diagnosticReportId, observationsBo, institutionId, patientId);
 
 		log.debug(OUTPUT, "endpoint doesn't provide output");
 	}

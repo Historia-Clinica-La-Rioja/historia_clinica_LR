@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -106,10 +105,8 @@ public class BackofficeDoctorsOfficeValidator implements BackofficePermissionVal
         if (allowedInstitutions.isEmpty())
             return new ItemsAllowed<>(false, Collections.emptyList());
 
-        List<DoctorsOffice> entitiesByExample = repository.findAll(Example.of(entity));
         List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-        List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(DoctorsOffice::getId).collect(Collectors.toList());
-        return new ItemsAllowed<>(false, resultIds);
+        return new ItemsAllowed<>(false, idsAllowed);
     }
 
     @Override

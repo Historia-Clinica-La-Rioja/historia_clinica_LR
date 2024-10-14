@@ -20,5 +20,9 @@ export class DocumentsSummaryService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments/${internmentEpisodeId}/document-header/${documentId}`;
 		return this.http.get<HospitalizationDocumentHeaderDto>(url);
 	}
-   
+
+    getEmergencyCareDocumentHeader(documentId: number, emergencyCareEpisodeId: number): Observable<HospitalizationDocumentHeaderDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/emergency-care/${emergencyCareEpisodeId}/document-header/${documentId}`;
+		return this.http.get<HospitalizationDocumentHeaderDto>(url);
+	} 
 }

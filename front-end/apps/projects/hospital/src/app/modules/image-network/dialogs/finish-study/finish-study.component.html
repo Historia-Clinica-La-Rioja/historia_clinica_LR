@@ -1,10 +1,10 @@
 <ng-container *ngIf ="detailOrderInfo$ | async as detailOrder">
-    <div  fxLayout="row" fxLayoutAlign="end">
-        <button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+    <div fxLayout="row" fxLayoutAlign="end">
+        <button id="cancel_button" name="cancel_button" mat-icon-button mat-dialog-close>
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div fxLayout="column" fxLayoutGap="15px">
+    <mat-dialog-content fxLayout="column" fxLayoutGap="15px">
         <app-order-image-detail [detailOrder]="detailOrder"></app-order-image-detail>
         <div class="inputs-container" fxLayout="column">
             <mat-form-field appearance="outline">
@@ -15,5 +15,5 @@
                 <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
             </button>
         </div>
-    </div>
+    </mat-dialog-content>
 </ng-container>

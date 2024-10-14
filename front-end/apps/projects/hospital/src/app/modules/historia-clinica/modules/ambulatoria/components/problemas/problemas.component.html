@@ -315,7 +315,7 @@
 														<app-amended-problems-information *ngIf="historicalProblem.markedAsError"
 															[errorProblem]="historicalProblem.errorProblem"></app-amended-problems-information>
 													</div>
-
+																						
 												</div>
 
 												<div id="reference_information"
@@ -462,6 +462,10 @@
 
 												</div>
 
+												<section *ngIf="historicalProblem.parameterizedForm">
+													<app-associated-parameterized-form-list id="parameterized_form_list" [parameterizedFormList]="historicalProblem.parameterizedForm"></app-associated-parameterized-form-list>
+												</section>
+												
 											</div>
 											<div>
 												<button mat-icon-button color="primary"

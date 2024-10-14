@@ -7,7 +7,7 @@ export interface Study {
 
 export class OrderStudiesService {
 
-	private data: any[];
+	data: Study[];
 
 	constructor() {
 		this.data = [];

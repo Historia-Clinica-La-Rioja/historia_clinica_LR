@@ -17,13 +17,14 @@ export class DocumentActionsService {
 	userId: number;
 	hasMedicalDischarge = false;
 	hasPhysicalDischarge = false;
+    hasAdministrativeDischarge = false;
 
 	constructor(
 		private readonly accountService: AccountService,
 		private readonly deleteDocumentAction: DeleteDocumentActionService,
 		private readonly editDocumentAction: EditDocumentActionService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
-		readonly internmentActions: InternmentActionsService
+		readonly internmentActions: InternmentActionsService,
 	) {
 		this.internmentActions.medicalDischarge$.subscribe(medicalDischarge => {
 			if (medicalDischarge)
@@ -37,6 +38,7 @@ export class DocumentActionsService {
 			.subscribe((patientDischarge: PatientDischargeDto) => {
 				this.hasMedicalDischarge = !!patientDischarge.medicalDischargeDate;
 				this.hasPhysicalDischarge = !!patientDischarge.physicalDischargeDate;
+                this.hasAdministrativeDischarge = !!patientDischarge.administrativeDischargeDate;
 			});
 		this.editDocumentAction.setInformation(patientId, internmentEpisodeId);
 	}
@@ -56,6 +58,11 @@ export class DocumentActionsService {
 		const createdOn = dateTimeDtotoLocalDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
+        if(document.documentType === "Parte anestésico" || document.documentType === "Parte quirúrgico de internación" ) {
+            if(this.hasMedicalDischarge && !this.hasAdministrativeDischarge){
+                return true;
+            }
+        }
 		if (this.hasMedicalDischarge)
 			return false;
 		return true;

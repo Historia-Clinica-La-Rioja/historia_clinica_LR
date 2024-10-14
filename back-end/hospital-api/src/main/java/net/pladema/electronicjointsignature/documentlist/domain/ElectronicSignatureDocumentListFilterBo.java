@@ -1,10 +1,12 @@
 package net.pladema.electronicjointsignature.documentlist.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @ToString
 @NoArgsConstructor
@@ -16,11 +18,16 @@ public class ElectronicSignatureDocumentListFilterBo {
 
 	private Integer healthcareProfessionalId;
 
-	private Short signatureStatusId;
+	private List<Short> signatureStatusIds;
 
-	public ElectronicSignatureDocumentListFilterBo(Integer institutionId, Short signatureStatusId) {
-		this.institutionId = institutionId;
-		this.signatureStatusId = signatureStatusId;
-	}
+	private LocalDate startDate;
+
+	private LocalDate endDate;
+
+	private String patientFirstName;
+
+	private String patientLastName;
+
+	private boolean isSelfDeterminationNameFFActive;
 
 }

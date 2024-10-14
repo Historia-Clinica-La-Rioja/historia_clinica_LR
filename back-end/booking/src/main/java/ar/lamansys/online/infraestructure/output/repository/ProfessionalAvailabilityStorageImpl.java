@@ -247,9 +247,18 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.collect(Collectors.toList());
+		result.forEach(professionalAvailability -> setHasCoverage(professionalAvailability, professionals));
 		log.debug("Find availability -> {}", result);
 		return Optional.of(result);
 
+	}
+
+	private void setHasCoverage(ProfessionalAvailabilityBo professionalAvailability, List<BookingProfessionalBo> professionals) {
+		professionalAvailability.getProfessional().setCoverage(professionals.stream().filter(professional -> isSameProfessional(professionalAvailability, professional)).findFirst().get().getCoverage());
+	}
+
+	private boolean isSameProfessional(ProfessionalAvailabilityBo professionalAvailability, BookingProfessionalBo professional) {
+		return professional.getId().equals(professionalAvailability.getProfessional().getId());
 	}
 
 	private List<BookingProfessionalBo> findProfessionals(Integer institutionId, Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId) {

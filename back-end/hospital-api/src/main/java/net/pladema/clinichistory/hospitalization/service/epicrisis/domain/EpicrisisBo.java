@@ -29,6 +29,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -98,6 +99,8 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 	private Integer sectorId;
 
 	private Integer medicalCoverageId;
+
+    private Map<String, Object> contextMap;
 
 	@Override
     public Integer getPatientId() {

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DownloadService } from '@core/services/download.service';
-import { UIComponentDto } from '@extensions/extensions-model';
 import { ReportFilters } from "../../reportes/routes/home/home.component";
-import { ImageNetworkProductivityFilterDto } from '@api-rest/api-model';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Injectable({
@@ -17,7 +15,6 @@ export class ReportsService {
 	constructor(
 		private contextService: ContextService,
 		private downloadService: DownloadService,
-		private http: HttpClient
 	) { }
 
 	private getReport(params: ReportFilters, fileName: string, url: any): Observable<any> {
@@ -61,36 +58,19 @@ export class ReportsService {
 		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
 	}
 
-	getDiabetesReport(): Observable<UIComponentDto> {
-		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/diabetes`;
-		return this.http.get<UIComponentDto>(url);
-	}
-
-	getHypertensionReport(): Observable<UIComponentDto> {
-		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/hypertension`;
-		return this.http.get<UIComponentDto>(url);
-	}
-
-	getEpidemiologicalWeekReport(): Observable<UIComponentDto> {
-		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/epidemiological_week`;
-		return this.http.get<UIComponentDto>(url);
-	}
-
 	getNominalAppointmentsDetail(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-appointment-detail`;
 		return this.getReport(params, fileName, url);
 	}
 
-	getNominalEmergencyCareEpisodeDetail(searchFilter: ReportFilters, fileName: string): Observable<any> {
+	getNominalEmergencyCareEpisodeDetail(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-emergency-care-episode-detail`;
-		const filters = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
-		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
-	}
+		return this.getReport(params, fileName, url);
+		}
 
-	getImageNetworkProductivityReport(searchCriteria: ImageNetworkProductivityFilterDto, fileName: string){
+	getImageNetworkProductivityReport(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/report/image-network-productivity`;
-		const params = { filter: JSON.stringify(searchCriteria) };
-		return this.downloadService.downloadXlsWithRequestParams(url, fileName, params);
+		return this.getReport(params, fileName, url);
 	}
 
 }

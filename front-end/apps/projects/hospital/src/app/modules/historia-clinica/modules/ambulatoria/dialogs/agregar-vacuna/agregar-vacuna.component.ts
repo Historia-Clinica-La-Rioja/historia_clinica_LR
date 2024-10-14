@@ -29,7 +29,10 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 	readonly HALF_COLUMN_WIDTH: number = 47.5;
 	readonly DISABLED_LABEL_COLOR: string = 'rgba(0, 0, 0, 0.38)';
-	selectedTab: number = 0;
+	readonly APPLY_VACCINE_TAB_VALUE: number = 0;
+	readonly REGISTER_PREVIOUS_VACCINE_TAB_VALUE: number = 1;
+
+	selectedTab: number = this.REGISTER_PREVIOUS_VACCINE_TAB_VALUE;
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
 	conditions: VaccineConditionsDto[];
@@ -82,7 +85,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	ngAfterContentInit(): void {
 		if (this.data?.edit)
 			if (!this.data.immunization?.billable)
-				this.setSelectedTab(1);
+				this.setSelectedTab(this.REGISTER_PREVIOUS_VACCINE_TAB_VALUE);
 	}
 
 	ngOnInit(): void {
@@ -121,7 +124,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 			if (this.data.immunization?.billable) { // then load data to billable form and its attributes
 
-				
+
 				const initValue = dateISOParseDate(this.data.immunization.administrationDate);
 				this.initNewVaccineDate = initValue
 				this.billableForm.controls.date.setValue(initValue);
@@ -136,9 +139,8 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 				this.vaccineService.vaccineInformation(this.newVaccineSnomedConcept.sctid).subscribe(
 					(vaccineInformation: VaccineInformationDto) => {
-
 						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
-						if (vaccineInformation.conditions.length > 0) {
+						if (vaccineInformation?.conditions.length > 0) {
 							this.conditions = vaccineInformation.conditions;
 							this.billableForm.get("condition").enable();
 							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
@@ -186,7 +188,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 					(vaccineInformation: VaccineInformationDto) => {
 
 						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
-						if (vaccineInformation.conditions.length > 0) {
+						if (vaccineInformation?.conditions.length > 0) {
 							this.conditions = vaccineInformation.conditions;
 							this.previousForm.get("condition").enable();
 							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
@@ -221,15 +223,15 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	}
 
 	prevDateChanged(date: Date) {
-		this.previousForm.controls.date.setValue(date)	
+		this.previousForm.controls.date.setValue(date)
 	}
-	
+
 	newDateChanged(date: Date) {
 		this.billableForm.controls.date.setValue(date)
 	}
 
 
-	public submit(vaccineInputContainer: HTMLElement): void {
+	public submit(): void {
 		if (this.billableForm.valid) {
 			this.tryToSubmit = false;
 			const appliedVaccine: ImmunizationDto = {
@@ -246,21 +248,21 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 				appliedVaccine.conditionId = this.conditions[this.billableForm.value.condition].id;
 				appliedVaccine.schemeId = this.schemes[this.billableForm.value.scheme].id;
 				appliedVaccine.dose = this.doses[this.billableForm.value.dose];
-			}			
+			}
 			this.dialogRef.close(appliedVaccine);
 		}
 		else {
 			this.tryToSubmit = true;
 			if (this.billableForm.controls.snomed.invalid)
-				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				document.getElementById('vaccineInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
 			else
 				scrollIntoError(this.billableForm, this.el);
 		}
 	}
 
-	public submitPreviousForm(vaccineInputContainer: HTMLElement): void {
+	public submitPreviousForm(): void {
 		if (this.previousForm.valid) {
-			this.tryToSubmitPrevious = false;			
+			this.tryToSubmitPrevious = false;
 			const appliedVaccine: ImmunizationDto = {
 				snomed: this.previousVaccineSnomedConcept,
 				administrationDate: toApiFormat(this.previousForm.value.date),
@@ -286,7 +288,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		else {
 			this.tryToSubmitPrevious = true;
 			if (this.previousForm.controls.snomed.invalid)
-				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				document.getElementById('previousVaccineInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
 			else
 				scrollIntoError(this.previousForm, this.el);
 		}

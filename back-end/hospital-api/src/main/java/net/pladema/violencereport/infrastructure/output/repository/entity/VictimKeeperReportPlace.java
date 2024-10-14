@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.violencereport.infrastructure.output.repository.embedded.VictimKeeperReportPlacePK;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;

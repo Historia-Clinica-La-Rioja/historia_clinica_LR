@@ -1,6 +1,7 @@
 package net.pladema.patient.repository;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
+import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
@@ -8,87 +9,63 @@ import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.domain.PatientSearch;
-import ar.lamansys.sgx.shared.repositories.QueryPart;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static net.pladema.patient.repository.PatientSearchQuery.AND_JOINING_OPERATOR;
-import static net.pladema.patient.repository.PatientSearchQuery.LIKE_COMPARATOR;
-
+@AllArgsConstructor
 @Repository
 public class PatientRepositoryImpl implements PatientRepositoryCustom {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    public PatientRepositoryImpl(EntityManager entityManager){
-        super();
-        this.entityManager = entityManager;
-    }
-
-    @SuppressWarnings("unchecked")
     @Override
-    public List<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Integer resultSize) {
-        PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
-        QueryPart queryPart = new QueryPart(
-                "SELECT ")
-                .concatPart(patientSearchQuery.select())
-                .concat(" FROM ")
-                .concatPart(patientSearchQuery.from())
-                .concat("WHERE ")
-                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
-				.concat(" AND patient.deleted = false AND patient.type_id != " + EPatientType.REJECTED.getId() + " ");
+    public Page<PatientSearch> getAllByOptionalFilter(PatientSearchFilter searchFilter, Pageable pageable) {
+		String fromStatement = "FROM Patient p " +
+				"JOIN Person p2 ON (p2.id = p.personId) " +
+				"JOIN PatientType pt ON (pt.id = p.typeId) " +
+				"LEFT JOIN PersonExtended pe ON (pe.id = p2.id) ";
 
-        if (searchFilter.getFilterByNameSelfDetermination()) {
-			queryPart.concat("UNION ");
-			queryPart.concatPart(patientSearchQuery.addUnion());
-		}
+		String whereStatement =	"WHERE p.deleteable.deleted = FALSE " +
+				"AND p.typeId != " + EPatientType.REJECTED.getId() + " " +
+				(searchFilter.getFirstName() != null && !searchFilter.getFirstName().isBlank() ? ((searchFilter.getFilterByNameSelfDetermination() ? "AND UPPER(COALESCE(pe.nameSelfDetermination, p2.firstName)) " : "AND UPPER(p2.firstName) ") + "LIKE '" + searchFilter.getFirstName().toUpperCase() + "%' ") : "") +
+				(searchFilter.getMiddleNames() != null && !searchFilter.getMiddleNames().isBlank() ? "AND UPPER(p2.middleNames) LIKE '" + searchFilter.getMiddleNames().toUpperCase() + "%' " : "") +
+				(searchFilter.getLastName() != null && !searchFilter.getLastName().isBlank() ? "AND UPPER(p2.lastName) LIKE '" + searchFilter.getLastName().toUpperCase() + "%' " : "") +
+				(searchFilter.getOtherLastNames() != null ? "AND UPPER(p2.otherLastNames) LIKE '" + searchFilter.getOtherLastNames().toUpperCase() +"%' " : "") +
+				(searchFilter.getGenderId() != null ? "AND p2.genderId = " + searchFilter.getGenderId() + " " : "") +
+				(searchFilter.getIdentificationNumber() != null && !searchFilter.getIdentificationNumber().isBlank() ? "AND p2.identificationNumber = '" + searchFilter.getIdentificationNumber() + "' " : "") +
+				(searchFilter.getIdentificationTypeId() != null ? "AND p2.identificationTypeId = " + searchFilter.getIdentificationTypeId() + " " : "") +
+				(searchFilter.getBirthDate() != null ? "AND p2.birthDate = '" + searchFilter.getBirthDate() + "' " : "");
 
-		Query query = entityManager.createNativeQuery(queryPart.toString());
-		query.setMaxResults(resultSize);
-		queryPart.configParams(query);
-
-        return patientSearchQuery.construct(query.getResultList());
+		List<PatientSearch> queryResult = getPatientSearches(pageable, fromStatement, whereStatement);
+		Long queryResultAmount = getPatientSearchesAmount(fromStatement, whereStatement);
+        return new PageImpl<>(queryResult, pageable, queryResultAmount);
     }
 
-    public Integer getCountByOptionalFilter(PatientSearchFilter searchFilter) {
-        PatientSearchQuery patientSearchQuery = new PatientSearchQuery(searchFilter);
+	private Long getPatientSearchesAmount(String fromStatement, String whereStatement) {
+		String selectStatement = "SELECT COUNT(1) ";
+		Query query = entityManager.createQuery(selectStatement + fromStatement + whereStatement);
+		return (Long) query.getSingleResult();
+	}
 
-        QueryPart queryPart = new QueryPart(
-                "SELECT COUNT(DISTINCT result.id) \n")
-                .concat("FROM ( \n")
-				.concat("	SELECT patient.id as id \n")
-				.concat("	FROM \n")
-                .concatPart(patientSearchQuery.from())
-                .concat("	WHERE \n")
-                .concatPart(patientSearchQuery.whereWithAllAttributes(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
-				.concat(" AND patient.deleted = false ");
-
-        if (searchFilter.getFilterByNameSelfDetermination()) {
-			queryPart.concat("UNION \n" +
-					"SELECT patient.id as id \n");
-			queryPart.concat("FROM \n")
-					.concatPart(patientSearchQuery.from())
-					.concat("WHERE \n")
-					.concatPart(patientSearchQuery.whereWithAllAttributesAndNameSelfDetermination(AND_JOINING_OPERATOR, LIKE_COMPARATOR))
-					.concat(" AND patient.deleted = false ");
-		}
-
-        queryPart.concat(") as result");
-
-        Query query = entityManager.createNativeQuery(queryPart.toString());
-		queryPart.configParams(query);
-
-		BigInteger result = (BigInteger) query.getSingleResult();
-		return result.intValue();
-    }
+	private List<PatientSearch> getPatientSearches(Pageable pageable, String fromStatement, String whereStatement) {
+		String selectStatement = "SELECT NEW net.pladema.patient.service.domain.PatientSearch(p2, p.id, pt.active, " +
+				"pe.nameSelfDetermination) ";
+		Query query = entityManager.createQuery(selectStatement + fromStatement + whereStatement)
+				.setMaxResults(pageable.getPageSize())
+				.setFirstResult(pageable.getPageSize() * pageable.getPageNumber());
+		return (List<PatientSearch>) query.getResultList();
+	}
 
 	@Override
 	public List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit) {

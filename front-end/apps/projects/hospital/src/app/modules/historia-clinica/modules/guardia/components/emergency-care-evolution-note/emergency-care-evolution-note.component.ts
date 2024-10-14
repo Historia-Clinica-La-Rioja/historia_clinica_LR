@@ -1,10 +1,19 @@
-import { Component, Input } from '@angular/core';
-import { DateTimeDto, EmergencyCareEvolutionNoteDocumentDto, HealthcareProfessionalDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { HEALTH_VERIFICATIONS } from '../../../ambulatoria/modules/internacion/constants/ids';
-import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
-import { PatientNameService } from '@core/services/patient-name.service';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AppFeature, EmergencyCareEvolutionNoteDto } from '@api-rest/api-model';
+import { EvolutionNoteAsViewFormat, EvolutionNoteSummaryService } from '../../services/evolution-note-summary.service';
+import { NotaDeEvolucionDockPopupComponent, NotaDeEvolucionData } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { DockPopupRef } from '@presentation/services/dock-popup-ref';
+import { Observable, forkJoin, map } from 'rxjs';
+import { Item } from '../emergency-care-evolutions/emergency-care-evolutions.component';
+import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
+import { DockPopupService } from '@presentation/services/dock-popup.service';
+import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
+import { DocumentService } from '@api-rest/services/document.service';
+import { TranslateService } from '@ngx-translate/core';
+import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
+import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
+import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-emergency-care-evolution-note',
@@ -12,176 +21,92 @@ import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 	styleUrls: ['./emergency-care-evolution-note.component.scss']
 })
 export class EmergencyCareEvolutionNoteComponent {
+    
+    @Input() set content(evolutionNote: Item) {
+        this._evolutionNote = evolutionNote;
+        this.fetchSummaryInfo();
+    }
+    @Input() patientId: number;
+	@Input() set episodeId(episodeId: number) {
+		this._episodeId = episodeId;
+        this.fetchSummaryInfo();
+	};
+	@Output() resetActiveDocument = new EventEmitter<void>();
+    private _episodeId: number;
+	private evolutionNoteDialogRef: DockPopupRef;
+    evolutionNoteSummary: EvolutionNoteAsViewFormat;
+     _evolutionNote: Item;
+    private documentName = '';
+    documentSummary$: Observable<HeaderDescription>;
+    isPopUpOpened = false;
+	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA = false;
 
+    constructor(
+		private readonly evolutionNoteSummaryService: EvolutionNoteSummaryService,
+		private readonly emergencyCareEvolutionNoteService: EmergencyCareEvolutionNoteService,
+		private readonly dockPopupService: DockPopupService,
+        private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
+        private readonly documentService: DocumentService,
+        private readonly translateService: TranslateService,
+        private readonly documentSummaryService: DocumentsSummaryService,
+        private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
+		private readonly featureFlag: FeatureFlagService
+	) { 
+        this.documentName = this.translateService.instant('guardia.documents-summary.document-name.EVOLUTION_NOTE');
+		this.setFeatureFlags();
+    }
 
-	@Input() set content(newContent: EmergencyCareEvolutionNoteDocumentDto) {
-		this.internacionMasterDataService.getAllergyCriticality().subscribe(
-			c => {
-				this.criticalityTypes = c;
-				this.alergiasContent = this.toAlergias(newContent.emergencyCareEvolutionNoteClinicalData.allergies);
-				if (newContent.emergencyCareEvolutionNoteClinicalData.allergies.isReferred === false)
-					this.alergiasContent = ['guardia.no_refer.ALLERGIES'];
-			}
-		)
-		this.especialidadContent = [newContent.clinicalSpecialtyName];
-		this.motivosContent = newContent.emergencyCareEvolutionNoteClinicalData.reasons.map(r => r.snomed.pt)
-		this.diagnosticosContent = this.toDiagnostico(newContent.emergencyCareEvolutionNoteClinicalData.mainDiagnosis, newContent.emergencyCareEvolutionNoteClinicalData.diagnosis)
-		this.evolucionContent = newContent.emergencyCareEvolutionNoteClinicalData.evolutionNote ? [newContent.emergencyCareEvolutionNoteClinicalData.evolutionNote] : null;
-		this.antropometricosContent = this.toAntropometricosContent(newContent.emergencyCareEvolutionNoteClinicalData.anthropometricData);
-		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
-		this.procedimientosContent = this.toProcedimientos(newContent.emergencyCareEvolutionNoteClinicalData.procedures);
-		this.factoresContent = this.toRiskFactors(newContent.emergencyCareEvolutionNoteClinicalData.riskFactors);
-		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares(newContent.emergencyCareEvolutionNoteClinicalData.familyHistories);
+    private fetchSummaryInfo(){
+        if (this._evolutionNote && this._episodeId) {
+            this.evolutionNoteSummary = this.evolutionNoteSummaryService.mapEvolutionNoteAsViewFormat(this._evolutionNote.content);
+            
+            let header$ = this.documentSummaryService.getEmergencyCareDocumentHeader(this._evolutionNote.summary.docId, this._episodeId);
+            let medicalDischarge$ = this.emergencyCareEpisodeAdministrativeDischargeService.hasAdministrativeDischarge(this._episodeId);
 
-		if (!!newContent.editor) {
-			this.setRegisterEvolutionNoteEdition(newContent.editedOn, newContent.editor);
-		}
-		else
-			this.registerEvolutionNoteEdition = null;
+            this.documentSummary$ = forkJoin([header$, medicalDischarge$]).pipe(map(([headerData, hasMedicalDischarge]) => {
+                return this.documentSummaryMapperService.mapEmergencyCareToHeaderDescription(headerData, this.documentName, this.canEditEmergencyCareEvolutionNote(hasMedicalDischarge), false, true);
+            }));
+        }
+    }
+    
+    downloadDocument() {
+		this.documentService.downloadFile({ filename: this._evolutionNote.summary.docFileName, id: this._evolutionNote.summary.docId });
 	}
 
-	private criticalityTypes: any[];
-
-	especialidadContent;
-	motivosContent;
-	diagnosticosContent;
-	evolucionContent;
-	antropometricosContent;
-	medicacionContent;
-	procedimientosContent;
-	factoresContent;
-	alergiasContent;
-	antecedentesFamiliaresContent;
-	registerEvolutionNoteEdition: RegisterEditor;
-	REGISTER_EDITOR_CASE = REGISTER_EDITOR_CASES.DATE_HOUR;
-
-	constructor(
-		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly patientNameService: PatientNameService,
-	) { }
-
-	private toAntecedentesFamiliares(familyHistories): string[] {
-		if (familyHistories.isReferred === false)
-			this.antecedentesFamiliaresContent = ['guardia.no_refer.FAMILY_HISTORIES'];
-		return familyHistories.content?.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
-
-		function map(m: OutpatientFamilyHistoryDto): string[] {
-			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}` : null]
-		}
+    editDocument() {
+		this.emergencyCareEvolutionNoteService.getByDocumentId(this._episodeId, this._evolutionNote.summary.docId).subscribe(evolutionNoteData => {
+			this.openEvolutionNote(evolutionNoteData);
+			this.resetActiveDocument.next();
+		});
 	}
 
-	private toAntropometricosContent(anthropometricData): string[] {
-		const result = [];
-		const bloodValue = anthropometricData?.bloodType?.value;
-		if (bloodValue) {
-			result.push(`Grupo y factor sanguineo: ${bloodValue}`)
-		}
-		const height = anthropometricData?.height?.value;
-		if (height) {
-			result.push(`Altura: ${height}cm`)
-		}
-		const weight = anthropometricData?.weight?.value;
-		if (weight) {
-			result.push(`Peso: ${weight}Kg`)
-		}
-		const headCircumference = anthropometricData?.headCircumference?.value;
-		if (headCircumference) {
-			result.push(`Perímetro cefálico: ${headCircumference}cm`)
-		}
-		return result;
+	private canEditEmergencyCareEvolutionNote = (hasMedicalDischarge: boolean): boolean => {
+		return !hasMedicalDischarge && this.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA;
 	}
 
-	private toMedications(medications): string[] {
-		return medications.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);;
-
-		function map(m: OutpatientMedicationDto): string[] {
-			return [m.snomed.pt, m.note]
-		}
-
+	private setFeatureFlags = () => {
+		this.featureFlag.isActive(AppFeature.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA).subscribe((isActive: boolean) => this.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA = isActive);
 	}
 
-	private toProcedimientos(procedures): string[] {
-		return procedures.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);;
-
-		function map(m: OutpatientProcedureDto): string[] {
-			return [m.snomed.pt, m.performedDate]
+	private openEvolutionNote(evolutionNoteData: EmergencyCareEvolutionNoteDto) {
+		if (!this.evolutionNoteDialogRef) {
+			this.evolutionNoteDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent,  this.getEvolutionNoteData(evolutionNoteData));
+			this.evolutionNoteDialogRef.afterClosed().subscribe(_ => {
+				delete this.evolutionNoteDialogRef;
+			})
+		} else {
+			if (this.evolutionNoteDialogRef.isMinimized())
+				this.evolutionNoteDialogRef.maximize();
 		}
 	}
 
-	private toRiskFactors(riskFactors): string[] {
-		const result = [];
-		const heartRate = riskFactors?.heartRate
-		if (heartRate) {
-			result.push(`Frecuencia cardíaca : ${heartRate.value}/min`)
-		}
-		const respiratoryRate = riskFactors?.respiratoryRate
-		if (respiratoryRate) {
-			result.push(`Frecuencia respiratoria: ${respiratoryRate.value}/min`)
-		}
-		const temperature = riskFactors?.temperature
-		if (temperature) {
-			result.push(`Temperatura: ${temperature.value}°`)
-		}
-		const bloodOxygenSaturation = riskFactors?.bloodOxygenSaturation
-		if (bloodOxygenSaturation) {
-			result.push(`Saturación de oxigeno: ${bloodOxygenSaturation.value}%`)
-		}
-		const systolicBloodPressure = riskFactors?.systolicBloodPressure;
-		if (systolicBloodPressure) {
-			result.push(`Tension arterial sistólica: ${systolicBloodPressure.value}mm`)
-		}
-		const diastolicBloodPressure = riskFactors?.diastolicBloodPressure;
-		if (diastolicBloodPressure) {
-			result.push(`Tension arterial diastólica: ${diastolicBloodPressure.value}mm`)
-		}
-		const bloodGlucose = riskFactors?.bloodGlucose;
-		if (bloodGlucose) {
-			result.push(`Glucemia: ${bloodGlucose.value}mg/dl`)
-		}
-		const glycosylatedHemoglobin = riskFactors?.glycosylatedHemoglobin;
-		if (glycosylatedHemoglobin) {
-			result.push(`Hemoglobina glicosilada: ${glycosylatedHemoglobin.value}%`)
-		}
-
-		const cardiovascularRisk = riskFactors?.cardiovascularRisk;
-		if (cardiovascularRisk) {
-			result.push(`Riesgo cardivascular: ${cardiovascularRisk.value}%`)
-		}
-		return result;
-	}
-
-	private toAlergias(allergies): string[] {
-		return allergies.content.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
-	}
-
-	private toDiagnostico(mainDiagnosis, otherDiagnosis): string[] {
-
-		const principal = [`${mainDiagnosis.snomed.pt} (Principal) - ${getVerification(mainDiagnosis.verificationId)}`]
-		const others = otherDiagnosis.map(r => `${r.snomed.pt} - ${getVerification(r.verificationId)}`);
-
-		return principal.concat(others);
-
-		function getVerification(verificationId: string): string {
-			let verification = HEALTH_VERIFICATIONS.DESCARTADO;
-			if (verificationId === HEALTH_VERIFICATIONS.CONFIRMADO) {
-				verification = 'Confirmado'
-			} else if (verificationId === HEALTH_VERIFICATIONS.PRESUNTIVO)
-				verification = 'Presuntivo';
-			return verification;
-		}
-	}
-
-	private setRegisterEvolutionNoteEdition(performedDate: DateTimeDto, professional: HealthcareProfessionalDto) {
-		const { firstName, lastName } = professional.person;
-		const nameSelfDetermination = professional.nameSelfDetermination;
-		const professionalFullName = this.patientNameService.completeName(firstName, nameSelfDetermination, lastName);
-		this.registerEvolutionNoteEdition = this.toRegisterEditorInformation(performedDate, professionalFullName);
-	}
-
-	private toRegisterEditorInformation(performedDate: DateTimeDto, professionalFullName: string): RegisterEditor {
+	private getEvolutionNoteData(emergencyCareEvolutionNote: EmergencyCareEvolutionNoteDto): NotaDeEvolucionData {
 		return {
-			date: dateTimeDtoToDate(performedDate),
-			createdBy: professionalFullName,
+			patientId: this.patientId,
+			episodeId: this._episodeId,
+			editMode: true,
+			emergencyCareEvolutionNote,
+			documentId: this._evolutionNote.summary.docId,
 		}
 	}
 }

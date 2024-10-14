@@ -73,7 +73,7 @@
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<mat-form-field appearance="outline">
-						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+						<button type="button"  matSuffix color="warn" mat-icon-button
 							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -147,10 +147,7 @@
 							calendar_today
 						</mat-icon>
 						<div>
-							<span class="mat-body strong-size"> {{selectedDate | date:"EEEE, d " | titlecase }}
-								de</span>
-							<span class="mat-body strong-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
-							<span class="mat-body strong-size"> {{selectedDate | date:"y " | titlecase}}</span>
+							<span class="mat-body strong-size"> {{selectedDate | dateFormat:"fulldate" | titlecase }} </span>
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
@@ -158,7 +155,7 @@
 							class="icon-grey">
 							access_time
 						</mat-icon>
-						<span class="mat-body subtitle-size"> {{selectedDate |  dateFormat: 'time'}}</span>
+						<span class="mat-body subtitle-size"> {{selectedDate | dateFormat: 'time'}}</span>
 					</div>
 					<div>
 						<app-modality-label class="custom-label-modality" [modality]="selectedModality?.value"></app-modality-label>
@@ -291,7 +288,7 @@
 
 		<section gdArea="state-observations">
 
-			<section id="state">
+			<section id="state" fxLayout="column" fxLayoutGap="10px">
 				<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
 				<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
@@ -338,7 +335,9 @@
 							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
 				</div>
-
+				<app-colored-icon-text *ngIf="HABILITAR_ANEXO_II_MENDOZA && selectedModality?.value === ON_SITE_ATTENTION && selectedState !== appointmentStatesIds.ASSIGNED && appointment.patientIdentityAccreditationStatus "
+					[coloredIconText]="scanMenssage"
+				></app-colored-icon-text>
 
 				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
 					<span class="mat-body-strong strong-size"
@@ -488,7 +487,7 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy
-			H:mm"}}hs.</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | dateFormat: 'datetime' }}</span>
 	</div>
 </ng-template>
+

@@ -33,20 +33,19 @@
 						<mat-option [value]="possibleScheduleHour"
 							*ngFor="let possibleScheduleHour of possibleStartingScheduleHours"
 							(click)="filterAppointmentEndingHours()">
-							{{ possibleScheduleHour | date:'shortTime' }}
+							{{ possibleScheduleHour | dateFormat:'time' }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<span>hs. a</span>
+				<span>a</span>
 				<mat-form-field appearance="outline" class="hour_selector">
 					<mat-select id="endingHour" formControlName="endingHour">
 						<mat-option [value]="possibleScheduleHour"
 							*ngFor="let possibleScheduleHour of possibleEndingScheduleHours">
-							{{ possibleScheduleHour | date:'shortTime' }}
+							{{ possibleScheduleHour | dateFormat:'time' }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<span>hs.</span>
 			</div>
 		</div>
 

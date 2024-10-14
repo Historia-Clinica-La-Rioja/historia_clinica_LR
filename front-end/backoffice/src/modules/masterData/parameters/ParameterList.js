@@ -30,7 +30,7 @@ const ParameterDescription = props => (
     props.record.description ? <TextField source="description" /> : <LoincDescription />
 );
 
-const ParameterLoincCode = props => (
+export const ParameterLoincCode = props => (
     <ReferenceField
         source="loincId"
         reference="loinc-codes"

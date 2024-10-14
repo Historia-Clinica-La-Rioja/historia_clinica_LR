@@ -8,6 +8,9 @@ import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { AppFeature } from "@api-rest/api-model";
 import { EDiaryType } from '@turnos/services/agenda-horario.service';
+import { getElementAtPosition } from '@core/utils/array.utils';
+
+const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS, AppFeature.HABILITAR_TELEMEDICINA, AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO]}]
 
 @Component({
 	selector: 'app-new-attention',
@@ -37,9 +40,12 @@ export class NewAttentionComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: NewAttentionElements,
 		private readonly featureFlagService: FeatureFlagService,
 	) {
-		this.featureFlagService.isActive(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS).subscribe(isEnabled => this.isEnableOnlineAppointments = isEnabled);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO).subscribe(isEnabled => this.isEnableReportReference = isEnabled);
+		this.featureFlagService.filterItems$(ACTIVES_FF_TO_ENABLE_OPTIONS).subscribe(activesFF => {
+			const activesFFElements: AppFeature[] = getElementAtPosition(activesFF, 0).featureFlag;
+			this.isEnableOnlineAppointments = activesFFElements.includes(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS) || activesFFElements.includes(AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO);
+			this.isEnableTelemedicina = activesFFElements.includes(AppFeature.HABILITAR_TELEMEDICINA);
+			this.isEnableReportReference = activesFFElements.includes(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO);
+		});
 	}
 
 

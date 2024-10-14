@@ -15,10 +15,6 @@
 	padding-bottom: 1em;
 }
 
-.dialog-actions {
-	padding-bottom: 30px
-}
-
 #order-detail {
 	padding-top: 1em;
 	padding-bottom: 1em;
@@ -35,4 +31,13 @@
 #selected-study-name {
 	display:flex;
 	align-items: center;
+}
+
+.formatted-text {
+    white-space: pre-wrap;
+}
+
+.error{
+	font-size: smaller;
+	margin-top: 3%;
 }

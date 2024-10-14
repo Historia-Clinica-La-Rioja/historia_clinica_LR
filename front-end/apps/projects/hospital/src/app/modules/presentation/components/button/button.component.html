@@ -1,10 +1,50 @@
-<button id="button" mat-button [ngClass]="buttonType" [color]="color" [disabled]="isLoading || disabled"
-    (click)="onClicked()">
-    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" style="margin: 0.25rem;"></mat-spinner>
+<button id="button" mat-raised-button *ngIf="buttonType === ButtonType.RAISED" [color]="color"
+    [disabled]="isLoading || disabled" (click)="onClicked()">
+    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" class="margin-spinner"></mat-spinner>
     <ng-template #showContent>
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+        <div fxLayoutAlign="start center">
             <mat-icon *ngIf="matIcon" fontSet="material-icons-outlined">{{ matIcon }}</mat-icon>
             <span>{{text | translate | uppercase}}</span>
         </div>
+    </ng-template>
+</button>
+
+<button id="button" mat-flat-button *ngIf="buttonType === ButtonType.FLAT" [color]="color"
+    [disabled]="isLoading || disabled" (click)="onClicked()">
+    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" class="margin-spinner"></mat-spinner>
+    <ng-template #showContent>
+        <div fxLayoutAlign="start center">
+            <mat-icon *ngIf="matIcon" fontSet="material-icons-outlined">{{ matIcon }}</mat-icon>
+            <span>{{text | translate | uppercase}}</span>
+        </div>
+    </ng-template>
+</button>
+
+<button id="button" mat-stroked-button *ngIf="buttonType === ButtonType.STROKED" [color]="color"
+    [disabled]="isLoading || disabled" (click)="onClicked()">
+    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" class="margin-spinner"></mat-spinner>
+    <ng-template #showContent>
+        <div fxLayoutAlign="start center">
+            <mat-icon *ngIf="matIcon" fontSet="material-icons-outlined">{{ matIcon }}</mat-icon>
+            <span>{{text | translate | uppercase}}</span>
+        </div>
+    </ng-template>
+</button>
+
+<button id="button" mat-icon-button *ngIf="buttonType === ButtonType.ICON" [color]="color"
+    [disabled]="isLoading || disabled" (click)="onClicked()">
+    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" class="margin-spinner"></mat-spinner>
+    <ng-template #showContent>
+        <div fxLayoutAlign="start center">
+            <mat-icon fontSet="material-icons-outlined">{{ matIcon }}</mat-icon>
+        </div>
+    </ng-template>
+</button>
+
+<button id="button" mat-button *ngIf="buttonType === ButtonType.BASIC" [color]="color"
+    [disabled]="isLoading || disabled" (click)="onClicked()">
+    <mat-spinner *ngIf="isLoading; else showContent" diameter="25" [color]="color" class="margin-spinner"></mat-spinner>
+    <ng-template #showContent>
+        <span>{{text | translate | uppercase}}</span>
     </ng-template>
 </button>

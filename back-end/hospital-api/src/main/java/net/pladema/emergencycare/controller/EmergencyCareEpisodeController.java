@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.application.GetAllEpisodeListByFilter;
+import net.pladema.emergencycare.application.getemercencycarelastattentionplace.GetEmergencyCareEpisodeLastAttentionPlace;
 import net.pladema.emergencycare.controller.dto.AEmergencyCarePatientDto;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
@@ -24,7 +25,9 @@ import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeE
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
-import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
+import net.pladema.emergencycare.controller.dto.EmergencyCareEpisodeFilterDto;
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareEpisodeAttentionPlaceDto;
+import net.pladema.emergencycare.infrastructure.input.rest.mapper.EmergencyCareEpisodeAttentionPlaceMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -87,6 +90,10 @@ public class EmergencyCareEpisodeController {
 	private final ObjectMapper objectMapper;
 
 	private final GetAllEpisodeListByFilter getAllEpisodeListByFilter;
+
+	private final GetEmergencyCareEpisodeLastAttentionPlace getEmergencyCareEpisodeLastAttentionPlace;
+
+	private final EmergencyCareEpisodeAttentionPlaceMapper emergencyCareEpisodeAttentionPlaceMapper;
 
     @GetMapping
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -234,6 +241,18 @@ public class EmergencyCareEpisodeController {
 		Boolean result = emergencyCareEpisodeService.updatePatientDescription(emergencyCareEpisodeId, patientDescription);
 		LOG.debug("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{episodeId}/last-attention-place")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public EmergencyCareEpisodeAttentionPlaceDto getLastAttentionPlace(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Input parameters getLastAttentionPlace -> institutionId {}, episodeId {}", institutionId, episodeId);
+		EmergencyCareEpisodeAttentionPlaceDto result =  emergencyCareEpisodeAttentionPlaceMapper.toDto(
+				getEmergencyCareEpisodeLastAttentionPlace.run(episodeId));
+		LOG.debug("Output -> {}", result);
+		return result;
 	}
 
     private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){

@@ -3,9 +3,7 @@ package net.pladema.establishment.controller.constraints.validator.permissions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import net.pladema.establishment.repository.CareLineInstitutionRepository;
@@ -64,10 +62,8 @@ public class BackofficeCareLineInstitutionValidator implements BackofficePermiss
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<CareLineInstitution> entitiesByExample = repository.findAll(Example.of(entity));
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-		List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(CareLineInstitution::getId).collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	@Override

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 
 @Component({
@@ -7,5 +8,5 @@ import { ProcedimientosService } from '@historia-clinica/services/procedimientos
   styleUrls: ['./procedure-list.component.scss']
 })
 export class ProcedureListComponent {
-  @Input() service: ProcedimientosService;
+  @Input() service: ProcedimientosService | CreateOrderService;
 }

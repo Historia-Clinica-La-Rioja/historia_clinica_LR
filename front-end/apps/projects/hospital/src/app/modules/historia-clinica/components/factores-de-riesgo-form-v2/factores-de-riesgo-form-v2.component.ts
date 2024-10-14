@@ -1,9 +1,9 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, forwardRef } from '@angular/core';
 import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,14 +22,14 @@ export class FactoresDeRiesgoFormV2Component implements OnInit {
 
 	onChangeSub: Subscription;
 	searchConceptsLocallyFFIsOn = false;
-	factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService, this.hceGeneralStateService, null, this.datePipe);
+	factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService, this.hceGeneralStateService, null, this.dateFormatPipe);
 
 	formMotivo = this.factoresDeRiesgoFormService.form;
 	constructor(
 		private readonly formBuilder: FormBuilder,
 		private readonly translateService: TranslateService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 	) { }
 
 	ngOnInit(): void {

@@ -30,6 +30,8 @@ public class OutpatientConsultationBo {
 
 	private String institutionSisaCode;
 
+	private Integer cipresEncounterId;
+
 	private AnthropometricDataBo anthropometricData;
 
 	private RiskFactorBo riskFactor;

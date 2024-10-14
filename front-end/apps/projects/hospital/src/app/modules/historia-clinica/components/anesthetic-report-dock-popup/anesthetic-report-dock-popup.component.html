@@ -2,7 +2,7 @@
     <div body fxLayout="column" fxLayoutGap="20px">
         <app-new-consultation-expansion-section id="diagnosis-expansion-section"
             [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="assignment"
-            [collapsed]="!mainDiagnosis" [isEmpty]="!mainDiagnosis" [hideBorder]="true">
+            [collapsed]="!mainDiagnosis && !diagnosis" [isEmpty]="!mainDiagnosis && !diagnosis" [hideBorder]="true">
             <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
                 [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
         </app-new-consultation-expansion-section>
@@ -38,7 +38,7 @@
 
         <app-new-consultation-expansion-section id="usual-medication-expansion-section"
             [title]="'internaciones.anesthesic-report.usual-medication.TITLE' | translate" icon="assignment"
-            [collapsed]="anesthethicReportHandlerService.isMedicationEmpty$ | async"
+            [collapsed]="true"
             [isEmpty]="anesthethicReportHandlerService.isMedicationEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-usual-medication></app-anesthetic-report-usual-medication>
         </app-new-consultation-expansion-section>
@@ -134,7 +134,7 @@
 
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
-		<app-button [color]="'primary'" [isLoading]="isLoadingDraft" [disabled]="isLoading"
+		<app-button *ngIf="!isConfirmed" [color]="'primary'" [isLoading]="isLoadingDraft" [disabled]="isLoading"
 			[text]="'internaciones.anesthesic-report.buttons.SAVE_DRAFT' | translate | uppercase"
 			[buttonType]="'mat-stroked-button'" (clicked)="save(true)">
 		</app-button>

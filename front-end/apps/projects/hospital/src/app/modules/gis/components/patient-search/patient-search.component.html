@@ -1,0 +1,28 @@
+<div class="card-container">
+    <mat-card class="card">
+        <mat-card-header>
+            <mat-card-title>{{'gis.patient-search.TITLE' | translate}}</mat-card-title>
+        </mat-card-header>
+    
+        <mat-card-content>
+            <app-radio-group
+                [radioGroupInputData]="radioGroupInputData"
+                (onOptionChange)="toggleDatePicker($event)">
+            </app-radio-group>
+            <div class="dateRange" *ngIf="showDatePicker">
+                <span class="bold">{{'gis.patient-search.DATE_RANGE' | translate}}</span>
+                <app-date-range-picker [dateRange]="initDateRange" [max]="initDateRange.end" (dateRangeChange)="dateRangeChange($event)"></app-date-range-picker>
+            </div>
+        </mat-card-content>
+
+        <mat-card-actions class="actions">
+            <app-button
+                [isLoading]="gisLayersService.getIsPatientLoading()"
+                [disabled]="disableButton"
+                (clicked)="searchPatients()"
+                [text]="'gis.patient-search.actions.MAP_SEARCH'"
+                [buttonType]="ButtonType.RAISED">
+            </app-button>
+        </mat-card-actions>
+    </mat-card>
+</div>

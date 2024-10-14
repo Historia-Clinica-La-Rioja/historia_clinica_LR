@@ -15,6 +15,6 @@ export class BarComponent {
 	constructor(
 		private readonly featureFlagService: FeatureFlagService
 	) {
-		this.isExchangeableTheme$ = this.featureFlagService.isActive(AppFeature.HABILITAR_INTERCAMBIO_TEMAS);
+		this.isExchangeableTheme$ = this.featureFlagService.isActive(AppFeature.HABILITAR_INTERCAMBIO_TEMAS_EN_DESARROLLO);
 	}
 }

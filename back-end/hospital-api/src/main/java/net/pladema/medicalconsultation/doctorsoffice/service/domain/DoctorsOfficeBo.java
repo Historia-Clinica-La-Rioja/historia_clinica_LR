@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.doctorsoffice.service.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
 public class DoctorsOfficeBo {
 
     private Integer id;
@@ -24,6 +26,7 @@ public class DoctorsOfficeBo {
     private LocalTime closingTime;
 
 	private boolean isAvailable;
+	private String sectorDescription;
 
     public DoctorsOfficeBo(Integer id, String description) {
         this.id = id;
@@ -43,4 +46,12 @@ public class DoctorsOfficeBo {
         this.openingTime = doctorsOffice.getOpeningTime();
         this.closingTime = doctorsOffice.getClosingTime();
     }
+
+	public DoctorsOfficeBo(Integer id, String description, LocalTime openingTime, LocalTime closingTime, boolean isAvailable) {
+		this.id = id;
+		this.description = description;
+		this.openingTime = openingTime;
+		this.closingTime = closingTime;
+		this.isAvailable = isAvailable;
+	}
 }

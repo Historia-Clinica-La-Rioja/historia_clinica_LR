@@ -105,4 +105,9 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 			"WHERE p.id = :patientId")
 	AddressVo findByPatientId(@Param("patientId") Integer patientId);
 
+	@Modifying
+	@Transactional
+	@Query("UPDATE Address a SET a.latitude = :latitude, a.longitude = :longitude WHERE a.id = (SELECT pe.addressId FROM Patient p JOIN PersonExtended pe ON (pe.id = p.personId) WHERE p.id = :patientId)")
+    void savePatientAddressGlobalCoordinates(@Param("patientId") Integer patientId, @Param("latitude") Double latitude, @Param("longitude") Double longitude);
+
 }

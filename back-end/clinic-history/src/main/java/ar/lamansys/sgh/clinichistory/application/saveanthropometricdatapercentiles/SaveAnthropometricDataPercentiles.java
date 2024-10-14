@@ -7,8 +7,6 @@ import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthrop
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentPercentilesRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentPercentiles;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import lombok.AllArgsConstructor;
@@ -21,7 +19,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor

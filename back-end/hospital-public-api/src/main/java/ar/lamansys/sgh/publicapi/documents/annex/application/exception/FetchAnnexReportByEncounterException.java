@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.publicapi.documents.annex.application.exception;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

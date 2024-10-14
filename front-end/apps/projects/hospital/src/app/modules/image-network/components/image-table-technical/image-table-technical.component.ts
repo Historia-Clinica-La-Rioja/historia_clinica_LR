@@ -50,6 +50,8 @@ export interface ItemImageQueue {
 	},
 	serviceRequestId: number,
 	date: Date,
+	appointmentDate: Date,
+	uid: string,
 	idMove: number
 }
 

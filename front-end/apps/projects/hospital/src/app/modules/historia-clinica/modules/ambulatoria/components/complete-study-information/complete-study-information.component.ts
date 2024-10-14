@@ -30,5 +30,5 @@ export class StudyData {
 	prescriptionPt: string;
 	problemPt: string;
 	registerEditor: RegisterEditor;
-
+    observations?: string;
 }

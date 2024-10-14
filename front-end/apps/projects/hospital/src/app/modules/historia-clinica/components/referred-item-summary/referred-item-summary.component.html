@@ -1,0 +1,9 @@
+<app-description-item-data-summary *ngIf="referredItem.isReferred, else notReferred"
+    [descriptionItemDataSummary]="referredItem.content"></app-description-item-data-summary>
+<ng-template #notReferred>
+    <app-iconed-titled-section icon="{{ referredItem.content.icon }}"
+        title="{{ referredItem.content.title }}"></app-iconed-titled-section>
+    <div class="section-description">
+        <span class="grey">{{ referredItem.notReferredText }}</span>
+    </div>
+</ng-template>

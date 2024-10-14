@@ -1,17 +1,13 @@
 package ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstate;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapperImpl;
 
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;

@@ -2,6 +2,7 @@
     <span>{{ "call-center.new-appointment.custom-form.identification-number.TITLE" | translate}}</span>
     <mat-form-field appearance="outline">
         <input matInput type="text" [placeholder]="'call-center.new-appointment.custom-form.identification-number.TITLE' | translate" formControlName="identificationNumber" (blur)="onTouched()">
-        <mat-error>{{ "forms.REQUIRED" | translate }}</mat-error>
+		<mat-error *ngIf="hasError(form, 'required', 'identificationNumber') || hasError(form, 'whitespace', 'identificationNumber')">{{ "forms.REQUIRED" | translate }}</mat-error>
+		<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')" [translate]="'forms.MAX_LENGTH_ERROR'" [translateParams]="{max: VALIDATIONS.MAX_LENGTH.identif_number}"></mat-error>
     </mat-form-field>
 </form>

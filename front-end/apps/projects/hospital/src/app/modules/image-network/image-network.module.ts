@@ -15,6 +15,8 @@ import { DeriveReportComponent } from './dialogs/derive-report/derive-report.com
 import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
 import { FinishStudyComponent } from './dialogs/finish-study/finish-study.component';
 import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
+import { IndexImageManuallyComponent } from './dialogs/index-image-manually/index-image-manually.component';
+import { IndexingImageStatusComponent } from './dialogs/indexing-image-status/indexing-image-status.component';
 import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
 import { StudyStatusPopupComponent } from './dialogs/study-status-popup/study-status-popup.component';
 //components
@@ -41,39 +43,42 @@ import { PatientSummaryComponent } from '../hsi-components/patient-summary/patie
 import { ImageQueueFiltersComponent } from './components/image-queue-filters/image-queue-filters.component';
 import { ImageQueuePaginatorComponent } from './components/image-queue-paginator/image-queue-paginator.component';
 import { QueueImageListComponent } from './components/queue-image-list/queue-image-list.component';
+import { DownloadStatusPopupComponent } from './dialogs/download-status-popup/download-status-popup.component';
 
 @NgModule({
     declarations: [
-        WorklistByTechnicalComponent,
-        HomeComponent,
-        FinishStudyComponent,
-        StudyStatusPopupComponent,
-        WorklistComponent,
-        WorklistByInformerComponent,
-        StudyDetailsComponent,
-        ReportStudyComponent,
-        ViewStudyComponent,
-        DeriveReportComponent,
-        AddConclusionFormComponent,
-        ViewReportComponent,
-        WorklistFiltersComponent,
-        SaveTemplateComponent,
-        ViewInformerObservationsComponent,
-        ImportTemplateComponent,
-        TooltipOrderComponent,
-        DownloadTranscribedOrderComponent,
-        TooltipOrderComponent,
-        DeleteTemplateComponent,
-        DownloadStudyComponent,
-        OrderImageDetailComponent,
-        ImageOrderColoredIconTextCasesComponent,
-        ProfessionalFullNamePipe,
-        TechnicalWorklistHomeComponent,
-        QueueImageTechnicalComponent,
-        ImageTableTechnicalComponent,
-        ImageQueueFiltersComponent,
-        ImageQueuePaginatorComponent,
-        QueueImageListComponent,
+		AddConclusionFormComponent,
+		DeleteTemplateComponent,
+		DeriveReportComponent,
+		DownloadStudyComponent,
+		DownloadTranscribedOrderComponent,
+		FinishStudyComponent,
+		HomeComponent,
+		ImageOrderColoredIconTextCasesComponent,
+		ImageQueueFiltersComponent,
+		ImageQueuePaginatorComponent,
+		ImageTableTechnicalComponent,
+		ImportTemplateComponent,
+		IndexImageManuallyComponent,
+		IndexingImageStatusComponent,
+		OrderImageDetailComponent,
+		ProfessionalFullNamePipe,
+		QueueImageListComponent,
+		QueueImageTechnicalComponent,
+		ReportStudyComponent,
+		SaveTemplateComponent,
+		StudyDetailsComponent,
+		StudyStatusPopupComponent,
+		TechnicalWorklistHomeComponent,
+		TooltipOrderComponent,
+		ViewInformerObservationsComponent,
+		ViewReportComponent,
+		ViewStudyComponent,
+		WorklistByInformerComponent,
+		WorklistByTechnicalComponent,
+		WorklistComponent,
+		WorklistFiltersComponent,
+  DownloadStatusPopupComponent,
     ],
     imports: [
         CommonModule,

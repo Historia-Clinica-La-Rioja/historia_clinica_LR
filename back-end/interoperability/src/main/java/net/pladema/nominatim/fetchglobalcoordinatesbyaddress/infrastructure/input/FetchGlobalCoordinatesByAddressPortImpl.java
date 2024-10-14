@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.application.FetchGlobalCoordinatesByAddress;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.application.port.input.FetchGlobalCoordinatesByAddressPort;
 
-import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordinatesBo;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.NominatimAddressBo;
-import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.GlobalCoordinatesDto;
+import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.NominatimRequestResponseBo;
 
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.NominatimAddressDto;
 
+import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.NominatimRequestResponseDto;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.mapper.GlobalCoordinatesMapper;
 
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.mapper.NominatimAddressMapper;
@@ -29,11 +29,11 @@ public class FetchGlobalCoordinatesByAddressPortImpl implements FetchGlobalCoord
 	private final NominatimAddressMapper nominatimAddressMapper;
 
 	@Override
-	public GlobalCoordinatesDto run(NominatimAddressDto address) {
+	public NominatimRequestResponseDto run(NominatimAddressDto address) {
 		log.debug("Input parameter -> address {}", address);
 		NominatimAddressBo addressBo = nominatimAddressMapper.fromNominatimAddressDto(address);
-		GlobalCoordinatesBo resultCoordinates = fetchGlobalCoordinatesByAddress.run(addressBo);
-		GlobalCoordinatesDto result = globalCoordinatesMapper.toGlobalCoordinatesDto(resultCoordinates);
+		NominatimRequestResponseBo resultCoordinates = fetchGlobalCoordinatesByAddress.run(addressBo);
+		NominatimRequestResponseDto result = globalCoordinatesMapper.toNominatimRequestResponseDto(resultCoordinates);
 		log.debug("Output -> {}", result);
 		return result;
 	}

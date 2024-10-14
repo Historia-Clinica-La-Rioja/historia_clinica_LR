@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ERole, PageDto, ReferenceReportDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
-import { DateFormat, dateMinusDays } from '@core/utils/date.utils';
+import { dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 import { DashboardView, DashboardFilters } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
-import format from 'date-fns/format';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { BehaviorSubject, Observable, take } from 'rxjs';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const MAX_DAYS = 90;
 const MIN_SIZE = 5;
@@ -104,8 +104,8 @@ export class DashboardService {
 	private setRange() {
 		this.dashboardFilters = {
 			...this.dashboardFilters,
-			from: format(this.dateRange.start, DateFormat.API_DATE),
-			to: format(this.dateRange.end, DateFormat.API_DATE)
+			from: toApiFormat(this.dateRange.start),
+			to: toApiFormat(this.dateRange.end)
 		}
 	}
 

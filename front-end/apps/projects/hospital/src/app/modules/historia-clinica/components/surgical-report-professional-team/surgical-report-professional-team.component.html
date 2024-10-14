@@ -7,6 +7,7 @@
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CIRUJANO' | translate"
 		[externalSetProfessional]="surgeon?.healthcareProfessional" (professionalChange)="selectSurgeon($event)">
 	</app-surgical-report-professional-info>
+	<mat-error *ngIf="isSelectedSurgeon === false">{{'ambulatoria.paciente.surgical-report.surgical-team.ERROR_SELECTING_SURGEON' | translate}}</mat-error>
 	<mat-error *ngIf="showErrorProfessionalRepeated">{{'ambulatoria.paciente.surgical-report.surgical-team.ERROR_PROFESSIONAL_REPEATED' | translate}}</mat-error>
 	<app-titled-content-card [title]="'ambulatoria.paciente.surgical-report.surgical-team.CARD_TITLE'"
 		*ngIf="!!healthcareProfessionals.length">

@@ -24,12 +24,17 @@
     <div fxLayout="row">
         <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.ADDRESS' |
             translate}}: &nbsp;</span>
-        <span>{{ person.aggressorData.actorPersonalData.address }}</span>
+        <span>{{ person.aggressorData.actorPersonalData.address.homeAddress }}</span>
     </div>
     <div fxLayout="row">
-        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LOCALTY' |
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.MUNICIPALITY' |
             translate}}: &nbsp;</span>
         <span>{{person.descriptionMunicipality}}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.LOCALITY' |
+            translate}}: &nbsp;</span>
+        <span>{{person.descriptionLocality}}</span>
     </div>
     <div fxLayout="row">
         <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_1' |

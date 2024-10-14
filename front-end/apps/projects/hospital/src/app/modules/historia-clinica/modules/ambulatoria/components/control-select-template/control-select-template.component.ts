@@ -94,6 +94,8 @@ export class ControlSelectTemplateComponent implements OnInit {
 				typeIput: this.getTypeInput(procedureTemplate.parameters, observation.procedureParameterId),
 				procedureParameterId: observation.procedureParameterId,
 				unitOfMeasureId: observation.unitOfMeasureId,
+				snomedSctid: observation.snomedSctid,
+				snomedPt: observation.snomedPt,
 				value: observation.value
 			}))
 		};

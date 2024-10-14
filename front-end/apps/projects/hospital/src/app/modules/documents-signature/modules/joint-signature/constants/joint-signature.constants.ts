@@ -39,23 +39,9 @@ export const SIGNATURE_STATUS_OPTION = {
 	[EElectronicSignatureStatus.SIGNED]: SIGNATURE_STATUS_SIGNED
 };
 
-export const SIGNATURE_STATUS_FILTER: Filter[] = [{
+export let SIGNATURE_STATUS_FILTER: Filter[] = [{
 	key: SIGNATURE_STATUS_KEY,
 	name: 'firma-conjunta.signature-status-filter.LABEL',
-	options: [{
-		id: EElectronicSignatureStatus.PENDING,
-		description: 'firma-conjunta.signature-status-filter.PENDING',
-	},
-	{
-		id: EElectronicSignatureStatus.REJECTED,
-		description: 'firma-conjunta.signature-status-filter.REJECTED',
-	},
-	{
-		id: EElectronicSignatureStatus.SIGNED,
-		description: 'firma-conjunta.signature-status-filter.SIGNED',
-	},
-	{
-		id: EElectronicSignatureStatus.OUTDATED,
-		description: 'firma-conjunta.signature-status-filter.OUTDATED',
-	},]
+	isMultiple: true,
+	options: [],
 }]

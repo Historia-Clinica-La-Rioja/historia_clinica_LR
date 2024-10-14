@@ -1,7 +1,10 @@
 .space-between {
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
+}
+
+.street, .number {
+    width: 45%;
 }
 
 .container {
@@ -10,6 +13,7 @@
 
 .institution-address-container {
     width: 45%;
+    background-color: white;
 }
 
 .m-top {
@@ -19,10 +23,6 @@
 .column {
     display: flex;
     flex-direction: column;
-}
-
-mat-stepper {
-    padding: 2rem;
 }
 
 .map-container {
@@ -47,8 +47,6 @@ app-hide-show-toggle {
     gap: 1rem;
 }
 
-.institution-description {
-    padding: 3.5rem;
-    background-color: white;
-    height: fit-content;
+h2 {
+    font-size: x-large;
 }

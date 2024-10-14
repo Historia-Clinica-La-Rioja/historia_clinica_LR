@@ -1,0 +1,31 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+	<div id="problem" fxLayout="column" fxLayoutGap="8px">
+		<span translate="guardia.episode.medical_discharge.NURSING_PROBLEM_TITLE"></span>
+		
+		<mat-form-field class="field-width" appearance="outline">
+			<input matInput formControlName="problemDescription">
+		</mat-form-field>
+	</div>
+
+	<div id="dischargeType" fxLayout="column" fxLayoutGap="16px">
+		<strong>
+			<span translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></span>
+		</strong>
+		
+		<mat-radio-group class="display-radio-buttons" formControlName="dischargeTypeId" color="primary">
+			<div *ngFor="let dischargeType of (dischargeTypes$ | async)">
+				<mat-radio-button [value]="dischargeType.id" class="margin-radio-buttons">
+					{{ dischargeType.description }}
+				</mat-radio-button>
+			</div>
+		</mat-radio-group>
+			
+	</div>
+
+	<div id="observations" fxLayout="column" fxLayoutGap="8px">
+		<span translate="guardia.episode.medical_discharge.ADDITIONAL_OBSERVATIONS"></span>
+		<mat-form-field class="field-width" appearance="outline">
+			<textarea matInput formControlName="observations" placeholder="{{'guardia.episode.medical_discharge.OBSERVATIONS_PLACEHOLDER' | translate}}"></textarea>
+		</mat-form-field>
+	</div>
+</form>

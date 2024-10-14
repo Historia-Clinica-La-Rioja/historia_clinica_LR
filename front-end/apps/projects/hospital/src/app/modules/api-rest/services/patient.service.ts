@@ -8,9 +8,11 @@ import {
 	PatientSearchDto,
 	ReducedPatientDto,
 	PersonPhotoDto,
-	PatientPhotoDto, LimitedPatientSearchDto, PatientGenderAgeDto
+	PatientPhotoDto, PatientGenderAgeDto, PageDto
 } from '@api-rest/api-model';
 import { ContextService } from "@core/services/context.service";
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -61,9 +63,26 @@ export class PatientService {
 		return this.http.put<BMPatientDto>(url, datosPersonales);
 	}
 
-	searchPatientOptionalFilters(person: PersonInformationRequest): Observable<LimitedPatientSearchDto> {
+	searchPatientOptionalFilters(person: PersonInformationRequest, pageable: { pageNumber, pageSize }): Observable<PageDto<PatientSearchDto>> {
+		this.mapToRequestParams(person);
 		const url = `${environment.apiBase}/patient/optionalfilter`;
-		return this.http.get<LimitedPatientSearchDto>(url, { params: { searchFilterStr: JSON.stringify(person) } });
+		return this.http.get<PageDto<PatientSearchDto>>(url, {
+			params: {
+				searchFilterStr: JSON.stringify(person),
+				pageSize: pageable.pageSize,
+				pageNumber: pageable.pageNumber
+			}
+		});
+	}
+
+	private mapToRequestParams(person: PersonInformationRequest) {
+		if (person.birthDate != null) {
+			person.birthDate = toApiFormat(dateISOParseDate(person.birthDate));
+		}
+
+		for (const property of Object.keys(person)) {
+			person[property] = person[property] === '' ? null : person[property];
+		}
 	}
 
 	getBasicPersonalData(patientId: number): Observable<ReducedPatientDto> {

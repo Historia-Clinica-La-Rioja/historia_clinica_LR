@@ -59,7 +59,7 @@
 				[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
 				[ngClass]="segment.cssClass">
 				<div class="cal-time" *ngIf="isTimeLabel">
-					{{ segment.date | date: 'HH:mm' }}
+					{{ segment.date | dateFormat: 'time' }}
 				</div>
 			</div>
 		</ng-template>
@@ -131,7 +131,7 @@
 				<div fxLayout="row" fxLayoutAlign="space-between center" class="title">
 					<div id="view_date">
 						<span class="mat-h2">
-							{{ viewDate | date:dateFormats.LONG_DATE }}
+							{{ viewDate | dateFormat: 'fulldate' }}
 						</span>
 					</div>
 					<button mat-button color="primary" onclick="this.blur()" (click)="goToDiary()">

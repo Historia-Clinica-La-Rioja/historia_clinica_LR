@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title class="mat-h2" [translate]="'ambulatoria.paciente.nueva-consulta.parameterized-form.dialog.TITLE'"></span>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>clear</mat-icon>
+	</button>
+</div>
+<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+    <app-typeahead titleInput="ambulatoria.paciente.nueva-consulta.parameterized-form.dialog.TYPEAHEAD_TITLE" placeholder="ambulatoria.paciente.nueva-consulta.parameterized-form.dialog.TYPEAHEAD_PLACEHOLDER" [options]="institutionalParameterizedForms$ | async" (selectionChange)="selectedForm = $event"></app-typeahead>
+    <app-parameterized-form-parameters-section *ngIf="!!selectedForm" [parameterizedFormId]="selectedForm.id" (parametersToSave)="completedParameterizedFormParameterDto = $event"></app-parameterized-form-parameters-section>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <app-button id="save-form" text="buttons.SAVE" buttonType="mat-raised-button" (clicked)="save()" [disabled]="!selectedForm"></app-button>
+</mat-dialog-actions>

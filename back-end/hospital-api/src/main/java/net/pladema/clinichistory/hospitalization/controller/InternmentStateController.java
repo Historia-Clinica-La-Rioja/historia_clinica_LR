@@ -14,6 +14,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.hospitalization.controller.dto.InternmentAnthropometricDataDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -30,7 +31,6 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationMedicationState;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AllergyConditionDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
@@ -169,12 +169,12 @@ public class InternmentStateController {
 
 	@InternmentValid
 	@GetMapping("/{internmentEpisodeId}/general/last-2-anthropometric-data")
-	public ResponseEntity<List<AnthropometricDataDto>> getLast2AnthropometricDataGeneralState(
+	public ResponseEntity<List<InternmentAnthropometricDataDto>> getLast2AnthropometricDataGeneralState(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId){
 		log.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
 		List<AnthropometricDataBo> anthropometricData = fetchHospitalizationClinicalObservationState.getLast2AnthropometricDataGeneralState(internmentEpisodeId);
-		List<AnthropometricDataDto> result = internmentStateMapper.toListAnthropometricDataDto(anthropometricData);
+		List<InternmentAnthropometricDataDto> result = internmentStateMapper.toListInternmentAnthropometricDataDto(anthropometricData);
 		log.debug(LOGGING_OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}

@@ -1,11 +1,5 @@
-mat-dialog-content.mat-dialog-content {
+.dialog-information {
 	max-height: 50vh;
-}
-
-.assign-turn-button {
-	display: flex;
-	justify-content: flex-end;
-	margin-right: 24px;
 }
 
 .columns {
@@ -13,7 +7,7 @@ mat-dialog-content.mat-dialog-content {
 }
 
 @media (max-width: 800px) {
-	mat-dialog-content.mat-dialog-content {
+	.dialog-information {
 		flex-wrap: wrap;
 		align-items: flex-start;
 	}

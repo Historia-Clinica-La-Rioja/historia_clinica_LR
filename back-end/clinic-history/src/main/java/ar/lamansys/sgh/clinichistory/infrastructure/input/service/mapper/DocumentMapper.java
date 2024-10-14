@@ -11,12 +11,14 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(uses = {AllergyConditionMapper.class, HealthConditionMapper.class, ImmunizationMapper.class, MedicationMapper.class,
-        RiskFactorMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class, DocumentHealthcareProfessionalMapper.class})
+        RiskFactorMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class, DocumentHealthcareProfessionalMapper.class},
+		builder = @Builder(disableBuilder = true))
 public interface DocumentMapper {
 
     @Named("fromDocumentDto")

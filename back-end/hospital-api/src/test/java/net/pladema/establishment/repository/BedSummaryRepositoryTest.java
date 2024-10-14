@@ -7,7 +7,7 @@ import net.pladema.establishment.repository.entity.AgeGroup;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.BedCategory;
 import net.pladema.establishment.repository.entity.CareType;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.repository.entity.SectorOrganization;

@@ -29,7 +29,7 @@
             <mat-form-field appearance="outline">
                 <input id="medication-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{ data.analgesicTechniqueService.snomedConcept.pt }}">
-                <button id="clear-drug" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear-drug"  matSuffix color="warn" mat-icon-button
                     (click)="data.analgesicTechniqueService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>
@@ -82,8 +82,8 @@
                     </mat-radio-button>
                 </mat-radio-group>
                 <mat-form-field appearance="outline">
-                    <input id="cateterNote-input" matInput type="text" formControlName="cateterNote" name="cateterNote"
-                        placeholder="{{'internaciones.anesthesic-report.analgesic-technique.CATETER_NOTE_LABEL' | translate}}">
+                    <textarea id="cateterNote-input" matInput type="text" formControlName="cateterNote" name="cateterNote" 
+                        placeholder="{{'internaciones.anesthesic-report.analgesic-technique.CATETER_NOTE_LABEL' | translate}}"></textarea>
                     <mat-error *ngIf="hasError(form, 'required', 'cateterNote')">
                         <span translate="forms.REQUIRED"></span>
                     </mat-error>

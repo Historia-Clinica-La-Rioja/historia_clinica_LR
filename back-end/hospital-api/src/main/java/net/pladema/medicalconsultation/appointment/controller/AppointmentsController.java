@@ -20,9 +20,13 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exception
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState;
+import net.pladema.medicalconsultation.appointment.application.GetAppointment;
 import net.pladema.medicalconsultation.appointment.application.createexpiredappointment.CreateExpiredAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
+import net.pladema.medicalconsultation.appointment.infrastructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
@@ -39,7 +43,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.CustomRecurrin
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateCustomAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.WeekDayDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.WeekDayMapper;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.service.CancelRecurringAppointment;
 import net.pladema.medicalconsultation.appointment.service.CreateCustomAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateEveryWeekAppointmentService;
@@ -194,7 +198,7 @@ public class AppointmentsController {
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
 	private final CreateAppointmentLabel createAppointmentLabel;
-	
+
 	private final ReassignAppointment reassignAppointment;
 
 	private final SharedBookingPort sharedBookingPort;
@@ -212,6 +216,10 @@ public class AppointmentsController {
 	private final FetchCustomAppointment fetchCustomAppointment;
 
 	private final CreateExpiredAppointment createExpiredAppointment;
+
+	private final ChangeAppointmentState changeAppointmentState;
+
+	private final GetAppointment getAppointment;
 
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
@@ -301,7 +309,7 @@ public class AppointmentsController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRADOR_AGENDA, ENFERMERO')")
 	public ResponseEntity<AppointmentDto> getAppointment(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "appointmentId") Integer appointmentId) {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
-		Optional<AppointmentBo> resultService = appointmentService.getAppointment(appointmentId);
+		Optional<AppointmentBo> resultService = getAppointment.run(appointmentId);
 		Optional<AppointmentDto> result = resultService.map(appointmentMapper::toAppointmentDto);
 		log.debug(OUTPUT, result);
 		return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
@@ -498,7 +506,8 @@ public class AppointmentsController {
 				equipmentAppointmentBo.getStudies(),
 				equipmentAppointmentBo.getServiceRequestId(),
 				equipmentAppointmentBo.getTranscribedServiceRequestId(),
-				null
+				null,
+				equipmentAppointmentBo.getLocalViewerUrl()
 		);
 	}
 
@@ -560,15 +569,14 @@ public class AppointmentsController {
 
 	@PutMapping(value = "/{appointmentId}/change-state")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<Boolean> changeState(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
-			@ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
-			@RequestParam(name = "reason", required = false) String reason
-	) {
-		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
-		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), reason);
-		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
+	public ResponseEntity<Boolean> changeState(@PathVariable(name = "institutionId") Integer institutionId,
+											   @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
+											   @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
+											   @RequestBody UpdateAppointmentStateDto updateAppointmentStateDto) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}, updateAppointmentStateDto {}", institutionId, appointmentId, appointmentStateId, updateAppointmentStateDto);
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), updateAppointmentStateDto.getReason());
+		UpdateAppointmentStateBo updateAppointmentStateBo = appointmentMapper.fromUpdateAppointmentStateDto(updateAppointmentStateDto, appointmentId, Short.parseShort(appointmentStateId));
+		boolean result = changeAppointmentState.run(updateAppointmentStateBo);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -643,14 +651,6 @@ public class AppointmentsController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/publish-work-list/{appointmentId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES')")
-	public ResponseEntity<Boolean> publishWorkList(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId
-	) {
-		return ResponseEntity.ok().body(true);
-	}
 
 	@GetMapping("/get-study-instance-UID/{appointmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, INFORMADOR, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
@@ -1003,7 +1003,7 @@ public class AppointmentsController {
 	}
 
 	@GetMapping(value = "/{appointmentId}/custom-appointment")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<CustomRecurringAppointmentDto> getCustomAppointment(@PathVariable(name = "institutionId") Integer institutionId,
 																			  @PathVariable(name = "appointmentId") Integer appointmentId) {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);

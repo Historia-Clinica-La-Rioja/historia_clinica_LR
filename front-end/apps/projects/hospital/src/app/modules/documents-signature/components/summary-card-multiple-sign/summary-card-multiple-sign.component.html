@@ -1,0 +1,24 @@
+<section class="container">
+	<app-summary-list-multiple-sign class="summary-list"
+		[dataList]="dataList"
+		[noDataMessage]="noDataMessage"
+		[enableCheckboxes]="enableCheckboxes"
+		(selectedId)="selectedId($event)"
+		(checkedIds)="checkedIds($event)">
+	</app-summary-list-multiple-sign>
+	<div *ngIf="detailedInformation || hasHeader" class="detailed-information">
+		<ng-content select=".header-information"></ng-content>
+		<mat-divider></mat-divider>
+		<app-detailed-information *ngIf="detailedInformation" [detailedInformation]="detailedInformation">
+		</app-detailed-information>
+	</div>
+	<div class="no-detailed-information">
+		<ng-content *ngIf="!detailedInformation"></ng-content>
+	</div>
+</section>
+
+<ng-template #noData>
+	<div class="no-information-container">
+		<h3>{{noDataMessage | translate}}</h3>
+	</div>
+</ng-template>

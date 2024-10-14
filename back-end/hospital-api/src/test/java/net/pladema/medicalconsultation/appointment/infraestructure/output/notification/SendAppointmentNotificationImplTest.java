@@ -3,6 +3,8 @@ package net.pladema.medicalconsultation.appointment.infraestructure.output.notif
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import net.pladema.medicalconsultation.appointment.infrastructure.output.notification.SendAppointmentNotificationImpl;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

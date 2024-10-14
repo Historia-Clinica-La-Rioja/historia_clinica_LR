@@ -25,7 +25,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { ContextService } from '@core/services/context.service';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
-import { HomeRoutes } from 'projects/hospital/src/app/modules/home/home-routing.module';
 import { EmergencyCareEpisodeSummaryService } from "@api-rest/services/emergency-care-episode-summary.service";
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
@@ -45,6 +44,7 @@ import { PatientValidatorPopupComponent } from '../../dialogs/patient-validator-
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
+import { HomeRoutes } from 'projects/hospital/src/app/modules/home/constants/menu';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;

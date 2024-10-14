@@ -24,4 +24,5 @@ public class DocumentHeaderBo implements IDocumentHeaderBo {
     private Integer encounterId;
     private Integer clinicalSpecialtyId;
     private Long initialDocumentId;
+    private String documentStatusId;
 }

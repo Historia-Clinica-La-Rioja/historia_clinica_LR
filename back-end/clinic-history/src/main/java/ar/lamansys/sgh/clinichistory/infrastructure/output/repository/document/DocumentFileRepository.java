@@ -53,9 +53,11 @@ public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<
 	void updateDigitalSignatureHash(@Param("documentId") Long documentId, @Param("hash") String hash);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT COUNT(1) > 0 " +
-			"FROM DocumentFile df " +
-			"WHERE df.signatureStatusId > 0")
+	@Query(value = " SELECT EXISTS (" +
+			"	SELECT 1 " +
+			"	FROM document_file df " +
+			"	WHERE df.signature_status_id > 0" +
+			")", nativeQuery = true)
 	boolean documentsWereAlreadySigned();
 
 }

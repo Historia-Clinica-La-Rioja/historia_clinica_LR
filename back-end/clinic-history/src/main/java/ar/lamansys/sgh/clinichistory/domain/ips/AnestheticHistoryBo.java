@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnesthesiaZone;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPreviousAnesthesiaState;
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import static java.util.Objects.nonNull;
 @Setter
 @NoArgsConstructor
 @ToString
-public class AnestheticHistoryBo {
+public class AnestheticHistoryBo implements IpsBo {
 
     private Long id;
     private EPreviousAnesthesiaState state;
@@ -31,5 +32,18 @@ public class AnestheticHistoryBo {
 
     public Short getZoneId() {
         return nonNull(zone) ? zone.getId() : null;
+    }
+
+    public String getPreviousAnesthesiaState() {
+        return state != null ? state.getDescription() : null;
+    }
+
+    public String getAnesthesiaZone() {
+        return zone != null ? zone.getDescription() : null;
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitAnestheticHistory(this);
     }
 }

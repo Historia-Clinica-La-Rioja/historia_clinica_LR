@@ -1,11 +1,12 @@
-import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn, FormControl} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn, FormControl} from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { DateFormat, toHourMinute } from './date.utils';
-import { format } from 'date-fns';
+import { toHourMinute } from './date.utils';
+import { isAfter, isBefore } from 'date-fns';
+import { TimeDto } from '@api-rest/api-model';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
-		identif_number: 11,
+		identif_number: 20,
 		cuil: 11,
 		gender: 40,
 		phonePrefix:10,
@@ -64,14 +65,19 @@ export function futureTimeValidation(control: UntypedFormControl): ValidationErr
 	return null;
 }
 
-export function futureTimeValidationDate(control: UntypedFormControl): ValidationErrors | null {
-	const time: string = control.value;
-	const today: Date = new Date();
-	if (isValidTime(time)) {
-		if (time > format(today, DateFormat.HOUR_MINUTE))
-			return { futureTime: true };
-	}
-	return null;
+export function futureTimeValidationDate(): ValidatorFn{
+	return (control: AbstractControl): ValidationErrors | null => {
+		const selectedTime: Date = getNewDateWithGivenTimeDto(control.value)
+		const today: Date = new Date();
+		return isAfter(selectedTime, today)  ? { 'futureTime': true } : null;
+	};
+}
+
+function getNewDateWithGivenTimeDto(selectedTime: TimeDto): Date {
+	const date: Date = new Date();
+	date.setHours(selectedTime.hours);
+	date.setMinutes(selectedTime.minutes);
+	return date;
 }
 
 export function beforeTimeValidation(date: Date) {
@@ -88,14 +94,11 @@ export function beforeTimeValidation(date: Date) {
 	};
 }
 
-export function beforeTimeValidationDate(date: Date) {
-	return (control: UntypedFormControl): ValidationErrors | null => {
-		const time: string = control.value;
-		if (isValidTime(time)) {
-			if (time < format(date, DateFormat.HOUR_MINUTE))
-				return { beforeTime: true };
-		}
-		return null;
+export function beforeTimeValidationDate(givenDate: Date, selectedDate: Date): ValidatorFn{
+	return (control: AbstractControl): ValidationErrors | null => {
+		selectedDate.setHours(control.value.hours);
+		selectedDate.setMinutes(control.value.minutes);
+		return isBefore(selectedDate, givenDate)  ? { 'beforeTime': true } : null;
 	};
 }
 

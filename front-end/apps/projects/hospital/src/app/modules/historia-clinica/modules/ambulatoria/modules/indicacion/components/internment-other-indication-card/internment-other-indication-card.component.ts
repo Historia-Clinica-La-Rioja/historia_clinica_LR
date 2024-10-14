@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
-import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, OTHER_INDICATION, OTHER_INDICATION_ID, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, OTHER_INDICATION, OTHER_INDICATION_ID } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from '@presentation/components/indication/indication.component';
 import { OtherIndicationDto } from '@api-rest/api-model';
 import { OtherIndicationTypeDto } from '@api-rest/services/internment-indication.service';
@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 import { IndicationService } from '@api-rest/services/indication.service';
 import { Subject } from 'rxjs';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { ShowTimeElapsedPipe } from '@historia-clinica/pipes/show-time-elapsed.pipe';
 
 
 const DIALOG_SIZE = '35%';
@@ -51,6 +53,8 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 
 	mapToIndicationContent(): Content[] {
 		return this.otherIndications?.map((otherIndication: OtherIndicationDto) => {
+			const createdOn = dateTimeDtotoLocalDate(otherIndication.createdOn);
+			const showTimeElapsedPipe = new ShowTimeElapsedPipe();
 			return {
 				status: {
 					description: IndicationStatus[otherIndication.status],
@@ -60,7 +64,7 @@ export class InternmentOtherIndicationCardComponent implements OnChanges {
 				id: otherIndication.id,
 				description: indication(otherIndication, this.othersIndicatiosType),
 				createdBy: otherIndication.createdBy,
-				timeElapsed: showTimeElapsed(otherIndication.createdOn),
+				timeElapsed: showTimeElapsedPipe.transform(createdOn),
 				extra_info: otherIndication?.dosage ? showFrequency(otherIndication.dosage) : [],
 				observations: otherIndication.description
 			}

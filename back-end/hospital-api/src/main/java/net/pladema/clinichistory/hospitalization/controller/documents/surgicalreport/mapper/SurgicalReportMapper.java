@@ -14,10 +14,15 @@ import net.pladema.clinichistory.hospitalization.service.domain.SurgicalReportBo
 public interface SurgicalReportMapper {
 
     @Named("fromSurgicalReportDto")
-	@Mapping(target = "healthcareProfessionals", source = "healthcareProfessionals", qualifiedByName = "toDocumentHealthcareProfessionalBoList")
+	@Mapping(target = "surgicalTeam", source = "surgicalTeam", qualifiedByName = "toDocumentHealthcareProfessionalBoList")
+	@Mapping(target = "pathologist", source = "pathologist", qualifiedByName = "toDocumentHealthcareProfessionalDocumentBo")
+	@Mapping(target = "transfusionist", source = "transfusionist", qualifiedByName = "toDocumentHealthcareProfessionalDocumentBo")
 	SurgicalReportBo fromSurgicalReportDto(SurgicalReportDto surgicalReportDto);
 	
 	@Named("fromSurgicalReportBo")
-	@Mapping(target = "healthcareProfessionals", source = "healthcareProfessionals", qualifiedByName = "toDocumentHealthcareProfessionalDtoList")
+	@Mapping(target = "surgicalTeam", source = "surgicalTeam", qualifiedByName = "toDocumentHealthcareProfessionalDtoList")
+	@Mapping(target = "pathologist", source = "pathologist", qualifiedByName = "toDocumentHealthcareProfessionalDocumentDto")
+	@Mapping(target = "transfusionist", source = "transfusionist", qualifiedByName = "toDocumentHealthcareProfessionalDocumentDto")
 	SurgicalReportDto fromSurgicalReportBo(SurgicalReportBo surgicalReportBo);
+
 }

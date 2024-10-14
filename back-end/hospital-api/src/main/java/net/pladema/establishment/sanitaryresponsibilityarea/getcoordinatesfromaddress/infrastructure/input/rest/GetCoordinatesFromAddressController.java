@@ -16,6 +16,7 @@ import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.inpu
 
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.mapper.NominatimAddressMapper;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +37,7 @@ public class GetCoordinatesFromAddressController {
 	private final GetCoordinatesFromAddress getCoordinatesFromAddress;
 
 	@GetMapping
+	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public GlobalCoordinatesDto run(@RequestParam("address") String address) throws JsonProcessingException {
 		log.debug("Input parameters -> address {}", address);
 		NominatimAddressDto addressDto = objectMapper.readValue(address, NominatimAddressDto.class);

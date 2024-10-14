@@ -1,0 +1,19 @@
+<h2 class="primary">{{data.title | translate}}</h2>
+
+<div fxLayout="column" fxLayoutGap="10px">
+	<app-identifier-cases *ngIf="data.problem"
+		[identifierCase]="identiferCases.PROBLEM"
+		[description]="data.problem | translate">
+	</app-identifier-cases>
+	<app-identifier-cases *ngIf="data.patient"
+		[identifierCase]="identiferCases.PATIENT"
+		[description]="data.patient">
+	</app-identifier-cases>
+	<app-register-editor-info *ngIf="data.registerEditor"
+		[registerEditor]="data.registerEditor"
+		[registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR"
+		[position]="Position.COLUMN">
+	</app-register-editor-info>
+</div>
+
+<app-sign-status [signStatus]="data.signStatus" *ngIf="data.signStatus"></app-sign-status>

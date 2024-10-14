@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
+import net.pladema.emergencycare.controller.dto.EmergencyCareClinicalSpecialtySectorDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareUserDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
@@ -42,5 +43,7 @@ public class TriageListDto implements Serializable {
     private String notes;
 
 	private List<OutpatientReasonDto> reasons;
+
+	private EmergencyCareClinicalSpecialtySectorDto clinicalSpecialtySector;
 
 }

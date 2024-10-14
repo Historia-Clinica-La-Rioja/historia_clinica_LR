@@ -5,7 +5,9 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
@@ -19,17 +21,22 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.CanBeMarkAsError;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.MarkAsErrorAProblem;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientProcedureDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ErrorProblemDto;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ProblemInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportObservationsMapper;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
@@ -52,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -90,7 +98,12 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final CanBeMarkAsError canBeMarkAsError;
 
+    private final SharedCreateConsultationServiceRequest sharedCreateConsultationServiceRequest;
+
+    private final DiagnosticReportObservationsMapper diagnosticReportObservationsMapper;
+
     @Override
+    @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             Integer institutionId,
@@ -134,12 +147,59 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(createOutpatientDto.getReferences(), institutionId,
 					doctorId, patientMedicalCoverageId, patientId, newOutPatient.getId()));
         }
+
+		/**
+		 * Create a service request for each procedure
+		 */
+		try {
+			List<Integer> orderIdsFromProcedures = createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
+				institutionId, newOutPatient.getId());
+			orderIds.addAll(orderIdsFromProcedures);
+		} catch (CreateOutpatientConsultationServiceRequestException e) {
+			//Translate to runtime exception to rollback the transaction
+			throw new RuntimeException(e);
+		}
+
 		ConsultationResponseDto result = new ConsultationResponseDto(newOutPatient.getId(), orderIds);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
-    @Override
+	/**
+	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
+	 */
+	private List<Integer> createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
+		Integer medicalCoverageId, BasicPatientDto patientDto, Integer institutionId, Integer newOutpatientConsultationId)
+	{
+		List<Integer> orderIds = new ArrayList<>();
+		for (int i = 0; i < procedures.size(); i++) {
+			var procedure = procedures.get(i);
+			CreateOutpatientServiceRequestDto procedureServiceRequest = procedure.getServiceRequest();
+			if (procedureServiceRequest != null) {
+
+				String categoryId = procedureServiceRequest.getCategoryId();
+				String healthConditionSctid = procedureServiceRequest.getHealthConditionSctid();
+				String healthConditionPt = procedureServiceRequest.getHealthConditionPt();
+				SnomedDto snomed = procedure.getSnomed();
+				Boolean createWithStatusFinal = procedureServiceRequest.getCreationStatus().isFinal();
+				Optional<SharedAddObservationsCommandVo> addObservationsCommand = Optional
+					.ofNullable(procedureServiceRequest.getObservations())
+					.map(x -> diagnosticReportObservationsMapper.fromDto(x));
+
+				Integer patientId = patientDto.getId();
+				Short patientGenderId = patientDto.getPerson().getGender().getId();
+				Short patientAge = patientDto.getPerson().getAge();
+
+				Integer orderId = sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(doctorId, categoryId, institutionId,
+						healthConditionSctid, healthConditionPt, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
+						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				orderIds.add(orderId);
+			}
+		}
+		return orderIds;
+	}
+
+	@Override
     @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")
     public ResponseEntity<Boolean> gettingVaccine(

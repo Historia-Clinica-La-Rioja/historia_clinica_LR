@@ -5,7 +5,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.emergencycare.controller.mapper.EmergencyCareEvolutionNoteMapper;
 import net.pladema.emergencycare.service.CreateEmergencyCareEvolutionNoteDocumentService;
 import net.pladema.emergencycare.service.CreateEmergencyCareEvolutionNoteService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -24,8 +23,8 @@ public class CipresOutpatientConsultationSummaryStorageImpl implements CipresOut
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<CipresOutpatientBasicDataBo> getOutpatientConsultations(Integer limit, LocalDateTime start, LocalDateTime end) {
-		String sqlString =" SELECT NEW net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo(oc.id, d.id, oc.creationable.createdOn, " +
+	public List<CipresOutpatientBasicDataBo> getOutpatientConsultationsForSend(Integer limit, LocalDateTime start, LocalDateTime end) {
+		 String sqlString =" SELECT NEW net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo(oc.id, d.id, oc.creationable.createdOn, " +
 				"cs.id, cs.sctidCode, i.id, i.sisaCode, oc.patientId, pe.id, pe.identificationTypeId, pe.identificationNumber, pe.genderId) " +
 				"FROM OutpatientConsultation oc " +
 				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
@@ -49,6 +48,33 @@ public class CipresOutpatientConsultationSummaryStorageImpl implements CipresOut
 				.getResultList();
 	}
 
+	@Transactional(readOnly = true)
+	@Override
+	public List<CipresOutpatientBasicDataBo> getOutpatientConsultationsForSendOrResend(Integer limit, LocalDateTime start, LocalDateTime end) {
+
+		String sqlString =" SELECT NEW net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo(oc.id, d.id, oc.creationable.createdOn, " +
+				"cs.id, cs.sctidCode, i.id, i.sisaCode, oc.patientId, pe.id, pe.identificationTypeId, pe.identificationNumber, pe.genderId, ce.id) " +
+				"FROM OutpatientConsultation oc " +
+				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
+				"JOIN Institution i ON (oc.institutionId = i.id) " +
+				"JOIN Document d ON (oc.id = d.sourceId) " +
+				"JOIN Patient p ON (oc.patientId = p.id) " +
+				"JOIN Person pe ON (p.personId = pe.id) " +
+				"LEFT JOIN CipresEncounter ce ON (oc.id = ce.encounterId) " +
+				"WHERE oc.billable = TRUE " +
+				"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
+				"AND d.typeId = " + DocumentType.OUTPATIENT +
+				"AND d.sourceTypeId = " + SourceType.OUTPATIENT +
+				"AND (ce.responseCode IN (500, 503) OR ce.encounterId IS NULL)" +
+				"AND (oc.creationable.createdOn BETWEEN :start AND :end) " +
+				"ORDER BY oc.creationable.createdOn DESC";
+
+		return (List<CipresOutpatientBasicDataBo>) entityManager.createQuery(sqlString)
+				.setParameter("end", end)
+				.setParameter("start", start)
+				.setMaxResults(limit)
+				.getResultList();
+	}
 	@Override
 	public CipresOutpatientBasicDataBo getOutpatientConsultationByCipresEncounterId(Integer cipresEncounterId) {
 		String sqlString =" SELECT NEW net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo(oc.id, d.id, oc.creationable.createdOn, " +

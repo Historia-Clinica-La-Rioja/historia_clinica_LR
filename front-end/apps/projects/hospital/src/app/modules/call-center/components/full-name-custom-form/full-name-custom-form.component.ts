@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, forwardRef } from '@angular/core';
 import { FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { STRING_PATTERN, hasError } from '@core/utils/form.utils';
+import { NoWhitespaceValidator, hasError } from '@core/utils/form.utils';
 import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
 
 @Component({
@@ -40,8 +40,8 @@ export class FullNameCustomFormComponent extends AbstractCustomForm implements O
 
 	createForm() {
 		this.form = new FormGroup<FullNameCustomForm>({
-			name: new FormControl(null, [Validators.required, Validators.pattern(STRING_PATTERN)]),
-			lastName: new FormControl(null, [Validators.required, Validators.pattern(STRING_PATTERN)])
+			name: new FormControl(null, [Validators.required, NoWhitespaceValidator()]),
+			lastName: new FormControl(null, [Validators.required, NoWhitespaceValidator()])
 		});
 	}
 

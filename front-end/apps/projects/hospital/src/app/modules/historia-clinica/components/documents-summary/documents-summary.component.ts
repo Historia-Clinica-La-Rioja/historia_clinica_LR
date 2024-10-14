@@ -21,6 +21,10 @@ import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambul
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { fixDate } from '@core/utils/date/format';
+import { ShowMoreConceptsPipe } from '@presentation/pipes/show-more-concepts.pipe';
+import { capitalize } from '@core/utils/core.utils';
+import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -45,7 +49,7 @@ export class DocumentsSummaryComponent implements OnInit {
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentTypes: MasterDataDto [] = [];
-	public documentsToShow: DocumentSearch[] = [];
+	public documentsToShow: DocumentData[] = [];
 	public readonly documentsSummary = DOCUMENTS;
 	public today = newDate();
 	public form: UntypedFormGroup;
@@ -86,7 +90,7 @@ export class DocumentsSummaryComponent implements OnInit {
 	ngOnInit(): void {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 		this.setInputResetBehaviour();
-		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);		
+		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);
 		this.minDate = this.internmentEpisodeAdmissionDatetime;
 	}
 
@@ -129,7 +133,7 @@ export class DocumentsSummaryComponent implements OnInit {
 			document: d.document,
 			canDoAction: {
 				delete: this.documentActions.canDeleteDocument(d.document),
-				edit: this.documentActions.canEditDocument(d.document)
+				edit: this.documentActions.canEditDocument(d.document),
 			}
 		};
 	}
@@ -143,7 +147,10 @@ export class DocumentsSummaryComponent implements OnInit {
 		if (documents){
 			this.documentActions.setPatientDocuments(documents);
 			this.documentsToShow = documents.map(document => {
-				return { document }
+				return {
+					documentSearch:	{ document },
+					summaryAttentionData: this.buildSummaryAttentionData(document)
+				}
 			})
 			this.changeDetectorRef.detectChanges();
 		}
@@ -163,14 +170,13 @@ export class DocumentsSummaryComponent implements OnInit {
 		if (documents){
 			this.documentActions.setPatientDocuments(documents);
 			this.documentsToShow = documents.map(document => {
-				return { document }
-			});
+				return {
+					documentSearch:	{ document },
+					summaryAttentionData: this.buildSummaryAttentionData(document)
+				}
+			})
 			this.changeDetectorRef.detectChanges();
 		}
-	}
-
-	viewEvolutionNote(): boolean {
-		return !!(this.activeDocument?.document.notes || this.activeDocument?.document.procedures.length > 0);
 	}
 
 	resetFilter(control: AbstractControl) {
@@ -244,6 +250,52 @@ export class DocumentsSummaryComponent implements OnInit {
 		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
 	}
 
+	buildSummaryAttentionData(document: DocumentSearchDto): SummaryAttentionData {
+		return {
+			title: this.getDocumentType(document),
+			problem: this.buildProblem(document),
+			registerEditor: this.buildRegisterEditor(document)
+		}
+	}
+
+	getDocumentType(document: DocumentSearchDto): string {
+		if (document.documentType === this.DOCUMENT_TYPES.SURGICAL_REPORT)
+			return 'internaciones.documents-summary.document-name.SURGICAL_REPORT';
+		if (document.documentType === this.DOCUMENT_TYPES.ANAMNESIS)
+			return 'internaciones.documents-summary.document-name.ANAMNESIS';
+		if ((document.documentType == this.DOCUMENT_TYPES.EPICRISIS || document.documentType == this.DOCUMENT_TYPES.ANESTHETIC_REPORT) && !document.confirmed)
+			return document.documentType + ' (Borrador)';
+		if (document.documentType !== this.DOCUMENT_TYPES.ANAMNESIS && document.confirmed)
+			return document.documentType;
+	}
+
+	buildProblem(document: DocumentSearchDto): string {
+		const showMoreConceptsPipe = new ShowMoreConceptsPipe();
+		let problems: string[] = [];
+		if (document.mainDiagnosis === null || document.mainDiagnosis === undefined || document.mainDiagnosis === '')
+			problems = [...document.diagnosis];
+		else
+			problems = [document.mainDiagnosis, ...document.diagnosis];
+		return problems.length ? capitalize(showMoreConceptsPipe.transform(problems)) : 'internaciones.documents-summary.NO_SNOMED_CONCEPT';
+	}
+
+	buildRegisterEditor(document: DocumentSearchDto): RegisterEditor {
+		return {
+			createdBy: this.getFullName(document.creator.firstName, document.creator.nameSelfDetermination) + " " + document.creator.lastName,
+			date: convertDateTimeDtoToDate(document.createdOn)
+		}
+	}
+}
+
+export interface DocumentData {
+	documentSearch: DocumentSearch,
+	summaryAttentionData: SummaryAttentionData
+}
+
+export interface SummaryAttentionData {
+	title: string,
+	problem: string,
+	registerEditor: RegisterEditor
 }
 
 export interface SearchField {
@@ -257,4 +309,5 @@ enum DocumentTypes {
     NURSE_EVOLUTION_NOTE = 'Nota de evolución de enfermería',
     ANAMNESIS = 'Anamnesis',
     EPICRISIS = 'Epicrisis',
+	SURGICAL_REPORT = 'Parte quirúrgico de internación',
 }

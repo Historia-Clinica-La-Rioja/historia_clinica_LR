@@ -67,8 +67,10 @@
 			}
 		},
 		"template-concept-search": {
-			"TEMPLATE_OPTION_GROUP": "Plantillas",
-			"CONCEPT_OPTION_GROUP": "Conceptos"
+			"TEMPLATE_OPTION_GROUP": "Conjunto de estudios",
+			"ALL_STUDIES": "Todos los estudios",
+			"MOST_FREQUENT_STUDIES": "Estudios más frecuentes...",
+			"INCLUDES_STUDIES": "Incluye {{count}} estudios"
 		},
 		"new-consultation-add-reason-form": {
 			"ADD_REASON": "Agregar motivo",
@@ -152,7 +154,36 @@
 				"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva",
 				"OBSERVATIONS": "Observaciones"
 			}
+		},
+		"create-order": {
+			"PROCEDURE": "Procedimiento",
+			"CATEGORY": "Categoría del estudio",
+			"HEALTH_PROBLEM": "Problema",
+			"DATE_OF_REALIZATION": "Fecha de realización"
+		},
+		"add_procedure": {
+			"TITLE_OPTIONS": "Resultados de estudio",
+			"PROCEDURE": "Procedimiento",
+			"RESULT": "Resultados",
+			"NEXT": "Siguiente",
+			"FINAL": "No requiere carga de resultados",
+			"REGISTERED": "Los resultados quedarán pendientes de carga",
+			"ADD_PROCEDURE": "Agregar procedimiento",
+			"LOAD_RESULTS_NOW": "Cargar resultados de procedimiento",
+			"COMPLETE": "Completar",
+			"CAME_BACK": "Volver",
+			"RESULTS_UPLOAD": "Carga de resultados"
+		},
+		"surgical-report": {
+			"summary": {
+				"DESCRIPTION": "Descripción",
+				"SURGERY_START": "Comienzo Cirugía",
+				"SURGERY_END": "Fin Cirugía",
+				"PROCEDURES": "Procedimientos",
+				"REGISTERED_PROCEDURES": "Procedimientos registrados",
+				"OTHER_MEMBERS": "Otros miembros",
+				"CULTURES": "Cultivos"
+			}
 		}
-
 	}
 }

@@ -4,12 +4,8 @@
 			<h2 class="page-title" [translate]="'internaciones.internados-table.TITLE'"></h2>
 			<app-calendar-professional-view *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"></app-calendar-professional-view>
 		</div>
-		<div  *ngIf="!ffOfCardsIsOn else internmentCard" fxLayout="row">
-			<app-internment-patient-table fxFlex="100%" [redirect]="redirect"></app-internment-patient-table>
+		<div>
+			<app-internment-patient-card [redirect]="redirect"></app-internment-patient-card>
 		</div>
 	</section>
 </app-content>
-
-<ng-template #internmentCard>
-	<app-internment-patient-card [redirect]="redirect"></app-internment-patient-card>
-</ng-template>

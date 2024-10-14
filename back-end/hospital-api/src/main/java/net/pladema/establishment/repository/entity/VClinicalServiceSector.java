@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;

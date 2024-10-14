@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller.constraints.validator;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
     private final InternmentEpisodeRepository internmentEpisodeRepository;
     
     private final FeatureFlagsService featureFlagService;
+    
+    private final AnestheticReportStorage anestheticReportStorage;
 
     @Override
     public void initialize(InternmentDischargeValid constraintAnnotation) {
@@ -40,6 +43,16 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
 
         if (!valid) {
             setResponse(context, "{internmentdischarge.invalid.no-epicrisis}", INTERNMENT_EPISODE_PROPERTY);
+        }
+
+        if (featureFlagService.isOn(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO)) {
+            var anestheticReportDraft = anestheticReportStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
+            boolean noDraft = anestheticReportDraft == null;
+            valid = valid && noDraft;
+        }
+
+        if (!valid) {
+            setResponse(context, "{internmentdischarge.invalid.pending-draft}", INTERNMENT_EPISODE_PROPERTY);
         }
 
         return valid;

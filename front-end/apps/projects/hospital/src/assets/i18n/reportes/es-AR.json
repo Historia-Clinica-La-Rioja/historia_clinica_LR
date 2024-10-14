@@ -28,6 +28,18 @@
 				"FECHA_INICIO_POSTERIOR_HOY": "La fecha de inicio debe ser anterior o igual a la fecha actual",
 				"FECHA_FIN_MIN": "La fecha de fin debe ser posterior o igual a la fecha de inicio"
 			}
+		},
+		"monthly-report": {
+			"TITLE": "Mensuales descargables"
+		},
+		"diabetic-patients": {
+			"TITLE": "Pacientes diabéticos"
+		},
+		"hypertensive-patients": {
+			"TITLE": "Pacientes hipertensos"
+		},
+		"weekly-epidemiological-report": {
+			"TITLE": "Reporte epidemiológico semanal"
 		}
 	}
 }

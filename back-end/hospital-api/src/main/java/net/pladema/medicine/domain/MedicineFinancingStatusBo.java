@@ -15,9 +15,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class MedicineFinancingStatusBo implements Serializable {
 
+	private static final long serialVersionUID = 2446654484732250647L;
+
 	private Integer id;
+
 	private String conceptSctid;
+
 	private String conceptPt;
+
 	private Boolean financed;
 
 }

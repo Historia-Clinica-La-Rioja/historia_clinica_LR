@@ -102,6 +102,22 @@ services:
       CEDALO_MC_USERNAME: cedaloadmin
       CEDALO_MC_PASSWORD: cedaloadminPassword
 
+  snomed_schema:
+    build: ./dba/snomed-schema
+    container_name: snomed_schema
+  # ejecutar manualmente para crear el esquema 'snomedct'
+    restart: no
+    environment:
+      POSTGRES_HOST: hsi-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Local123
+      POSTGRES_DB: hospitalDB
+    volumes:
+      # Absolute Path on the host
+      - ./SnomedCT_Argentina-EditionRelease:/usr/src/app/Release2405
+
+
 networks:
   cedalo-platform:
     name: cedalo-platform

@@ -7,6 +7,8 @@ import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +51,11 @@ public class ClinicalObservationBo extends SelfValidating<ClinicalObservationBo>
             return;
         }
         this.effectiveTime = LocalDateTime.parse(effectiveTime, DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_TIME_FORMAT));
+    }
+
+    @JsonIgnore
+    public LocalDateTime getLocalDateEffectiveTime() {
+        return this.getEffectiveTime();
     }
 
 }

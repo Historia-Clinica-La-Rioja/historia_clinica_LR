@@ -16,6 +16,7 @@ export class PriorizationCriteriaSelectComponent implements OnInit {
 	priorities$: Observable<MasterDataDto[]>;
 
 	@Input() oldPriorityId: number;
+	@Input() disabled = false;
 
 	@Output() newPriority = new EventEmitter<number>();
 
@@ -31,7 +32,8 @@ export class PriorizationCriteriaSelectComponent implements OnInit {
 			if (this.oldPriorityId) {
 				const priorityToSet = priorities.find(priority => priority.id === this.oldPriorityId);
 				this.form.controls.priority.setValue(priorityToSet);
-			}			
+			}
+			if (this.disabled) this.form.disable();
 		}));
 	}
 

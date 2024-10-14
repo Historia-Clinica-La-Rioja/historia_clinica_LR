@@ -5,7 +5,6 @@ import java.util.List;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.Builder;
-import lombok.NonNull;
 
 @Builder
 public class NewMedicationRequestNotificationArgs {

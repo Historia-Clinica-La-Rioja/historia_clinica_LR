@@ -86,6 +86,8 @@ class FormValuesService {
 				procedureParameterId: newValue.procedureParameterId,
 				value: newValue.value,
 				unitOfMeasureId: newValue.unitOfMeasureId,
+				snomedPt: newValue?.snomedPt,
+				snomedSctid: newValue?.snomedSctid
 			});
 		}
 		return !!this.changedValues.length; // hasChange

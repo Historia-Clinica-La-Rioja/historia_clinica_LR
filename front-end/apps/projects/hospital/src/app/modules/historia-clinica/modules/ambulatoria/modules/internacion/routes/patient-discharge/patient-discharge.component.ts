@@ -1,4 +1,3 @@
-import { DatePipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -10,7 +9,7 @@ import { PatientService } from "@api-rest/services/patient.service";
 import { PersonService } from "@api-rest/services/person.service";
 import { ContextService } from "@core/services/context.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
-import { DatePipeFormat } from "@core/utils/date.utils";
+import { toHourMinute } from "@core/utils/date.utils";
 import { TIME_PATTERN, hasError, beforeTimeDateValidation, futureTimeValidation } from "@core/utils/form.utils";
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PatientTypeData } from "@presentation/components/patient-type-logo/patient-type-logo.component";
@@ -38,7 +37,7 @@ export class PatientDischargeComponent implements OnInit {
 	todayDate = new Date();
 	TIME_PATTERN = TIME_PATTERN;
 	minTime: string;
-	minDate: string;
+	minDate: Date;
 	public dischargeForm: UntypedFormGroup;
 	public minDischargeDate: Date;
 	public patientBasicData: PatientBasicData;
@@ -67,8 +66,7 @@ export class PatientDischargeComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly datePipe: DatePipe,
-		private readonly patientMedicalCoverageService: PatientMedicalCoverageService
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
@@ -118,13 +116,13 @@ export class PatientDischargeComponent implements OnInit {
 	private loadForm() {
 		this.dischargeForm = this.formBuilder.group({
 			date: [new Date(), [Validators.required]],
-			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME)],
+			time: [toHourMinute(this.todayDate)],
 			dischargeTypeId: [null, [Validators.required]]
 		});
 		this.setValidators()
 		this.dischargeForm.get('date').valueChanges.subscribe((date: Date) => {
 			if (isSameDay(date,new Date())) {
-				if (this.minDate === (this.datePipe.transform(new Date(), DatePipeFormat.SHORT_DATE))) {
+				if (this.minDate === new Date()) {
 					this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
 				} else {
 					this.dischargeForm.get('time').setValidators([Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
@@ -141,7 +139,7 @@ export class PatientDischargeComponent implements OnInit {
 	}
 
 	setValidators(): void {
-		if (this.minDate === (this.datePipe.transform(new Date(), DatePipeFormat.SHORT_DATE))) {
+		if (this.minDate === new Date()) {
 			this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
 		} else {
 			this.dischargeForm.get('time').setValidators([Validators.required, futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
@@ -160,8 +158,8 @@ export class PatientDischargeComponent implements OnInit {
 		this.intermentEpisodeService.getMinDischargeDate(this.internmentId)
 			.subscribe(minDischargeDate => {
 				this.minDischargeDate = new Date(dateTimeDtoToStringDate(minDischargeDate));
-				this.minTime = this.datePipe.transform(this.minDischargeDate, DatePipeFormat.SHORT_TIME);
-				this.minDate = this.datePipe.transform(this.minDischargeDate, DatePipeFormat.SHORT_DATE);
+				this.minTime = toHourMinute(this.minDischargeDate);
+				this.minDate = this.minDischargeDate;
 			});
 	}
 

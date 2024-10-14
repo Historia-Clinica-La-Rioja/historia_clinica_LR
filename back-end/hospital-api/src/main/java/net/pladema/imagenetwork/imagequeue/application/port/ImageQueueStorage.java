@@ -14,4 +14,6 @@ public interface ImageQueueStorage {
     Optional<MoveImageBo> getImageInQueue(Integer moveImageId);
 
     Boolean updateStatusToPending(Integer id);
+
+    Boolean updateImageUIDAndStatusToPending(Integer imageId, String newUID);
 }

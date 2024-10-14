@@ -68,31 +68,30 @@ public class BasicDataPersonDto implements Serializable {
         if (lastName == null && firstName == null && middleNames == null && otherLastNames==null) {
             return null;
         }
+		
+		String completeFirstName;
 
 		if (selfPerceivedFeatureFlag && nameSelfDetermination != null)
-			return nameSelfDetermination;
+			completeFirstName = nameSelfDetermination;
+		else {
+			completeFirstName = firstName != null && middleNames != null
+					? firstName + " " + middleNames
+					: firstName == null ?
+					middleNames
+					: firstName;
+		}
 
-        String completeFirsName = (firstName != null && middleNames != null)
-                ? firstName + " " + middleNames
-                : firstName == null ?
-                middleNames
-                : middleNames == null ?
-                firstName :
-                null;
-
-        String completeLastName = (lastName != null && otherLastNames != null)
+		String completeLastName = lastName != null && otherLastNames != null
                 ? lastName + " " + otherLastNames
                 : lastName == null ?
                 otherLastNames
-                : otherLastNames == null ?
-                lastName :
-                null;
+                : lastName;
 
-        String result =  (completeLastName != null && completeFirsName != null) ?
-                completeLastName + ", " + completeFirsName
-                : completeFirsName == null ?
+        String result =  (completeLastName != null && completeFirstName != null) ?
+                completeLastName + ", " + completeFirstName
+                : completeFirstName == null ?
                 completeLastName :
-                completeFirsName;
+				completeFirstName;
         LOG.debug(OUTPUT, result);
         return result;
     }

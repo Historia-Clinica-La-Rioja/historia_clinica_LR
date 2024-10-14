@@ -121,6 +121,7 @@
 		},
 		"reference-edition": {
 			"TITLE": "Editar solicitud de referencia",
+			"EDIT_REFERENCE_DATA": "Editar datos de referencia",
 			"PLACEHOLDER_ASSOCIATED_PROBLEM": "Problema asociado",
 			"PLACEHOLDER_CARE_LINE": "Línea de cuidado",
 			"SEARCH_BY_CARE_LINE": "Solicitar por línea de cuidado?",

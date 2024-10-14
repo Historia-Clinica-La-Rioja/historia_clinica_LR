@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
+import net.pladema.clinichistory.hospitalization.service.domain.SectorBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.triage.domain.TriageBo;
@@ -63,12 +64,21 @@ public class EmergencyCareBo {
 	private ShockRoomBo shockroom;
 
 	private BedBo bed;
-	
+
 	private LocalDateTime endDate;
 
 	private RoomBo room;
 
 	private String institutionName;
+
+	private Boolean canBeAbsent;
+
+	private LocalDateTime stateUpdatedOn;
+	private Short calls;
+
+	private SectorBo sector;
+
+	private EpisodeDischargeSummaryBo dischargeSummary;
 
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
@@ -87,16 +97,20 @@ public class EmergencyCareBo {
         this.createdOn = emergencyCareVo.getCreatedOn();
         this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
 		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription()) : null;
-		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), null) : null;
+		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), emergencyCareVo.getRoom() != null ? new RoomBo(emergencyCareVo.getRoom()) : null) : null;
 		this.endDate = emergencyCareVo.getEndDate();
 		this.institutionName = emergencyCareVo.getInstitutionName();
 		this.reason = emergencyCareVo.getReason();
+		this.stateUpdatedOn = emergencyCareVo.getStateUpdatedOn();
+		this.sector = emergencyCareVo.getSector() != null ? new SectorBo(emergencyCareVo.getSector()) : null;
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
         this.id = emergencyCareEpisode.getId();
         if(emergencyCareEpisode.getPatientId() != null) {
-            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId());
+            this.patient = new PatientECEBo(emergencyCareEpisode.getPatientId(),
+					emergencyCareEpisode.getPatientMedicalCoverageId(),
+					emergencyCareEpisode.getPatientDescription());
         }
         this.institutionId = emergencyCareEpisode.getInstitutionId();
         this.emergencyCareEntranceId = emergencyCareEpisode.getEmergencyCareEntranceTypeId();
@@ -108,6 +122,8 @@ public class EmergencyCareBo {
             this.doctorsOffice.setId(emergencyCareEpisode.getDoctorsOfficeId());
         }
         this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
+		this.reason = emergencyCareEpisode.getReason();
+		this.createdOn = emergencyCareEpisode.getCreatedOn();
     }
 
     public void setTriageRiskFactorIds(List<Integer> riskFactorIds) {

@@ -1,30 +1,46 @@
-<form [formGroup]="triageForm" class="page" fxLayout="column" fxFlex="grow shrink initial">
-	<mat-form-field class="simple-form-field" appearance="outline">
-		<mat-label [translate]="'guardia.triage.LEVEL'"></mat-label>
-		<mat-select formControlName="triageCategoryId">
-			<mat-option id="triageCategoryId"
-			            *ngFor="let triageCategory of triageCategories" [value]="triageCategory.id">
-				{{triageCategory.description}}
-			</mat-option>
-		</mat-select>
-	</mat-form-field>
+<div class="page" fxLayout="column">
+	<section id="patient" class="patient-summary" *ngIf="patientId || patientDescription">
+		<app-patient-basic-information [patientId]="patientId" [patientDescription]="patientDescription"></app-patient-basic-information>
+	</section>
 
-	<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
-		<span [translate]="'guardia.triage.REASON'"></span>
-		<app-reasons-form [reasons]="lastTriageReasons" (selectedReasons)="setSelectedReasons($event)"></app-reasons-form>
-	</div>
-	
-	<mat-form-field *ngIf="false" class="simple-form-field" appearance="outline">
-		<mat-label [translate]="'guardia.triage.TRIAGE_ROOM'"></mat-label>
-		<mat-select matTooltip="{{'guardia.triage.TRIAGE_ROOM_DESCRIPTION' | translate}}" formControlName="doctorsOfficeId">
-			<mat-option id="doctorsOfficeId"
-			            *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
-				{{office.description}}
-			</mat-option>
-		</mat-select>
-		<button id="clear_triage_room" type="button" mat-button *ngIf="triageForm.value.doctorsOfficeId" matSuffix
-			color="warn" mat-icon-button (click)="clear(triageForm.controls.doctorsOfficeId); $event.stopPropagation()">
-			<mat-icon>close</mat-icon>
-		</button>
-	</mat-form-field>
-</form>
+	<section>
+		<form [formGroup]="triageForm" class="page" fxLayout="column" fxFlex="grow shrink initial">
+			<label class="formLabel" [translate]="'guardia.triage.LEVEL'"></label>
+			<mat-form-field class="simple-form-field" appearance="outline">
+				<mat-select formControlName="triageCategoryId" (selectionChange)="changeTriageLevel($event)">
+					<mat-select-trigger *ngIf="triageLevel">
+						<app-triage-chip [category]="triageLevel" [isFilled]="true"></app-triage-chip>
+					</mat-select-trigger>
+					<mat-option id="triageCategoryId" class="triage-options"
+								*ngFor="let triageCategory of triageCategories" [value]="triageCategory.id">
+						<app-triage-chip [category]="triageCategory" [isFilled]="true"></app-triage-chip>
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
+				<label class="formLabel" [translate]="'guardia.triage.REASON'"></label>
+				<app-reasons-form [reasons]="lastTriageReasons" (selectedReasons)="setSelectedReasons($event)"></app-reasons-form>
+			</div>
+
+			<div *ngIf="hasSpecialtySectors">
+				<app-specialty-sector-form [lastTriageSpecialtySector]="lastTriageSpecialtySector" [specialtySectors]="specialtySectors" (selectedSpecialtySectorForm)="onSelectedSpecialtySectorChange($event)"></app-specialty-sector-form>
+			</div>
+
+
+			<mat-form-field *ngIf="false" class="simple-form-field" appearance="outline">
+				<mat-label [translate]="'guardia.triage.TRIAGE_ROOM'"></mat-label>
+				<mat-select matTooltip="{{'guardia.triage.TRIAGE_ROOM_DESCRIPTION' | translate}}" formControlName="doctorsOfficeId">
+					<mat-option id="doctorsOfficeId"
+								*ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
+						{{office.description}}
+					</mat-option>
+				</mat-select>
+				<button id="clear_triage_room" type="button"  *ngIf="triageForm.value.doctorsOfficeId" matSuffix
+					color="warn" mat-icon-button (click)="clear(triageForm.controls.doctorsOfficeId); $event.stopPropagation()">
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
+		</form>
+	</section>
+</div>

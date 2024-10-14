@@ -46,6 +46,7 @@ const HierarchicalUnitChilds = (props) => {
                     addLabel={false}
                     reference="hierarchicalunitrelationships"
                     target="hierarchicalUnitParentId"
+                    perPage={100}
                 >
                     <Datagrid rowClick={show}
                               empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas hijas definidas</p>}>
@@ -70,6 +71,7 @@ const HierarchicalUnitParents = (props) => {
                     addLabel={false}
                     reference="hierarchicalunitrelationships"
                     target="hierarchicalUnitChildId"
+                    perPage={100}
                 >
                     <Datagrid rowClick={show}
                               empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas padres definidas</p>}>
@@ -112,6 +114,7 @@ const HierarchicalUnitSectors = (props) => {
                     addLabel={false}
                     reference="hierarchicalunitsectors"
                     target="hierarchicalUnitId"
+                    perPage={100}
                 >
                     <Datagrid rowClick={show}
                               empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin sectores asociados</p>}>
@@ -170,6 +173,7 @@ const HierarchicalUnitStaff = (props) => {
                     addLabel={false}
                     reference="hierarchicalunitstaff"
                     target="hierarchicalUnitId"
+                    perPage={100}
                 >
                     <Datagrid empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin usuarios definidos</p>}>
                         <ReferenceField source="userId" reference="institutionuserpersons" label="resources.person.fields.firstName" link={false}>
@@ -188,6 +192,18 @@ const HierarchicalUnitStaff = (props) => {
         ) : null;
 }
 
+const ClosestService = (props) => {
+    const record = useRecordContext(props);
+    return record.typeId !== SERVICE ?
+    (
+        <Labeled label="resources.hierarchicalunits.fields.closestService">
+            <ReferenceField source="closestServiceId" reference="hierarchicalunits">
+                <TextField source="alias"/>
+            </ReferenceField>
+        </Labeled>
+    ) : null;
+}
+
 const HierarchicalUnitShow = props => {
     const userIsInstitutionalAdmin = UserIsInstitutionalAdmin();
     return (
@@ -200,6 +216,7 @@ const HierarchicalUnitShow = props => {
                 <ReferenceField source="typeId" reference="hierarchicalunittypes" link={ false }>
                     <TextField source="description" />
                 </ReferenceField>
+                <ClosestService {...props}/>
                 <ServiceField {...props} />
                 <ReferenceField source="hierarchicalUnitIdToReport" link={userIsInstitutionalAdmin} reference="hierarchicalunits">
                     <TextField source="alias"/>

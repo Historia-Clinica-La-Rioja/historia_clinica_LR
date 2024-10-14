@@ -10,9 +10,11 @@ import {
 	APPOINTMENT_CANCEL_OPTIONS,
 	APPOINTMENT_STATES_ID,
 	getAppointmentState,
+	getScanStatusCustom,
 	MAX_LENGTH_MOTIVE,
 	modality,
 	MODALITYS_TYPES,
+	SCAN_COMPLETED,
 } from '../../constants/appointment';
 import {
 	RECURRING_APPOINTMENT_OPTIONS,
@@ -39,6 +41,8 @@ import {
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
 	ItsCoveredResponseDto,
+	GenderDto,
+	IdentificationTypeDto,
 } from '@api-rest/api-model.d';
 
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
@@ -90,6 +94,9 @@ import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { sameHourAndMinute, timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
+import { PatientInformationScan } from '@pacientes/pacientes.model';
+import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -113,6 +120,7 @@ const enum itsCovered {
 })
 export class AppointmentComponent implements OnInit {
 	readonly SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+	readonly ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
@@ -150,7 +158,7 @@ export class AppointmentComponent implements OnInit {
 
 	isDateFormVisible = false;
 	startAgenda = dateToDateDto(new Date(this.data.agenda.startDate));
-	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate)).year;
+	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate));
 	availableDays: number[] = [];
 	availableMonths: number[] = [];
 	availableYears: number[] = [];
@@ -202,6 +210,12 @@ export class AppointmentComponent implements OnInit {
 	HABILITAR_VISTA_COBERTURA_TURNOS: boolean = false;
 	waitingTime: string;
 	HABILITAR_ATENDER_TURNO_MANUAL: boolean = false;
+	patientInformationScan: string;
+	genderOptions: GenderDto[];
+	identificationTypeList: IdentificationTypeDto[];
+	HABILITAR_ANEXO_II_MENDOZA = false;
+	TYPE_DNI: string;
+	scanMenssage: ColoredIconText = SCAN_COMPLETED;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -305,6 +319,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
+				this.scanMenssage = getScanStatusCustom(this.appointment.patientIdentityAccreditationStatus);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
 				this.selectedModality = MODALITYS_TYPES.find(m => m.value === this.appointment.modality);
@@ -346,7 +361,7 @@ export class AppointmentComponent implements OnInit {
 					fullName: this.patientNameService.completeName(this.data.appointmentData.patient.names.firstName, this.data.appointmentData.patient.names.nameSelfDetermination, this.data.appointmentData.patient.names.lastName, this.data.appointmentData.patient.names.middleNames, this.data.appointmentData.patient.names.otherLastNames),
 					id: this.data.appointmentData.patient.id,
 					identification: {
-						number: Number(this.data.appointmentData.patient.identificationNumber),
+						number: this.data.appointmentData.patient.identificationNumber,
 						type: identificationType.description
 					}
 				}
@@ -357,6 +372,15 @@ export class AppointmentComponent implements OnInit {
 			this.formDate.get('recurringType').setValidators([Validators.required]);
 			this.setCustomAppointment();
 		}
+
+		this.personMasterDataService.getIdentificationTypes().subscribe(
+			identificationTypes => {
+				this.identificationTypeList = identificationTypes;
+				this.TYPE_DNI = this.identificationTypeList.find(type => type.description === 'DNI').description;
+			});
+
+		this.personMasterDataService.getGenders().subscribe(
+			genders => { this.genderOptions = genders; });
 	}
 
 	setCustomAppointment() {
@@ -385,9 +409,12 @@ export class AppointmentComponent implements OnInit {
 	initializeFormDate() {
 		const date = new Date(this.appointment.date)
 		date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-		this.dateAppointment = dateToDateDto(date)
-		if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year && this.dateAppointment.day > this.today.day) {
-			this.dateAppointment.day = this.today.day;
+		this.dateAppointment = dateToDateDto(date)	
+		if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year) {
+			if (this.startAgenda.year === this.today.year && this.startAgenda.month === this.today.month)
+				this.dateAppointment.day = this.startAgenda.day > this.today.day ? this.startAgenda.day : this.today.day;
+			else
+				this.dateAppointment.day = this.today.day
 		} else {
 			this.calculateSetAppointmentDay();
 		}
@@ -413,6 +440,7 @@ export class AppointmentComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO).subscribe((isOn: boolean) => this.isHabilitarRecurrencia = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS).subscribe((isOn: boolean) => this.HABILITAR_VISTA_COBERTURA_TURNOS = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL).subscribe((isOn: boolean) => this.HABILITAR_ATENDER_TURNO_MANUAL = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ANEXO_II_MENDOZA).subscribe((isOn: boolean) => this.HABILITAR_ANEXO_II_MENDOZA = isOn);
 	}
 
 	private checkInputUpdatePermissions() {
@@ -444,11 +472,15 @@ export class AppointmentComponent implements OnInit {
 
 	cancelDateForm(): void {
 		this.formDate.reset();
-		this.initializeFormDate();
 		this.dateFormToggle();
 	}
 
 	openDateForm(): void {
+        this.initializeFormDate();
+        this.loadAvailableDays(this.dateAppointment, true);
+        this.formDate.get('recurringType').setValue(this.recurringTypeSelected?.id);
+        this.loadAppointmentsHours(dateToDateDto(this.selectedDate), true);
+        this.setModalityAndValidator(false);
 		this.dateFormToggle();
 	}
 
@@ -515,10 +547,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	calculateSetAppointmentDay() {
-		if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < this.today.day)) {
-			this.dateAppointment.day = this.startAgenda.day;
-		} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < this.today.day) {
-			this.dateAppointment.day = this.today.day;
+		if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year) {
+			this.dateAppointment.day = this.startAgenda.day >= this.today.day ? this.startAgenda.day : this.today.day;
 		} else {
 			if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year) {
 				this.dateAppointment.day = this.today.day;
@@ -542,11 +572,17 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setAvailableMonths() {
-		this.availableMonths = MONTHS.filter(month => month >= this.today.month);
+		let selectedYear = this.formDate.controls.year.getRawValue();
+		this.availableMonths = MONTHS.filter(month => 
+			selectedYear === this.today.year ? 
+				selectedYear === this.endAgenda.year ? month >= this.today.month && month <= this.endAgenda.month : month >= this.today.month
+			:
+				selectedYear === this.endAgenda.year ? month <= this.endAgenda.month : month > 0
+		);
 	}
 
 	setAvailableYears() {
-		for (var i = this.startAgenda.year; i <= this.endAgenda; i++) {
+		for (var i = this.startAgenda.year; i <= this.endAgenda.year; i++) {
 			this.availableYears.push(i);
 		}
 	}
@@ -958,7 +994,11 @@ export class AppointmentComponent implements OnInit {
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
 			if (upDateState)
-				this.updateState(newStateId);
+				if (this.isAptToScan()) {
+					this.openScanPatientDialog(newStateId);
+				} else {
+					this.updateState(newStateId);
+				}
 		});
 	}
 
@@ -968,9 +1008,47 @@ export class AppointmentComponent implements OnInit {
 			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
 				this.confirmChangeState(newStateId);
 			} else {
-				this.updateState(newStateId);
+				if (this.isAptToScan(newStateId)) {
+					this.openScanPatientDialog(newStateId);
+				} else {
+					this.updateState(newStateId);
+				}
 			}
 		}
+	}
+
+	private isAptToScan(newStateId?: APPOINTMENT_STATES_ID): boolean {
+		const isCommonConditionsMet = this.HABILITAR_ANEXO_II_MENDOZA
+			&& this.hasRoleAdmin$
+			&& this.patientSummary.identification.type === this.TYPE_DNI
+			&& this.selectedModality.value === this.ON_SITE_ATTENTION
+			&& (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED || this.selectedState === APPOINTMENT_STATES_ID.ABSENT);
+
+		if (newStateId) {
+			return isCommonConditionsMet
+				&& newStateId !== APPOINTMENT_STATES_ID.ABSENT
+				&& newStateId !== APPOINTMENT_STATES_ID.ASSIGNED
+				&& !this.appointment.patientIdentityAccreditationStatus;
+		}
+		return isCommonConditionsMet;
+	}
+
+	public openScanPatientDialog(newStateId: APPOINTMENT_STATES_ID): void {
+		const dialogRef = this.dialog.open(ScanPatientComponent, {
+			width: "32%",
+			height: "600px",
+			data: {
+				genderOptions: this.genderOptions,
+				identifyTypeArray: this.identificationTypeList,
+			}
+		});
+		dialogRef.afterClosed().subscribe((patientInformationScan: PatientInformationScan) => {
+			this.patientInformationScan = patientInformationScan?.infoRawBarCodeScan;
+			if (this.patientInformationScan) {
+				this.scanMenssage = SCAN_COMPLETED;
+			}
+			this.updateState(newStateId);
+		});
 	}
 
 	private checkIfAbsent(newStateId: APPOINTMENT_STATES_ID) {
@@ -1098,7 +1176,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {
-		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
+		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive, this.patientInformationScan)
 			.subscribe(() => {
 				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);

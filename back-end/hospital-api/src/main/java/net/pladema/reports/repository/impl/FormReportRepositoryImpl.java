@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
 import org.springframework.stereotype.Repository;
@@ -17,14 +20,12 @@ import net.pladema.reports.repository.entity.FormVAppointmentVo;
 import net.pladema.reports.repository.entity.FormVReportDataVo;
 import net.pladema.reports.repository.entity.FormVOutpatientVo;
 
+@RequiredArgsConstructor
 @Repository
 public class FormReportRepositoryImpl implements FormReportRepository {
 
+	@PersistenceContext
     private final EntityManager entityManager;
-
-    public FormReportRepositoryImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -59,20 +60,31 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     @Override
     @Transactional(readOnly = true)
     public Optional<FormVOutpatientVo> getConsultationFormVInfo(Long documentId) {
-        String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
-                +
-                "       FROM {h-schema}document AS d " +
-                "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)"
-                +
-                "       WHERE d.id = :documentId " +
-                "       UNION ALL " +
-                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id "
-                +
-                "       FROM {h-schema}document AS d " +
-                "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
-                "       WHERE d.id = :documentId " +
-                "       )" +
+		int outPatientValue = SourceType.OUTPATIENT;
+		int vaccineValue = SourceType.IMMUNIZATION;
+		String query = "WITH t AS (" +
+				"       SELECT " +
+				"        CASE " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.id " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.id " +
+				"        END as id, " +
+				"        d.id as doc_id, " +
+				"        CASE " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.start_date " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.performed_date " +
+				"        END as start_date, " +
+				"        COALESCE(oc.institution_id, vc.institution_id) as institution_id, " +
+				"        COALESCE(oc.patient_id, vc.patient_id) as patient_id, " +
+				"        COALESCE(oc.clinical_specialty_id, vc.clinical_specialty_id) as clinical_specialty_id, " +
+				"        COALESCE(oc.patient_medical_coverage_id, vc.patient_medical_coverage_id) as patient_medical_coverage_id, " +
+				"        d.created_on, " +
+				"        COALESCE(oc.doctor_id, vc.doctor_id) as doctor_id " +
+				"       FROM {h-schema}document AS d " +
+				"           LEFT JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id AND d.source_type_id = :outPatientValue) " +
+				"           LEFT JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id AND d.source_type_id = :vaccineValue) " +
+				"       WHERE d.id = :documentId " +
+				"           AND (d.source_type_id = :outPatientValue OR d.source_type_id = :vaccineValue) " +
+				"       )" +
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
                 "              t.start_date, prob.descriptions as problems, " +
@@ -96,14 +108,16 @@ public class FormReportRepositoryImpl implements FormReportRepository {
                 "               FROM {h-schema}document_health_condition dhc " +
                 "               JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
                 "               JOIN {h-schema}snomed sno ON (hc.snomed_id = sno.id) " +
-                "               WHERE hc.problem_id IN (:problemTypes)  " +
+                "               WHERE hc.problem_id IN (:problemTypes) AND dhc.document_id = :documentId " +
                 "               GROUP BY dhc.document_id " +
                 "            ) prob ON (t.doc_id = prob.document_id)";
         Optional<Object[]> queryResult = entityManager.createNativeQuery(query)
                 .setParameter("documentId", documentId)
                 .setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC))
-                .setMaxResults(1)
-                .getResultList().stream().findFirst();
+				.setParameter("outPatientValue", outPatientValue)
+				.setParameter("vaccineValue", vaccineValue)
+				.setMaxResults(1)
+				.getResultList().stream().findFirst();
 
         Optional<FormVOutpatientVo> result = queryResult.map(a -> new FormVOutpatientVo(
                 (String) a[0],
@@ -130,6 +144,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     }
 
     @Override
+	@Transactional(readOnly = true)
     public Optional<FormVOutpatientVo> getOdontologyConsultationFormVGeneralInfo(Long documentId) {
         String query = "WITH t AS (" +
                 "       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
@@ -184,6 +199,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     }
 
     @Override
+	@Transactional(readOnly = true)
     public List<FormVReportDataVo> getOdontologyConsultationFormVDataInfo(Long documentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.FormVReportDataVo(s.pt, od.cie10Codes) " +
                 "		FROM Document AS d " +
@@ -200,6 +216,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     }
 
     @Override
+	@Transactional(readOnly = true)
     public List<FormVReportDataVo> getOdontologyConsultationFormVOtherDataInfo(Long documentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.FormVReportDataVo(s.pt, hc.cie10Codes) " +
                 "		FROM Document AS d " +
@@ -216,6 +233,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     }
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<FormVOutpatientVo> getNursingConsultationFormVGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
 				"       SELECT d.id as doc_id, nc.performed_date, nc.institution_id, nc.patient_id, nc.clinical_specialty_id, nc.patient_medical_coverage_id " +
@@ -268,6 +286,7 @@ public class FormReportRepositoryImpl implements FormReportRepository {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Optional<FormVReportDataVo> getNursingConsultationFormVDataInfo(Long documentId) {
 		String query = "SELECT NEW net.pladema.reports.repository.entity.FormVReportDataVo(s.pt, hc.cie10Codes) " +
 				"		FROM Document AS d " +

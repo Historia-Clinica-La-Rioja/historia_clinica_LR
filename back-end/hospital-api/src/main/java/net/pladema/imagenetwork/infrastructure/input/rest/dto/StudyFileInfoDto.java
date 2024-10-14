@@ -17,4 +17,5 @@ public class StudyFileInfoDto {
     private String token;
     private String url;
     private String uuid;
+    private Integer pacServerId;
 }

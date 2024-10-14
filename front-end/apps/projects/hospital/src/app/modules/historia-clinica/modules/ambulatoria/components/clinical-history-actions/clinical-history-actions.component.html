@@ -20,14 +20,16 @@
 	</ng-template>
 
 	<mat-menu #menu="matMenu">
-
-		<div *ngIf="anyEmergencyCareAction" id="emergencyCare">
+		<div *ngIf="anyEmergencyCareAction && hasGuardButtons" id="emergencyCare">
 			<mat-label class="actions-labels color-grey">
 				GUARDIA
 			</mat-label>
-			<button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions">
-				{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
-			</button>
+
+			<ng-container *ngIf="!isAdministrativeAndHasTriageFFInFalse">
+				<button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions">
+					{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
+				</button>
+			</ng-container>
 
 			<ng-container *ngIf="isEvolutionNoteEnabled">
 				<button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item
@@ -75,7 +77,7 @@
 			</ng-container>
 		</div>
 		<ng-container *ngIf="hasInternmentActionsToDo || enableReports">
-			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions" (click)="openSurgicalReport()">
+			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions" (click)="openSurgicalReport()">
 				{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
 			</button>
             <ng-container *ngIf="isAnestheticReportEnabledFF">
@@ -84,7 +86,7 @@
                     {{ this.documentAnestheticPartDraft
                     ? ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT_DRAFT' | translate)
                     : ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate) }}
-			    </button>
+                </button>
             </ng-container>
 		</ng-container>
 

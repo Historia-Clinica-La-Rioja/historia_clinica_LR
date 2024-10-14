@@ -4,10 +4,10 @@ const SNOMED_ECL = 3;
 const TEXT_OPTION = 4;
 
 const TYPE_CHOICES = {
-    "numeric": {id: NUMERIC, name: 'resources.parameters.typeChoices.numeric',},
-    "freeText": {id: FREE_TEXT, name: 'resources.parameters.typeChoices.text'},
-    "snomedEcl": {id: SNOMED_ECL, name: 'resources.parameters.typeChoices.snomed'},
-    "textOption": {id: TEXT_OPTION, name: 'resources.parameters.typeChoices.options'}
+    "numeric": {id: NUMERIC, name: 'Numérico',},
+    "freeText": {id: FREE_TEXT, name: 'Texto libre'},
+    "snomedEcl": {id: SNOMED_ECL, name: 'SNOMED (ECL)'},
+    "textOption": {id: TEXT_OPTION, name: 'Lista de opciones'}
 };
 
 export const TYPE_CHOICES_IDS = Object.values(TYPE_CHOICES);

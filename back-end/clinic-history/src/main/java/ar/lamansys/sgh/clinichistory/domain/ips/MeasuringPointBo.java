@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class MeasuringPointBo {
+public class MeasuringPointBo implements IpsBo {
 
     private Integer id;
     private LocalDate date;
@@ -39,5 +41,10 @@ public class MeasuringPointBo {
         int result = date.hashCode();
         result = 31 * result + time.hashCode();
         return result;
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitMeasuringPoint(this);
     }
 }

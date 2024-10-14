@@ -33,9 +33,6 @@ public enum AppFeature implements Feature {
 	@Label("Indica si esta habilitado el módulo de Portal de Paciente")
 	HABILITAR_MODULO_PORTAL_PACIENTE,
 
-	@Label("Indica si esta habilitado el menu configuracion")
-	HABILITAR_CONFIGURACION,
-
 	@Label("Indica si está habilitado el Bus de Interoperabilidad")
 	HABILITAR_BUS_INTEROPERABILIDAD,
 
@@ -44,6 +41,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si está habilitado el módulo de Reportes")
 	HABILITAR_REPORTES,
+
+	@Label("Indica si está habilitada la generación de reportes instantanea")
+	HABILITAR_REPORTES_INSTANTANEOS,
 	
 	@Label("Indica si está habilitada la funcionalidad para descargar informes desde turnos y desde el perfil del paciente")
 	HABILITAR_INFORMES,
@@ -61,7 +61,7 @@ public enum AppFeature implements Feature {
 	RESTRINGIR_DATOS_EDITAR_PACIENTE,
 	
 	@Label("Indica si está habilitado la opción de cambiar el tema de la aplicación")
-	HABILITAR_INTERCAMBIO_TEMAS,
+	HABILITAR_INTERCAMBIO_TEMAS_EN_DESARROLLO,
 
 	@Label("Indica si está habilitada la funcionalidad para crear usuarios")
 	HABILITAR_CREACION_USUARIOS,
@@ -116,9 +116,6 @@ public enum AppFeature implements Feature {
 
 	@Label("Habilita reportes estadísticos de consultas ambulatorias y turnos")
 	HABILITAR_REPORTES_ESTADISTICOS,
-
-	@Label("Indica si esta habilitado el uso de card en HC e INTERNACION")
-	HABILITAR_VISUALIZACION_DE_CARDS,
 
 	@Label("Indica si esta habilitada la recuperación de contraseña por correo")
 	HABILITAR_RECUPERAR_PASSWORD,
@@ -220,9 +217,30 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si se muestra la seccion cola de imagenes para el rol tecnico")
 	HABILITAR_SOLAPA_COLA_IMAGENES,
+
+	@Label("Habilita la creación del triage para el rol administrativo")
+	HABILITAR_TRIAGE_PARA_ADMINISTRATIVO,
 	
 	@Label("Habilita el reporte detalle nominal de atenciones en guardia")
 	HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la caché de relaciones de snomed")
+	HABILITAR_RELACIONES_SNOMED,
+
+	@Label("Indica si se encuentra habilitado el reporte de turnos otorgados en el centro de llamados")
+	HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la prescripción de recetas digitales utilizando fármacos comerciales")
+	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la dispensa de medicamentos dentro de las instituciones")
+	HABILITAR_DISPENSA,
+
+	@Label("Indica si los documentos de guardia podrán ser editados")
+	HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA,
+
+	@Label("Indica si se encuentra habilitada la financiacion de medicamentos")
+	HABILITAR_FINANCIACION_DE_MEDICAMENTOS,
 
 	@Label("Indica si el módulo de cuestionarios está activo")
 	HABILITAR_CUESTIONARIOS,

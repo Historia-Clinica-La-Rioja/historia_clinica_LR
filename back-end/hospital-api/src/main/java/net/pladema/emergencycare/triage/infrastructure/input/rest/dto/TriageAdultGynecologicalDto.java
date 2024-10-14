@@ -18,7 +18,7 @@ public class TriageAdultGynecologicalDto extends TriageNoAdministrativeDto {
     private NewRiskFactorsObservationDto riskFactors;
 
     @Builder(builderMethodName = "adultGynecologicalBuilder")
-    public TriageAdultGynecologicalDto(Short categoryId, Integer doctorsOfficeId, String notes, List<OutpatientReasonDto> reasons){
-        super(categoryId, doctorsOfficeId, notes, reasons);
+    public TriageAdultGynecologicalDto(Short categoryId, Integer doctorsOfficeId, String notes, List<OutpatientReasonDto> reasons, Integer clinicalSpecialtySectorId){
+        super(categoryId, doctorsOfficeId, notes, reasons, clinicalSpecialtySectorId);
     }
 }

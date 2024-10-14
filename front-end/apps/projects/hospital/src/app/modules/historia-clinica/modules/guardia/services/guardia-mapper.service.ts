@@ -4,21 +4,22 @@ import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateDtoToDate, timeDto
 import {
 	AdministrativeDischargeDto,
 	AMedicalDischargeDto,
+	DiagnosesGeneralStateDto,
 	NewEffectiveClinicalObservationDto,
 	NewEmergencyCareDto,
 	NewRiskFactorsObservationDto,
+	OutpatientProblemDto,
 	PoliceInterventionDetailsDto,
+	ProblemTypeEnum,
 	ResponseEmergencyCareDto,
 	TriageListDto
 } from '@api-rest/api-model';
 import { parse } from 'date-fns';
-import { Problema } from '../../../services/problemas.service';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
 import { EffectiveObservation, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TriageReduced } from '@pacientes/component/resumen-de-guardia/resumen-de-guardia.component';
-import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { toHourMinute } from '@core/utils/date.utils';
 
 @Injectable({
@@ -42,8 +43,7 @@ export class GuardiaMapperService {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
 				id: triageListDto.category.id,
-				name: triageListDto.category.name,
-				colorHex: triageListDto.category.color.code
+				name: triageListDto.category.name
 			},
 			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description,
@@ -53,6 +53,7 @@ export class GuardiaMapperService {
 			circulation: mapCirculation(triageListDto.circulation),
 			notes: triageListDto.notes,
 			reasons: triageListDto.reasons.map(reason => reason.snomed.pt),
+			clinicalSpecialtySector: triageListDto.clinicalSpecialtySector,
 		};
 
 		function mapAppearance(appearance) {
@@ -148,38 +149,41 @@ export class GuardiaMapperService {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
 				id: triageListDto.category.id,
-				name: triageListDto.category.name,
-				colorHex: triageListDto.category.color.code
+				name: triageListDto.category.name
 			},
 			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description
 		};
 	}
 
-	private static _mapFormToAMedicalDischargeDto(s: MedicalDischargeForm): AMedicalDischargeDto {
-		const medicalDischargeOn = dateToDateTimeDtoUTC(getDateTime(s.dateTime));
+	private static _mapFormToAMedicalDischargeDto(form: MedicalDischargeForm): AMedicalDischargeDto {
+		const medicalDischargeOn = dateToDateTimeDtoUTC(getDateTime(form.dateTime));
 		return {
 			medicalDischargeOn,
-			problems: s.problems.map(
-				(problema: Problema) => {
-					return {
-						severity: problema.codigoSeveridad,
-						chronic: problema.cronico,
-						endDate: problema.fechaFin ? toApiFormat(problema.fechaFin) : undefined,
-						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? toApiFormat(problema.fechaInicio) : undefined
-					};
-				}
-			),
-			dischargeTypeId: s.dischargeTypeId,
-			autopsy: s.autopsy,
+			problems: _mapProblems(form.problems),
+			dischargeTypeId: form.dischargeTypeId,
+			autopsy: form.autopsy,
+			otherDischargeDescription: form.otherDischargeDescription,
+			observation: form.observations
 		}
 
 		function getDateTime(dateTime): Date {
 			const date: Date = dateTime.date;
-			const time = dateTime.time.split(":");
-			date.setHours(+time[0], +time[1]);
+			const time = dateTime.time;
+			date.setHours(time.hours);
+			date.setMinutes(time.minutes);
 			return date;
+		}
+
+		function _mapProblems(problems: DiagnosesGeneralStateDto[]): OutpatientProblemDto[] {
+			return problems.map((problem: DiagnosesGeneralStateDto) => {
+				return {
+					chronic: problem?.type === ProblemTypeEnum.CHRONIC,
+					snomed: problem.snomed,
+					statusId: problem?.statusId,
+					verificationId: problem?.verificationId
+				};
+			});
 		}
 
 	}

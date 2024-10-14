@@ -1,10 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.getavailableanthropometricgraphictypes;
 
-import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphic;
-import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphicRange;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphicType;
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;

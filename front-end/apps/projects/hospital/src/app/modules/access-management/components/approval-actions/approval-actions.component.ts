@@ -63,7 +63,6 @@ export class ApprovalActionsComponent {
 			data: referenceEditionData,
 			autoFocus: false,
 			disableClose: true,
-			width: '50%',
 		});
 
 		referenceEditionDialogRef.afterClosed().subscribe(edited => {

@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

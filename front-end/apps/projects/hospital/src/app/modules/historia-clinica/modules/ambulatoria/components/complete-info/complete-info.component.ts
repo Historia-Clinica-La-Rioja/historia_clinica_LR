@@ -53,7 +53,7 @@ export class CompleteInfoComponent implements OnInit {
 
 		this.buttonService.submitPartialSave$.subscribe(submitPartialSlave => {
 			if (submitPartialSlave)
-				this.existsAppointment();
+				this.savedPartialStudy();
 		});
 
 	}
@@ -61,7 +61,6 @@ export class CompleteInfoComponent implements OnInit {
 	setSelectedFilesEmiit($event: File[]) {
 		this.selectedFiles = $event;
 	}
-
 
 	private completeStudy() {
 		const completeRequest: CompleteRequestDto = {
@@ -72,11 +71,10 @@ export class CompleteInfoComponent implements OnInit {
 			this.diagnosticReport.map(report => {
 
 				const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation || report;
+				let isPartialUpload = false;
 
-				let template = this.controlTemplatesService.getProcedureTemplateId(reportInfo.id);
-				let formTemplateValues = this.controlTemplatesService.getFormTemplateValues();
 				let reportObservations: AddDiagnosticReportObservationsCommandDto =
-					this.buildProcedureTemplateFullSummaryDto(reportInfo.id, template, formTemplateValues, false);
+					this.controlTemplatesService.build(reportInfo.id, isPartialUpload);
 
 				if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0) {
 					return this.prescripcionesService.completeStudyTemplateWhithForm(this.patientId,
@@ -89,10 +87,9 @@ export class CompleteInfoComponent implements OnInit {
 			})).subscribe(
 				() => {
 					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
-
 					this.closeModal(false, true);
 				}, _ => {
-					 this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
+					this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
 					this.closeModal(false, false);
 				});
 	}
@@ -106,12 +103,10 @@ export class CompleteInfoComponent implements OnInit {
 
 				let template = this.controlTemplatesService.getProcedureTemplateId(reportInfo.id);
 
-				let formTemplateValues = this.controlTemplatesService.getFormTemplateValues();
-
 				let isPartialUpload = true;
 
 				let reportObservations: AddDiagnosticReportObservationsCommandDto =
-					this.buildProcedureTemplateFullSummaryDto(reportInfo.id, template, formTemplateValues, isPartialUpload);
+					this.controlTemplatesService.build(reportInfo.id, isPartialUpload);
 
 				if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0 && !!template) {
 					return this.prescripcionesService.partialStudyTemplateWhithForm(this.patientId,
@@ -135,31 +130,7 @@ export class CompleteInfoComponent implements OnInit {
 		this.dialogRef.close(simpleClose ? null : { completed });
 	}
 
-	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template, formTemplateValues, isPartialUpload?: boolean): AddDiagnosticReportObservationsCommandDto {
-		return {
-			isPartialUpload: isPartialUpload || false,
-			procedureTemplateId: template,
-			values: Object.keys(formTemplateValues).length > 0 ? this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic, formTemplateValues) : [],
-		}
-	}
-
-	private buildAddDiagnosticReportObservationsCommandDto(idDiagnostic: number, formTemplateValues): any {
-		let procedure = formTemplateValues[idDiagnostic];
-		return this.cleanProcedureParameterIds(procedure);
-	}
-
-	private cleanProcedureParameterIds(data): AddDiagnosticReportObservationsCommandDto {
-		return data?.map((item) => {
-			if (item) {
-				if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
-					item.procedureParameterId = item.procedureParameterId.split('_')[0];
-				}
-				return item;
-			}
-		});
-	}
-
-	private existsAppointment() {
+	private savedPartialStudy() {
 		if (this.formStudyClosure.valid) {
 			const warnignComponent = this.dialog.open(DiscardWarningComponent,
 				{

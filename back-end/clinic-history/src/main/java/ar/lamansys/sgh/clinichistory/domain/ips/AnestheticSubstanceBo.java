@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AnestheticSubstanceBo extends ClinicalTerm {
+public class AnestheticSubstanceBo extends ClinicalTerm implements IpsBo {
 
     private static final Map<Short, List<EVia>> VIA_MAP = new HashMap<>();
 
@@ -56,5 +58,16 @@ public class AnestheticSubstanceBo extends ClinicalTerm {
 
     public String getDescriptionType() {
         return typeId != null ? EAnestheticSubstanceType.map(typeId).getDescription() : null;
+    }
+
+    public String getViaDescription() {
+        if (viaId == null)
+            return null;
+        return EVia.getById(viaId).getDescription();
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitAnestheticSubstance(this);
     }
 }

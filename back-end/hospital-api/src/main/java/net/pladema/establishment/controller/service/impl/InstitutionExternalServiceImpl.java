@@ -1,7 +1,9 @@
 package net.pladema.establishment.controller.service.impl;
 
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.service.AddressService;
@@ -78,5 +80,16 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
 				.map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode()))
 				.orElse(null);
 	}
+
+	@Override
+	public List<InstitutionInfoDto> fetchInstitutions() {
+		return institutionService.getAll().stream()
+				.map(inst -> new InstitutionInfoDto(
+						inst.getId(),
+						inst.getName(),
+						inst.getSisaCode()))
+				.collect(Collectors.toList());
+	}
+
 
 }

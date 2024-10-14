@@ -1,0 +1,12 @@
+@import "../../../../../../../assets/styles/mixins.scss";
+
+.full-width {
+	width: 100%;
+	button#clear {
+		margin-right: 10px;
+	}
+}
+
+.row {
+	@include form-row;
+}

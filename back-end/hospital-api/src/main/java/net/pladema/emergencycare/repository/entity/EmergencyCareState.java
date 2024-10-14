@@ -27,6 +27,8 @@ public class EmergencyCareState implements Serializable {
 		public static final short EN_ESPERA = 2;
 		public static final short CON_ALTA_ADMINISTRATIVA = 3;
 		public static final short CON_ALTA_MEDICA = 4;
+		public static final short AUSENTE = 5;
+		public static final short LLAMADO = 6;
 
 		@Id
 		@Column(name = "id")
@@ -34,4 +36,7 @@ public class EmergencyCareState implements Serializable {
 
 		@Column(name = "description", length = 25, nullable = false)
 		private String description;
+
+		@Column(name = "order")
+		private Short order;
 }

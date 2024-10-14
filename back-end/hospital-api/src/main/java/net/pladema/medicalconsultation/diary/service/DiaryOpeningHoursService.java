@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface DiaryOpeningHoursService {
-
-    void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
     
     void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours);
 

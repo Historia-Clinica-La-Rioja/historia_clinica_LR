@@ -9,7 +9,6 @@ import net.pladema.establishment.repository.InstitutionalGroupRepository;
 import net.pladema.establishment.service.domain.InstitutionalGroupBo;
 
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.LoggedUserService;
 import net.pladema.user.application.port.UserRoleStorage;
 import net.pladema.user.domain.UserRoleBo;
 

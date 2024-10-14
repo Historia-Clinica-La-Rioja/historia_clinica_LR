@@ -11,6 +11,8 @@ import { AppMaterialModule } from '@material/app.material.module';
 import { AddObservationsComponent } from './components/add-observations/add-observations.component';
 import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';
 import { BarComponent } from './components/bar/bar.component';
+import { BoxMessageComponent } from './components/box-message/box-message.component';
+import { ButtonAvailabilityComponent } from './components/button-availability/button-availability.component';
 import { ButtonComponent } from './components/button/button.component';
 import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
@@ -23,9 +25,11 @@ import { ColorSelectorComponent } from './components/color-selector/color-select
 import { ContentTitleComponent } from './components/content-title/content-title.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
+import { DatetimeRelativeComponent } from './components/datetime-relative/datetime-relative.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
 import { DetailsSectionCustomComponent } from './components/details-section-custom/details-section-custom.component';
+import { DescriptionItemColumnComponent } from './components/description-item-column/description-item-column.component';
 import { DescriptionItemComponent } from './components/description-item/description-item.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
@@ -34,6 +38,7 @@ import { DownloadButtonComponent } from './components/download-button/download-b
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
 import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
+import { ExternalIconComponent } from './components/external-icon/external-icon.component';
 import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
@@ -109,8 +114,8 @@ import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 import { OnlyNumericCharactersDirective } from './directives/only-numeric-characters.directive';
 import { OnlyAlphabeticCharactersDirective } from './directives/only-alphabetic-characters.directive';
 // pipes
+import { CapitalizeFirstLetterPipe } from './pipes/capitalize-first-letter.pipe';
 import { DateFormatPipe } from './pipes/date-format.pipe';
-import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
 import { IsoToDatePipe } from './pipes/iso-to-date.pipe';
@@ -127,6 +132,8 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		AddObservationsComponent,
 		AsignPatientButtonComponent,
 		BarComponent,
+		BoxMessageComponent,
+		ButtonAvailabilityComponent,
 		ButtonComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
@@ -139,7 +146,9 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
+        DescriptionItemColumnComponent,
     	DescriptionItemComponent,
+		DatetimeRelativeComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
@@ -150,6 +159,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
 		ExpansionSectionComponent,
+		ExternalIconComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FilterButtonComponent,
@@ -226,8 +236,8 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		OnlyNumericCharactersDirective,
 		OnlyAlphabeticCharactersDirective,
 		// pipes
+		CapitalizeFirstLetterPipe,
 		DateFormatPipe,
-		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
 		IsoToDatePipe,
@@ -259,6 +269,8 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		AddObservationsComponent,
 		AsignPatientButtonComponent,
 		BarComponent,
+		BoxMessageComponent,
+		ButtonAvailabilityComponent,
 		ButtonComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
@@ -271,9 +283,11 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
+		DatetimeRelativeComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
+        DescriptionItemColumnComponent,
     	DescriptionItemComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
@@ -282,6 +296,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
 		ExpansionSectionComponent,
+		ExternalIconComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FilterButtonComponent,
@@ -336,14 +351,15 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		UserBadgeComponent,
 		//dialogs
 		ConfirmDialogV2Component,
+		DialogPresentationComponent,
 		OpenStorybookDialogComponent,
 		// directives
 		CtrlTemplateDirective,
 		OnlyNumericCharactersDirective,
 		OnlyAlphabeticCharactersDirective,
 		// pipes
+		CapitalizeFirstLetterPipe,
 		DateFormatPipe,
-		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
 		IsoToDatePipe,

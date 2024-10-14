@@ -1,7 +1,9 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,4 +27,8 @@ public class StudyTranscribedOrderReportInfoBo {
 	private Boolean status;
 	private LocalDateTime creationDate;
 	private Boolean isAvailableInPACS;
+	private Integer appointmentId;
+	private LocalDate appointmentDate;
+	private LocalTime appointmentHour;
+	private String localViewerUrl;
 }

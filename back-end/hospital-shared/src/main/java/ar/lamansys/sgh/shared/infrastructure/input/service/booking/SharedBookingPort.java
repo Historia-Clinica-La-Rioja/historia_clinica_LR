@@ -17,15 +17,15 @@ public interface SharedBookingPort {
 
 	List<BookingInstitutionExtendedDto> fetchAllBookingInstitutionsExtended();
 
-	List<BookingHealthInsuranceDto> fetchAllMedicalCoverages();
-	List<PracticeDto> fetchPracticesBySpecialtyAndHealthInsurance(Integer clinicalSpecialtyId,
-																  Integer medicalCoverageId, boolean all);
+	List<BookingHealthInsuranceDto> fetchMedicalCoverages();
+	List<PracticeDto> fetchBookingPracticesBySpecialtyAndHealthInsurance(Integer clinicalSpecialtyId,
+																		 Integer medicalCoverageId, boolean all);
 
-	List<PracticeDto> fetchPracticesByProfessionalAndHealthInsurance(Integer healthcareProfessionalId,
-																	 Integer medicalCoverageId,
-																	 Integer clinicalSpecialtyId, boolean all);
-	List<BookingSpecialtyDto> fetchSpecialties();
-	List<BookingSpecialtyDto> fetchSpecialtiesByProfessional(Integer healthcareProfessionalId);
+	List<PracticeDto> fetchBookingPracticesByProfessionalAndHealthInsurance(Integer healthcareProfessionalId,
+																			Integer medicalCoverageId,
+																			Integer clinicalSpecialtyId, boolean all);
+	List<BookingSpecialtyDto> fetchBookingSpecialties();
+	List<BookingSpecialtyDto> fetchBookingSpecialtiesByProfessional(Integer healthcareProfessionalId);
 
 	List<BookingProfessionalDto> fetchBookingProfessionals(Integer institutionId, Integer medicalCoverageId, boolean all);
 

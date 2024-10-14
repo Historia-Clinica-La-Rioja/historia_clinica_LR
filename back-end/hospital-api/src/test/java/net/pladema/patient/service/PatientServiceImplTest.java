@@ -33,6 +33,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -126,23 +128,29 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 		when(featureFlagsService.isOn(any())).thenReturn(true);
         PatientSearchFilter patientSearchFilter = new PatientSearchFilter();
         patientSearchFilter.setIdentificationTypeId((short)1);
-        var result = patientService.searchPatientOptionalFilters(patientSearchFilter);
-        Assertions.assertThat(result.getPatientList())
-                .hasSize(PatientServiceImpl.MAX_RESULT_SIZE);
-        Assertions.assertThat(result.getActualPatientSearchSize())
+		Pageable pageable = initializePageable();
+        var result = patientService.searchPatientOptionalFilters(patientSearchFilter, pageable);
+        Assertions.assertThat(result.getContent())
+                .hasSize(1);
+        Assertions.assertThat(result.getTotalElements())
                 .isEqualTo(1534);
     }
 
-    @Test
+	private PageRequest initializePageable() {
+		return PageRequest.of(0, 1);
+	}
+
+	@Test
     void test_searchPatientOptionalFilters_resultSizeLowerThanMax(){
         populatePacientRepository(49);
 		when(featureFlagsService.isOn(any())).thenReturn(true);
         PatientSearchFilter patientSearchFilter = new PatientSearchFilter();
         patientSearchFilter.setIdentificationTypeId((short)1);
-        var result = patientService.searchPatientOptionalFilters(patientSearchFilter);
-        Assertions.assertThat(result.getPatientList())
-                .hasSize(49);
-        Assertions.assertThat(result.getActualPatientSearchSize())
+		Pageable pageable = initializePageable();
+        var result = patientService.searchPatientOptionalFilters(patientSearchFilter, pageable);
+        Assertions.assertThat(result.getContent())
+                .hasSize(1);
+        Assertions.assertThat(result.getTotalElements())
                 .isEqualTo(49);
     }
 

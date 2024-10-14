@@ -5,13 +5,14 @@ import {
     EditButton,
     ReferenceInput,
     ReferenceManyField,
-    required, SelectInput,
+    required,
     SimpleForm,
     TextField,
     TextInput, 
     useGetOne, 
     usePermissions,
-    DateInput
+    DateInput,
+    AutocompleteInput
 } from 'react-admin';
 import {
     CustomToolbar,
@@ -27,9 +28,11 @@ const SectorField = ({ record }) => {
             <ReferenceInput
                 source="sectorId"
                 reference="sectors"
+                perPage={100}
                 sort={{ field: 'description', order: 'ASC' }}
-                filter={{sectorTypeId: INTERNACION, institutionId: sector.data.institutionId}}>
-                <SelectInput optionText="description" optionValue="id" />
+                filter={{sectorTypeId: INTERNACION, institutionId: sector.data.institutionId}}
+            >
+                <AutocompleteInput optionText="description" optionValue="id" />
             </ReferenceInput>
         ) : null;
 }

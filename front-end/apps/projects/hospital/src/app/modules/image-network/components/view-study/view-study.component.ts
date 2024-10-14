@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PacsListDto, StudyIntanceUIDDto, TokenDto, ViewerUrlDto } from '@api-rest/api-model';
+import { PacsDto, StudyIntanceUIDDto, TokenDto, ViewerUrlDto } from '@api-rest/api-model';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { StudyPACAssociationService } from '@api-rest/services/study-PAC-association';
 import { StudyPermissionService } from '@api-rest/services/study-permission.service';
@@ -32,13 +32,13 @@ export class ViewStudyComponent {
 		sourceView$.pipe(
 		switchMap((studyInstanceUID: StudyIntanceUIDDto) =>
 			this.studyPACAssociationService.getPacGlobalURL(studyInstanceUID.uid).pipe(
-				switchMap((pacs: PacsListDto) => {
-					if (pacs.urls.length) {
+				switchMap((pacs: PacsDto[]) => {
+					if (pacs) {
 						return this.studyPermissionService.getPermissionsJWT(studyInstanceUID.uid).pipe(
 							switchMap((token: TokenDto) =>
 								this.viewerService.getUrl().pipe(
 									switchMap((url: ViewerUrlDto) =>
-										this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs.urls[0]) // se queda el primero no dominio
+										this.buildUrl(url.url, studyInstanceUID.uid, token.token, pacs[0].url) // se queda el primero no dominio
 									),
 									reduce((result, value) => result + value)
 								)
@@ -52,7 +52,7 @@ export class ViewStudyComponent {
 		))
 		.subscribe({
 			next: (url) => window.open(url, "_blank"),
-			error: () => {
+			error: (e) => {
 				this.dialog.open(DiscardWarningComponent, {
 					data: getErrorDataDialog(),
 					minWidth: '30%'

@@ -1,6 +1,6 @@
 package net.pladema.reports.repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class ConsultationsVo {
 
     private Long documentId;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String specialty;
 

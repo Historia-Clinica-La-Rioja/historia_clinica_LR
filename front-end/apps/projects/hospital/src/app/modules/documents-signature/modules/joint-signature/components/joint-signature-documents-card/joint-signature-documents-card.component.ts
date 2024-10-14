@@ -1,8 +1,5 @@
-import { Component, Input, OnInit, ViewChild, } from '@angular/core';
+import { Component, Input, ViewChild, } from '@angular/core';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
-import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
-import { buildHeaderInformation, buildItemListCard } from '../../mappers/joint-signature.mapper';
-import { DocumentDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { map, tap } from 'rxjs';
 import { INITIAL_PAGE, PAGE_SIZE, PAGE_SIZE_OPTIONS } from '../../constants/joint-signature.constants';
@@ -14,24 +11,28 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
 import { DocumentService } from '@api-rest/services/document.service';
 import { DocumentSignatureService } from '../../../../services/document-signature.service';
+import { DocumentDto, ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { SummaryItem } from '../../../../components/summary-list-multiple-sign/summary-list-multiple-sign.component';
+import { buildHeaderInformation, buildSummaryItemCard } from '../../mappers/joint-signature.mapper';
+import { SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 
 @Component({
 	selector: 'app-joint-signature-documents-card',
 	templateUrl: './joint-signature-documents-card.component.html',
 	styleUrls: ['./joint-signature-documents-card.component.scss']
 })
-export class JointSignatureDocumentsCardComponent implements OnInit {
+export class JointSignatureDocumentsCardComponent {
 	@ViewChild('paginator') paginator: MatPaginator;
 
-	@Input() set setFilter(filter: string) {
+	@Input() set setFilter(filter: ElectronicJointSignatureInvolvedDocumentListFilterDto) {
 		this.filter = filter;
 		this.setDocuments(this.INITIAL_PAGE);
 	};
 
-	filter: string;
+	filter: ElectronicJointSignatureInvolvedDocumentListFilterDto;
 	headerInformation: Detail[] = [];
 	isLoading: boolean;
-	documents: ItemListCard[] = [];
+	documents: SummaryItem[] = [];
 	jointSignatureDocuments: ElectronicSignatureInvolvedDocumentDto[];
 	selectedDocumentId: number;
 	elementsAmount: number;
@@ -50,10 +51,6 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 		private readonly documentSignatureService: DocumentSignatureService
 	) { }
 
-	ngOnInit(): void {
-		this.setDocuments(this.INITIAL_PAGE);
-	}
-
 	setDocuments(pageIndex: number): void {
 		this.isLoading = true;
 		this.resetData();
@@ -65,7 +62,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 			)
 			.subscribe((documents: ElectronicSignatureInvolvedDocumentDto[]) => {
 				this.jointSignatureDocuments = documents;
-				this.documents = buildItemListCard(this.jointSignatureDocuments);
+				this.documents = buildSummaryItemCard(this.jointSignatureDocuments);
 				this.isLoading = false;
 			}, _ => this.isLoading = false);
 	}
@@ -88,11 +85,11 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 		}
 	}
 
-	seeDetails(ids: SelectableCardIds): void {
-		this.documentService.getDocumentInfo(ids.id)
+	seeDetails(id: number): void {
+		this.documentService.getDocumentInfo(id)
 			.subscribe((document: DocumentDto) => {
-				this.selectedDocumentId = ids.id;
-				const jointSignatureDocument = this.jointSignatureDocuments.find(item => item.documentId === ids.id);
+				this.selectedDocumentId = id;
+				const jointSignatureDocument = this.jointSignatureDocuments.find(item => item.documentId === id);
 				this.headerInformation = buildHeaderInformation(jointSignatureDocument);
 				this.detailedInformation = this.documentSignatureService.buildDetailedInformation(document);
 			});
@@ -174,7 +171,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	downloadPdf(): void {
         this.selectedDocumentsId.forEach(selectedId => this.download({id: selectedId}));
     }
-	
+
 	download(ids: SelectableCardIds): void {
         this.documentService.downloadUnnamedFile(ids.id);
     }

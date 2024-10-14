@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
-import net.pladema.address.repository.entity.Address;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
 
 import net.pladema.user.domain.PersonBo;

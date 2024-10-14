@@ -13,7 +13,7 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;

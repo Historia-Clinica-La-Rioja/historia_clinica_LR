@@ -6,6 +6,9 @@
 		"TITLE_HEADER": "Datos de la consulta",
 		"INTERVENING_PROFESSIONALS": "Otros profesionales intervinientes",
 		"BUTTON_SIGN_DOCUMENT": "Firmar documento",
+		"FILTER_NAME_PATIENT": "Nombre paciente",
+		"FILTER_LAST_NAME_PATIENT": "Apellido paciente",
+		"FILTER_DATES": "Filtrar por rango de fecha",
 		"sign-document":{
 			"TITLE": "¿Firmar solicitud de firma conjunta?",
 			"TITLE2": "¿Firmar {{param}} solicitudes de firma conjunta?",

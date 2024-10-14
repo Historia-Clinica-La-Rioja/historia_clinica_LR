@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.ShockroomDto;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -36,6 +34,8 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
 	private DateTimeDto endDate;
 
 	private String institutionName;
+
+	private Boolean canBeAbsent;
 
     public ResponseEmergencyCareDto(Integer id, String reason, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, Boolean hasPoliceIntervention, PoliceInterventionDetailsDto policeIntervention,

@@ -24,6 +24,15 @@ const ServiceField = ({formData, ...rest}) => {
     )
 }
 
+const ClosestServiceField = ({formData, record, ...rest}) => {
+    return formData.typeId === SERVICE ? null : (
+        <ReferenceInput {...rest} filter={{institutionId: record.institutionId, typeId: SERVICE}} sort={{ field: 'alias', order: 'ASC' }}
+            filterToQuery={searchToFilter}>
+            <AutocompleteInput optionText="alias" optionValue="id" />
+        </ReferenceInput>
+    )
+}
+
 const HierarchicalUnitCreate = props => {
     const redirect = props?.location?.state?.record?.hierarchicalUnitIdToReport != null ?
         `/hierarchicalunits/${props?.location?.state?.record?.hierarchicalUnitIdToReport}/show` : "show";
@@ -53,6 +62,10 @@ const HierarchicalUnitCreate = props => {
                 >
                     <AutocompleteInput optionText="alias" optionValue="id" options={{disabled: true}}/>
                 </ReferenceInput>
+                <FormDataConsumer>
+                    {formDataProps => (
+                        <ClosestServiceField {...formDataProps} reference="hierarchicalunits" source="closestServiceId"/>)}
+                </FormDataConsumer>
             </SimpleForm>
         </Create>
     )

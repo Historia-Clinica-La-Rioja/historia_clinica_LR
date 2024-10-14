@@ -3,6 +3,8 @@ import { ImageQueueFilteringCriteriaDto, ImageQueueListDto, PageDto } from '@api
 import { ImageQueueService } from '@api-rest/services/image-queue.service';
 import { BehaviorSubject, Observable, switchMap, take } from 'rxjs';
 import { ItemImageQueue } from '../components/image-table-technical/image-table-technical.component';
+import { IndexImageManuallyComponent } from '../dialogs/index-image-manually/index-image-manually.component';
+import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +19,7 @@ export class ImageQueueManagementStateService {
 
 	constructor(
 		private imageQueueService: ImageQueueService,
+		private readonly dialog: DialogService<IndexImageManuallyComponent>,
 	) { }
 
 
@@ -55,6 +58,23 @@ export class ImageQueueManagementStateService {
 				}
 			}
 			)
+	}
+
+	indexImage(image: ItemImageQueue) {
+		const dialogConfig: DialogConfiguration = {
+			dialogWidth: DialogWidth.SMALL,
+			blockCloseClickingOut: true
+		};
+
+		const componentData = image.idMove;
+
+		const dialogRef = this.dialog.open(IndexImageManuallyComponent, dialogConfig, componentData);
+
+		dialogRef.afterClosed().subscribe(success => {
+			if (success) {
+				this.emit()
+			}
+		});
 	}
 }
 

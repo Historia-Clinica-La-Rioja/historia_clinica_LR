@@ -1,11 +1,11 @@
 <div fxLayout.lg="row" fxLayout.gt-xs="row wrap" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutAlign.lg="space-between start">
 	<div fxFlex.lg="25%" fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon" fontSet="material-icons-outlined"> event </mat-icon>
-		<span class="mat-body capitalize-first-letter text">{{ emptyAppointment.date | date: 'fullDate' }}</span>
+		<span class="mat-body capitalize-first-letter text">{{ appointmentDate | dateFormat: 'fulldate' }}</span>
 	</div>
 	<div fxFlex.lg="8%" fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon"> query_builder </mat-icon>
-		<span class="mat-body text">{{ appointmentTime | date: 'shortTime' }} hs</span>
+		<span class="mat-body text">{{ appointmentDate | dateFormat: 'time' }}</span>
 	</div>
 	<div fxFlex.lg="18%" fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon"> person_outline </mat-icon>

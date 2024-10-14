@@ -42,6 +42,7 @@ describe('TypeaheadV2Component', () => {
 
 	it('should handle the setExternalSetValue input appropriately with an external value, emitting the same value that was set', () => {
 		spyOn(component.selectionChange, 'emit');
+		component.options = mockOptionsTypeahead;
 		component.externalSetValue = FACUNDO;
 		expect(component.selectionChange.emit).toHaveBeenCalledWith(FACUNDO.value);
 	});

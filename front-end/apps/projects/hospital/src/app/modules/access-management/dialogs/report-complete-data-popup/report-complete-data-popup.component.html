@@ -1,11 +1,12 @@
-<div fxLayoutAlign="end">
-	<button id="close" mat-icon-button mat-dialog-close>
-		<mat-icon>close</mat-icon>
-	</button>
-</div>
 <div *ngIf="referenceCompleteData">
-	<div mat-dialog-title>
-		<h2>{{'access-management.search_references.reference.TITLE' | translate}}</h2>
+	<div fxLayoutAlign="space-between">
+		<h2 mat-dialog-title>{{'access-management.search_references.reference.TITLE' | translate}}</h2>
+		<button id="close" mat-icon-button mat-dialog-close>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<mat-dialog-content>
 		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
 		<div *ngIf="!domainRole">
 			<app-view-medical-history-button *appHasRole="['ABORDAJE_VIOLENCIAS', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_LA_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
@@ -13,66 +14,74 @@
 				[patientId]="reportCompleteData.patient.id">
 			</app-view-medical-history-button>
 		</div>
-	</div>
-
-	<mat-dialog-content fxLayoutAlign="start" fxLayoutGap="20px">
-		<div fxLayout="column" fxLayoutGap="10px" class="columns">
-			<app-expansion-section [title]="'access-management.search_references.reference.CONTACT_DATA'"
-				[collapsed]="colapseContactDetails">
-				<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
-			</app-expansion-section>
-
-			<mat-divider></mat-divider>
-
-			<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'">
-				<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
-			</app-expansion-section>
-		</div>
-
-		<div fxLayout="column" fxLayoutGap="10px" class="columns" *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
-			<div>
-				<app-approval [approval]="referenceRegulationDto" [referenceCompleteDataDto]="referenceCompleteData"></app-approval>
-			</div>
-			<div *ngIf="referenceCompleteData.regulation.state == approvedState">
+		<div fxLayoutAlign="start" fxLayoutGap="20px" class="dialog-information">
+			<div fxLayout="column" fxLayoutGap="10px" class="columns">
+				<app-expansion-section [title]="'access-management.search_references.reference.CONTACT_DATA'"
+					[collapsed]="colapseContactDetails">
+					<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
+				</app-expansion-section>
+	
 				<mat-divider></mat-divider>
-				<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
-			</div>
-			<div *ngIf="(registerEditorAppointment !== pendingAttentionState)" class="grey">
-				<span>{{'access-management.search_references.reference.ASSIGNED_BY' | translate }}</span>
-				<app-register-editor-info
-					[registerEditor]="registerEditorAppointment"
-					[registerEditorCase]="registerEditorCasesDateHour">
-				</app-register-editor-info>
-			</div>
+	
+				<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'">
+					<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
+				</app-expansion-section>
 
-			<mat-divider></mat-divider>
+				<mat-divider></mat-divider>
 
-			<app-add-observations [observation]="observation" [registerEditor]="registerEditor$ | async"
-				(observationEmmiter)="addObservation($event)">
-			</app-add-observations>
-
-			<div fxLayout="column" fxLayoutGap="20px"
-			*ngIf="(referenceRegulationDto.state === approvedState || referenceRegulationDto.state === waitingApprovalState) && isRoleGestor">
-				<mat-divider *ngIf="observation || derivation"></mat-divider>
-
-				<div>
-					<app-derive-request
-						[derivation]="derivation" [registerDerivationEditor]="registerDeriveEditor$.getValue()" (derivationEmmiter)="performDerivationAction($event)">
-					</app-derive-request>
+				<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !referenceCompleteData.reference.closureType
+					&& reportCompleteData.appointment.state.description === waitingAppointment">
+					<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="getReferenceDetails($event)"></app-edit-reference>
 				</div>
 			</div>
-
+	
+			<div fxLayout="column" fxLayoutGap="10px" class="columns" *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
+				<div>
+					<app-approval [approval]="referenceRegulationDto" [referenceCompleteDataDto]="referenceCompleteData"></app-approval>
+				</div>
+				<div *ngIf="referenceCompleteData.regulation.state == approvedState">
+					<mat-divider></mat-divider>
+					<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
+				</div>
+				<div *ngIf="(registerEditorAppointment !== pendingAttentionState)" class="grey">
+					<span>{{'access-management.search_references.reference.ASSIGNED_BY' | translate }}</span>
+					<app-register-editor-info
+						[registerEditor]="registerEditorAppointment"
+						[registerEditorCase]="registerEditorCasesDateHour">
+					</app-register-editor-info>
+				</div>
+	
+				<mat-divider></mat-divider>
+	
+				<app-add-observations [observation]="observation" [registerEditor]="registerEditor$ | async"
+					(observationEmmiter)="addObservation($event)">
+				</app-add-observations>
+	
+				<div fxLayout="column" fxLayoutGap="20px"
+				*ngIf="(referenceRegulationDto.state === approvedState || referenceRegulationDto.state === waitingApprovalState) && isRoleGestor">
+					<mat-divider *ngIf="observation || derivation"></mat-divider>
+	
+					<div>
+						<app-derive-request
+							[derivation]="derivation" [registerDerivationEditor]="registerDeriveEditor$.getValue()" (derivationEmmiter)="performDerivationAction($event)">
+						</app-derive-request>
+					</div>
+				</div>
+	
+			</div>
 		</div>
 	</mat-dialog-content>
 
-	<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
+	<mat-dialog-actions fxLayoutAlign="end">
+		<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
 
-	<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading" class="assign-turn-button">
-		<button *ngIf="referenceRegulationDto.state === approvedState && isRoleGestor && !referenceCompleteData.reference.closureType && hasAppointment"
-			mat-flat-button color="primary" (click)="redirectToOfferByRegulation()">
-			{{'access-management.appointment_result_view.ASSIGN_APPOINTMENT' | translate | uppercase}}
-		</button>
-	</div>
+		<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading" class="assign-turn-button">
+			<button *ngIf="referenceRegulationDto.state === approvedState && isRoleGestor && !referenceCompleteData.reference.closureType && hasNoAppointment"
+				mat-flat-button color="primary" (click)="redirectToOfferByRegulation()">
+				{{'access-management.appointment_result_view.ASSIGN_APPOINTMENT' | translate | uppercase}}
+			</button>
+		</div>
+	</mat-dialog-actions>
 
 </div>
 

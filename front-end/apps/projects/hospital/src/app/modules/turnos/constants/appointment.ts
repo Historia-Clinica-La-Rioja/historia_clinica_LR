@@ -1,5 +1,6 @@
-import { EAppointmentModality } from "@api-rest/api-model";
+import { EAppointmentModality, EPatientIdentityAccreditationStatus } from "@api-rest/api-model";
 import { Color } from "@presentation/colored-label/colored-label.component";
+import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component";
 
 export const APPOINTMENT_DURATIONS = [
 	{
@@ -249,4 +250,24 @@ export const getAppointmentLabelColor = (appointmentStateId: number): string => 
 
 	if (appointmentStateId === APPOINTMENT_STATES_ID.BOOKED)
 		return Color.RED;
+}
+
+export function getScanStatusCustom(status: EPatientIdentityAccreditationStatus ): ColoredIconText {
+	if(status === EPatientIdentityAccreditationStatus.VALID){
+		return SCAN_COMPLETED;
+	}else{
+		return SCAN_PENDING;
+	}
+}
+
+export const SCAN_COMPLETED: ColoredIconText = {
+	text: 'turnos.appointment.scaned_identification.MESSAGE_SUCCESS',
+	color: Color.GREEN,
+	icon: "verified_user"
+}
+
+export const SCAN_PENDING: ColoredIconText = {
+	text: 'turnos.appointment.scaned_identification.MESSAGE_PENDING',
+	color: Color.YELLOW,
+	icon: "gpp_maybe"
 }

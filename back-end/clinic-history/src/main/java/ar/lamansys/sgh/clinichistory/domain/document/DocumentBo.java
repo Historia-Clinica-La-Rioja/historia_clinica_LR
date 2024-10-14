@@ -20,17 +20,24 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
+@ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class DocumentBo implements IDocumentBo {
 
@@ -43,6 +50,8 @@ public class DocumentBo implements IDocumentBo {
     private boolean confirmed = true;
 
     private Integer clinicalSpecialtyId;
+
+	private Integer clinicalSpecialtySectorId;
 
     private Integer medicalCoverageId;
 
@@ -98,11 +107,22 @@ public class DocumentBo implements IDocumentBo {
 
 	private List<Integer> involvedHealthcareProfessionalIds;
 
+    private Map<String,Object> contextMap;
 
-    public String getDocumentStatusId(){
-        return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    private Integer createdBy;
+
+    private Long initialDocumentId;
+
+    private String documentStatusId;
+
+    @Override
+    public String getDocumentStatusId() {
+        if (Objects.isNull(documentStatusId)) {
+            return IDocumentBo.super.getDocumentStatusId();
+        }
+        return documentStatusId;
+
     }
-
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)

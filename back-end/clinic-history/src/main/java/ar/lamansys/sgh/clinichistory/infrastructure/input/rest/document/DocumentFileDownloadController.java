@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.FetchAllDocumentInfo;
-import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +48,7 @@ public class DocumentFileDownloadController {
 	}
 
     @GetMapping(value = "/{id}/downloadFile")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, TECNICO, INFORMADOR, PERSONAL_DE_IMAGENES, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, TECNICO, INFORMADOR, PERSONAL_DE_IMAGENES, ABORDAJE_VIOLENCIAS, PERSONAL_DE_FARMACIA')")
 	public ResponseEntity<Resource> downloadPdf(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "id") Long id)

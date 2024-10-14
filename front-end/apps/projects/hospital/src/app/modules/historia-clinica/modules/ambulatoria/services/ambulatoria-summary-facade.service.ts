@@ -25,6 +25,7 @@ export class AmbulatoriaSummaryFacadeService {
 	private amendedProblemsSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasNewConsultationEnabledSubject: Subject<any> = new BehaviorSubject<boolean>(false);
 	private isNewConsultationOpenSubject: Subject<any> = new BehaviorSubject<boolean>(false);
+	updateReferences: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
 	public readonly allergies$ = this.allergiesSubject.asObservable();
 	public readonly personalHistories$ = this.personalHistoriesSubject.asObservable();
@@ -41,7 +42,6 @@ export class AmbulatoriaSummaryFacadeService {
 	public readonly amendedProblems$ = this.amendedProblemsSubject.asObservable();
 	public readonly hasNewConsultationEnabled$ = this.hasNewConsultationEnabledSubject.asObservable();
 	public readonly isNewConsultationOpen$ = this.isNewConsultationOpenSubject.asObservable();
-
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
@@ -60,7 +60,8 @@ export class AmbulatoriaSummaryFacadeService {
 			riskFactors: true,
 			medications: true,
 			anthropometricData: true,
-			problems: true
+			problems: true,
+			references: true
 		});
 	}
 
@@ -80,7 +81,6 @@ export class AmbulatoriaSummaryFacadeService {
 		if (fieldsToUpdate.patientProblems) {
 			this.hceGeneralStateService.getPatientProblems(this.idPaciente).subscribe(ph => this.patientProblemsSubject.next(ph));
 		}
-	
 		if (fieldsToUpdate.patientProblemsByRole) {
 			this.hceGeneralStateService.getPatientProblemsByRole(this.idPaciente).subscribe(ph => this.patientProblemsByRoleSubject.next(ph));
 		}
@@ -119,6 +119,10 @@ export class AmbulatoriaSummaryFacadeService {
 		this.historialProblemsFacadeService.loadEvolutionSummaryList(this.idPaciente);
 		this.appointmentsService.hasNewConsultationEnabled(this.idPaciente)
 			.subscribe(h => this.hasNewConsultationEnabledSubject.next(h));
+
+		if (fieldsToUpdate.references) {
+			this.updateReferences.next(true)
+		}
 	}
 
 	setIsNewConsultationOpen(isNewConsultationOpen: boolean){
@@ -136,4 +140,5 @@ export interface AmbulatoriaFields {
 	medications?: boolean;
 	anthropometricData?: boolean;
 	problems?: boolean;
+	references?: boolean;
 }

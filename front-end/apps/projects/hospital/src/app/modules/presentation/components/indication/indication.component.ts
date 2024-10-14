@@ -45,6 +45,7 @@ export interface Content {
 	observations?: string;
 	createdOn?: Date;
 	reference?: ReferenceStudy;
+    observationsFromServiceRequest?;
 }
 
 export interface ReferenceStudy {

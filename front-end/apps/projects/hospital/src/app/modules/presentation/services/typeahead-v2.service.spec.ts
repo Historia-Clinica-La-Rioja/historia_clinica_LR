@@ -66,6 +66,7 @@ describe('TypeaheadV2Service', () => {
 	});
 
 	it('should keep the selected option if the component is disabled and then a new option is attempted to be selected', () => {
+		service.setOptions(mockOptionsTypeahead);
 		service.select(FACUNDO);
 		service.disabled = true;
 		service.select(FEDERICO);
@@ -75,6 +76,7 @@ describe('TypeaheadV2Service', () => {
 	});
 
 	it('should support the user being able to select an option within the list of options', () => {
+		service.setOptions(mockOptionsTypeahead);
 		service.select(FEDERICO);
 		service.selectValue$.subscribe(e =>
 			expect(e.value).toBe(FEDERICO.value)

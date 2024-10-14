@@ -1,6 +1,14 @@
 <div mat-dialog-content fxLayoutGap="12px" fxLayout="column">
 	<h2>{{'ambulatoria.reference-study-closure-information.TITLE'|translate}}</h2>
-	<div>
+
+	<div *ngFor="let rp of resultsPractices" fxLayoutGap="10px">
+		<app-show-closed-forms-template [result]="rp">
+		</app-show-closed-forms-template>
+
+		<mat-divider></mat-divider>
+	</div>
+
+	<div *ngIf="reportReference.observations">
 		<h3 class="grey">{{'ambulatoria.reference-study-closure-information.OBSERVATIONS'|translate}} : </h3>
 		<span id="note">{{ reportReference.observations }}</span>
 		<div *ngFor="let file of diagnosticReportFiles$ | async">
@@ -10,7 +18,7 @@
 		</div>
 	</div>
 
-	<div class="row-container" fxLayoutAlign="space-between" id="refernece-info-third">
+	<div *ngIf="reportReference?.date" class="row-container" fxLayoutAlign="space-between" id="refernece-info-third">
 		<span class="grey" id="professional-name">
 			{{doctorName}}
 		</span>

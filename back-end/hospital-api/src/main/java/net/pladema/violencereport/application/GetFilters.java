@@ -4,7 +4,6 @@ import ar.lamansys.sgh.shared.domain.FilterOptionBo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.pladema.violencereport.domain.ViolenceReportFilterBo;
 import net.pladema.violencereport.domain.ViolenceReportFilterOptionBo;
 
 import net.pladema.violencereport.infrastructure.output.repository.ViolenceModalityRepository;

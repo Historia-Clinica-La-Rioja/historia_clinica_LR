@@ -15,7 +15,7 @@ const MedicineGroupFilter = (props) => (
 )
 
 const MedicineGroupList = props => (
-    <List {...props} filter={{ deleted: false }} filters={<MedicineGroupFilter/>} sort={{ field:'name', order:'ASC' }}>
+    <List {...props} filters={<MedicineGroupFilter/>} sort={{ field:'name', order:'ASC' }}>
         <Datagrid rowClick="show">
             <TextField source="name" label="Nombre"/>
             <DeleteButton/>

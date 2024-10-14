@@ -54,7 +54,7 @@ export class AnestheticReportVitalSignsService {
 	private vitalSignsIsEmpty$ = this.vitalSignsIsEmptySource.asObservable();
 
     private isSectionEmptySource = new BehaviorSubject<boolean>(true);
-	isSectionEmpty$ = this.vitalSignsIsEmptySource.asObservable();
+	isSectionEmpty$ = this.isSectionEmptySource.asObservable();
 
     private bloodPressureMaxSource = new Subject<string | void>();
 	private _bloodPressureMax$ = this.bloodPressureMaxSource.asObservable();
@@ -250,8 +250,6 @@ export class AnestheticReportVitalSignsService {
     }
 
     private clearForm() {
-        this.form.controls.measuringPointStartDate.setValue(null);
-        this.form.controls.measuringPointStartTime.setValue(null);
         this.form.controls.bloodPressureMax.setValue(null);
         this.form.controls.bloodPressureMin.setValue(null);
         this.form.controls.pulse.setValue(null);
@@ -322,15 +320,15 @@ export class AnestheticReportVitalSignsService {
 
 	setDataVitalSigns(vitalSigns: ProcedureDescriptionDto): void {
 		if (vitalSigns) {
-			this.setVitalSigns(vitalSigns)
-			this.mapVitalSigns(vitalSigns)
+			this.setVitalSignsToForm(vitalSigns);
+			this.setAndEmitVitalSigns(vitalSigns);
 		} else {
-			this.vitalSignsSubject.next(this.getVitalSignsData())
-			this.mapToTime(null)
+			this.vitalSignsSubject.next(this.getVitalSignsData());
+			this.resetTime();
 		}
 	}
 
-	private setVitalSigns(vitalSigns: ProcedureDescriptionDto) {
+	private setVitalSignsToForm(vitalSigns: ProcedureDescriptionDto) {
 		if (vitalSigns.anesthesiaStartDate) {
 			this.setFormDateAttributeValue('anesthesiaStartDate', this.convertToDate(vitalSigns.anesthesiaStartDate));
 		}
@@ -357,14 +355,14 @@ export class AnestheticReportVitalSignsService {
 		}
 	}
 
-	private mapVitalSigns(vitalSigns: ProcedureDescriptionDto) {
-		this.mapToDate(vitalSigns)
-		this.mapToTime(vitalSigns)
+	private setAndEmitVitalSigns(vitalSigns: ProcedureDescriptionDto) {
+        let updatedVitalSigns: VitalSignsDataWithTimePicker = { ...this.vitalSignsSubject.getValue() };
+		updatedVitalSigns = this.mapToDate(vitalSigns, updatedVitalSigns);
+		updatedVitalSigns = this.mapToTime(vitalSigns, updatedVitalSigns);
+        this.vitalSignsSubject.next(updatedVitalSigns);
 	}
 
-	private mapToDate(data: ProcedureDescriptionDto) {
-		const updatedVitalSigns: VitalSignsData = { ...this.vitalSignsSubject.getValue() };
-
+	private mapToDate(data: ProcedureDescriptionDto, updatedVitalSigns: VitalSignsDataWithTimePicker) {
 		if (data.anesthesiaStartDate)
 			updatedVitalSigns.anesthesiaStartDate = this.convertToDate(data.anesthesiaStartDate);
 
@@ -377,30 +375,45 @@ export class AnestheticReportVitalSignsService {
 		if (data.surgeryEndDate)
 			updatedVitalSigns.surgeryEndDate = this.convertToDate(data.surgeryEndDate);
 
-		this.vitalSignsSubject.next(updatedVitalSigns);
+		return updatedVitalSigns;
 	}
 
-	private mapToTime(data: ProcedureDescriptionDto) {
-		const updatedVitalSigns: VitalSignsDataWithTimePicker = { ...this.vitalSignsSubject.getValue() };
-
+	private mapToTime(data: ProcedureDescriptionDto, updatedVitalSigns: VitalSignsDataWithTimePicker) {
+        updatedVitalSigns.anesthesiaStartTime = data?.anesthesiaStartTime;
 		updatedVitalSigns.anesthesiaStartTimePicker = data?.anesthesiaStartTime
 			? { defaultTime: this.convertToTimePickerDto(data.anesthesiaStartTime), hideLabel: true }
 			: { hideLabel: true };
 
+        updatedVitalSigns.anesthesiaEndTime = data?.anesthesiaEndTime;
 		updatedVitalSigns.anesthesiaEndTimePicker = data?.anesthesiaEndTime
 			? { defaultTime: this.convertToTimePickerDto(data.anesthesiaEndTime), hideLabel: true }
 			: { hideLabel: true };
 
+        updatedVitalSigns.surgeryStartTime = data?.surgeryStartTime;
 		updatedVitalSigns.surgeryStartTimePicker = data?.surgeryStartTime
 			? { defaultTime: this.convertToTimePickerDto(data.surgeryStartTime), hideLabel: true }
 			: { hideLabel: true };
 
+        updatedVitalSigns.surgeryEndTime = data?.surgeryEndTime;
 		updatedVitalSigns.surgeryEndTimePicker = data?.surgeryEndTime
 			? { defaultTime: this.convertToTimePickerDto(data.surgeryEndTime), hideLabel: true }
 			: { hideLabel: true };
 
-		this.vitalSignsSubject.next(updatedVitalSigns);
+        return updatedVitalSigns;
 	}
+
+    private resetTime() {
+        let updatedVitalSigns: VitalSignsDataWithTimePicker = { ...this.vitalSignsSubject.getValue() };
+        updatedVitalSigns.anesthesiaStartTime = null;
+        updatedVitalSigns.anesthesiaStartTimePicker = { hideLabel: true };
+        updatedVitalSigns.anesthesiaEndTime = null;
+        updatedVitalSigns.anesthesiaEndTimePicker = { hideLabel: true };
+        updatedVitalSigns.surgeryStartTime = null;
+        updatedVitalSigns.surgeryStartTimePicker = { hideLabel: true };
+        updatedVitalSigns.surgeryEndTime = null;
+        updatedVitalSigns.surgeryEndTimePicker = { hideLabel: true };
+        this.vitalSignsSubject.next(updatedVitalSigns);
+    }
 
 	convertToDate(dateDto: DateDto): Date {
 		return new Date(dateDto.year, dateDto.month - 1, dateDto.day);

@@ -1,6 +1,5 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
-import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,6 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Setter

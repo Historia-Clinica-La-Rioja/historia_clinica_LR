@@ -2,6 +2,9 @@ package net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
 import java.util.List;
+
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,4 +52,11 @@ public class StudyTranscribedOrderReportInfoDto {
 
 	@NotNull(message = "${value.mandatory}")
 	private Boolean viewReport;
+
+	@Nullable
+	private DateDto appointmentDate;
+	@Nullable
+	private TimeDto appointmentHour;
+	@Nullable
+	private String localViewerUrl;
 }

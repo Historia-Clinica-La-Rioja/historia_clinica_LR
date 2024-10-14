@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.controller;
 
 import ar.lamansys.sgh.clinichistory.application.fetchEmergencyCareEpisodeState.FetchEmergencyCareEpisodeStateDiagnoses;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -40,8 +40,8 @@ public class EmergencyCareStateController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeId") Integer episodeId) {
 		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
-		List<HealthConditionBo> diagnoses = fetchEmergencyCareEpisodeStateDiagnoses.getDiagnosesGeneralState(episodeId);
-		List<DiagnosesGeneralStateDto> result = internmentStateMapper.toListDiagnosesGeneralStateDto(diagnoses);
+		List<DiagnosisBo> diagnoses = fetchEmergencyCareEpisodeStateDiagnoses.getDiagnosesGeneralState(episodeId);
+		List<DiagnosesGeneralStateDto> result = internmentStateMapper.toListDiagnosesGeneralStateDtoFromDiagnosisBoList(diagnoses);
 		LOG.debug("Output -> result {}", result);
 		return  ResponseEntity.ok().body(result);
 	}

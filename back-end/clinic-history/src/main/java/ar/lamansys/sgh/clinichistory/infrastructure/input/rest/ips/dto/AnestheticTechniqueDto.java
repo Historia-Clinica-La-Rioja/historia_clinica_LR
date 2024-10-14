@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +31,20 @@ public class AnestheticTechniqueDto extends ClinicalTermDto {
 
     @Nullable
     private Short circuitId;
+
+    @Nullable
+    @JsonIgnore
+    private String techniqueDescription;
+
+    @Nullable
+    @JsonIgnore
+    private String trachealIntubationMethodDescription;
+
+    @Nullable
+    @JsonIgnore
+    private String breathingDescription;
+
+    @Nullable
+    @JsonIgnore
+    private String circuitDescription;
 }

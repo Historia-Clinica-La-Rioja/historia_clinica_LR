@@ -77,8 +77,7 @@ export class FactoresDeRiesgoSummaryComponent implements OnInit {
 	openDialog() {
 		const dialogRef = this.dialog.open(AddRiskFactorsComponent, {
 			disableClose: true,
-			width: '35%',
-			height: '90%',
+			minWidth: '35%',
 			data: {
 				internmentEpisodeId: this.internmentEpisodeId
 			}

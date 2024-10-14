@@ -24,31 +24,33 @@ public class GetProfessionalInvolvedDocumentListStorage {
 	private EntityManager entityManager;
 
 	public Page<ElectronicSignatureInvolvedDocumentBo> run(ElectronicSignatureDocumentListFilterBo filter, Pageable pageable) {
-		String queryString = "SELECT NEW net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo(dip.id, d.id, d.typeId, p2.personId, up.pk.personId, " +
-				"d.creationable.createdOn, dip.signatureStatusId, dip.statusUpdateDate) " +
+		String queryFromAndWhereStatement =
 				"FROM DocumentInvolvedProfessional dip " +
 				"JOIN Document d ON (d.id = dip.documentId) " +
 				"JOIN UserPerson up ON (up.pk.userId = d.creationable.createdBy) " +
 				"JOIN Patient p2 ON (p2.id = d.patientId) " +
+				"JOIN Person p3 ON (p3.id = p2.personId) " +
+				(filter.isSelfDeterminationNameFFActive() ? "LEFT JOIN PersonExtended pe ON (pe.id = p3.id) " : "") +
 				"WHERE d.institutionId = :institutionId " +
 				"AND dip.healthcareProfessionalId = :healthcareProfessionalId " +
-				(filter.getSignatureStatusId() != null ? "AND dip.signatureStatusId = :signatureStatusId " : "") +
+				(filter.getSignatureStatusIds() != null && !filter.getSignatureStatusIds().isEmpty() ? "AND dip.signatureStatusId IN :signatureStatusIds " : "") +
+				(filter.getStartDate() != null && filter.getEndDate() != null ? "AND d.creationable.createdOn BETWEEN :startDate AND :endDate " : "") +
+				(filter.getPatientFirstName() != null ?
+						(filter.isSelfDeterminationNameFFActive() ? "AND ((pe.nameSelfDetermination != NULL AND UPPER(pe.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%') OR (pe.nameSelfDetermination = NULL AND UPPER(p3.firstName) LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%')) " :
+								"AND UPPER(p3.firstName) LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%' ") : "") +
+				(filter.getPatientLastName() != null ? "AND UPPER(p3.lastName) LIKE '%" + filter.getPatientLastName().toUpperCase() + "%' " : "");
+		String queryString = "SELECT NEW net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo(dip.id, d.id, d.typeId, p2.personId, up.pk.personId, " +
+				"d.creationable.createdOn, dip.signatureStatusId, dip.statusUpdateDate) " +
+				queryFromAndWhereStatement +
 				"ORDER BY dip.signatureStatusId, d.creationable.createdOn DESC";
 		Query query = parseDocumentQuery(filter, queryString, pageable);
 		List<ElectronicSignatureInvolvedDocumentBo> result = getElectronicSignatureInvolvedDocumentBos(query);
-		Integer queryElementsAmount = fetchQueryResultRealAmount(filter);
+		Integer queryElementsAmount = fetchQueryResultRealAmount(filter, queryFromAndWhereStatement);
 		return new PageImpl<>(result, pageable, queryElementsAmount);
 	}
 
-	private Integer fetchQueryResultRealAmount(ElectronicSignatureDocumentListFilterBo filter) {
-		String queryString = "SELECT COUNT(1) " +
-				"FROM DocumentInvolvedProfessional dip " +
-				"JOIN Document d ON (d.id = dip.documentId) " +
-				"JOIN UserPerson up ON (up.pk.userId = d.creationable.createdBy) " +
-				"JOIN Patient p2 ON (p2.id = d.patientId) " +
-				"WHERE d.institutionId = :institutionId " +
-				"AND dip.healthcareProfessionalId = :healthcareProfessionalId " +
-				(filter.getSignatureStatusId() != null ? "AND dip.signatureStatusId = :signatureStatusId" : "");
+	private Integer fetchQueryResultRealAmount(ElectronicSignatureDocumentListFilterBo filter, String queryFromAndWhereStatement) {
+		String queryString = "SELECT COUNT(1) " + queryFromAndWhereStatement;
 		Query query = parseDocumentAmountQuery(filter, queryString);
 		return ((Long) query.getSingleResult()).intValue();
 	}
@@ -103,8 +105,18 @@ public class GetProfessionalInvolvedDocumentListStorage {
 	private void setQueryParameters(ElectronicSignatureDocumentListFilterBo filter, Query result) {
 		result.setParameter("institutionId", filter.getInstitutionId());
 		result.setParameter("healthcareProfessionalId", filter.getHealthcareProfessionalId());
-		if (filter.getSignatureStatusId() != null)
-			result.setParameter("signatureStatusId", filter.getSignatureStatusId());
+		if (filter.getSignatureStatusIds() != null && !filter.getSignatureStatusIds().isEmpty())
+			result.setParameter("signatureStatusIds", filter.getSignatureStatusIds());
+		if (filter.getStartDate() != null & filter.getEndDate() != null)
+			setQueryStartAndEndDate(filter, result);
+	}
+
+	private void setQueryStartAndEndDate(ElectronicSignatureDocumentListFilterBo filter, Query result) {
+		final int LAST_HOUR = 23;
+		final int LAST_MINUTE = 59;
+		final int LAST_SECOND = 59;
+		result.setParameter("startDate", filter.getStartDate().atStartOfDay());
+		result.setParameter("endDate", filter.getEndDate().atTime(LAST_HOUR, LAST_MINUTE, LAST_SECOND));
 	}
 
 }

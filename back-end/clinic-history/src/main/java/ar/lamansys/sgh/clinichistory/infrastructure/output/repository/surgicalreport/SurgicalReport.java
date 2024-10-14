@@ -63,4 +63,7 @@ public class SurgicalReport extends SGXAuditableEntity<Integer> {
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "has_prosthesis")
+	private Boolean hasProsthesis;
+
 }

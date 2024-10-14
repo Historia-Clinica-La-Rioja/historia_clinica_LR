@@ -60,6 +60,8 @@
 			</app-document-section>
 		</app-new-consultation-expansion-section>
 
+		<app-parameterized-form-section *ngIf="isEnabledParameterizedFormFF" (completeParameterizedForms)="completeFormsData = $event"></app-parameterized-form-section>
+
 		<app-new-consultation-expansion-section id="datos_antropometricos"
 			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"
 			[fixedExpanded]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
@@ -111,16 +113,31 @@
 
 		<app-new-consultation-expansion-section id="procedimientos"
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
-			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
+			[isEmpty]="createOrderService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
-				<app-titled-content-card *ngIf="!procedimientoNuevaConsultaService.isEmpty()"
-					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
-					<app-procedure-list [service]="procedimientoNuevaConsultaService"></app-procedure-list>
-				</app-titled-content-card>
+				<app-titled-content-card
+				*ngIf="!procedimientoNuevaConsultaService.isEmpty()"
+				title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' | translate}}">
+
+				<div *ngFor="let procedimiento of procedimientoNuevaConsultaService.getProcedimientos(); index as i; last as isLast">
+					<div fxLayout="row" fxLayoutAlign="space-between center">
+						<div fxLayout="column">
+							<span>{{ procedimiento.snomed.pt }}</span>
+							<span *ngIf="procedimiento?.performedDate" class="mat-caption gray-caption">
+								{{ procedimiento.performedDate | dateFormat : 'date' }}
+							</span>
+						</div>
+						<button type="button" mat-icon-button color="warn" (click)="procedimientoNuevaConsultaService.remove(i)">
+							<mat-icon>delete_outline</mat-icon>
+						</button>
+					</div>
+					<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+				</div>
+			</app-titled-content-card>
 
 				<div>
 					<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
-						(click)="addProcedure()">
+						(click)="openSearchSnomedConceptComponent()">
 						+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
 					</button>
 				</div>
@@ -149,7 +166,7 @@
 			<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
 		</app-concepts-list>
 
-		<app-new-consultation-expansion-section id="solicitud-referencia" 
+		<app-new-consultation-expansion-section id="solicitud-referencia"
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [(collapsed)]="collapsedReferenceRequest">
 			<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
@@ -167,7 +184,7 @@
 
 				<div>
 					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
-						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()">
+						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()" [disabled]="showWarningViolenceSituation">
 						+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
 					</button>
 				</div>
@@ -188,7 +205,7 @@
 	<div actions id="buttons" align="end">
 		<div class="actions">
 			<app-button
-				[buttonType]="ButtonType.RAISED" 
+				[buttonType]="ButtonType.RAISED"
 				[text]="'buttons.CONFIRM'"
 				[disabled]="disableConfirmButton"
 				[isLoading]="isSaving"

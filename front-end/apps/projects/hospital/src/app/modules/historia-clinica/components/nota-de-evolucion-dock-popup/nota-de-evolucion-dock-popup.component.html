@@ -10,7 +10,7 @@
 
 			<app-diagnosticos-form formControlName="diagnosis"></app-diagnosticos-form>
 
-			<app-evolucion-form formControlName="evolutionNote"></app-evolucion-form>
+			<app-evolucion-form [markAsTouched]="markAsTouched" formControlName="evolutionNote"></app-evolucion-form>
 
 			<app-datos-antropometricos-form formControlName="anthropometricData" [patientId]="data.patientId"> </app-datos-antropometricos-form>
 
@@ -22,17 +22,16 @@
 
 			<app-factores-de-riesgo-form-v2 formControlName="riskFactors"></app-factores-de-riesgo-form-v2>
 
-			<app-alergias-form formControlName="allergies" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias-form>
+			<app-alergias-form formControlName="allergies" [isAllergyNoReferInput]="data.emergencyCareEvolutionNote?.allergies.isReferred" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias-form>
 
 		</form>
 	</div>
 
 	<div actions id="buttons">
-		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()"
-				[disabled]="disableConfirmButton">
-				<span [translate]="'buttons.CONFIRM'"></span>
-			</button>
+		<div actions id="buttons" fxLayoutAlign="end">
+			<app-button [color]="'primary'" [isLoading]="disableConfirmButton" [text]="'buttons.CONFIRM' | translate | uppercase"
+				[buttonType]="'mat-raised-button'" (clicked)="save()">
+			</app-button>
 		</div>
 	</div>
 </app-dock-popup>

@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutGap="1vh">
-    <app-titled-content-card *ngIf="!service.anestheticReportRecordService.isEmpty()"
+    <app-titled-content-card *ngIf="!(service.anestheticReportRecordService.isEmptyRecord$ | async)"
         title="{{ 'internaciones.anesthesic-report.record.REGISTERED_RECORDS' }}">
         <div *ngFor="let record of (service.anestheticReportRecordService.getRecord() | async); index as i; last as isLast">
             <div fxLayout="row" fxLayoutAlign="space-between center">

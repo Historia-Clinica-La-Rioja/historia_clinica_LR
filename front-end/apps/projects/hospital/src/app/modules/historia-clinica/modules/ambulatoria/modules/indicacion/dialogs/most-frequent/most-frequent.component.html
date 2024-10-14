@@ -1,14 +1,14 @@
-<div mat-dialog-content>
-	<div fxLayout="row" fxLayoutAlign="space-between">
-		<div mat-dialog-title class="mat-h3">
-			{{'indicacion.card-pharmaco-frequent.TITLE' | translate}}
-		</div>
-
-		<button type="button" mat-icon-button mat-dialog-close (click)="close(false)">
-			<mat-icon>close</mat-icon>
-		</button>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div mat-dialog-title class="mat-h3">
+		{{'indicacion.card-pharmaco-frequent.TITLE' | translate}}
 	</div>
 
+	<button type="button" mat-icon-button mat-dialog-close (click)="close(false)">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div mat-dialog-content>
 	<h2>{{'indicacion.card-pharmaco-frequent.SUBTITLE' | translate}} </h2>
 
 	<div class="search-container">
@@ -23,7 +23,7 @@
 					<mat-icon>search</mat-icon>
 				</button>
 
-				<button type="button" id="clear-filter-sector" *ngIf="formFilter.value.description" mat-button matSuffix
+				<button type="button" id="clear-filter-sector" *ngIf="formFilter.value.description"  matSuffix
 					color="warn" mat-icon-button
 					(click)="clearFilterField(formFilter.controls.description); $event.stopPropagation()">
 					<mat-icon>close</mat-icon>
@@ -38,8 +38,8 @@
 
 	<app-card-pharmaco [pharmacos]="data?.items | paginate: currentPage: pageSize :filterSearch" [vias]="vias"
 		(selectionChange)="close(true, $event)"></app-card-pharmaco>
+</div>
 
-	<mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-		(page)="setPage($event)"></mat-paginator>
-
+<div mat-dialog-actions>
+	<mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"(page)="setPage($event)"></mat-paginator>
 </div>

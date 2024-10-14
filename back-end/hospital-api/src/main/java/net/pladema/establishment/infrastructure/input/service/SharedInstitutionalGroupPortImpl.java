@@ -4,11 +4,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institutionalgroup.Sh
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.repository.InstitutionalGroupInstitutionRepository;
-import net.pladema.establishment.repository.InstitutionalGroupUserRepository;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j

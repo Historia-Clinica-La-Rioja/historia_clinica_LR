@@ -1,5 +1,4 @@
-<div>
-    <h1>{{institutionDescription.title | translate}}</h1>
+<div class="m-top">
     <app-title-description-list 
         [title]="'gis.address.INSTITUTION'"
         [descriptionData]="[{description: institutionDescription.institution}]">
@@ -17,12 +16,14 @@
         </app-title-description-list>
     </div>
     
-    <div class="space-between m-top">
+    <div class="m-top">
         <app-title-description-list
             [title]="'gis.address.CITY'"
             [descriptionData]="[{description: institutionDescription.address.city.description}]">
         </app-title-description-list>
-    
+    </div>
+
+    <div class="m-top">
         <app-title-description-list
             [title]="'gis.address.DEPARTMENT'"
             [descriptionData]="[{description: institutionDescription.address.department.description}]">
@@ -41,16 +42,5 @@
             [title]="'gis.map-position.COORDINATES'"
             [descriptionData]="[{description: coordinatesToShow}]">
         </app-title-description-list>
-    </div>
-
-    <div *ngIf="showActions" class="actions m-top">
-        <button (click)="previousStepper()" mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
-        <app-button 
-            text="buttons.CONFIRM" 
-            [disabled]="!institutionDescription.coordinates?.latitude"
-            [buttonType]="ButtonType.RAISED" 
-            [isLoading]="isSaving" 
-            (clicked)="confirm()">
-        </app-button>
     </div>
 </div>

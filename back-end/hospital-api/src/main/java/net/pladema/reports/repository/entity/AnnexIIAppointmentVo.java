@@ -16,15 +16,18 @@ public class AnnexIIAppointmentVo extends AnnexIIVo {
     private String medicalCoverage;
 	private String medicalCoverageCuit;
 	private Integer rnos;
+	private Short patientIdentityAccreditationStatusId;
 
     public AnnexIIAppointmentVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
-                                String documentType, String documentNumber, String appointmentState, LocalDate attentionDate, String medicalCoverageName, String medicalCoverageCuit, String sisaCode, Integer rnos){
+                                String documentType, String documentNumber, String appointmentState, LocalDate attentionDate, String medicalCoverageName, String medicalCoverageCuit, String sisaCode, Integer rnos,
+								Short patientIdentityAccreditationStatusId){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber, sisaCode);
         this.appointmentState = appointmentState;
         this.attentionDate = attentionDate;
         this.medicalCoverage = medicalCoverageName;
         this.medicalCoverageCuit = medicalCoverageCuit;
 		this.rnos = rnos;
+		this.patientIdentityAccreditationStatusId = patientIdentityAccreditationStatusId;
     }
 
     @JsonIgnore

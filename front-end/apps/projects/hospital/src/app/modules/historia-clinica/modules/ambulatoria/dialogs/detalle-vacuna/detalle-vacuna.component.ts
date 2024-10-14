@@ -25,4 +25,8 @@ export class DetalleVacunaComponent {
 			vaccinationSchemeDescription: string,
 			vaccineObservations: string,
 		}) { }
+
+	close(): void {
+		this.dialogRef.close()
+	}
 }

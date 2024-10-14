@@ -17,9 +17,12 @@ import lombok.ToString;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.establishment.domain.ClinicalSpecialtySectorBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -68,7 +71,14 @@ public class TriageBo implements IDocumentBo {
 	private Integer roomId;
 
 	private Integer sectorId;
+
 	private List<ReasonBo> reasons;
+
+	private Map<String, Object> contextMap;
+
+	private ProfessionalPersonBo creator;
+
+	private ClinicalSpecialtySectorBo clinicalSpecialtySectorBo;
 
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();
@@ -83,6 +93,8 @@ public class TriageBo implements IDocumentBo {
         this.createdOn = triageVo.getCreatedOn();
         this.riskFactorIds = triageVo.getRiskFactorIds();
 		this.encounterId = triageVo.getEmergencyCareEpisodeId();
+		this.clinicalSpecialtySectorBo = ClinicalSpecialtySectorBo.builder().id(triageVo.getClinicalSpecialtySectorId())
+				.description(triageVo.getClinicalSpecialtySectorDescription()).build();
     }
 
 	public TriageBo(Triage triage){
@@ -91,6 +103,9 @@ public class TriageBo implements IDocumentBo {
 		this.notes = triage.getNotes();
 		this.categoryId = triage.getTriageCategoryId();
 		this.doctorsOfficeId = triage.getDoctorsOfficeId();
+		this.createdBy = triage.getCreatedBy();
+		this.clinicalSpecialtySectorBo = ClinicalSpecialtySectorBo.builder().id(triage.getClinicalSpecialtySectorId()).build();
+		this.createdOn = triage.getCreatedOn();
 	}
 
     public boolean isAdultGynecological() {
@@ -125,6 +140,11 @@ public class TriageBo implements IDocumentBo {
 			return result;
 		}
 		return null;
+	}
+
+	@Override
+	public Integer getClinicalSpecialtySectorId() {
+		return clinicalSpecialtySectorBo == null ? null : clinicalSpecialtySectorBo.getId();
 	}
 
 }

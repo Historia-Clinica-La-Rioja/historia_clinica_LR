@@ -75,7 +75,7 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 
 	private static final String NO_NATIONALITY_MATCHING_DATA = "No se encontraron datos en la api para conformar la nacionalidad del paciente";
 
-	private static final String NO_ADDRESS_MATCHING_DATA = "No se encontraron datos en la api para conformar la localidad del paciente";
+	private static final String NO_ADDRESS_MATCHING_DATA = "No se encontraron datos en la api para conformar la localidad del paciente, localidad: %s, partido: %s";
 
 	private static final String NO_IDENTIFICATION_PATIENT_DATA = "No se cuenta con la información necesaria para identificar al paciente. Verificar tipo de documento, número de documento y género";
 
@@ -357,11 +357,11 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 				var cipresCityResponse = Arrays.asList(response.getBody());
 				var cities = cipresCityResponse.stream().filter(c -> matchesCityAndDepartment(c, city, department)).collect(Collectors.toList());
 				if (cities.isEmpty())
-					saveStatusError(this.cipresEncounterId, this.encounterId, NO_ADDRESS_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
+					saveStatusError(this.cipresEncounterId, this.encounterId, String.format(NO_ADDRESS_MATCHING_DATA, city, department), HttpStatus.BAD_REQUEST.value());
 				else
 					return cities.stream().findFirst().map(c -> cipresWSConfig.getCitiesUrl() + "/" + c.getId());
 			} else
-				saveStatusError(this.cipresEncounterId, this.encounterId, NO_ADDRESS_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
+				saveStatusError(this.cipresEncounterId, this.encounterId, String.format(NO_ADDRESS_MATCHING_DATA, city, department), HttpStatus.BAD_REQUEST.value());
 		} catch (RestTemplateApiException e) {
 			log.debug("Error al intentar obtener la localidad");
 			saveStatusError(this.cipresEncounterId, this.encounterId, e.getMessage(), e.getStatusCode().value());

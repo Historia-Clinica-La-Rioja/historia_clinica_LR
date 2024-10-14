@@ -43,7 +43,9 @@ export const toOutpatientAnthropometricDataDto = (anthropometricData): Outpatien
 			weight: {
 				value: anthropometricData.weight?.toString()
 			},
-			bloodType: anthropometricData.bloodType,
+			bloodType: {
+				value: anthropometricData.bloodType?.description
+			},
 			headCircumference: {
 				value: anthropometricData.headCircumference?.toString()
 			},

@@ -12,6 +12,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryCareLine;
 import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDia
 	private final CareLineService careLineService;
 
 	@Override
+	@Transactional
 	public void updateCareLinesAssociatedToDiary(Integer diaryId, List<Integer> careLines) {
 
 		List<DiaryCareLine> diaryCareLinesHistory = this.diaryCareLineRepository.findAllByDiaryId(diaryId);

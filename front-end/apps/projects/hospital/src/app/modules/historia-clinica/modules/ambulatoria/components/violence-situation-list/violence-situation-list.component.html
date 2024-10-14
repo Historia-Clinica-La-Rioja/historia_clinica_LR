@@ -26,11 +26,11 @@
         </div>
         <div fxLayout="column" fxFlex="15">
             <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.INIT_DATE'"></span>
-            <span>{{vs.initialDate | viewDateDto: 'date' | date: DateFormat.VIEW_DATE}}</span>
+            <span>{{vs.initialDate | viewDateDto: 'date' | dateFormat: 'date'}}</span>
         </div>
         <div fxLayout="column" fxFlex="15">
             <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.LAST_UPDATE'"></span>
-            <span>{{vs.lastModificationDate | viewDateDto: 'date' | date: DateFormat.VIEW_DATE}}</span>
+            <span>{{vs.lastModificationDate | viewDateDto: 'date' | dateFormat: 'date'}}</span>
         </div>
         <div>
             <button mat-icon-button [matMenuTriggerFor]="menu">

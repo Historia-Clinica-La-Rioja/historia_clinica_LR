@@ -9,3 +9,12 @@ mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
 .bold {
     font-weight: 500;
 }
+
+.note {
+    display: block;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+    box-sizing: border-box;
+}

@@ -27,7 +27,7 @@ public class LoadNewborns {
 
 	public List<NewbornBo> run (List<NewbornBo> newborns, Integer obstetricEventId){
 		LOG.debug("Input parameters -> newborns {}, obstetricEventId {}", newborns, obstetricEventId);
-		if (newborns == null) return Collections.emptyList();
+		if (newborns == null || obstetricEventId == null) return Collections.emptyList();
 		newborns.forEach(nb -> {
 			Newborn entity = new Newborn();
 			entity.setWeight(nb.getWeight());

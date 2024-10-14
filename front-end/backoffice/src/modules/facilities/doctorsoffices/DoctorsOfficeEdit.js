@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-    SelectInput,
     Edit, FormDataConsumer,
     ReferenceInput,
     required,
     SimpleForm,
     TextInput,
-    usePermissions
+    usePermissions,
+    AutocompleteInput
 } from 'react-admin';
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 import CustomToolbar from '../../components/CustomToolbar';
@@ -14,14 +14,15 @@ import CustomToolbar from '../../components/CustomToolbar';
 const AMBULATORIA = 1;
 
 const SectorField = ({formData}) => {
-    return   <ReferenceInput 
-    source="sectorId"
-    reference="sectors"
-    sort={{ field: 'description', order: 'ASC' }}
-    filter={{sectorTypeId: AMBULATORIA, institutionId: formData.institutionId}}
->
-<SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>
+    return  <ReferenceInput 
+                source="sectorId"
+                reference="sectors"
+                perPage={100}
+                sort={{ field: 'description', order: 'ASC' }}
+                filter={{sectorTypeId: AMBULATORIA, institutionId: formData.institutionId}}
+            >
+                <AutocompleteInput optionText="description" optionValue="id" />
+            </ReferenceInput>
 }
 
 const DoctorsOfficeEdit = (props) => {

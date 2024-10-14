@@ -9,6 +9,6 @@
 			+ {{content.actions.button | translate}}
 		</button>
 		<mat-checkbox id="{{content.id}}" color="primary" *ngIf="content.actions.checkbox" (change)="toggleCheckbox()"
-			[disabled]="hasConcepts">{{content.actions.checkbox | translate}}</mat-checkbox>
+			[disabled]="hasConcepts" [checked]="checkboxOn">{{content.actions.checkbox | translate}}</mat-checkbox>
 	</article>
 </app-hide-show-toggle>

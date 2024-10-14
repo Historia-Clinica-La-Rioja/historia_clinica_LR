@@ -1,0 +1,12 @@
+package net.pladema.emergencycare.application.port.output;
+
+import net.pladema.emergencycare.infrastructure.output.entity.EmergencyCareEpisodeDischargeOtherTypeDescription;
+
+import java.util.Optional;
+
+public interface EmergencyCareEpisodeDischargeOtherTypeDescriptionStorage {
+
+	EmergencyCareEpisodeDischargeOtherTypeDescription save(EmergencyCareEpisodeDischargeOtherTypeDescription ecedotDescription);
+
+	Optional<EmergencyCareEpisodeDischargeOtherTypeDescription> getByEmergencyCareEpisodeId(Integer emergencyCareEpisodeId);
+}

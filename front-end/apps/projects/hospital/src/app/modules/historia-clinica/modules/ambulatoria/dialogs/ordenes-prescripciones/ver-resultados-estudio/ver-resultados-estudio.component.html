@@ -2,7 +2,7 @@
 	<h1 mat-dialog-title>
 		{{ 'ambulatoria.paciente.ordenes_prescripciones.show_study_results_dialog.TITLE' | translate}}
 	</h1>
-	<button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
+	<button id="close-modal"  mat-icon-button aria-label="close" (click)="closeModal()">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
@@ -10,7 +10,7 @@
 <div mat-dialog-content fxLayout="column" fxLayoutGap="22px">
 
 	<app-complete-study-information id="estudio" fxFlex="45%" [order]="order" [registerEditor]="study.registerEditor"
-		[titleContent]="study.problemPt" [descriptionState]="study.problemPt" [status]="status">
+		[titleContent]="study.problemPt" [descriptionState]="study.observations" [status]="status">
 	</app-complete-study-information>
 
 	<mat-divider [vertical]="true"></mat-divider>
@@ -43,3 +43,4 @@
 	</div>
 
 </div>
+

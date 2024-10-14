@@ -12,12 +12,13 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class SnomedConceptsRepository {
 
     private static final Integer LIMIT = 30;
+
     private final EntityManager entityManager;
 
 	public SnomedSearchVo searchConceptsByEcl(String term, String ecl, String groupDescription) {
@@ -45,11 +46,11 @@ public class SnomedConceptsRepository {
 						// there are other modes documented in PostgreSQL's doc "Controlling Text Search"
                 "FROM Snomed s " +
                 "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
-                "JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
-                "WHERE fts(s.pt, :term ) = true " +
-                    "AND (sg.ecl = :ecl ) " +
-					"AND (sg.description = :groupDescription ) " +
-                    "AND (srg.lastUpdate >= sg.lastUpdate ) " +
+                "JOIN SnomedGroup sg ON (srg.groupId = sg.id) " +
+                "WHERE fts(s.pt, :term) = true " +
+                    "AND (sg.ecl = :ecl) " +
+					"AND (sg.description = :groupDescription) " +
+                    "AND (srg.lastUpdate >= sg.lastUpdate) " +
                 "ORDER BY rank DESC "
         ;
 
@@ -67,7 +68,9 @@ public class SnomedConceptsRepository {
 				.map(o -> new SnomedSearchItemVo((Integer) o[0], (String) o[1], (String) o[2]))
 				.collect(Collectors.toList());
 
-		List<Integer> conceptIds = result.stream().map(item -> item.getSnomedId()).collect(Collectors.toList());
+		List<Integer> conceptIds = result.stream()
+				.map(SnomedSearchItemVo::getSnomedId)
+				.collect(Collectors.toList());
 
 		List<SnomedSearchItemVo> synonyms = getConceptsSynonyms(conceptIds);
 
@@ -83,8 +86,8 @@ public class SnomedConceptsRepository {
                 "FROM Snomed s " +
                 "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
                 "JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
-                "WHERE fts(s.pt, :term ) = true " +
-					"AND (sg.ecl = :ecl ) " +
+                "WHERE fts(s.pt, :term) = true " +
+					"AND (sg.ecl = :ecl) " +
 					"AND (sg.description = :groupDescription ) " +
                     "AND (srg.lastUpdate >= sg.lastUpdate ) "
                 ;
@@ -106,8 +109,11 @@ public class SnomedConceptsRepository {
 				"SELECT s.id, s.sctid, s.pt " +
 				"FROM Snomed s " +
 				"JOIN SnomedSynonym ss ON (s.id = ss.pk.synonymId OR s.id = ss.pk.mainConceptId) " +
-				"WHERE (ss.pk.mainConceptId IN (:conceptIds) and s.synonym = true) " +
-				"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false) " +
+				"JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
+				"JOIN SnomedGroup sg ON (srg.groupId = sg.id) " +
+				"WHERE ((ss.pk.mainConceptId IN (:conceptIds) and s.synonym = true) " +
+						"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false)) " +
+						"AND (srg.lastUpdate >= sg.lastUpdate) " +
 				"GROUP BY s.id"
 				;
 		

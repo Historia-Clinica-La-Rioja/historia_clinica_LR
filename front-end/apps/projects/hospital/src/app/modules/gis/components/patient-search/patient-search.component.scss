@@ -1,0 +1,23 @@
+@import '../../../../../assets/styles/mixins';
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card {
+    padding: 2.5rem;
+}
+
+.dateRange {
+    margin-top: 2rem;
+}
+
+.bold {
+	@include font-weight-bold;
+}
+
+.card-container {
+    display: flex;
+    height: 100vh;
+}

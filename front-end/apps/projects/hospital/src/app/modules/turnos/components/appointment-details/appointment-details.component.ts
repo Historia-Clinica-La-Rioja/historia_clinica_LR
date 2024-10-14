@@ -1,11 +1,11 @@
+import { stringToDate } from './../../../api-rest/mapper/date-dto.mapper';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '@api-rest/api-model';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DatePipe } from '@angular/common';
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -20,19 +20,16 @@ export class AppointmentDetailsComponent implements OnInit {
 	@Input() patientId: number;
 	@Input() referenceSummary?: ReferenceSummaryDto;
 	@Output() resetInformation = new EventEmitter<void>();
-	appointmentTime: Date = new Date();
+	appointmentDate: Date = new Date();
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly holidayService: HolidayCheckService,
 	) { }
 
 	ngOnInit(): void {
-		const timeData = this.emptyAppointment.hour.split(":");
-		this.appointmentTime.setHours(+timeData[0]);
-		this.appointmentTime.setMinutes(+timeData[1]);
-		this.appointmentTime.setSeconds(+timeData[2]);
+		this.appointmentDate = new Date(this.emptyAppointment.date + 'T' + this.emptyAppointment.hour);
 	}
 
 	assign() {
@@ -64,7 +61,7 @@ export class AppointmentDetailsComponent implements OnInit {
 				if (result !== -1) {
 					this.resetInformation.emit();
 
-					var fullAppointmentDate = this.datePipe.transform(this.emptyAppointment.date, DatePipeFormat.FULL_DATE);
+					var fullAppointmentDate = this.dateFormatPipe.transform(stringToDate(this.emptyAppointment.date), 'fulldate');
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = this.emptyAppointment.hour.split(":");
 

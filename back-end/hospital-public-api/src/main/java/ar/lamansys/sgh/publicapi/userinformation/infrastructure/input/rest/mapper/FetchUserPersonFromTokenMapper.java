@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.rest.mapper;
 
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.user.dto.FetchUserPersonFromTokenDto;
+import ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.dto.FetchUserPersonFromTokenDto;
 import ar.lamansys.sgh.publicapi.userinformation.domain.FetchUserPersonFromTokenBo;
 
 public class FetchUserPersonFromTokenMapper {

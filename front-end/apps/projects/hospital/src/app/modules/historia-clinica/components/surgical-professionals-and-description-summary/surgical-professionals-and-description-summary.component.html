@@ -1,0 +1,22 @@
+<div data-id="surgical-professionals-and-description-section">
+	<app-iconed-titled-section icon="{{ descriptionItemDataSummary.icon }}"
+		title="{{ descriptionItemDataSummary.title }}"></app-iconed-titled-section>
+	<div class="surgical-professionals-and-description" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
+		<ng-container *ngIf="descriptionItemDataSummary.data.items">
+			<app-title-description-list title="{{ descriptionItemDataSummary.subtitle }}"
+				[descriptionData]="descriptionItemDataSummary.data.firstItem ? descriptionItemDataSummary.data.firstItem : descriptionItemDataSummary.data.items">
+			</app-title-description-list>
+
+			<app-title-description-list *ngIf="descriptionItemDataSummary.data.remainingItems"
+				title="historia-clinica.surgical-report.summary.OTHER_MEMBERS"
+				[descriptionData]="descriptionItemDataSummary.data.remainingItems">
+			</app-title-description-list>
+
+			<app-title-description-list *ngIf="descriptionItemDataSummary.data.note.length"
+				title="ambulatoria.paciente.surgical-report.DESCRIPTION"
+				[descriptionData]="descriptionItemDataSummary.data.note">
+			</app-title-description-list>
+
+		</ng-container>
+	</div>
+</div>

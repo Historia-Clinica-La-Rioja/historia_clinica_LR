@@ -11,7 +11,7 @@
 					</mat-label>
 					<input matInput type="text" formControlName="snomed" name="snomed" readonly
 						matTooltip="{{ snomedConcept.pt }}">
-					<button id="clear" mat-button matSuffix color="warn" mat-icon-button (click)="resetForm()">
+					<button id="clear"  matSuffix color="warn" mat-icon-button (click)="resetForm()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
@@ -62,3 +62,4 @@
 	</table>
 	<app-no-data class="secondary" *ngIf="medications.length === 0"></app-no-data>
 </section>
+

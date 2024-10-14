@@ -1,15 +1,20 @@
 <app-content width="full">
-	<section fxLayout="column" fxLayoutGap="50px">
-		<div>
-			<h2 class="page-title" [translate]="'guardia.new-episode.TITLE'"></h2>
-			<h4 [translate]="'guardia.new-episode.SUB_TITLE'"></h4>
-		</div>
-		<div>
-			<h3 [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
-			<app-adult-gynecological-triage (confirm)="confirmEvent($event)"
-											(cancel)="cancelEvent()"
-											[canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE"></app-adult-gynecological-triage>
-		</div>
+	<section fxLayout="column" fxLayoutGap="18px">
+		<mat-card class="triage-card">
+			<mat-card-header>
+				<mat-card-title class="page-title" [translate]="'guardia.new-episode.TITLE'"></mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				<app-adult-gynecological-triage [canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE">
+				</app-adult-gynecological-triage>
+			</mat-card-content>
+			<mat-card-actions align="end" fxLayout="row" fxLayoutGap="10px">
+				<app-button text="{{'buttons.BACK'}}" (clicked)="back()"></app-button>
+				<app-button buttonType="{{RAISED}}" text="{{'guardia.new-episode.CONFIRM'}}"
+					[disabled]="isLoading"
+					(clicked)="triageActionsService.saveTriage()">
+				</app-button>
+			</mat-card-actions>
+		</mat-card>
 	</section>
 </app-content>
-

@@ -31,13 +31,17 @@ public class NewMedicationRequestNotificationImpl implements NewMedicationReques
 		log.debug("Input parameters -> args {}", args);
 		String email = Stream.of(patientEmail).findFirst().orElse(null);
 		LocalDate requestDate = getMedicationRequestInfoService.execute(args.recipeId).getRequestDate();
-		String subject = digitalRecipeSubject + String.format(" %s hasta %s", formatStringDate(requestDate), formatStringDate(requestDate.plusDays(30)));
+		String subject = subject(digitalRecipeSubject, requestDate);
 		this.patientNotificationSender.send(new PatientRecipient(args.patient.getId(), email), new NewMedicationRequestTemplateInput(args, subject));
 	}
 
-	private String formatStringDate(LocalDate date){
+	private static String formatStringDate(LocalDate date){
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		return date.format(dateTimeFormatter);
 
+	}
+
+	public static String subject(String digitalRecipeSubject, LocalDate requestDate) {
+		return String.format("%s %s hasta %s", digitalRecipeSubject, formatStringDate(requestDate), formatStringDate(requestDate.plusDays(30)));
 	}
 }

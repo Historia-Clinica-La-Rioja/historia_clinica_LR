@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.servicerequests.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
@@ -39,6 +40,8 @@ public class InformerObservationBo implements IDocumentBo {
 	private AddressBo institutionAddress;
 
 	private List<DiagnosticReportBo> diagnosticReports;
+
+	private Map<String, Object> contextMap;
 
 	@Override
 	public short getDocumentType() { return DocumentType.MEDICAL_IMAGE_REPORT;	}

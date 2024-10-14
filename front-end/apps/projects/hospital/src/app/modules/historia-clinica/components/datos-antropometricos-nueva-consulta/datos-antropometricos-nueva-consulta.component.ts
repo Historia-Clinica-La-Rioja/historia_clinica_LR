@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { DatosAntropometricosNuevaConsultaService } from '../../modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
-import { BoxMessageInformation } from '../box-message/box-message.component';
 import { TranslateService } from '@ngx-translate/core';
 import { AnthropometricData, PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
 import { Observable } from 'rxjs/internal/Observable';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 @Component({
 	selector: 'app-datos-antropometricos-nueva-consulta',

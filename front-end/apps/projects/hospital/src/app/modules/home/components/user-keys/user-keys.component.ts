@@ -31,10 +31,6 @@ export class UserKeysComponent implements OnInit {
 		this.userKeysService.delete(apiKeyName);
 	}
 
-	volver() {
-		window.history.back();
-	}
-
     private openGenerateApiKeyDialog() {
         this.dialog.open(GenerateApiKeyFormComponent, {
             width: '35%',

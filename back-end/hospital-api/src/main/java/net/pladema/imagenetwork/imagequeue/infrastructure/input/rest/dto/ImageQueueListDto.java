@@ -18,7 +18,8 @@ public class ImageQueueListDto {
     Integer id;
     Integer appointmentId;
     ImageQueuePatientDataDto patient;
-    DateTimeDto createdOn;
+    DateTimeDto lastTriedOn;
+    DateTimeDto appointmentDateTime;
     Integer modalityId;
     Integer equipmentId;
     EImageMoveStatus imageMoveStatus;
@@ -26,5 +27,7 @@ public class ImageQueueListDto {
     Integer serviceRequestId;
     List<String> studies;
     Integer transcribedServiceRequestId;
+    String studyImageUID;
+
 
 }

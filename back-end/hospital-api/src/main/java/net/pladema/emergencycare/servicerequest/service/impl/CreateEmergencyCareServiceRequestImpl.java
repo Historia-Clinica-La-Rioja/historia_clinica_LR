@@ -39,6 +39,9 @@ public class CreateEmergencyCareServiceRequestImpl implements CreateEmergencyCar
 				.medicalCoverageId(extendedServiceRequestBo.getMedicalCoverageId())
 				.associatedSourceId(episodeId)
 				.observations(extendedServiceRequestBo.getObservations())
+				.studyTypeId(extendedServiceRequestBo.getStudyTypeId())
+				.requiresTransfer(extendedServiceRequestBo.getRequiresTransfer())
+				.deferredDate(extendedServiceRequestBo.getDeferredDate())
 				.build();
 	}
 

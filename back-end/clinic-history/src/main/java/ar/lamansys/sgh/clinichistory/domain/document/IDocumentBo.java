@@ -1,19 +1,8 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
-import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EDocumentStatus;
+import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
@@ -26,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IpsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
@@ -34,8 +24,17 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.shared.domain.general.AddressBo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public interface IDocumentBo {
 
@@ -109,6 +108,10 @@ public interface IDocumentBo {
         return null;
     }
 
+	default Integer getClinicalSpecialtySectorId() {
+		return null;
+	}
+
     default Integer getMedicalCoverageId() {
         return null;
     }
@@ -125,8 +128,8 @@ public interface IDocumentBo {
 
     void setId(Long id);
 
-    default String getDocumentStatusId(){
-        return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    default String getDocumentStatusId() {
+        return EDocumentStatus.getDocumentStatusId(this);
     }
 
     Integer getPatientId();
@@ -192,37 +195,9 @@ public interface IDocumentBo {
         return false;
     }
 
-    default AnestheticHistoryBo getAnestheticHistory() { return null; }
-
-    default List<AnestheticSubstanceBo> getPreMedications() { return Collections.emptyList(); }
-
-    default List<HealthConditionBo> getHistories() { return Collections.emptyList(); }
-
-    default ProcedureDescriptionBo getProcedureDescription() { return null; }
-
-    default List<AnestheticSubstanceBo> getAnestheticPlans() { return Collections.emptyList(); }
-
-    default List<AnalgesicTechniqueBo> getAnalgesicTechniques() { return Collections.emptyList(); }
-
-    default List<AnestheticTechniqueBo> getAnestheticTechniques() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getFluidAdministrations() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getAnestheticAgents() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getNonAnestheticDrugs() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getAntibioticProphylaxis() { return Collections.emptyList(); }
-
-    default List<MeasuringPointBo> getMeasuringPoints() { return Collections.emptyList(); }
-
-    default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
-
-    default String getAnestheticChart() { return null; }
-
 	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
 
-	default UUID getUuid() {return null;}
+	default UUID getUuid() {return UUID.randomUUID();}
 
     default Long getPreviousDocumentId() { return null; }
 
@@ -230,7 +205,42 @@ public interface IDocumentBo {
 
     default void setPreviousDocumentId(Long lastDocumentId) {}
 
-    default void setPatientInfo(PatientInfoBo patientInfo) {};
+    default void setPatientInfo(PatientInfoBo patientInfo) {}
 
-    default void setPatientId(Integer patientId) {};
+    default void setPatientId(Integer patientId) {}
+
+    default void accept(DocumentVisitor documentVisitor) {
+        documentVisitor.visit(this);
+    }
+
+    Map<String,Object> getContextMap();
+
+    void setContextMap(Map<String,Object> contextMap);
+
+    default Collection<IpsBo> getIpsComponents() { return new ArrayList<>(); }
+
+    default Collection<IpsBo> getIpsComponentsWithStatus() { return new ArrayList<>(); }
+
+    default void setEncounterId(Integer encounterId) {}
+
+    default void setDocumentSource(Short documentSource) {}
+
+    default void setDocumentType(short documentType) {}
+
+    default void setPerformedDate(LocalDateTime performedDate) {}
+
+    default void setClinicalSpecialtyId(Integer clinicalSpecialtyId) {}
+
+	default void setClinicalSpecialtySectorId(Integer clinicalSpecialtyId) {}
+
+    default void setInstitutionId(Integer institutionId) {}
+
+    default void setNotes(DocumentObservationsBo notes) {}
+
+    default void setBusinessObjectId(Integer businessObjectId) {}
+
+    default Integer getBusinessObjectId() { return null; }
+
+	default List<CompleteParameterizedFormBo> getCompleteForms() { return Collections.emptyList(); }
+    
 }

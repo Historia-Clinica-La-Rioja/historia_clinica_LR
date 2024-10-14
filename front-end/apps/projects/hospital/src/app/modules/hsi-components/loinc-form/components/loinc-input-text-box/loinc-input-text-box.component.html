@@ -1,5 +1,5 @@
 <div fxLayout="column">
-	<h3>{{title | translate}}</h3>
+	<span>{{title | translate}}</span>
 	<mat-form-field appearance="outline">
 		<textarea matInput type="text" id="text" [(value)]="_preload"
 			(input)="valueSelected.emit($event.target.value)"></textarea>

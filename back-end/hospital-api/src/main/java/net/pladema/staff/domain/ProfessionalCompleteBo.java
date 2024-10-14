@@ -22,8 +22,8 @@ public class ProfessionalCompleteBo {
     private String lastName;
 	private String nameSelfDetermination;
 	private String otherLastNames;
-
 	private List<ProfessionBo> professions;
+
 	public ProfessionalCompleteBo(Integer id, Integer personId, String firstName, String middleNames, String lastName, String nameSelfDetermination, String otherLastNames){
 		this.id = id;
 		this.personId = personId;

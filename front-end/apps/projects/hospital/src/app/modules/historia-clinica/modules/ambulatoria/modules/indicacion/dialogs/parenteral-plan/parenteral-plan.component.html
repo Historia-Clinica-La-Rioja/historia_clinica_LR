@@ -12,7 +12,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label>{{'indicacion.internment-card.dialogs.parenteral-plan.add-snomed-concept.SEARCH' | translate | titlecase}}</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" readonly>
-				<button id="clear" mat-button matSuffix color="warn" mat-icon-button *ngIf="searchSnomedConcept.salineForm.value.snomed"
+				<button id="clear"  matSuffix color="warn" mat-icon-button *ngIf="searchSnomedConcept.salineForm.value.snomed"
 						(click)="returnToMostFrequentDialog()">
 					<mat-icon>close</mat-icon>
 				</button>
@@ -35,7 +35,7 @@
 							{{via.description | translate}}
 						</mat-option>
 					</mat-select>
-					<button id="clear" mat-button matSuffix type="button" color="warn" mat-icon-button *ngIf="parenteralPlanForm.value.via"
+					<button id="clear"  matSuffix type="button" color="warn" mat-icon-button *ngIf="parenteralPlanForm.value.via"
 							(click)="clear(parenteralPlanForm.controls.via); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
@@ -96,7 +96,7 @@
 							{{hour | translate}}hs.
 						</mat-option>
 					</mat-select>
-					<button id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button *ngIf="parenteralPlanForm.controls.startTime.value"
+					<button id="clear" type="button"  matSuffix color="warn" mat-icon-button *ngIf="parenteralPlanForm.controls.startTime.value"
 							(click)="clear(parenteralPlanForm.controls.startTime); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
 					</button>
@@ -123,7 +123,7 @@
 									<mat-error *ngIf="hasError(searchSnomedConcept.pharmacos.at(i), 'required', 'dose')" [translate]="'forms.REQUIRED'"></mat-error>
 								</mat-form-field>
 								<span> {{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate }}.</span>
-								<button mat-button type="button" color="warn" (click)="searchSnomedConcept.removePharmaco(i)">
+								<button mat-icon-button type="button" color="warn" (click)="searchSnomedConcept.removePharmaco(i)">
 									<mat-icon color="warn">delete</mat-icon>
 								</button>
 							</div>
@@ -175,3 +175,4 @@
 		</app-concepts-search>
 	</ng-container>
 </ng-template>
+

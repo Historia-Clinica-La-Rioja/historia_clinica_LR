@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Anesthetic Report</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <!-- Bootstrap core CSS -->
-    <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
-    <style>
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: auto;
-        }
-
-        .img-container {
-            width: 700px;
-            height: 420px;
-        }
-    </style>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-<br/>
-<div class="img-container">
-    <img th:src="${chart != null ? chart : _ }" alt=""/>
-</div>
-<br/>
+<table>
+    <thead><tr><td>
+        <div class="header-space">&nbsp;</div>
+    </td></tr></thead>
+    <tbody><tr><td>
+        <div>
+            <div th:replace="fragments/general.html :: header"></div>
+            <div th:replace="fragments/general.html :: encounterData(type='Internación')"></div>
+            <div th:replace="fragments/general.html :: professionalData"></div>
+            <div th:replace="fragments/general.html :: documentTypeTitle(title='Parte anestésico')"></div>
+            <div th:replace="fragments/general.html :: mainDiagnosis(message='Diagnóstico principal')"></div>
+            <div th:replace="fragments/general.html :: diagnosis(message='Diagnósticos secundarios')"></div>
+            <div th:replace="fragments/general.html :: surgeryProcedures(message='Cirugía propuesta')"></div>
+            <div th:replace="fragments/general.html :: antropometicDataAnestheticReport(message='Datos antropométricos')"></div>
+            <div th:replace="fragments/general.html :: anestheticClinicalEvaluation(message='Evaluación clínica anestésica')"></div>
+            <div th:replace="fragments/general.html :: anestheticHistory(message='Antecedentes anestésicos')"></div>
+            <div th:replace="fragments/general.html :: medications(title='Medicación habitual')"></div>
+            <div th:replace="fragments/general.html :: anestheticSubstance(message='Premedicación e ingesta alimentaria', anestheticSubstances=${preMedications})"></div>
+            <div th:replace="fragments/general.html :: foodInTake(message='Premedicación e ingesta alimentaria')"></div>
+            <div th:replace="fragments/general.html :: histories(message='Antecedentes')"></div>
+            <div th:replace="fragments/general.html :: anestheticSubstance(message='Plan anestésico', anestheticSubstances=${anestheticPlans})"></div>
+            <div th:replace="fragments/general.html :: analgesicTechnique(message='Técnica analgésica')"></div>
+            <div th:replace="fragments/general.html :: anestheticTechnique(message='Técnica anestésica')"></div>
+            <div th:replace="fragments/general.html :: anestheticSubstance(message='Administración de líquidos', anestheticSubstances=${fluidAdministrations})"></div>
+            <div th:replace="fragments/general.html :: anestheticSubstance(message='Agentes anestésicos', anestheticSubstances=${anestheticAgents})"></div>
+            <div th:replace="fragments/general.html :: anestheticSubstance(message='Drogas no anestésicas', anestheticSubstances=${nonAnestheticDrugs})"></div>
+            <div th:replace="fragments/general.html :: intrasurgicalAnestheticProcedures(message='Procedimientos anestésicos intraquirúrgicos')"></div>
+            <div th:replace="fragments/general.html :: anestheticSubstance(message='Profilaxis antibiótica', anestheticSubstances=${antibioticProphylaxis})"></div>
+            <div th:replace="fragments/general.html :: postAnesthesiaStatus(message='Estado al finalizar la anestesia')"></div>
+            <div th:replace="fragments/general.html :: vitalSignsDuringAnesthesia(message='Signos vitales durante la anestesia', chartData=${anestheticChart})"></div>
+        </div>
+    </td></tr></tbody>
+    <tfoot><tr><td>
+        <div class="footer-space">&nbsp;</div>
+    </td></tr></tfoot>
+</table>
 </body>
-<footer class="footer-dark">
+<footer>
+    <div th:replace="fragments/general.html :: footer"></div>
 </footer>
 </html>

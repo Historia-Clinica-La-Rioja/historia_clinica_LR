@@ -68,8 +68,7 @@ public class FetchAnnexReportByEncounterTest {
 		String refsetCode = "refset";
 		Integer institutionId = 1;
 
-		when(annexReportByEncounterPublicApiPermissionsPort.canAccess(any())).thenReturn(false);
-		when(annexReportByEncounterPublicApiPermissionsPort.findInstitutionId(any())).thenReturn(Optional.of(institutionId));
+		when(annexReportByEncounterPublicApiPermissionsPort.canAccess()).thenReturn(false);
 
 		assertThrows(
 				FetchAnnexReportByEncounterAccessDeniedException.class,
@@ -86,8 +85,7 @@ public class FetchAnnexReportByEncounterTest {
 		String refsetCode = "refset";
 		Integer institutionId = 1;
 
-		when(annexReportByEncounterPublicApiPermissionsPort.canAccess(any())).thenReturn(true);
-		when(annexReportByEncounterPublicApiPermissionsPort.findInstitutionId(any())).thenReturn(Optional.of(institutionId));
+		when(annexReportByEncounterPublicApiPermissionsPort.canAccess()).thenReturn(true);
 
 		when(sharedEncounterToAppointmentService.run(encounterId, sourceTypeId))
 				.thenReturn(Optional.empty());
@@ -112,8 +110,7 @@ public class FetchAnnexReportByEncounterTest {
 		 * Case 1: invalid scope
 		 */
 
-		when(annexReportByEncounterPublicApiPermissionsPort.canAccess(any())).thenReturn(true);
-		when(annexReportByEncounterPublicApiPermissionsPort.findInstitutionId(any())).thenReturn(Optional.of(institutionId));
+		when(annexReportByEncounterPublicApiPermissionsPort.canAccess()).thenReturn(true);
 		when(sharedEncounterToAppointmentService.sourceTypeSupported(any())).thenReturn(true);
 
 		assertThrows(
@@ -142,8 +139,7 @@ public class FetchAnnexReportByEncounterTest {
 		String refsetCode = "refset";
 		Integer institutionId = 1;
 
-		when(annexReportByEncounterPublicApiPermissionsPort.canAccess(any())).thenReturn(true);
-		when(annexReportByEncounterPublicApiPermissionsPort.findInstitutionId(any())).thenReturn(Optional.of(institutionId));
+		when(annexReportByEncounterPublicApiPermissionsPort.canAccess()).thenReturn(true);
 
 		when(sharedEncounterToAppointmentService.run(encounterId, sourceTypeId))
 				.thenReturn(Optional.of(appointmentId));
@@ -167,8 +163,7 @@ public class FetchAnnexReportByEncounterTest {
 		String refsetCode = "refset";
 		Integer institutionId = 1;
 
-		when(annexReportByEncounterPublicApiPermissionsPort.canAccess(any())).thenReturn(true);
-		when(annexReportByEncounterPublicApiPermissionsPort.findInstitutionId(any())).thenReturn(Optional.of(institutionId));
+		when(annexReportByEncounterPublicApiPermissionsPort.canAccess()).thenReturn(true);
 
 		when(sharedEncounterToAppointmentService.run(encounterId, sourceTypeId))
 				.thenReturn(Optional.of(appointmentId));

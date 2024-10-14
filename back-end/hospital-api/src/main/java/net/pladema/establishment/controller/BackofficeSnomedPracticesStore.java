@@ -1,15 +1,11 @@
 package net.pladema.establishment.controller;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.controller.dto.BackofficeSnowstormDto;
 import net.pladema.establishment.controller.dto.SnomedProcedureDto;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
-import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 
 import net.pladema.snowstorm.repository.VSnomedGroupConceptRepository;
 import net.pladema.snowstorm.repository.entity.VSnomedGroupConcept;

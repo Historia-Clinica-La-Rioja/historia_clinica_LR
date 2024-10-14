@@ -24,14 +24,7 @@ section {
 	text-transform: capitalize;
 }
 
-.checkbox{
-	alignment: left;
-}
-
-.mat-form-field--no-underline .mat-input-underline {
-	background-color: transparent;
-}
-
-.input-checkbox-solve-problem{
-	display: none;
+.checkbox {
+    display: flex;
+    margin-bottom: 15px;
 }

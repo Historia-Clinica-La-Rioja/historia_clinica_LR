@@ -1,14 +1,13 @@
 import { RegulationNewAppointmentData, RegulationNewAppointmentPopUpComponent } from '@access-management/dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
-import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EAppointmentModality, DiaryAvailableAppointmentsDto, ReferenceSummaryDto } from '@api-rest/api-model';
-import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DateFormat, DatePipeFormat } from '@core/utils/date.utils';
+import { dateDtoToDate, stringToDate, timeDtotoFullTimeString } from '@api-rest/mapper/date-dto.mapper';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
-import format from 'date-fns/format';
 
 @Component({
 	selector: 'app-regulation-appointment-result-view',
@@ -26,14 +25,14 @@ export class RegulationAppointmentResultViewComponent {
 	@Output() resetInformation = new EventEmitter<void>();
 
 	constructor(
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly dialog: MatDialog,
 		private readonly holidayService: HolidayCheckService,
 	) { }
 
 	assign(): void {
-		const appointmentDate = format(dateDtoToDate(this.appointment.date), DateFormat.API_DATE);
-		const appointmentHour = this.datePipe.transform(timeDtoToDate(this.appointment.hour), DatePipeFormat.MEDIUM_TIME);
+		const appointmentDate = toApiFormat(dateDtoToDate(this.appointment.date));
+		const appointmentHour = timeDtotoFullTimeString(this.appointment.hour);
 		this.holidayService.checkAvailability(appointmentDate).subscribe(isAvailable => {
 			if (isAvailable) {
 				const data: RegulationNewAppointmentData = {
@@ -58,7 +57,7 @@ export class RegulationAppointmentResultViewComponent {
 						if (result !== -1) {
 							this.resetInformation.emit();
 
-							var fullAppointmentDate = this.datePipe.transform(appointmentDate, DatePipeFormat.FULL_DATE);
+							var fullAppointmentDate = this.dateFormatPipe.transform(stringToDate(appointmentDate), 'fulldate');
 							fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 							const timeData = appointmentHour.split(":");
 

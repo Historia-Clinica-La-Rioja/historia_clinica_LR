@@ -42,10 +42,31 @@ const HierarchicalUnitParentsToReport = ({ record }) => {
     );
 } 
 
+const ClosestService = ({formData, record, ...rest}) => {
+
+    return formData.typeId !== SERVICE ?
+    (
+        <ReferenceInput {...rest}
+            label="resources.hierarchicalunits.fields.closestService"
+            filter={{institutionId: record.institutionId, typeId: SERVICE}} >
+            <AutocompleteInput allowEmpty resettable optionText="alias" optionValue="id"/>
+        </ReferenceInput>
+    ) : 
+    null
+}
+
+const WarningClosestService = ({formData, record}) => {
+    return formData.typeId !== SERVICE && record.typeId === SERVICE ? 
+    (<p style={{paddingLeft:10, marginTop:0, color:'#ff9966', fontSize: 14}}>
+        Atención: la edición del Tipo puede afectar a la configuración de Servicios Inmediatos Superiores. 
+    </p>) : null;
+}
+
 const HierarchicalUnitEdit = props => (
     <Edit {...props}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={true}/>}>
             <ReferenceInput
+                 empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin Shockrooms definidos</p>}
                 source="institutionId"
                 reference="institutions"
                 sort={{ field: 'name', order: 'ASC' }}
@@ -61,6 +82,12 @@ const HierarchicalUnitEdit = props => (
             <FormDataConsumer>
                 {formDataProps => ( <ServiceField {...formDataProps} reference="clinicalservices" source="clinicalSpecialtyId"/>)}
             </FormDataConsumer>
+            <FormDataConsumer>
+                {formDataProps => ( <WarningClosestService {...formDataProps} source="closestServiceId"/>)}
+            </FormDataConsumer>
+            <FormDataConsumer>
+                {formDataProps => ( <ClosestService {...formDataProps} reference="hierarchicalunits" source="closestServiceId"/>)}
+            </FormDataConsumer>
             <HierarchicalUnitParentsToReport/>
             <HierarchicalUnitChilds/>
             <HierarchicalUnitParents/>
@@ -68,6 +95,7 @@ const HierarchicalUnitEdit = props => (
             <HierarchicalUnitSectors/>
         </SimpleForm>
     </Edit>
+    
 );
 
 export default HierarchicalUnitEdit;

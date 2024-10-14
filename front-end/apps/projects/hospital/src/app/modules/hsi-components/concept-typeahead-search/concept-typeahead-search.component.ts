@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormControl } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, mergeMap, startWith } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
@@ -12,13 +12,11 @@ import { PresentationModule } from '@presentation/presentation.module';
 	styleUrls: ['./concept-typeahead-search.component.scss'],
 	standalone: true,
 	imports: [PresentationModule]
-
 })
-
-
 export class ConceptTypeaheadSearchComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
+	inputFocused = false;
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() debounceTime = 300;
@@ -27,13 +25,15 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 	@Input() clearButton = false;
 	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
-	@Input() preload: string = null;
+	@Input() preload: SnomedDto = null;
+	@Input() required = false;
 
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
 	myControl = new UntypedFormControl();
 	filteredOptions: Observable<any[]>;
 	opts: SnomedDto[] = [];
+	formGroup: UntypedFormGroup;
 
 	private readonly MIN_SEARCH_LENGTH = 3;
 
@@ -45,18 +45,26 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 			mergeMap(searchValue => {
 				return this.filter(searchValue || '')
 			})
-		)
+		);
 
+		this.formGroup = new UntypedFormGroup({
+			myControl: this.myControl
+		});
+
+		if (this.required) {
+			this.myControl.setValidators([Validators.required]);
+		}
 	}
+
 	ngOnInit() {
 		this.setPreload();
 	}
 
 	private filter(searchValue: string): Observable<SnomedDto[]> {
-		return this.searchConcepts(searchValue)
+		return this.searchConcepts(searchValue);
 	}
 
-	private searchConcepts(searchValue): Observable<SnomedDto[]> {
+	private searchConcepts(searchValue: string): Observable<SnomedDto[]> {
 		if (searchValue.length < this.MIN_SEARCH_LENGTH) return of(this.opts);
 		return this.opts.length ?
 			of(this.opts) :
@@ -97,21 +105,20 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 				conceptId: "",
 				id: "",
 				fsn: {
-					term: this.preload,
+					term: this.preload.pt,
 					lang: ""
 				},
 				pt: {
-					term: this.preload,
+					term: this.preload.pt,
 					lang: ""
 				}
 			}
 			this.snomedConcept = {
-				sctid: "-1",
-				pt: this.preload
+				sctid: this.preload.sctid,
+				pt: this.preload.pt
 			};
 			this.myControl.setValue(concept);
 			this.conceptSelected.emit(this.snomedConcept);
 		}
 	}
 }
-

@@ -25,6 +25,6 @@ public class CipresEstablishmentPk implements Serializable {
 	private String sisaCode;
 
 	@Column(name = "cipres_establishment_id")
-	private Integer cipresEstablishmentId;
+	private String cipresEstablishmentId;
 
 }

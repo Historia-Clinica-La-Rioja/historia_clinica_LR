@@ -10,4 +10,14 @@ public interface ActivitiesPublicApiPermissions {
 	boolean canFetchAllMedicalCoverages();
 
 	Optional<Integer> findInstitutionId(String refsetCode);
+
+	boolean canAccessActivityInfo(Integer institutionId);
+
+	boolean canAccessProcessActivityInfo(Integer institutionId);
+
+	boolean canAccessActivityByFilter(Integer institutionId);
+
+	boolean canFetchAllInstitutions();
+
+	boolean canFetchHolidays();
 }

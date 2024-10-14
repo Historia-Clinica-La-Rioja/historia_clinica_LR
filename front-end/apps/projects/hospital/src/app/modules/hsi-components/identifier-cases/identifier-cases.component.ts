@@ -52,7 +52,11 @@ export enum IDENTIFIER_CASES {
 	BED = 'Cama', 
 	HIERARCHICAL_UNIT = 'Unidad jerárquica',
 	SCOPE = 'Ambito',
-	PATIENT = 'Paciente'
+	PATIENT = 'Paciente',
+	REASON = 'Motivo',
+	EMERGENCY_CARE_TYPE = 'Tipo de guardia',
+	SHOCKROOM = 'Shockroom',
+	ROOM_V2 = 'Habitación',
 }
 
 const institution: IconLegend = {
@@ -145,6 +149,27 @@ const patient: IconLegend = {
 	legend: 'Paciente',
 }
 
+const reason: IconLegend = {
+	icon: 'announcement',
+	legend: 'Motivo',
+}
+
+const emergencyCareType: IconLegend = {
+	icon: 'add_box',
+	legend: 'Tipo de guardia',
+}
+
+const shockroom: IconLegend = {
+	icon: 'meeting_room',
+	legend: 'Shockroom',
+}
+
+const room_v2: IconLegend = {
+	icon: 'meeting_room',
+	legend: 'Habitación',
+}
+
+
 const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.INSTITUTION]: institution,
 	[IDENTIFIER_CASES.CARE_LINE]: careLine,
@@ -164,4 +189,8 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.HIERARCHICAL_UNIT]: hierarchicalUnit,
 	[IDENTIFIER_CASES.SCOPE]: scope,
 	[IDENTIFIER_CASES.PATIENT]: patient,
+	[IDENTIFIER_CASES.REASON]: reason,
+	[IDENTIFIER_CASES.EMERGENCY_CARE_TYPE]: emergencyCareType,
+	[IDENTIFIER_CASES.SHOCKROOM]: shockroom,
+	[IDENTIFIER_CASES.ROOM_V2]: room_v2
 }

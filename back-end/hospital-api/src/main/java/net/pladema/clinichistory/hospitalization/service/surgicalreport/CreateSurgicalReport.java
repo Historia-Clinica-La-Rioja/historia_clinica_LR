@@ -32,6 +32,7 @@ public class CreateSurgicalReport {
 		log.debug("Input parameter -> surgicalReport {}", surgicalReport);
 		surgicalReport.setPatientInternmentAge(internmentEpisodeService.getEntryDate(surgicalReport.getEncounterId()).toLocalDate());
 		surgicalReportValidator.assertContextValid(surgicalReport);
+		surgicalReportValidator.assertProsthesisValid(surgicalReport);
 		surgicalReportValidator.assertHasAnamnesis(surgicalReport.getEncounterId());
 		surgicalReportValidator.assertSurgicalReportValid(surgicalReport);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -39,7 +40,21 @@ public class CreateSurgicalReport {
 				.map(PatientMedicalCoverageBo::getId).orElse(null);
 		Long documentId = documentFactory.run(surgicalReport, surgicalReport.isConfirmed());
 		Long noteId = Optional.ofNullable(surgicalReport.getDescription()).map(noteService::createNote).orElse(null);
-		SurgicalReport entity = new SurgicalReport(null, surgicalReport.getPatientId(), surgicalReport.getClinicalSpecialtyId(), surgicalReport.getInstitutionId(), documentId, doctorId, false, patientMedicalCoverageId, surgicalReport.getStartDateTime(), surgicalReport.getEndDateTime(), noteId);
+		SurgicalReport entity =
+				new SurgicalReport(
+						null,
+						surgicalReport.getPatientId(),
+						surgicalReport.getClinicalSpecialtyId(),
+						surgicalReport.getInstitutionId(),
+						documentId,
+						doctorId,
+						false,
+						patientMedicalCoverageId,
+						surgicalReport.getStartDateTime(),
+						surgicalReport.getEndDateTime(),
+						noteId,
+						surgicalReport.hasProsthesis()
+				);
 		surgicalReportRepository.save(entity);
 	}
 

@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.establishment.application.rules.determineregulatedreference.DetermineRegulatedReference;
-import net.pladema.establishment.controller.dto.RoomDto;
-import net.pladema.establishment.repository.entity.Room;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

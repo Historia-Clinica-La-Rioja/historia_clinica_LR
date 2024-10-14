@@ -18,6 +18,7 @@ export class DateRangePickerComponent implements OnInit {
 	@Input() max?: Date = null;
 	@Input() dateRange: DateRange;
 	@Input() fixedRangeDays?: number;
+	@Input() isFixedOneMonth?: boolean;
 
 	@Input()
 	set disabled(disableForm: boolean) {
@@ -42,8 +43,13 @@ export class DateRangePickerComponent implements OnInit {
 
 	setAndEmitRangeForFixedDates(){
 		let endDate = new Date(this.dateRangeForm.controls.start.value);
-		endDate.setDate(endDate.getDate() + this.fixedRangeDays);
-
+		if(!this.isFixedOneMonth){
+			endDate.setDate(endDate.getDate() + this.fixedRangeDays);
+		}else{
+			endDate.setMonth(endDate.getMonth() + 1);
+			if(this.dateRangeForm.value.start.getDate() === 1)
+				endDate.setDate(endDate.getDate() - 1);
+		}
 		this.dateRangeForm.controls.end.setValue(endDate);
 		this.emitChange();
 	}
@@ -54,6 +60,11 @@ export class DateRangePickerComponent implements OnInit {
 		const start = new Date(this.dateRangeForm.controls.start.value);
 		const end = new Date(this.dateRangeForm.controls.end.value);
 		this.dateRangeChange.emit({ start, end });
+	}
+
+	delete() {
+		this.dateRangeForm.reset();
+		this.dateRangeChange.next(null);
 	}
 }
 

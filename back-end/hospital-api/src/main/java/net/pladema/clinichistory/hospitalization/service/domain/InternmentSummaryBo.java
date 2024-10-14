@@ -73,4 +73,8 @@ public class InternmentSummaryBo {
 		return (physicalDischargeDate != null) || (administrativeDischargeDate != null);
 	}
 
+    public void setLastAnestheticReport(AnestheticReportSummaryBo anestheticReportSummaryBo) {
+        this.getDocuments().setLastAnestheticReport(anestheticReportSummaryBo);
+    }
+
 }
