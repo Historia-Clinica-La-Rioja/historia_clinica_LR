@@ -18,23 +18,27 @@ import java.util.List;
 public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<DocumentFile, Long> {
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo( " +
-			"d.id, st, d.creationable.createdOn, p.firstName, p.lastName, p.otherLastNames, dt.id, dt.description, pp.firstName, pp.lastName, pp.otherLastNames) " +
-			"FROM Document d " +
-			"JOIN DocumentType dt ON (d.typeId = dt.id) " +
-			"JOIN DocumentFile df ON (d.id = df.id) " +
-			"JOIN SourceType st ON (d.sourceTypeId = st.id) " +
-			"JOIN User u ON (d.creationable.createdBy = u.id)" +
-			"JOIN UserPerson up ON (u.id = up.pk.userId) " +
-			"JOIN Person p ON (up.pk.personId = p.id) " +
-			"JOIN Patient pa ON (d.patientId = pa.id) " +
-			"JOIN Person pp ON (pa.personId = pp.id) " +
-			"WHERE d.institutionId = :institutionId " +
-			"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
-			"AND d.typeId != '" + DocumentType.DIGITAL_RECIPE + "' " +
-			"AND d.creationable.createdBy = :userId " +
-			"AND df.signatureStatusId != -1 " +
-			"AND df.signatureStatusId != 3")
+	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo( " +
+            "d.id, st, d.creationable.createdOn, p.firstName, p.lastName, p.otherLastNames, dt.id, dt.description, pp.firstName, pp.lastName, pp.otherLastNames) " +
+            "FROM Document d " +
+            "JOIN DocumentType dt ON (d.typeId = dt.id) " +
+            "JOIN DocumentFile df ON (d.id = df.id) " +
+            "JOIN SourceType st ON (d.sourceTypeId = st.id) " +
+            "JOIN User u ON (d.creationable.createdBy = u.id)" +
+            "JOIN UserPerson up ON (u.id = up.pk.userId) " +
+            "JOIN Person p ON (up.pk.personId = p.id) " +
+            "JOIN Patient pa ON (d.patientId = pa.id) " +
+            "JOIN Person pp ON (pa.personId = pp.id) " +
+            "WHERE d.institutionId = :institutionId " +
+            "AND d.statusId = '" + DocumentStatus.FINAL + "' " +
+            "AND d.typeId != '" + DocumentType.DIGITAL_RECIPE + "' " +
+            "AND d.typeId != '" + DocumentType.SURGICAL_HOSPITALIZATION_REPORT + "' " +
+            "AND d.typeId != '" + DocumentType.EMERGENCY_SURGICAL_REPORT + "' " +
+            "AND d.typeId != '" + DocumentType.ANESTHETIC_REPORT + "' " +
+            "AND d.typeId != '" + DocumentType.NURSING_EMERGENCY_CARE_EVOLUTION + "' " +
+            "AND d.creationable.createdBy = :userId " +
+            "AND df.signatureStatusId != -1 " +
+            "AND df.signatureStatusId != 3")
 	Page<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(@Param("userId") Integer userId,
 																	   @Param("institutionId") Integer institutionId,
 																	   Pageable pageable);
