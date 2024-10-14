@@ -5274,6 +5274,12 @@ export interface StudyOrderBasicPatientDto {
     otherLastNames: string;
 }
 
+export interface StudyOrderPatientLocationDto {
+    bedNumber: string;
+    roomNumber: string;
+    sector: string;
+}
+
 export interface StudyOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;
