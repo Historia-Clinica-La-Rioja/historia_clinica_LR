@@ -53,7 +53,7 @@
 							translate}}
 						</span>
 						<mat-form-field appearance="outline" class="full-width">
-							<mat-select formControlName="healthProblem" id="healthproblem">
+							<mat-select formControlName="healthProblem" id="healthproblem"  placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.HEALTH_PROBLEM_PLACEHOLDER' | translate}}">
 								<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem">
 									{{ healthProblem.description | translate }}
 								</mat-option>

@@ -898,6 +898,7 @@
                     "CATEGORY": "Categoría del estudio",
                     "SEARCH_STUDY": "Buscar estudio...",
                     "HEALTH_PROBLEM": "Problema asociado",
+					"HEALTH_PROBLEM_PLACEHOLDER": "Seleccione problema asociado",
                     "NOTES": "Observaciones",
                     "NEXT_BUTTON": "Agregar",
                     "TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
