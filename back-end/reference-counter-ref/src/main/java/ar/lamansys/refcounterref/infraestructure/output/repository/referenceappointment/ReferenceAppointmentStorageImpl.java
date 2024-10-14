@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStorage {
 
 	private static final Short APPOINTMENT_CANCELLED_STATE = 4;
+	
+	private static final Short APPOINTMENT_ABSENT_STATE = 3;
 
 	private final ReferenceAppointmentRepository referenceAppointmentRepository;
 
@@ -44,6 +46,12 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 		return referenceAppointmentBos.stream()
 				.collect(Collectors.groupingBy(ReferenceAppointmentBo::getReferenceId,
 						Collectors.mapping(ReferenceAppointmentBo::getAppointmentId, Collectors.toList())));
+	}
+
+	@Override
+	public boolean referenceHasAppointment(Integer referenceId) {
+		var appointmentStates = List.of(APPOINTMENT_CANCELLED_STATE, APPOINTMENT_ABSENT_STATE);
+		return referenceAppointmentRepository.referenceHasAppointment(referenceId, appointmentStates);
 	}
 
 }

@@ -45,8 +45,8 @@ public class ModifyReferenceByManagerRole {
 			throw new ModifyReferenceException(ModifyReferenceExceptionEnum.CLOSED_REFERENCE, "No es posible modificar la referencia porque la misma se encuentra cerrada");
 
 		if (institutionId != null) {
-			var appointments = referenceAppointmentStorage.getReferenceAppointmentsIdsWithoutCancelledStateId(Collections.singletonList(referenceId));
-			if (!appointments.isEmpty())
+			var referenceHasAppointment = referenceAppointmentStorage.referenceHasAppointment(referenceId);
+			if (referenceHasAppointment)
 				throw new ModifyReferenceException(ModifyReferenceExceptionEnum.HAS_APPOINTMENT, "No es posible modificar la institucion de la referencia porque la misma tiene un turno asignado");
 		}
 	}

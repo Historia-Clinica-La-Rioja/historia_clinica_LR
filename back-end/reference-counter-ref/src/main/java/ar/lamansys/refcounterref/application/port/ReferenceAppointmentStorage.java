@@ -11,4 +11,6 @@ public interface ReferenceAppointmentStorage {
 
 	Map<Integer, List<Integer>>  getReferenceAppointmentsIds(List<Integer> referenceId);
 
+	boolean referenceHasAppointment(Integer referenceId);
+
 }
