@@ -48,7 +48,7 @@
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_PROCEDURES_TITLE' | translate"
 			icon="library_add" [isEmpty]="createOrderService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
-				<app-titled-content-card 
+				<app-titled-content-card
 					*ngIf="!otherProceduresService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
 
@@ -75,6 +75,24 @@
 					</button>
 				</div>
 			</div>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="studies" *ngIf="isEnabledStudiesFF"
+			[title]="'ambulatoria.paciente.nueva-consulta.studies.TITLE' | translate" icon="library_add"
+			[isEmpty]="createOrderService.isEmpty()">
+
+			<app-titled-content-card *ngIf="!createOrderService.isEmpty()"
+				title="{{ 'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' }}">
+				<app-procedure-list [service]="createOrderService"> </app-procedure-list>
+			</app-titled-content-card>
+
+			<div>
+				<button mat-button type="button" id="add-study-button" color="primary" class="add-button"
+					(click)="openStudiesComponent()">
+					+ {{ 'ambulatoria.paciente.nueva-consulta.studies.buttons.ADD' | translate }}
+				</button>
+			</div>
+
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="other_diagnoses"
