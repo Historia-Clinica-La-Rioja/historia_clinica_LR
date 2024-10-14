@@ -9,7 +9,6 @@ import { ProcedureParameterUnitOfMeasureFullSummaryDto, SnomedDto } from '@api-r
 import { NumberWithUnit } from '../loinc-input-number/loinc-input-number.component';
 
 
-
 @Component({
   selector: 'app-observation-input',
   templateUrl: './observation-input.component.html',
@@ -48,6 +47,17 @@ export class ObservationInputComponent implements OnInit {
 			procedureParameterId: procedureParameter.id,
 			value: $event.value,
 			unitOfMeasureId: $event.unitOfMeasureId,
+		});
+	}
+
+	emitValueSnomed($event: SnomedDto) {
+		const procedureParameter = this.loincInput.param;
+		this.valueChange.emit({
+			procedureParameterId: procedureParameter.id,
+			value: null,
+			 unitOfMeasureId: null,
+			snomedPt: $event.pt,
+		 	snomedSctid: $event.sctid
 		});
 	}
 

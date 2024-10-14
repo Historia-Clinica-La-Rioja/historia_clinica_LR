@@ -1,24 +1,24 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
 
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentSearchQuery;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentSearchVo;
 import ar.lamansys.sgx.shared.repositories.QueryPart;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Repository
 public class DocumentRepositoryCustomImpl implements DocumentRepositoryCustom {
 
     private final EntityManager entityManager;
 
-    public DocumentRepositoryCustomImpl(EntityManager entityManager){
-        super();
-        this.entityManager = entityManager;
-    }
-
-    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     @Override
     public <T extends DocumentSearchQuery> List<DocumentSearchVo> doHistoricSearch(Integer internmentEpisodeId, T structuredQuery) {
         QueryPart queryPart = new QueryPart(

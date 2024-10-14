@@ -73,7 +73,8 @@ public class DiaryAvailableAppointmentsSearchController {
 	}
 
 	@GetMapping("/protected-quantity")
-	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Integer> getAvailableProtectedAppointmentsQuantity(@PathVariable(name = "institutionId") Integer institutionId,
 																			 @RequestParam Integer careLineId,
 																			 @RequestParam Integer departmentId,
@@ -91,7 +92,8 @@ public class DiaryAvailableAppointmentsSearchController {
 	}
 
 	@GetMapping("/quantity/by-reference-filter")
-	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Integer> getAvailableAppointmentsQuantity(@PathVariable(name = "institutionId") Integer institutionId,
 																	@RequestParam Integer institutionDestinationId,
 																	@RequestParam(value="clinicalSpecialtyIds", required = false) List<Integer> clinicalSpecialtyIds,
@@ -107,7 +109,8 @@ public class DiaryAvailableAppointmentsSearchController {
 	}
 
 	@GetMapping("/quantity/by-careline-diaries")
-	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Integer> getAvailableAppointmentsQuantityByCareLineDiaries(@PathVariable(name = "institutionId") Integer institutionId,
 																					@RequestParam Integer institutionDestinationId,
 																					@RequestParam Integer careLineId,

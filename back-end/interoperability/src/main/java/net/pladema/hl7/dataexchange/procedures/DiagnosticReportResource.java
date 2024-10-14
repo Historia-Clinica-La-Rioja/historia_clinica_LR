@@ -11,7 +11,6 @@ import net.pladema.hl7.dataexchange.model.domain.CoverageVo;
 import net.pladema.hl7.dataexchange.model.domain.DiagnosticReportVo;
 import net.pladema.hl7.dataexchange.model.domain.ObservationVo;
 import net.pladema.hl7.dataexchange.model.domain.PatientVo;
-import net.pladema.hl7.dataexchange.model.domain.PractitionerVo;
 import net.pladema.hl7.dataexchange.model.domain.ServiceRequestVo;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 

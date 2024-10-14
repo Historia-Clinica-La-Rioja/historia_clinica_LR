@@ -1,6 +1,6 @@
 package net.pladema.establishment.repository;
 
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
 import org.springframework.data.jpa.repository.JpaRepository;

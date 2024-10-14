@@ -25,5 +25,12 @@ public class PatientSearch {
 		this.ranking = ranking;
 		this.nameSelfDetermination = nameSelfDetermination;
 	}
-	
+
+	public PatientSearch(Person person, Integer idPatient, Boolean activo, String nameSelfDetermination) {
+		this.person = person;
+		this.idPatient = idPatient;
+		this.activo = activo;
+		this.nameSelfDetermination = nameSelfDetermination;
+	}
+
 }

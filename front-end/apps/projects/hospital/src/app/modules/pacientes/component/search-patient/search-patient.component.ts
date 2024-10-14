@@ -7,14 +7,13 @@ import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import {getError, hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { PatientBasicData } from '@presentation/utils/patient.utils';
-import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { catchError, forkJoin, Observable, of, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
-const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_SEARCH = 'pacientes';
 
 @Component({
 	selector: 'app-search-patient',
@@ -47,7 +46,6 @@ export class SearchPatientComponent implements OnInit {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
-		private readonly mapperService: MapperService,
 		private readonly router: Router,
 		private readonly contextService: ContextService
 	) {	}
@@ -136,10 +134,22 @@ export class SearchPatientComponent implements OnInit {
 
 		forkJoin([basicPatientDto$, photo$])
 			.subscribe(([basicPatientDto, photo]) => {
-				this.cardPatient = {
-					basicData: this.mapperService.toPatientBasicData(basicPatientDto),
-					photo
-				};
+				const patientBasicData = {
+                    id: basicPatientDto.id,
+                    firstName: basicPatientDto.person?.firstName,
+                    middleNames: basicPatientDto.person?.middleNames,
+                    lastName: basicPatientDto.person?.lastName,
+                    otherLastNames: basicPatientDto.person?.otherLastNames,
+                    gender: basicPatientDto.person?.gender?.description,
+                    age: basicPatientDto.person?.age,
+                    nameSelfDetermination: basicPatientDto.person?.nameSelfDetermination,
+                    selfPerceivedGender: basicPatientDto.person?.selfPerceivedGender,
+                    personAge: basicPatientDto.person?.personAge
+                }
+                this.cardPatient = {
+                    basicData: patientBasicData,
+                    photo
+                };
 
 				this.foundPatient = {
 					basicData: basicPatientDto,

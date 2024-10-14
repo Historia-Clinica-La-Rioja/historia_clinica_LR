@@ -42,7 +42,7 @@ const routes: Routes = [
 			{
 				path: 'reportes',
 				loadChildren: () => import('../reportes/reportes.module').then(m => m.ReportesModule),
-				canActivate: [FeatureFlagGuard],
+				canActivate: [ FeatureFlagGuard ],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
 			{
@@ -73,7 +73,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'firma-digital/documentos',
-				loadChildren: () => import('../digital-signature/digital-signature.module').then(m => m.DigitalSignatureModule),
+				loadChildren: () => import('../documents-signature/modules/digital-signature/digital-signature.module').then(m => m.DigitalSignatureModule),
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_FIRMA_DIGITAL }
 			},
@@ -100,7 +100,7 @@ const routes: Routes = [
 			allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRATIVO,
 			ERole.ENFERMERO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 			ERole.ADMINISTRADOR_DE_CAMAS, ERole.PERSONAL_DE_IMAGENES, ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_FARMACIA, ERole.PERSONAL_DE_ESTADISTICA,
-			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR, ERole.AUDITOR_MPI, ERole.TECNICO,
+			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR, ERole.AUDITOR_MPI, ERole.TECNICO, ERole.INDEXADOR,
 			ERole.PERSONAL_DE_LEGALES, ERole.INFORMADOR, ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE, ERole.ABORDAJE_VIOLENCIAS]
 		},
 

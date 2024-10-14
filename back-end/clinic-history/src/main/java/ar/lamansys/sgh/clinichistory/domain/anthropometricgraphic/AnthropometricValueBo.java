@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic;
 
-import ar.lamansys.sgh.clinichistory.domain.hce.HCEClinicalObservationBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

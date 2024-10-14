@@ -12,7 +12,8 @@ import {
     SimpleForm,
     TextField,
     TextInput,
-    BooleanInput
+    BooleanInput,
+    AutocompleteInput
 } from 'react-admin';
 import {
     SgxDateField,
@@ -73,7 +74,7 @@ const Sector = ({ formData, ...rest }) => {
             sort={{ field: 'description', order: 'ASC' }}
             filter={{institutionId: formData.institutionId}}
         >
-            <SelectInput optionText="description" optionValue="id" />
+            <AutocompleteInput optionText="description" optionValue="id" />
         </ReferenceInput>);
 };
 
@@ -119,7 +120,7 @@ const SectorEdit = props => (
                 reference="sectors"
                 target= { "sectorId" }
                 sort={{ field: 'description', order: 'DESC' }}
-                filter={{ deleted: false }}
+                perPage={100}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
@@ -138,6 +139,7 @@ const SectorEdit = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
                 filter={{ deleted: false }}
+                perPage={100}
             >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
@@ -152,6 +154,7 @@ const SectorEdit = props => (
                 reference="orchestrator"
                 target="sectorId"
                 sort={{ field: 'name', order: 'DESC' }}
+                perPage={100}
                 >
                 <Datagrid rowClick={UserIsAdmin()?"show":""}>
                     <TextField source="name"/>
@@ -168,6 +171,7 @@ const SectorEdit = props => (
                 reference="equipment"
                 target="sectorId"
                 sort={{ field: 'aeTitle', order: 'DESC' }}
+                perPage={100}
             >
                 <Datagrid rowClick={UserIsAdmin()?"show":""}>
                     <TextField source="name" />
@@ -195,7 +199,9 @@ const SectorEdit = props => (
                 addLabel={false}
                 reference="rooms"
                 target="sectorId"
-                sort={{ field: 'description', order: 'DESC' }}>
+                sort={{ field: 'description', order: 'DESC' }}
+                perPage={100}
+            >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin habitaciones definidas</p>}>
                     <TextField source="roomNumber" />
@@ -214,6 +220,7 @@ const SectorEdit = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
                 filter={{ deleted: false }}
+                perPage={100}
             >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin Shockrooms definidos</p>}>

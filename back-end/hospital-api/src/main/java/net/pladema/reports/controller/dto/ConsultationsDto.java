@@ -1,11 +1,11 @@
 package net.pladema.reports.controller.dto;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class ConsultationsDto implements Serializable {
 
 	private Long documentId;
 
-	private LocalDate consultationDate;
+	private DateTimeDto consultationDate;
 
 	private String specialty;
 

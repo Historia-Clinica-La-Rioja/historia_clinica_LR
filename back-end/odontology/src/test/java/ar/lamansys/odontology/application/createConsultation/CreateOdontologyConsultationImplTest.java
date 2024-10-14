@@ -20,16 +20,20 @@ import ar.lamansys.odontology.domain.consultation.ConsultationMedicationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationPersonalHistoryBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationReasonBo;
+import ar.lamansys.odontology.domain.consultation.CreateOdontologyConsultationServiceRequestBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -89,6 +93,12 @@ class CreateOdontologyConsultationImplTest {
     @Mock
     private Publisher publisher;
 
+    @Mock
+    private SharedCreateConsultationServiceRequest sharedCreateConsultationServiceRequest;
+
+    @Mock
+    private SharedPatientPort sharedPatientPort;
+
     @BeforeEach
     void setUp() {
         this.createOdontologyConsultation = new CreateOdontologyConsultationImpl(diagnosticStorage,
@@ -101,13 +111,15 @@ class CreateOdontologyConsultationImplTest {
                 sharedAppointmentPort, cpoCeoIndicesCalculator,
                 getToothSurfacesService, odontologyAppointmentStorage,
                 getToothService, publisher,
-				sharedReferenceCounterReference);
+				sharedReferenceCounterReference,
+				sharedCreateConsultationServiceRequest,
+				sharedPatientPort);
     }
 
     @Test
     void shouldThrowErrorWhenConsultationIsNull() {
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                        createOdontologyConsultation.run(null));
+                        createOdontologyConsultation.run(null, null));
 
         String expectedMessage = "La información de la consulta es obligatoria";
         List<String> actualMessages = exception.getMessages();
@@ -128,7 +140,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, null));
 
         String expectedMessage = "El id de la institución es obligatorio";
         List<String> actualMessages = exception.getMessages();
@@ -139,6 +151,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenPatientIdIsNull() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -149,7 +162,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setClinicalSpecialtyId(clinicalSpecialtyId);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El id del paciente es obligatorio";
         List<String> actualMessages = exception.getMessages();
@@ -160,6 +173,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenDiagnosticIsNotFound() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -203,7 +217,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDentalActions(dentalDiagnosticBos);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El diagnóstico con ID de Snomed: '" + sctidNotFound +
                 "' y término: '" + ptNotFound + "' no es un diagnóstico dental aplicable";
@@ -215,6 +229,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenDiagnosticNotApplicableToToothIsAppliedToTooth() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -250,7 +265,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDentalActions(dentalDiagnostics);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El diagnóstico con ID de Snomed: '" + diagnosticSctid +
                 "' y término: '" + diagnosticPt + "' no es aplicable a pieza dental";
@@ -262,6 +277,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenDiagnosticNotApplicableToSurfaceIsAppliedToSurface() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -297,7 +313,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDentalActions(dentalDiagnostics);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El diagnóstico con ID de Snomed: '" + diagnosticSctid +
                 "' y término: '" + diagnosticPt + "' no es aplicable a cara dental";
@@ -309,6 +325,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenProcedureIsNotFound() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -353,7 +370,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDentalActions(dentalProcedures);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El procedimiento con ID de Snomed: '" + sctidNotFound +
                 "' y término: '" + ptNotFound + "' no es un procedimiento dental aplicable";
@@ -366,6 +383,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenProcedureNotApplicableToToothIsAppliedToTooth() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -403,7 +421,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDentalActions(dentalProcedures);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El procedimiento con ID de Snomed: '" + sctidNotApplicable +
                 "' y término: '" + ptNotApplicable + "' no es aplicable a pieza dental";
@@ -415,6 +433,7 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenProcedureNotApplicableToSurfaceIsAppliedToSurface() {
         Integer clinicalSpecialtyId = 255;
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(clinicalSpecialtyId, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -453,7 +472,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDentalActions(dentalProcedures);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El procedimiento con ID de Snomed: '" + sctidNotApplicable +
                 "' y término: '" + ptNotApplicable + "' no es aplicable a cara dental";
@@ -463,6 +482,7 @@ class CreateOdontologyConsultationImplTest {
 
     @Test
     void shouldThrowErrorWhenDoctorIsNotFound() {
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.empty());
 
@@ -472,7 +492,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setClinicalSpecialtyId(255);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El identificador del profesional es inválido";
         List<String> actualMessages = exception.getMessages();
@@ -482,6 +502,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenDoctorDoesNotHaveSpecialty() {
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(255, "Especialidad 1"));
         clinicalSpecialties.add(new ClinicalSpecialtyBo(156, "Especialidad 2"));
         when(odontologyDoctorStorage.getDoctorInfo())
@@ -493,7 +514,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setClinicalSpecialtyId(1000);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El doctor no posee la especialidad indicada";
         List<String> actualMessages = exception.getMessages();
@@ -503,6 +524,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenClinicalSpecialtyIsNull() {
         List<ClinicalSpecialtyBo> clinicalSpecialties = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
         clinicalSpecialties.add(new ClinicalSpecialtyBo(255, "Especialidad 1"));
         when(odontologyDoctorStorage.getDoctorInfo())
                 .thenReturn(Optional.of(new DoctorInfoBo(5, clinicalSpecialties)));
@@ -513,7 +535,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setClinicalSpecialtyId(null);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "El id de especialidad es obligatorio";
         List<String> actualMessages = exception.getMessages();
@@ -525,6 +547,7 @@ class CreateOdontologyConsultationImplTest {
         ConsultationBo consultation = mockBasicConsultation();
 
         List<ConsultationReasonBo> reasons = new ArrayList<>();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         ConsultationReasonBo reason1 = new ConsultationReasonBo();
         reason1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
@@ -541,7 +564,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setReasons(reasons);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "Motivos repetidos";
         List<String> actualMessages = exception.getMessages();
@@ -551,6 +574,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenThereAreRepeatedPersonalHistories() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories = new ReferableItemBo<>();
 
@@ -569,7 +593,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setPersonalHistories(personalHistories);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "Antecedentes personales repetidos";
         List<String> actualMessages = exception.getMessages();
@@ -579,6 +603,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenThereAreRepeatedAllergies() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         List<ConsultationAllergyBo> allergies = new ArrayList<>();
 
@@ -599,7 +624,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setAllergies(referableItemBo);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "Alergias repetidas";
         List<String> actualMessages = exception.getMessages();
@@ -609,6 +634,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenThereAreRepeatedDiagnostics() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         List<ConsultationDiagnosticBo> diagnostics = new ArrayList<>();
 
@@ -627,7 +653,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setDiagnostics(diagnostics);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "Diagnósticos repetidos";
         List<String> actualMessages = exception.getMessages();
@@ -637,6 +663,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenThereAreRepeatedProcedures() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         List<ConsultationProcedureBo> procedures = new ArrayList<>();
 
@@ -655,7 +682,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setProcedures(procedures);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "Procedimientos repetidos";
         List<String> actualMessages = exception.getMessages();
@@ -665,6 +692,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenThereAreRepeatedMedications() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         List<ConsultationMedicationBo> medications = new ArrayList<>();
 
@@ -683,7 +711,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setMedications(medications);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "Medicaciones repetidas";
         List<String> actualMessages = exception.getMessages();
@@ -693,6 +721,7 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorWhenThereAreMultipleTypesOfRepeatedConcepts() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         List<ConsultationMedicationBo> medications = new ArrayList<>();
         ConsultationMedicationBo medication1 = new ConsultationMedicationBo();
@@ -752,7 +781,7 @@ class CreateOdontologyConsultationImplTest {
         consultation.setReasons(reasons);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         assertTrue(exception.getMessages().containsAll(List.of("Medicaciones repetidas",
                 "Antecedentes personales repetidos", "Alergias repetidas", "Motivos repetidos",
@@ -762,12 +791,13 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorsWhenPermanentTeethQuantityIsNegative() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         consultation.setPermanentTeethPresent(-1);
         consultation.setTemporaryTeethPresent(15);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "La cantidad de dientes permanentes presentes debe estar entre 0 y 99";
         List<String> actualMessages = exception.getMessages();
@@ -777,12 +807,13 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorsWhenPermanentTeethQuantityIsMoreThan99() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         consultation.setPermanentTeethPresent(100);
         consultation.setTemporaryTeethPresent(15);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "La cantidad de dientes permanentes presentes debe estar entre 0 y 99";
         List<String> actualMessages = exception.getMessages();
@@ -792,12 +823,13 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorsWhenTemporaryTeethQuantityIsNegative() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         consultation.setPermanentTeethPresent(28);
         consultation.setTemporaryTeethPresent(-1);
 
         CreateConsultationException exception3 = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "La cantidad de dientes temporarios presentes debe estar entre 0 y 99";
         List<String> actualMessages = exception3.getMessages();
@@ -807,12 +839,13 @@ class CreateOdontologyConsultationImplTest {
     @Test
     void shouldThrowErrorsWhenTemporaryTeethQuantityIsMoreThan99() {
         ConsultationBo consultation = mockBasicConsultation();
+		List<CreateOdontologyConsultationServiceRequestBo> consultationServiceRequestsBo = Collections.emptyList();
 
         consultation.setPermanentTeethPresent(28);
         consultation.setTemporaryTeethPresent(100);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
-                createOdontologyConsultation.run(consultation));
+                createOdontologyConsultation.run(consultation, consultationServiceRequestsBo));
 
         String expectedMessage = "La cantidad de dientes temporarios presentes debe estar entre 0 y 99";
         List<String> actualMessages = exception.getMessages();

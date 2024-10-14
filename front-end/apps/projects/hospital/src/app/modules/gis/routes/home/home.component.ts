@@ -13,6 +13,7 @@ import { finalize, forkJoin, map } from 'rxjs';
 import { InstitutionDescription } from '../../components/institution-description/institution-description.component';
 import { transformCoordinates } from '../../constants/coordinates.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { GisLayersService } from '../../services/gis-layers.service';
 
 interface InstitutionAddress {
     stateId: FormControl<number>;
@@ -23,8 +24,9 @@ interface InstitutionAddress {
 	coordinates: FormControl<string>;
 }
 
-export const INSTITUTION_ADDRESS_STEP = 0;
-const MAP_POSITION_INDEX = 1;
+const INSTITUTION_ADDRESS_STEP = 0;
+const GEOPOSITION_STEP = 1;
+const RESPONSABILITY_AREA_STEP = 2;
 
 @Component({
 	selector: 'app-home',
@@ -56,21 +58,31 @@ export class HomeComponent implements OnInit {
 	coordinatesCurrentValue: GlobalCoordinatesDto;
 
 	showMap = false;
-	isFirstTime = false;
+	editMode = false;
+	stepperMode = false;
 	isLoading = false;
 
 	currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+	RESPONSABILITY_AREA_STEP = RESPONSABILITY_AREA_STEP;
+	GEOPOSITION_STEP = GEOPOSITION_STEP;
+
+	handleLocationPoint = false;
+
+	showDetails = false;
+
+	area: GlobalCoordinatesDto[] = [];
 
 	constructor(private readonly gisService: GisService,
 				private readonly addressMasterDataService: AddressMasterDataService,
 				private readonly institutionService: InstitutionService,
 				private readonly contextService: ContextService,
-				private readonly snackBarService: SnackBarService) {}
+				private readonly snackBarService: SnackBarService,
+				private readonly gisLayersService: GisLayersService) {}
 
 	ngOnInit(): void {
-		this.setInstitution();
 		this.setUpInstitutionAddressForm();
 		this.setInstitutionData();
+		this.setShowDetails();
 	}
 
 	setState = (state: AddressProjection) => {
@@ -101,54 +113,59 @@ export class HomeComponent implements OnInit {
 	}
 
 	changeStep = ($event) => {
-		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) 
+		let index = $event.selectedIndex;
+		if (index === undefined) index = $event;
+
+		this.currentStepperIndex = index;
+
+		this.gisLayersService.toggleActions(false, false);
+		this.gisLayersService.removeControls();
+		this.gisLayersService.removeModifyInteraction();
+		if (index === INSTITUTION_ADDRESS_STEP) 
 			this.stepToInstitutionAddress();
 
-		if ($event.selectedIndex === MAP_POSITION_INDEX) 
+		if (index === GEOPOSITION_STEP) 
 			this.stepToMapPosition();
-	}
-
-	stepToMapPosition = () => {
-		this.currentStepperIndex = MAP_POSITION_INDEX;
-		this.isLoading = true;
-		const address: string = this.toStringify();
-		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
-		this.gisService.getInstitutionCoordinatesFromAddress(address)
-			.pipe(finalize(() => this.isLoading = false))
-			.subscribe((coordinates: GlobalCoordinatesDto) => {
-				this.coordinatesCurrentValue = coordinates;
-
-				if (!coordinates) 
-					return this.snackBarService.showError('gis.map-position.ERROR');
-
-				this.showMap = true;
-				this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
-				this.institutionAddressForm.controls.coordinates.setValue(transformCoordinates(coordinates));
-			});
-	}
-
-	stepToInstitutionAddress = () => {
-		this.coordinatesCurrentValue = null;
-		this.showMap = false;
-		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
 	}
 
 	setInstitutionData = () => {
 		forkJoin([
+			this.institutionService.getInstitutions([this.contextService.institutionId]),
 			this.gisService.getInstitutionCoordinatesByInstitutionId(),
-			this.gisService.getInstitutionAddressById()
-		]).subscribe(([coordinates, address]: [GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto]) => {
+			this.gisService.getInstitutionAddressById(),
+			this.gisService.getInstitutionArea()
+		]).subscribe(([institutions, coordinates, address, area]: [InstitutionDto[], GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto[]]) => {
+			this.institution = institutions[0];
+			this.area = area;
 			this.coordinatesCurrentValue = coordinates;
 			this.address = address;
-			this.isFirstTime = !this.hasCoordinates();
+			this.stepperMode = !this.hasCoordinates();
 			this.showMap = this.hasCoordinates();
 			if (this.hasCoordinates()) {
+				this.gisLayersService.detectIfLocationPointClickled();
 				this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
 			} else {
 				this.setInstitutionAddressFormData();
 				this.setStates();
 			}
 		})
+	}
+
+	edit = () => {
+		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+		this.showDetails = false;
+		this.editMode = true;
+		this.stepperMode = true;
+		this.setInstitutionAddressFormData();
+		this.setStates();
+	}
+
+	cancel = () => {
+		this.gisLayersService.removeLocationClic();
+		this.gisLayersService.detectIfLocationPointClickled();
+		this.editMode = false;
+		this.showDetails = false;
+		this.setInstitutionData();
 	}
 
 	get street(): string {
@@ -171,6 +188,44 @@ export class HomeComponent implements OnInit {
 		return this.institutionAddressForm.value.cityId;
 	}
 
+	private stepToInstitutionAddress = () => {
+		this.institutionDescription = null;
+		this.coordinatesCurrentValue = null;
+		this.showMap = false;
+		this.gisLayersService.removeLocationPoint();
+	}
+
+	private setShowDetails = () => {
+		this.gisLayersService.showDetails$.next(false);
+		this.gisLayersService.showDetails$.subscribe((value: boolean) => {
+			this.showDetails = value;
+
+			if (this.showDetails) 
+				this.gisLayersService.removeLocationPointListener();
+		});
+	}
+
+	private stepToMapPosition = () => {
+		this.isLoading = true;
+		const address: string = this.toStringify();
+		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
+		this.gisService.getInstitutionCoordinatesFromAddress(address)
+		.pipe(finalize(() => this.isLoading = false))
+		.subscribe((coordinates: GlobalCoordinatesDto) => {
+			if (!coordinates) {
+				this.showMap = false;
+				this.currentStepperIndex = 0;
+				return this.snackBarService.showError('gis.map-position.ERROR');
+			}
+			this.coordinatesCurrentValue = coordinates;
+			this.gisLayersService.removeDrawnPolygon();
+			this.showMap = true;
+			this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
+			this.institutionAddressForm.controls.coordinates.setValue(transformCoordinates(coordinates));
+			this.handleLocationPoint = true;
+		});
+	}
+
 	private toStringify = (): string => {
 		return JSON.stringify(
 			{
@@ -180,10 +235,6 @@ export class HomeComponent implements OnInit {
 				cityName: this.cityCurrentValue.description
 			}
 		)
-	}
-
-	private setInstitution = () => {
-		this.institutionService.getInstitutions([this.contextService.institutionId]).subscribe((institutions: InstitutionDto[]) => this.institution = institutions[0]);
 	}
 
 	private setUpInstitutionAddressForm = () => {
@@ -220,7 +271,7 @@ export class HomeComponent implements OnInit {
 				department: this.departments.find(department => department.value.id === this.institutionAddressForm.value.departmentId).value,
 				city: this.cities.find(city => city.value.id === this.institutionAddressForm.value.cityId).value,
 			},
-			coordinates: this.coordinatesCurrentValue
+			coordinates: this.coordinatesCurrentValue,
 		}
 	}
 
@@ -235,7 +286,7 @@ export class HomeComponent implements OnInit {
 				department: this.address.department,
 				city: this.address.city,
 			},
-			coordinates: this.coordinatesCurrentValue
+			coordinates: this.coordinatesCurrentValue,
 		}
 	}
 

@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { FactoresDeRiesgoFormService } from '../../services/factores-de-riesgo-form.service';
-import { BoxMessageInformation } from '../box-message/box-message.component';
 import { TranslateService } from '@ngx-translate/core';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 @Component({
   selector: 'app-factores-de-riesgo-form',

@@ -31,11 +31,11 @@ public class ViolenceReportAggressorBo {
 
 	private Short hasPreviousEpisodesId;
 
-	public ViolenceReportAggressorBo(String lastName, String firstName, Short age, String address, Short municipalityId, String municipalityName, Short relationshipWithVictimId,
-									 String otherRelationshipWithVictim, Boolean hasGuns, Boolean hasBeenTreated, Boolean belongsToSecurityForces, Boolean inDuty,
-									 Short securityForceTypeId, Short livesWithVictimId, Short relationshipLengthId, Short violenceViolenceFrequencyId,
-									 Short hasPreviousEpisodesId) {
-		aggressorData = new ViolenceReportActorBo(lastName, firstName, age, address, municipalityId, municipalityName, relationshipWithVictimId, otherRelationshipWithVictim);
+	public ViolenceReportAggressorBo(String lastName, String firstName, Short age, String homeAddress, Short municipalityId, String municipalityName,
+									 Integer cityId, String cityName, Short relationshipWithVictimId, String otherRelationshipWithVictim, Boolean hasGuns,
+									 Boolean hasBeenTreated, Boolean belongsToSecurityForces, Boolean inDuty, Short securityForceTypeId,
+									 Short livesWithVictimId, Short relationshipLengthId, Short violenceViolenceFrequencyId, Short hasPreviousEpisodesId) {
+		aggressorData = new ViolenceReportActorBo(lastName, firstName, age, homeAddress, municipalityId, municipalityName, cityId, cityName, relationshipWithVictimId, otherRelationshipWithVictim);
 		this.hasGuns = hasGuns;
 		this.hasBeenTreated = hasBeenTreated;
 		this.belongsToSecurityForces = belongsToSecurityForces;
@@ -47,11 +47,11 @@ public class ViolenceReportAggressorBo {
 		this.hasPreviousEpisodesId = hasPreviousEpisodesId;
 	}
 
-	public ViolenceReportAggressorBo(String lastName, String firstName, Short age, String address, Short municipalityId, Short relationshipWithVictimId,
+	public ViolenceReportAggressorBo(String lastName, String firstName, Short age, String homeAddress, Short municipalityId, Integer cityId, Short relationshipWithVictimId,
 									 String otherRelationshipWithVictim, Boolean hasGuns, Boolean hasBeenTreated, Boolean belongsToSecurityForces, Boolean inDuty,
 									 Short securityForceTypeId, Short livesWithVictimId, Short relationshipLengthId, Short violenceViolenceFrequencyId,
 									 Short hasPreviousEpisodesId) {
-		aggressorData = new ViolenceReportActorBo(lastName, firstName, age, address, municipalityId, relationshipWithVictimId, otherRelationshipWithVictim);
+		aggressorData = new ViolenceReportActorBo(lastName, firstName, age, homeAddress, municipalityId, cityId, relationshipWithVictimId, otherRelationshipWithVictim);
 		this.hasGuns = hasGuns;
 		this.hasBeenTreated = hasBeenTreated;
 		this.belongsToSecurityForces = belongsToSecurityForces;

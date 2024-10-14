@@ -18,8 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
-import ar.lamansys.sgx.shared.templating.utils.testing.AppTemplateConfig;
-import ar.lamansys.sgx.shared.templating.utils.testing.TemplateMailTestingHelper;
+import ar.lamansys.sgx.shared.notifications.templating.utils.testing.AppTemplateConfig;
+import ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateMailTestingHelper;
 import net.pladema.clinichistory.requests.medicationrequests.service.impl.notification.NewMedicationRequestNotificationArgs;
 import net.pladema.clinichistory.requests.medicationrequests.service.impl.notification.NewMedicationRequestTemplateInput;
 

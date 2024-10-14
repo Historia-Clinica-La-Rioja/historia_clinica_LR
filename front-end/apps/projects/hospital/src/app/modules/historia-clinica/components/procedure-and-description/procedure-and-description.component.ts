@@ -10,6 +10,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
+const PROCEDURE_NOTE_POSITION = 0;
 @Component({
 	selector: 'app-procedure-and-description',
 	templateUrl: './procedure-and-description.component.html',
@@ -26,7 +27,8 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
-	procedures: HospitalizationProcedureDto[];
+	procedures: HospitalizationProcedureDto[] = [];
+	isEmptyConcepts: boolean = true;
 	description: string;
 
 	constructor(
@@ -36,11 +38,8 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly dateFormatPipe: DateFormatPipe
-		
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-			this.searchConceptsLocallyFF = isOn;
-		})
+		this.setFeatureFlags();
 		this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
 	}
 
@@ -56,6 +55,11 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 				this.procedures = this.surgicalReport.frozenSectionBiopsies;
 				break;
 		}
+
+		if (this.procedures.length > 0) {
+			this.description = this.procedures[PROCEDURE_NOTE_POSITION].note;
+		}
+		this.checkEmptyConcepts();
 	}
 
 	addProcedure() {
@@ -71,39 +75,68 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 		});
 	}
 
-	private changeProcedure(procedures): void {
-		procedures.forEach(procedure =>
-			this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare));
-			switch (this.type) {
-				case ProcedureTypeEnum.DRAINAGE:
-					this.surgicalReport.drainages = this.procedures;
-					break;
-				case ProcedureTypeEnum.CULTURE:
-					this.surgicalReport.cultures = this.procedures;
-					break;
-				case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
-					this.surgicalReport.frozenSectionBiopsies = this.procedures;
-					break;
-			}
-	}
-
-	private compare(first, second): boolean {
-		return first.snomed.sctid === second.snomed.sctid;
-	}
-
-	deleteProcedure(index: number): void {
+	deleteProcedure(index: number) {
 		this.procedures = removeFrom(this.procedures, index);
 		this.procedureService.remove(index);
+		this.updateSurgicalReportProcedures();
+		this.checkEmptyConcepts();
+	}
+
+	onDescriptionChange() {
+		if (this.procedures.length > 0) {
+			this.procedures[PROCEDURE_NOTE_POSITION].note = this.description;
+			this.updateSurgicalReportProcedures();
+		}
+	}
+
+	private checkEmptyConcepts() {
+		this.isEmptyConcepts = this.procedures.length === 0;
+		if (this.isEmptyConcepts) {
+			this.description = '';
+		}
+	}
+
+	private changeProcedure(procedures) {
+		procedures.forEach(procedure => {
+			this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare);
+		});
+		this.updateSurgicalReportProcedures();
+
+		if (this.procedures.length > 0) {
+			this.description = this.procedures[PROCEDURE_NOTE_POSITION].note;
+		}
+		this.checkEmptyConcepts();
+	}
+
+	private updateSurgicalReportProcedures() {
+		switch (this.type) {
+			case ProcedureTypeEnum.DRAINAGE:
+				this.surgicalReport.drainages = this.procedures;
+				break;
+			case ProcedureTypeEnum.CULTURE:
+				this.surgicalReport.cultures = this.procedures;
+				break;
+			case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
+				this.surgicalReport.frozenSectionBiopsies = this.procedures;
+				break;
+		}
 	}
 
 	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
 		return {
 			snomed: procedure.snomed,
-			type: type
+			type: type,
+			note: this.description || procedure.note || '',
 		}
 	}
 
-	isEmpty(): boolean {
-		return !this.procedures.length && !this.description;
+	private setFeatureFlags() {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFF = isOn;
+		})
+	}
+
+	private compare(first, second): boolean {
+		return first.snomed.sctid === second.snomed.sctid;
 	}
 }

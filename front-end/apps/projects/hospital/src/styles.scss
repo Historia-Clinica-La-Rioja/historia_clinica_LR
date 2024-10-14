@@ -1,6 +1,6 @@
 @import "./assets/styles/theme";
 @import "./assets/styles/variables.scss";
-@import '~quill/dist/quill.bubble.css'; 
+@import '~quill/dist/quill.bubble.css';
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';
 
@@ -106,5 +106,14 @@ div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 .background-color-input {
 	.mat-form-field-appearance-outline .mat-form-field-outline {
 		background-color: white;
+	}
+}
+
+.tooltip {
+    background-color: black !important;
+    color: #ffffff !important;
+	font-size: 12px;
+	&::first-letter {
+		text-transform: capitalize !important;
 	}
 }

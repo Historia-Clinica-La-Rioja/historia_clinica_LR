@@ -9,6 +9,7 @@ import imagelvlpacservers from './imagelvlpacservers';
 import orchestrator from './orchestrator';
 import equipment from './equipment';
 import movestudies from './movestudies';
+import resultstudies from './resultstudies';
 import allmovestudies from './allmovestudies';
 
 const resourcesImageNetwork = (permissions: SGXPermissions) => [
@@ -17,6 +18,7 @@ const resourcesImageNetwork = (permissions: SGXPermissions) => [
     <Resource name="orchestrator" {...orchestrator(permissions)} />,
     <Resource name="equipment" {...equipment(permissions)} />,
     <Resource name="movestudies" {...movestudies(permissions)} />,
+    <Resource name="resultstudies" {...resultstudies(permissions)} />,
     <Resource name="allmovestudies" {...allmovestudies(permissions)} />,
     <Resource name="pacservertypes" />,
     <Resource name="pacserverprotocols" />,

@@ -21,7 +21,7 @@ const InstitutionSelect = ({ formData, ...rest }) => {
             filterToQuery={searchText => ({name: searchText})}
             filter={{ institutionId: formData.institutionId }}
         >
-            <AutocompleteInput optionText="name" optionValue="id" resettable />
+            <AutocompleteInput optionText="name" optionValue="id" resettable validate={[required()]}/>
         </ReferenceInput>);
 };
 

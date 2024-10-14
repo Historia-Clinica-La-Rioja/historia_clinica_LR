@@ -109,4 +109,25 @@ public class InstitutionServiceImpl implements InstitutionService {
 		return result;
 	}
 
+	@Override
+	public List<InstitutionBo> getAll() {
+		log.debug("Getting all institutions");
+		var result =  institutionRepository.findAll().stream()
+				.map(inst -> new InstitutionBo(
+						inst.getId(),
+						inst.getName(),
+						inst.getAddressId(),
+						inst.getWebsite(),
+						inst.getPhone(),
+						inst.getEmail(),
+						inst.getCuit(),
+						inst.getSisaCode(),
+						inst.getTimezone(),
+						inst.getProvinceCode()
+				))
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 }

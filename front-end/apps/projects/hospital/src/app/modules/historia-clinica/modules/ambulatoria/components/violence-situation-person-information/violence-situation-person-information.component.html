@@ -28,9 +28,7 @@
 					{{opt.text}}
 				</mat-radio-button>
 			</mat-radio-group>
-		</div>
-
-		<mat-radio-group class="basic-options" color="primary"
+			<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="receive-plan-assistance-label"
 			formControlName="receivePlanAssistance">
 			<label id="receive-plan-assistance-label">{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_3' | translate}}</label>
@@ -38,6 +36,9 @@
 				{{opt.text}}
 			</mat-radio-button>
 		</mat-radio-group>
+		</div>
+
+
 
 		<mat-radio-group class="basic-options" color="primary"
 			aria-labelledby="have-disability-label"
@@ -130,7 +131,7 @@
 							{{province.description}}
 						</mat-option>
 					</mat-select>
-					<button id="clear_address_province" type="button" mat-button
+					<button id="clear_address_province" type="button"
 						*ngIf="form.value.addressProvinceId" matSuffix color="warn" mat-icon-button
 						(click)="resetAllLocaltyControls($event)">
 						<mat-icon>close</mat-icon>
@@ -143,11 +144,11 @@
 				<label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.DEPARTMENT' | translate}}</label>
 				<mat-form-field appearance="outline" class="full-width">
 					<mat-select id="addressDepartmentId" name="addressDepartmentId" formControlName="addressDepartmentId">
-						<mat-option *ngFor="let department of departments$ | async" [value]="department.id">
+						<mat-option *ngFor="let department of departments$ | async" [value]="department.id" (click)="setLocalitys()">
 							{{department.description}}
 						</mat-option>
 					</mat-select>
-					<button id="clear_address_departament" type="button" mat-button
+					<button id="clear_address_departament" type="button"
 						*ngIf="form.value.addressDepartmentId" matSuffix color="warn" mat-icon-button
 						(click)="resetDepartmentControl($event)">
 						<mat-icon>close</mat-icon>
@@ -155,6 +156,24 @@
 					<mat-error *ngIf="hasError(form, 'required', 'addressDepartmentId')" [translate]="'forms.REQUIRED'"></mat-error>
 				</mat-form-field>
 			</div>
+
+			
+            <div>
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LOCALITY' | translate}}</label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-select id="locality" name="locality" formControlName="addressLocality">
+                        <mat-option *ngFor="let locality of localitys$ | async" [value]="locality.id">
+                            {{locality.description}}
+                        </mat-option>
+                    </mat-select>
+                    <button id="clear_locality" type="button" *ngIf="form.value.addressLocality"
+                        matSuffix color="warn" mat-icon-button (click)="resetLocalityControl($event)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="hasError(form, 'required', 'addressLocality')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
 
 			<div>
 				<label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.RELATION_PERSON_IN_VIOLENCE_SITUATION' | translate}}</label>
@@ -166,7 +185,7 @@
 							{{opt.text}}
 						</mat-option>
 					</mat-select>
-					<button id="clear_relation_person_violence_situation" type="button" mat-button
+					<button id="clear_relation_person_violence_situation" type="button"
 						*ngIf="form.value.relationPersonViolenceSituation" matSuffix color="warn" mat-icon-button
 						(click)="form.controls.relationPersonViolenceSituation.reset(); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
@@ -186,3 +205,4 @@
 	</form>
 
 </app-new-consultation-expansion-section>
+

@@ -36,4 +36,12 @@ public class ObstetricEventBo {
 		this.pregnancyTerminationType = entity.getPregnancyTerminationType() != null ? EPregnancyTermination.map(entity.getPregnancyTerminationType()) : null;
 	}
 
+	public boolean hasNotNullValues(){
+		return previousPregnancies != null ||
+				currentPregnancyEndDate != null	||
+				gestationalAge != null ||
+				pregnancyTerminationType != null ||
+				(newborns != null && !newborns.isEmpty());
+	}
+
 }

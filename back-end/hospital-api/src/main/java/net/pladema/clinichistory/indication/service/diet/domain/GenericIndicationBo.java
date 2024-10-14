@@ -2,6 +2,7 @@ package net.pladema.clinichistory.indication.service.diet.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -31,6 +32,8 @@ public abstract class GenericIndicationBo implements IDocumentBo {
 	protected Integer professionalId;
 
 	protected Short sourceTypeId;
+
+	private Map<String, Object> contextMap;
 
 	@Override
 	public short getDocumentType() {

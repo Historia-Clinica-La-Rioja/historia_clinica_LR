@@ -33,11 +33,19 @@ const snomedEclMap: Record<string, SnomedECL> = {
 export class LoincInputSnomedComponent {
 
 	eclSelected: SnomedECL;
+	preloadSnomed: SnomedDto;
 	@Input() set ecl(snomedGroupId: string) {
 		this.eclSelected = convertStringToEnum(snomedGroupId);
 	};
 	@Input() title: string;
-	@Input() preload: string;
+	@Input() set preload(preload) {
+		if (!preload) return;
+
+		this.preloadSnomed = {
+			sctid:  preload.snomedSctid,
+			pt: preload.snomedPt
+		}
+	}
 	@Output() valueSelected: EventEmitter<SnomedDto> = new EventEmitter<SnomedDto>();
 
 }

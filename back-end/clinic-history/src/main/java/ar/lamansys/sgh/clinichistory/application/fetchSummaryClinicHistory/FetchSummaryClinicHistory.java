@@ -1,10 +1,12 @@
 package ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory;
 
 import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.port.DocumentInvolvedProfessionalStorage;
+import ar.lamansys.sgh.clinichistory.application.getcompletedformsummary.GetCompletedFormSummary;
 import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.OdontologyConsultationSummaryStorage;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompletedFormSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EElectronicSignatureStatus;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
@@ -64,6 +66,8 @@ public class FetchSummaryClinicHistory {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final GetCompletedFormSummary getCompletedFormSummary;
+
     public List<EvolutionSummaryBo> run(Integer institutionId, Integer patientId) {
         log.debug("FetchSummaryClinicHistory from patientId {}", patientId);
         List<EvolutionSummaryBo> result = new ArrayList<>();
@@ -90,13 +94,19 @@ public class FetchSummaryClinicHistory {
         List<HealthConditionSummaryBo> healthConditions = HCEOutpatientConsultationSummaryStorage.getHealthConditionsByPatient(patientId, outpatientConsultationIds);
         List<ReasonSummaryBo> reasons = HCEOutpatientConsultationSummaryStorage.getReasonsByPatient(patientId, outpatientConsultationIds);
         List<ProcedureSummaryBo> procedures = HCEOutpatientConsultationSummaryStorage.getProceduresByPatient(patientId, outpatientConsultationIds);
+		List<CompletedFormSummaryBo> completedForms = HCEOutpatientConsultationSummaryStorage.getCompletedFormsByPatient(patientId, outpatientConsultationIds);
         List<EvolutionSummaryBo> result = new ArrayList<>();
-		queryResult.forEach(oes -> processOutpatientEvolutionSummaries(loggedUserRoleIds, oes, healthConditions, reasons, procedures, result));
+		queryResult.forEach(oes -> processOutpatientEvolutionSummaries(loggedUserRoleIds, oes, healthConditions, reasons, procedures, result, completedForms));
         log.trace(OUTPUT, result);
         return result;
     }
 
-	private void processOutpatientEvolutionSummaries(List<Short> loggedUserRoleIds, OutpatientEvolutionSummaryBo oes, List<HealthConditionSummaryBo> healthConditions, List<ReasonSummaryBo> reasons, List<ProcedureSummaryBo> procedures, List<EvolutionSummaryBo> result) {
+	private void processOutpatientEvolutionSummaries(List<Short> loggedUserRoleIds, OutpatientEvolutionSummaryBo oes,
+													 List<HealthConditionSummaryBo> healthConditions,
+													 List<ReasonSummaryBo> reasons,
+													 List<ProcedureSummaryBo> procedures,
+													 List<EvolutionSummaryBo> result,
+													 List<CompletedFormSummaryBo> completedForms) {
 		EvolutionSummaryBo oesBo = new EvolutionSummaryBo(oes);
 		oesBo.setHealthConditions(healthConditions.stream().filter(h -> h.getConsultationId().equals(oes.getConsultationId()))
 				.peek(hs -> hs.setReferences(getReferencesData(HCEOutpatientConsultationSummaryStorage
@@ -112,7 +122,14 @@ public class FetchSummaryClinicHistory {
                     .ifPresentOrElse(documentId -> oesBo.setElectronicJointSignatureProfessionals(this.fetchElectronicJointSignatureProfessionals(documentId)),
                             () -> log.debug("No document present associated with this evolution summary from consultation id {}", oesBo.getConsultationID()));
         }
+		oesBo.setCompletedForms(
+				getCompletedFormsData(filterCompletedFormListByEncounter(completedForms, oes.getConsultationId()))
+		);
 		result.add(oesBo);
+	}
+
+	private List<CompletedFormSummaryBo> filterCompletedFormListByEncounter(List<CompletedFormSummaryBo> completedFormList, Integer consultationId){
+		return completedFormList.stream().filter(cf -> cf.getConsultationId().equals(consultationId)).collect(Collectors.toList());
 	}
 
 	private ElectronicJointSignatureProfessionalsBo fetchElectronicJointSignatureProfessionals(Long documentId) {
@@ -176,4 +193,12 @@ public class FetchSummaryClinicHistory {
         log.debug("Input parameter -> referenceId {}", referenceId);
         return hceReferenceCounterReferenceStorage.getReferenceFilesData(referenceId);
     }
+
+	private List<CompletedFormSummaryBo> getCompletedFormsData(List<CompletedFormSummaryBo> completeParameterizedFormBos) {
+		completeParameterizedFormBos.forEach(form ->
+			form.setParameters(getCompletedFormSummary.run(form.getId()))
+		);
+		return completeParameterizedFormBos;
+	}
+
 }

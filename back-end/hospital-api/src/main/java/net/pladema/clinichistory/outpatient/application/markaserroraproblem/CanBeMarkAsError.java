@@ -8,7 +8,6 @@ import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmen
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsSameUserIdFromHealthCondition;
 import ar.lamansys.sgh.clinichistory.application.markaserroraproblem.IsWithinExpirationTimeLimit;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTerm;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
@@ -20,12 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemExceptionEnum;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
+import net.pladema.clinichistory.requests.servicerequests.application.GetDiagnosticReportResultsList;
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
+import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticReportResultsBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequestCategory;
-import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
@@ -37,14 +37,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class CanBeMarkAsError {
 
     private final IsSameUserIdFromHealthCondition isSameUserIdFromHealthCondition;
     private final IsWithinExpirationTimeLimit isWithinExpirationTimeLimit;
-    private final ListDiagnosticReportInfoService listDiagnosticReportInfoService;
+    private final GetDiagnosticReportResultsList getDiagnosticReportResultsList;
     private final ServiceRequestRepository serviceRequestRepository;
     private final AppointmentService appointmentService;
     private final AppointmentOrderImageService appointmentOrderImageService;
@@ -58,8 +58,8 @@ public class CanBeMarkAsError {
 
         this.assertContextValid(healthConditionId);
 
-        var studies = listDiagnosticReportInfoService.getList(
-                        new DiagnosticReportFilterBo(patientId, null, null, null, null, null))
+        var studies = getDiagnosticReportResultsList.run(
+                        new DiagnosticReportFilterBo(patientId, null, null, null, null, null, null, null))
                 .stream()
                 .filter(diagnosticReportBo -> healthConditionId.equals(diagnosticReportBo.getHealthCondition().getId()))
                 .collect(Collectors.toList());
@@ -106,7 +106,7 @@ public class CanBeMarkAsError {
                 .collect(Collectors.toList()));
 
         var serviceRequestsIds = studies.stream()
-                .map(DiagnosticReportBo::getEncounterId)
+                .map(DiagnosticReportResultsBo::getEncounterId)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -138,7 +138,7 @@ public class CanBeMarkAsError {
 
     }
 
-    private void assertContextValidDiagnosticReports(List<DiagnosticReportBo> studiesRelatedToProblem) {
+    private void assertContextValidDiagnosticReports(List<DiagnosticReportResultsBo> studiesRelatedToProblem) {
         studiesRelatedToProblem.stream()
                 .filter(diagnosticReportBo -> diagnosticReportBo.getStatusId().equals(DiagnosticReportStatus.FINAL) ||
                         diagnosticReportBo.getStatusId().equals(DiagnosticReportStatus.FINAL_RDI))
@@ -161,9 +161,9 @@ public class CanBeMarkAsError {
                 });
     }
 
-    private List<Integer> getDiagnosticImagingOrders(List<DiagnosticReportBo> studiesRelatedToProblem) {
+    private List<Integer> getDiagnosticImagingOrders(List<DiagnosticReportResultsBo> studiesRelatedToProblem) {
         return studiesRelatedToProblem.stream()
-                .map(DiagnosticReportBo::getEncounterId)
+                .map(DiagnosticReportResultsBo::getEncounterId)
                 .distinct()
                 .map(serviceRequestRepository::findById)
                 .filter(Optional::isPresent)

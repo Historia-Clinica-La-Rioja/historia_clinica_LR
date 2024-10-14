@@ -7,7 +7,6 @@ import {
 	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, RoleAssignmentDto, SelfPerceivedGenderDto
 } from '@api-rest/api-model';
 
-import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -23,7 +22,6 @@ import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MapperService } from '@core/services/mapper.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { hasError, scrollIntoError, updateControlValidator, VALIDATIONS } from '@core/utils/form.utils';
 import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
@@ -38,6 +36,7 @@ import { UserService } from '@api-rest/services/user.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { NO_INSTITUTION } from '../../../home/home.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -108,7 +107,7 @@ export class EditPatientComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private permissionsService: PermissionsService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private patientMasterDataService: PatientMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private readonly userService: UserService,
@@ -138,7 +137,7 @@ export class EditPatientComponent implements OnInit {
 							this.auditablePatientInfo = {
 								message: this.completeDataPatient.auditablePatientInfo.message,
 								createdBy: this.completeDataPatient.auditablePatientInfo.createdBy,
-								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								createdOn: this.dateFormatPipe.transform(this.auditableFullDate, 'datetime'),
 								institutionName: this.completeDataPatient.auditablePatientInfo.institutionName
 							};
 						}

@@ -5,7 +5,8 @@
 			"SUB_TITLE": "Complete los datos solicitados para continuar",
 			"ADM_TRIAGE": "Triage",
 			"SUCCESS": "El episodio fue creado exitosamente",
-			"ERROR": "Ocurrió un error al crear el episodio"
+			"ERROR": "Ocurrió un error al crear el episodio",
+			"CONFIRM": "Confirmar episodio"
 		},
 		"triage": {
 			"APPEARANCE": "Apariencia",
@@ -30,6 +31,8 @@
 			"TEMPERATURE": "Temperatura",
 			"TITLE": "Nuevo triage",
 			"REASON": "Motivo de consulta",
+			"SPECIALTY_SECTOR": "Servicio de guardia",
+			"SELECT_SPECIALTY_SECTOR": "Seleccione un servicio",
 			"LIST_CARD_TITLE": "Motivos registrados",
 			"ADD_REASON": "+ agregar motivo"
 		},
@@ -72,17 +75,45 @@
 		"home": {
 			"episodes": {
 				"episode": {
+					"status": {
+						"WAITING": "En espera de atención",
+						"IN_ATTETION": "En atención",
+						"PATIENT_DISCHARGE": "Alta de paciente",
+						"ABSENT": "Ausente",
+						"CALLED": "Llamando ({{nro}})"
+					},
 					"actions": {
+						"call": {
+							"TITLE": "Llamar",
+							"SUCCESS": "El paciente fue llamado",
+							"ERROR": "Error al intentar llamar al paciente"
+						},
 						"atender": {
 							"TITLE": "Atender",
 							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
-							"ERROR": "Error al actualizar estado de episodio a En atención"
+							"ERROR": "Error al actualizar estado de episodio a En atención",
+							"NO_AVAILABLE_PLACES": "No existen lugares disponibles para realizar la atención"
+						},
+						"mark_as_absent":{
+							"TITLE": "Marcar como ausente",
+							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a AUSENTE?",
+							"SUCCESS": "Estado de episodio actualizado a AUSENTE exitosamente",
+							"ERROR": "Error al actualizar estado de episodio a AUSENTE",
+							"buttons": {
+								"CONFIRM": "Si, marcar como ausente"
+							}
 						},
 						"en_espera": {
 							"TITLE": "Pasar a en espera",
 							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a EN ESPERA?",
 							"SUCCESS": "Episodio con paciente en espera",
-							"ERROR": "Error al cambiar el estado del episodio"
+							"ERROR": "Error al cambiar el estado del episodio",
+							"buttons": {
+								"CONFIRM": "Si, pasar a espera"
+							}
+						},
+						"edit_patient_episode": {
+							"TITLE": "Editar episodio"
 						},
 						"edit_patient_description": {
 							"TITLE": "Editar identificación",
@@ -117,12 +148,33 @@
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",
 				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
-				"TITLE": "Episodios de guardia"
+				"TITLE": "Filtrar por"
 			},
-			"TITLE": "Guardia de emergencia"
+			"attention_places":{
+                "NO_DATA": "No hay lugares de atención para mostrar",
+                "NO_SELECTED_SPACE": "Seleccione un lugar para ver el detalle",
+				"sector": {
+					"NO_ASSOCIATED_SPECIALTY": "Sin servicio asociado"
+				},
+				"space": {
+					"FREE": "Libre",
+					"NOT_FREE": "Ocupada"
+				},
+				"entry": {
+					"TITLE": "Ingreso"
+				},
+				"last_triage": {
+					"TITLE": "Último triage"
+				}
+            },
+			"tabs": {
+				"PATIENTS": "Pacientes",
+				"ATTENTION_PLACES": "Lugares de atención"
+			},
+			"TITLE": "Episodios de guardia",
+			"LAST": "Último"
 		},
 		"episode": {
-			"TITLE": "Episodio de guardia",
 			"EDIT_EPISODE": "Editar episodio",
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"administrative": {
@@ -157,35 +209,32 @@
 				}
 			},
 			"medical_discharge": {
-				"TITLE": "Alta Médica",
+				"TITLE": "Alta de paciente",
 				"PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
 				"form": {
 					"DATE": "Fecha",
 					"TIME": "Hora",
 					"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
-					"AUTOPSY": "Autopsia autorizada",
-					"DISCHARGE_TYPE": "Tipo de egreso",
+					"AUTOPSY": "Solicita autopsia",
+					"SELECT_AUTOPSY": "Seleccione una opcion",
+					"DISCHARGE_TYPE": "Tipo de egreso:",
+					"DISCHARGE_TYPE_INPUT": "Ingrese tipo de egreso",
 					"INVALID_TIME": "La hora debe ser posterior a la de creación del episodio"
 				},
 				"REQUIRED_PROBLEM": "Debe ingresar al menos un problema",
 				"messages": {
-					"SUCCESS": "El alta médica se guardó exitosamente",
-					"ERROR": "Ocurrió un error al intentar guardar el alta médica"
+					"SUCCESS": "El alta de paciente se creó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta de paciente"
 				},
 				"problems": {
-					"buttons": {
-						"ADD": "Agregar problema"
-					},
-					"CONCEPT_LABEL": "Problema",
-					"CRONICO": "Crónico",
-					"errors": {
-						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio"
-					},
-					"FECHA_FIN": "Fecha fin",
-					"FECHA_INICIO": "Fecha inicio",
-					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problema"
-				}
+					"TITLE": "Problema/s asociado al alta:",
+					"PRESUMPTIVE": "Presuntivo",
+					"CONFIRMED": "Confirmado",
+					"MAIN": "(Principal)"
+				},
+				"NURSING_PROBLEM_TITLE": "Diagnóstico o Problema",
+				"ADDITIONAL_OBSERVATIONS": "Observaciones adicionales",
+				"OBSERVATIONS_PLACEHOLDER": "Escriba aquí..."
 			},
 			"triage": {
 				"HISTORIAL": "Historial de triages",
@@ -194,6 +243,7 @@
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
 					"PROFESIONAL": "Profesional",
+					"SPECIALTY_SECTOR": "Servicio de guardia",
 					"UBICACION": "Zona de Triage",
 					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
 					"TEMPERATURA": "Temperatura",
@@ -235,7 +285,8 @@
 		},
 		"dialog": {
 			"attention_place": {
-				"TITLE": "Atender",
+				"TITLE_ATTEND": "Atender",
+				"TITLE_CALL": "Llamar",
 				"SUBTITLE": "Seleccione el destino donde se atenderá al paciente",
 				"PLACE": "Lugar de atencion",
 				"CONFIRM": "Confirmar",
@@ -256,6 +307,55 @@
 			"ALLERGIES": "No refiere alergias",
 			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
 		},
-		"EDITED": "(Editado) -"
+		"EDITED": "(Editado) -",
+		"documents-summary": {
+			"reasons": {
+				"TITLE": "Motivo de consulta",
+				"REGISTERED_REASONS": "Motivos de consulta registrados"
+			},
+			"clinical_specialty_sector": {
+                "TITLE": "Servicio de guardia"
+            },
+			"evolutions": {
+				"TITLE": "Evolución"
+			},
+			"specialty": {
+				"TITLE": "Especialidad"
+			},
+			"family-histories": {
+				"NOT_REFERRED": "No refiere antecedentes familiares"
+			},
+			"allergies": {
+				"NOT_REFERRED": "No refiere alergias"
+			},
+			"document-name": {
+				"EVOLUTION_NOTE": "Nota de evolución médica",
+				"TRIAGE": "Triage"
+			},
+			"triage-level": {
+				"TITLE": "Nivel de triage"
+			},
+			"observations": {
+				"TITLE": "Observaciones"
+			},
+			"appearance": {
+				"TITLE": "Apariencia",
+				"TEMPERATURE": "Temperatura",
+				"CRYING_EXCESSIVE": "Llanto sin consuelo",
+				"MUSCULAR_TONE": "Tono muscular"
+			},
+			"breathing": {
+				"TITLE": "Respiración",
+				"BLOOD_OXYGEN_SATURATION": "Saturación de oxígeno",
+				"RESPIRATORY_RATE": "Frecuencia respiratoria",
+				"RESPIRATORY_RETRACTION": "Respiración con tiraje",
+				"STRIDOR": "Respiración con estridor"
+			},
+			"circulation": {
+				"TITLE": "Circulación",
+				"PERFUSION": "Perfusión",
+				"HEART_RATE": "Frecuencia cardíaca"
+			}
+		}
 	}
 }

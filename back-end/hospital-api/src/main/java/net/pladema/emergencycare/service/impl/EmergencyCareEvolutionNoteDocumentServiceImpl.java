@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEvolutionNoteRepository;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEvolutionNote;
 import net.pladema.emergencycare.service.EmergencyCareEvolutionNoteDocumentService;
+import net.pladema.emergencycare.service.EmergencyCareEvolutionNoteReasonService;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
 
@@ -51,6 +52,8 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 	private final ClinicalSpecialtyService clinicalSpecialtyService;
 
 	private final LocalDateMapper localDateMapper;
+
+	private final EmergencyCareEvolutionNoteReasonService emergencyCareEvolutionNoteReasonService;
 
 	@Override
 	public List<EmergencyCareEvolutionNoteDocumentBo> getAllDocumentsByEpisodeId(Integer episodeId) {
@@ -107,7 +110,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		evolutionNoteBo.setAllergies(documentService.getAllergyIntoleranceStateFromDocument(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setProcedures(documentService.getProcedureStateFromDocument(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setMedications(documentService.getMedicationStateFromDocument(evolutionNote.getDocumentId()));
-		evolutionNoteBo.setReasons(reasonService.fetchFromDocumentId(evolutionNote.getDocumentId()));
+		evolutionNoteBo.setReasons(reasonService.fetchFromEmergencyCareEvolutionNoteId(evolutionNote.getId()));
 		evolutionNoteBo.setEvolutionNote(noteService.getEvolutionNoteDescriptionByDocumentId(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(evolutionNote.getPerformedDate()).toLocalDateTime());
 		evolutionNoteBo.setId(evolutionNote.getDocumentId());

@@ -32,8 +32,9 @@ public class PatientECEBo {
 		this.patientDescription = patient.getPatientDescription();
 	}
 
-	public PatientECEBo(Integer patientId, Integer patientMedicalCoverageId) {
+	public PatientECEBo(Integer patientId, Integer patientMedicalCoverageId, String patientDescription) {
 		this.id = patientId;
 		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.patientDescription = patientDescription;
 	}
 }

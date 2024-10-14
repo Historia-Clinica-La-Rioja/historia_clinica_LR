@@ -3,9 +3,9 @@ package net.pladema.clinichistory.requests.servicerequests.domain.observations;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import lombok.Getter;
 import lombok.Value;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.ObservationToUpdateNotFound;
@@ -38,7 +38,7 @@ public class DiagnosticReportObservationsForUpdateVo {
 	}
 
 
-	public List<UpdatedDiagnosticReportObservationBo> update(AddObservationsCommandVo updatedObservations) throws InvalidProcedureTemplateChangeException, ObservationToUpdateNotFound {
+	public List<UpdatedDiagnosticReportObservationBo> update(SharedAddObservationsCommandVo updatedObservations) throws InvalidProcedureTemplateChangeException, ObservationToUpdateNotFound {
 		List<UpdatedDiagnosticReportObservationBo> output = new ArrayList<>();
 
 		if (!updatedObservations.getProcedureTemplateId().equals(this.getProcedureTemplateId())) {
@@ -83,7 +83,7 @@ public class DiagnosticReportObservationsForUpdateVo {
 	 */
 	private Integer findExistingIndex(
 		List<DiagnosticReportObservationForUpdateVo> existingObservations,
-		AddObservationsCommandVo.Observation update) throws ObservationToUpdateNotFound {
+		SharedAddObservationsCommandVo.Observation update) throws ObservationToUpdateNotFound {
 		return IntStream
 			.range(0, existingObservations.size())
 			.filter(idx -> Objects.equals(

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, forwardRef } from '@angular/core';
 import { FormGroup, Validators, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
+import { NoWhitespaceValidator, VALIDATIONS, hasError } from '@core/utils/form.utils';
 
 @Component({
 	selector: 'app-identification-number-custom-form',
@@ -21,6 +22,8 @@ import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
 })
 export class IdentificationNumberCustomFormComponent extends AbstractCustomForm implements OnDestroy {
 
+	readonly hasError = hasError;
+	VALIDATIONS = VALIDATIONS;
 	form: FormGroup<IdentificationNumberCustomForm>;
 	@Input()
 	set submitParentFormEvent(event: EventEmitter<void>) {
@@ -38,7 +41,11 @@ export class IdentificationNumberCustomFormComponent extends AbstractCustomForm 
 
 	createForm() {
 		this.form = new FormGroup<IdentificationNumberCustomForm>({
-			identificationNumber: new FormControl(null, Validators.required)
+			identificationNumber: new FormControl(null, [
+				Validators.required,
+				NoWhitespaceValidator(),
+				Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)
+			])
 		});
 	}
 }

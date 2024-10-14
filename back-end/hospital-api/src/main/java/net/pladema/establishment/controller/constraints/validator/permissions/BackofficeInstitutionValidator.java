@@ -27,6 +27,9 @@ import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 public class BackofficeInstitutionValidator implements BackofficePermissionValidator<Institution, Integer> {
 
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
+
+	public static final String SISA_CODE_ALREADY_USED = "El código SISA ingresado ya se encuentra asignado a otra institución";
+
 	private final InstitutionRepository repository;
 
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
@@ -48,7 +51,8 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 				// quien puede ver las instituciones
 				ERole.ROOT,
 				ERole.ADMINISTRADOR,
-				ERole.API_IMAGENES
+				ERole.API_IMAGENES,
+				ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO
 		);
 	}
 
@@ -81,13 +85,19 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 	@Override
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertCreate(Institution entity) {
-		// Do nothing
+		verifyUniqueSISACode(entity);
+	}
+
+	private void verifyUniqueSISACode(Institution entity) {
+		boolean SISACodeAlreadyUsed = !repository.findIdsBySisaCode(entity.getSisaCode()).isEmpty();
+		if (SISACodeAlreadyUsed)
+			throw new PermissionDeniedException(SISA_CODE_ALREADY_USED);
 	}
 
 	@Override
 	@PreAuthorize("hasPermission(#id, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE') || hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void assertUpdate(Integer id, Institution entity) {
-		// Do nothing
+		verifyUniqueSISACode(entity);
 	}
 
 	@Override
@@ -103,10 +113,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<Institution> entitiesByExample = repository.findAll(buildExample(entity));
-		List<Integer> resultIds = entitiesByExample.stream().filter(css -> allowedInstitutions.contains(css.getId()))
-				.map(Institution::getId).collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, allowedInstitutions);
 	}
 
 	@Override

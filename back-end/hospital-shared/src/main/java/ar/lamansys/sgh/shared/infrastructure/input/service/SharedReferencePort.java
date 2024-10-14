@@ -6,4 +6,5 @@ public interface SharedReferencePort {
 
 	void closeReference(ReferenceClosureDto counterReference, Integer institutionId, Integer patientId);
 
+	void validateReference(ReferenceClosureDto counterReference, Integer institutionId, Integer patientId);
 }

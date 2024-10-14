@@ -8,7 +8,6 @@ import net.pladema.hl7.dataexchange.model.domain.DosageVo;
 import net.pladema.hl7.dataexchange.model.domain.MedicationDispenseVo;
 import net.pladema.hl7.dataexchange.model.domain.MedicationRequestVo;
 import net.pladema.hl7.dataexchange.model.domain.PatientVo;
-import net.pladema.hl7.dataexchange.model.domain.PractitionerVo;
 import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
 
 import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;

@@ -1,0 +1,15 @@
+<header>
+	<p class="mat-body-strong">{{space.type}}</p>
+</header>
+
+<div class="buttons-availability-container">
+	<div *ngFor="let item of itemsInfo">
+		<app-button-availability
+			[description]="item.description"
+			[type]="item.type"
+			[size]="item.size"
+			[isSelected]="item.isSelected"
+			(clicked)="selectItem(item)">
+		</app-button-availability>
+	</div>
+</div>

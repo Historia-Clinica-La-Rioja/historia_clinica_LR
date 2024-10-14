@@ -19,19 +19,38 @@
 			<mat-divider></mat-divider>
 			<mat-divider [vertical]="true"></mat-divider>
 
-			<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
-				[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference">
-			</app-reference-study>
+			<ng-container *ngIf="_reference.state===APPROVED  else warningMessage ">
+				<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
+					[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference"
+					[studies]="data.studies" [resultsPractices]="data.resultsPractices">
+				</app-reference-study>
+			</ng-container>
+
 		</div>
 	</mat-dialog-content>
 
-	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-		<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+
+		<app-button *ngIf="buttonService.activatePartialSaveButton$ | async" [buttonType]='buttonTypeFlat'
+			text='ambulatoria.reference-study-close.COMPLETE_PARTIAL_BUTTON'
+			[isLoading]="buttonService.isLoadingPartialSave$ | async" (clicked)="completePartialStudy()">
+		</app-button>
+
+		<app-button *ngIf="!data?.reportReference" [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
 			[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
 			(clicked)="completeStudy()">
 		</app-button>
+
 	</mat-dialog-actions>
+
 </ng-container>
+
+<ng-template #warningMessage>
+	<app-box-message [boxMessageInfo]="boxMessageInfo">
+
+	</app-box-message>
+</ng-template>
+
 
 <ng-template #spinner>
 	<div class="centered-spinner">

@@ -1,17 +1,17 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-    <span mat-dialog-title [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></span>
+    <h2 mat-dialog-title [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></h2>
     <button mat-icon-button mat-dialog-close>
         <mat-icon>close</mat-icon>
     </button>
 </div>
 
-<div  fxLayout="column"  fxLayoutGap="8px" mat-dialog-content>
+<mat-dialog-content fxLayout="column"  fxLayoutGap="8px">
     <form [formGroup]="form">
         <mat-form-field class="width_content">
             <mat-label [translate]="'image-network.worklist.details_study.NAME_TEMPLATE'"></mat-label>
             <input id="input" name="input" matInput type="text" formControlName="templateName">
             <mat-error *ngIf="hasError(form, 'required','templateName')" [translate]="'forms.REQUIRED'"></mat-error>
-            <button id="clear" type="button" mat-button *ngIf="form.controls.templateName && !hideIcon" matSuffix color="warn" mat-icon-button
+            <button id="clear" type="button"  *ngIf="form.controls.templateName && !hideIcon" matSuffix color="warn" mat-icon-button
             (click)="clear()">
             <mat-icon>close</mat-icon>
             </button>
@@ -23,4 +23,4 @@
             <span class="uppercase" [translate]="'buttons.SAVE'"></span>
         </button>
     </div>
-</div>
+</mat-dialog-content>

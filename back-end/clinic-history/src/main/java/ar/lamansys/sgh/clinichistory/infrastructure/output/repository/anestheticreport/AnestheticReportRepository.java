@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,11 +18,6 @@ public interface AnestheticReportRepository extends JpaRepository<AnestheticRepo
 	Optional<AnestheticReport> findByDocumentId(Long documentId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT ar.id " +
-            "FROM AnestheticReport ar WHERE ar.documentId = :documentId ")
-    Optional<Integer> getAnestheticReportIdByDocumentId(@Param("documentId") Long documentId);
-
-    @Transactional(readOnly = true)
     @Query("SELECT d.id " +
             "FROM Document d " +
             "WHERE d.sourceId = :internmentEpisodeId " +
@@ -29,4 +25,11 @@ public interface AnestheticReportRepository extends JpaRepository<AnestheticRepo
             "AND d.typeId = '" + DocumentType.ANESTHETIC_REPORT + "' " +
             "AND d.statusId = '" + DocumentStatus.DRAFT + "' ")
     Optional<Long> getDocumentIdFromLastAnestheticReportDraft(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE AnestheticReport ar SET ar.documentId = :documentId " +
+            "WHERE ar.id = :anestheticReportId")
+    void updateDocumentId(@Param("documentId") Long documentId,
+                          @Param("anestheticReportId") Integer anestheticReportId);
 }

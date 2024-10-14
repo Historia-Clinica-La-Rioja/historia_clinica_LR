@@ -448,11 +448,11 @@ databaseChangeLog:
           comment: se agrego en distintas versiones mediante hotfix (2.23, 2.24 y 2.25), para evitar conflictos
               se agrega en todas las versiones afectadas pero con precondición
           preConditions:
-              -   onFail: MARK_RAN
-              -   not:
-                      -   columnExists:
-                              tableName: pac_server_image_lvl
-                              columnName: local_viewer_url
+              - onFail: MARK_RAN
+              - not:
+                  - columnExists:
+                        tableName: pac_server_image_lvl
+                        columnName: local_viewer_url
           changes:
               - addColumn:
                     tableName: pac_server_image_lvl

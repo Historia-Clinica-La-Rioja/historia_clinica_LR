@@ -17,7 +17,7 @@
                 <mat-label [translate]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM'"></mat-label>
                 <input formControlName="assosiatedProblem" type="text" matInput readonly
                     matTooltip="{{ this.getProblemDisplayName() }}">
-                <button mat-button matSuffix color="warn" mat-icon-button (click)="resetProblemSelector()">
+                <button  matSuffix color="warn" mat-icon-button (click)="resetProblemSelector()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -79,7 +79,7 @@
                 <span class="mat-body element-light-color">
                     {{fileName}}
                 </span>
-                <button mat-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
             </div>
         </div>
 

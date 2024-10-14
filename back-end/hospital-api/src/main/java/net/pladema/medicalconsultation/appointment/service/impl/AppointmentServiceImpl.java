@@ -16,9 +16,10 @@ import net.pladema.clinichistory.requests.servicerequests.application.port.Servi
 import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository.TranscribedServiceRequestRepository;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.imagenetwork.application.getlocalviewerurl.GetLocalViewerUrl;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentOption;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentOption;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
@@ -35,12 +36,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.CustomAppoi
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
-import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.*;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
@@ -65,14 +61,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
@@ -133,6 +122,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
 
+    private final GetLocalViewerUrl getLocalViewerUrl;
+
     @Override
     public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
         log.debug("Input parameters -> diaryIds {}", diaryIds);
@@ -166,9 +157,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .peek(e -> e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId())))
                 .peek(e -> e.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(e.getDiagnosticReportId(),e.getTranscribedServiceRequestId())))
                 .collect(Collectors.toList());
+        addLocalViewerInfo(result);
         log.debug("Result size {}", result.size());
         log.trace(OUTPUT, result);
         return result;
+    }
+
+    private void addLocalViewerInfo(Collection<EquipmentAppointmentBo> result) {
+        Map<Integer,String> mappedUrl = getLocalViewerUrl.run(
+                result.stream().map(EquipmentAppointmentBo::getId).collect(Collectors.toList())
+        );
+        result.forEach(eaBo -> eaBo.setLocalViewerUrl(mappedUrl.get(eaBo.getId())));
     }
 
     @Override
@@ -220,27 +219,39 @@ public class AppointmentServiceImpl implements AppointmentService {
         return result;
     }
 
+	/**
+	 * @Deprecated Usar {@link net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState} para turnos que NO son de imágenes
+	 */
+	@Deprecated
     @Override
     @Transactional
     public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
         log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
-        appointmentRepository.updateState(appointmentId, appointmentStateId, userId, LocalDateTime.now());
-        if (appointmentStateId == AppointmentState.CANCELLED || appointmentStateId == AppointmentState.ABSENT)
-            appointmentOrderImageRepository.deleteByAppointment(appointmentId);
-        if (appointmentStateId == AppointmentState.ASSIGNED || appointmentStateId == AppointmentState.CONFIRMED)
-            appointmentOrderImageRepository.activateAppointment(appointmentId);
-        if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
-            Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+        Optional<Short> stateId = appointmentRepository.getAppointmentStateId(appointmentId);
+        if(stateId.isPresent() && stateId.get() != AppointmentState.SERVED) {
+            appointmentRepository.updateState(appointmentId, appointmentStateId, userId, LocalDateTime.now());
+            if (appointmentStateId == AppointmentState.CANCELLED || appointmentStateId == AppointmentState.ABSENT)
+                appointmentOrderImageRepository.deleteByAppointment(appointmentId);
+            if (appointmentStateId == AppointmentState.ASSIGNED || appointmentStateId == AppointmentState.CONFIRMED)
+                appointmentOrderImageRepository.activateAppointment(appointmentId);
+            if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
+                Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+                if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null)
+                    checkRemainingChildAppointments(appointment.get().getParentAppointmentId());
+            }
 
-            if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null)
-                checkRemainingChildAppointments(appointment.get().getParentAppointmentId());
+            historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
+            log.debug(OUTPUT, Boolean.TRUE);
+            return Boolean.TRUE;
         }
-
-        historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
-        log.debug(OUTPUT, Boolean.TRUE);
-        return Boolean.TRUE;
+        log.debug(OUTPUT, Boolean.FALSE);
+        return Boolean.FALSE;
     }
 
+	/**
+	 * @Deprecated Usar {@link net.pladema.medicalconsultation.appointment.application.GetAppointment}
+	 */
+	@Deprecated
     @Override
     public Optional<AppointmentBo> getAppointment(Integer appointmentId) {
         log.debug("Input parameters -> appointmentId {}", appointmentId);
@@ -281,7 +292,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
                     .stream().findFirst();
         }
-        log.debug(OUTPUT, result);
+        log.debug("Output -> appointmentId {}, exist {}", appointmentId, result.isPresent());
         return result;
     }
 
@@ -662,6 +673,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds) {
         log.debug("Input parameter -> appointmentIds {}", appointmentIds);
         return appointmentRepository.getAppointmentDataByAppointmentIds(appointmentIds);
+    }
+
+    @Override
+    public List<AppointmentDateHourBo> getAppointmentDateAndHourByIds(Set<Integer> appointmentIds) {
+        log.debug("Input parameter -> appointmentIds {}", appointmentIds);
+        var result = appointmentRepository.findAppointmentDateAndHoyByAppointmentIds(appointmentIds);
+        log.debug(OUTPUT, result);
+        return result;
     }
 
     @Override

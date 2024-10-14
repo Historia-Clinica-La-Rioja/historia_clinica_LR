@@ -1,0 +1,9 @@
+<div class="separation">
+    <app-emergency-care-status-labels [statusLabel]="statusLabel"></app-emergency-care-status-labels>
+    <span *ngIf="statusLabel.stateId == CALL else onlyTimeElapsed">
+        {{'guardia.home.LAST' | translate }} {{ stateUpdatedOn | viewDateDto: 'datetime' | showTimeElapsed | lowercase}}
+    </span>
+    <ng-template #onlyTimeElapsed>
+        <span>{{ stateUpdatedOn | viewDateDto: 'datetime' | showTimeElapsed}}</span>
+    </ng-template>
+</div>

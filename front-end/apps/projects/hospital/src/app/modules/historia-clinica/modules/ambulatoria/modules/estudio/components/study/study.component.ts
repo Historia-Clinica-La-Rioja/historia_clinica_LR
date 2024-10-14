@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, DoctorInfoDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
-import { VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
+import { ResultPractice, VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ReferenceStudy, Title } from '@presentation/components/indication/indication.component';
@@ -13,7 +13,7 @@ import { ActionsButtonService } from '../../../indicacion/services/actions-butto
 import { CreatedDuring } from '../study-list-element/study-list-element.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
-import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
+import { AppointmentDate, DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
 import { ReferenceCompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/components/reference-complete-study/reference-complete-study.component';
 import { ReportReference } from '@historia-clinica/modules/ambulatoria/components/reference-study-closure-information/reference-study-closure-information.component';
 import { getColoredIconText } from '@access-management/utils/reference.utils';
@@ -23,6 +23,7 @@ import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambul
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/complete-study/complete-study.component';
 import { StudyInfo, StudyResultsService } from '@historia-clinica/modules/ambulatoria/services/study-results.service';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -60,6 +61,7 @@ export class StudyComponent implements OnInit {
 	[this.translateService.instant('app.menu.GUARDIA'), CreatedDuring.EMERGENCY_CARE]])
 
 	private sameOrderStudies: Map<Number, StudyInformation[]>;
+	PATTERN_SPLIT = ', '
 
 
 	constructor(
@@ -73,27 +75,36 @@ export class StudyComponent implements OnInit {
 
 	) { }
 
-	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): Content {
+	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): ContentStudy {
 		const reportImageCase = diagnosticReport as DiagnosticWithTypeReportInfoDto
 		const associatedStudiesTranscribed: string[] = reportImageCase.infoOrderInstances?.associatedStudies?.map(study => capitalize(study))
 		const prescriptionStatus =  diagnosticReport.statusId ? this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId) :
 		this.prescripcionesService.renderStatusDescriptionStudyImage(reportImageCase.infoOrderInstances.status)
 		const updateDate = diagnosticReport.creationDate;
 		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto;
+
+        let extra_info = [];
+        diagnosticReport.healthCondition ? extra_info.push({
+            title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
+            content:  diagnosticReport.healthCondition.snomed.pt,
+        }) : null;
+        diagnosticReport.observationsFromServiceRequest ? extra_info.push({
+            title: "Observaciones:",
+            content:  diagnosticReport.observationsFromServiceRequest,
+        }) : null;
 		return {
 			status: {
 				description: prescriptionStatus,
 				cssClass: this.setCssClass(prescriptionStatus)
 			},
-			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
-			extra_info: diagnosticReport.healthCondition ? [{
-				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
-				content:  diagnosticReport.healthCondition.snomed.pt,
-			}]: null  ,
+			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(this.PATTERN_SPLIT) : capitalize(diagnosticReport.snomed.pt),
+			extra_info: extra_info,
 			createdBy: diagnosticReport.doctor ? this.getProfessionalName(diagnosticReport.doctor) : "",
 			createdOn: updateDate,
 			timeElapsed: diagnosticReport.creationDate ? null : '',
-			reference:  isReferenceStudyPending ? this.getReference(diagnosticReport.referenceRequestDto) : null
+			reference:  isReferenceStudyPending ? this.getReference(diagnosticReport.referenceRequestDto) : null,
+            observationsFromServiceRequest: diagnosticReport.observationsFromServiceRequest,
+			dateAppointment: reportImageCase.infoOrderInstances && this.getAppointmentDate(reportImageCase.infoOrderInstances.dateAppoinment),
 		}
 	}
 
@@ -108,6 +119,13 @@ export class StudyComponent implements OnInit {
 	}
 
 
+	private getAppointmentDate( dateAppoinment: AppointmentDate): Date {
+		const finalAppointmentDate = dateAppoinment.appointmentDate && dateAppoinment.appointmentHour ?
+			dateTimeDtoToDate({date:dateAppoinment?.appointmentDate, time:dateAppoinment?.appointmentHour}) : null
+		return finalAppointmentDate
+	}
+
+
 	private mapToStudyInformation(report: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto, appointment?: any): StudyInformation {
         return {
             diagnosticInformation: report,
@@ -118,9 +136,9 @@ export class StudyComponent implements OnInit {
     }
 
 	private mapToStudyInformationFromImageOrderCases(report: DiagnosticWithTypeReportInfoDto): StudyInformation {
-        return {
+		return {
             diagnosticInformation: report,
-            hasActiveAppointment: (report.infoOrderInstances as InfoNewStudyOrderDto).hasActiveAppointment,
+            hasActiveAppointment: (report.infoOrderInstances as InfoNewStudyOrderDto)?.hasActiveAppointment?(report.infoOrderInstances as InfoNewStudyOrderDto).hasActiveAppointment: false ,
 			appointmentId: report.infoOrderInstances?.imageId ? report.infoOrderInstances.imageId : null ,
 			reportStatus: report.infoOrderInstances?.viewReport
         }
@@ -149,6 +167,7 @@ export class StudyComponent implements OnInit {
 						order: diagnosticReport.serviceRequestId,
 						patientId: this.patientId,
 						diagnosticReportId: diagnosticReport.id,
+						studies: studiesService,
 						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
 					width: '50%',
@@ -189,8 +208,8 @@ export class StudyComponent implements OnInit {
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto): void {
 
 		let idOrder: number = diagnosticReport.serviceRequestId;
-		let studiesService: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
-
+		let studies: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
+		let resultsPractices: ResultPractice[] = this.studyResultsService.getTemplatesStudies(diagnosticReport.serviceRequestId, this.patientId);
 		if (diagnosticReport?.referenceRequestDto) {
 			this.dialog.open(ReferenceCompleteStudyComponent,
 				{
@@ -200,7 +219,8 @@ export class StudyComponent implements OnInit {
 						order: diagnosticReport.serviceRequestId,
 						patientId: this.patientId,
 						diagnosticReportId: diagnosticReport.id,
-						status: this.getPrescriptionStatus(diagnosticReport.statusId)
+						status: this.getPrescriptionStatus(diagnosticReport.statusId),
+						resultsPractices: resultsPractices,
 					},
 					width: '50%',
 					height: '55%',
@@ -211,7 +231,7 @@ export class StudyComponent implements OnInit {
 				{
 					data: {
 						diagnosticReport: diagnosticReport,
-						studies: studiesService,
+						studies: studies,
 						patientId: this.patientId,
 						order: diagnosticReport.serviceRequestId,
 						creationDate: diagnosticReport.creationDate,
@@ -341,4 +361,8 @@ export interface StudyInformation {
     hasActiveAppointment?: boolean;
 	appointmentId?: number | string;
 	reportStatus?: boolean
+}
+
+export interface ContentStudy extends Content {
+	dateAppointment?: Date
 }

@@ -39,11 +39,13 @@ public class LoadExternalCause {
 	public ExternalCauseBo run (Long documentId, Optional<ExternalCauseBo> externalCauseBo) {
 		LOG.debug("Input parameters -> documentId {}, externalCauseBo {}", documentId, externalCauseBo);
 		externalCauseBo.ifPresent(ec -> {
+			if (!ec.hasNotNullValues())
+				return;
 			ExternalCause externalCause = new ExternalCause();
-			if (ec.getSnomed() != null)
-				externalCause.setSnomedId(
-						snomedService.getSnomedId(ec.getSnomed())
-								.orElseGet(() -> snomedService.createSnomedTerm(ec.getSnomed())));
+			if (ec.getSnomed() != null){
+				Integer snomedId = snomedService.getSnomedId(ec.getSnomed()).orElseGet(() -> snomedService.createSnomedTerm(ec.getSnomed()));
+				externalCause.setSnomedId(snomedId);
+			}
 			if (ec.getExternalCauseType() != null)
 				externalCause.setExternalCauseTypeId(ec.getExternalCauseType().getId());
 			if(ec.getEventLocation() != null)

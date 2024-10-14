@@ -30,6 +30,10 @@ public enum EAnestheticTechnique {
         return Stream.of(EAnestheticTechnique.values()).collect(Collectors.toList());
     }
 
+    public static List<EAnestheticTechnique> getIndividualOptions() {
+        return Stream.of(EAnestheticTechnique.INHALATION, EAnestheticTechnique.INTRAVENOUS).collect(Collectors.toList());
+    }
+
     @JsonCreator
     public static EAnestheticTechnique map(Short id) {
         for (EAnestheticTechnique e : values()) {

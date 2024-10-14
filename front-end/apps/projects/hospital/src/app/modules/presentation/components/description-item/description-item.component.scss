@@ -5,7 +5,7 @@
 }
 
 .date-text {
-	font-size: 14px;
+    font-size: 14px;
 }
 
 .bull-elements {
@@ -15,4 +15,8 @@
 
 .description-item {
     margin-bottom: 2px;
+}
+
+.formatted-text {
+    white-space: pre-wrap;
 }

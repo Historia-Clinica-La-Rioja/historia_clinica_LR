@@ -1,0 +1,6 @@
+<div *ngIf="isLoadingRequestReport" class="padding-top">
+	<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
+</div>
+<div *ngIf="cubeReportData">
+	<app-ui-component [uiComponent]="cubeReportData" (close)="close.emit($event)"></app-ui-component>
+</div>

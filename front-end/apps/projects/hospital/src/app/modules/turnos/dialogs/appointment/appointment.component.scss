@@ -49,7 +49,8 @@
 		color: #A8A8A8;
 		font-size: 20px;
 	}
-	.icon-purple{
+
+	.icon-purple {
 		color: #AA4EF2;
 		font-size: 20px;
 	}
@@ -103,6 +104,11 @@
 
 .appointment-actions {
 
+	::ng-deep .mat-mdc-outlined-button>.mat-icon {
+		margin-right: 0 !important;
+		margin-left: 0 !important;
+	}
+
 	margin-top: 10px;
 
 	button {
@@ -113,10 +119,6 @@
 
 	.mat-icon.mat-primary {
 		color: #979797;
-	}
-
-	mat-icon {
-		font-size: 25px;
 	}
 
 	.selected {
@@ -294,7 +296,7 @@ app-colored-label {
 	font-weight: 500;
 }
 
-.custom-label-modality{
+.custom-label-modality {
 	display: flex;
 	justify-content: flex-start;
 }
@@ -304,12 +306,12 @@ app-colored-label {
 		display: none;
 	}
 
-	section{
+	section {
 		width: 58vw;
 	}
 
-	.appointment-actions{
-		button{
+	.appointment-actions {
+		button {
 			min-width: 0;
 			padding: 0;
 		}
@@ -317,7 +319,7 @@ app-colored-label {
 }
 
 @media only screen and (max-width: 320px) {
-	.window{
+	.window {
 		padding-left: 5px;
 	}
 }

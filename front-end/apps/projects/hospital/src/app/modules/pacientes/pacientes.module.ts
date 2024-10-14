@@ -29,12 +29,14 @@ import { EditIdentificationNumberComponent } from './dialogs/edit-identification
 import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 import { HierarchicalUnitsComponent } from './component/hierarchical-units/hierarchical-units.component';
 import { LicenseFormComponent } from './component/license-form/license-form.component';
+import { MedicalDischargeSummaryComponent } from './component/medical-discharge-summary/medical-discharge-summary.component';
 import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
 import { ResumenDeGuardiaComponent } from './component/resumen-de-guardia/resumen-de-guardia.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
 import { SearchPatientComponent } from './component/search-patient/search-patient.component';
 import { ViewPatientDetailComponent } from './component/view-patient-detail/view-patient-detail.component';
 //Standalone component
+import { EmergencyCareStatusLabelsComponent } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
 // dialogs
@@ -57,8 +59,6 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
-
-
 
 @NgModule({
 	declarations: [
@@ -83,6 +83,7 @@ import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 		FilesUploaderComponent,
 		HierarchicalUnitsComponent,
 		LicenseFormComponent,
+		MedicalDischargeSummaryComponent,
 		ProfessionSpecialtiesFormComponent,
 		ResumenDeGuardiaComponent,
 		SearchCreateComponent,
@@ -130,6 +131,7 @@ import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 		InternacionesModule,
 		GuardiaModule,
 		//Standalone Components
+		EmergencyCareStatusLabelsComponent,
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
 	],

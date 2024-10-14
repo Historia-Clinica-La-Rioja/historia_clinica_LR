@@ -32,7 +32,7 @@ public class GetIsValidAccess {
 	public boolean run(Integer institutionId, Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		boolean isIntermentEpisodeActive = internmentPatientService.internmentEpisodeInProcess(institutionId, patientId).isInProgress();
-		boolean isEmergencyCareEpisodeActive = emergencyCareEpisodeService.emergencyCareEpisodeInProgressByInstitution(institutionId, patientId).isInProgress();
+		boolean isEmergencyCareEpisodeActive = emergencyCareEpisodeService.getEmergencyCareEpisodeInProgressByInstitution(institutionId, patientId).isInProgress();
 		boolean hasCurrentAppointment = appointmentService.hasCurrentAppointment(patientId, userLogged.getProfessionalId(), LocalDate.now());
 		boolean hasPastAppointment = appointmentService.hasOldAppointmentWithMinDateLimit(patientId, userLogged.getProfessionalId(), MIN_DATE_LIMIT);
 		boolean hasFutureAppointment = appointmentService.hasFutureAppointmentByPatientId(patientId, userLogged.getProfessionalId());

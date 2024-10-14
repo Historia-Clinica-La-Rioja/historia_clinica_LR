@@ -125,7 +125,7 @@ export class AgendaHorarioService {
 			} else {
 				event.start = dialogInfo.startingHour;
 				event.end = dialogInfo.endingHour;
-				if (this.thereIsValidTurnAvailability(event))
+				if (this.thereIsValidTurnAvailabilityByEvent(event))
 					this.setNewEvent(event, dialogInfo);
 				else {
 					this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
@@ -136,7 +136,15 @@ export class AgendaHorarioService {
 		});
 	}
 
-	private thereIsValidTurnAvailability(event: CalendarEvent): boolean {
+	private thereIsValidAvailability(): boolean {
+		return !this.occupiedOpeningHours.some(occupiedOpeningHour =>
+			!this.diaryOpeningHours.every(diaryOpeningHour =>
+				this.compareTurnHourThreshold(occupiedOpeningHour, diaryOpeningHour)
+			)
+		);
+	}
+
+	private thereIsValidTurnAvailabilityByEvent(event: CalendarEvent): boolean {
 		return this.occupiedOpeningHours
 			.filter(occupiedTurn => event.start.getDay() === occupiedTurn.start.getDay())
 			.every(occupiedTurn => this.compareTurnHourThreshold(event, occupiedTurn));
@@ -188,7 +196,7 @@ export class AgendaHorarioService {
 					else {
 						event.start = dialogInfo.startingHour;
 						event.end = dialogInfo.endingHour;
-						if (this.thereIsValidTurnAvailability(event))
+						if (this.thereIsValidTurnAvailabilityByEvent(event))
 							this.setNewEvent(event, dialogInfo);
 						else {
 							this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
@@ -231,6 +239,8 @@ export class AgendaHorarioService {
 			map(occupations => this.occupationsToCalendarEvents(occupations))
 		).subscribe((doctorsOfficeEvents: CalendarEvent[]) => {
 			this.occupiedOpeningHours = doctorsOfficeEvents;
+			if (!this.thereIsValidAvailability())
+				this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
 			this.refresh();
 		});
 	}

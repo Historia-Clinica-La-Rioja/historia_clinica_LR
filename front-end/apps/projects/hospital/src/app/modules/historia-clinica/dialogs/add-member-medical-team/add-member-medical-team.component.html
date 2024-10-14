@@ -25,7 +25,6 @@
                     [(ngModel)]="professional?.professionalData.profession.otherTypeDescription">
             </mat-form-field>
         </div>
-
     </div>
     <app-surgical-report-professional-info [professionals]="data.professionals"
         [professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.PROFESSIONAL' | translate"
@@ -37,7 +36,7 @@
     <button mat-stroked-button color="primary" mat-dialog-close>
         <span [translate]="'buttons.CANCEL'"></span>
     </button>
-    <button mat-raised-button color="primary" id="confirm_button" [disabled]="showErrorProfessionalRepeated" (click)="emitProfessionalSelected()">
+    <button mat-raised-button color="primary" id="confirm_button" [disabled]="isConfirmDisabled" (click)="emitProfessionalSelected()">
         <span [translate]="'buttons.CONFIRM'"></span>
     </button>
 </div>

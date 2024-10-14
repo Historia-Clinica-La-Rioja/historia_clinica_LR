@@ -12,10 +12,8 @@ import org.mapstruct.Named;
 
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.establishment.controller.dto.BedInfoDto;
-import net.pladema.establishment.controller.dto.PatientBedRelocationDto;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
-import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 @Mapper(uses = {LocalDateMapper.class})
@@ -46,10 +44,4 @@ public interface BedMapper {
     @Named("toListBedSummaryDto")
     @IterableMapping(qualifiedByName = "toBedSummaryDto")
     List<BedSummaryDto> toListBedSummaryDto(List<BedSummaryVo> bedSummaryList);
-
-    @Named("toPatientBedRelocationDto")
-    PatientBedRelocationDto toPatientBedRelocationDto(HistoricPatientBedRelocation historicPatientBedRelocation);
-    
-    @Named("fromPatientBedRelocationDto")
-    HistoricPatientBedRelocation fromPatientBedRelocationDto(PatientBedRelocationDto patientBedRelocationDto);
 }

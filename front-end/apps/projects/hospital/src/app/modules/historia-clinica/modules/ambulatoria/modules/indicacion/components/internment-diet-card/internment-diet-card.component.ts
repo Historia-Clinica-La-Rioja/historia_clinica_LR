@@ -1,11 +1,13 @@
 import { Component, Input, OnChanges, Output } from "@angular/core";
-import { DIET, IndicationStatus, IndicationStatusScss, INDICATION_TYPE, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { DIET, IndicationStatus, IndicationStatusScss, INDICATION_TYPE } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { DietDto, EIndicationType } from "@api-rest/api-model";
 import { Content } from '@presentation/components/indication/indication.component';
 import { MatDialog } from "@angular/material/dialog";
 import { InternmentIndicationDetailComponent } from "../../dialogs/internment-indication-detail/internment-indication-detail.component";
 import { IndicationService } from "@api-rest/services/indication.service";
 import { Subject } from "rxjs";
+import { dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
+import { ShowTimeElapsedPipe } from "@historia-clinica/pipes/show-time-elapsed.pipe";
 
 
 const DIALOG_SIZE = '35%';
@@ -24,7 +26,7 @@ export class InternmentDietCardComponent implements OnChanges {
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly indicationService: IndicationService
+		private readonly indicationService: IndicationService,
 	) { }
 
 	ngOnChanges() {
@@ -36,7 +38,10 @@ export class InternmentDietCardComponent implements OnChanges {
 	}
 
 	mapToIndicationContent(): Content[] {
+		
 		return this.diets?.map((diet: DietDto) => {
+			const createdOn = dateTimeDtotoLocalDate(diet.createdOn);
+			const showTimeElapsedPipe = new ShowTimeElapsedPipe();
 			return {
 				status: {
 					description: IndicationStatus[diet.status],
@@ -46,7 +51,7 @@ export class InternmentDietCardComponent implements OnChanges {
 				id: diet.id,
 				description: diet.description,
 				createdBy: diet.createdBy,
-				timeElapsed: showTimeElapsed(diet.createdOn),
+				timeElapsed: showTimeElapsedPipe.transform(createdOn),
 			}
 		});
 	}

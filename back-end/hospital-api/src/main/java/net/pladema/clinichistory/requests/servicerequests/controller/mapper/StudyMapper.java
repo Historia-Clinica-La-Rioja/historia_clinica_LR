@@ -3,10 +3,14 @@ package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import java.util.List;
+
+import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
+import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportSummaryDto;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
@@ -49,5 +53,15 @@ public interface StudyMapper {
     @Mapping(target = "diagnosticReportId", expression = "java(diagnosticReportBo.getId())")
     @Mapping(target = "pt", expression = "java(diagnosticReportBo.getDiagnosticReportSnomedPt())")
     DiagnosticReportSummaryDto toDiagnosticReportSummaryDto(DiagnosticReportBo diagnosticReportBo);
+
+	@Named("toExtendedServiceRequestBo")
+	@Mapping(target = "patientInfo", source = "patientDto")
+	@Mapping(target = "doctorId", source = "doctorId")
+	@Mapping(target = "medicalCoverageId", expression = "java(serviceRequestDto.getMedicalCoverageId())")
+	@Mapping(target = "diagnosticReports", source = "studies")
+	@Mapping(target = "observations", expression = "java(serviceRequestDto.getObservations())")
+	@Mapping(target = "studyTypeId", expression = "java(serviceRequestDto.getStudyType().getId())")
+	@Mapping(target = "requiresTransfer", expression = "java(serviceRequestDto.getRequiresTransfer())")
+	ExtendedServiceRequestBo toExtendedServiceRequestBo(BasicPatientDto patientDto, Integer doctorId, String categoryId, PrescriptionDto serviceRequestDto, List<PrescriptionItemDto> studies);
 
 }

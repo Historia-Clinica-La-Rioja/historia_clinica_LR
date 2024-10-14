@@ -46,12 +46,12 @@
 									</div>
 									<div fxFlex="40%">
 										<span >
-											{{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate | date:dateFormats.SHORT_DATE}}
+											{{diary.startDate | isoToDate | dateFormat : 'date' }} - {{diary.endDate | isoToDate | dateFormat: 'date'}}
 										</span>
 									</div>
                                 </mat-option>
                             </mat-select>
-                            <button id="clear_agenda_selected" type="button" mat-button *ngIf="diarySelected && showButtonToClear"
+                            <button id="clear_agenda_selected" type="button"  *ngIf="diarySelected && showButtonToClear"
                                 matSuffix color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -75,3 +75,4 @@
         </ng-template>
     </div>
 </app-dock-popup>
+

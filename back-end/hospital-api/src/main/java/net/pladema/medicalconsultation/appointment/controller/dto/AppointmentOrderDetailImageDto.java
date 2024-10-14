@@ -3,7 +3,6 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 
 import java.time.LocalDateTime;

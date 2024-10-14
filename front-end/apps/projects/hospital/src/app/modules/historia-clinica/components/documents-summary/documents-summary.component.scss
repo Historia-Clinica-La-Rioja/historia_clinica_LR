@@ -8,7 +8,11 @@ form {
 
 mat-selection-list {
 	overflow: auto;
-	width: 25vw;
+	width: 24vw;
+
+	.mat-list-single-selected-option {
+		background-color: #E9F3F9;
+	}
 }
 
 .content {
@@ -22,11 +26,15 @@ mat-selection-list {
 }
 
 .selection-documents {
-	min-width: 25vw;
+	min-width: 24vw;
 }
 
 .selection-documents mat-list-option {
 	height: auto;
+}
+
+.padding-left {
+	padding-left: 1rem;
 }
 
 .no-notes {
@@ -88,7 +96,7 @@ mat-selection-list {
     mat-selection-list {
         width: 30vw;
     }
-    
+
     .selection-documents {
         min-width: 30vw;
     }

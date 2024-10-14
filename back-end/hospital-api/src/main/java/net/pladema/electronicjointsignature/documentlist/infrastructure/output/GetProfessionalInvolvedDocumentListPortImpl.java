@@ -2,7 +2,9 @@ package net.pladema.electronicjointsignature.documentlist.infrastructure.output;
 
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EElectronicSignatureStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentInvolvedProfessionalRepository;
-import lombok.AllArgsConstructor;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.RequiredArgsConstructor;
 import net.pladema.electronicjointsignature.documentlist.application.port.GetProfessionalInvolvedDocumentListPort;
 
 import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureDocumentListFilterBo;
@@ -15,19 +17,27 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class GetProfessionalInvolvedDocumentListPortImpl implements GetProfessionalInvolvedDocumentListPort {
 
-	private GetProfessionalInvolvedDocumentListStorage getProfessionalInvolvedDocumentListStorage;
+	private final GetProfessionalInvolvedDocumentListStorage getProfessionalInvolvedDocumentListStorage;
 
-	private DocumentInvolvedProfessionalRepository documentInvolvedProfessionalRepository;
+	private final DocumentInvolvedProfessionalRepository documentInvolvedProfessionalRepository;
+
+	private final FeatureFlagsService featureFlagsService;
 
 	@Override
 	public Page<ElectronicSignatureInvolvedDocumentBo> fetchProfessionalInvolvedDocuments(ElectronicSignatureDocumentListFilterBo filter, Pageable pageable) {
+		setNameSelfDeterminationFFActiveOnFilter(filter);
 		Page<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListStorage.run(filter, pageable);
 		result.forEach(this::checkAndUpdateOutdatedSignatureStatus);
 		return result;
+	}
+
+	private void setNameSelfDeterminationFFActiveOnFilter(ElectronicSignatureDocumentListFilterBo filter) {
+		boolean isNameSelfDeterminationFFActive = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
+		filter.setSelfDeterminationNameFFActive(isNameSelfDeterminationFFActive);
 	}
 
 	private void checkAndUpdateOutdatedSignatureStatus(ElectronicSignatureInvolvedDocumentBo document) {

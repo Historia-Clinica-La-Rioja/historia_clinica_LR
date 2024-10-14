@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.application.bed.exceptions.BedRelocationException;
 import net.pladema.establishment.application.rules.determineregulatedreference.exceptions.RuleException;
 import net.pladema.establishment.controller.service.exceptions.HierarchicalUnitStaffException;
 
@@ -44,6 +45,20 @@ public class EstablishmentExceptionHandler {
 	protected ApiErrorMessageDto handleRuleException(RuleException ex) {
 		log.debug("RuleException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BedRelocationException.class })
+	protected ApiErrorMessageDto handleBedRelocationException(BedRelocationException ex, Locale locale) {
+		log.debug("BedRelocationException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+	@ExceptionHandler({ BackofficeClinicalServiceSectorException.class })
+	protected ApiErrorMessageDto handleBackofficeClinicalServiceSectorException(BackofficeClinicalServiceSectorException ex, Locale locale) {
+		log.debug("BackofficeClinicalServiceSectorException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
+import net.pladema.establishment.domain.bed.BedRelocationBo;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
 import net.pladema.establishment.repository.HistoricInchargeNurseBedRepository;
@@ -73,27 +74,29 @@ public class BedServiceImpl implements BedService {
 
 	@Override
 	@Transactional
-	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation) {
-		log.debug("BedService::addPatientBedRelocation-> input parameters -> PatientBedRelocation{} ", patientBedRelocation);
-		if (patientBedRelocation.getOriginBedId() != null) {
-			internmentEpisodeExtService.relocatePatientBed(patientBedRelocation.getInternmentEpisodeId(),
-					patientBedRelocation.getDestinationBedId());
-			if (patientBedRelocation.isOriginBedFree()) {
-				freeBed(patientBedRelocation.getOriginBedId());
+	public BedRelocationBo addPatientBedRelocation(BedRelocationBo bedRelocationBo) {
+		log.debug("Input parameters -> bedRelocationBo {} ", bedRelocationBo);
+		if (bedRelocationBo.getOriginBedId() != null) {
+			internmentEpisodeExtService.relocatePatientBed(bedRelocationBo.getInternmentEpisodeId(),
+					bedRelocationBo.getDestinationBedId());
+			if (bedRelocationBo.isOriginBedFree()) {
+				freeBed(bedRelocationBo.getOriginBedId());
 			}
 		}
-		updateBedStatusOccupied(patientBedRelocation.getDestinationBedId());
-		HistoricPatientBedRelocation result = historicPatientBedRelocationRepository.save(patientBedRelocation);
-		log.debug(OUTPUT, result);
+		updateBedStatusOccupied(bedRelocationBo.getDestinationBedId());
+		historicPatientBedRelocationRepository.save(this.mapTo(bedRelocationBo));
+		log.debug(OUTPUT, bedRelocationBo);
 
-		return result;
+		return bedRelocationBo;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId) {
-		log.debug("BedService::getLastPatientBedRelocation-> input parameters -> internmentEpisodeId{}", internmentEpisodeId);
-		Optional<HistoricPatientBedRelocation> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId).findFirst();
+	public Optional<BedRelocationBo> getLastPatientBedRelocation(Integer internmentEpisodeId) {
+		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Optional<BedRelocationBo> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId)
+				.findFirst()
+				.map(this::mapTo);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -160,11 +163,39 @@ public class BedServiceImpl implements BedService {
 		);
 	}
 
+	@Override
+	public boolean isBedFreeAndAvailable(Integer bedId) {
+		log.debug("Input parameters -> bedId {}", bedId);
+		var result = bedRepository.isBedFreeAndAvailable(bedId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private void updatePreviousHistoricInchargeNurseBed(Integer bedId) {
 		List<HistoricInchargeNurseBed> historic = historicInchargeNurseBedRepository.getLatestHistoricInchargeNurseBedByBedId(bedId, PageRequest.of(0, 1));
 		if (!historic.isEmpty()) {
 			historic.get(0).setUntilDate(LocalDateTime.now());
 			historicInchargeNurseBedRepository.save(historic.get(0));
 		}
+	}
+
+	private BedRelocationBo mapTo(HistoricPatientBedRelocation patientBedRelocation) {
+		return BedRelocationBo.builder()
+				.originBedId(patientBedRelocation.getOriginBedId())
+				.destinationBedId(patientBedRelocation.getDestinationBedId())
+				.internmentEpisodeId(patientBedRelocation.getInternmentEpisodeId())
+				.relocationDate(patientBedRelocation.getRelocationDate())
+				.originBedFree(patientBedRelocation.isOriginBedFree())
+				.build();
+	}
+
+	private HistoricPatientBedRelocation mapTo(BedRelocationBo bedRelocationBo) {
+		return HistoricPatientBedRelocation.builder()
+				.originBedId(bedRelocationBo.getOriginBedId())
+				.destinationBedId(bedRelocationBo.getDestinationBedId())
+				.internmentEpisodeId(bedRelocationBo.getInternmentEpisodeId())
+				.relocationDate(bedRelocationBo.getRelocationDate())
+				.originBedFree(bedRelocationBo.isOriginBedFree())
+				.build();
 	}
 }

@@ -29,7 +29,7 @@
             <mat-form-field appearance="outline">
                 <input id="medication-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{ data.fluidAdministrationService.snomedConcept.pt }}">
-                <button id="clear-drug" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear-drug"  matSuffix color="warn" mat-icon-button
                     (click)="data.fluidAdministrationService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>

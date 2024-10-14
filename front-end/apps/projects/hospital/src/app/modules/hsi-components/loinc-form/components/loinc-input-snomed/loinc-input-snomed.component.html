@@ -1,10 +1,10 @@
-<h3>{{title | translate}}</h3>
+<span>{{title | translate}}</span>
 <app-concept-typeahead-search
 	 [ecl]="eclSelected"
      [appearanceOutline]="true"
 	 [placeholder]="'Busqueda'"
 	 [showSearchIcon]="true"
 	 [clearButton]="true"
-	 [preload]="preload"
-	 (conceptSelected)="valueSelected.emit($event?.pt)">
+	 [preload]="preloadSnomed"
+	 (conceptSelected)="valueSelected.emit($event)">
 </app-concept-typeahead-search>

@@ -1,7 +1,7 @@
 <form [formGroup]="typeaheadService.form">
 	<mat-form-field fxFlex=100% appearance="outline" class="typeahead-input" [hideRequiredMarker]="true">
-		<mat-label>{{titleInput | translate}}</mat-label>
-		<input type="text" placeholder="{{ placeholder | translate}}" formControlName="searchValue"
+		<mat-label>{{titleInput}}</mat-label>
+		<input type="text" placeholder="{{ placeholder}}" formControlName="searchValue"
 			#trigger="matAutocompleteTrigger" matInput [matAutocomplete]="auto"
 			(keyup.backspace)="typeaheadService.clear()">
 		<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
@@ -13,7 +13,7 @@
 			</mat-option>
 		</mat-autocomplete>
 
-		<button *ngIf="typeaheadService.form.value?.searchValue?.length && !disabled" id="clear" type="button"
+		<button *ngIf="typeaheadService.form.value?.searchValue?.length && !typeaheadService.disabled" id="clear" type="button"
 			color="warn" mat-icon-button matSuffix (click)="typeaheadService.clear()">
 			<mat-icon>close</mat-icon>
 		</button>

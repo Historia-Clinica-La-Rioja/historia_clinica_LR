@@ -227,9 +227,11 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.AGE');
 			array.push(aggressor.aggressorData.actorPersonalData.age.toString());
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.ADDRESS');
-			array.push(aggressor.aggressorData.actorPersonalData.address);
+			array.push(aggressor.aggressorData.actorPersonalData.address.homeAddress);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.MUNICIPALTY');
-			array.push(aggressor.aggressorData.actorPersonalData.municipality.description ? aggressor.aggressorData.actorPersonalData.municipality.description : 'Sin información');
+			array.push(aggressor.aggressorData.actorPersonalData.address.municipality.description ? aggressor.aggressorData.actorPersonalData.address.municipality.description : 'Sin información');
+			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.LOCALITY');
+			array.push(aggressor.aggressorData.actorPersonalData.address.city.description ? aggressor.aggressorData.actorPersonalData.address.city.description : 'Sin información');
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.questions.QUESTION_1');
 			const guns: BasicOption = BasicOptions.find(opt => opt.value === aggressor.hasGuns);
 			array.push(guns.text);
@@ -282,9 +284,6 @@ export class ViolenceReportFacadeService {
 		array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_1');
 		array.push(canReadAndWrite.text);
 		this.buildIncome(array, victimData);
-		const socialPlan: BasicOption = BasicOptions.find(opt => opt.value === victimData.hasSocialPlan);
-		array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_3');
-		array.push(socialPlan.text);
 		this.buildDisabilityData(array, victimData);
 		this.buildInstitutionalizedData(array, victimData);
 		this.buildLackOfLegalCapacity(array, victimData);
@@ -299,6 +298,9 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_9');
 			const sector: BasicOption = Sectors.find(opt => opt.value === victimData.incomeData.worksAtFormalSector);
 			array.push(sector.text);
+			const socialPlan: BasicOption = BasicOptions.find(opt => opt.value === victimData.hasSocialPlan);
+			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_3');
+			array.push(socialPlan.text);
 		}
 	}
 
@@ -365,9 +367,11 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.AGE');
 			array.push(victimData.keeperData.actorPersonalData.age.toString());
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.ADDRESS');
-			array.push(victimData.keeperData.actorPersonalData.address);
+			array.push(victimData.keeperData.actorPersonalData.address.homeAddress);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.MUNICIPALTY');
-			array.push(victimData.keeperData.actorPersonalData.municipality.description ? victimData.keeperData.actorPersonalData.municipality.description : 'Sin información');
+			array.push(victimData.keeperData.actorPersonalData.address.municipality.description ? victimData.keeperData.actorPersonalData.address.municipality.description : 'Sin información');
+			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.LOCALITY');
+			array.push(victimData.keeperData.actorPersonalData.address.city.description ? victimData.keeperData.actorPersonalData.address.city.description : 'Sin información');
 			const relationship: ValueOption = RelationOption.find(opt => opt.value === victimData.keeperData.relationshipWithVictim);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.RELATIONSHIP_WITH_VICTIM');
 			array.push(relationship.text === RelationOptionDescription.OTHER ? `${relationship.text}: ${victimData.keeperData.otherRelationshipWithVictim}`: relationship.text);

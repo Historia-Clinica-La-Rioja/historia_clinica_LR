@@ -1,0 +1,42 @@
+<form [formGroup]="data.createOrderService.getForm()" fxLayout="column" fxLayoutGap="5px">
+	<div>
+		<span>{{'historia-clinica.create-order.PROCEDURE' | translate}}</span>
+		<app-concept-typeahead-search [ecl]="PROCEDURE" [appearanceOutline]="true" [placeholder]="'Busqueda'"
+			[showSearchIcon]="true" [placeholder]="'historia-clinica.create-order.PROCEDURE'" [appearanceOutline]="true"
+			[placeholder]="'historia-clinica.new-consultation-procedure-form.SEARCH_PLACEHOLDER'" [clearButton]="true"
+			(conceptSelected)="setConcept($event)">
+		</app-concept-typeahead-search>
+	</div>
+
+	<div fxLayout="column">
+		<div>
+			<span>{{'historia-clinica.create-order.DATE_OF_REALIZATION' | translate}}</span>
+
+			<app-datepicker id="procedure-date" [minDate]="minDate" [maxDate]="maxDate"
+				(selectDate)="dateChanged($event)">
+			</app-datepicker>
+		</div>
+
+		<span>{{'historia-clinica.create-order.CATEGORY' | translate}}</span>
+
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-select [(value)]="DEFAULT_STUDY.id" id="study-category">
+				<mat-option *ngFor="let studyCategory of studyCategoryOptions"
+					(click)="setStudyCategory(studyCategory.id)" [value]="studyCategory.id">
+					{{studyCategory.description | translate}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<span>{{'historia-clinica.create-order.HEALTH_PROBLEM' | translate}}</span>
+
+		<mat-form-field appearance="outline" class="full-width">
+			<mat-select id="health-problem">
+				<mat-option *ngFor="let healthProblem of problems" (click)="setProblem(healthProblem)"
+					[value]="healthProblem">
+					{{ healthProblem.pt | translate }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+</form>

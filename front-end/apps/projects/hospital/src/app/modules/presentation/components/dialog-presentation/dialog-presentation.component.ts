@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-dialog-presentation',
@@ -7,15 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class DialogPresentationComponent {
 
-    DIALOG_WIDTH = DialogWidth;
-    @Input() dialogWidth: DialogWidth;
-
     constructor() { }
 
-}
-
-export enum DialogWidth {
-    SMALL = '520px',
-    MEDIUM = '760px',
-    LARGE = '960px'
 }

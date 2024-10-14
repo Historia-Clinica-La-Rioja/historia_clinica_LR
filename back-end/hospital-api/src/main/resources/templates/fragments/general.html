@@ -36,7 +36,7 @@
         }
 
         .header-space {
-            height: 200px;
+            height: 220px;
         }
 
         /*FOOTER*/
@@ -72,6 +72,13 @@
         table {
             width: 100%;
             -fs-table-paginate: paginate;
+        }
+
+        .professionals-table {
+            width: auto;
+            margin-left: -25px;
+            border-collapse: separate;
+            border-spacing: 25px 0;
         }
 
         /*TEXT FORMAT*/
@@ -119,6 +126,28 @@
             float: left;
             margin-right: 30px;
         }
+
+        .graph-container {
+            width: 700px;
+            height: 420px;
+            padding-top: 10px;
+        }
+
+        .divider {
+            background: rgb(180, 180, 180);
+            border: 0;
+            height: 1px;
+            margin: 8px 0;
+        }
+
+        .element {
+            padding-bottom: 6px;
+        }
+
+        .section-explicit-list {
+            margin-bottom: 15px;
+        }
+
 	</style>
 </head>
 <body>
@@ -133,40 +162,38 @@
                     <div class="institution-data" th:text="${institution.email}"></div>
                 </div>
             </div>
+            <div class="section-title">Información general</div>
             <div>
-                <div class="section-title">Información general</div>
-                <div>
-                    <div class="row-content">
-                        <div class="data-title">Nombre y apellido del paciente</div>
-                        <div style="float: left; margin-right: 3px;">
-                            <div class="data-text" th:if="${patientCompleteName != null}" style="text-transform: uppercase;" th:text="${patientCompleteName}"></div>
-                            <div class="data-text" th:if="${patientCompleteName == null}">Sin información</div>
-                        </div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Documento</div>
-                        <div class="data-text" th:if="${patient.identificationNumber != null}" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
-                        <div class="data-text" th:if="${patient.identificationNumber == null}">Sin información</div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">N° HC</div>
-                        <div class="data-text" th:text="${patient.id}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">ID Encuentro</div>
-                        <div class="data-text" th:text="${encounterId}"></div>
+                <div class="row-content">
+                    <div class="data-title">Nombre y apellido del paciente</div>
+                    <div style="float: left; margin-right: 3px;">
+                        <div class="data-text" th:if="${patientCompleteName != null}" style="text-transform: uppercase;" th:text="${patientCompleteName}"></div>
+                        <div class="data-text" th:if="${patientCompleteName == null}">Sin información</div>
                     </div>
                 </div>
-                <div>
-                    <div style="clear: both;">
-                        <div class="row-content">
-                            <div class="data-title">Edad</div>
-                            <div class="data-text" th:text="${patient.person.age}"></div>
-                        </div>
-                        <div class="row-content">
-                            <div class="data-title">Fecha Nac.</div>
-                            <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
-                        </div>
+                <div class="row-content">
+                    <div class="data-title">Documento</div>
+                    <div class="data-text" th:if="${patient.identificationNumber != null}" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                    <div class="data-text" th:if="${patient.identificationNumber == null}">Sin información</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">N° HC</div>
+                    <div class="data-text" th:text="${patient.id}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">ID Encuentro</div>
+                    <div class="data-text" th:text="${encounterId}"></div>
+                </div>
+            </div>
+            <div>
+                <div style="clear: both;">
+                    <div class="row-content">
+                        <div class="data-title">Edad</div>
+                        <div class="data-text" th:text="${patient.person.age}?: 'Sin información'"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Fecha Nac.</div>
+                        <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')?: 'Sin información'}"></div>
                     </div>
                 </div>
             </div>
@@ -179,55 +206,53 @@
     <!-- Datos encuentro -->
     <div th:fragment="encounterData(type)">
         <div>
-            <div>
-                <div class="section-title">Episodio/Encuentro</div>
-                <div style="margin-bottom: 10px;">
-                    <div class="row-content">
-                        <div class="data-title">Institucion</div>
-                        <div class="data-text" th:text="${institution.name}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Sector/Servicio</div>
-                        <div class="data-text" th:if="${sector}" th:text="${sector}"></div>
-                        <div class="data-text" th:unless="${sector}">Sin información</div>
-                    </div>
-                    <div class="row-content" th:if="${doctorsOffice != null}">
-                        <div class="data-title">Consultorio</div>
-                        <div class="data-text" th:text="${doctorsOffice}"></div>
-                    </div>
-                    <div class="row-content" th:if="${room != null}">
-                        <div class="data-title">Habitación</div>
-                        <div class="data-text" th:text="${room}"></div>
-                    </div>
-                    <div class="row-content" th:if="${shockRoom != null}">
-                        <div class="data-title">Shockroom</div>
-                        <div class="data-text" th:text="${shockRoom}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Tipo</div>
-                        <div class="data-text" th:text="${type}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Fecha y Hora</div>
-                        <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy | HH:mm') + ' hs'}"></div>
-                    </div>
+            <div class="section-title">Episodio/Encuentro</div>
+            <div style="margin-bottom: 10px;">
+                <div class="row-content">
+                    <div class="data-title">Institucion</div>
+                    <div class="data-text" th:text="${institution.name}"></div>
                 </div>
-                <div style="clear: both; margin-bottom: 10px;">
-                    <div style="overflow-wrap: break-word; width: 40%" class="row-content">
-                        <div class="data-title">Cobertura</div>
-                        <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
-                        <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">N° de credencial</div>
-                        <div class="data-text" th:if="${patientCoverage != null && patientCoverage.affiliateNumber != null}" th:text="${patientCoverage.affiliateNumber}"></div>
-                        <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.affiliateNumber != null}">Sin información</div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Plan</div>
-                        <div class="data-text" th:if="${patientCoverage != null && patientCoverage.planName != null}" th:text="${patientCoverage.planName}"></div>
-                        <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.planName != null}">Sin información</div>
-                    </div>
+                <div class="row-content">
+                    <div class="data-title">Sector/Servicio</div>
+                    <div class="data-text" th:if="${sector}" th:text="${sector}"></div>
+                    <div class="data-text" th:unless="${sector}">Sin información</div>
+                </div>
+                <div class="row-content" th:if="${doctorsOffice != null}">
+                    <div class="data-title">Consultorio</div>
+                    <div class="data-text" th:text="${doctorsOffice}"></div>
+                </div>
+                <div class="row-content" th:if="${room != null}">
+                    <div class="data-title">Habitación</div>
+                    <div class="data-text" th:text="${room}"></div>
+                </div>
+                <div class="row-content" th:if="${shockRoom != null}">
+                    <div class="data-title">Shockroom</div>
+                    <div class="data-text" th:text="${shockRoom}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Tipo</div>
+                    <div class="data-text" th:text="${type}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Fecha y Hora</div>
+                    <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(performedDate, 'HH:mm')} + ' hs.'"></div>
+                </div>
+            </div>
+            <div style="clear: both; margin-bottom: 10px;">
+                <div style="overflow-wrap: break-word; width: 40%" class="row-content">
+                    <div class="data-title">Cobertura</div>
+                    <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
+                    <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">N° de credencial</div>
+                    <div class="data-text" th:if="${patientCoverage != null && patientCoverage.affiliateNumber != null}" th:text="${patientCoverage.affiliateNumber}"></div>
+                    <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.affiliateNumber != null}">Sin información</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Plan</div>
+                    <div class="data-text" th:if="${patientCoverage != null && patientCoverage.planName != null}" th:text="${patientCoverage.planName}"></div>
+                    <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.planName != null}">Sin información</div>
                 </div>
             </div>
             <div style="clear: both;">
@@ -239,7 +264,7 @@
     <!-- Profesional -->
     <div th:fragment="professionalData">
         <div>
-            <div class="section-title">Profesional responsable</div>
+            <div class="section-title">Profesional originante</div>
             <div>
                 <div class="row-content">
                     <div class="data-title">Nombre y apellido</div>
@@ -265,22 +290,25 @@
     <div th:fragment="involvedProfessionalsData">
         <div th:if="${involvedProfessionals != null && !involvedProfessionals.isEmpty()}">
             <div>
-                <div class="section-title">Profesionales intervinientes</div>
-                <div th:each="involvedProfessional, iter: ${involvedProfessionals}">
-                    <div class="row-content">
-                        <div class="data-title">Nombre y apellido</div>
-                        <div class="data-text" style="text-transform: uppercase;" th:if="${nameSelfDeterminationFF}" th:text="${involvedProfessional.nameSelfDetermination + ' ' + involvedProfessional.lastName}"></div>
-                        <div class="data-text" style="text-transform: uppercase;" th:unless="${nameSelfDeterminationFF}" th:text="${involvedProfessional.firstName + ' ' + involvedProfessional.lastName}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Profesión</div>
-                        <div class="data-text" th:if="${involvedProfessional.professions != null && !involvedProfessional.professions.isEmpty()}" th:text="${involvedProfessional.getProfessionsAsString()}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Matricula</div>
-                        <div class="data-text" th:text="${involvedProfessional.completeLicenseInfo.isEmpty() ? '-' : involvedProfessional.completeLicenseInfo}"></div>
-                    </div>
-                </div>
+                <div class="section-title">Profesionales responsables</div>
+                <table class="professionals-table">
+                    <thead>
+                        <tr>
+                            <th class="data-title">Nombre y apellido</th>
+                            <th class="data-title">Profesión</th>
+                            <th class="data-title">Matrícula</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="involvedProfessional, iter : ${involvedProfessionals}">
+                            <td class="data-text" style="text-transform: uppercase;" th:if="${nameSelfDeterminationFF}" th:text="${involvedProfessional.nameSelfDetermination + ' ' + involvedProfessional.lastName}"></td>
+                            <td class="data-text" style="text-transform: uppercase;" th:unless="${nameSelfDeterminationFF}" th:text="${involvedProfessional.firstName + ' ' + involvedProfessional.lastName}"></td>
+                            <td class="data-text" th:if="${involvedProfessional.professions != null && !involvedProfessional.professions.isEmpty()}" th:text="${involvedProfessional.getProfessionsAsString()}"></td>
+                            <td class="data-text" th:if="${involvedProfessional.completeLicenseInfo.isEmpty()}" th:text="'-'"></td>
+                            <td class="data-text" th:unless="${involvedProfessional.completeLicenseInfo.isEmpty()}" th:text="${involvedProfessional.completeLicenseInfo}"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div style="clear: both;">
                 <hr class="line"></hr>
@@ -314,6 +342,16 @@
         <div>
             <dl class="section-data">
                 <dd><p th:text="${'- ' + clinicalSpecialty.name}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Especialidad clínica sector (servicio) -->
+    <div th:fragment="clinicalSpecialtySector (message)" th:if="${clinicalSpecialtySector != null}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data">
+                <dd><p th:text="${'- ' + clinicalSpecialtySector.description}"></p></dd>
             </dl>
         </div>
     </div>
@@ -409,17 +447,12 @@
         </div>
     </div>
 
-    <!-- Procedimientos quirúrgicos -->
-    <div th:fragment="surgeryProcedures (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${#lists.isEmpty(surgeryProcedures)}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(surgeryProcedures)}">
-            <dl th:each="procedure,iter: ${surgeryProcedures}">
-                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+    <!-- Cirugía propuesta -->
+    <div th:fragment="surgeryProcedures(message)" th:if="${surgeryProcedures != null && not #lists.isEmpty(surgeryProcedures)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="procedure,iter: ${surgeryProcedures}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + procedure.snomed.pt}"></p></dd>
             </dl>
         </div>
     </div>
@@ -566,42 +599,54 @@
         </div>
     </div>
 
-    <!-- Datos Antropometricos -->
+    <!-- Factor sanguíneo -->
+    <div th:fragment="bloodType">
+        <strong>- Factor sanguíneo:</strong>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'A+')}">A+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'A−')}">A-</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'B+')}">B+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'B−')}">B-</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'AB+')}">AB+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'AB−')}">AB-</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, '0+')}">0+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, '0−')}">0-</span>
+            <span th:text="${anthropometricData.bloodType == null} ? 'Sin cambios registrados' : _"></span>
+    </div>
 
-    <div th:fragment="antropometicData" th:if="${anthropometricData != null && anthropometricData.hasValues}">
-        <p class="section-title">Datos antropométricos</p>
+    <!-- Altura -->
+    <div th:fragment="height">
+        <strong>- Talla:</strong>
+        <span th:text="${anthropometricData.height != null} ? ${anthropometricData.height.value + 'cm'} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- Peso -->
+    <div th:fragment="weight">
+        <strong>- Peso:</strong>
+        <span th:text="${anthropometricData.weight != null} ? ${anthropometricData.weight.value + 'Kg'} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- IMC -->
+    <div th:fragment="icm">
+        <strong>- IMC:</strong>
+        <span th:text="${anthropometricData.BMI != null} ? ${anthropometricData.BMI.value} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- Perímetro encefálico -->
+    <div th:fragment="headCircumference">
+        <strong>- Perímetro cefálico:</strong>
+        <span th:text="${anthropometricData.headCircumference != null} ? ${anthropometricData.headCircumference.value + 'cm'} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- Datos Antropométricos -->
+    <div th:fragment="antropometicData(message)" th:if="${anthropometricData != null && anthropometricData.hasValues}">
+        <p class="section-title" th:text="${message}"></p>
         <div class="section-data">
-            - Factor sanguíneo:
-            <strong>
-            <label th:if="${anthropometricData.bloodType != null}">
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'A+')}">A+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'A−')}">A-</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'B+')}">B+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'B−')}">B-</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'AB+')}">AB+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'AB−')}">AB-</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, '0+')}">0+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, '0−')}">0-</span>
-            </label>
-            </strong>
-            <strong><span  th:if="${anthropometricData.bloodType  == null}">Sin cambios registrados</span></strong><br/>
-
-            - Talla:
-            <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong>
-            <strong><span  th:if="${anthropometricData.height  == null}">Sin cambios registrados</span></strong><br/>
-
-            - Peso:
-            <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong>
-            <strong><span  th:if="${anthropometricData.weight  == null}">Sin cambios registrados</span></strong><br/>
-
-            - IMC:
-            <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong>
-            <strong><span  th:if="${anthropometricData.BMI  == null}">Sin cambios registrados</span></strong><br/>
-
-            - Perímetro cefálico:
-            <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong>
-            <strong><span  th:if="${anthropometricData.headCircumference  == null}">Sin cambios registrados</span></strong><br/>
-        </div><br/>
+            <div th:replace=" :: bloodType"></div>
+            <div th:replace=" :: height"></div>
+            <div th:replace=" :: weight"></div>
+            <div th:replace=" :: icm"></div>
+            <div th:replace=" :: headCircumference"></div>
+        </div>
     </div>
 
     <!-- Diagnósticos dentales -->
@@ -718,17 +763,17 @@
     </div>
 
     <!-- Medicación habitual -->
-
-    <div th:fragment="medications (title)" th:if="${not #lists.isEmpty(medications)}">
+    <div th:fragment="medications(title)" th:if="${not #lists.isEmpty(medications)}">
         <p class="section-title" th:text="${title}"></p>
-        <div>
-            <dl class="section-data" th:each="medication,iter: ${medications}">
-                <dd><p th:text="${'- ' + medication.snomed.pt}"></p></dd>
-                <dl>
-                    <dd><strong th:if="${medication.note != null}">Observaciones: </strong><label  th:text="${medication.note}"></label></dd>
-                </dl>
-            </dl>
-        </div>
+        <dl class="section-data" th:each="medication,iter: ${medications}">
+            <dd>
+                <p class="wide_wrapped_text" th:text="${'- ' + medication.snomed.pt}"></p>
+            </dd>
+            <dd>
+                <strong th:if="${medication.note != null}">Observaciones: </strong>
+                <p class="wide_wrapped_text" th:text="${medication.note}"></p>
+            </dd>
+        </dl>
     </div>
 
     <!-- Otras circunstancias que prolongan la internación -->
@@ -747,7 +792,7 @@
                 
     <!-- Causa externa de traumatismo, envenenamiento y otros efectos adversos -->
 
-    <div th:fragment="externalCause" th:if="${externalCause  != null}">
+    <div th:fragment="externalCause" th:if="${externalCause != null}">
         <div th:if="${cipresFieldsFF}">
             <p class="section-title"> Causa externa de traumatismo, envenenamiento y otros efectos adversos</p>
                 <div class="section-data">
@@ -768,7 +813,7 @@
 
     <!-- Datos del evento obstetrico -->
 
-    <div th:fragment="obstetricEvent" th:if="${obstetricEvent  != null}">
+    <div th:fragment="obstetricEvent" th:if="${obstetricEvent != null}">
         <div th:if="${cipresFieldsFF}">
             <p class="section-title"> Datos del evento obstétrico </p>
             <div class="section-data">
@@ -806,92 +851,58 @@
         </div>
     </div>
 
+    <!-- Frecuencia (cardíaca/respiratoria), Temperatura corporal, Saturación de oxígeno, Glucemia, Hemoglobina glicosilada, Riesgo cardiovascular, Hematocrito -->
+    <div th:fragment="rate(description, typeRate, unitMeasure, showDate)" th:with="hasDate=${typeRate != null && typeRate.getLocalDateEffectiveTime() != null}">
+        <strong th:text="'- ' + ${description} + ':'"></strong>
+        <span th:text="${typeRate != null} ? ${typeRate.value + unitMeasure} : 'Sin cambios registrados'"></span>
+        <strong th:if="${showDate && hasDate}" th:text="'- Fecha de medición: '"></strong>
+        <span th:if="${showDate && hasDate}" th:with="time=${typeRate.getLocalDateEffectiveTime()}" th:text="${#temporals.format(time, 'dd/MM/yyyy') + ' - ' + #temporals.format(time, 'HH:mm') + ' hs.'}"></span>
+    </div>
+
+    <!-- Tensión arterial -->
+    <div th:fragment="bloodPressure(showDate)" th:with="systolic=${riskFactors.systolicBloodPressure}, diastolic=${riskFactors.diastolicBloodPressure}, hasDate=${systolic != null || diastolic != null}">
+        <strong>- Tensión arterial (Sistólica/Diastólica):</strong>
+        <span th:text="${systolic == null && diastolic == null} ? 'Sin cambios registrados' : (${systolic != null && systolic.value != null} ? ${systolic.value} :'-') + '/' + (${diastolic != null && diastolic.value != null} ? ${diastolic.value} :'-') + ' mmHg' "></span>
+        <strong th:if="${showDate && hasDate}" th:text="'- Fecha de medición: '"></strong>
+        <span th:if="${showDate && hasDate}" th:with="time=${systolic != null ? systolic.getLocalDateEffectiveTime() : diastolic.getLocalDateEffectiveTime()}" th:text="${#temporals.format(time, 'dd/MM/yyyy') + ' - ' + #temporals.format(time, 'HH:mm') + ' hs.'}"></span>
+    </div>
+
     <!-- Signos vitales y factores de riesgo -->
-
-    <div th:fragment="riskFactors" th:if="${riskFactors != null && riskFactors.hasValues}">
-        <p class="section-title">Factores de riesgo</p>
+    <div th:fragment="riskFactors(message)" th:if="${riskFactors != null && riskFactors.hasValues}">
+        <p class="section-title" th:text="${message}"></p>
         <div class="section-data">
-            - Frecuencía cardíaca:
-            <strong><span  th:if="${riskFactors.heartRate  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.heartRate  != null}" th:text="${riskFactors.heartRate.value + '/min'} "></span></strong>
-            &nbsp;<span th:if="${riskFactors.heartRate != null}" >Fecha de medición: </span>
-            <strong><span th:if="${(riskFactors.heartRate != null) &&  (riskFactors.heartRate.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.heartRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Frecuencía respiratoria:
-            <strong><span  th:if="${riskFactors.respiratoryRate  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.respiratoryRate != null}" th:text="${riskFactors.respiratoryRate.value + '/min'}"></span></strong>
-            &nbsp;<span th:if="${riskFactors.respiratoryRate != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.respiratoryRate != null) &&  (riskFactors.respiratoryRate.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.respiratoryRate.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Tensión arterial (Sistolica/Diastolica):
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure == null) &&  (riskFactors.diastolicBloodPressure == null)}">Sin cambios registrados</span></strong>
-
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure == null)}" th:text="${riskFactors.systolicBloodPressure.value + '/- mm Hg'}"></span></strong>
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure == null) &&  (riskFactors.diastolicBloodPressure != null)}" th:text="${'-/' + riskFactors.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure != null)}" th:text="${riskFactors.systolicBloodPressure.value + '/' + riskFactors.diastolicBloodPressure.value + ' mm Hg'}"></span></strong>
-
-
-            &nbsp;<span th:if="${(riskFactors.systolicBloodPressure != null) || (riskFactors.diastolicBloodPressure != null)}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure != null) &&  (riskFactors.systolicBloodPressure.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure == null) &&  (riskFactors.systolicBloodPressure.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.systolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong>
-            <strong><span  th:if="${(riskFactors.systolicBloodPressure == null) &&  (riskFactors.diastolicBloodPressure != null) &&  (riskFactors.diastolicBloodPressure.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.diastolicBloodPressure.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Temperatura corporal:
-            <strong><span  th:if="${riskFactors.temperature  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.temperature != null}" th:text="${riskFactors.temperature.value  + '°C'}"></span></strong>
-            &nbsp;<span th:if="${riskFactors.temperature != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.temperature != null) &&  (riskFactors.temperature.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.temperature.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Saturación de oxígeno:
-            <strong><span  th:if="${riskFactors.bloodOxygenSaturation  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.bloodOxygenSaturation != null}" th:text="${riskFactors.bloodOxygenSaturation.value+ '%' + 'Hs'}"></span></strong>
-            &nbsp;<span th:if="${riskFactors.bloodOxygenSaturation != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.bloodOxygenSaturation != null) &&  (riskFactors.bloodOxygenSaturation.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.bloodOxygenSaturation.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Glucemia:
-            <strong><span  th:if="${riskFactors.bloodGlucose  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.bloodGlucose != null}" th:text="${riskFactors.bloodGlucose.value + 'Mg/dl'}"></span></strong>
-            &nbsp;<span th:if="${riskFactors.bloodGlucose != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.bloodGlucose != null) &&  (riskFactors.bloodGlucose.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.bloodGlucose.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Hemoglobina glicosilada:
-            <strong><span  th:if="${riskFactors.glycosylatedHemoglobin  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.glycosylatedHemoglobin != null}" th:text="${riskFactors.glycosylatedHemoglobin.value+ '%'}"></span></strong>
-            &nbsp;<span th:if="${riskFactors.glycosylatedHemoglobin != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.glycosylatedHemoglobin != null) &&  (riskFactors.glycosylatedHemoglobin.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.glycosylatedHemoglobin.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
-            - Riesgo cardiovascular:
-            <strong><span  th:if="${riskFactors.cardiovascularRisk  == null}">Sin cambios registrados</span></strong>
-            <strong><span  th:if="${riskFactors.cardiovascularRisk != null}" th:text="${riskFactors.cardiovascularRisk.value+ '%'}"></span></strong>
-            &nbsp;<span th:if="${riskFactors.cardiovascularRisk != null}" >Fecha de medición: </span>
-            <strong><span  th:if="${(riskFactors.cardiovascularRisk != null) &&  (riskFactors.cardiovascularRisk.effectiveTime != null)}" th:text="${#temporals.format(riskFactors.cardiovascularRisk.effectiveTime, 'dd-MM-yyyy HH:mm') + ' hs'}"></span></strong><br/>
-
+            <div class="element" th:replace=" :: rate(description='Frecuencia cardíaca', typeRate=${riskFactors.heartRate}, unitMeasure='/min', showDate=true)"></div>
+            <div class="element" th:replace=" :: rate(description='Frecuencia respiratoria', typeRate=${riskFactors.respiratoryRate}, unitMeasure='/min', showDate=true)"></div>
+            <div class="element" th:replace=" :: bloodPressure(showDate=true)"></div>
+            <div class="element" th:replace=" :: rate(description='Temperatura corporal', typeRate=${riskFactors.temperature}, unitMeasure='°C', showDate=true)"></div>
+            <div class="element" th:replace=" :: rate(description='Saturación de oxígeno', typeRate=${riskFactors.bloodOxygenSaturation}, unitMeasure='%Hs', showDate=true)"></div>
+            <div class="element" th:replace=" :: rate(description='Glucemia', typeRate=${riskFactors.bloodGlucose}, unitMeasure='Mg/dl', showDate=true)"></div>
+            <div class="element" th:replace=" :: rate(description='Hemoglobina glicosilada', typeRate=${riskFactors.glycosylatedHemoglobin}, unitMeasure='%', showDate=true)"></div>
+            <div class="element" th:replace=" :: rate(description='Riesgo cardiovascular', typeRate=${riskFactors.cardiovascularRisk}, unitMeasure='%', showDate=true)"></div>
             <div th:if="${otherRiskFactors != null}">
                 <div th:if="${otherRiskFactors.bodyTemperatureId != null}">
-                    - Temperatura:
-                    <strong><span th:text="${otherRiskFactors.bodyTemperatureDescription}"></span></strong>
+                    <strong>- Temperatura:</strong>
+                    <span th:text="${otherRiskFactors.bodyTemperatureDescription}"></span>
                 </div>
                 <div th:if="${otherRiskFactors.cryingExcessive != null}">
-                    - Llanto sin consuelo:
-                    <strong><span th:if="${otherRiskFactors.cryingExcessive}" th:text="Si"></span></strong>
-                    <strong><span th:if="${!otherRiskFactors.cryingExcessive}" th:text="No"></span></strong>
+                    <strong>- Llanto sin consuelo:</strong>
+                    <span th:text="${otherRiskFactors.cryingExcessive} ? Si : No"></span>
                 </div>
                 <div th:if="${otherRiskFactors.muscleHypertoniaId != null}">
-                    - Tono muscular:
-                    <strong><span th:text="${otherRiskFactors.muscleHypertoniaDescription}"></span></strong>
+                    <strong>- Tono muscular:</strong>
+                    <span th:text="${otherRiskFactors.muscleHypertoniaDescription}"></span>
                 </div>
                 <div th:if="${otherRiskFactors.respiratoryRetractionId != null}">
-                    - Respiracion con tiraje:
-                    <strong><span th:text="${otherRiskFactors.respiratoryRetractionDescription}"></span></strong>
+                    <strong>- Respiracion con tiraje:</strong>
+                    <span th:text="${otherRiskFactors.respiratoryRetractionDescription}"></span>
                 </div>
                 <div th:if="${otherRiskFactors.stridor != null}">
-                    - Respiración con estridor:
-                    <strong><span th:if="${otherRiskFactors.stridor}" th:text="Si"></span></strong>
-                    <strong><span th:if="${!otherRiskFactors.stridor}" th:text="No"></span></strong>
+                    <strong>- Respiración con estridor:</strong>
+                    <span th:text="${otherRiskFactors.stridor} ? Si : No"></span>
                 </div>
                 <div th:if="${otherRiskFactors.perfusionId != null}">
-                    - Perfusión:
-                    <strong><span th:text="${otherRiskFactors.perfusionDescription}"></span></strong>
+                    <strong>- Perfusión:</strong>
+                    <span th:text="${otherRiskFactors.perfusionDescription}"></span>
                 </div>
             </div>
         </div><br/>
@@ -1013,6 +1024,267 @@
             [(${evolutionNote})]
         </div>
     </div>
+
+    <!-- Datos Antropométricos parte anestésico -->
+    <div th:fragment="antropometicDataAnestheticReport(message)" th:if="${anthropometricData != null && anthropometricData.hasMinimalValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data section-explicit-list">
+            <div th:replace=" :: bloodType"></div>
+            <div th:replace=" :: height"></div>
+            <div th:replace=" :: weight"></div>
+        </div>
+    </div>
+
+    <!-- Evaluación clínica anestésica -->
+    <div th:fragment="anestheticClinicalEvaluation(message)" th:if="${riskFactors != null && riskFactors.hasAnestheticClinicalEvaluationValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data section-explicit-list">
+            <div class="element" th:replace=" :: bloodPressure(showDate=false)"></div>
+            <div class="element" th:replace=" :: rate(description='Hematocrito', typeRate=${riskFactors.hematocrit}, unitMeasure='%', showDate=false)"></div>
+        </div>
+    </div>
+
+    <!-- Antecedentes anestésicos -->
+    <div th:fragment="anestheticHistory(message)" th:if="${anestheticHistory != null && anestheticHistory.hasStringValues}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data section-explicit-list">
+            <strong>¿El paciente se realizó algún tipo de anestesia previamente?</strong>
+            <span th:text="${anestheticHistory.previousAnesthesiaState}"></span>
+            <span th:text="${anestheticHistory.anesthesiaZone} ? ${'(' + anestheticHistory.anesthesiaZone + ')'} : _"></span>
+        </div>
+    </div>
+
+    <!-- Sustancias anestésicas -->
+    <div th:fragment="anestheticSubstance(message, anestheticSubstances)" th:if="${anestheticSubstances != null && not #lists.isEmpty(anestheticSubstances)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="substance,iter: ${anestheticSubstances}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + substance.snomed.pt}"></p>
+                    <dl>
+                        <dd th:if="${substance.viaDescription}">
+                            <strong>Vía: </strong><span th:text="${substance.viaDescription}"></span>
+                            <span class="wide_wrapped_text" th:text="${substance.viaNote} ? ${' - ' + substance.viaNote} : _"></span>
+                        </dd>
+                        <dd><strong>Dosis: </strong><span th:text="${substance.dosage.quantity.value}"></span></dd>
+                        <dd><strong>Unidad: </strong><span th:text="${substance.dosage.quantity.unit}"></span></dd>
+                        <dd th:if="${substance.viaDescription}">
+                            <strong>Fecha de administración: </strong>
+                            <span th:text="${substance.performedTime} ? ${#temporals.format(substance.performedTime, 'HH:mm') + ' hs.'} : _"></span>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Última hora ingesta alimentaria -->
+    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${procedureDescription != null && procedureDescription.foodIntakeClockTime != null}">
+        <p class="section-title" th:text="${preMedications == null || #lists.isEmpty(preMedications)} ? ${message} : _"></p>
+        <strong>Última ingesta de comida: </strong>
+        <span th:text="${#temporals.format(procedureDescription.foodIntakeClockTime, 'HH:mm') + ' hs.'}"></span>
+    </div>
+
+    <!-- Antecedentes (histories) -->
+    <div th:fragment="histories(message)" th:if="${not #lists.isEmpty(histories) || (procedureDescription != null && procedureDescription.hasHistoryStringValues())}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data section-explicit-list">
+            <dl th:each="history,iter: ${histories}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + history.snomed.pt}"></p></dd>
+            </dl>
+            <dd th:if="${procedureDescription != null && procedureDescription.note != null}">
+                <strong>Observaciones: </strong>
+                <p class="wide_wrapped_text" th:text="${procedureDescription.note}"></p>
+            </dd>
+            <dd th:if="${procedureDescription != null && procedureDescription.asa != null}">
+                <strong>ASA: </strong>
+                <span th:text="${procedureDescription.asa}"></span>
+            </dd>
+        </div>
+    </div>
+
+    <!-- Técnicas analgésicas -->
+    <div th:fragment="analgesicTechnique(message)" th:if="${analgesicTechniques != null && not #lists.isEmpty(analgesicTechniques)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="substance,iter: ${analgesicTechniques}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + substance.snomed.pt}"></p>
+                    <dl>
+                        <dd th:if="${substance.injectionNote}">
+                            <strong>Zona de inyección: </strong><p class="wide_wrapped_text" th:text="${substance.injectionNote}"></p>
+                        </dd>
+                        <dd><strong>Dosis: </strong><span th:text="${substance.dosage.quantity.value}"></span></dd>
+                        <dd><strong>Unidad: </strong><span th:text="${substance.dosage.quantity.unit}"></span></dd>
+                        <dd th:if="${substance.catheter != null}">
+                            <strong>Cateter: </strong><span th:text="${substance.catheter} ? Si : No"></span>
+                        </dd>
+                        <dd th:if="${substance.catheterNote}">
+                            <strong>Observaciones: </strong><p class="wide_wrapped_text" th:text="${substance.catheterNote}"></p>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Técnicas anestésicas -->
+    <div th:fragment="anestheticTechnique(message)" th:if="${anestheticTechniques != null && not #lists.isEmpty(anestheticTechniques)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="substance,iter: ${anestheticTechniques}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + substance.snomed.pt}"></p>
+                    <dl>
+                        <dd th:if="${substance.techniqueDescription}">
+                            <strong>Técnica: </strong><span th:text="${substance.techniqueDescription}"></span>
+                        </dd>
+                        <dd th:if="${substance.trachealIntubation != null}">
+                            <strong>Intubación traqueal: </strong><span th:text="${substance.trachealIntubation} ? Si : No"></span>
+                            <span th:text="${substance.trachealIntubationMethodDescription} ? ${' - ' + substance.trachealIntubationMethodDescription} : _"></span>
+                        </dd>
+                        <dd th:if="${substance.breathingDescription}">
+                            <strong>Respiración: </strong><span th:text="${substance.breathingDescription}"></span>
+                        </dd>
+                        <dd th:if="${substance.circuitDescription}">
+                            <strong>Circuito: </strong><span th:text="${substance.circuitDescription}"></span>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Procedimientos anestésicos intraquirúrgicos -->
+    <div th:fragment="intrasurgicalAnestheticProcedures(message)" th:if="${procedureDescription != null && procedureDescription.hasIntrasurgicalAnestheticProceduresValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data section-explicit-list">
+            <dd th:if="${procedureDescription.venousAccess != null}">
+                <strong>Acceso venoso: </strong><span th:text="${procedureDescription.venousAccess} ? Si : No"></span>
+            </dd>
+            <dd th:if="${procedureDescription.nasogastricTube != null}">
+                <strong>Sonda nasogástrica: </strong><span th:text="${procedureDescription.nasogastricTube} ? Si : No"></span>
+            </dd>
+            <dd th:if="${procedureDescription.urinaryCatheter != null}">
+                <strong>Sonda vesical: </strong><span th:text="${procedureDescription.urinaryCatheter} ? Si : No"></span>
+            </dd>
+        </div>
+    </div>
+
+    <!-- Estado al finalizar la anestesia -->
+    <div th:fragment="postAnesthesiaStatus(message)" th:if="${postAnesthesiaStatus != null && postAnesthesiaStatus.hasValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data section-explicit-list">
+            <dd th:if="${postAnesthesiaStatus.intentionalSensitivity != null}">
+                <strong>Sensibilidad dolorosa: </strong><span th:text="${postAnesthesiaStatus.intentionalSensitivity} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.cornealReflex != null}">
+                <strong>Reflejo corneal: </strong><span th:text="${postAnesthesiaStatus.cornealReflex} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.obeyOrders != null}">
+                <strong>Obedece órdenes: </strong><span th:text="${postAnesthesiaStatus.obeyOrders} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.talk != null}">
+                <strong>Conversa: </strong><span th:text="${postAnesthesiaStatus.talk} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.respiratoryDepression != null}">
+                <strong>Depresión respiratoria: </strong><span th:text="${postAnesthesiaStatus.respiratoryDepression} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.circulatoryDepression != null}">
+                <strong>Depresión circulatoria: </strong><span th:text="${postAnesthesiaStatus.circulatoryDepression} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.vomiting != null}">
+                <strong>Vómitos: </strong><span th:text="${postAnesthesiaStatus.vomiting} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.curated != null}">
+                <strong>Curarizado: </strong><span th:text="${postAnesthesiaStatus.curated} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.trachealCannula != null}">
+                <strong>Cánula traqueal: </strong><span th:text="${postAnesthesiaStatus.trachealCannula} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.pharyngealCannula != null}">
+                <strong>Cánula faringea: </strong><span th:text="${postAnesthesiaStatus.pharyngealCannula} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.internment != null}">
+                <strong>Se interna: </strong><span th:text="${postAnesthesiaStatus.internment} ? Si : No"></span>
+                <span th:text="${postAnesthesiaStatus.internmentPlace} ? ${' - ' + postAnesthesiaStatus.internmentPlace.getDescription()} : _"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.note}">
+                <strong>Observaciones: </strong><p class="wide_wrapped_text" th:text="${postAnesthesiaStatus.note}"></p>
+            </dd>
+        </div>
+    </div>
+
+    <!-- Signos vitales durante la anestesia -->
+    <div th:fragment="vitalSignsDuringAnesthesia(message, chartData)"
+         th:if="${(procedureDescription != null && procedureDescription.hasTimeValues())
+         || chartData != null
+         || (measuringPoints != null && not #lists.isEmpty(measuringPoints))}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data" th:if="${procedureDescription != null && procedureDescription.hasTimeValues()}" th:with="pd=${procedureDescription}">
+            <dd th:if="${pd.anesthesiaStartLocalDate != null || pd.anesthesiaStartLocalTime != null}">
+                <strong>Comienzo anestesia: </strong>
+                <span th:text="${pd.anesthesiaStartLocalDate} ? ${#temporals.format(pd.anesthesiaStartLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.anesthesiaStartLocalDate != null && pd.anesthesiaStartLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.anesthesiaStartLocalTime} ? ${#temporals.format(pd.anesthesiaStartLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+            <dd th:if="${pd.anesthesiaEndLocalDate != null || pd.anesthesiaEndLocalTime != null}">
+                <strong>Fin anestesia: </strong>
+                <span th:text="${pd.anesthesiaEndLocalDate} ? ${#temporals.format(pd.anesthesiaEndLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.anesthesiaEndLocalDate != null && pd.anesthesiaEndLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.anesthesiaEndLocalTime} ? ${#temporals.format(pd.anesthesiaEndLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+            <dd th:if="${pd.surgeryStartLocalDate != null || pd.surgeryStartLocalTime != null}">
+                <strong>Comienzo cirugía: </strong>
+                <span th:text="${pd.surgeryStartLocalDate} ? ${#temporals.format(pd.surgeryStartLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.surgeryStartLocalDate != null && pd.surgeryStartLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.surgeryStartLocalTime} ? ${#temporals.format(pd.surgeryStartLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+            <dd th:if="${pd.surgeryEndLocalDate != null || pd.surgeryEndLocalTime != null}">
+                <strong>Fin cirugía: </strong>
+                <span th:text="${pd.surgeryEndLocalDate} ? ${#temporals.format(pd.surgeryEndLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.surgeryEndLocalDate != null && pd.surgeryEndLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.surgeryEndLocalTime} ? ${#temporals.format(pd.surgeryEndLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+        </div>
+        <div th:if="${chartData != null}">
+            <img class="graph-container" th:src="${chartData}" alt=""/>
+        </div>
+        <div th:if="${measuringPoints != null && not #lists.isEmpty(measuringPoints)}">
+            <div class="divider">
+                <hr />
+            </div>
+            <dl class="section-data" th:each="point,iter: ${measuringPoints}">
+                <dd>
+                    <strong><span th:text="'Medición ' + ${iter.index+1} +' (' + ${#temporals.format(point.localDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(point.localTime, 'HH:mm')} + ' hs.)'"></span></strong>
+                </dd>
+                <dd th:if="${point.hasPointValues()}">
+                    <strong>TA Max: </strong><span th:text="${point.bloodPressureMax} ? ${point.bloodPressureMax + 'mmHg'} : '-'"></span>
+                    <strong> TA Min: </strong><span th:text="${point.bloodPressureMin} ? ${point.bloodPressureMin + 'mmHg'} : '-'"></span>
+                    <strong> Pulso: </strong><span th:text="${point.bloodPulse} ? ${point.bloodPulse + 'lat/min'} : '-'"></span>
+                    <strong> Saturación: </strong><span th:text="${point.o2Saturation} ? ${point.o2Saturation + '%'} : '-'"></span>
+                    <strong> End Tidal CO2: </strong><span th:text="*{point.co2EndTidal}?: '-'"></span>
+                </dd>
+                <div class="divider">
+                    <hr />
+                </div>
+            </dl>
+        </div>
+
+        <div th:fragment="completedForms" th:if="${completedForms != null && not #lists.isEmpty(completedForms)}">
+            <dl th:each="form,iter: ${completedForms}">
+                <p class="section-title" th:text="${form.name}"></p>
+                <dl class="section-data" th:each="parameter,iter: ${form.parameters}">
+                    <dd>
+                        <strong><span th:text="${parameter.description}"></span></strong>
+                    </dd>
+                    <dd>
+                        <p class="wide_wrapped_text" th:if="${parameter.value != null}" th:text="${parameter.value}"></p>
+                        <span th:if="${parameter.value == null}">Sin información</span>
+                    </dd>
+                </dl>
+            </dl>
+        </div>
+
+    </div>
+
 
 </body>
 <footer th:fragment="footer">

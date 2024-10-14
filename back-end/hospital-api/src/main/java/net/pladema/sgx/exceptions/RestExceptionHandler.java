@@ -1,7 +1,6 @@
 package net.pladema.sgx.exceptions;
 
 import java.io.IOException;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,6 +13,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
+
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
@@ -217,6 +218,14 @@ public class RestExceptionHandler {
 		LOG.error("IOException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto("IOException", ex.getMessage());
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ InvalidFormatException.class })
+	public ApiErrorMessageDto handleIOException(InvalidFormatException ex) {
+		LOG.error("InvalidFormatException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("Invalid JSON Format", ex.getMessage());
+	}
+
 
 	@ExceptionHandler(ClientAbortException.class)
 	protected ResponseEntity<Object> handleClientAbortException(ClientAbortException ex, WebRequest request) {

@@ -6,6 +6,8 @@ import {
     EditButton,
     Button,
     ReferenceField,
+    Labeled,
+    BooleanField,
     SimpleForm,
     useRedirect
 } from 'react-admin';
@@ -57,6 +59,12 @@ const OrchestratorShow = props => (
             <ReferenceField link={false}  source="sectorId" reference="sectors">
                 <TextField source="description"/>
             </ReferenceField>
+            <Labeled label="resources.orchestrator.fields.massiveRetry">
+                <BooleanField source="massiveRetry" />
+            </Labeled>
+            <Labeled label="resources.orchestrator.fields.findStudies">
+                <BooleanField source="findStudies" />
+            </Labeled>
         </SimpleForm>
     </Show>
 );

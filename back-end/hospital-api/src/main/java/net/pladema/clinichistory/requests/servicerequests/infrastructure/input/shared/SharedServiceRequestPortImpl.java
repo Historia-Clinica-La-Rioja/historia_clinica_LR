@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
+import net.pladema.clinichistory.requests.servicerequests.domain.SnomedItemBo;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -78,6 +79,29 @@ public class SharedServiceRequestPortImpl implements SharedServiceRequestPort {
 	public void cancelServiceRequest(Integer serviceRequestId){
 		log.debug("Input parameters -> serviceRequestId{}", serviceRequestId);
 		serviceRequestStorage.cancelServiceRequest(serviceRequestId);
+	}
+
+	@Override
+	public List<SharedSnomedDto> getMostFrequentStudies(Integer professionalId, Integer institutionId, Integer limit){
+		log.debug("Input parameter -> professionalId {}, institutionId {}", professionalId, institutionId);
+
+		List<SharedSnomedDto> result = serviceRequestStorage.getMostFrequentStudies(professionalId, institutionId, limit)
+				.stream()
+				.map(this::mapToSharedSnomedDto)
+				.collect(Collectors.toList());
+
+		log.debug("Output -> {}",result);
+		return result;
+	}
+
+	private SharedSnomedDto mapToSharedSnomedDto(SnomedItemBo snomedItemBo) {
+		SharedSnomedDto result = new SharedSnomedDto();
+		result.setId(snomedItemBo.getId());
+		result.setSctid(snomedItemBo.getSctid());
+		result.setPt(snomedItemBo.getPt());
+		result.setParentId(snomedItemBo.getParentId());
+		result.setParentFsn(snomedItemBo.getParentFsn());
+		return result;
 	}
 
 }

@@ -44,6 +44,7 @@ public class GetConsultations {
 				 .patient(mapToBasicPatientDataBo(consultation.getPatient()))
 				 .clinicalSpecialtyId(consultation.getClinicalSpecialtyId())
 				 .clinicalSpecialtySctid(consultation.getClinicalSpecialtySctid())
+				 .cipresEncounterId(consultation.getCipresEncounterId())
 				 .anthropometricData(mapToAnthropometricDataBo(consultation.getAnthropometricData()))
 				 .riskFactor(mapToSharedRiskFactorBo(consultation.getRiskFactor()))
 				 .problems(consultation.getProblems().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))

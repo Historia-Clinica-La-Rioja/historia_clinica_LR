@@ -66,6 +66,12 @@ public class ReasonServiceImpl implements ReasonService {
 		return Optional.empty();
 	}
 
+	@Override
+	public List<ReasonBo> fetchFromEmergencyCareEvolutionNoteId(Integer emergencyCareEvolutionNoteId) {
+		return reasonRepository.findAllByEmergencyCareEvolutionNoteId(emergencyCareEvolutionNoteId)
+				.stream().map(r -> new ReasonBo(new SnomedBo(r.getId(), r.getDescription())))
+				.collect(Collectors.toList());
+	}
 
 	private ReasonBo saveReason(ReasonBo reasonBo) {
         LOG.debug("Input parameters reasonBo {}", reasonBo);

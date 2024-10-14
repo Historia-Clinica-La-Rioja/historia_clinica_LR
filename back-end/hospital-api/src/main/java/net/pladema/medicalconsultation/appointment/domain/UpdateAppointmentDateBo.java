@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
-import javax.annotation.Nullable;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 

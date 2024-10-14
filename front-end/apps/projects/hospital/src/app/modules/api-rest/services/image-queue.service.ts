@@ -26,4 +26,9 @@ export class ImageQueueService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/image-queue/move-image/${idMoveImage}/retry`;
 		return this.http.put<boolean>(url, {})
 	}
+
+	indexImageManually(idMoveImage:number, imageUID: string): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/image-queue/move-image/${idMoveImage}/index/${imageUID}`;
+		return this.http.put<boolean>(url, {})
+	}
 }

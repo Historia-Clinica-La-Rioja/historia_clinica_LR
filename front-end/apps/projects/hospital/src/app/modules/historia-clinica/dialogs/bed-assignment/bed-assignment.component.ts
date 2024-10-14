@@ -22,7 +22,10 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 	constructor(
 		public dialogRef: MatDialogRef<BedAssignmentComponent>,
 		private bedManagementFacadeService: BedManagementFacadeService,
-		@Inject(MAT_DIALOG_DATA) public data,
+		@Inject(MAT_DIALOG_DATA) public data:{
+			sectorsType,
+			preselectedBed: number
+		},
   	) {}
 
 	ngOnInit(): void {
@@ -37,6 +40,7 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
 		).subscribe(data => {
 			this.existBedManagementList = data ? true : false;
+			this.selectedBed = this.data.preselectedBed;
 		});
 	}
 

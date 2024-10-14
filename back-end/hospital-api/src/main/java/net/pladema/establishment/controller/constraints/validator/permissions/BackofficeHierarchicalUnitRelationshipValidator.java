@@ -69,10 +69,11 @@ public class BackofficeHierarchicalUnitRelationshipValidator implements Backoffi
 	}
 
 	private void validateRelationship(HierarchicalUnitRelationship entity) {
-		if (entity.getHierarchicalUnitChildId() == entity.getHierarchicalUnitParentId())
+		if (entity.getHierarchicalUnitChildId() == null || entity.getHierarchicalUnitParentId() == null)
+			throw new BackofficeValidationException("hierarchical-unit-relationship.null.fields");
+		if (entity.getHierarchicalUnitChildId().equals(entity.getHierarchicalUnitParentId()))
 			throw new BackofficeValidationException("hierarchical-unit-relationship.parentOfItself");
-		if (entity.getHierarchicalUnitChildId() != null &&
-				repository.existsRelationship(entity.getHierarchicalUnitChildId(), entity.getHierarchicalUnitParentId()))
+		if (repository.existsRelationship(entity.getHierarchicalUnitChildId(), entity.getHierarchicalUnitParentId()))
 			throw new BackofficeValidationException("hierarchical-unit-relationship.exists");
 	}
 }

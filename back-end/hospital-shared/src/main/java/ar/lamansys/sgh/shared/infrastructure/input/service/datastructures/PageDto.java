@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.datastructures;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(name = "ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto", implementation = PageDto.class)
 public class PageDto<T> {
 
 	private List<T> content;

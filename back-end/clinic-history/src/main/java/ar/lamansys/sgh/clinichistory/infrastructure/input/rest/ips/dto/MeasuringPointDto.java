@@ -4,12 +4,17 @@ import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -39,4 +44,20 @@ public class MeasuringPointDto {
 
     @Nullable
     private Integer co2EndTidal;
+
+    @Nullable
+    @JsonIgnore
+    private LocalDate localDate;
+
+    @Nullable
+    @JsonIgnore
+    private LocalTime localTime;
+
+    public boolean hasPointValues() {
+        return bloodPressureMin != null
+                || bloodPressureMax != null
+                || bloodPulse != null
+                || o2Saturation != null
+                || co2EndTidal != null;
+    }
 }

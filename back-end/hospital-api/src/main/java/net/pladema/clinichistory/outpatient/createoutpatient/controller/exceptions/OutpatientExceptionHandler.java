@@ -5,6 +5,7 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "net.pladema.clinichistory.outpatient")
@@ -53,6 +55,16 @@ public class OutpatientExceptionHandler {
 	protected ApiErrorMessageDto handleMarkAsErrorAProblemException(MarkAsErrorAProblemException ex, Locale locale) {
 		LOG.error("MarkAsErrorAProblemException exception -> {}", ex.getMessage());
 		return buildErrorMessage(ex.getMessage(), locale);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ CreateOutpatientConsultationServiceRequestException.class })
+	protected ApiErrorMessageDto handleCreateOutpatientConsultationServiceRequestException(CreateOutpatientConsultationServiceRequestException ex, Locale locale) {
+		LOG.error("CreateOutpatientConsultationServiceRequestException exception -> {}", ex.getMessage());
+		var msg = ex.getParams().entrySet().stream()
+		.map(e -> String.format("%s %s", e.getKey(), e.getValue()))
+		.collect(Collectors.joining(", "));
+		return new ApiErrorMessageDto(ex.getCode().toString(), msg);
 	}
 }
 

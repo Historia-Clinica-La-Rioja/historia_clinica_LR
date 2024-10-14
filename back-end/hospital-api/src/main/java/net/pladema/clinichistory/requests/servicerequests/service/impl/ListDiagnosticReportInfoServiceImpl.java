@@ -5,70 +5,63 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgx.shared.security.UserInfo;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.requests.servicerequests.application.GetDiagnosticReportResultsList;
+import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticReportResultsBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.domain.DiagnosticReportFilterVo;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReportInfoService {
-
-    private ListDiagnosticReportRepository listDiagnosticReportRepository;
-
-	private SharedLoggedUserPort sharedLoggedUserPort;
-
-    private static final Logger LOG = LoggerFactory.getLogger(ListDiagnosticReportInfoServiceImpl.class);
+    
     private static final String OUTPUT = "create result -> {}";
 
-    @Override
-    public List<DiagnosticReportBo> getList(DiagnosticReportFilterBo filter) {
-        LOG.trace("Input parameters -> filter {}", filter);
-        DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(
-                filter.getPatientId(), filter.getStatus(), filter.getStudy(), filter.getHealthCondition(),
-                filter.getCategory(), filter.getCategoriesToBeExcluded(), null, null
-        );
-        List<DiagnosticReportBo> result = parseDiagnosticReportBoList(listDiagnosticReportRepository.getList(filterVo));
-        LOG.trace("OUTPUT List -> {}", result);
-        return result;
-    }
+    private final ListDiagnosticReportRepository listDiagnosticReportRepository;
+	private final SharedLoggedUserPort sharedLoggedUserPort;
+    private final GetDiagnosticReportResultsList getDiagnosticReportResultsList;
 
 	@Override
 	public List<DiagnosticReportBo> getMedicalOrderList(DiagnosticReportFilterBo filter) {
-		LOG.trace("Input parameters -> filter {}", filter);
+		log.trace("Input parameters -> filter {}", filter);
 		DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(filter.getPatientId(), filter.getStatus(), null, null, filter.getCategory(), null, null, null);
 		List<DiagnosticReportBo> result = parseDiagnosticReportBoList(listDiagnosticReportRepository.getMedicalOrderList(filterVo));
-		LOG.trace("OUTPUT List -> {}", result);
+		log.trace("OUTPUT List -> {}", result);
 		return result;
 	}
 
 	@Override
-	public List<DiagnosticReportBo> getListIncludingConfidential(DiagnosticReportFilterBo filter, Integer institutionId) {
-		LOG.trace("Input parameters -> filter {}, institutionId {}", filter, institutionId);
-		Integer userId = UserInfo.getCurrentAuditor();
-		List<Short> loggedUserRoles = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, userId);
-		DiagnosticReportFilterVo filterVo = new DiagnosticReportFilterVo(filter.getPatientId(), filter.getStatus(), filter.getStudy(), filter.getHealthCondition(),
-				filter.getCategory(), filter.getCategoriesToBeExcluded(), userId, loggedUserRoles);
-		List<DiagnosticReportBo> result = parseDiagnosticReportBoList(listDiagnosticReportRepository.getList(filterVo));
-		LOG.trace("OUTPUT List -> {}", result);
+	public List<DiagnosticReportResultsBo> getListIncludingConfidential(DiagnosticReportFilterBo filter, Integer institutionId) {
+		log.trace("Input parameters -> filter {}, institutionId {}", filter, institutionId);
+        this.includeConfidentialFilters(filter, institutionId);
+        List<DiagnosticReportResultsBo> result = getDiagnosticReportResultsList.run(filter);
+		log.trace("OUTPUT List -> {}", result);
 		return result;
 	}
 
-	private List<DiagnosticReportBo> parseDiagnosticReportBoList(List<Object[]> listDiagnosticReportRepository) {
+    private void includeConfidentialFilters(DiagnosticReportFilterBo filter, Integer institutionId) {
+        Integer userId = UserInfo.getCurrentAuditor();
+        List<Short> loggedUserRoles = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, userId);
+        filter.setUserId(userId);
+        filter.setLoggedUserRoleIds(loggedUserRoles);
+    }
+
+    private List<DiagnosticReportBo> parseDiagnosticReportBoList(List<Object[]> listDiagnosticReportRepository) {
 		return listDiagnosticReportRepository.stream().map(this::createDiagnosticReportBo).collect(Collectors.toList());
 	}
 
 	private DiagnosticReportBo createDiagnosticReportBo(Object[] row) {
-        LOG.debug("Input parameters -> row {}", row);
+        log.debug("Input parameters -> row {}", row);
         DiagnosticReportBo result = new DiagnosticReportBo();
         result.setId((Integer) row[0]);
         result.setSnomed(new SnomedBo((Integer) row[1], (String)  row[11], (String) row[2]));
@@ -92,7 +85,7 @@ public class ListDiagnosticReportInfoServiceImpl implements ListDiagnosticReport
 		result.setCategory((String) row[14]);
 		result.setSource((String) row[15]);
 		result.setSourceId((Integer) row[16]);
-        LOG.trace(OUTPUT, result);
+        log.trace(OUTPUT, result);
         return result;
     }
 }

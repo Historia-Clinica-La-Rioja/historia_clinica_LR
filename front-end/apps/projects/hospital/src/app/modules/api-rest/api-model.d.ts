@@ -26,6 +26,8 @@ export interface AEmergencyCarePatientDto extends Serializable {
 
 export interface AMedicalDischargeDto extends MedicalDischargeDto {
     dischargeTypeId: number;
+    observation?: string;
+    otherDischargeDescription?: string;
     problems: OutpatientProblemDto[];
 }
 
@@ -101,7 +103,19 @@ export interface AddDiagnosticReportObservationCommandDto {
 export interface AddDiagnosticReportObservationsCommandDto {
     isPartialUpload: boolean;
     procedureTemplateId: number;
+    referenceClosure: ReferenceClosureDto;
     values: AddDiagnosticReportObservationCommandDto[];
+}
+
+export interface AddInstitutionReportToQueueDto {
+    appointmentStateId: number;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    endDate: DateDto;
+    hierarchicalUnitId: number;
+    hierarchicalUnitTypeId: number;
+    includeHierarchicalUnitDescendants: boolean;
+    startDate: DateDto;
 }
 
 export interface AddressDto extends Serializable {
@@ -196,8 +210,8 @@ export interface AnestheticReportDto {
     antibioticProphylaxis?: AnestheticSubstanceDto[];
     confirmed: boolean;
     diagnosis?: DiagnosisDto[];
+    encounterId: number;
     fluidAdministrations?: AnestheticSubstanceDto[];
-    foodIntake?: FoodIntakeDto;
     histories?: HealthConditionDto[];
     mainDiagnosis?: DiagnosisDto;
     measuringPoints?: MeasuringPointDto[];
@@ -207,7 +221,7 @@ export interface AnestheticReportDto {
     preMedications?: AnestheticSubstanceDto[];
     procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
-    surgeryProcedures?: HospitalizationProcedureDto[];
+    surgeryProcedures?: SpecificProcedureDto[];
 }
 
 export interface AnestheticReportSummaryDto extends DocumentSummaryDto {
@@ -242,11 +256,13 @@ export interface AnnexIIDto {
     missingProcedures: number;
     patientAge: number;
     patientGender: string;
+    patientIdentityAccreditationStatusId: number;
     problems: string;
     procedures: AnnexIIProcedureDto[];
     proceduresEgressDate: Date;
     proceduresIngressDate: Date;
     proceduresTotal: number;
+    professional: AnnexIIProfessionalDto;
     rnos: number;
     showProcedures: boolean;
     sisaCode: string;
@@ -260,6 +276,12 @@ export interface AnnexIIProcedureDto {
     descriptionNomenclator: string;
     patientRate: number;
     rate: number;
+}
+
+export interface AnnexIIProfessionalDto {
+    completeProfessionalName: string;
+    licenses: LicenseNumberDto[];
+    licensesString: string;
 }
 
 export interface AnthropometricDataDto extends Serializable {
@@ -286,9 +308,9 @@ export interface AnthropometricGraphicDto {
 }
 
 export interface AnthropometricGraphicEnablementDto {
-    hasAnthropometricData: boolean;
+    hasAnthropometricData?: boolean;
     hasValidAge: boolean;
-    hasValidGender: boolean;
+    hasValidGender?: boolean;
 }
 
 export interface ApiErrorDto {
@@ -357,6 +379,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
     observation?: string;
     observationBy?: string;
     parentAppointmentId?: number;
+    patientIdentityAccreditationStatus: EPatientIdentityAccreditationStatus;
     protected: boolean;
     recurringTypeDto: RecurringTypeDto;
     stateChangeReason?: string;
@@ -404,8 +427,9 @@ export interface AppointmentOrderDetailImageDto {
 }
 
 export interface AppointmentSearchDto {
-    aliasOrSpecialtyName?: string;
+    clinicalSpecialtyId: number;
     daysOfWeek: number[];
+    diaryId?: number;
     endSearchTime: TimeDto;
     endingSearchDate: DateDto;
     initialSearchDate: DateDto;
@@ -679,11 +703,11 @@ export interface BlockDto {
 }
 
 export interface BookedAppointmentDto {
+    clinicalSpecialtyName: string;
     date: DateDto;
     hour: TimeDto;
     office: string;
     professionalName: string;
-    specialties: string[];
 }
 
 export interface BookingAppointmentDto {
@@ -804,6 +828,7 @@ export interface ChangeStateMedicationRequestDto extends Serializable {
 
 export interface CipresOutpatientConsultationDto {
     anthropometricData: SharedAnthropometricDataDto;
+    cipresEncounterId: number;
     clinicalSpecialtyId: number;
     clinicalSpecialtySctid: string;
     date: string;
@@ -842,10 +867,27 @@ export interface ClinicalSpecialtyDto extends Serializable {
     name: string;
 }
 
+export interface ClinicalSpecialtySectorDto extends Serializable {
+    clinicalSpecialtyId: number;
+    description: string;
+    id: number;
+    sectorId: number;
+}
+
 export interface ClinicalTermDto extends Serializable {
     id?: number;
     snomed: SnomedDto;
     statusId?: string;
+}
+
+export interface CommercialMedicationDto {
+    commercial: SharedSnomedDto;
+    generic: SharedSnomedDto;
+}
+
+export interface CommercialMedicationPrescriptionDto {
+    medicationPackQuantity: number;
+    presentationUnitQuantity: number;
 }
 
 export interface Comparable<T> {
@@ -866,6 +908,11 @@ export interface CompleteDiaryDto extends DiaryDto {
 export interface CompleteEquipmentDiaryDto extends EquipmentDiaryDto {
     sectorDescription: string;
     sectorId: number;
+}
+
+export interface CompleteParameterizedFormDto {
+    id: number;
+    parameters: CompletedParameterizedFormParameterDto[];
 }
 
 export interface CompletePatientDto extends BasicPatientDto {
@@ -930,6 +977,35 @@ export interface CompleteRequestDto {
     referenceClosure?: ReferenceClosureDto;
 }
 
+export interface CompletedFormDto {
+    id: number;
+    name: string;
+    parameters: Parameter[];
+}
+
+export interface CompletedFormSummaryDto {
+    formName: string;
+    id: number;
+    parameters: CompletedParameterSummaryDto[];
+}
+
+export interface CompletedParameterSummaryDto {
+    completedValue: string;
+    description: string;
+    id: number;
+    loincId: number;
+    type: EParameterType;
+}
+
+export interface CompletedParameterizedFormParameterDto {
+    conceptPt?: string;
+    conceptSctid?: string;
+    id: number;
+    numericValue?: number;
+    optionId?: number;
+    textValue?: string;
+}
+
 export interface ConclusionDto extends HealthConditionDto {
 }
 
@@ -951,7 +1027,7 @@ export interface ConsultationResponseDto {
 
 export interface ConsultationsDto extends Serializable {
     completeProfessionalName: string;
-    consultationDate: Date;
+    consultationDate: DateTimeDto;
     documentId: number;
     id: number;
     specialty: string;
@@ -1064,6 +1140,7 @@ export interface CreateOutpatientDto {
     allergies: ReferableItemDto<OutpatientAllergyConditionDto>;
     anthropometricData?: OutpatientAnthropometricDataDto;
     clinicalSpecialtyId?: number;
+    completeForms: CompleteParameterizedFormDto[];
     evolutionNote?: string;
     familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
     hierarchicalUnitId?: number;
@@ -1072,10 +1149,24 @@ export interface CreateOutpatientDto {
     patientMedicalCoverageId?: number;
     personalHistories?: ReferableItemDto<OutpatientPersonalHistoryDto>;
     problems: OutpatientProblemDto[];
-    procedures: OutpatientProcedureDto[];
+    procedures: CreateOutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
     references: ReferenceDto[];
     riskFactors?: OutpatientRiskFactorDto;
+}
+
+export interface CreateOutpatientProcedureDto {
+    performedDate?: string;
+    serviceRequest?: CreateOutpatientServiceRequestDto;
+    snomed: SnomedDto;
+}
+
+export interface CreateOutpatientServiceRequestDto {
+    categoryId: string;
+    creationStatus: CreationStatus;
+    healthConditionPt: string;
+    healthConditionSctid: string;
+    observations?: AddDiagnosticReportObservationsCommandDto;
 }
 
 export interface CreationableDto extends Serializable {
@@ -1111,6 +1202,10 @@ export interface DateTimeDto extends Comparable<DateTimeDto> {
 
 export interface DeleteApiKeyDto {
     name: string;
+}
+
+export interface DeleteDocumentDto {
+    modificationReason: string;
 }
 
 export interface DentalActionDto extends ClinicalTermDto {
@@ -1172,6 +1267,7 @@ export interface DiagnosticReportInfoDto {
     id: number;
     link?: string;
     observations?: string;
+    observationsFromServiceRequest?: string;
     referenceRequestDto?: ReferenceRequestDto;
     serviceRequestId: number;
     snomed: SnomedDto;
@@ -1401,7 +1497,6 @@ export interface DocumentHealthcareProfessionalDto {
 
 export interface DocumentHistoricDto {
     documents: DocumentSearchDto[];
-    message: string;
 }
 
 export interface DocumentObservationsDto extends Serializable {
@@ -1509,9 +1604,6 @@ export interface DocumentSearchDto extends Serializable {
     editedOn: DateTimeDto;
     id: number;
     mainDiagnosis: string;
-    message: string;
-    notes: DocumentObservationsDto;
-    procedures: ProcedureReduced[];
 }
 
 export interface DocumentSearchFilterDto {
@@ -1614,6 +1706,13 @@ export interface EReferencePriority {
     id: number;
 }
 
+export interface EditableDocumentDto {
+    createdBy: number;
+    createdOn: Date;
+    reason: string;
+    sourceId: number;
+}
+
 export interface EducationLevelDto extends Serializable {
     code: number;
     description: string;
@@ -1629,6 +1728,14 @@ export interface ElectronicJointSignatureInstitutionProfessionalDto {
     completeName: string;
     healthcareProfessionalId: number;
     license: ElectronicJointSignatureLicenseDto;
+}
+
+export interface ElectronicJointSignatureInvolvedDocumentListFilterDto {
+    electronicSignaturesStatusIds?: EElectronicSignatureStatus[];
+    endDate?: DateDto;
+    patientFirstName?: string;
+    patientLastName?: string;
+    startDate?: DateDto;
 }
 
 export interface ElectronicJointSignatureLicenseDto {
@@ -1651,6 +1758,65 @@ export interface ElectronicSignatureInvolvedDocumentDto {
     signatureStatus: EElectronicSignatureStatus;
 }
 
+export interface EmergencyCareAttentionPlaceDetailDto {
+    lastTriage?: EmergencyCareEpisodeListTriageDto;
+    patient?: EmergencyCarePatientDto;
+    personId: number;
+    professional?: ProfessionalPersonDto;
+    reason?: string;
+    state?: MasterDataDto;
+    type?: MasterDataDto;
+    updatedOn?: DateTimeDto;
+}
+
+export interface EmergencyCareAttentionPlaceDto {
+    beds: EmergencyCareBedDto[];
+    clinicalSpecialtySectors: ClinicalSpecialtySectorDto[];
+    description: string;
+    doctorsOffices: EmergencyCareDoctorsOfficeDto[];
+    id: number;
+    sectorId: number;
+    sectorOrganizationId: number;
+    shockRooms: ShockroomDto[];
+}
+
+export interface EmergencyCareBedDetailDto extends EmergencyCareAttentionPlaceDetailDto {
+    bed: EmergencyCareBedDto;
+}
+
+export interface EmergencyCareBedDto {
+    available: boolean;
+    description: string;
+    id: number;
+    sectorDescription: string;
+}
+
+export interface EmergencyCareClinicalSpecialtySectorDto {
+    description: string;
+    id: number;
+}
+
+export interface EmergencyCareDoctorsOfficeDetailDto extends EmergencyCareAttentionPlaceDetailDto {
+    doctorsOffice: EmergencyCareDoctorsOfficeDto;
+}
+
+export interface EmergencyCareDoctorsOfficeDto {
+    available: boolean;
+    description: string;
+    id: number;
+    sectorDescription: string;
+}
+
+export interface EmergencyCareDocumentHeaderDto {
+    bed?: BedDto;
+    clinicalSpecialtyName: string;
+    createdOn: DateTimeDto;
+    id: number;
+    institutionName: string;
+    professionalName: string;
+    sourceTypeName: string;
+}
+
 export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
     emergencyCareType: MasterDataDto;
@@ -1659,6 +1825,21 @@ export interface EmergencyCareDto extends Serializable {
     patient: EmergencyCarePatientDto;
     policeInterventionDetails: PoliceInterventionDetailsDto;
     reason: string;
+}
+
+export interface EmergencyCareEpisodeAttentionPlaceDto {
+    bedId: number;
+    doctorsOfficeId: number;
+    shockroomId: number;
+}
+
+export interface EmergencyCareEpisodeDischargeSummaryDto {
+    administrativeDischargeOn: DateTimeDto;
+    episodeId: number;
+    medicalDischargeOn: DateTimeDto;
+    medicalDischargeProfessionalLastName: string;
+    medicalDischargeProfessionalName: string;
+    observation: string;
 }
 
 export interface EmergencyCareEpisodeFilterDto {
@@ -1678,7 +1859,10 @@ export interface EmergencyCareEpisodeInProgressDto {
 }
 
 export interface EmergencyCareEpisodeListTriageDto {
+    clinicalSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
     color: string;
+    createdOn: DateTimeDto;
+    creator: ProfessionalPersonDto;
     id: number;
     name: string;
     reasons: OutpatientReasonDto[];
@@ -1739,14 +1923,19 @@ export interface EmergencyCareHistoricDocumentDto {
 
 export interface EmergencyCareListDto extends Serializable {
     bed: BedDto;
+    calls: number;
+    canBeAbsent: boolean;
     creationDate: DateTimeDto;
+    dischargeSummary: EmergencyCareEpisodeDischargeSummaryDto;
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     patient: EmergencyCarePatientDto;
     reason: string;
     relatedProfessional: ProfessionalPersonDto;
+    sector: SectorDto;
     shockroom: ShockroomDto;
     state: MasterDataDto;
+    stateUpdatedOn: DateTimeDto;
     triage: EmergencyCareEpisodeListTriageDto;
     type: MasterDataDto;
 }
@@ -1760,10 +1949,21 @@ export interface EmergencyCarePatientDto extends Serializable {
 }
 
 export interface EmergencyCarePersonDto {
+    age: PersonAgeDto;
     firstName: string;
+    gender: string;
+    id: number;
     identificationNumber: string;
+    identificationType: string;
     lastName: string;
+    middleNames: string;
     nameSelfDetermination: string;
+    otherLastNames: string;
+    photo?: PersonPhotoDto;
+}
+
+export interface EmergencyCareShockRoomDetailDto extends EmergencyCareAttentionPlaceDetailDto {
+    shockroom: ShockroomDto;
 }
 
 export interface EmergencyCareUserDto {
@@ -1855,6 +2055,7 @@ export interface EquipmentAppointmentListDto {
     healthInsuranceId: number;
     hour: string;
     id: number;
+    localViewerUrl?: string;
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
     overturn: boolean;
@@ -1901,6 +2102,14 @@ export interface EquipmentDto extends Serializable {
 export interface EquipmentOpeningHoursDto extends TimeRangeDto {
     dayWeekId: number;
     id?: number;
+}
+
+export interface ErrorDownloadStudyDto {
+    effectiveTime: DateTimeDto;
+    errorCode: number;
+    errorCodeDescription: string;
+    fileUuid: string;
+    pacServerId: number;
 }
 
 export interface ErrorProblemDto extends ProblemInfoDto {
@@ -2056,10 +2265,6 @@ export interface FilterOptionDto {
     id: number;
 }
 
-export interface FoodIntakeDto {
-    clockTime: TimeDto;
-}
-
 export interface FormVDto {
     address: string;
     affiliateNumber: string;
@@ -2120,6 +2325,11 @@ export interface GeneratedApiKeyDto {
 export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
 }
 
+export interface GetCommercialMedicationSnomedDto {
+    commercialPt: string;
+    genericMedication: SnomedDto;
+}
+
 export interface GetDiagnosticReportObservationDto {
     id: number;
     procedureParameterId: number;
@@ -2136,6 +2346,18 @@ export interface GetDiagnosticReportObservationGroupDto {
     isPartialUpload: boolean;
     observations: GetDiagnosticReportObservationDto[];
     procedureTemplateId: number;
+}
+
+export interface GetPatientCoordinatesByAddedInstitutionFilterDto {
+    mapLowerCorner: GlobalCoordinatesDto;
+    mapUpperCorner: GlobalCoordinatesDto;
+}
+
+export interface GetPatientCoordinatesByOutpatientConsultationFilterDto {
+    fromDate: DateDto;
+    mapLowerCorner: GlobalCoordinatesDto;
+    mapUpperCorner: GlobalCoordinatesDto;
+    toDate: DateDto;
 }
 
 export interface GetSanitaryResponsibilityAreaInstitutionAddressDto {
@@ -2221,6 +2443,7 @@ export interface HCEErrorProblemDto {
 
 export interface HCEEvolutionSummaryDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
+    completedForms: CompletedFormSummaryDto[];
     consultationId: number;
     document: HCEDocumentDataDto;
     electronicJointSignatureProfessionals: ElectronicJointSignatureProfessionalsDto;
@@ -2508,13 +2731,6 @@ export interface IdentifierDto extends Serializable {
     value: string;
 }
 
-export interface ImageNetworkProductivityFilterDto {
-    clinicalSpecialtyId: number;
-    from: DateDto;
-    healthcareProfessionalId: number;
-    to: DateDto;
-}
-
 export interface ImageQueueFilteringCriteriaDto {
     equipmentId: number;
     from: DateDto;
@@ -2527,16 +2743,18 @@ export interface ImageQueueFilteringCriteriaDto {
 }
 
 export interface ImageQueueListDto {
+    appointmentDateTime: DateTimeDto;
     appointmentId: number;
-    createdOn: DateTimeDto;
     equipmentId: number;
     id: number;
     imageMoveStatus: EImageMoveStatus;
+    lastTriedOn: DateTimeDto;
     modalityId: number;
     patient: ImageQueuePatientDataDto;
     result: string;
     serviceRequestId: number;
     studies: string[];
+    studyImageUID: string;
     transcribedServiceRequestId: number;
 }
 
@@ -2658,11 +2876,60 @@ export interface InstitutionInfoDto extends Serializable {
     sisaCode: string;
 }
 
+export interface InstitutionMedicineFinancingStatusDto extends Serializable {
+    conceptPt: string;
+    conceptSctid: string;
+    financedByDomain: boolean;
+    financedByInstitution: boolean;
+    id: number;
+    institutionId: number;
+    medicineId: number;
+}
+
+export interface InstitutionMedicineGroupDto extends Serializable {
+    allDiagnoses: boolean;
+    emergencyCare: boolean;
+    enabled: boolean;
+    id: number;
+    institutionId: number;
+    internment: boolean;
+    isDomain: boolean;
+    medicineGroupId: number;
+    message: string;
+    name: string;
+    outpatient: boolean;
+    requiredDocumentation: string;
+    requiresAudit: boolean;
+}
+
 export interface InstitutionReportDto {
     institutionReportPlaces: EInstitutionReportPlace[];
     otherInstitutionReportPlace: string;
     reportReasons: EInstitutionReportReason[];
     reportWasDoneByInstitution: boolean;
+}
+
+export interface InstitutionReportQueryDto extends PageRequestDto {
+    appointmentStateId: number;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    endDate: string;
+    hierarchicalUnitId: number;
+    hierarchicalUnitTypeId: number;
+    includeHierarchicalUnitDescendants: boolean;
+    startDate: string;
+}
+
+export interface InstitutionReportQueuedDto {
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    endDate: DateDto;
+    hierarchicalUnitId: number;
+    hierarchicalUnitTypeId: number;
+    id: number;
+    includeHierarchicalUnitDescendants: boolean;
+    report: ReportQueuedDto;
+    startDate: DateDto;
 }
 
 export interface InstitutionUserPersonDto {
@@ -2708,6 +2975,14 @@ export interface InstitutionalGroupRuleDto {
 export interface InstitutionalGroupTypeDto extends Serializable {
     id: number;
     value: string;
+}
+
+export interface InternmentAnthropometricDataDto extends Serializable {
+    bloodType?: EffectiveClinicalObservationDto;
+    bmi?: EffectiveClinicalObservationDto;
+    headCircumference?: EffectiveClinicalObservationDto;
+    height?: EffectiveClinicalObservationDto;
+    weight?: EffectiveClinicalObservationDto;
 }
 
 export interface InternmentEpisodeADto {
@@ -2816,11 +3091,6 @@ export interface LicenseNumberDto {
 export interface LicenseNumberTypeDto extends Serializable {
     description: string;
     id: number;
-}
-
-export interface LimitedPatientSearchDto {
-    actualPatientSearchSize: number;
-    patientList: PatientSearchDto[];
 }
 
 export interface LoggedPersonDto {
@@ -2988,6 +3258,24 @@ export interface MedicineFinancingStatusDto extends Serializable {
     conceptSctid: string;
     financed: boolean;
     id: number;
+    institutionId?: number;
+}
+
+export interface MedicineGroupMedicineDto extends Serializable {
+    conceptPt: string;
+    financed: boolean;
+    financedByInstitution: boolean;
+    id: number;
+    institutionId: number;
+    medicineGroupId: number;
+    medicineId: number;
+}
+
+export interface MedicineGroupProblemDto extends Serializable {
+    conceptPt: string;
+    id: number;
+    medicineGroupId: number;
+    problemId: number;
 }
 
 export interface MergedPatientSearchDto {
@@ -3084,6 +3372,17 @@ export interface NominatimAddressDto {
     streetName: string;
 }
 
+export interface NominatimRequestResponseDto {
+    globalCoordinates: GlobalCoordinatesDto;
+    responseCode: ENominatimResponseCode;
+}
+
+export interface NotificationTemplateRenderDto extends AbstractMasterdataDto<string> {
+    body: string;
+    id: string;
+    sendingEnabled: boolean;
+}
+
 export interface NotifyPatientDto {
     appointmentId: number;
     doctorName: string;
@@ -3139,6 +3438,7 @@ export interface NursingProblemDto extends Serializable {
 
 export interface NursingProcedureDto extends Serializable {
     performedDate?: string;
+    serviceRequest?: CreateOutpatientServiceRequestDto;
     snomed: SnomedDto;
 }
 
@@ -3307,7 +3607,8 @@ export interface OdontologyPersonalHistoryDto {
 }
 
 export interface OdontologyProcedureDto extends Serializable {
-    performedDate?: DateDto;
+    performedDate?: string;
+    serviceRequest?: CreateOutpatientServiceRequestDto;
     snomed: SnomedDto;
 }
 
@@ -3489,13 +3790,35 @@ export interface PacServerTypeDto extends Serializable {
     id: number;
 }
 
-export interface PacsListDto {
-    urls: string[];
+export interface PacsDto {
+    id: number;
+    url: string;
 }
 
 export interface PageDto<T> {
     content: T[];
     totalElementsAmount: number;
+}
+
+export interface PageRequestDto {
+    pageNumber: number;
+    pageSize: number;
+}
+
+export interface Parameter {
+    description: string;
+    value: string;
+}
+
+export interface ParameterCompleteDataDto {
+    description: string;
+    ecl: SnomedECL;
+    id: number;
+    inputCount: number;
+    loincId: number;
+    textOptions: ParameterTextOptionDto[];
+    type: EParameterType;
+    unitOfMeasure: ParameterUnitOfMeasureDto;
 }
 
 export interface ParameterDto {
@@ -3509,9 +3832,42 @@ export interface ParameterDto {
     unitsOfMeasureIds: number[];
 }
 
+export interface ParameterTextOptionDto {
+    description: string;
+    id: number;
+    parameterId: number;
+}
+
 export interface ParameterTypeDto {
     description: string;
     id: number;
+}
+
+export interface ParameterUnitOfMeasureDto {
+    parameterId: number;
+    unitOfMeasureCode: string;
+    unitOfMeasureDescription: string;
+    unitOfMeasureId: number;
+}
+
+export interface ParameterizedFormDto {
+    emergencyCareEnabled: boolean;
+    id: number;
+    institutionId: number;
+    internmentEnabled: boolean;
+    isDomain: boolean;
+    isEnabled: boolean;
+    name: string;
+    outpatientEnabled: boolean;
+    statusId: number;
+}
+
+export interface ParameterizedFormParameterDto {
+    id: number;
+    orderNumber: number;
+    parameterId: number;
+    parameterizedFormId: number;
+    unitsOfMeasureIds: number[];
 }
 
 export interface ParenteralPlanDto extends IndicationDto {
@@ -3807,6 +4163,12 @@ export interface PostAnesthesiaStatusDto {
     vomiting?: boolean;
 }
 
+export interface PostCloseAnestheticReportDto {
+    anestheticReport: AnestheticReportDto;
+    modificationReason: string;
+    previousDocumentId: number;
+}
+
 export interface PracticeDto {
     coverage: boolean;
     coverageText: string;
@@ -3822,6 +4184,7 @@ export interface PreferredTermDto {
 
 export interface PrescriptionDto extends Serializable {
     clinicalSpecialtyId?: number;
+    deferredDate?: DateTimeDto;
     hasRecipe: boolean;
     isArchived?: boolean;
     isPostDated?: boolean;
@@ -3829,15 +4192,19 @@ export interface PrescriptionDto extends Serializable {
     medicalCoverageId?: number;
     observations?: string;
     repetitions?: number;
+    requiresTransfer?: boolean;
+    studyType?: EStudyType;
 }
 
 export interface PrescriptionItemDto extends Serializable {
     categoryId?: string;
+    commercialMedicationPrescription?: CommercialMedicationPrescriptionDto;
     dosage?: NewDosageDto;
     healthConditionId: number;
     observations?: string;
     prescriptionLineNumber: number;
     snomed: SnomedDto;
+    suggestedCommercialMedication?: SnomedDto;
 }
 
 export interface PrivateHealthInsuranceDetailsDto {
@@ -3875,6 +4242,7 @@ export interface ProcedureDescriptionDto {
     anesthesiaStartDate?: DateDto;
     anesthesiaStartTime?: TimeDto;
     asa?: number;
+    foodIntake?: TimeDto;
     nasogastricTube?: boolean;
     note?: string;
     surgeryEndDate?: DateDto;
@@ -3949,11 +4317,6 @@ export interface ProcedureParameterUnitOfMeasureFullSummaryDto {
     code: string;
     description: string;
     unitOfMeasureId: number;
-}
-
-export interface ProcedureReduced {
-    performedDate: Date;
-    procedure: string;
 }
 
 export interface ProcedureTemplateDto {
@@ -4098,6 +4461,11 @@ export interface ProfessionalSpecialtyDto {
 export interface ProfessionalsByClinicalSpecialtyDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     professionalsIds: number[];
+}
+
+export interface ProsthesisInfoDto {
+    description?: string;
+    hasProsthesis: boolean;
 }
 
 export interface ProvinceDto extends AbstractMasterdataDto<number> {
@@ -4389,6 +4757,13 @@ export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
 }
 
+export interface ReportQueuedDto {
+    createdOn: DateTimeDto;
+    existsFile: boolean;
+    generatedError: string;
+    generatedOn: DateTimeDto;
+}
+
 export interface Representation {
     description: string;
     value: string;
@@ -4422,6 +4797,7 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     bed: BedDto;
+    canBeAbsent: boolean;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     emergencyCareState: MasterDataDto;
@@ -4516,6 +4892,11 @@ export interface RuleDto {
     snomedId: number;
 }
 
+export interface SanitaryRegionPatientMapCoordinatesDto {
+    latitude: number;
+    longitude: number;
+}
+
 export interface SaveInstitutionAddressDto {
     cityId: number;
     departmentId: number;
@@ -4527,6 +4908,21 @@ export interface SaveInstitutionAddressDto {
 export interface SaveInstitutionGlobalCoordinatesDto {
     latitude: number;
     longitude: number;
+}
+
+export interface SaveInstitutionResponsibilityAreaDto {
+    responsibilityAreaPolygon: GlobalCoordinatesDto[];
+}
+
+export interface SaveMedicationStatementInstitutionalSupplyDto {
+    medicationStatementId: number;
+    medications: SaveMedicationStatementInstitutionalSupplyMedicationDto[];
+}
+
+export interface SaveMedicationStatementInstitutionalSupplyMedicationDto {
+    pt: string;
+    quantity: number;
+    sctid: string;
 }
 
 export interface SavedBookingAppointmentDto {
@@ -4619,6 +5015,26 @@ export interface SharedAnthropometricDataDto {
     weight: string;
 }
 
+export interface SharedHolidayDto {
+    date: DateDto;
+    description: string;
+}
+
+export interface SharedParameterDto {
+    description: string;
+    id: number;
+    inputCount: number;
+    loincId: number;
+    orderNumber: number;
+    snomedGroupId: number;
+    textOptions: TextOptionDto[];
+    type: EParameterType;
+    unitOfMeasure: UnitOfMeasureDto;
+}
+
+export interface SharedParameterizedFormDto {
+}
+
 export interface SharedRiskFactorDto {
     diastolicBloodPressure: string;
     systolicBloodPressure: string;
@@ -4663,6 +5079,7 @@ export interface ShockroomDto {
     available: boolean;
     description: string;
     id: number;
+    sectorDescription: string;
 }
 
 export interface SignatureStatusTypeDto {
@@ -4692,6 +5109,10 @@ export interface SnomedDto extends Serializable {
 export interface SnomedEclDto {
     key: SnomedECL;
     value: string;
+}
+
+export interface SnomedMedicationSearchDto extends SnomedSearchItemDto {
+    financed: boolean;
 }
 
 export interface SnomedPracticeDto {
@@ -4779,6 +5200,15 @@ export interface SourceTypeDto {
     id: number;
 }
 
+export interface SpecificProcedureDto {
+    id?: number;
+    isPrimary?: boolean;
+    note?: string;
+    performedDate?: string;
+    snomed: SnomedDto;
+    type?: ProcedureTypeEnum;
+}
+
 export interface StudyAppointmentDto {
     actionTime: DateTimeDto;
     completionInstitution: InstitutionBasicInfoDto;
@@ -4801,6 +5231,7 @@ export interface StudyDto extends Serializable {
 }
 
 export interface StudyFileInfoDto {
+    pacServerId: number;
     token: string;
     url: string;
     uuid: string;
@@ -4811,6 +5242,8 @@ export interface StudyIntanceUIDDto {
 }
 
 export interface StudyOrderReportInfoDto {
+    appointmentDate?: DateDto;
+    appointmentHour?: TimeDto;
     creationDate: Date;
     diagnosticReportId: number;
     doctor: DoctorInfoDto;
@@ -4819,6 +5252,8 @@ export interface StudyOrderReportInfoDto {
     healthCondition: string;
     imageId?: string;
     isAvailableInPACS: boolean;
+    localViewerUrl?: string;
+    observationsFromServiceRequest: string;
     serviceRequestId: number;
     snomed: string;
     source: string;
@@ -4827,12 +5262,15 @@ export interface StudyOrderReportInfoDto {
 }
 
 export interface StudyTranscribedOrderReportInfoDto {
+    appointmentDate?: DateDto;
+    appointmentHour?: TimeDto;
     creationDate: Date;
     diagnosticReports: string[];
     hceDocumentDataDto?: HCEDocumentDataDto;
     healthCondition: string;
     imageId?: string;
     isAvailableInPACS: boolean;
+    localViewerUrl?: string;
     professionalName: string;
     snomed: string;
     status: boolean;
@@ -4840,9 +5278,12 @@ export interface StudyTranscribedOrderReportInfoDto {
 }
 
 export interface StudyWithoutOrderReportInfoDto {
+    appointmentDate?: DateDto;
+    appointmentHour?: TimeDto;
     hceDocumentDataDto?: HCEDocumentDataDto;
     imageId?: string;
     isAvailableInPACS: boolean;
+    localViewerUrl?: string;
     snomed: string;
     status: boolean;
     viewReport: boolean;
@@ -4856,14 +5297,17 @@ export interface SurgicalReportDto extends Serializable {
     drainages?: HospitalizationProcedureDto[];
     endDateTime?: DateTimeDto;
     frozenSectionBiopsies?: HospitalizationProcedureDto[];
-    healthcareProfessionals?: DocumentHealthcareProfessionalDto[];
+    mainDiagnosis?: DiagnosisDto;
     modificationReason?: string;
+    pathologist?: DocumentHealthcareProfessionalDto;
     postoperativeDiagnosis?: DiagnosisDto[];
     preoperativeDiagnosis?: DiagnosisDto[];
     procedures?: HospitalizationProcedureDto[];
-    prosthesisDescription?: string;
+    prosthesisInfo?: ProsthesisInfoDto;
     startDateTime?: DateTimeDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
+    surgicalTeam?: DocumentHealthcareProfessionalDto[];
+    transfusionist?: DocumentHealthcareProfessionalDto;
 }
 
 export interface TemplateNamesDto {
@@ -4892,6 +5336,11 @@ export interface TerminologyQueueItemDto {
     ingestedError: string;
     ingestedOn: DateTimeDto;
     url: string;
+}
+
+export interface TextOptionDto {
+    description: string;
+    id: number;
 }
 
 export interface TextTemplateDto extends DocumentTemplateDto {
@@ -4990,6 +5439,7 @@ export interface TriageDocumentDto {
 
 export interface TriageDto extends Serializable {
     categoryId: number;
+    clinicalSpecialtySectorId?: number;
     doctorsOfficeId?: number;
     reasons?: OutpatientReasonDto[];
 }
@@ -4999,6 +5449,7 @@ export interface TriageListDto extends Serializable {
     breathing: TriageBreathingDto;
     category: TriageCategoryDto;
     circulation: TriageCirculationDto;
+    clinicalSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
     createdBy: EmergencyCareUserDto;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
@@ -5033,6 +5484,12 @@ export interface URI extends Comparable<URI>, Serializable {
 export interface URL extends Serializable {
 }
 
+export interface UnitOfMeasureDto {
+    code: string;
+    description: string;
+    id: number;
+}
+
 export interface UnsatisfiedAppointmentDemandDto {
     aliasOrSpecialtyName: string;
     daysOfWeek: number[];
@@ -5061,6 +5518,11 @@ export interface UpdateAppointmentDto {
     patientMedicalCoverageId?: number;
     phoneNumber?: string;
     phonePrefix?: string;
+}
+
+export interface UpdateAppointmentStateDto {
+    patientIdentificationBarCode: string;
+    reason: string;
 }
 
 export interface UsageReportStatusDto {
@@ -5130,6 +5592,10 @@ export interface VInstitutionDto {
 
 export interface VMedicalDischargeDto extends MedicalDischargeDto {
     dischargeType: MasterDataDto;
+    medicalDischargeProfessionalLastName: string;
+    medicalDischargeProfessionalName: string;
+    observation: string;
+    otherDischargeDescription: string;
     snomedPtProblems: string[];
 }
 
@@ -5214,6 +5680,12 @@ export interface ViolenceReportActorDto<T> {
     relationshipWithVictim: T;
 }
 
+export interface ViolenceReportAddressDto {
+    city: CityDto;
+    homeAddress: string;
+    municipality: DepartmentDto;
+}
+
 export interface ViolenceReportAggressorDto {
     aggressorData: ViolenceReportActorDto<EAggressorRelationship>;
     hasBeenTreated: boolean;
@@ -5270,11 +5742,10 @@ export interface ViolenceReportInstitutionalizedDto {
 }
 
 export interface ViolenceReportPersonDto {
-    address: string;
+    address: ViolenceReportAddressDto;
     age: number;
     firstName: string;
     lastName: string;
-    municipality: DepartmentDto;
 }
 
 export interface ViolenceReportSituationDto {
@@ -5432,16 +5903,16 @@ export const enum AppFeature {
     HABILITAR_EDITAR_PACIENTE_COMPLETO = "HABILITAR_EDITAR_PACIENTE_COMPLETO",
     HABILITAR_MODULO_GUARDIA = "HABILITAR_MODULO_GUARDIA",
     HABILITAR_MODULO_PORTAL_PACIENTE = "HABILITAR_MODULO_PORTAL_PACIENTE",
-    HABILITAR_CONFIGURACION = "HABILITAR_CONFIGURACION",
     HABILITAR_BUS_INTEROPERABILIDAD = "HABILITAR_BUS_INTEROPERABILIDAD",
     HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
     HABILITAR_REPORTES = "HABILITAR_REPORTES",
+    HABILITAR_REPORTES_INSTANTANEOS = "HABILITAR_REPORTES_INSTANTANEOS",
     HABILITAR_INFORMES = "HABILITAR_INFORMES",
     HABILITAR_LLAMADO = "HABILITAR_LLAMADO",
     HABILITAR_HISTORIA_CLINICA_EXTERNA = "HABILITAR_HISTORIA_CLINICA_EXTERNA",
     HABILITAR_SERVICIO_RENAPER = "HABILITAR_SERVICIO_RENAPER",
     RESTRINGIR_DATOS_EDITAR_PACIENTE = "RESTRINGIR_DATOS_EDITAR_PACIENTE",
-    HABILITAR_INTERCAMBIO_TEMAS = "HABILITAR_INTERCAMBIO_TEMAS",
+    HABILITAR_INTERCAMBIO_TEMAS_EN_DESARROLLO = "HABILITAR_INTERCAMBIO_TEMAS_EN_DESARROLLO",
     HABILITAR_CREACION_USUARIOS = "HABILITAR_CREACION_USUARIOS",
     HABILITAR_REPORTE_EPIDEMIOLOGICO = "HABILITAR_REPORTE_EPIDEMIOLOGICO",
     AGREGAR_MEDICOS_ADICIONALES = "AGREGAR_MEDICOS_ADICIONALES",
@@ -5460,7 +5931,6 @@ export const enum AppFeature {
     HABILITAR_NOTIFICACIONES_TURNOS = "HABILITAR_NOTIFICACIONES_TURNOS",
     HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA = "HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA",
     HABILITAR_REPORTES_ESTADISTICOS = "HABILITAR_REPORTES_ESTADISTICOS",
-    HABILITAR_VISUALIZACION_DE_CARDS = "HABILITAR_VISUALIZACION_DE_CARDS",
     HABILITAR_RECUPERAR_PASSWORD = "HABILITAR_RECUPERAR_PASSWORD",
     HABILITAR_DESARROLLO_RED_IMAGENES = "HABILITAR_DESARROLLO_RED_IMAGENES",
     HABILITAR_SIP_PLUS = "HABILITAR_SIP_PLUS",
@@ -5495,9 +5965,21 @@ export const enum AppFeature {
     HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO = "HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO",
     HABILITAR_AREA_RESPONSABILIDAD_SANITARIA = "HABILITAR_AREA_RESPONSABILIDAD_SANITARIA",
     HABILITAR_SOLAPA_COLA_IMAGENES = "HABILITAR_SOLAPA_COLA_IMAGENES",
+    HABILITAR_TRIAGE_PARA_ADMINISTRATIVO = "HABILITAR_TRIAGE_PARA_ADMINISTRATIVO",
     HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO = "HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO",
+    HABILITAR_RELACIONES_SNOMED = "HABILITAR_RELACIONES_SNOMED",
+    HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO = "HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO",
+    HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO = "HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO",
+    HABILITAR_DISPENSA = "HABILITAR_DISPENSA",
+    HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA = "HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA",
+    HABILITAR_FINANCIACION_DE_MEDICAMENTOS = "HABILITAR_FINANCIACION_DE_MEDICAMENTOS",
     HABILITAR_CUESTIONARIOS = "HABILITAR_CUESTIONARIOS",
     HABILITAR_ANTECEDENTES_FAMILIARES = "HABILITAR_ANTECEDENTES_FAMILIARES",
+}
+
+export const enum CreationStatus {
+    REGISTERED = "REGISTERED",
+    FINAL = "FINAL",
 }
 
 export const enum EAggressorRelationship {
@@ -5552,6 +6034,7 @@ export const enum ECHDocumentType {
     REPORTS = "REPORTS",
     MEDICAL_PRESCRIPTIONS = "MEDICAL_PRESCRIPTIONS",
     CLINICAL_NOTES = "CLINICAL_NOTES",
+    ANESTHETIC_REPORTS = "ANESTHETIC_REPORTS",
     OTHER = "OTHER",
     NOT_SUPPORTED = "NOT_SUPPORTED",
 }
@@ -5630,6 +6113,8 @@ export const enum EHealthInstitutionOrganization {
     COMMITTEE = "COMMITTEE",
     MANAGEMENT = "MANAGEMENT",
     OTHERS = "OTHERS",
+    MUNICIPAL_HOSPITAL = "MUNICIPAL_HOSPITAL",
+    SAME = "SAME",
 }
 
 export const enum EHealthSystemOrganization {
@@ -5745,6 +6230,12 @@ export const enum ENationalGovernmentDevice {
     JUSTICE_MINISTRY = "JUSTICE_MINISTRY",
 }
 
+export const enum ENominatimResponseCode {
+    SERVER_ERROR = "SERVER_ERROR",
+    NOT_FOUND = "NOT_FOUND",
+    SUCCESSFUL = "SUCCESSFUL",
+}
+
 export const enum ENursingRecordStatus {
     COMPLETED = "COMPLETED",
     REJECTED = "REJECTED",
@@ -5753,6 +6244,18 @@ export const enum ENursingRecordStatus {
 
 export const enum EOdontologyTopicDto {
     NUEVA_CONSULTA = "NUEVA_CONSULTA",
+}
+
+export const enum EParameterType {
+    NUMERIC = "NUMERIC",
+    FREE_TEXT = "FREE_TEXT",
+    SNOMED_ECL = "SNOMED_ECL",
+    OPTIONS_LIST = "OPTIONS_LIST",
+}
+
+export const enum EPatientIdentityAccreditationStatus {
+    VALID = "VALID",
+    NOT_GIVEN = "NOT_GIVEN",
 }
 
 export const enum EPatientMedicalCoverageCondition {
@@ -5875,6 +6378,8 @@ export const enum ERole {
     FHIR_ACCESS_ALL_RESOURCES = "FHIR_ACCESS_ALL_RESOURCES",
     API_ANEXO = "API_ANEXO",
     API_REPORTES = "API_REPORTES",
+    INDEXADOR = "INDEXADOR",
+    GESTOR_DE_ACCESO_INSTITUCIONAL = "GESTOR_DE_ACCESO_INSTITUCIONAL",
 }
 
 export const enum ESchoolLevel {
@@ -5907,6 +6412,11 @@ export const enum ESignatureStatus {
     PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     SIGNED = "SIGNED",
+}
+
+export const enum EStudyType {
+    ROUTINE = "ROUTINE",
+    URGENT = "URGENT",
 }
 
 export const enum ESurfacePositionDto {

@@ -48,6 +48,12 @@ import java.util.Optional;
 
 public interface DocumentService {
 
+    /**
+     *
+     * @deprecated
+     * <p> Use {@link FetchDocument#run(Long documentId)} instead.
+     */
+    @Deprecated
     Optional<Document> findById(Long documentId);
 
     Document save(Document document);

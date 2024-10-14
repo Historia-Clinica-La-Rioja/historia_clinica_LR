@@ -1,7 +1,18 @@
-h3 {
-	font-weight: 500;
+.evolution-note-container {
+    overflow-y: auto; 
+	overflow-x: hidden; 
+	height: 95%;
+	font-size: 16px;
 }
 
-.register-editor-width {
-	width: 65%;
+.summary-content {
+    margin: 0 24px;
+}
+
+.loader {
+    margin: auto;
+}
+
+.edited-summary {
+    padding: 10px 0;
 }

@@ -7,6 +7,17 @@ export const MANAGER_ROLES = [
 	ERole.GESTOR_DE_ACCESO_LOCAL,
 ];
 
+export enum HomeRoutes {
+	Home = '',						// pantalla inicial
+	Profile = 'profile',			// Perfil del usuario
+	Settings = 'settings',			// Configuración
+	Extension = 'extension', 		// Extensión
+	UserKeys = 'user-keys', 		// API Keys del usuario
+	Auditoria = 'auditoria',
+	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
+	CallCenter = 'centro-de-llamadas', // Centro de llamadas
+}
+
 export const PUBLIC_API_ROLES = [
 	ERole.API_FACTURACION,
 	ERole.API_TURNOS,
@@ -32,9 +43,8 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'home_settings',
 		url: '/home/settings',
 		permissions: [
-			ERole.ROOT,
+			ERole.ROOT, ERole.ADMINISTRADOR
 		],
-		featureFlag: [AppFeature.HABILITAR_CONFIGURACION]
 	},
 	{
 		text: 'app.menu.AUDIT',
@@ -62,6 +72,23 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.GESTOR_CENTRO_LLAMADO
 		],
+	},
+	{
+		text: 'app.menu.APPOINTMENTS_GIVEN',
+		icon: 'calendar_today',
+		id: 'appointments-given',
+		url: '/home/get-call-center-appointments',
+		permissions: [
+			ERole.GESTOR_CENTRO_LLAMADO
+		],
+		featureFlag: [AppFeature.HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO]
+	},
+	{
+		text: 'app.menu.API_KEYS',
+		icon: 'private_connectivity',
+		id: 'user-keys',
+		url: '/home/profile/user-keys',
+		permissions: PUBLIC_API_ROLES,
 	},
 ];
 

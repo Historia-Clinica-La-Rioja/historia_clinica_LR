@@ -12,10 +12,9 @@ import { PatientTypeData } from '@presentation/components/patient-type-logo/pati
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { AuditablePatientInfo } from '@pacientes/routes/edit-patient/edit-patient.component';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
 @Component({
@@ -45,7 +44,7 @@ export class PatientProfilePopupComponent implements OnInit {
 		private readonly internmentPatientService: InternmentPatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private router: Router,
 		private contextService: ContextService,
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -69,7 +68,7 @@ export class PatientProfilePopupComponent implements OnInit {
 					this.auditablePatientInfo = {
 						message: completeData.auditablePatientInfo.message,
 						createdBy: completeData.auditablePatientInfo.createdBy,
-						createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+						createdOn: this.dateFormatPipe.transform(this.auditableFullDate, 'datetime'),
 						institutionName: completeData.auditablePatientInfo.institutionName
 					};
 				}

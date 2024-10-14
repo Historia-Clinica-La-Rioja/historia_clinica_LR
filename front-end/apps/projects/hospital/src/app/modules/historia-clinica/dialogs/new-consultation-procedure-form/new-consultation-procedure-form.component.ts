@@ -23,9 +23,8 @@ export class NewConsultationProcedureFormComponent {
     }
   }
 
-  close(): void {
+  resetForm(): void {
     this.data.procedureService.resetForm();
-    this.dialogRef.close()
   }
 
   dateChanged(date: Date) {

@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -78,6 +79,8 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 	private Integer sectorId;
 
 	private Integer roomId;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public Integer getPatientId() {

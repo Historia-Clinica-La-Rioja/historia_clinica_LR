@@ -43,6 +43,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	diagnosis;
 	isAllergyNoRefer: boolean = true;
 	isFamilyHistoriesNoRefer: boolean = true;
+	disabled = true;
+	markAsTouched = false;
 
 	constructor(
 		public dockPopupRef: DockPopupRef,
@@ -78,9 +80,15 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	}
 
 	save() {
-		this.disableConfirmButton = true;
-		const emergencyCareEvolutionNoteDto = this.buildEmergencyCareEvolutionNoteDto();
-		this.persist(emergencyCareEvolutionNoteDto)
+		if (this.form.value.evolutionNote) {
+			this.disableConfirmButton = true;
+			const emergencyCareEvolutionNoteDto = this.buildEmergencyCareEvolutionNoteDto();
+			this.persist(emergencyCareEvolutionNoteDto)
+		}
+		else {
+			this.markAsTouched = true;
+			this.snackBarService.showError('La nota de evolución de guardia debe tener una evolución');
+		}
 	}
 
 	private buildEmergencyCareEvolutionNoteDto(): EmergencyCareEvolutionNoteDto {
@@ -90,7 +98,6 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
 		const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
 		const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
-
 		return {
 			clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
 			reasons: value.reasons?.motivo || [],
@@ -155,7 +162,6 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		this.setDiagnosis(evolutionNoteData.mainDiagnosis, evolutionNoteData.diagnosis);
 		this.evolutionNoteEditionService.loadFormByEvolutionNoteData(this.form, evolutionNoteData);
 	}
-
 }
 
 export interface NotaDeEvolucionData {

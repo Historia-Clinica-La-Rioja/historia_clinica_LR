@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnnexReportByEncounterAccessDeniedException;
 import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnnexReportByEncounterException;
-import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.activities.domain.ScopeEnum;
 import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
 import ar.lamansys.sgh.shared.application.encounter.SharedEncounterToAppointmentService;
 import ar.lamansys.sgh.shared.domain.annex.SharedAppointmentAnnexPdfReportResponse;
@@ -27,7 +27,7 @@ public class FetchAnnexReportByEncounter {
 		throws FetchAnnexReportByEncounterException
 	{
 		log.debug("Fetching annex for refsetCode {} encounterId {} scope {}", refsetCode, encounterId, scope);
-		assertCanAccessInstitution(refsetCode);
+		assertCanAccess();
 		/**
 		 * The scope stored by addons is taken from the activities controller
 		 * At the moment (2.20) the only supported scope is AMBULATORIA
@@ -69,11 +69,8 @@ public class FetchAnnexReportByEncounter {
 		return sourceTypeId;
 	}
 
-	private void assertCanAccessInstitution(String refsetCode) {
-		var canAccess = annexReportByEncounterPublicApiPermissionsPort
-				.findInstitutionId(refsetCode)
-				.map(annexReportByEncounterPublicApiPermissionsPort::canAccess)
-				.orElse(false);
+	private void assertCanAccess() {
+		var canAccess = annexReportByEncounterPublicApiPermissionsPort.canAccess();
 		if (!canAccess)
 			throw new FetchAnnexReportByEncounterAccessDeniedException();
 	}

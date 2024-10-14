@@ -1,8 +1,24 @@
+stages:
+  - build
+  - dockerize
+  - quality
+  - publish-docker-image
+
 include:
   - project: 'lamansys/cicd'
-    ref: gian
     file:
-      - '/gitlab/integration.yml'
+      - 'gitlab/stages/build-full.yml'
+      - 'gitlab/stages/quality-full.yml'
+
+workflow:
+  # https://medium.com/devops-with-valentine/fix-gitlab-ci-duplicate-pipelines-in-merge-requests-when-using-rules-9a1486994f3a
+  # Rule are evaluated in the order they appear. 
+  # So if a merge request pipeline is detected, this is “killed” with the when: never configuration.
+  # If the first rule does not match, the next one will always match, enabling all other pipelines.
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - when: always
 
 build_frontend:
   extends: .build_frontend_base
@@ -22,9 +38,9 @@ code_freeze:
     - apt-get update
     - apt-get install -y maven
     - ./scripts/run-code-freeze.sh
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: manual
+  only:
+    - master
+  when: manual
 
 generar_release:
   stage: publish-docker-image
@@ -34,3 +50,89 @@ generar_release:
   only:
     - /^rc-.*$/ 
   when: manual
+
+.dockerize_dockerhub:
+  stage: publish-docker-image
+  extends: .dockerize_folder
+  variables:
+    CI_REGISTRY: "index.docker.io"
+    CI_REGISTRY_IMAGE: "historiaclinica"
+    CI_REGISTRY_USER: $DOCKERHUB_REGISTRY_USER
+    CI_REGISTRY_PASSWORD: $DOCKERHUB_REGISTRY_PASSWORD
+
+dockerize_app_dockerhub:
+  extends: .dockerize_dockerhub
+  variables:
+    IMAGE_NAME: hsi
+    IMAGE_VERSION: ${CI_COMMIT_TAG}
+    DOCKER_FOLDER: "ci/docker/entrega/nginx-jar"
+  dependencies:
+    - build_backend
+    - build_frontend
+  before_script:
+    - mv -v back-end/.docker/* ${DOCKER_FOLDER}/
+    - mv -v front-end/.docker/* ${DOCKER_FOLDER}/
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      exists:
+        - ci/docker/entrega/nginx-jar/Dockerfile
+      when: manual
+
+dockerize_app_dockerhub_latest:
+  extends: dockerize_app_dockerhub
+  variables:
+    IMAGE_VERSION: latest
+
+dockerize_cubejs_dockerhub:
+  extends: .dockerize_dockerhub
+  variables:
+    IMAGE_NAME: cubejs
+    IMAGE_VERSION: ${CI_COMMIT_TAG}
+    DOCKER_FOLDER: "cubejs/entrega"
+  before_script:
+    - mv cubejs/schema cubejs/entrega
+    - mv cubejs/cube.js cubejs/entrega
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      exists:
+        - cubejs/entrega/Dockerfile
+      when: manual
+
+dockerize_cubejs_dockerhub_latest:
+  extends: dockerize_cubejs_dockerhub
+  variables:
+    IMAGE_VERSION: latest
+
+dockerize_snomed-schema:
+  extends: .dockerize_folder
+  variables:
+    IMAGE_NAME: snomed-schema
+    DOCKER_FOLDER: "dba/snomed-schema/"
+
+dockerize_snomed-schema_dockerhub:
+  extends: .dockerize_dockerhub
+  variables:
+    IMAGE_NAME: snomed-schema
+    IMAGE_VERSION: ${CI_COMMIT_TAG}
+    DOCKER_FOLDER: "dba/snomed-schema/"
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      exists:
+        - dba/snomed-schema/Dockerfile
+      when: manual
+
+dockerize_snomed-schema_dockerhub_latest:
+  extends: dockerize_snomed-schema_dockerhub
+  variables:
+    IMAGE_VERSION: latest
+
+test_frontend:
+  extends: .test_frontend_base
+  cache:
+    key:
+      files:
+        - front-end/apps/package-lock.json
+        - front-end/backoffice/package-lock.json
+    paths:
+      - front-end/apps/node_modules
+      - front-end/backoffice/node_modules

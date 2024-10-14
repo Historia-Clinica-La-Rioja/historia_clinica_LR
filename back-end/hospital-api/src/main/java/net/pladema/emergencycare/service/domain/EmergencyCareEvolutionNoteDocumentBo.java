@@ -21,6 +21,7 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -79,6 +80,8 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 	private LocalDateTime editedOn;
 
 	private HealthcareProfessionalBo editor;
+
+	private Map<String, Object> contextMap;
 
 	@Override
 	public Integer getPatientId() {

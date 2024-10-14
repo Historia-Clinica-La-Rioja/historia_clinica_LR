@@ -27,7 +27,9 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 	loadingReport = false;
 	disabled = true;
 	markAsTouched = false;
+	canConfirmSurgicalTeam = false;
 	validDate = false;
+	validSurgicalTeam = false;
 	validProsthesis = true;
 
 	surgicalReport: SurgicalReportDto = {
@@ -48,12 +50,13 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			}
 		},
 		frozenSectionBiopsies: [],
-		healthcareProfessionals: [],
 		modificationReason: undefined,
+		mainDiagnosis: undefined,
+		pathologist: undefined,
 		postoperativeDiagnosis: [],
 		preoperativeDiagnosis: [],
 		procedures: [],
-		prosthesisDescription: undefined,
+		prosthesisInfo: undefined,
 		startDateTime: {
 			date: {
 				year: undefined,
@@ -65,7 +68,9 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 				minutes: undefined
 			}
 		},
-		surgeryProcedures: []
+		surgeryProcedures: [],
+		surgicalTeam: [],
+		transfusionist: undefined,
 	};
 
 	PATHOLOGIST = EProfessionType.PATHOLOGIST;
@@ -82,13 +87,13 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
 		this.diagnosis = data.diagnosis;
 		this.mainDiagnosis = data.mainDiagnosis;
-		this.healthcareProfessionalService.getAllProfessionalsAndTechnicians().subscribe(response => {
+		this.healthcareProfessionalService.getAllProfessionalsAndTechniciansByInstitution().subscribe(response => {
 			if (response)
 				this.professionals = response;
 		});
@@ -97,42 +102,50 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			this.loadingReport = true;
 			this.surgicalReportService.getSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId).subscribe(response => {
 				this.surgicalReport = response;
+				this.diagnosis = response?.preoperativeDiagnosis;
+				this.mainDiagnosis = response?.mainDiagnosis;
 				this.loadingReport = false;
 				if (this.surgicalReport.startDateTime && this.surgicalReport.endDateTime)
 					this.disabled = false;
 			})
 		}
 	}
-	ngOnInit(): void {
+
+	ngOnInit() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;
 		})
 	}
-	
-	setDisabled(): void {
-		this.disabled = !this.validDate || !this.validProsthesis;
+
+	setDisabled() {
+		this.disabled = !this.validDate || !this.validProsthesis || !this.validSurgicalTeam;
 	}
 
-	setValidProsthesis(event: boolean): void {
+	setValidProsthesis(event: boolean) {
 		this.validProsthesis = event;
 		this.setDisabled();
 	}
 
-	setValidDate(event: boolean): void {
+	setValidDate(event: boolean) {
 		this.validDate = event;
 		this.setDisabled();
 	}
 
-	save(): void {
+	setValidSurgicalTeam(event: boolean) {
+		this.validSurgicalTeam = event;
+		this.setDisabled();
+	}
+
+	save() {
 		if (!this.disabled) {
 			this.surgicalReport.confirmed = true;
 			this.isLoading = true;
+			this.surgicalReport.preoperativeDiagnosis = this.filterCheckedDiagnosis(this.surgicalReport.preoperativeDiagnosis);
 			if (this.data.surgicalReportId) {
 				this.openEditReason();
 				this.isLoading = false;
 				return;
 			}
-
 			this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, this.surgicalReport).subscribe(
 				saved => {
 					this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
@@ -147,8 +160,13 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		}
 		else {
 			this.markAsTouched = true;
+			this.canConfirmSurgicalTeam = true;
 			this.snackBarService.showError('Faltan completar campos en el formulario');
 		}
+	}
+
+	private filterCheckedDiagnosis(diagnosis: DiagnosisDto[]): DiagnosisDto[] {
+		return diagnosis.filter(d => d.isAdded);
 	}
 
 	private openEditReason() {
@@ -177,7 +195,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		});
 	}
 
-	formControlChange(event, formControl: FormControl): void {
+	formControlChange(event, formControl: FormControl) {
 		formControl.setValue(event);
 	}
 

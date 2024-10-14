@@ -39,6 +39,7 @@ export interface ReferenceCompleteData {
 	dto: ReferenceDataDto;
 	priority: string;
 	problems: string;
+	state?: string;
 }
 
 export interface PrescriptionStatus {

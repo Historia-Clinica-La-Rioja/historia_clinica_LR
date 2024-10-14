@@ -32,8 +32,6 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
-import { DatePipeFormat } from "@core/utils/date.utils";
-import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
@@ -47,12 +45,14 @@ import { SearchAppointmentCriteria } from '@turnos/components/search-appointment
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
 import { getStudiesNames } from '@turnos/utils/appointment.utils';
 import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
-const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_SEARCH = 'pacientes';
 const TEMPORARY_PATIENT_ID = 3;
 const MEDICAL_ORDER_PENDING_STATUS = '1';
 const MEDICAL_ORDER_CATEGORY_ID = '363679005'
@@ -90,7 +90,6 @@ export class NewAppointmentComponent implements OnInit {
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
 	lastAppointmentId = -1;
-	readonly dateFormats = DatePipeFormat;
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
 	transcribedOrder = null;
@@ -105,8 +104,8 @@ export class NewAppointmentComponent implements OnInit {
 	isEnableTelemedicina: boolean = false;
 	boxMessageInfo: BoxMessageInformation;
 	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
-	fullDate: Date
-	
+	fullDate: Date;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
@@ -122,7 +121,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientNameService: PatientNameService,
 		private readonly referenceService: ReferenceService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
@@ -227,7 +226,7 @@ export class NewAppointmentComponent implements OnInit {
 			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)])
 		});
 
-		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date))
+		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date));
 	}
 
 	setModalityValidation(modality) {
@@ -359,8 +358,8 @@ export class NewAppointmentComponent implements OnInit {
 			this.verifyExistingAppointment().subscribe((appointmentShortSummary) => {
 				if (appointmentShortSummary) {
 					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
-					const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
-					const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
+					const date = this.dateFormatPipe.transform(dateDtoToDate(appointmentShortSummary.date), 'date')
+					const hour = this.dateFormatPipe.transform(timeDtoToDate(appointmentShortSummary.hour), 'time')
 					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentFor} en ${appointmentShortSummary.institution}`
 
 					const warnignComponent = this.dialog.open(DiscardWarningComponent,
@@ -418,13 +417,14 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	goCreatePatient() {
+		const paramsToSearchPerson: ParamsToSearchPerson = {
+			identificationTypeId: this.formSearch.controls.identifType.value,
+			identificationNumber: this.formSearch.controls.identifNumber.value,
+			genderId: this.formSearch.controls.gender.value
+		}
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
-				queryParams: {
-					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: this.formSearch.controls.identifNumber.value,
-					genderId: this.formSearch.controls.gender.value
-				}
+				queryParams: paramsToSearchPerson
 			});
 	}
 
@@ -517,7 +517,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
 				this.transcribedOrderService.resetTranscribedOrder();
 			});
-			
+
 		}
 		this.clearQueryParams();
 	}
@@ -574,7 +574,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
-        this.transcribedOrderService.resetTranscribedOrder();
+		this.transcribedOrderService.resetTranscribedOrder();
 		if (this.data.isEquipmentAppointment) {
 			let medicalOrder = this.appointmentInfoForm.get('medicalOrder').get('appointmentMedicalOrder').value;
 			let orderId = medicalOrder?.serviceRequestId;

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.ports;
 
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompletedFormSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.OutpatientEvolutionSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
@@ -19,5 +20,7 @@ public interface HCEOutpatientConsultationSummaryStorage {
     List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> outpatientIds);
 
     List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds);
+
+	List<CompletedFormSummaryBo> getCompletedFormsByPatient(Integer patientId, List<Integer> outpatientIds);
 
 }

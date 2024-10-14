@@ -37,6 +37,8 @@ public class CreateOutpatientServiceRequestServiceImpl implements CreateOutpatie
 				.associatedSourceTypeId(SourceType.OUTPATIENT)
 				.medicalCoverageId(extendedServiceRequestBo.getMedicalCoverageId())
 				.observations(extendedServiceRequestBo.getObservations())
+				.studyTypeId(extendedServiceRequestBo.getStudyTypeId())
+				.requiresTransfer(extendedServiceRequestBo.getRequiresTransfer())
 				.build();
 	}
 

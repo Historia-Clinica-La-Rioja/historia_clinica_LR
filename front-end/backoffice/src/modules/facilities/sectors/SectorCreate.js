@@ -14,6 +14,7 @@ import {
 import CustomToolbar from '../../components/CustomToolbar';
 
 const INTERNACION = 2;
+const GUARDIA = 3;
 const SIN_TIPO = 6;
 const DIAGNOSTICO_POR_IMAGENES = 4;
 
@@ -56,6 +57,22 @@ const CheckBoxField = ({formData}) => {
         <BooleanInput label="resources.sectors.fields.informer" source="informer" />
     )
 }
+
+const emergencyCareOptions = [
+    { id: 1, description: 'Servicios' }
+];
+
+const EmergencyCareField = ({ formData, ...rest }) => {
+    return formData.sectorTypeId !== GUARDIA ? null : (
+        <SelectInput
+            {...rest}
+            choices={emergencyCareOptions} // Pasar las opciones estáticas
+            optionText="description"
+            optionValue="id"
+            resettable 
+        />
+    );
+};
 
 const SectorCreate = props => (
     <Create {...props}>
@@ -101,6 +118,10 @@ const SectorCreate = props => (
             {/*Hospitalization Type*/}
             <FormDataConsumer>
                 {formDataProps => ( <HospitalizationField {...formDataProps} reference="hospitalizationtypes" source="hospitalizationTypeId"/>)}
+            </FormDataConsumer>
+            {/*Sector Organizations for Emergency care*/}
+            <FormDataConsumer>
+                {formDataProps => ( <EmergencyCareField {...formDataProps} source="sectorOrganizationId" />)}
             </FormDataConsumer>
 
         </SimpleForm>

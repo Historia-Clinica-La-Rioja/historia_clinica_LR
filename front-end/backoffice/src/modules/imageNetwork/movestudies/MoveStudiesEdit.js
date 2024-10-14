@@ -7,6 +7,10 @@ import {
     TextInput,
     NumberInput,
     DateInput,
+    TextField,
+    DateField,
+    ReferenceManyField,
+    Datagrid,
     required,
     regex
 } from 'react-admin';
@@ -26,6 +30,23 @@ const MoveStudiesEdit = props => {
                 <TextInput source="imageId"/>
                 <TextInput source="sizeImage" disabled />
                 <TextInput source="result"/>
+                <ReferenceManyField
+                        reference="resultstudies"
+                        target="idMove"
+                        source="id"
+                        label="Posibles estudios"
+                        {...props}
+                >
+                        <Datagrid>
+                            <TextField source="patientId" sortable={false}/>
+                            <TextField source="patientName" sortable={false}/>
+                            <DateField source="studyDate" />
+                            <TextField source="studyTime" sortable={false} />
+                            <TextField source="studyInstanceUid" />
+                            <TextField source="modality"/>
+                        </Datagrid>
+                </ReferenceManyField>
+
                 <SelectInput source="status" choices={[
                     { id: 'PENDING', name: 'resources.movestudies.pending' },
                     { id: 'FINISHED', name: 'resources.movestudies.finished' },

@@ -3,12 +3,11 @@ import { newDate } from '@core/utils/moment.utils';
 import { EffectiveClinicalObservationDto, HCELast2RiskFactorsDto } from '@api-rest/api-model';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DatePipe } from '@angular/common';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { PATTERN_NUMBER_WITH_DECIMALS, PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from '@core/utils/pattern.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { fixDate } from '@core/utils/date/format';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 export interface FactoresDeRiesgo {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
@@ -52,7 +51,7 @@ export class FactoresDeRiesgoFormService {
 		private readonly translateService: TranslateService,
 		private readonly hceGeneralStateService?: HceGeneralStateService,
 		private readonly patientId?: number,
-		private readonly datePipe?: DatePipe,
+		private readonly dateFormatPipe?: DateFormatPipe,
 	) {
 		this.form = this.formBuilder.group({
 			heartRate: this.formBuilder.group({
@@ -388,7 +387,7 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	getDate(): string {
-		return this.datePipe?.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+		if (this.dateList.length > 0) return this.dateFormatPipe?.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), 'datetime');
 	}
 
 	hasAtLeastOneValueLoaded(): boolean {

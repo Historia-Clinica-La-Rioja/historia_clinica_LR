@@ -28,6 +28,7 @@ export const DocumentType = {
 	[ECHDocumentType.EPICRISIS]: 'ambulatoria.print.document-type.EPICRISIS',
 	[ECHDocumentType.MEDICAL_PRESCRIPTIONS]: 'ambulatoria.print.document-type.MEDICAL_PRESCRIPTIONS',
 	[ECHDocumentType.REPORTS]: 'ambulatoria.print.document-type.REPORTS',
+	[ECHDocumentType.ANESTHETIC_REPORTS]: 'ambulatoria.print.document-type.ANESTHETIC_REPORTS',
 }
 
 export const DocumentTypes = [
@@ -46,6 +47,10 @@ export const DocumentTypes = [
 	{
 		value: ECHDocumentType.REPORTS,
 		label: DocumentType.REPORTS
+	},
+	{
+		value: ECHDocumentType.ANESTHETIC_REPORTS,
+		label: DocumentType.ANESTHETIC_REPORTS
 	},
 ]
 

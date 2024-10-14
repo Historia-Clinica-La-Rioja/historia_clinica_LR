@@ -283,7 +283,7 @@
         <div class="row-data" th:each="problem, iter: ${problems}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
              th:with="cie10CodesList = ${cie10Codes}">
             <div class="diagnosis" th:text="${!iter.last} ? ${problem} + ',' : ${problem}"></div>
-            <div th:if="${cie10Codes != null}" class="code" th:text="${!iter.last} ? ${cie10CodesList[iter.index]} + ',' : ${cie10CodesList[iter.index]}"></div>
+            <div th:if="${cie10Codes != null}" class="code" th:text="${cie10CodesList}"></div>
             <div th:unless="${cie10Codes != null}" class="code">&nbsp;</div>
         </div>
     </div>

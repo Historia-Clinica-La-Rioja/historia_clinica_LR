@@ -1,11 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationCommandDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationsCommandDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.AddDiagnosticReportObservationCommandDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.AddDiagnosticReportObservationsCommandDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.GetDiagnosticReportObservationDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.GetDiagnosticReportObservationGroupDto;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.GetDiagnosticReportObservationGroupBo;
-import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 
 import org.mapstruct.Mapper;
 
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @Mapper
 public interface DiagnosticReportObservationsMapper {
 
-	AddObservationsCommandVo fromDto(AddDiagnosticReportObservationsCommandDto dto);
+	SharedAddObservationsCommandVo fromDto(AddDiagnosticReportObservationsCommandDto dto);
 
-	default AddObservationsCommandVo.Observation fromDto(AddDiagnosticReportObservationCommandDto dto) {
-		var ret = new AddObservationsCommandVo.Observation();
+	default SharedAddObservationsCommandVo.Observation fromDto(AddDiagnosticReportObservationCommandDto dto) {
+		var ret = new SharedAddObservationsCommandVo.Observation();
 		ret.setValue(dto.getValue());
 		ret.setProcedureParameterId(dto.getProcedureParameterId());
 		ret.setUnitOfMeasureId(dto.getUnitOfMeasureId());

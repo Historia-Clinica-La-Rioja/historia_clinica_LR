@@ -3,14 +3,11 @@ package ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
-import ar.lamansys.sgh.publicapi.imagenetwork.application.check.exceptions.CheckStudyAccessDeniedException;
+import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -22,10 +19,11 @@ public class FetchActivityById {
 
 	public AttentionInfoBo run(String refsetCode, Long activityId) throws ActivityNotFoundException {
 		log.debug("Find institutionId from refsetCode {}", refsetCode);
-		Integer institutionId = findInstitutionId(refsetCode);
+
+		var institutionId = activitiesPublicApiPermissions.findInstitutionId(refsetCode);
+		institutionId.ifPresent(this::assertUserCanAccess);
 
 		log.debug("Checking permissions for institutionId {}", institutionId);
-		assertUserCanAccess(institutionId);
 
 		log.debug("Get Attention Info from refsetCode={} and activityId={}", refsetCode, activityId);
 		AttentionInfoBo result = getAttentionInfoBo(refsetCode, activityId);
@@ -44,8 +42,4 @@ public class FetchActivityById {
 		}
 	}
 
-	private Integer findInstitutionId(String refsetCode) {
-		return activitiesPublicApiPermissions.findInstitutionId(refsetCode)
-				.orElseThrow(ActivitiesAccessDeniedException::new);
-	}
 }

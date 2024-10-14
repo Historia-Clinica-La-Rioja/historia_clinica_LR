@@ -3,7 +3,6 @@
 .mat-dialog-content {
 	@include general-font;
 }
-
 .mat-list-item {
 	padding-bottom: 5px;
 	padding-top: 15px;
@@ -26,12 +25,6 @@
 	background-color: #2687c533;
 	color: #2687c5;
 	font-size: 14px;
-	font-weight: 500;
-}
-
-.title {
-	padding-top: 5px;
-	font-size: 22px;
 	font-weight: 500;
 }
 

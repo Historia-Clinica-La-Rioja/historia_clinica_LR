@@ -27,6 +27,9 @@ public class SurgicalReportDto implements Serializable {
 	private boolean confirmed = false;
 
 	@Nullable
+	private DiagnosisDto mainDiagnosis;
+
+	@Nullable
 	private @Valid List<DiagnosisDto> preoperativeDiagnosis = new ArrayList<>();
 
 	@Nullable
@@ -34,7 +37,6 @@ public class SurgicalReportDto implements Serializable {
 
 	@Nullable
 	private @Valid List<HospitalizationProcedureDto> surgeryProcedures = new ArrayList<>();
-
 
 	@Nullable
 	private DateTimeDto startDateTime;
@@ -58,14 +60,21 @@ public class SurgicalReportDto implements Serializable {
 	private @Valid List<HospitalizationProcedureDto> drainages = new ArrayList<>();
 
 	@Nullable
-	private String prosthesisDescription;
+	private ProsthesisInfoDto prosthesisInfo;
 
 	@Nullable
 	private String description;
 
 	@Nullable
-	private @Valid List<DocumentHealthcareProfessionalDto> healthcareProfessionals = new ArrayList<>();
+	private @Valid List<DocumentHealthcareProfessionalDto> surgicalTeam = new ArrayList<>();
+
+	@Nullable
+	private @Valid DocumentHealthcareProfessionalDto pathologist;
+
+	@Nullable
+	private @Valid DocumentHealthcareProfessionalDto transfusionist;
 
 	@Nullable
 	private String modificationReason;
+
 }

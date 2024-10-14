@@ -1,0 +1,47 @@
+<div *ngIf="triageSummary" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px"
+    class="triage-container" data-id="triage-summary">
+
+    <div *ngIf="(documentSummary$ | async) as headerDescription, else loader" class="summary-content" fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px">
+        <app-document-summary-header data-id="summary-header" [headerData]="headerDescription"
+            [isPopUpOpen]="isPopUpOpened" (downloadDocument)="downloadDocument()"></app-document-summary-header>
+        <mat-divider></mat-divider>
+
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-triage-level-summary data-id="triage-level-summary" [triageLevel]="triageSummary.triageLevel"></app-triage-level-summary>
+
+            <app-description-item-data-summary *ngIf="triageSummary.reasons" data-id="reasons-summary"
+                [descriptionItemDataSummary]="triageSummary.reasons"></app-description-item-data-summary>
+
+			<div data-id="clinical-specialty-sector-summary" *ngIf="triageSummary.clinicalSpecialtySector">
+				<app-iconed-titled-section icon="medical_services" title="guardia.documents-summary.clinical_specialty_sector.TITLE"></app-iconed-titled-section>
+				<div class="text-container section-description">
+					<span>{{triageSummary.clinicalSpecialtySector}}</span>
+				</div>
+			</div>
+
+            <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+                *ngIf="triageSummary.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+
+            <app-titled-grid-summary data-id="appearance-summary" *ngIf="triageSummary.appearance?.description.length"
+            [itemsList]="triageSummary.appearance"></app-titled-grid-summary>
+
+            <app-titled-grid-summary data-id="breathing-summary" *ngIf="triageSummary.breathing?.description.length"
+                [itemsList]="triageSummary.breathing"></app-titled-grid-summary>
+
+            <app-titled-grid-summary data-id="circulation-summary" *ngIf="triageSummary.circulation?.description.length"
+                [itemsList]="triageSummary.circulation"></app-titled-grid-summary>
+
+            <div data-id="observations-summary" *ngIf="triageSummary.observations">
+                <app-iconed-titled-section icon="assignment" title="guardia.documents-summary.observations.TITLE"></app-iconed-titled-section>
+                <div class="text-container section-description">
+                    <span>{{triageSummary.observations}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loader>
+        <mat-spinner color="primary" class="loader"></mat-spinner>
+    </ng-template>
+</div>

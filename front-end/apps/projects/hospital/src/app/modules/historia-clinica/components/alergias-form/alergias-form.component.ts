@@ -1,4 +1,4 @@
-import { Component, forwardRef, EventEmitter, Output } from '@angular/core';
+import { Component, forwardRef, EventEmitter, Output, Input } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -41,7 +41,7 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		}
 	}
 	@Output() isAllergyNoRefer = new EventEmitter<boolean>();
-
+	@Input() isAllergyNoReferInput: boolean;
 
 	alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 
@@ -51,7 +51,6 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		private readonly dialog: MatDialog,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) {
-
 		this.alergiasNuevaConsultaService.alergias$.subscribe(alergias => this.alergias.controls.data.setValue(alergias));
 	}
 

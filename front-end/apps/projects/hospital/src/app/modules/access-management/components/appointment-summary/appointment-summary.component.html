@@ -4,7 +4,7 @@
 	<app-colored-label [description]="appointmentSummary.state.description" [color]="appointmentSummary.state.color"></app-colored-label>
 
 	<app-identifier-cases *ngIf="appointmentSummary.date" [identifierCase]="identiferCases.DATE"
-		[description]="appointmentSummary.date.date | viewDateDto: 'date' | date: 'fullDate'">
+		[description]="appointmentSummary.date.date | viewDateDto: 'date' | dateFormat: 'fulldate'">
 	</app-identifier-cases>
 
 	<div fxLayout="row" *ngIf="appointmentSummary.date">

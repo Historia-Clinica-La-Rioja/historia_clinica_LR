@@ -5,15 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.diary.domain.IDiaryOpeningHoursBo;
-import net.pladema.medicalconsultation.diary.domain.IOpeningHoursBo;
+import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
+
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"diaryId", "overturnCount"})
 @ToString
 @NoArgsConstructor
-public class DiaryOpeningHoursBo implements IDiaryOpeningHoursBo {
+public class DiaryOpeningHoursBo {
 
     private Integer diaryId;
 
@@ -35,8 +36,26 @@ public class DiaryOpeningHoursBo implements IDiaryOpeningHoursBo {
 
 	private Boolean regulationProtectedAppointmentsAllowed;
 
-    @Override
-    public IOpeningHoursBo getIOpeningHours() {
-        return openingHours;
-    }
+	public boolean overlap(DiaryOpeningHoursBo current) {
+		return openingHours.overlap(current.getOpeningHours());
+	}
+
+	public Integer getOpeningHoursId() {
+		return openingHours.getId();
+	}
+
+	public boolean fitsAppointmentHere(UpdateDiaryAppointmentBo a) {
+		LocalTime from = openingHours.getFrom();
+		LocalTime to = openingHours.getTo();
+		LocalTime appointmentLocalTime = a.getTime();
+		return (appointmentLocalTime.equals(from) || appointmentLocalTime.isAfter(from))
+				&& appointmentLocalTime.isBefore(to);
+	}
+
+	public void updateMeWithDiaryInformation(DiaryBo diaryBo) {
+		var noCarelines = diaryBo.getCareLines().isEmpty();
+		if (this.getProtectedAppointmentsAllowed() != null && this.getProtectedAppointmentsAllowed() && noCarelines)
+			this.setProtectedAppointmentsAllowed(false);
+		this.setDiaryId(diaryBo.getId());
+	}
 }

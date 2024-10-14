@@ -4,7 +4,7 @@ import { EquipmentDiaryDto, EquipmentDto, ModalityDto } from '@api-rest/api-mode
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { ModalityService } from '@api-rest/services/modality.service';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
+import { fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { isAfter, startOfToday, parseISO } from 'date-fns';
 import { Observable } from 'rxjs';
@@ -36,8 +36,6 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	expiredDiaries: DiaryList[] = [];
 
 	externalSelectedEquipment: TypeaheadOption<EquipmentDto>;
-
-	readonly dateFormats = DatePipeFormat;
 
 	constructor(
 		private readonly modalityService: ModalityService,

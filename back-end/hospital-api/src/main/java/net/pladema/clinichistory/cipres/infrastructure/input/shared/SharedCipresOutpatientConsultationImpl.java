@@ -32,7 +32,7 @@ public class SharedCipresOutpatientConsultationImpl implements SharedCipresOutpa
 	@Override
 	public List<CipresOutpatientConsultationDto> getOutpatientConsultations() {
 		log.debug("fetch consultations to create");
-		List<CipresOutpatientBasicDataBo> consultations = cipresOutpatientConsultationStorage.getOutpatientConsultations();
+		List<CipresOutpatientBasicDataBo> consultations = cipresOutpatientConsultationStorage.getOutpatientConsultationsData();
 		List<CipresOutpatientConsultationDto> result = consultations
 				.stream()
 				.map(this::mapToOutpatientConsultationDto)
@@ -50,6 +50,7 @@ public class SharedCipresOutpatientConsultationImpl implements SharedCipresOutpa
 				.institutionSisaCode(oc.getInstitutionSisaCode())
 				.clinicalSpecialtyId(oc.getClinicalSpecialtyId())
 				.clinicalSpecialtySctid(oc.getClinicalSpecialtySctid())
+				.cipresEncounterId(oc.getCipresEncounterId())
 				.anthropometricData(mapToAnthropometricDataDto(oc.getAnthropometricData()))
 				.riskFactor(mapToSharedRiskFactorDto(oc.getRiskFactorData()))
 				.procedures(oc.getProcedures().stream().map(p -> new SharedSnomedDto(p.getSctid(), p.getPt())).collect(Collectors.toList()))

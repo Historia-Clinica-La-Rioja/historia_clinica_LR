@@ -1,16 +1,14 @@
-import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { DiaryAvailableAppointmentsDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
 import { HolidaysService } from '@api-rest/services/holidays.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { format } from 'date-fns';
 import { Observable, of } from 'rxjs';
-import { DateFormat } from '@core/utils/date.utils';
 import { NewAppointmentForThirdPartyPopupComponent, NewAppointmentForThirdPartyPopupData } from '@call-center/dialogs/new-appointment-for-third-party-popup/new-appointment-for-third-party-popup.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 @Component({
@@ -36,7 +34,7 @@ export class AvailableAppointmentListComponent {
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly holidayService: HolidaysService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 	) { }
 
 	onPageChange($event: PageEvent) {
@@ -46,7 +44,7 @@ export class AvailableAppointmentListComponent {
 
 	checkHolidayAndAssign(appointmentToAssign: DiaryAvailableAppointmentsDto) {
 		const date = dateDtoToDate(appointmentToAssign.date);
-		const stringDate = format(date, DateFormat.API_DATE);
+		const stringDate = toApiFormat(date);
 
 		this.holidayService.getHolidays(stringDate, stringDate).subscribe(holidays => {
 			if (!holidays.length) {
@@ -59,7 +57,7 @@ export class AvailableAppointmentListComponent {
 
 	private openHolidayWarning(appointmentToAssign: DiaryAvailableAppointmentsDto, date: Date) {
 		const holidayText = 'corresponde a un día feriado.';
-		const holidayDate = this.datePipe.transform(date, DatePipeFormat.FULL_DATE);
+		const holidayDate = this.dateFormatPipe.transform(date, 'fulldate');
 		const dialogRef = this.dialog.open(DiscardWarningComponent, {
 			data: {
 				title: 'access-management.holiday_warning.TITLE',
@@ -82,7 +80,7 @@ export class AvailableAppointmentListComponent {
 			diaryId: appointmentToAssign.diaryId,
 			openingHoursId: appointmentToAssign.openingHoursId,
 			specialtyId: appointmentToAssign.clinicalSpecialty?.id,
-			day: format(dateDtoToDate(appointmentToAssign.date), DateFormat.API_DATE),
+			day: toApiFormat(dateDtoToDate(appointmentToAssign.date)),
 			hour: timeDtotoString(appointmentToAssign.hour),
 			practiceId: this.practiceId
 		}

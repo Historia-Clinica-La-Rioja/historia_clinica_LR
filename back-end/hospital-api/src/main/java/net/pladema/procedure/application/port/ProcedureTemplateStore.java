@@ -17,4 +17,6 @@ public interface ProcedureTemplateStore {
 	public List<ProcedureTemplateVo> findAvailableForDiagnosticReport(Integer diagnosticReportId);
 
 	Optional<ProcedureTemplateFullSummaryVo> findFullSummaryById(Integer procedureTemplateId);
+
+	List<ProcedureTemplateVo> findAvailableForSnomedId(Integer snomedId);
 }

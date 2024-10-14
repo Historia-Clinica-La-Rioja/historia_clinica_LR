@@ -1,15 +1,15 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-    <span mat-dialog-title [translate]="'image-network.worklist.details_study.conclutions.ADD_CONCLUTION'"></span>
-    <button mat-icon-button (click)="close()">
+    <h2 mat-dialog-title [translate]="'image-network.worklist.details_study.conclutions.ADD_CONCLUTION'"></h2>
+    <button mat-icon-button mat-dialog-close (click)="resetForm()">
         <mat-icon>close</mat-icon>
     </button>
 </div>
 
-<div mat-dialog-content>
+<mat-dialog-content>
     <div>
         <app-concepts-search *ngIf="!data.searchConceptsLocallyFF"
             [label]="'image-network.worklist.details_study.conclutions.CONCEPT_LABEL'"
             (search)="searchProblem($event)">
         </app-concepts-search>
     </div>
-</div>
+</mat-dialog-content>

@@ -1,4 +1,4 @@
-<div class="grey" fxLayoutAlign="space-between">
+<div class="grey" fxLayoutAlign="space-between" fxLayout="{{position}}">
 	<p>
 		<span>
 			{{registerEditor.createdBy}}
@@ -8,14 +8,14 @@
 		</span>
 	</p>
 
-	<div *ngIf="(registerEditorCase === registerEditorCasesDate )else DETE_HOUR">
-		<span class="grey">
+	<div *ngIf="!!registerEditorCase">
+		<span class="grey" *ngIf="(registerEditorCase === registerEditorCasesDate) else DETE_HOUR">
 			{{ registerEditor.date | dateFormat: 'date'}}
 		</span>
 	</div>
 	<ng-template #DETE_HOUR>
 		<span class="grey">
-			{{ registerEditor.date | dateFormat: 'datetime'}}
+			{{ registerEditor.date | dateFormat : 'datetime' }}
 		</span>
 	</ng-template>
 </div>

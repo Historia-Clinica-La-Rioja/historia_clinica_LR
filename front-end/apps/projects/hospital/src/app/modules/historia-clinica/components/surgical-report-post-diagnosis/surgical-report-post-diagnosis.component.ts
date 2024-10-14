@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ProblemTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { DiagnosisCreationEditionComponent, DiagnosisMode } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 
 @Component({
 	selector: 'app-surgical-report-post-diagnosis',
@@ -18,7 +18,7 @@ export class SurgicalReportPostDiagnosisComponent {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
 			data: {
-				type: 'CREATION',
+				diagnosisMode: DiagnosisMode.CREATION,
 				isMainDiagnosis: false
 			}
 		});

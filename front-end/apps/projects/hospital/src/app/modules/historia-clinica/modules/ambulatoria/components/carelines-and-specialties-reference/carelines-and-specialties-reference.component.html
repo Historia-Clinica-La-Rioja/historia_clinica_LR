@@ -50,7 +50,7 @@
 			  </mat-select-trigger>
 			  <mat-option *ngFor="let specialty of (formReference.value.searchByCareLine ? specialtiesSubject$ : allSpecialtiesSubject$) | async" [value]="specialty">{{specialty.name | translate}}</mat-option>
 			</mat-select>
-			<button id="clear_identification_type" type="button" mat-button
+			<button id="clear_identification_type" type="button" 
 				*ngIf="formReference?.value.clinicalSpecialties && !formReference?.value.consultation" matSuffix
 				color="warn" mat-icon-button
 				(click)="clear(formReference.controls.clinicalSpecialties); $event.stopPropagation()">
@@ -90,3 +90,4 @@
 	</ng-container>
 
 </form>
+

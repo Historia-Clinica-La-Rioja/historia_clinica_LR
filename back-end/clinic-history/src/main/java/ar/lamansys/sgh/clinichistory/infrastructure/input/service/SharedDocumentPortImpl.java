@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
+import ar.lamansys.sgh.clinichistory.application.document.DeleteDocument;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.RebuildFile;
@@ -30,12 +31,12 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 	private final RebuildFile rebuildFile;
 	private final DocumentFileStorage documentFileStorage;
 	private final UpdateSignatureStatus updateSignatureStatus;
+	private final DeleteDocument deleteDocument;
 
 	@Override
 	public void deleteDocument(Long documentId, String newDocumentStatus) {
 		log.debug("Input parameter documentId {}, newDocumentStatus {}", documentId, newDocumentStatus);
-		documentService.deleteById(documentId, newDocumentStatus);
-		documentFileStorage.deleteById(documentId);
+		deleteDocument.run(documentId, newDocumentStatus);
 	}
 
 	@Override

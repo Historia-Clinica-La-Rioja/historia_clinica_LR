@@ -270,6 +270,69 @@ databaseChangeLog:
                     type: datetime
 
     - changeSet:
+        id: insert-new-discharge-type-in-table-discharge_type
+        author: tomasbecher
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO discharge_type VALUES (14, 'Retiro sin alta médica (fuga)', false, true);
+
+    - changeSet:
+        id: emergency_care_discharge_other_type_description-createTable
+        comment: creation of emergency_care_discharge_other_type_description table
+        author: tomasbecher
+        changes:
+              - createTable:
+                    tableName: emergency_care_discharge_other_type_description
+                    columns:
+                        - column:
+                              name: emergency_care_episode_id
+                              type: int
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: description
+                              type: text
+                              constraints:
+                                  nullable: false
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: emergency_care_episode_id
+                    constraintName: PK_emergency_care_discharge_other_type_description
+                    tableName: emergency_care_discharge_other_type_description
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: emergency_care_episode_id
+                    baseTableName: emergency_care_discharge_other_type_description
+                    constraintName: FK_emergency_care_discharge_other_type_description__emergency_care_discharge
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: emergency_care_episode_id
+                    referencedTableName: emergency_care_discharge
+                    validate: true
+
+    - changeSet:
+        id: emergency_care_discharge-addDocumentIdColumn
+        comment: Create column document_id in table emergency_care_discharge
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: document_id
+                    type: bigint
+              tableName: emergency_care_discharge
+          - addForeignKeyConstraint:
+                    baseColumnNames: document_id
+                    baseTableName: emergency_care_discharge
+                    constraintName: FK_emergency_care_discharge__document
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: document
+                    validate: true
+
+    - changeSet:
           id: add-column-local_viewer_url-to-pac_server_image_lvl
           author: fzudaire
           comment: se agrego en distintas versiones mediante hotfix (2.23, 2.24 y 2.25), para evitar conflictos

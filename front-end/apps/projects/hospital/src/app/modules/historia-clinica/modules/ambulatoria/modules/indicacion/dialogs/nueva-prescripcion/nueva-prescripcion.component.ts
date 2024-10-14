@@ -38,7 +38,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	prescriptionForm: FormGroup<PrescriptionForm>;
 	prescriptionItems: NewPrescriptionItem[];
 	isHabilitarRecetaDigitalEnabled: boolean = false;
-	
+
 	hasError = hasError;
 	submitted: boolean = false;
 	showAddMedicationError: boolean = false;
@@ -120,6 +120,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 						quantity: pi.quantity
 					},
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
+					commercialMedicationPrescription: pi.commercialMedicationPrescription,
+				    suggestedCommercialMedication: pi.suggestedCommercialMedication
 				};
 			}),
 			repetitions: this.prescriptionForm.controls.posdatadas.value,
@@ -127,6 +129,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
 			isArchived: this.prescriptionForm.controls.archived.value ? this.prescriptionForm.controls.archived.value : false,
 		};
+
 		this.savePrescription(newPrescription);
 		if (this.isHabilitarRecetaDigitalEnabled) {
 			const patientDto: APatientDto = mapToAPatientDto(this.patientData, this.person, this.prescriptionForm);

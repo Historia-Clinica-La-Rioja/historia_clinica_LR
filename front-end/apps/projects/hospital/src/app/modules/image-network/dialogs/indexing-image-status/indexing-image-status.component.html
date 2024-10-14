@@ -1,0 +1,23 @@
+<div class="align-end">
+	<button id="cancel_button" name="cancel_button" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<mat-dialog-content class="main-container">
+	<div class="icon-container">
+		<mat-icon [inline]="true"
+			class="material-icons-outlined icon {{data.iconColor}}">{{data.icon}}</mat-icon>
+	</div>
+	<h2>
+		<span> {{data.popUpTitle | translate}}</span>
+	</h2>
+	<h3>
+		<span> {{data.popUpMessage | translate}}</span>
+	</h3>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="data.acceptBtn" fxLayout="row" fxLayoutAlign="center center">
+	<button mat-flat-button color="primary" mat-dialog-close>
+		<span class="uppercase" [translate]="'buttons.ACCEPT'"></span>
+	</button>
+</mat-dialog-actions>

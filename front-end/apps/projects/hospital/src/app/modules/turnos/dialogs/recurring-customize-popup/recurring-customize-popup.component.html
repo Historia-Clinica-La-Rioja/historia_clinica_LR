@@ -1,11 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="end">
-    <button mat-icon-button (click)="close()" type="button">
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <h1 mat-dialog-title [translate]="'turnos.appointment.recurring-dialog.TITLE'"></h1>
+    <button mat-icon-button (click)="close()">
         <mat-icon>close</mat-icon>
     </button>
 </div>
 
-<div>
-    <h1 [translate]="'turnos.appointment.recurring-dialog.TITLE'"></h1>
+<div mat-dialog-content>
     <form [formGroup]="form">
         <span [translate]="'turnos.appointment.recurring-dialog.REPEAT_EVERY'"></span>
         <div class="container small-input">
@@ -48,14 +48,6 @@
                 </article>
             </mat-radio-group>
         </div>
-        <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="17px">
-            <button mat-stroked-button color="primary" (click)="close()">
-                <span [translate]="'turnos.appointment.recurring-dialog.CANCEL'"></span>
-            </button>
-            <button mat-flat-button color="primary" (click)="save()" [disabled]=" ! this.form.valid">
-                <span [translate]="'turnos.appointment.recurring-dialog.CONFIRM'"></span>
-            </button>
-        </div>
     </form>
     
     <ng-template #disabledDatepicker>
@@ -72,7 +64,16 @@
     
     <ng-template #endDate>
         <div class="container end-date">
-            <span>{{dateToSetInDatepicker | date:'EEEE, MMMM d, y' | uppercase }}</span>
+            <span>{{dateToSetInDatepicker | dateFormat :'date' }}</span>
         </div>
     </ng-template>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button mat-stroked-button color="primary" (click)="close()">
+        <span [translate]="'turnos.appointment.recurring-dialog.CANCEL'"></span>
+    </button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]=" ! this.form.valid">
+        <span [translate]="'turnos.appointment.recurring-dialog.CONFIRM'"></span>
+    </button>
 </div>

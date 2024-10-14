@@ -28,4 +28,6 @@ public interface SharedPersonPort {
     List<String> getCompletePersonsNameByIds(List<Integer> personIds);
 
 	Optional<PersonDto> getPersonData(Integer patientId);
+
+	String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
 }

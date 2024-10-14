@@ -53,4 +53,7 @@ public class CompleteDiaryBo extends DiaryBo {
 		hierarchicalUnitId = diaryBo.getHierarchicalUnitId();
 	}
 
+	public boolean hasPractices() {
+		return this.practicesInfo != null && !this.practicesInfo.isEmpty();
+	}
 }

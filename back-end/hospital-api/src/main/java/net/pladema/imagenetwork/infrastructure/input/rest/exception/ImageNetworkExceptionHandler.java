@@ -19,8 +19,8 @@ import net.pladema.imagenetwork.application.exception.StudyException;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(basePackages = "net.pladema.imagenetwork")
 @RequiredArgsConstructor
+@RestControllerAdvice(basePackages = "net.pladema.imagenetwork")
 public class ImageNetworkExceptionHandler {
 
 	private final MessageSource messageSource;

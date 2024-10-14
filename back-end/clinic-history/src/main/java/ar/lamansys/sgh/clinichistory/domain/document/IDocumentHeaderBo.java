@@ -16,4 +16,6 @@ public interface IDocumentHeaderBo {
     LocalDateTime getCreatedOn();
 
     Integer getClinicalSpecialtyId();
+
+    String getDocumentStatusId();
 }

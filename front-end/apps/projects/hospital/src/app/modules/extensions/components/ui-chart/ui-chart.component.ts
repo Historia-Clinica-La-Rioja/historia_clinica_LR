@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, map, switchMap, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, map, switchMap, tap } from 'rxjs';
 
 import { PivotConfig, Query, ResultSet } from '@cubejs-client/core';
 import { CubejsClient } from '@cubejs-client/ngx';
@@ -21,7 +21,7 @@ export class UiChartComponent implements OnInit {
 	@Input() chartDefinitionService: ChartDefinitionService;
 
 	chart$: Observable<UiChartBo>;
-	loadingResults: boolean = true;
+	errorCube: boolean = true;
 
 	constructor(
 		private cubejsClient: CubejsClient,
@@ -36,9 +36,17 @@ export class UiChartComponent implements OnInit {
 		this.chart$ = this.chartDefinitionService.queryStream$(this.query)
 		.pipe(
 			tap(() => {
-				this.loadingResults = true;
+				this.errorCube = false;
 			}),
 			switchMap(({cubeQuery, chartType, pivotConfig}: UiChartDefinitionBo) => this.cubejsClient.load(cubeQuery).pipe(
+				catchError(
+					e => {
+						this.errorCube = true;
+						const {a, ...rest} = e;
+						console.log('errorCube', rest);
+						return EMPTY;
+					}
+				),
 				map((resultSet: ResultSet) => ({
 					chartDefinition: { cubeQuery, chartType, pivotConfig },
 					resultSet,
@@ -48,7 +56,7 @@ export class UiChartComponent implements OnInit {
 					},
 				})),
 			)),
-			tap(() => this.loadingResults = false),
+			tap(() => this.errorCube = false),
 		);
 	}
 

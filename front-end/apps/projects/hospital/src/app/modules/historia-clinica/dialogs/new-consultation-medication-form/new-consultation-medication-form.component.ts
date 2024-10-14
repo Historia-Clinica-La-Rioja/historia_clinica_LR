@@ -25,9 +25,8 @@ export class NewConsultationMedicationFormComponent {
     }
   }
 
-  close(): void {
+  resetForm(): void {
     this.data.medicationService.resetForm();
-    this.dialogRef.close()
   }
 
 }

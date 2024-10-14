@@ -23,8 +23,7 @@ import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { getAppointmentEnd, getAppointmentStart, toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -74,7 +73,7 @@ export class AppointmentsFacadeService {
 		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
 		private readonly holidayService: HolidaysService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
@@ -161,7 +160,7 @@ export class AppointmentsFacadeService {
 
 	getHolidayData(selectedDay: Date) {
 		const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-		const holidayDateText = this.datePipe.transform(selectedDay, DatePipeFormat.FULL_DATE);
+		const holidayDateText = this.dateFormatPipe.transform(selectedDay, 'fulldate');
 		return {
 			title: 'turnos.holiday.TITLE',
 			content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
@@ -271,8 +270,8 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string): Observable<boolean> {
-		return this.appointmentService.changeState(appointmentId, newStateId, motivo)
+	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string, patientInformationScan?: string): Observable<boolean> {
+		return this.appointmentService.changeState(appointmentId, newStateId, motivo, patientInformationScan)
 			.pipe(
 				map((response: boolean) => {
 					if (response) {

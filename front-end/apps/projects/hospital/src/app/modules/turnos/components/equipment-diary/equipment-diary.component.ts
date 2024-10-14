@@ -1,11 +1,10 @@
-import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CompleteEquipmentDiaryDto, DiaryOpeningHoursDto, ERole, MedicalCoverageDto } from '@api-rest/api-model';
 import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { DatePipeFormat, toHourMinuteSecond } from '@core/utils/date.utils';
+import { toHourMinuteSecond } from '@core/utils/date.utils';
 import { buildFullDateFromDate, dateISOParseDate, isBetweenDates, isSameOrBefore } from '@core/utils/moment.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
@@ -24,6 +23,7 @@ import { ImageNetworkAppointmentComponent } from '../image-network-appointment/i
 import { fixDate } from '@core/utils/date/format';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-equipment-diary',
@@ -50,7 +50,6 @@ export class EquipmentDiaryComponent implements OnInit {
 
 	readonly calendarViewEnum = CalendarView;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
-	readonly dateFormats = DatePipeFormat;
 
 	@Input()
 	set diaryId(diaryId: number) {
@@ -69,7 +68,7 @@ export class EquipmentDiaryComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly transcribedOrderService: TranscribedOrderService
 	) { }
 
@@ -278,7 +277,7 @@ export class EquipmentDiaryComponent implements OnInit {
 
 	private openWarningHoliday(clickedDate: Date, openingHourId: number, addingOverturn: boolean) {
 		const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-		const holidayDateText = this.datePipe.transform(clickedDate, DatePipeFormat.FULL_DATE);
+		const holidayDateText = this.dateFormatPipe.transform(clickedDate, 'fulldate');
 		const dialogRef = this.dialog.open(DiscardWarningComponent, {
 			data: {
 				title: 'turnos.holiday.TITLE',

@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface  EmergencyCareEpisodeService {
 
-    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId);
+    EmergencyCareEpisodeInProgressBo getEmergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId);
 
-	EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
+	EmergencyCareEpisodeInProgressBo getEmergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
 
 	EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId);
 

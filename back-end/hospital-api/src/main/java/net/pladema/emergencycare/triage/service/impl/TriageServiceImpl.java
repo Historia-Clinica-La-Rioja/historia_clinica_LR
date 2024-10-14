@@ -7,8 +7,15 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ERespiratoryRetraction;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import io.jsonwebtoken.lang.Assert;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
@@ -24,27 +31,16 @@ import net.pladema.emergencycare.triage.repository.entity.TriageRiskFactors;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.establishment.repository.RoomRepository;
 import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
 import net.pladema.medicalconsultation.shockroom.infrastructure.repository.ShockroomRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TriageServiceImpl implements TriageService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TriageServiceImpl.class);
 
     private final TriageRepository triageRepository;
 
@@ -70,9 +66,10 @@ public class TriageServiceImpl implements TriageService {
 	private final AddTriageReasons addTriageReasons;
 	private final FetchTriageReasons fetchTriageReasons;
 
+
     @Override
     public List<TriageBo> getAll(Integer institutionId, Integer episodeId) {
-        LOG.debug("Input parameter -> institutionId {}, episodeId {}", institutionId, episodeId);
+        log.debug("Input parameter -> institutionId {}, episodeId {}", institutionId, episodeId);
         List<TriageVo> triageVos = triageRepository.getAllByEpisodeId(episodeId);
         List<TriageBo> result = triageVos.stream()
                 .map(TriageBo::new)
@@ -82,24 +79,24 @@ public class TriageServiceImpl implements TriageService {
             t.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, t.getCreatedOn()));
 			t.setReasons(fetchTriageReasons.run(t.getTriageId()));
         });
-        LOG.debug("Output size -> {}", result.size());
-        LOG.trace("Output -> {}", result);
+        log.debug("Output size -> {}", result.size());
+        log.trace("Output -> {}", result);
         return result;
     }
 
     private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {
-        LOG.debug("Input parameters -> institutionId {}, date {}", institutionId, date);
+        log.debug("Input parameters -> institutionId {}, date {}", institutionId, date);
         ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
         LocalDateTime result = date
                 .atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
                 .withZoneSameInstant(institutionZoneId)
                 .toLocalDateTime();
-        LOG.debug("Output -> {}", result);
+        log.debug("Output -> {}", result);
         return result;
     }
 
     private void setDetailsDescriptions(TriageBo triage) {
-        LOG.debug("Input parameter -> triage {}", triage);
+        log.debug("Input parameter -> triage {}", triage);
         if (triage.getOtherRiskFactors().getBodyTemperatureId() != null)
             triage.getOtherRiskFactors().setBodyTemperatureDescription(EBodyTemperature.getById(triage.getOtherRiskFactors().getBodyTemperatureId()).getDescription());
         if (triage.getOtherRiskFactors().getMuscleHypertoniaId() != null)
@@ -111,28 +108,34 @@ public class TriageServiceImpl implements TriageService {
     }
 
     @Override
+    @Transactional
     public TriageBo createAdministrative(TriageBo triageBo, Integer institutionId) {
 		TriageBo result = persistTriage(triageBo, institutionId, getAdministrativeConsumer());
 		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		ifEpisodeIsAbsentUpdateToWaiting(triageBo.getEmergencyCareEpisodeId(), institutionId);
 		return result;
     }
 
     @Override
+    @Transactional
     public TriageBo createAdultGynecological(TriageBo triageBo, Integer institutionId) {
 		TriageBo result = persistTriage(triageBo, institutionId, getAdultConsumer());
 		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		ifEpisodeIsAbsentUpdateToWaiting(triageBo.getEmergencyCareEpisodeId(), institutionId);
         return result;
     }
 
     @Override
+    @Transactional
     public TriageBo createPediatric(TriageBo triageBo, Integer institutionId) {
 		TriageBo result = persistTriage(triageBo, institutionId, getPediatricConsumer());
 		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		ifEpisodeIsAbsentUpdateToWaiting(triageBo.getEmergencyCareEpisodeId(), institutionId);
 		return result;
     }
-	@Transactional
+
     private TriageBo persistTriage(TriageBo triageBo, Integer institutionId, Consumer<TriageBo> consumer){
-        LOG.debug("Input parameter -> triageBo {}, institutionId{}", triageBo, institutionId);
+        log.debug("Input parameter -> triageBo {}, institutionId{}", triageBo, institutionId);
         validTriage(triageBo, institutionId);
         Triage triage = triageRepository.save(new Triage(triageBo));
         triageBo.setTriageId(triage.getId());
@@ -150,13 +153,14 @@ public class TriageServiceImpl implements TriageService {
 		Long documentId = documentFactory.run(triageBo, true);
 		documentService.createDocumentTriage(documentId, triage.getId());
 
-        LOG.debug("Output -> {}", triageBo);
+        log.debug("Output -> {}", triageBo);
         return triageBo;
     }
 
     private void validTriage(TriageBo triageBo, Integer institutionId) {
         EEmergencyCareState ems = emergencyCareEpisodeStateService.getState(triageBo.getEmergencyCareEpisodeId(), institutionId);
-        Assert.isTrue(EEmergencyCareState.ESPERA.getId().equals(ems.getId()) || EEmergencyCareState.ATENCION.getId().equals(ems.getId()), "care-episode.invalid-triage");
+		List<Short> validStates = EEmergencyCareState.getAllValidForCreateTriage();
+		Assert.isTrue(validStates.contains(ems.getId()), "care-episode.invalid-triage");
     }
 
     private Consumer<TriageBo> getAdultConsumer() {
@@ -179,24 +183,24 @@ public class TriageServiceImpl implements TriageService {
 
 
     private boolean existDetails(TriageBo triageBo) {
-        LOG.debug("Input parameter -> triageBo {}", triageBo);
+        log.debug("Input parameter -> triageBo {}", triageBo);
         boolean result =  (triageBo.getOtherRiskFactors().getBodyTemperatureId() != null) ||
                 (triageBo.getOtherRiskFactors().getCryingExcessive() != null) ||
                 (triageBo.getOtherRiskFactors().getMuscleHypertoniaId() != null) ||
                 (triageBo.getOtherRiskFactors().getRespiratoryRetractionId() != null) ||
                 (triageBo.getOtherRiskFactors().getStridor() != null) ||
                 (triageBo.getOtherRiskFactors().getPerfusionId() != null);
-        LOG.debug("Output -> {}", result);
+        log.debug("Output -> {}", result);
         return result;
     }
 
     private void saveRiskFactors(Integer triageId, List<Integer> riskFactorIds) {
-        LOG.debug("Input parameters -> triageId {}, riskFactorIds {}", triageId, riskFactorIds);
+        log.debug("Input parameters -> triageId {}, riskFactorIds {}", triageId, riskFactorIds);
         riskFactorIds.forEach(id -> triageRiskFactorsRepository.save(new TriageRiskFactors(triageId, id)));
     }
 
     private Boolean setTriageCategoryId(Integer episodeId, Short triageCategoryId) {
-        LOG.debug("Input parameters -> episodeId {}, triageCategoryId {}",
+        log.debug("Input parameters -> episodeId {}, triageCategoryId {}",
                 episodeId, triageCategoryId);
         emergencyCareEpisodeRepository.updateTriageCategoryId(episodeId, triageCategoryId);
         return true;
@@ -226,5 +230,11 @@ public class TriageServiceImpl implements TriageService {
 	public void addTriageReasons(List<ReasonBo> reasons, Integer triageId){
 		if (reasons != null && !reasons.isEmpty())
 			addTriageReasons.run(triageId, reasons);
+	}
+
+	private void ifEpisodeIsAbsentUpdateToWaiting(Integer episodeId, Integer institutionId){
+		EEmergencyCareState ems = emergencyCareEpisodeStateService.getState(episodeId, institutionId);
+		if (ems.equals(EEmergencyCareState.AUSENTE))
+			emergencyCareEpisodeStateService.changeState(episodeId,institutionId,EEmergencyCareState.ESPERA.getId(),null,null,null);
 	}
 }

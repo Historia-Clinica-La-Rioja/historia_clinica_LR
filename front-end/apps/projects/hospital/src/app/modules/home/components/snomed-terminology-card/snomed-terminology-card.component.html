@@ -4,7 +4,7 @@
             <app-colored-label [description]="uploadedTerminologyData.loadStatus.description"
                 [color]="uploadedTerminologyData.loadStatus.color"></app-colored-label>
         </div>
-        <span>{{uploadedTerminologyData.data.createdOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+        <span>{{uploadedTerminologyData.data.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
     </mat-card-subtitle>
     <mat-card-subtitle>
         <span> {{uploadedTerminologyData.data.url}}</span>
@@ -15,7 +15,7 @@
                 <span>{{uploadedTerminologyData.data.downloadedError}}</span>
             </div>
             <div *ngIf="uploadedTerminologyData.data.downloadedOn">
-                <span>{{uploadedTerminologyData.data.downloadedOn | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy - HH:mm'}}</span>
+                <span>{{uploadedTerminologyData.data.downloadedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
                 <span *ngIf="uploadedTerminologyData.data.downloadedFile">
                     {{'configuracion.snomed-cache.DOWNLOADED_FILE' | translate}}
                 </span>

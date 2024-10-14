@@ -100,29 +100,47 @@
     color: #27AE60;
 }
 
-// Colored-label styles
-.personalized-label{
-    display: flex;
-    margin-right: 6%;
-    align-self: center;
+// layout elements positions
+.space-gap {
+    gap: 10px;
 }
 
+.layout-label {
+    flex: 1 1 11%;
+}
+
+.layout-patient {
+    flex: 0 1 24%;
+}
+
+.layout-tooltip {
+    flex:0 1 5%;
+}
+
+.layout-study {
+    flex: 2 1 15%;
+}
+
+.layout-time {
+    flex: 2 1 9%;
+}
+
+.layout-actions {
+    flex: 0 1 35%;
+}
+
+
+// Colored-label styles
 ::ng-deep .appointment-detail span {
     display: flex;
-    min-width: 100%;
     height: fit-content;
     justify-content: center;
 }
 //------------------------//
 
-@media (max-width: 960px) {
-	.appointment-container {
-		align-items: start;
-	}
-}
-
-@media (max-width: 960px) {
+@media (max-width: 1150px) {
     .appointment-container {
+        align-items: start;
         flex-direction: column !important;
     }
 
@@ -145,7 +163,6 @@
 
     .appointment-date-information {
         margin: 2%;
-        align-self: end;
     }
 }
 

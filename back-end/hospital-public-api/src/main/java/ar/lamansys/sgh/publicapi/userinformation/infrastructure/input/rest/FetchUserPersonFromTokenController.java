@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions.PublicApiAccessDeniedException;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.user.dto.FetchUserPersonFromTokenDto;
+import ar.lamansys.sgh.publicapi.generalexceptions.PublicApiAccessDeniedException;
+import ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.dto.FetchUserPersonFromTokenDto;
 import ar.lamansys.sgh.publicapi.userinformation.application.fetchuserpersonfromtoken.FetchUserPersonFromToken;
 import ar.lamansys.sgh.publicapi.userinformation.application.fetchuserpersonfromtoken.exception.UserNotExistsException;
 import ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.rest.mapper.FetchUserPersonFromTokenMapper;

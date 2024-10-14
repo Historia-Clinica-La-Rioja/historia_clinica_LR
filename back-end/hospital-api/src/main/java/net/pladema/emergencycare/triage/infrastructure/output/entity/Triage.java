@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.triage.domain.TriageBo;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import net.pladema.establishment.domain.ClinicalSpecialtySectorBo;
 
 import javax.persistence.*;
 
@@ -33,7 +34,7 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 	@Column(name = "emergency_care_episode_id", nullable = false)
 	private Integer emergencyCareEpisodeId;
 
-	@Column(name = "notes")
+	@Column(name = "notes", columnDefinition = "TEXT")
 	private String notes;
 
 	@Column(name = "triage_category_id", nullable = false)
@@ -42,11 +43,16 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;
 
+	@Column(name = "clinical_specialty_sector_id")
+	private Integer clinicalSpecialtySectorId;
+
 	public Triage(TriageBo triageBo) {
 		this.id = triageBo.getTriageId();
 		this.emergencyCareEpisodeId = triageBo.getEmergencyCareEpisodeId();
 		this.notes = triageBo.getNotes() != null ? triageBo.getNotes().getOtherNote() : null;
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
+		ClinicalSpecialtySectorBo css = triageBo.getClinicalSpecialtySectorBo();
+		this.clinicalSpecialtySectorId = css == null ? null : css.getId();
 	}
 }

@@ -1,6 +1,6 @@
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Episode } from '../routes/home/home.component';
-import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { Episode } from '../components/emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { Observable } from 'rxjs';
 import { MasterDataInterface } from '@api-rest/api-model';
@@ -9,6 +9,7 @@ import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { EstadosEpisodio } from '../constants/masterdata';
+import { TriageCategory } from '../components/triage-chip/triage-chip.component';
 
 const NO_INFO: MasterDataInterface<number> = {
 	id: -1,
@@ -121,7 +122,7 @@ export class EpisodeFilterService {
 		return this.form.valid;
 	}
 
-	getTriageCategories(): Observable<TriageCategoryDto[]> {
+	getTriageCategories(): Observable<TriageCategory[]> {
 		return this.triageMasterDataService.getCategories();
 	}
 

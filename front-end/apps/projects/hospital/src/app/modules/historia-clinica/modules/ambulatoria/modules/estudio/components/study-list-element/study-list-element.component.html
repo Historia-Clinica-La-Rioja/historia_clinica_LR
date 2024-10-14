@@ -1,6 +1,15 @@
 <div fxLayout="column">
 	<div fxLayout="row">
-		<app-list-element-item fxFlex [content]="content"></app-list-element-item>
+		<app-list-element-item fxFlex [content]="content">
+			<div fxFlex="22%" class="professional-elapsed-time color-grey dateTimeAppointment">
+				<ng-container *ngIf="content.dateAppointment">
+					<strong>
+						Turno:
+					</strong>
+					{{ content.dateAppointment | dateFormat: 'datetime' }}
+				</ng-container>
+			</div>
+		</app-list-element-item>
 		<ng-content select="[actions]"></ng-content>
 	</div>
 	<div class="internment-dialog message-label" fxLayout="row" fxLayoutAlign="none center" fxLayoutGap="10px"

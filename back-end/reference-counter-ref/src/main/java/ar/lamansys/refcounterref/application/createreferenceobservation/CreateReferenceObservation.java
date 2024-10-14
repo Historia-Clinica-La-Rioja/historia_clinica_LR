@@ -4,7 +4,6 @@ package ar.lamansys.refcounterref.application.createreferenceobservation;
 import ar.lamansys.refcounterref.application.createreferenceobservation.exceptions.ReferenceObservationException;
 import ar.lamansys.refcounterref.application.createreferenceobservation.exceptions.ReferenceObservationExceptionEnum;
 import ar.lamansys.refcounterref.application.port.ReferenceObservationStorage;
-import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 
 import lombok.RequiredArgsConstructor;
 

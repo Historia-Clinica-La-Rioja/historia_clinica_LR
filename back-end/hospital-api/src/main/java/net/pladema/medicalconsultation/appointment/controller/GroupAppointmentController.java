@@ -36,7 +36,7 @@ public class GroupAppointmentController {
 	private final ObjectMapper objectMapper;
 
 	@GetMapping("get-appointments-from-determinated-diary-date-time")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
 	public ResponseEntity<List<GroupAppointmentResponseDto>> getAppointmentsFromDeterminatedDiaryDateTime(@PathVariable("institutionId") Integer institutionId,
 																										  @RequestParam("data") String data) throws JsonProcessingException {
 		log.debug("Input parameters -> institutionId {}, data {}", institutionId, data);

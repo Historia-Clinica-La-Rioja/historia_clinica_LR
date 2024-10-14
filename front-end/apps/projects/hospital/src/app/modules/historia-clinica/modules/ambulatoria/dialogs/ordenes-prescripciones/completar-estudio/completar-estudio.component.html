@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
     <h1 mat-dialog-title>{{ 'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.TITLE' | translate}}</h1>
-    <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
+    <button id="close-modal"  mat-icon-button aria-label="close" (click)="closeModal(true)">
         <mat-icon>close</mat-icon>
     </button>
 </div>
@@ -45,7 +45,7 @@
                     <span class="mat-body element-light-color" fxFlexAlign="center">
                         {{fileName}}
                     </span>
-                    <button mat-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+                    <button mat-icon-button color="warn" (click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
                 </div>
             </div>
         </div>
@@ -58,4 +58,5 @@
         <span class="uppercase">{{'ambulatoria.paciente.ordenes_prescripciones.complete_study_dialog.COMPLETE_BUTTON' | translate}}</span>
     </button>
 </mat-dialog-actions>
+
 

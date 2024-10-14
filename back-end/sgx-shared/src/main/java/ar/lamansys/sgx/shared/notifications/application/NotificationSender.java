@@ -9,7 +9,7 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

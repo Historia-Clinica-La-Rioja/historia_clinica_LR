@@ -23,7 +23,7 @@ public abstract class AbstractBackofficeController<E, I> {
     protected final Logger logger;
     protected final BackofficeStore<E, I> store;
     protected final BackofficePermissionValidator<E, I> permissionValidator;
-    private final BackofficeEntityValidator<E, I> entityValidator;
+    protected final BackofficeEntityValidator<E, I> entityValidator;
 
     public AbstractBackofficeController(
             BackofficeStore<E, I> repository,

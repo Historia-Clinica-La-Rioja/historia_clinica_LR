@@ -69,3 +69,23 @@ export const WithConceptListAndNoReferCheckbox: Story = {
         hasConcepts: true
 	},
 }
+
+export const WithoutConceptListAndNoReferCheckboxClicked: Story = {
+	args: {
+		content: {
+			id: 'allergy-checkbox-concepts-list',
+            header: {
+                text: 'Alergias',
+                icon: 'cancel'
+            },
+            titleList: 'Alergias registradas',
+            actions: {
+                button: 'Agregar alergia',
+                checkbox: 'No refiere'
+            }
+        },
+        hasConcepts: false,
+		initialCheckboxState: true
+	},
+}
+

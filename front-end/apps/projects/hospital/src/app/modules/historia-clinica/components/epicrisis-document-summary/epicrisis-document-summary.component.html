@@ -1,5 +1,5 @@
 <div class="epicrisis-note-container" data-id="epicrisis-note-summary">
-    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" class="summary-content" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
         fxLayoutGap="20px">
         <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
             [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
@@ -14,8 +14,8 @@
         </ng-container>
 
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
-            <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="summary.epicrisis.mainDiagnosis || summary.epicrisis.diagnosis"
-                [diagnosis]="summary.epicrisis.diagnosis" [mainDiagnosis]="summary.epicrisis.mainDiagnosis"></app-diagnosis-summary>
+            <app-diagnosis-evolution-summary data-id="diagnosis-summary" *ngIf="summary.epicrisis.mainDiagnosis || summary.epicrisis.diagnosis"
+                [diagnosis]="summary.epicrisis.diagnosis" [mainDiagnosis]="summary.epicrisis.mainDiagnosis"></app-diagnosis-evolution-summary>
 
             <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="summary.epicrisis.clinicalEvaluation"
                 [clinicalEvaluation]="summary.epicrisis.clinicalEvaluation"></app-clinical-evaluation-summary>

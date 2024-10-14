@@ -2,7 +2,10 @@ package net.pladema.emergencycare.triage.infrastructure.input.rest.mapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
+import net.pladema.emergencycare.controller.dto.EmergencyCareEpisodeListTriageDto;
+import net.pladema.emergencycare.controller.mapper.EmergencyCareClinicalSpecialtySectorMapper;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
+import net.pladema.emergencycare.triage.domain.EmergencyCareTriageBo;
 import net.pladema.emergencycare.triage.infrastructure.input.rest.dto.TriageAdultGynecologicalDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAppearanceDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageBreathingDto;
@@ -23,13 +26,16 @@ import org.mapstruct.Named;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, OutpatientConsultationMapper.class})
+@Mapper(uses = {LocalDateMapper.class, OutpatientConsultationMapper.class, EmergencyCareClinicalSpecialtySectorMapper.class})
 public interface TriageMapper {
 
     @Named("toTriageBo")
+	@Mapping(target = "clinicalSpecialtySectorBo.id", source = "clinicalSpecialtySectorId")
     TriageBo toTriageBo(TriageAdministrativeDto triageDto);
 
     @Named("toTriageBo")
+    @Mapping(target = "notes", expression = "java(triageDto.getNotes())")
+	@Mapping(target = "clinicalSpecialtySectorBo.id", source = "clinicalSpecialtySectorId")
     TriageBo toTriageBo(TriageAdultGynecologicalDto triageDto);
 
     @Named("toTriageBo")
@@ -39,6 +45,8 @@ public interface TriageMapper {
     @Mapping(target = "otherRiskFactors.respiratoryRetractionId", source = "breathing.respiratoryRetractionId")
     @Mapping(target = "otherRiskFactors.stridor", source = "breathing.stridor")
     @Mapping(target = "otherRiskFactors.perfusionId", source = "circulation.perfusionId")
+    @Mapping(target = "notes", expression = "java(triageDto.getNotes())")
+	@Mapping(target = "clinicalSpecialtySectorBo.id", source = "clinicalSpecialtySectorId")
     TriageBo toTriageBo(TriagePediatricDto triageDto);
 
     @Named("toTriageListDto")
@@ -109,4 +117,8 @@ public interface TriageMapper {
     @Mapping(target = "respiratoryRate", source = "breathing.respiratoryRate")
     @Mapping(target = "bloodOxygenSaturation", source = "breathing.bloodOxygenSaturation")
 	NewRiskFactorsObservationDto fromTriagePediatricDto(TriagePediatricDto triagePediatricDto);
+
+	@Named("toEmergencyCareEpisodeListTriageDto")
+	@Mapping(target = "clinicalSpecialtySector", source = "clinicalSpecialtySectorBo")
+	EmergencyCareEpisodeListTriageDto toEmergencyCareEpisodeListTriageDto(EmergencyCareTriageBo emergencyCareTriageBo);
 }

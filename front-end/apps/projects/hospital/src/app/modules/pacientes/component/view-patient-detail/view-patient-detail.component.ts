@@ -16,6 +16,7 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class ViewPatientDetailComponent implements OnInit {
 
 	public personPhoto: PersonPhotoDto;
+	patientBirthDate: Date;
 
 	private readonly routePrefix;
 
@@ -30,6 +31,7 @@ export class ViewPatientDetailComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.patientBirthDate = new Date(this.patient.birthDate);
 		this.patientService.getPatientPhoto(this.patient.id)
 			.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 	}

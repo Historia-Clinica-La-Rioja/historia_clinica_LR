@@ -55,23 +55,24 @@ export class CompleteStudyComponent implements OnInit {
 			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, statusId),
 			prescriptionPt,
 			problemPt,
-			registerEditor
+			registerEditor,
+            observations: diagnosticReport[0].observationsFromServiceRequest || diagnosticReport[0].diagnosticInformation?.observationsFromServiceRequest,
 		};
 	}
 
 	private mapRegisterEditor(doctor: DoctorInfoDto, creationDate: Date): RegisterEditor {
 		return {
-			createdBy: this.getFullName(doctor.firstName, doctor.nameSelfDetermination),
+			createdBy: this.getFullName(doctor),
 			date: creationDate
 		}
 	}
 
-	private getFullName(firstName: string, nameSelfDetermination: string): string {
-		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
+	private getFullName(doctor: DoctorInfoDto): string {
+		return `${this.patientNameService.completeName(doctor.firstName, doctor.nameSelfDetermination, doctor.lastName)}`;
 	}
 
 	private setValues() {
-		this.study = this.prescriptionItemDataBuilder(this.data.diagnosticReport);
+		this.study = this.prescriptionItemDataBuilder(this.diagnosticReport);
 	}
 
 }

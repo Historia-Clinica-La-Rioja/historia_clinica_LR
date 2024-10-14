@@ -1,14 +1,17 @@
 package net.pladema.clinichistory.requests.controller.dto;
 
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,4 +42,13 @@ public class PrescriptionDto implements Serializable {
 
 	@Nullable
 	private String observations;
+
+	@Nullable
+	private EStudyType studyType;
+
+	@Nullable
+	private Boolean requiresTransfer;
+
+	@Nullable
+	private DateTimeDto deferredDate;
 }

@@ -20,7 +20,6 @@ import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/de
 import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { TabsService } from '@access-management/services/tabs.service';
 
-
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 const TAB_OFERTA_POR_REGULACION = 1;
 const PENDING_STATE = REFERENCE_STATES.PENDING;
@@ -42,6 +41,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
 	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
+	waitingAppointment = PENDING_STATE;
 	observation: string;
 	derivation: string;
 	registerEditor: RegisterEditor = null;
@@ -52,9 +52,10 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
 	isRoleGestor: boolean;
-	hasAppointment = false;
+	hasNoAppointment = false;
 	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
 	pendingAttentionState = PENDING_ATTENTION_STATE;
+	selectedFiles: File[] = [];
 
 	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -73,6 +74,11 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	ngOnInit(): void {
 		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
 		const referenceDetails$ = this.getObservable();
+		this.getReferenceDetails(referenceDetails$);
+		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
+	}
+
+	getReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
 		referenceDetails$.subscribe(
 			referenceDetails => {
 				this.setAppointment(referenceDetails.appointment);
@@ -83,7 +89,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
-		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 	}
 
 	private getObservable(): Observable<ReferenceCompleteDataDto> {
@@ -208,7 +213,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			reference: referenceDetails.reference,
 			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment,
 		}
-		this.hasAppointment = this.reportCompleteData.appointment.state.description === PENDING_STATE || this.reportCompleteData.appointment.state.description === ABSENT_STATE;
+		this.hasNoAppointment = this.reportCompleteData.appointment.state.description === (PENDING_STATE || ABSENT_STATE);
 	}
 }
 

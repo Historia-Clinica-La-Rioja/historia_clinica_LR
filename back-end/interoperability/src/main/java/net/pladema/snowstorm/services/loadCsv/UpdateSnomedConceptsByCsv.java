@@ -56,6 +56,7 @@ public class UpdateSnomedConceptsByCsv {
 		Integer snomedGroupId = saveSnomedGroup(eclKey, today);
 		List<SnomedConceptBo> conceptBatch = null;
 
+		log.debug("Total concepts to process -> {}", totalConcepts);
 		while (conceptsProcessed < totalConcepts) {
 			try {
 				conceptBatch = getNextBatch(batchSize, conceptsProcessed, totalConcepts, csvFile);
@@ -63,7 +64,7 @@ public class UpdateSnomedConceptsByCsv {
 				// if the batch size had decreased before due to an error, it will increase again
 				batchSize = Math.min(batchSize * BATCH_SIZE_MULTIPLIER, batchMaxSize);
 				log.debug("Concepts processed -> {}", conceptsProcessed);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// If the batch size is equal to 1, it means that that element is the one that can't be saved.
 				// So, it should be skipped to try to save the rest
 				if (batchSize.equals(1)) {
@@ -74,6 +75,7 @@ public class UpdateSnomedConceptsByCsv {
 				} else {
 					batchSize = Math.max(batchSize / BATCH_SIZE_DIVIDER, 1);
 				}
+				log.error("Capturing Update Snomed exception -> {}", e.getMessage());
 			}
 
 		}
@@ -88,7 +90,7 @@ public class UpdateSnomedConceptsByCsv {
 		return result;
 	}
 
-	private void saveError(Exception e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
+	private void saveError(Throwable e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
 		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), e.getCause().getCause().getMessage());
 		errorMessages.add(message);
 		snomedCacheLogRepository.save(new SnomedCacheLog(message, dateTimeProvider.nowDateTime()));

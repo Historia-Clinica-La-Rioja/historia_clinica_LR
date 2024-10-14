@@ -17,10 +17,11 @@ public class GetServiceRequestCategoriesServiceImpl implements GetServiceRequest
 
 	private final ServiceRequestCategoryRepository serviceRequestCategoryRepository;
 
-	public List<ServiceRequestCategoryBo> run() {
+	public List<ServiceRequestCategoryBo> run(Boolean excludeDiagnosticImaging) {
 		log.debug("Get all Request Categories");
 		List<ServiceRequestCategoryBo> result = serviceRequestCategoryRepository.getAll()
 				.stream()
+				.filter(category -> !(excludeDiagnosticImaging && category.isDiagnosticImaging()))
 				.map(src -> new ServiceRequestCategoryBo(src.getId(), src.getDescription()))
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);

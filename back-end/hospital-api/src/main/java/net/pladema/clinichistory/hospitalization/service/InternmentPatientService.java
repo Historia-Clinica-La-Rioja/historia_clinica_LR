@@ -1,7 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service;
 
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
+import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
 
 import java.time.LocalDateTime;

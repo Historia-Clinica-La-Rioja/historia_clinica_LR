@@ -15,7 +15,7 @@
 
 		<div *ngSwitchCase="'snomed'" id="snomed">
 			<app-loinc-input-snomed [title]="loincInput.label" [ecl]="loincInput.param.snomedGroupDescription"
-				[preload]="loincInput.preload" (valueSelected)="setValue(loincInput.key, $event)">
+				[preload]="loincInput" (valueSelected)="emitValueSnomed($event)">
 			</app-loinc-input-snomed>
 		</div>
 

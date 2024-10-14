@@ -20,13 +20,12 @@ import { CalendarProfessionalInformation } from '../../services/calendar-profess
 
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
-import { DatePipe } from "@angular/common";
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { DatePipeFormat, toHourMinuteSecond } from '@core/utils/date.utils';
+import { toHourMinuteSecond } from '@core/utils/date.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
@@ -42,6 +41,7 @@ import { AppointmentListComponent } from '@turnos/dialogs/appointment-list/appoi
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { fixDate } from '@core/utils/date/format';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -58,7 +58,6 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	readonly calendarViewEnum = CalendarView;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
-	readonly dateFormats = DatePipeFormat;
 	hasRoleToCreate: boolean;
 
 	hourSegments: number;
@@ -114,7 +113,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly loggedUserService: LoggedUserService,
 		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly translateService: TranslateService,
 		private readonly featureFlagService: FeatureFlagService
 	) {
@@ -326,7 +325,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					}
 					else {
 						const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-						const holidayDateText = this.datePipe.transform(clickedDate, DatePipeFormat.FULL_DATE);
+						const holidayDateText = this.dateFormatPipe.transform(clickedDate, 'fulldate');
 						const dialogRef = this.dialog.open(DiscardWarningComponent, {
 							data: {
 								title: 'turnos.holiday.TITLE',

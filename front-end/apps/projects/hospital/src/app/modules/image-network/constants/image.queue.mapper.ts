@@ -3,7 +3,7 @@ import { PatientSummary } from "../../hsi-components/patient-summary/patient-sum
 import { ItemImageQueue } from "../components/image-table-technical/image-table-technical.component"
 import { Color } from "@presentation/colored-label/colored-label.component"
 import { PatientNameService } from "@core/services/patient-name.service"
-import { convertDateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
+import { convertDateTimeDtoToDate, dateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
 
 
 export const EIMAGE_QUEUE_ERROR = EImageMoveStatus.ERROR
@@ -27,9 +27,11 @@ export const mapToListItemImageQueue = (items: ImageQueueListDto[], patientNameS
                 description: translateMappingStatus.get(item.imageMoveStatus),
                 color: item.imageMoveStatus === EIMAGE_QUEUE_ERROR ? Color.RED : Color.YELLOW,
             },
-            date: convertDateTimeDtoToDate(item.createdOn),
+            date: item.lastTriedOn ? convertDateTimeDtoToDate(item.lastTriedOn) : null,
+            appointmentDate: dateTimeDtoToDate(item.appointmentDateTime),
             serviceRequestId: item.serviceRequestId,
-            idMove: item.id
+            idMove: item.id,
+            uid:item.studyImageUID
         }
     })
 
@@ -40,7 +42,7 @@ const toPatientSummary = (patient: ImageQueuePatientDataDto, patientNameService:
         fullName: patientNameService.completeName(patient.firstName, patient.nameSelfDetermination, patient.lastName,patient.middleNames, patient.otherLastNames),
         identification: {
             type: patient.identificationType,
-            number: +patient.identificationNumber,
+            number: patient.identificationNumber,
         },
         id: patient.personId,
         gender: patient.gender.description,

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEHealthConditionDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEHealthConditionDto, InternmentEpisodeBMDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS, PatientType } from '@historia-clinica/constants/summaries';
@@ -27,6 +27,9 @@ import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/
 import { DiagnosticWithTypeReportInfoDto, IMAGE_DIAGNOSIS_CATEGORY_ID } from '../../modules/estudio/model/ImageModel';
 import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
 import { StudyResultsService } from '../../services/study-results.service';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { DialogWidth } from '@presentation/services/dialog.service';
+import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
 
 @Component({
 	selector: 'app-card-estudios',
@@ -37,7 +40,7 @@ export class CardEstudiosComponent implements OnInit {
 
 	public readonly estudios = ESTUDIOS;
 	public readonly STUDY_STATUS = STUDY_STATUS;
-	imageDiagnotics: DiagnosticReportInfoDto[] | DiagnosticWithTypeReportInfoDto[]= [];
+	imageDiagnotics: DiagnosticReportInfoDto[] | DiagnosticWithTypeReportInfoDto[] = [];
 	laboratoryDiagnotics: DiagnosticReportInfoDto[] = [];
 	pathologicAnatomyDiagnotics: DiagnosticReportInfoDto[] = [];
 	hemotherapyDiagnotics: DiagnosticReportInfoDto[] = [];
@@ -59,6 +62,8 @@ export class CardEstudiosComponent implements OnInit {
 	episodeId: number;
 	response: DiagnosticReportInfoDto[] = []
 
+	patientEmergencyCareMedicalCoverageId: number;
+	patientInternmentEpisodeMedicalCoverageId: number;
 
 	@Input() filterBy: {
 		source: string,
@@ -100,6 +105,8 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private readonly imageOrderCasesService: ImageOrderCasesService,
 		private studyResultsService: StudyResultsService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private internmentEpisodeService: InternmentEpisodeService,
 
 	) { }
 
@@ -111,7 +118,6 @@ export class CardEstudiosComponent implements OnInit {
 			study: [null],
 		});
 
-		this.getStudy();
 
 		this.setActionsLayout();
 
@@ -126,6 +132,8 @@ export class CardEstudiosComponent implements OnInit {
 				this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisodeInProgressId).subscribe(diagnoses => {
 					this.intermentDiagnosis = diagnoses.map(this.mapDiagnosesGeneralStateDto);
 				});
+				this.internmentEpisodeService.getInternmentEpisode(this.internmentEpisodeInProgressId).subscribe((internmentEpisodeBMDto: InternmentEpisodeBMDto) =>
+					this.patientInternmentEpisodeMedicalCoverageId = internmentEpisodeBMDto.patientMedicalCoverageId)
 			}
 		});
 
@@ -139,6 +147,7 @@ export class CardEstudiosComponent implements OnInit {
 			).subscribe(
 				(episode: EmergencyCareListDto) => {
 					if (episode) {
+						this.patientEmergencyCareMedicalCoverageId = episode.patient.patientMedicalCoverageId;
 						this.episodeId = episode.id;
 						this.episodeEnAtencion = episode.state.id === EstadosEpisodio.EN_ATENCION;
 						this.notEmergencyCareTemporaryPatient = episode.patient.typeId != PatientType.EMERGENCY_CARE_TEMPORARY;
@@ -155,6 +164,9 @@ export class CardEstudiosComponent implements OnInit {
 			)
 		)
 
+		this.ambulatoriaSummaryFacadeService.updateReferences.subscribe(
+			_ => this.getStudy()
+		)
 	}
 
 	setActionsLayout(): void {
@@ -233,8 +245,8 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateInternmentOrderDialog() {
 		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 			{
-				width: '28%',
-				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId },
+				width: DialogWidth.LARGE,
+				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId, patientInternmentEpisodeMedicalCoverageId: this.patientInternmentEpisodeMedicalCoverageId },
 			})
 
 		newOrderComponent.afterClosed().subscribe((newInternmentOrder: NewInternmentOrder) => {
@@ -273,8 +285,8 @@ export class CardEstudiosComponent implements OnInit {
 		if (this.emergencyCareDiagnosis.length) {
 			const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 				{
-					width: '28%',
-					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, },
+					width: DialogWidth.LARGE,
+					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, patientEmergencyCareMedicalCoverageId: this.patientEmergencyCareMedicalCoverageId },
 				});
 			newOrderComponent.afterClosed().subscribe((newOrder: NewInternmentOrder) => {
 				if (newOrder) {
@@ -294,7 +306,8 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateOutpatientOrderDialog(healthProblems) {
 		const newOrderComponent = this.dialog.open(CreateOutpatientOrderComponent,
 			{
-				width: '28%',
+				width: DialogWidth.LARGE,
+				autoFocus: false,
 				data: { patientId: this.patientId, healthProblems },
 			});
 

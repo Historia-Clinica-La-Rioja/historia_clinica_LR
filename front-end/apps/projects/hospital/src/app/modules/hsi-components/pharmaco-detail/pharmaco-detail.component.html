@@ -1,0 +1,72 @@
+<div class="container">
+
+	<div class="pharmaco-container">
+		<app-title-description *ngIf="pharmaco.pt"
+			[title]="'pharmaco-detail.PHARMACO'"
+			[text]="pharmaco.pt">
+		</app-title-description>
+
+		<div class="buttons" *ngIf="showButtons">
+			<button mat-icon-button color="primary" (click)="emitEdit()" [disabled]="disabled">
+				<mat-icon>edit</mat-icon>
+			</button>
+			<button mat-icon-button color="warn" (click)="emitDelete()" [disabled]="disabled">
+				<mat-icon>delete_outline</mat-icon>
+			</button>
+		</div>
+	</div>
+
+	<app-title-description *ngIf="pharmaco.commercialPt"
+		[title]="'pharmaco-detail.SUGGESTED_COMMERCIAL'"
+		[text]="pharmaco.commercialPt">
+	</app-title-description>
+
+    <div class="grouped-info">
+        <app-title-description *ngIf="pharmaco.unitDose"
+            [title]="'pharmaco-detail.UNIT_DOSE'"
+            [text]="pharmaco.unitDose">
+        </app-title-description>
+
+        <app-title-description *ngIf="pharmaco.dayDose"
+            [title]="'pharmaco-detail.DAY_DOSE'"
+            [text]="pharmaco.dayDose">
+        </app-title-description>
+
+        <app-title-description *ngIf="pharmaco.treatmentDays"
+            [title]="'pharmaco-detail.TREATMENT_DAYS'"
+            [text]="pharmaco.treatmentDays">
+        </app-title-description>
+
+        <app-title-description *ngIf="pharmaco.quantity"
+            [title]="'pharmaco-detail.QUANTITY'"
+            [text]="pharmaco.quantity">
+        </app-title-description>
+    </div>
+
+	<app-title-description *ngIf="pharmaco.interval"
+		[title]="'pharmaco-detail.INTERVAL'"
+		[text]="pharmaco.interval">
+	</app-title-description>
+
+	<div class="grouped-info" *ngIf="pharmaco.commercialMedicationPrescription">
+        <app-title-description
+            [title]="'pharmaco-detail.PRESENTATION'"
+            [text]="pharmaco.commercialMedicationPrescription.presentationUnitQuantity + ' unidades'">
+        </app-title-description>
+
+        <app-title-description
+            [title]="'pharmaco-detail.MEDICATION_PACK'"
+            [text]="pharmaco.commercialMedicationPrescription.medicationPackQuantity">
+        </app-title-description>
+    </div>
+
+	<app-identifier-cases *ngIf="pharmaco.healthProblem"
+		[identifierCase]="identiferCases.PROBLEM"
+        [description]="pharmaco.healthProblem">
+    </app-identifier-cases>
+
+	<app-title-description *ngIf="pharmaco.observations"
+		[title]="'pharmaco-detail.OBSERVATIONS'"
+		[text]="pharmaco.observations">
+	</app-title-description>
+</div>

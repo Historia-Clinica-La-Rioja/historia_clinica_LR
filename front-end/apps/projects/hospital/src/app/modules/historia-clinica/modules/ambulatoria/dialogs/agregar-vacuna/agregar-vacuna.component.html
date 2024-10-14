@@ -1,12 +1,11 @@
-<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.TITLE'"></div>
-	<button mat-icon-button (click)="dialogRef.close();">
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.TITLE'"></span>
+	<button mat-icon-button (click)="dialogRef.close()">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
-<div mat-dialog-content>
-
+<mat-dialog-content>
 	<mat-tab-group mat-align-tabs="start" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
 		<ng-container *appHasRole="['ENFERMERO']">
 			<ng-container *ngIf="this.data.hasConfirmedAppointment">
@@ -18,14 +17,15 @@
 						</span>
 					</ng-template>
 
-					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)" id="billableForm">
+					<form [formGroup]="billableForm" (submit)="submit()" id="billableForm">
 						<div fxLayout="column">
 
 							<app-datepicker
 								title="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE"
-								[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initNewVaccineDate" (selectDate)="newDateChanged($event)"></app-datepicker>
+								[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initNewVaccineDate"
+								(selectDate)="newDateChanged($event)"></app-datepicker>
 
-							<div #vaccineInput>
+							<div id="vaccineInput">
 								<div fxLayout="column" fxFlex="100%">
 									<mat-label>
 										{{
@@ -37,7 +37,7 @@
 										<mat-form-field appearance="outline">
 											<input matInput required readonly formControlName="snomed"
 												matTooltip="{{ newVaccineSnomedConcept.pt }}">
-											<button type="button" mat-button matSuffix color="warn" mat-icon-button
+											<button type="button" matSuffix color="warn" mat-icon-button
 												(click)="resetConceptBillableForm()">
 												<mat-icon>close</mat-icon>
 											</button>
@@ -90,7 +90,7 @@
 										{{ condition.description }}
 									</mat-option>
 								</mat-select>
-								<button id="clear_condition" type="button" mat-button
+								<button id="clear_condition" type="button"
 									*ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined"
 									matSuffix color="warn" mat-icon-button
 									(click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
@@ -114,7 +114,7 @@
 												{{ scheme.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button
+										<button id="clear_scheme" type="button"
 											*ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined"
 											matSuffix color="warn" mat-icon-button
 											(click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
@@ -137,7 +137,7 @@
 												{{ dose.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button
+										<button id="clear_scheme" type="button"
 											*ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined"
 											matSuffix color="warn" mat-icon-button
 											(click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
@@ -161,15 +161,8 @@
 								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOTE' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5">
-						</textarea>
+								<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5"></textarea>
 							</mat-form-field>
-
-							<div fxLayout="row" fxLayoutAlign="end">
-								<button type="submit" mat-flat-button color="primary">
-									{{ 'buttons.ADD' | translate | uppercase }}
-								</button>
-							</div>
 						</div>
 					</form>
 				</mat-tab>
@@ -186,14 +179,15 @@
 					</span>
 				</ng-template>
 
-				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)" id="previousForm">
+				<form [formGroup]="previousForm" (submit)="submitPreviousForm()" id="previousForm">
 					<div fxLayout="column">
 						<app-datepicker
 							title="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE"
-							[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initPrevVaccineDate" (selectDate)="prevDateChanged($event)">
+							[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initPrevVaccineDate"
+							(selectDate)="prevDateChanged($event)">
 						</app-datepicker>
 
-						<div #previousVaccineInput>
+						<div id="previousVaccineInput">
 							<div fxLayout="column" fxFlex="100%">
 								<mat-label>
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
@@ -204,7 +198,7 @@
 									<mat-form-field appearance="outline">
 										<input matInput required readonly formControlName="snomed"
 											matTooltip="{{ previousVaccineSnomedConcept.pt }}">
-										<button type="button" mat-button matSuffix color="warn" mat-icon-button
+										<button type="button" matSuffix color="warn" mat-icon-button
 											(click)="resetConceptPreviousForm()">
 											<mat-icon>close</mat-icon>
 										</button>
@@ -257,7 +251,7 @@
 									{{ condition.description }}
 								</mat-option>
 							</mat-select>
-							<button id="clear_condition" type="button" mat-button
+							<button id="clear_condition" type="button"
 								*ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined"
 								matSuffix color="warn" mat-icon-button
 								(click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
@@ -280,7 +274,7 @@
 											{{ scheme.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_scheme" type="button" mat-button
+									<button id="clear_scheme" type="button"
 										*ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined"
 										matSuffix color="warn" mat-icon-button
 										(click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
@@ -303,7 +297,7 @@
 											{{ dose.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_dose" type="button" mat-button
+									<button id="clear_dose" type="button"
 										*ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined"
 										matSuffix color="warn" mat-icon-button
 										(click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
@@ -339,17 +333,28 @@
 						<mat-form-field appearance="outline">
 							<input matInput formControlName="professional">
 						</mat-form-field>
-
-						<div fxLayout="row" fxLayoutAlign="end">
-							<button type="submit" mat-flat-button color="primary">
-								{{ 'buttons.ADD' | translate | uppercase }}
-							</button>
-						</div>
 					</div>
 				</form>
 
 			</mat-tab>
 		</ng-container>
 	</mat-tab-group>
+</mat-dialog-content>
 
-</div>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
+	<ng-container *ngIf="selectedTab === APPLY_VACCINE_TAB_VALUE">
+		<div *appHasRole="['ENFERMERO']">
+			<button id="add-only-nurse" type="submit" (click)="submit()" mat-flat-button color="primary">
+				{{ 'buttons.ADD' | translate | uppercase }}
+			</button>
+		</div>
+	</ng-container>
+
+	<ng-container *ngIf="selectedTab === REGISTER_PREVIOUS_VACCINE_TAB_VALUE">
+		<div *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+			<button id="add" type="submit"  (click)="submitPreviousForm()" mat-flat-button color="primary">
+				{{ 'buttons.ADD' | translate | uppercase }}
+			</button>
+		</div>
+	</ng-container>
+</mat-dialog-actions>

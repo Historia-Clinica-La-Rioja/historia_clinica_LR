@@ -1,5 +1,6 @@
 package net.pladema.reports.repository.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import java.sql.Date;
@@ -9,6 +10,8 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import lombok.RequiredArgsConstructor;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 
+	@PersistenceContext
     private final EntityManager entityManager;
 
 	private static AnnexIIOutpatientVo toAnnexIIOutpatientVo(Object[] a) {
@@ -45,7 +49,8 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 			(String) a[15],
 			(Integer) a[16],
 			mapCreatedOn(a[17]),
-			(Integer) a[18]
+			(Integer) a[18],
+			(Integer) a[19]
 		);
 	}
 
@@ -68,7 +73,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     public Optional<AnnexIIAppointmentVo> getAppointmentAnnexInfo(Integer appointmentId) {
         String query = "SELECT NEW net.pladema.reports.repository.entity.AnnexIIAppointmentVo(i.name, pe.firstName, pe.middleNames, " +
                 "           pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, pe.identificationNumber, " +
-                "           aps.description, a.dateTypeId, mc.name, mc.cuit, i.sisaCode, hi.rnos) " +
+                "           aps.description, a.dateTypeId, mc.name, mc.cuit, i.sisaCode, hi.rnos, apias.patientIdentityAccreditationStatusId) " +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +
                 "           JOIN Diary AS d ON (assn.pk.diaryId = d.id) " +
@@ -82,6 +87,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "           LEFT JOIN Person AS pe ON (pe.id = pa.personId) " +
                 "           LEFT JOIN IdentificationType AS it ON (it.id = pe.identificationTypeId) " +
                 "           LEFT JOIN Gender AS g ON (pe.genderId = g.id) " +
+				"			LEFT JOIN AppointmentPatientIdentityAccreditationStatus apias ON (apias.appointmentId = a.id) " +
                 "       WHERE a.id = :appointmentId ";
 
         return entityManager.createQuery(query)
@@ -93,21 +99,35 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     @Override
 	@Transactional(readOnly = true)
     public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
+		int outPatientValue = SourceType.OUTPATIENT;
+		int vaccineValue = SourceType.IMMUNIZATION;
         String query = "WITH t AS (" +
-                "       SELECT oc.id, d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
-                "       FROM {h-schema}document AS d " +
-                "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
-                "       WHERE d.id = :documentId " +
-                "       UNION ALL " +
-                "       SELECT vc.id, d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id, d.created_on " +
-                "       FROM {h-schema}document AS d " +
-                "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
-                "       WHERE d.id = :documentId " +
+                "       SELECT " +
+				"        CASE " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.id " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.id " +
+				"        END as id, " +
+				"        d.id as doc_id, " +
+				"        CASE " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.start_date " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.performed_date " +
+				"        END as start_date, " +
+				"        COALESCE(oc.institution_id, vc.institution_id) as institution_id, " +
+				"        COALESCE(oc.patient_id, vc.patient_id) as patient_id, " +
+				"        COALESCE(oc.clinical_specialty_id, vc.clinical_specialty_id) as clinical_specialty_id, " +
+				"        COALESCE(oc.patient_medical_coverage_id, vc.patient_medical_coverage_id) as patient_medical_coverage_id, " +
+				"        d.created_on, " +
+				"        COALESCE(oc.doctor_id, vc.doctor_id) as doctor_id " +
+				"       FROM {h-schema}document AS d " +
+				"           LEFT JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id AND d.source_type_id = :outPatientValue) " +
+				"           LEFT JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id AND d.source_type_id = :vaccineValue) " +
+				"       WHERE d.id = :documentId " +
+				"           AND (d.source_type_id = :outPatientValue OR d.source_type_id = :vaccineValue) " +
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
                 "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
                 "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos, " +
-                "				t.created_on as createdOn, t.id as id " +
+                "				t.created_on as createdOn, t.id as id, t.doctor_id " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -134,11 +154,15 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 					"           WHERE hc.problem_id IN (:problemTypes) AND dhc.document_id = :documentId " +
 					"           GROUP BY dhc.document_id " +
 					"           ) prob ON (t.doc_id = prob.document_id) ";
-        Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
+
+        Optional<Object[]> queryResult = (Optional<Object[]>) entityManager.createNativeQuery(query)
                 .setParameter("documentId", documentId)
                 .setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC))
-                .setMaxResults(1)
-                .getResultList().stream().findFirst();
+				.setParameter("outPatientValue", outPatientValue)
+				.setParameter("vaccineValue", vaccineValue)
+				.setMaxResults(1)
+				.getResultList()
+				.stream().findFirst();
 
         Optional<AnnexIIOutpatientVo> result = queryResult.map(AnnexReportRepositoryImpl::toAnnexIIOutpatientVo);
         return result;
@@ -148,14 +172,14 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	@Transactional(readOnly = true)
 	public Optional<AnnexIIOutpatientVo> getOdontologyConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
+				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on, oc.doctor_id " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}odontology_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 6)" +
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos	" +
-				"               t.created_on as createdOn, t.id as id" +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos,	" +
+				"               t.created_on as createdOn, t.id as id, t.doctor_id" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -243,14 +267,14 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	@Transactional(readOnly = true)
 	public Optional<AnnexIIOutpatientVo> getNursingConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
+				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on, oc.doctor_id " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}nursing_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 7)" +
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
-				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos   " +
-				"               t.created_on as createdOn, t.id as id" +
+				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos,   " +
+				"               t.created_on as createdOn, t.id as id, t.doctor_id" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +

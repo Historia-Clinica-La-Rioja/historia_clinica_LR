@@ -44,7 +44,11 @@ public class TriageVo {
 
     private List<Integer> riskFactorIds;
 
-    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, List<Integer> riskFactorIds) {
+	private Integer clinicalSpecialtySectorId;
+
+	private String clinicalSpecialtySectorDescription;
+
+    public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, List<Integer> riskFactorIds, String specialtySectorDescription) {
         this.id = triage.getId();
         this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
         this.emergencyCareTypeId = emergencyCareTypeId;
@@ -62,6 +66,8 @@ public class TriageVo {
         }
         this.createdOn = triage.getCreatedOn();
         this.riskFactorIds = riskFactorIds;
+		this.clinicalSpecialtySectorId = triage.getClinicalSpecialtySectorId();
+		this.clinicalSpecialtySectorDescription = specialtySectorDescription;
     }
 
 }

@@ -47,7 +47,7 @@ export class TypeaheadV2Service {
 
 	select(optionToSelect: TypeaheadOption<any>) {
 		if (!this.disabled)
-			if (!!!this.options)
+			if (this.options?.length) 
 				this.emit(optionToSelect);
 			else
 				this.emit(null);
@@ -60,14 +60,16 @@ export class TypeaheadV2Service {
 	}
 
 	setExternalSetValue(externalValue: TypeaheadOption<any>) {
-		if (externalValue) {
+		if (externalValue && this.options.length) {
 			this.externalValue = externalValue;
+			this.form.controls.searchValue.setValue(this.externalValue.compareValue);
 			this.emit(externalValue);
 		}
 	}
 
 	setDisabled(disabled: boolean) {
 		this.disabled = disabled;
+		this.disabled ? this.form.disable() : this.form.enable();
 		this.disabledObs.next(disabled);
 	}
 

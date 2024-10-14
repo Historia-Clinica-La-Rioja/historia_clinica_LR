@@ -78,7 +78,7 @@
 						(selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
 
 					<mat-form-field appearance="outline">
-						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+						<button type="button"  matSuffix color="warn" mat-icon-button
 							*ngIf="formEdit.value.newCoverageData"
 							(click)="clearCoverageData(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -150,7 +150,7 @@
 				<div fxLayout="column" fxLayoutGap="10px">
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-date">
 						<app-iconed-text icon="calendar_today"
-							text="{{selectedDate | date:'EEEE, d ' | titlecase }} de {{selectedDate | date:'MMMM ' | titlecase}} de {{selectedDate | date:'y ' | titlecase}}"></app-iconed-text>
+							text="{{selectedDate | dateFormat: 'fulldate' | titlecase}}"></app-iconed-text>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-time">
 						<app-iconed-text icon="access_time"
@@ -292,3 +292,4 @@
 			dateFormat:'datetime'}}</span>
 	</div>
 </ng-template>
+

@@ -3,12 +3,13 @@ package ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate;
 import java.util.List;
 import java.util.Objects;
 
-import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate.ProfessionalDataBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,9 +30,11 @@ public class ConsultationBo {
 	private MedicalCoverageBo medicalCoverage;
 	private String officialGender;
 	private DateBo birthdate;
+	@Setter
 	private Integer age;
 	private String department;
 	private String city;
+	@Setter
 	private String appointmentState;
 	private String appointmentBookingChannel;
 	@Setter
@@ -40,6 +43,7 @@ public class ConsultationBo {
 	private List<ConsultationItemWithDateBo> procedures;
 	@Setter
 	private List<ConsultationItemWithDateBo> problems;
+	private ProfessionalDataBo professionalData;
 
 	@Override
 	public boolean equals(Object o) {

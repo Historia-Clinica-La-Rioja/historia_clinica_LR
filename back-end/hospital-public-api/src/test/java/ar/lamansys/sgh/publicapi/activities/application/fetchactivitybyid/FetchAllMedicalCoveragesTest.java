@@ -1,10 +1,10 @@
 package ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.shared.infrastructure.input.service.MedicalCoverageDataDto;
 
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.activities.medicalcoverages.application.FetchAllMedicalCoverages;
 import ar.lamansys.sgh.publicapi.activities.medicalcoverages.application.exception.FetchAllMedicalCoveragesDeniedAccessException;

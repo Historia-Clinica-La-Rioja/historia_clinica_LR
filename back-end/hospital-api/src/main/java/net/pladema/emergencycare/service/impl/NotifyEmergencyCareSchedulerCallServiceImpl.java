@@ -27,13 +27,13 @@ public class NotifyEmergencyCareSchedulerCallServiceImpl implements NotifyEmerge
 	private HospitalApiPublisher hospitalApiPublisher;
 
 	@Override
-	public void run(Integer emergencyCareEpisodeId) {
-		log.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+	public void run(Integer emergencyCareEpisodeId, Integer institutionId) {
+		log.debug("Input parameters -> emergencyCareEpisodeId {}, institutionId {}", emergencyCareEpisodeId, institutionId);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		EmergencyCareEpisodeNotificationBo notificationData = emergencyCareEpisodeRepository.getSchedulerNotificationData(emergencyCareEpisodeId);
 		if (notificationData.getTopic() != null) {
 			notificationData.setDoctorName(personService.findByHealthcareProfessionalId(doctorId).getPersonFullName());
-			hospitalApiPublisher.emergencyCareAppointmentCaller(new EmergencyCareEpisodeNotificationDto(notificationData));
+			hospitalApiPublisher.emergencyCareAppointmentCaller(new EmergencyCareEpisodeNotificationDto(notificationData), institutionId);
 		}
 	}
 

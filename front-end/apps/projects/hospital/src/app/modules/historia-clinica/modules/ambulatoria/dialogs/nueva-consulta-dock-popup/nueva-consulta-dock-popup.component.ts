@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CompleteParameterizedFormDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, ProcedureDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -15,7 +15,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SuggestedFieldsPopupComponent } from '../../../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { FactoresDeRiesgoFormService } from '../../../../services/factores-de-riesgo-form.service';
 import { Problema } from '../../../../services/problemas.service';
-import { ProcedimientosService } from '../../../../services/procedimientos.service';
+import { Procedimiento, ProcedimientosService } from '../../../../services/procedimientos.service';
 import { SnomedService } from '../../../../services/snomed.service';
 import { Alergia, AlergiasNuevaConsultaService } from '../../services/alergias-nueva-consulta.service';
 import { AmbulatoryConsultationReferenceService, ReferenceInformation } from '../../services/ambulatory-consultation-reference.service';
@@ -28,7 +28,6 @@ import { Medicacion, MedicacionesNuevaConsultaService } from '../../services/med
 import { MotivoNuevaConsultaService } from '../../services/motivo-nueva-consulta.service';
 import { NewConsultationSuggestedFieldsService } from '../../services/new-consultation-suggested-fields.service';
 
-import { DatePipe } from '@angular/common';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
@@ -37,7 +36,6 @@ import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialog
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
-import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { finalize, forkJoin, Observable, of } from 'rxjs';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
@@ -49,13 +47,21 @@ import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confir
 import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
-import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+// import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+import { CreateOrderService } from '@historia-clinica/services/create-order.service';
+import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
+import { DialogWidth } from '@presentation/services/dialog.service';
+import { getElementAtPosition, pushIfNotExists } from '@core/utils/array.utils';
+import { SearchSnomedConceptComponent } from '../search-snomed-concept/search-snomed-concept.component';
+import { Concept, ConceptDateFormComponent } from '../../modules/internacion/dialogs/concept-date-form/concept-date-form.component';
 
 const TIME_OUT = 5000;
+const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO]}];
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -76,6 +82,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
+	createOrderService: CreateOrderService;
 	apiErrors: string[] = [];
 	public today = new Date();
 	fixedSpecialty = true;
@@ -98,6 +105,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
 	touchedConfirm = false;
+	procedures: ProcedureDto[] = [];
+
 	referenceSituationViolence = null;
 	allergyContent: ConceptsList = {
 		id: 'allergy-checkbox-concepts-list',
@@ -140,6 +149,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	isFamilyHistoriesNoRefer: boolean = true;
 	ButtonType = ButtonType;
 	isSaving = false;
+	isEnabledParameterizedFormFF = false;
+	completeFormsData: CompleteParameterizedFormDto[] = []
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -159,10 +170,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly translateService: TranslateService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
-		private readonly datePipe: DatePipe,
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 		private readonly snowstormService: SnowstormService,
+		private readonly procedureTemplatesService: ProcedureTemplatesService,
 		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -170,13 +181,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.datosAntropometricosNuevaConsultaService =
-			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
-		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
+			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.dateFormatPipe);
+		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.dateFormatPipe);
 		this.personalHistoriesNewConsultationService = new NewConsultationPersonalHistoriesService(this.snomedService, this.snackBarService);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
+		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 	}
 
 	ngOnInit(): void {
@@ -229,15 +241,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
-			this.reportFFIsOn = isOn;
-			this.ambulatoryConsultationProblemsService.setReportFF(isOn);
-		});
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-			this.searchConceptsLocallyFFIsOn = isOn;
-			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
+		this.featureFlagService.filterItems$(ACTIVES_FF_TO_ENABLE_OPTIONS).subscribe(activesFF => {
+			const activesFFElements: AppFeature[] = getElementAtPosition(activesFF, 0).featureFlag;
+			this.reportFFIsOn = activesFFElements.includes(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO);
+			this.ambulatoryConsultationProblemsService.setReportFF(this.reportFFIsOn);
+			this.searchConceptsLocallyFFIsOn = activesFFElements.includes(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS);
+			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(this.searchConceptsLocallyFFIsOn);
+			this.isEnabledParameterizedFormFF = activesFFElements.includes(AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO);
+		})
 
-		});
 	}
 
 	setBoxMessageInfo() {
@@ -480,6 +492,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
 				problems: !!problemsToUpdate.length,
+				references: !!nuevaConsultaDto.references?.length,
 			};
 		}
 	}
@@ -580,13 +593,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					};
 				}
 			),
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(procedimiento => this.mapProcedimientoToNursingProcedure(procedimiento)),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
 			involvedHealthcareProfessionalIds: this.episodeData.involvedHealthcareProfessionalIds,
+			completeForms: this.completeFormsData
 		};
 	}
 
@@ -641,6 +655,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		return result;
 	}
+
+	private mapProcedimientoToNursingProcedure = (procedimiento: Procedimiento) => {
+		return {
+		  	performedDate: procedimiento.performedDate ? toApiFormat(procedimiento.performedDate): null,
+		  	snomed: procedimiento.snomed
+		};
+	}
+
 	private mapToOutpatientProblemDto(problem: HCEPersonalHistory): OutpatientProblemDto {
 		return {
 			chronic: problem.chronic,
@@ -678,7 +700,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	addProblem(): void {
-		this.dialog.open(NewConsultationAddProblemFormComponent, {
+		const problemDialog = this.dialog.open(NewConsultationAddProblemFormComponent, {
 			data: {
 				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
 				severityTypes: this.severityTypes,
@@ -689,6 +711,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+
+		problemDialog.afterClosed().subscribe(this.referenceSituationViolence = null);
 	}
 
 	addReason(): void {
@@ -738,16 +762,69 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
-	addProcedure(): void {
-		this.dialog.open(NewConsultationProcedureFormComponent, {
-			data: {
-				procedureService: this.procedimientoNuevaConsultaService,
-				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
-			},
+	openSearchSnomedConceptComponent(): void {
+		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, {
 			autoFocus: false,
-			width: '35%',
+			width: DialogWidth.MEDIUM,
 			disableClose: true,
+			data: this.buildProcedureDataToDialog(problems)
 		});
+
+		dialogRef.afterClosed().subscribe((snomedConcept: SnomedDto) => this.openConceptDateFormComponent(snomedConcept));
+	}
+
+	private openConceptDateFormComponent = (snomedConcept: SnomedDto) => {
+		if (!snomedConcept) return;
+
+		const dialogRef = this.dialog.open(ConceptDateFormComponent, {
+			width: '35%',
+			disableClose: false,
+			data: this.buildConceptDateToDialog(snomedConcept)
+		});
+		dialogRef.afterClosed().subscribe((procedure: Concept) => {
+			if (!procedure) return;
+
+			const procedureDto: ProcedureDto = {
+				performedDate: procedure?.data,
+				snomed: procedure.snomedConcept
+			};
+			this.addProcedure(procedureDto);
+		});
+	}
+
+	private addProcedure(procedure: ProcedureDto) {
+		this.procedures = pushIfNotExists<ProcedureDto>(this.procedures, procedure, this.compareProcedure);
+		this.procedimientoNuevaConsultaService.add({snomed: procedure.snomed, performedDate: this.fromStringToDate(procedure.performedDate)});
+	}
+
+	private buildConceptDateToDialog = (snomedConcept: SnomedDto) => {
+		const data = {
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			add: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
+			title: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			snomedConcept
+		}
+		return data;
+	}
+
+	private buildProcedureDataToDialog = (problems: SnomedDto[]) => {
+		const data = {
+			patientId: this.data.idPaciente,
+			createOrderService: this.createOrderService,
+			problems: problems,
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			title: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
+			eclFilter: SnomedECL.PROCEDURE
+		}
+		return data;
+	}
+
+	private fromStringToDate(date: string): Date {
+		if (!date) return;
+
+		const dateData = date.split("-");
+		return new Date(+dateData[0], +dateData[1]-1, +dateData[2]);
 	}
 
 	addAllergy(): void {
@@ -781,6 +858,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.addFamilyHistory();
 		}
 		this.isFamilyHistoriesNoRefer = !$event.checkboxSelected;
+	}
+
+
+	private compareProcedure(concept1: ProcedureDto, concept2: ProcedureDto): boolean {
+		return concept1.snomed.sctid === concept2.snomed.sctid
 	}
 
 }

@@ -8,7 +8,7 @@
 			<div content align="center">
 				<mat-card-subtitle>
 					<p>
-						Fecha de Nacimiento: {{ patient.birthDate }}
+						Fecha de Nacimiento: {{ patientBirthDate | dateFormat: 'date' }}
 					</p>
 					<p>
 						{{ patient.identificationTypeId }} : {{ patient.identificationNumber }}

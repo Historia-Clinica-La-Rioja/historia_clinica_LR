@@ -11,6 +11,8 @@ export class LoincInput {
 	param: any;
 	preload: string;
 	preloadUnitOfMeasureId: number;
+	snomedSctid?: string;
+	snomedPt?: string;
 
 	constructor(options: {
 		observationValue?: LoincObservationValue;
@@ -24,6 +26,8 @@ export class LoincInput {
 		param?: any;
 		preload?: string;
 		unitOfMeasureId?: number;
+		snomedSctid?: string;
+		snomedPt?: string;
 	} = {}) {
 		this.observationValue = options.observationValue;
 		this.key = options.key || '';
@@ -36,6 +40,8 @@ export class LoincInput {
 		this.param = options.param;
 		this.preload = options.preload || '';
 	    this.preloadUnitOfMeasureId = options.unitOfMeasureId;
+		this.snomedPt = options.snomedPt || null;
+		this.snomedSctid = options.snomedSctid || null;
 	}
 }
 
@@ -64,5 +70,7 @@ export interface LoincObservationValue {
 	procedureParameterId: number;
 	value: string;
 	unitOfMeasureId: number;
+	snomedPt?: string;
+    snomedSctid?: string;
 }
 

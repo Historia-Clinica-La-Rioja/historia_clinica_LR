@@ -9,6 +9,9 @@ import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.servic
 import { EpidemiologicalManualClassificationResult, EpidemiologicalReport, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
+import { forkJoin } from 'rxjs';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 
 export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
@@ -225,6 +228,46 @@ export class AmbulatoryConsultationProblemsService {
 	getProblemas(): AmbulatoryConsultationProblem[] {
 		return this.data;
 	}
+
+	getAllProblemas(patientId: number, hceGeneralStateService: HceGeneralStateService): SnomedDto[] {
+
+		let problemsList: SnomedDto[] = this.data.map(e => e.snomed);
+
+		const chronicProblems$ = hceGeneralStateService.getChronicConditions(patientId);
+
+		const activeProblems$ = hceGeneralStateService.getActiveProblems(patientId);
+
+
+		forkJoin([activeProblems$, chronicProblems$]).subscribe(([activeProblems, chronicProblems]) => {
+
+			const chronicProblemsHCEPersonalHistory = chronicProblems.map(chronicProblem => {
+				return {
+					HCEHealthConditionDto: chronicProblem,
+					chronic: true,
+				}
+			});
+
+			const activeProblemsHCEPersonalHistory = activeProblems.map(activeProblem => {
+				return {
+					HCEHealthConditionDto: activeProblem,
+					chronic: null,
+				}
+			});
+
+			const problems = [...activeProblemsHCEPersonalHistory, ...chronicProblemsHCEPersonalHistory];
+			problems.forEach((problem: HCEPersonalHistory) => {
+
+				const existProblem = problemsList.find(consultationProblem => consultationProblem.sctid === problem.HCEHealthConditionDto.snomed.sctid);
+				if (!existProblem) {
+					problemsList.push(problem.HCEHealthConditionDto.snomed);
+				}
+
+			});
+		});
+
+		return problemsList;
+	}
+
 
 	resetStartDate(){
 		this.form.controls.fechaInicio.setValue(new Date());

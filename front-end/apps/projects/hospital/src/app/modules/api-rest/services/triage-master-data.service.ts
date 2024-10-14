@@ -3,55 +3,33 @@ import { environment } from '@environments/environment';
 import { Observable, of } from 'rxjs';
 import { MasterDataDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
+import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
+import { Triages } from '@historia-clinica/modules/guardia/constants/masterdata';
 
-const TRIAGE_CATEGORIES = [
+export const TRIAGE_CATEGORIES = [
 	{
-		id: 1,
-		description: 'Nivel I',
-		colour: {
-			name: 'red',
-			code: 'some'
-		}
+		id: Triages.ROJO_NIVEL_1,
+		name: 'Nivel 1'
 	},
 	{
-		id: 2,
-		description: 'Nivel II',
-		colour: {
-			name: 'orange',
-			code: 'some'
-		}
+		id: Triages.NARANJA_NIVEL_2,
+		name: 'Nivel 2'
 	},
 	{
-		id: 3,
-		description: 'Nivel III',
-		colour: {
-			name: 'yellow',
-			code: 'some'
-		}
+		id: Triages.AMARILLO_NIVEL_3,
+		name: 'Nivel 3'
 	},
 	{
-		id: 4,
-		description: 'Nivel IV',
-		colour: {
-			name: 'green',
-			code: 'some'
-		}
+		id: Triages.VERDE_NIVEL_4,
+		name: 'Nivel 4'
 	},
 	{
-		id: 5,
-		description: 'Nivel V',
-		colour: {
-			name: 'blue',
-			code: 'some'
-		}
+		id: Triages.AZUL_NIVEL_5,
+		name: 'Nivel 5'
 	},
 	{
-		id: 6,
-		description: 'Sin triage',
-		colour: {
-			name: 'gray',
-			code: 'soma'
-		}
+		id: Triages.GRIS_SIN_TRIAGE,
+		name: 'Triage pendiente'
 	}
 ];
 
@@ -63,9 +41,9 @@ const BASIC_URL_PREFIX = '/emergency-care/triage/masterdata';
 export class TriageMasterDataService {
 
 	constructor(private readonly http: HttpClient) {
-	}
+	}	
 
-	getCategories(): Observable<TriageCategoryDto[]> {
+	getCategories(): Observable<TriageCategory[]> {
 		return of(TRIAGE_CATEGORIES);
 	}
 
@@ -88,13 +66,4 @@ export class TriageMasterDataService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/perfusion`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
-}
-
-export interface TriageCategoryDto {
-	id: number;
-	description: string;
-	colour: {
-		name: string,
-		code: string
-	};
 }

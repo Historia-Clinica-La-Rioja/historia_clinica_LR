@@ -17,7 +17,7 @@ const meta: Meta<IdentifierCasesComponent> = {
 		showLegend: {
 			description: 'Indica si va leyenda o tooltip',
 			options: [true, false],
-            control: {
+			control: {
 				type: 'select',
 			},
 		},
@@ -194,14 +194,14 @@ export const serviceFull: Story = {
 	}
 };
 
-export const  roomMin: Story = {
+export const roomMin: Story = {
 	args: {
 		identifierCase: IDENTIFIER_CASES.ROOM,
 		description: "Ejemplo de sala de reuniones",
 	}
 };
 
-export const  roomFull: Story = {
+export const roomFull: Story = {
 	args: {
 		identifierCase: IDENTIFIER_CASES.ROOM,
 		showLegend: true,
@@ -286,6 +286,70 @@ export const patientFull: Story = {
 		identifierCase: IDENTIFIER_CASES.PATIENT,
 		showLegend: true,
 		description: "Ejemplo paciente",
+		position: Position.COLUMN
+	}
+};
+
+export const reasonMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.REASON,
+		description: "Ejemplo motivo",
+	}
+};
+
+export const reasonFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.REASON,
+		showLegend: true,
+		description: "Ejemplo motivo",
+		position: Position.COLUMN
+	}
+};
+
+export const emergencyCareTypeMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.EMERGENCY_CARE_TYPE,
+		description: "Ejemplo tipo de guardia",
+	}
+};
+
+export const emergencyCareTypeFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.EMERGENCY_CARE_TYPE,
+		showLegend: true,
+		description: "Ejemplo tipo de guardia",
+		position: Position.COLUMN
+	}
+};
+
+export const shockroomMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.SHOCKROOM,
+		description: "Ejemplo de shockroom",
+	}
+};
+
+export const shockroomFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.SHOCKROOM,
+		showLegend: true,
+		description: "Ejemplo de shockroom",
+		position: Position.COLUMN
+	}
+};
+
+export const roomV2Min: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.ROOM_V2,
+		description: "Ejemplo de habitación",
+	}
+};
+
+export const roomV2Full: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.ROOM_V2,
+		showLegend: true,
+		description: "Ejemplo de habitación",
 		position: Position.COLUMN
 	}
 };

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.establishment.controller.dto.BedDto;
+import net.pladema.establishment.controller.dto.SectorDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -45,4 +46,13 @@ public class EmergencyCareListDto implements Serializable {
 
 	private String reason;
 
+	private Boolean canBeAbsent;
+
+	private DateTimeDto stateUpdatedOn;
+
+	private SectorDto sector;
+
+	private EmergencyCareEpisodeDischargeSummaryDto dischargeSummary;
+
+	private Short calls;
 }

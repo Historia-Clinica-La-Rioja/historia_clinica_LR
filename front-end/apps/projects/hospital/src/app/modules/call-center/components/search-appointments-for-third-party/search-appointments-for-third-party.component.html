@@ -3,8 +3,7 @@
 
     <form [formGroup]="form" fxLayout="column" fxLayoutGap="20px" (submit)="submit()">
 
-        <div fxLayout="row" fxLayoutGap="10px">
-
+		<div fxLayout="row" fxLayoutGap="10px">
             <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
                 <strong> {{'call-center.search_appointments.DEPARTMENT' | translate}} </strong>
                 <app-typeahead id="department" [titleInput]="'call-center.search_appointments.DEPARTMENT' | translate"
@@ -24,16 +23,28 @@
                     [options]="searchAppointmentsForThirdPartyDataService.institutionTypeaheadOptions" (selectionChange)="setInstitution($event)">
                 </app-typeahead>
             </div>
+		</div>
 
-        </div>
+		<div fxLayout="row" fxLayoutGap="10px">
 
-        <div fxLayout="row" fxLayoutGap="10px">
-            <div fxLayout="column" fxLayoutGap="5px" fxFlex="25">
+			<div fxLayout="column" fxLayoutGap="5px" fxFlex="25">
                 <strong>{{'call-center.search_appointments.SPECIALTY' | translate}}</strong>
                 <app-typeahead id="specialty" [titleInput]="'call-center.search_appointments.SPECIALTY' | translate"
                     [options]="searchAppointmentsForThirdPartyDataService.specialtyTypeaheadOptions" (selectionChange)="setSpecialty($event)">
                 </app-typeahead>
             </div>
+
+			<div fxLayout="column" fxLayoutGap="5px" fxFlex="25">
+                <strong>{{'call-center.search_appointments.PRACTICE/PROCEDURE' | translate}}</strong>
+                <app-typeahead id="practice"
+                    [titleInput]="'call-center.search_appointments.PRACTICE/PROCEDURE' | translate"
+                    [options]="searchAppointmentsForThirdPartyDataService.practiceTypeaheadOptions" (selectionChange)="setPractice($event)">
+                </app-typeahead>
+            </div>
+
+		</div>
+
+        <div fxLayout="row" fxLayoutGap="10px">
 
             <div fxLayout="column" fxLayoutGap="5px" fxFlex="25">
                 <strong>{{'call-center.search_appointments.PROFESSIONAL' | translate}}</strong>
@@ -46,19 +57,10 @@
         </div>
 
         <div>
-            <div fxLayout="column" fxLayoutGap="5px" fxFlex="25">
-                <strong>{{'call-center.search_appointments.PRACTICE/PROCEDURE' | translate}}</strong>
-                <app-typeahead id="practice"
-                    [titleInput]="'call-center.search_appointments.PRACTICE/PROCEDURE' | translate"
-                    [options]="searchAppointmentsForThirdPartyDataService.practiceTypeaheadOptions" (selectionChange)="setPractice($event)">
-                </app-typeahead>
-            </div>
-        </div>
-
-        <div>
             <strong>{{'call-center.search_appointments.DATE_RANGE' | translate}}</strong>
             <app-date-range-picker [dateRange]="initialDateRange" [min]="today"
                 (dateRangeChange)="verifyDateRangeNotExceedMaxiumDaysAndSetDate($event)"></app-date-range-picker>
+			<mat-error *ngIf="showValidations.noDate">{{ 'forms.REQUIRED' | translate }}</mat-error>
             <mat-error *ngIf="showValidations.periodRange" [translateParams]="{max: MAX_DAYS}"
                 [translate]="'call-center.search_appointments.PERIOD_VALIDATIONS'">
             </mat-error>

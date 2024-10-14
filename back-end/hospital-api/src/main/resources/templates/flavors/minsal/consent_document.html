@@ -39,6 +39,7 @@
             text-align: justify;
             text-justify: inter-word;
             white-space: pre-wrap;
+            font-size: 12px;
         }
 
         .header {
@@ -47,17 +48,25 @@
     </style>
 </head>
 <body>
-    <table>
-        <thead><tr><td>
+<table>
+    <thead>
+    <tr>
+        <td>
             <div class="header">
                 <th:block th:include="fragments/consent_document_header.html :: consent_document_header"></th:block>
             </div>
-        </td></tr></thead>
-        <div class="richText">[(${richBody})]</div>
-        <tfoot><tr><td>
+        </td>
+    </tr>
+    </thead>
+    <div class="richText">[(${richBody})]</div>
+    <tfoot>
+    <tr>
+        <td>
             <div class="footer-space">&nbsp;</div>
-        </td></tr></tfoot>
-    </table>
-    <th:block th:include="fragments/consent_document_footer.html :: consent_document_footer"></th:block>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+<th:block th:include="fragments/consent_document_footer.html :: consent_document_footer"></th:block>
 </body>
 </html>

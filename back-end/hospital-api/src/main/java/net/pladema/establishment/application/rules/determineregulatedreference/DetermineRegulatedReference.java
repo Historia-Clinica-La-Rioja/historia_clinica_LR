@@ -1,7 +1,5 @@
 package net.pladema.establishment.application.rules.determineregulatedreference;
 
-import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
-import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceExceptionEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -240,10 +240,17 @@ public class FhirPersistentStore {
     }
     
 	@Transactional(readOnly = true)
-	public List<ServiceRequestVo> getServiceRequest(@NotNull Integer serviceRequestId, @NotNull String identificationNumber) {
-		return entityManager.createNamedQuery("HCE.getServiceRequest")
+	public List<ServiceRequestVo> getServiceRequestByIdAndPatientIdentificationNumber(@NotNull Integer serviceRequestId, @NotNull String patientIdentificationNumber) {
+		return entityManager.createNamedQuery("HCE.getServiceRequestByIdAndPatientIdentificationNumber")
 				.setParameter("serviceRequestId", serviceRequestId)
-				.setParameter("identificationNumber", identificationNumber)
+				.setParameter("identificationNumber", patientIdentificationNumber)
+				.getResultList();
+	}
+
+	@Transactional(readOnly = true)
+	public List<ServiceRequestVo> getServiceRequestByPatientIdentificationNumber(@NotNull String patientIdentificationNumber) {
+		return entityManager.createNamedQuery("HCE.getServiceRequestByPatientIdentificationNumber")
+				.setParameter("identificationNumber", patientIdentificationNumber)
 				.getResultList();
 	}
 

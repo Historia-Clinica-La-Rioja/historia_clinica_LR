@@ -33,4 +33,8 @@ public enum EDiagnosticReportStatus {
     public String getDescription() {
         return description;
     }
+
+    public Boolean isFinal() {
+    	return this.equals(FINAL);
+    }
 }

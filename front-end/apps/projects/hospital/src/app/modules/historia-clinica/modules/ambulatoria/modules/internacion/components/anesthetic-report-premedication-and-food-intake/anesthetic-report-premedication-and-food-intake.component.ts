@@ -4,7 +4,7 @@ import { AppFeature, MasterDataDto, TimeDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TranslateService } from '@ngx-translate/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { Observable, distinctUntilChanged, filter, take, tap } from 'rxjs';
+import { distinctUntilChanged, filter, take, tap } from 'rxjs';
 import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anesthetic-drug.component';
 import { AnestheticReportService } from '../../services/anesthetic-report.service';
 import { TimePickerData, TimePickerDto } from '@presentation/components/time-picker/time-picker.component';
@@ -24,7 +24,6 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
     @Output() timeSelected: EventEmitter<TimeDto> = new EventEmitter<TimeDto>();
 	searchConceptsLocallyFFIsOn = false;
 	timePickerData: TimePickerData;
-	lastFoodIntake$: Observable<TimeDto>
 
     constructor(
 		private readonly dialog: MatDialog,
@@ -35,6 +34,7 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
     ) { }
 
     ngOnInit(): void {
+        this.timePickerData = null
         this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
             this.searchConceptsLocallyFFIsOn = isOn;
         });
@@ -46,24 +46,23 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
                     this.title = messagesValues[0]
                     this.label = messagesValues[1]
                 }
-            );
-			this.lastFoodIntake$ = this.service.lastIntake$.pipe(
-				filter(data => data !== null),
-				distinctUntilChanged(),
-				tap(data => {
-					if (data) {
-						const timePickerDto: TimePickerDto = {
-							hours: data.hours,
-							minutes: data.minutes
-						};
-						this.timePickerData = {
-							defaultTime: timePickerDto
-						};
-						this.onTimeSelected(data);
-					}
-				})
-			);
-		this.timePickerData = null
+        );
+        this.service.lastIntake$.pipe(
+            filter(data => data !== null),
+            distinctUntilChanged(),
+            tap(data => {
+                if (data) {
+                    const timePickerDto: TimePickerDto = {
+                        hours: data.hours,
+                        minutes: data.minutes
+                    };
+                    this.timePickerData = {
+                        defaultTime: timePickerDto
+                    };
+                    this.onTimeSelected(data);
+                }
+            })
+        ).subscribe();
     }
 
     addPremedication(){

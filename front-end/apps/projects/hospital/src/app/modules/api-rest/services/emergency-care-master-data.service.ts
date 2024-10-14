@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MasterDataInterface } from '@api-rest/api-model';
+import { MasterDataDto, MasterDataInterface } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -33,6 +33,11 @@ export class EmergencyCareMasterDataService {
 	getEmergencyEpisodeSectorType(): Observable<MasterDataInterface<number>[]> {
 		const url = `${environment.apiBase}${PREFIX}/emergency-episode-sector-type`;
 		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
+
+	getNursingDischargeType(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/dischargeType/nursing`;
+		return this.http.get<MasterDataDto[]>(url);
 	}
 
 }

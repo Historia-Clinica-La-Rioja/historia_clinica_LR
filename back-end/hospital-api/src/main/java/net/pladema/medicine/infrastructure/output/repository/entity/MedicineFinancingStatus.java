@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -22,6 +22,7 @@ import java.io.Serializable;
 @EntityListeners(SGXAuditListener.class)
 @Table(name = "medicine_financing_status")
 @Entity
+@Where(clause = "deleted = false")
 public class MedicineFinancingStatus extends SGXAuditableEntity<Integer> {
 
 	@Id

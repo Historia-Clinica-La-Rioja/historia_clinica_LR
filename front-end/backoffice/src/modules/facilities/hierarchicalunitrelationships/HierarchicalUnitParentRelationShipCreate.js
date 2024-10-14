@@ -17,6 +17,7 @@ const HierarchicalUnitParentField = ({ record }) => {
             sort={{ field: 'alias', order: 'ASC' }}
             filter={{institutionId: hierarchicalUnitChild.data?.institutionId}}
             label="resources.hierarchicalunitrelationships.fields.hierarchicalUnitParentId"
+            perPage={100}
         >
             <AutocompleteInput optionText="alias" optionValue="id" />
         </ReferenceInput>

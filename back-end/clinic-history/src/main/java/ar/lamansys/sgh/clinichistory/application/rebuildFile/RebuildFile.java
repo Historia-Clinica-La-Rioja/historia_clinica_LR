@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.rebuildFile;
 
+import ar.lamansys.sgh.clinichistory.application.document.FetchSpecificDocument;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileEnumException;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileException;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileHistoryRepository;
@@ -11,27 +12,26 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.FetchAllDocumentInfo;
 import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
 import ar.lamansys.sgh.clinichistory.domain.document.event.OnGenerateDocumentEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class RebuildFile {
 
-    private final FetchAllDocumentInfo fetchAllDocumentInfo;
+    private final FetchSpecificDocument fetchSpecificDocument;
 	private final DocumentFileRepository documentFileRepository;
 	private final GenerateFilePort generateFilePort;
 	private final DocumentFileHistoryRepository documentFileHistoryRepository;
 
 	public void run(Long id) {
-        log.debug("FetchDocumentFile with id {}",id);
+        log.debug("FetchDocumentFile with id {}", id);
 		assertSignatureStatus(id);
-		fetchAllDocumentInfo.run(id)
+		fetchSpecificDocument.run(id)
 			.ifPresent(documentBo -> {
 				OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);
 				if(event.getDocumentBo().isConfirmed())

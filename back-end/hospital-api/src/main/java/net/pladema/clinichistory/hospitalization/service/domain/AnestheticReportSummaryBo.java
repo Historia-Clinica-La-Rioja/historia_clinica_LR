@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.AnestheticReportSummaryVo;
 
 @Getter
 @Setter
@@ -12,7 +11,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.summary.Anest
 @NoArgsConstructor
 public class AnestheticReportSummaryBo extends DocumentSummaryBo {
 
-    public AnestheticReportSummaryBo(AnestheticReportSummaryVo anestheticReportSummaryVo) {
-        super(anestheticReportSummaryVo.getId(), anestheticReportSummaryVo.getStatusId());
+    public AnestheticReportSummaryBo(Long id, String statusId) {
+        super(id, statusId);
     }
 }

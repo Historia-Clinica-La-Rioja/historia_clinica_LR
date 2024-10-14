@@ -74,8 +74,8 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				"AND apt.date_type_id BETWEEN :startDate AND :endDate ";
 
 		String sqlQuery = "SELECT " +
-				"hut.description as hierarchical_unit_type, " +
-				"hu.alias as hierarchical_unit, " +
+				"COALESCE(hut.description, '') as hierarchical_unit_type, " +
+				"COALESCE(hu.alias, '') as hierarchical_unit, " +
 				"cs.name AS clinicalSpecialty, " +
 				selectCommon +
 				"FROM {h-schema}institution i " +

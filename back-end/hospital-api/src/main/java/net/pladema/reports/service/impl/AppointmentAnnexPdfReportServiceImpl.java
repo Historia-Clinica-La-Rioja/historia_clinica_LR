@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
+import net.pladema.reports.domain.AnnexIIParametersBo;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
 import net.pladema.reports.service.domain.AppointmentAnnexPdfReportVo;
@@ -35,7 +36,7 @@ public class AppointmentAnnexPdfReportServiceImpl implements SharedAppointmentAn
 	public SharedAppointmentAnnexPdfReportResponse run(Integer appointmentId) {
 		log.debug("Input parameter -> appointmentId {}", appointmentId);
 		ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-		AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
+		AnnexIIBo reportDataBo = annexReportService.getAppointmentData(new AnnexIIParametersBo(appointmentId, null));
 		AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
 		reportDataDto.setRnos(reportDataBo.getRnos());
 		Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);

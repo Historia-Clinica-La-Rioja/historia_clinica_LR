@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "emergency_care_episode")
 @EntityListeners(SGXAuditListener.class)
@@ -102,5 +103,16 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 			this.emergencyCareStateId = EmergencyCareState.EN_ESPERA;
 		}
 	}
+
+	public String getMinimalInformationToLog() {
+        return "EmergencyCareEpisode{" + "id=" + id +
+                ", patientId=" + patientId +
+                ", emergencyCareTypeId=" + emergencyCareTypeId +
+                ", emergencyCareStateId=" + emergencyCareStateId +
+                ", emergencyCareEntranceTypeId=" + emergencyCareEntranceTypeId +
+                ", institutionId=" + institutionId +
+                '}';
+	}
+
 }
 

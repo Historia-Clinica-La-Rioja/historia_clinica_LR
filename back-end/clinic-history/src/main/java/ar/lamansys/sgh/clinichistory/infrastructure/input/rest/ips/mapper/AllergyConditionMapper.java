@@ -7,7 +7,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableI
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;

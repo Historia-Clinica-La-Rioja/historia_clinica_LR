@@ -31,7 +31,10 @@ public class RoomBo implements Serializable {
     }
 
 	public RoomBo(RoomVo room) {
+		this.id = room.getId();
 		this.description = room.getDescription();
+		this.type = room.getType();
+		this.roomNumber = room.getRoomNumber();
 	}
 
     public RoomBo(Integer id, SectorBo sector, String description) {

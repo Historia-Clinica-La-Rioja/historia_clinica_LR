@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { SelectedFilterOption } from '@presentation/components/filters/filters.component';
-import { SIGNATURE_STATUS_FILTER, SIGNATURE_STATUS_KEY } from '../../constants/joint-signature.constants';
+import { ElectronicJointSignatureInvolvedDocumentListFilterDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-joint-signature-documents',
@@ -8,13 +7,11 @@ import { SIGNATURE_STATUS_FILTER, SIGNATURE_STATUS_KEY } from '../../constants/j
 	styleUrls: ['./joint-signature-documents.component.scss']
 })
 export class JointSignatureDocumentsComponent {
-
-	selectedFilterOption: string;
-	filter = SIGNATURE_STATUS_FILTER;
+	selectedFilterOptions: ElectronicJointSignatureInvolvedDocumentListFilterDto = {};
 
 	constructor() { }
 
-	handleFilterChange(event: SelectedFilterOption[]): void {
-		this.selectedFilterOption = event.length ? event.find(filter => filter.key === SIGNATURE_STATUS_KEY).value : null;
+	setSelectedFilterOptions(filters) {
+		this.selectedFilterOptions = filters;
 	}
 }

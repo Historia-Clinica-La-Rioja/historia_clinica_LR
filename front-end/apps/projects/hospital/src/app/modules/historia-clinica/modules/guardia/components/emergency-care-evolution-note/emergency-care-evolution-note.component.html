@@ -1,26 +1,57 @@
+<div *ngIf="evolutionNoteSummary" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px"
+    class="evolution-note-container" data-id="evolution-note-summary">
 
-<app-titled-content *ngIf="especialidadContent?.length" icon="medical_services" title="Especialidad" [content]="especialidadContent"></app-titled-content>
+    <div *ngIf="(documentSummary$ | async) as headerDescription, else loader" class="summary-content" fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px">
+        <app-document-summary-header data-id="summary-header" [headerData]="headerDescription"
+            [isPopUpOpen]="isPopUpOpened" (editDocument)="editDocument()" (downloadDocument)="downloadDocument()"></app-document-summary-header>
+        <mat-divider></mat-divider>
 
-<app-titled-content *ngIf="motivosContent?.length" icon="sms_failed" title="Motivos de Consulta" [content]="motivosContent"></app-titled-content>
+        <ng-container *ngIf="_evolutionNote.content.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _evolutionNote.content.editedOn | viewDateDto: 'datetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
 
-<app-titled-content *ngIf="diagnosticosContent?.length" icon="report" title="Diagnósticos" [content]="diagnosticosContent"></app-titled-content>
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-specialty-summary data-id="specialty-summary" *ngIf="evolutionNoteSummary.specialty"
+                [specialty]="evolutionNoteSummary.specialty"></app-specialty-summary>
 
-<app-titled-single-content *ngIf="evolucionContent?.length" icon="chat" title="Evolución" [content]="evolucionContent"></app-titled-single-content>
+            <app-description-item-data-summary *ngIf="evolutionNoteSummary.reasons" data-id="reasons-summary"
+                [descriptionItemDataSummary]="evolutionNoteSummary.reasons"></app-description-item-data-summary>
 
-<app-titled-content *ngIf="antropometricosContent?.length" icon="accessibility" title="Datos antropométricos" [content]="antropometricosContent"></app-titled-content>
+            <app-diagnosis-evolution-summary data-id="diagnosis-summary"
+                *ngIf="evolutionNoteSummary.mainDiagnosis || evolutionNoteSummary.diagnosis"
+                [diagnosis]="evolutionNoteSummary.diagnosis"
+                [mainDiagnosis]="evolutionNoteSummary.mainDiagnosis"></app-diagnosis-evolution-summary>
 
-<app-titled-content *ngIf="antecedentesFamiliaresContent?.length" icon="report" title="Antencedentes familiares" [content]="antecedentesFamiliaresContent"></app-titled-content>
+            <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
+                [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
 
-<app-titled-content *ngIf="medicacionContent?.length" icon="event_available" title="Medicación habitual" [content]="medicacionContent"></app-titled-content>
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary"
+                *ngIf="evolutionNoteSummary.anthropometricData"
+                [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>
 
-<app-titled-content *ngIf="procedimientosContent?.length" icon="library_add" title="Procedimientos" [content]="procedimientosContent"></app-titled-content>
+            <app-referred-item-summary data-id="family-histories-summary" *ngIf="evolutionNoteSummary.familyHistories"
+                [referredItem]="evolutionNoteSummary.familyHistories"></app-referred-item-summary>
 
-<app-titled-content *ngIf="factoresContent?.length" icon="favorite_outlined" title="Signos vitales y factores de riesgo" [content]="factoresContent"></app-titled-content>
+            <app-description-item-data-summary data-id="usual-medication-summary" *ngIf="evolutionNoteSummary.medications"
+                [descriptionItemDataSummary]="evolutionNoteSummary.medications"></app-description-item-data-summary>
 
-<app-titled-content *ngIf="alergiasContent?.length" icon="cancel" title="Alergias" [content]="alergiasContent"></app-titled-content>
+            <app-description-item-data-summary data-id="procedures-summary" *ngIf="evolutionNoteSummary.procedures"
+                [descriptionItemDataSummary]="evolutionNoteSummary.procedures"></app-description-item-data-summary>
 
-<div *ngIf="!!registerEvolutionNoteEdition" fxLayout="row" fxLayoutGap="5px">
-    <span class="grey" [translate]="'guardia.EDITED'"></span>
-    <app-register-editor-info class="register-editor-width" [registerEditor]="registerEvolutionNoteEdition"
-        registerEditorCase="REGISTER_EDITOR_CASE"></app-register-editor-info>
+            <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+                *ngIf="evolutionNoteSummary.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="evolutionNoteSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+
+            <app-referred-item-summary data-id="allergies-summary" *ngIf="evolutionNoteSummary.allergies"
+                [referredItem]="evolutionNoteSummary.allergies"></app-referred-item-summary>
+        </div>
+
+    </div>
+
+    <ng-template #loader>
+        <mat-spinner color="primary" class="loader"></mat-spinner>
+    </ng-template>
 </div>

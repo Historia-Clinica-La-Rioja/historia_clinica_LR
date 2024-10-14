@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.pladema.snowstorm.services.loadCsv.exceptions.EUpdateSnomedConceptsException;
+import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
@@ -26,8 +27,8 @@ import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class UpdateSnomedConceptsSynonymsByCsv {
 
 	@Value("${snomed-cache-update.batch-size:1000}")
@@ -55,6 +56,7 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 		Integer snomedGroupId = getSnomedGroupId(eclKey, today);
 		List<SnomedConceptBo> conceptBatch = null;
 
+		log.debug("Total concepts to process -> {}", totalConcepts);
 		while (conceptsProcessed < totalConcepts) {
 			try {
 				conceptBatch = getNextBatch(batchSize, conceptsProcessed, totalConcepts, csvFile);
@@ -62,10 +64,11 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 				// if the batch size had decreased before due to an error, it will increase again
 				batchSize = Math.min(batchSize * BATCH_SIZE_MULTIPLIER, batchMaxSize);
 				log.debug("Concepts processed -> {}", conceptsProcessed);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// If the batch size is equal to 1, it means that that element is the one that can't be saved.
 				// So, it should be skipped to try to save the rest
 				if (batchSize.equals(1)) {
+					log.error("Capturing Throwable Update Snomed -> {}", e.getMessage());
 					saveError(e, conceptBatch.get(0), errorMessages);
 					conceptsProcessed += 1;
 					erroneousConcepts += 1;
@@ -87,8 +90,11 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 		return result;
 	}
 
-	private void saveError(Exception e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
-		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), e.getCause().getMessage());
+	private void saveError(Throwable e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
+		String particularError = e.getCause() != null
+				? e.getCause().getMessage()
+				: e.getMessage();
+		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), particularError);
 		errorMessages.add(message);
 		snomedCacheLogRepository.save(new SnomedCacheLog(message, dateTimeProvider.nowDateTime()));
 	}
@@ -125,6 +131,10 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 
 	private Integer saveConcepts(Integer conceptsProcessed, LocalDate today, Integer snomedGroupId, List<SnomedConceptBo> conceptBatch, Integer missingMainConcepts) {
 		List<Integer> conceptIds = sharedSnomedPort.addSnomedSynonyms(mapToDto(conceptBatch));
+		if (conceptIds.isEmpty()) {
+			throw new UpdateSnomedConceptsException(EUpdateSnomedConceptsException.NO_SYNONYMS_BATCH_WERE_CREATED,
+					"No se han creado nuevos sinónimos, ya que no se encuentran definidos en snomed.");
+		}
 		conceptsProcessed = associateConceptIdsWithSnomedGroup(snomedGroupId, conceptIds, conceptsProcessed, today);
 		missingMainConcepts = missingMainConcepts + (conceptBatch.size() - conceptsProcessed);
 		return conceptsProcessed;

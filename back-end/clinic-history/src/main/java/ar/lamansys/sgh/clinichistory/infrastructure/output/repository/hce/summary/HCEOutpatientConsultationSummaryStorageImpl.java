@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summary;
 
 import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompletedFormSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.DocumentDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.HealthConditionSummaryBo;
@@ -77,7 +78,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
     }
 
     @SuppressWarnings("unchecked")
-    @Override
+	@Transactional(readOnly = true)
+	@Override
     public List<HealthConditionSummaryBo> getHealthConditionsByPatient(Integer patientId, List<Integer> outpatientIds) {
         String sqlString ="SELECT hc.id, hc.patientId, "
                 +"  s.sctid, s.pt, "
@@ -128,7 +130,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
     }
 
     @SuppressWarnings("unchecked")
-    @Override
+	@Transactional(readOnly = true)
+	@Override
     public List<ReasonSummaryBo> getReasonsByPatient(Integer patientId, List<Integer> outpatientIds) {
         String sqlString = "SELECT r.id, r.description, oc.id"
                 +"  FROM OutpatientConsultation oc"
@@ -151,7 +154,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
     }
 
     @SuppressWarnings("unchecked")
-    @Override
+	@Transactional(readOnly = true)
+	@Override
     public List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> outpatientIds) {
         String sqlString = "SELECT p.id, s.id, s.sctid, s.pt, p.performedDate, oc.id"
                 +"  FROM OutpatientConsultation oc"
@@ -180,7 +184,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
         return result;
     }
 
-    @Override
+	@Transactional(readOnly = true)
+	@Override
     public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds) {
         String sqlString = "SELECT DISTINCT r.id, cl.description, rn.description, i.name,"
                 +"  r.deleteable.deleted AS cancelled"
@@ -210,4 +215,35 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
         queryResult.forEach(a -> result.add(mapReferenceSummary.processReferenceSummaryBo(a)));
         return result;
     }
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<CompletedFormSummaryBo> getCompletedFormsByPatient(Integer patientId, List<Integer> outpatientIds){
+		String sqlString = "SELECT cpf.id, cpf.parameterizedFormId, oc.id, pf.name"
+				+"  FROM OutpatientConsultation oc"
+				+"  JOIN Document d ON (d.sourceId = oc.id)"
+				+"  JOIN CompletedParameterizedForm cpf ON (d.id = cpf.documentId)"
+				+"  JOIN ParameterizedForm pf ON (pf.id = cpf.parameterizedFormId)"
+				+"  WHERE oc.patientId = :patientId"
+				+"  AND d.statusId = '" + DocumentStatus.FINAL + "'"
+				+"  AND d.typeId = "+ DocumentType.OUTPATIENT
+				+"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
+				+"  AND oc.id IN (:outpatientIds) ";
+
+		List<Object[]> queryResult = entityManager.createQuery(sqlString)
+				.setParameter("patientId", patientId)
+				.setParameter("outpatientIds", outpatientIds)
+				.getResultList();
+
+		List<CompletedFormSummaryBo> result = new ArrayList<>();
+
+		queryResult.forEach(a -> result.add(
+				new CompletedFormSummaryBo(
+					(Integer) a[0], (Integer) a[1], (Integer) a[2], (String) a[3]
+				)
+		));
+
+		return result;
+	}
+
 }

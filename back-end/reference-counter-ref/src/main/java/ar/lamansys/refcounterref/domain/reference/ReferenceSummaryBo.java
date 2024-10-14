@@ -1,7 +1,5 @@
 package ar.lamansys.refcounterref.domain.reference;
 
-import ar.lamansys.refcounterref.domain.InstitutionBo;
-
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import lombok.Getter;
 import lombok.Setter;

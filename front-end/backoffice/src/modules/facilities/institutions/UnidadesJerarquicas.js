@@ -68,6 +68,7 @@ const toHierarchicalUnitCustomNodes = (nodesDto, hierarchicalUnitTypes) => {
           Clasificación: hierarchicalUnitTypes.content.find(t => t.id === n.typeId).description,
           Usuarios: n.usersAmount,
           Responsables: n.responsable,
+          "Servicio inmediato superior": nodesDto.find(t => t.id === n.closestServiceId)?.alias, 
         }
       }
     }

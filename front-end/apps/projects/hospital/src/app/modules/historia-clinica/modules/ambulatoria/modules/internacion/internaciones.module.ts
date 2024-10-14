@@ -21,7 +21,6 @@ import { ExternalCauseComponent } from './components/external-cause/external-cau
 import { FormDynamicNewBornComponent } from './components/form-dynamic-new-born/form-dynamic-new-born.component';
 import { IntermentDocumentEpisodeComponent } from './components/interment-document-episode/interment-document-episode.component';
 import { InternmentPatientCardComponent } from './components/internment-patient-card/internment-patient-card.component';
-import { InternmentPatientTableComponent } from './components/internment-patient-table/internment-patient-table.component';
 import { ListConceptComponent } from './components/list-concept/list-concept.component';
 import { MedicacionComponent } from './components/medicacion/medicacion.component';
 import { MedicationComponent } from './components/medication/medication.component';
@@ -72,7 +71,6 @@ import { EditMeasuringPointComponent } from './dialogs/edit-measuring-point/edit
 		ExternalCauseComponent,
 		EventSerchComponent,
 		FormDynamicNewBornComponent,
-		InternmentPatientTableComponent,
 		InternmentPatientCardComponent,
 		InternmentEpisodeSummaryComponent,
 		MedicacionComponent,
@@ -106,7 +104,6 @@ import { EditMeasuringPointComponent } from './dialogs/edit-measuring-point/edit
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,
-		InternmentPatientTableComponent,
 		InternmentPatientCardComponent,
 	],
 	imports: [

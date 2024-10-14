@@ -42,7 +42,7 @@ const MoveStudiesList = props => {
                 <TextField source="identificationNumber" />
                 <TextField source="firstName" />
                 <TextField source="lastName" />
-                <DateField source="appoinmentDate" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit'}}/>
+                <DateField source="appoinmentDate"/>
                 <TextField source="appoinmentTime" type="time"/>
                 <TextField source="imageId" />
                 <SelectField source="status" choices={[

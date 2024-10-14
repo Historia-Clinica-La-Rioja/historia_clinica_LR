@@ -3,7 +3,7 @@
 	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="25%">
 
 		<app-identifier-cases [identifierCase]="identiferCases.DATE"
-			[description]="availableAppointment.date | date: 'fullDate'">
+			[description]="availableAppointment.date | dateFormat: 'fulldate'">
 		</app-identifier-cases>
 
 		<app-identifier-cases [identifierCase]="identiferCases.HOUR"

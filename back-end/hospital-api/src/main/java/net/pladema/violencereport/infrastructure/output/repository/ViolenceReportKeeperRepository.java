@@ -13,10 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ViolenceReportKeeperRepository extends JpaRepository<ViolenceReportKeeper, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceReportActorBo(vrk.lastName, vrk.firstName, vrk.age, vrk.address, d.provinceId, d.id, d.description, " +
-			"vrk.relationshipWithVictimId, vrk.otherRelationshipWithVictim) " +
+	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceReportActorBo(vrk.lastName, vrk.firstName, vrk.age, vrk.address, " +
+			"d.provinceId, d.id, d.description, c.id, c.description, vrk.relationshipWithVictimId, vrk.otherRelationshipWithVictim) " +
 			"FROM ViolenceReportKeeper vrk " +
 			"LEFT JOIN Department d ON (d.id = vrk.municipalityId) " +
+			"LEFT JOIN City c ON (c.id = vrk.cityId) " +
 			"WHERE vrk.reportId = :reportId")
 	ViolenceReportActorBo getKeeperByReportId(@Param("reportId") Integer reportId);
 

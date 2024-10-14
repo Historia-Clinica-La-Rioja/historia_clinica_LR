@@ -15,7 +15,7 @@
 					</button>
 				</div>
 				<em *ngIf="vaccine?.administrationDate" class="mat-caption gray-caption">
-					{{ vaccine.administrationDate | date: 'shortDate'}}
+					{{ vaccine.administrationDate | isoToDate | dateFormat: 'date'}}
 				</em>
 				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 			</div>

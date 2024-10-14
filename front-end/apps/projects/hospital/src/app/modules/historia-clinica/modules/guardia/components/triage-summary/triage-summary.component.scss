@@ -1,0 +1,27 @@
+.triage-container {
+    overflow-y: auto; 
+	overflow-x: hidden; 
+	height: 95%;
+	font-size: 16px;
+}
+
+.summary-content {
+    margin: 0 24px;
+}
+
+.loader {
+    margin: auto;
+}
+
+.edited-summary {
+    padding: 10px 0;
+}
+
+.text-container {
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.section-description {
+	margin-left: 40px;
+}

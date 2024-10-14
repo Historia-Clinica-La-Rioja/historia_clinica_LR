@@ -2,10 +2,10 @@
     <div fxFlex fxLayout.gt-xs="row wrap" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="5px">
         <div fxFlex fxLayout="column" fxLayoutGap="5px">
             <app-identifier-cases *ngIf="appointment.dateTime.date" [identifierCase]="identiferCases.DATE"
-                description="{{ appointment.dateTime.date | viewDateDto: 'date' | date: 'fullDate' | titlecase }}" data-id="appoinmentDate">
+                description="{{ appointment.dateTime.date | viewDateDto: 'date' | dateFormat: 'fulldate' | titlecase }}" data-id="appoinmentDate">
             </app-identifier-cases>
             <app-identifier-cases *ngIf="appointment.dateTime.time" [identifierCase]="identiferCases.HOUR"
-                description="{{ appointment.dateTime.time | viewDateDto: 'time' | date: 'HH:mm' }} hs" data-id="appoinmentTime">
+                description="{{ appointment.dateTime.time | viewDateDto: 'time' | dateFormat: 'time' }}" data-id="appoinmentTime">
             </app-identifier-cases>
         </div>
     

@@ -61,9 +61,18 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "observations", columnDefinition = "TEXT")
 	private String observations;
-	
+
 	@Column(name = "uuid")
 	private UUID uuid;
+
+	@Column(name = "study_type_id")
+	private Short studyType;
+
+	@Column(name = "requires_transfer")
+	private Boolean requiresTransfer;
+
+	@Column(name = "deferred_date")
+	private LocalDateTime deferredDate;
 
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,

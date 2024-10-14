@@ -76,7 +76,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
                 })
 				.orElse(null);
 
-		log.debug(OUTPUT, result);
+		log.debug("Output -> appointmentId {}, exist {}", appointmentId, result != null);
 		return Optional.ofNullable(result);
 	}
 

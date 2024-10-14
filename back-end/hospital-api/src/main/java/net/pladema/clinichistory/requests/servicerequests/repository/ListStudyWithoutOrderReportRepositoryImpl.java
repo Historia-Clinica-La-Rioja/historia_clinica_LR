@@ -23,7 +23,7 @@ public class ListStudyWithoutOrderReportRepositoryImpl implements ListStudyWitho
     public List<Object[]> execute(Integer patientId) {
         LOG.debug("Input parameters -> patientId {}", patientId);
 
-        String sqlString = "SELECT aoi.completed, aoi.image_id, aoi.document_id, df.file_name, d.status_id \n" +
+        String sqlString = "SELECT aoi.completed, aoi.image_id, aoi.document_id, df.file_name, d.status_id, aoi.appointment_id \n" +
 				"FROM  {h-schema}appointment a\n" +
 				"JOIN  {h-schema}appointment_order_image aoi on aoi.appointment_id = a.id\n" +
 				"LEFT JOIN {h-schema}document_file df  ON df.id = aoi.document_id\n" +

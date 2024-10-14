@@ -1,10 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="end">
-    <button id="close-modal" mat-button mat-icon-button aria-label="close" mat-dialog-close>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<h1 mat-dialog-title> {{dialogTitle | translate}} </h1>
+    <button id="close-modal"  mat-icon-button aria-label="close" mat-dialog-close>
         <mat-icon>close</mat-icon>
     </button>
 </div>
 <div mat-dialog-content>
-    <h1 translate="guardia.dialog.attention_place.TITLE"></h1>
     <h4 translate="guardia.dialog.attention_place.SUBTITLE"></h4>
     <form [formGroup]="form">
         <mat-form-field appearance="outline">
@@ -19,6 +19,7 @@
             id="doctors-office"
             [titleInput]="'guardia.dialog.attention_place.office.SELECT_OFFICE' | translate"
             [options]="officesTypeaheadOptions$ | async"
+			[externalSetValue]="preselectedOffice"
             (selectionChange)="setOffice($event)"
             [required]="true">
         </app-typeahead>
@@ -27,13 +28,15 @@
             id="shockroom"
             [titleInput]="'guardia.dialog.attention_place.shockroom.SELECT_SHOCKROOM' | translate"
             [options]="shockroomsTypeaheadOptions$ | async"
+			[externalSetValue]="preselectedShockroom"
             (selectionChange)="setShockroom($event)"
             [required]="true">
         </app-typeahead>
     </form>
 </div>
 <mat-dialog-actions align="end">
-    <button id="{{currentButton.id}}" mat-flat-button color="primary" (click)="attend()" [disabled]="this.form.invalid">
+    <button id="{{currentButton.id}}" mat-flat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">
         <span translate="{{currentButton.text}}"></span>
     </button>
 </mat-dialog-actions>
+

@@ -98,17 +98,17 @@ export class VerResultadosEstudioComponent implements OnInit {
 
 	private mapRegisterEditor(doctor: DoctorInfoDto, creationDate: Date): RegisterEditor {
 		return {
-			createdBy: this.getFullName(doctor.firstName, doctor.nameSelfDetermination),
+			createdBy: this.getFullName(doctor),
 			date: creationDate
 		}
 	}
 
-	private getFullName(firstName: string, nameSelfDetermination: string): string {
-		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
+	private getFullName(doctor: DoctorInfoDto): string {
+		return `${this.patientNameService.completeName(doctor.firstName, doctor.nameSelfDetermination, doctor.lastName)}`;
 	}
 
 	private setValues() {
-		this.study = this.prescriptionItemDataBuilder(this.data.diagnosticReport);
+		this.study = this.prescriptionItemDataBuilder(this.diagnosticReport);
 		this.order = this.data.order;
 		this.status = this.data.status;
 		this.patientId = this.data.patientId;
@@ -119,7 +119,8 @@ export class VerResultadosEstudioComponent implements OnInit {
 			prescriptionStatus: this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId),
 			prescriptionPt: diagnosticReport.snomed.pt,
 			problemPt: diagnosticReport.healthCondition.snomed.pt,
-			registerEditor: this.mapRegisterEditor(diagnosticReport.doctor, this.data.creationDate)
+			registerEditor: this.mapRegisterEditor(diagnosticReport.doctor, this.data.creationDate),
+            observations: diagnosticReport.observationsFromServiceRequest,
 		};
 	}
 }

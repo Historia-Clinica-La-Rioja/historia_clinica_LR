@@ -37,4 +37,6 @@ public class HCEEvolutionSummaryDto {
 
 	private ElectronicJointSignatureProfessionalsDto electronicJointSignatureProfessionals;
 
+	private List<CompletedFormSummaryDto> completedForms;
+
 }

@@ -26,6 +26,13 @@
 		<span *ngIf="triage.reasons.length else noInfo">{{ triage.reasons | stringSeparator }}</span>
 	</section>
 
+	<div *ngIf="triage.clinicalSpecialtySector.id">
+		<section id="specialty-sector" fxLayout="column" fxLayoutGap="5px">
+			<span class="title-weight">{{'guardia.triage.SPECIALTY_SECTOR' | translate }}</span>
+			<span>{{ triage.clinicalSpecialtySector.description }}</span>
+		</section>
+	</div>
+
 	<section
 		*ngIf="emergencyCareType && ( emergencyCareType === emergencyCareTypes.PEDIATRIA || (showRiskFactors && riskFactors?.length))"
 		id="body" fxLayout="column" fxLayoutGap="16px">

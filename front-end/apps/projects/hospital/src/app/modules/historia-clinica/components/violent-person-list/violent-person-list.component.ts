@@ -78,13 +78,20 @@ export class ViolentPersonListComponent implements OnDestroy {
 							actorPersonalData: {
 								firstName: agr.aggressorData.actorPersonalData.firstName,
 								lastName: agr.aggressorData.actorPersonalData.lastName,
-								address: agr.aggressorData.actorPersonalData.address,
 								age: agr.aggressorData.actorPersonalData.age,
-								municipality: {
-									id: agr.aggressorData.actorPersonalData.municipality.id,
-									provinceId: agr.aggressorData.actorPersonalData.municipality.provinceId,
-									description: agr.aggressorData.actorPersonalData.municipality.description
-								},
+								address:{
+									municipality: {
+										id: agr.aggressorData.actorPersonalData.address.municipality.id,
+										provinceId: agr.aggressorData.actorPersonalData.address.municipality.provinceId,
+										description: agr.aggressorData.actorPersonalData.address.municipality.description
+									},
+									city:{
+										id: agr.aggressorData.actorPersonalData.address.city.id,
+										description: agr.aggressorData.actorPersonalData.address.city.description,
+									},
+									homeAddress: agr.aggressorData.actorPersonalData.address.homeAddress,
+								}
+						
 							},
 							relationshipWithVictim: agr.aggressorData.relationshipWithVictim,
 							otherRelationshipWithVictim: agr.aggressorData.otherRelationshipWithVictim,
@@ -100,7 +107,8 @@ export class ViolentPersonListComponent implements OnDestroy {
 							securityForceTypes: agr.securityForceRelatedData.securityForceTypes,
 						  },
 						violenceViolenceFrequency: agr.violenceViolenceFrequency,
-						descriptionMunicipality: agr.aggressorData.actorPersonalData.municipality.description,
+						descriptionMunicipality: agr.aggressorData.actorPersonalData.address.municipality.description ? agr.aggressorData.actorPersonalData.address.municipality.description : FormOption.WITHOUT_DATA,
+						descriptionLocality: agr.aggressorData.actorPersonalData.address.city.description ? agr.aggressorData.actorPersonalData.address.city.description: FormOption.WITHOUT_DATA,
 					}
 				)
 			}

@@ -1,25 +1,26 @@
-<div class="align-end">
-	<button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+<div class="dialog-header">
+    <h2 class="capitalize-first-letter" mat-dialog-title>{{ data.title | translate }}</h2>
+	<button id="cancel_button" name="cancel_button" mat-icon-button mat-dialog-close>
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
-<div class="main-container">
+<mat-dialog-content class="main-container">
 	<div class="icon-container">
 		<div *ngIf="data.iconCircle; else plainIcon" class="{{data.iconColor}} {{ data.iconCircle ? 'icon-border' : '' }}">	
-			<mat-icon [inline]="true" class="material-icons-outlined smaller-icon {{data.iconColor}}" >{{data.icon}}</mat-icon>
+			<mat-icon class="material-icons-outlined smaller-icon {{data.iconColor}}" >{{data.icon}}</mat-icon>
 		</div>
 		<ng-template #plainIcon>
-			<mat-icon [inline]="true" class="material-icons-outlined icon {{data.iconColor}}" >{{data.icon}}</mat-icon>
+			<mat-icon class="material-icons-outlined icon {{data.iconColor}}" >{{data.icon}}</mat-icon>
 		</ng-template>
 	</div>
-	<h2>
-		<span> {{data.popUpMessageTranslate | translate}}</span>
-		<span *ngIf="data.popUpMessage">{{data.popUpMessage}}</span>
-	</h2>
-</div>
+	<div class="content-text">
+		<span class="content-title"> {{data.popUpMessageTranslate | translate}}</span>
+		<span class="content-subtitle" *ngIf="data.popUpMessage">{{data.popUpMessage}}</span>
+	</div>
+</mat-dialog-content>
 
-<div *ngIf="data.acceptBtn" fxLayout="row" fxLayoutAlign="center center">
-	<button mat-flat-button color="primary" (click)="closeDialog()">
+<mat-dialog-actions *ngIf="data.acceptBtn" fxLayout="row" fxLayoutAlign="center center">
+	<button mat-flat-button color="primary" mat-dialog-close>
 		<span class="uppercase" [translate]="'buttons.ACCEPT'"></span>
 	</button>
-</div>
+</mat-dialog-actions>

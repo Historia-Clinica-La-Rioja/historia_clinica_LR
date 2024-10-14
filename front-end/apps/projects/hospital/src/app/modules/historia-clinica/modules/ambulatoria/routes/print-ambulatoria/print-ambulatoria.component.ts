@@ -16,7 +16,7 @@ import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, Doc
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat, fromStringToDate } from '@core/utils/date.utils';
+import { fromStringToDate } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,7 +34,6 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 })
 export class PrintAmbulatoriaComponent implements OnInit {
 
-	datePipeFormat = DatePipeFormat;
 	nowDate: string;
 	userLastDownload: string;
 	dateLastDownload: Date;
@@ -63,6 +62,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	documentTypeForm: FormGroup;
 	documentTypes = DocumentTypes;
+    filteredDocumentTypes = DocumentTypes;
 	allChecked = true;
 	showDocuments = true;
 
@@ -103,6 +103,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).pipe(take(1)).subscribe(isOn => {
+			if (!isOn) {
+				this.documentTypes = this.documentTypes.filter(e => e.value !== ECHDocumentType.ANESTHETIC_REPORTS);
+                this.filteredDocumentTypes = this.documentTypes;
+			}
+		});
 	}
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -123,9 +130,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		const documentTypeControls = {};
 		documentTypeControls["all"] = this.formBuilder.control(true);
-		this.documentTypes.forEach(documentType => {
-			documentTypeControls[documentType.value] = this.formBuilder.control(true);
-		});
+
+        this.documentTypes.forEach(documentType => {
+            documentTypeControls[documentType.value] = this.formBuilder.control(true);
+        });
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
 	}
@@ -173,7 +181,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	encounterCheckedChange(): void {
 		this.documentTypes = [];
 		if (!this.atLeastOneChecked(this.encounterTypeForm)) {
-			this.documentTypes = DocumentTypes;
+			this.documentTypes = this.filteredDocumentTypes;
 			this.showDocuments = true;
 		}
 		else

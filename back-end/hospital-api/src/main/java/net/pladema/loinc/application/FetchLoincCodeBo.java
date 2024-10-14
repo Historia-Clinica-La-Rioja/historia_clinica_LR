@@ -2,9 +2,6 @@ package net.pladema.loinc.application;
 
 import lombok.Value;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-
 @Value
 public class FetchLoincCodeBo {
 	private Integer id;

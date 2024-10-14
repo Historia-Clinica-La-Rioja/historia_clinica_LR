@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProfessionalLicenseService } from "@api-rest/services/professional-license.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
@@ -15,21 +15,19 @@ import {
 	AppFeature,
 	ERole,
 	HierarchicalUnitDto,
-	HierarchicalUnitTypeDto, ImageNetworkProductivityFilterDto, LicenseNumberTypeDto,
+	HierarchicalUnitTypeDto,
+	LicenseNumberTypeDto,
 	ProfessionalLicenseNumberDto, ProfessionalRegistrationNumbersDto,
 	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { ReportsService } from '@api-rest/services/reports.service';
 
 import { REPORT_TYPES, REPORT_TYPES_ID } from '../../constants/report-types';
-import { UIComponentDto } from '@extensions/extensions-model';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.service";
 import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
 import { APPOINTMENT_STATES_DESCRIPTION, APPOINTMENT_STATES_ID, AppointmentState } from "@turnos/constants/appointment";
-import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { fixDate } from '@core/utils/date/format';
 import { isBefore, subMonths } from 'date-fns';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
@@ -40,7 +38,8 @@ import { DateRange } from '@presentation/components/date-range-picker/date-range
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+	@Input() isLoadingRequestReport = false;
+	@Output() generate: EventEmitter<any> = new EventEmitter<any>();
 	form: FormGroup<ReportForm>;
 	public submitted = false;
 
@@ -66,20 +65,19 @@ export class HomeComponent implements OnInit {
 	minEndDate: Date;
 	maxFixedEndDate: Date;
 	oneWeekRange = 7;
-
-	cubeReportData: UIComponentDto;
+	isFixedOneMonth = false;
 
 	hasToShowHierarchicalUnitSection = false;
 	hasToShowAppointmentStateFilter = false;
 	hasDateRangeFilterWithFixedEndDate = false;
-	isLoadingRequestReport = false;
+
 	private nameSelfDeterminationFF = false;
 	private licensesTypeMasterData: LicenseNumberTypeDto[];
 
 	constructor(
 		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
-		private readonly reportsService: ReportsService,
+		// private readonly reportsService: ReportsService,
 		private readonly permissionsService: PermissionsService,
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
 		private readonly hierarchicalUnitTypeService: HierarchicalUnitTypeService,
@@ -139,6 +137,7 @@ export class HomeComponent implements OnInit {
 				this.hasToShowHierarchicalUnitSection = this.showHierarchicalUnitSection(reportType);
 				this.hasToShowAppointmentStateFilter = this.showAppointmentStateFilter(reportType);
 				this.hasDateRangeFilterWithFixedEndDate = this.showDateRangeFilterWithFixedEndDate(reportType);
+				this.setMaxFixedEndDate(reportType);
 			});
 	}
 
@@ -158,7 +157,7 @@ export class HomeComponent implements OnInit {
 
 	private showDateRangeFilterWithFixedEndDate(reportType: number): boolean {
 		return (reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
-			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
+			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT || reportType === REPORT_TYPES_ID.MONTHLY);
 	}
 
 	private firstDayOfThisMonth(): Date {
@@ -171,14 +170,24 @@ export class HomeComponent implements OnInit {
 		return new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0);
 	}
 
-	private setMaxFixedEndDate() {
+	private setMaxFixedEndDate(reportType? : REPORT_TYPES_ID) {
+		this.isFixedOneMonth = false;
 		this.maxFixedEndDate = newDate();
-		this.maxFixedEndDate = datePlusDays(newDate(), this.oneWeekRange);
+		if(reportType === REPORT_TYPES_ID.MONTHLY){
+			this.isFixedOneMonth = true;
+			this.maxFixedEndDate = null;
+		}else{
+			this.maxFixedEndDate = datePlusDays(newDate(), this.oneWeekRange);
+		}
 	}
 
 	getInitialDateRange(): DateRange {
 		const today = newDate();
-		return {start: today, end: this.maxFixedEndDate};
+		if(this.isFixedOneMonth){
+			return {start: this.firstDayOfThisMonth(), end: this.lastDayOfThisMonth()}
+		}else{
+			return {start: today, end: this.maxFixedEndDate};
+		}
 	}
 
 	onDateRangeChange(dateRange: DateRange) {
@@ -338,48 +347,19 @@ export class HomeComponent implements OnInit {
 	generateReport() {
 		this.submitted = true;
 		if (this.form.valid) {
-			this.isLoadingRequestReport = true;
 			const reportFilters = this.getReportFilters();
 			const reportId = this.form.value.reportType;
 			const reportDescription = this.REPORT_TYPES.find(reportType => reportType.id === reportId).description;
 
-			const getReportById = {
-				[REPORT_TYPES_ID.MONTHLY]: this.reportsService.getMonthlyReport(reportFilters, `${reportDescription}.xls`),
-				[REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT]: this.reportsService.getOutpatientSummaryReport(reportFilters, `${reportDescription}.xls`),
-				[REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS]:
-					this.reportsService.getMonthlySummaryOfExternalClinicAppointmentsReport(reportFilters, `${reportDescription}.xls`),
-				[REPORT_TYPES_ID.DIABETIC_PATIENTS]: this.reportsService.getDiabetesReport(),
-				[REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS]: this.reportsService.getHypertensionReport(),
-				[REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT]: this.reportsService.getEpidemiologicalWeekReport(),
-				[REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL]:
-					this.reportsService.getNominalAppointmentsDetail(reportFilters, `${reportDescription}.xls`),
-				[REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING]:
-					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${reportDescription}.xls`),
-				[REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT]: this.reportsService.getNominalEmergencyCareEpisodeDetail(reportFilters, `${reportDescription}.xls`)
-			};
-
-			const selectedReport = getReportById[reportId];
-			if (selectedReport) {
-				selectedReport.subscribe(() => this.isLoadingRequestReport = false);
-			}
+			this.generate.emit({reportId, reportDescription, reportFilters});
 		}
 	}
 
 
 	resetCubeReport() {
-		this.cubeReportData = null;
 		this.resetForm();
 		if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
 			this.setDatesForNominalDiagnosticImaging();
-		}
-	}
-
-	prepareImageNetworkProductivityFilterDto(): ImageNetworkProductivityFilterDto {
-		return {
-			clinicalSpecialtyId: this.form.controls.specialtyId.value,
-			from: dateToDateDto(fixDate(this.form.value.startDate)),
-			healthcareProfessionalId: this.form.controls.professionalId.value,
-			to: dateToDateDto(fixDate(this.form.value.endDate)),
 		}
 	}
 

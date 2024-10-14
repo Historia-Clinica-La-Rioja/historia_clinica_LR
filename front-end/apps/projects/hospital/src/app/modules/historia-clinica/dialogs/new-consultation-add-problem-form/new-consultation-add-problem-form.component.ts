@@ -47,9 +47,8 @@ export class NewConsultationAddProblemFormComponent implements OnInit {
         this.dialogRef.close(this.data.ambulatoryConsultationProblemsService.getProblemas());
     }
 
-    close(): void {
+    resetForm(): void {
         this.data.ambulatoryConsultationProblemsService.resetForm();
-        this.dialogRef.close()
     }
 }
 

@@ -7,8 +7,8 @@ import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 import { AnthropometricDataKey } from '@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
 import { getValuesOfEnum } from '@core/utils/core.utils';
-import { BoxMessageInformation } from '../box-message/box-message.component';
 import { TranslateService } from '@ngx-translate/core';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 @Component({
 	selector: 'app-patient-evolution-charts',

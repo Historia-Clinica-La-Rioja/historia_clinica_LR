@@ -2,7 +2,6 @@ package ar.lamansys.refcounterref.domain.report;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
-import ar.lamansys.refcounterref.domain.enums.EReferenceForwardingType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;

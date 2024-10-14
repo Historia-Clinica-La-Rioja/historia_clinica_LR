@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ar.lamansys.sgh.publicapi.TestUtils;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.user.dto.FetchUserPersonFromTokenDto;
+import ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.dto.FetchUserPersonFromTokenDto;
 import ar.lamansys.sgh.publicapi.userinformation.application.fetchuserpersonfromtoken.FetchUserPersonFromToken;
 import ar.lamansys.sgh.publicapi.userinformation.application.fetchuserpersonfromtoken.exception.UserInformationAccessDeniedException;
 import ar.lamansys.sgh.publicapi.userinformation.application.fetchuserpersonfromtoken.exception.UserNotExistsException;

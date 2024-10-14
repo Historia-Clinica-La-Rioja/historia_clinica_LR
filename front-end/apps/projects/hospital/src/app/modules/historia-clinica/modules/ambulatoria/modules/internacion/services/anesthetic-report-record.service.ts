@@ -24,6 +24,8 @@ export class AnestheticReportRecordService {
 
 	private isEmptySource = new BehaviorSubject<boolean>(true);
 	isEmpty$ = this.isEmptySource.asObservable();
+    private isEmptyRecordSource = new BehaviorSubject<boolean>(true);
+	isEmptyRecord$ = this.isEmptyRecordSource.asObservable();
 
     constructor(
         private readonly snomedService: SnomedService,
@@ -44,6 +46,7 @@ export class AnestheticReportRecordService {
         this.recordList = pushIfNotExists<any>(this.recordList, record, this.compareRecord);
         this.dataEmitter.next(this.recordList);
 		this.isEmptySource.next(this.isEmpty());
+		this.isEmptyRecordSource.next(this.hasRecords());
         return currentItems === this.recordList.length;
     }
 
@@ -82,6 +85,7 @@ export class AnestheticReportRecordService {
 		this.recordList = removeFrom<SnomedDto>(this.recordList, index);
 		this.dataEmitter.next(this.recordList);
 		this.isEmptySource.next(this.isEmpty());
+		this.isEmptyRecordSource.next(this.hasRecords());
 	}
 
     getRecord(): Observable<SnomedDto[]> {
@@ -125,13 +129,16 @@ export class AnestheticReportRecordService {
     }
 
     isEmpty(): boolean {
-        return !(!!this.recordList.length)
+        return !(!!this.recordList.length || !!this.personalRecordForm.value.asa || !!this.personalRecordForm.value.observations)
+    }
+
+    hasRecords(): boolean {
+        return !(!!this.recordList.length);
     }
 
 	setData(records: HealthConditionDto[], procedures: ProcedureDescriptionDto) {
         this.recordList = records.map(record => record.snomed);
         this.dataEmitter.next(this.recordList);
-        this.isEmptySource.next(this.isEmpty());
 
 		if (procedures) {
 			if (procedures.note) {
@@ -141,6 +148,9 @@ export class AnestheticReportRecordService {
 				this.personalRecordForm.get('asa').setValue(procedures.asa);
 			}
 		}
+
+        this.isEmptySource.next(this.isEmpty());
+		this.isEmptyRecordSource.next(this.hasRecords());
     }
 }
 

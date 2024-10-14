@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PresentationModule } from '@presentation/presentation.module';
 
 export interface ConceptsList {
@@ -21,20 +21,32 @@ export interface ConceptsList {
 	standalone: true,
 	imports: [PresentationModule]
 })
-export class ConceptsListComponent {
+export class ConceptsListComponent implements OnInit {
 
 	@Input() content: ConceptsList;
 	@Input() hasConcepts: boolean;
+	@Input() initialCheckboxState?: boolean;
 	@Output() openEmit = new EventEmitter<{ addPressed: boolean, checkboxSelected: boolean }>();
 
 	checkboxOn: boolean = false;
 
 	toggleCheckbox = () => {
 		this.checkboxOn = !this.checkboxOn;
-		this.openEmit.emit({ addPressed: false, checkboxSelected: this.checkboxOn });
+		this.setOpenEmit(false, this.checkboxOn);
 	}
 
 	open = () => {
-		this.openEmit.emit({ addPressed: true, checkboxSelected: false });
+		this.setOpenEmit(true, false);
+	}
+
+	ngOnInit() {
+		if (this.initialCheckboxState) {
+			this.checkboxOn = this.initialCheckboxState;
+			this.setOpenEmit(false, this.checkboxOn);
+		}
+	}
+
+	private setOpenEmit(addPressed: boolean, checkboxSelected: boolean) {
+		this.openEmit.emit({ addPressed: addPressed, checkboxSelected: checkboxSelected });
 	}
 }

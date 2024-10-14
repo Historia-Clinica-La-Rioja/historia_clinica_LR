@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HCEPersonalHistoryDto } from '@api-rest/api-model';
-import { DateFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
+import { fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { PersonalHistoryViewDetailsComponent } from '@historia-clinica/modules/ambulatoria/dialogs/personal-history-view-details/personal-history-view-details.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
-import { format } from 'date-fns';
 
 @Component({
     selector: 'app-personal-histories-summary',
@@ -18,8 +17,7 @@ export class PersonalHistoriesSummaryComponent {
     }
     @Input() personalHistoriesHeader: SummaryHeader;
     personalHistories_: PersonalHistoryData[];
-    format = format;
-    DateFormat = DateFormat
+    
     
     constructor(
 		private readonly dialog: MatDialog) { }

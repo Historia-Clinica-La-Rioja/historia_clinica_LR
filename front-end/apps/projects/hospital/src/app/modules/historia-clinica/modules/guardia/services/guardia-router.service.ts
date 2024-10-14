@@ -23,6 +23,10 @@ export class GuardiaRouterService {
 		});
 	}
 
+	goToEmergencyCareDashboard(){
+		const url = 'institucion/' + this.contextService.institutionId + '/guardia';
+		this.router.navigateByUrl(url);
+	}
 
 	goToEpisode(episodeId: number, patient: { typeId: number, id: number }) {
 		const routePrefix = 'institucion/' + this.contextService.institutionId;

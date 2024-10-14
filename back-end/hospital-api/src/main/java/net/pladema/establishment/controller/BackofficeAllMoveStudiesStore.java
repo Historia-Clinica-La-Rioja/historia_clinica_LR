@@ -3,9 +3,7 @@ package net.pladema.establishment.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.imagenetwork.derivedstudies.repository.AllMoveStudiesViewRepository;
-import net.pladema.imagenetwork.derivedstudies.repository.MoveStudiesRepository;
 import net.pladema.imagenetwork.derivedstudies.repository.entity.AllMoveStudiesView;
-import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 import org.springframework.data.domain.Example;

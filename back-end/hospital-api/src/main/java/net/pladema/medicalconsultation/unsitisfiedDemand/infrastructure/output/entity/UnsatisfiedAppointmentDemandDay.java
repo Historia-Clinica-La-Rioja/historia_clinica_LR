@@ -6,10 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.medicalconsultation.unsitisfiedDemand.infrastructure.output.entity.embedded.UnsatisfiedAppointmentDemandDayPK;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.io.Serializable;

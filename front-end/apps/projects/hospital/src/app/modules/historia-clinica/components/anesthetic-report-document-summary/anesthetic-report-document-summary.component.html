@@ -1,16 +1,24 @@
 <div class="anesthesic-report-content">
-    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" class="summary-content" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
         fxLayoutGap="20px">
 
         <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
-            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+            [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
         <mat-divider></mat-divider>
 
+        <ng-container *ngIf="_activeDocument?.document?.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _activeDocument.document?.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
+
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
-            <app-diagnosis-summary data-id="diagnosis-summary"
+            <app-diagnosis-evolution-summary data-id="diagnosis-summary"
                 *ngIf="summary.anestheticReport.mainDiagnosis || summary.anestheticReport.diagnosis"
                 [diagnosis]="summary.anestheticReport.diagnosis"
-                [mainDiagnosis]="summary.anestheticReport.mainDiagnosis"></app-diagnosis-summary>
+                [mainDiagnosis]="summary.anestheticReport.mainDiagnosis"></app-diagnosis-evolution-summary>
 
             <app-description-item-data-summary *ngIf="summary.anestheticReport.proposedSurgeries"
                 data-id="proposed-surgery-summary"
@@ -76,18 +84,13 @@
 
             <app-end-of-anesthesia-status-summary data-id="end-of-anesthesia-status-summary"
                 [endOfAnesthesiaStatus]="summary.anestheticReport.endOfAnesthesiaStatus"></app-end-of-anesthesia-status-summary>
-				<div class="additional-sections">
-					<button *ngIf="isDraft" id="edit-anesthetic-part-button" class="draft-button" type="button" mat-flat-button
-						color="primary" (click)="openEditDraft()">
-						<span [translate]="'internaciones.anesthesic-report.CONTINUE_DRAFT'"></span>
-					</button>
-					<section *ngIf="isDraft && _activeDocument.document.editedOn" class="edited-section">
-						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
-							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
-							<span>{{ _activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
-						</div>
-					</section>
-				</div>
+
+            <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+                <button *ngIf="isDraft" id="edit-anesthetic-part-button" class="draft-button" type="button" mat-flat-button
+                    color="primary" (click)="openEditDraft()">
+                    <span [translate]="'internaciones.anesthesic-report.CONTINUE_DRAFT'"></span>
+                </button>
+            </ng-container>
         </div>
     </div>
     <ng-template #loader>

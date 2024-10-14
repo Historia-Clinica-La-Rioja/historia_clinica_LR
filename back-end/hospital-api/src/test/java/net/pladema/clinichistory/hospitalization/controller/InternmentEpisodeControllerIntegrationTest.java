@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
+import net.pladema.clinichistory.hospitalization.application.createinternmentepisode.CreateInternmentEpisode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,18 +28,15 @@ import net.pladema.clinichistory.hospitalization.application.getDocumentType.Fet
 import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.FetchEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentEpisodeMapper;
 import net.pladema.clinichistory.hospitalization.controller.mapper.PatientDischargeMapper;
-import net.pladema.clinichistory.hospitalization.controller.mapper.ResponsibleContactMapper;
 import net.pladema.clinichistory.hospitalization.controller.mocks.MocksInternmentPatient;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.EpisodeDocumentDtoMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
-import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.events.HospitalApiPublisher;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
 @WebMvcTest(InternmentEpisodeController.class)
 class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
@@ -48,19 +46,12 @@ class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private InternmentEpisodeMapper internmentEpisodeMapper;
-
-	@MockBean
-	private HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 	
 	@MockBean
 	private PatientDischargeMapper patientDischargeMapper;
 
 	@MockBean
 	private BedExternalService bedExternalService;
-
-	@MockBean
-	private ResponsibleContactService responsibleContactService;
-
 	@MockBean
 	private InternmentEpisodeRepository internmentEpisodeRepository;
 	
@@ -78,9 +69,6 @@ class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private PatientDischargeService patientDischargeService;
-
-	@MockBean
-	private ResponsibleContactMapper responsibleContactMapper;
 
 	@MockBean
 	private LocalDateMapper localDateMapper;
@@ -105,6 +93,9 @@ class InternmentEpisodeControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private EpisodeDocumentDtoMapper episodeDocumentDtoMapper;
+
+	@MockBean
+	private CreateInternmentEpisode createInternmentEpisode;
 
 	@BeforeEach
 	void setup() {

@@ -83,7 +83,8 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 	@Override
 	public String getClinicalSpecialtyNameByDiaryId(Integer diaryId) {
 		LOG.debug("Input parameters -> diaryId {}", diaryId);
-		String result = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(diaryId).getName();
+		ClinicalSpecialty cs = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(diaryId);
+		String result = cs != null ? cs.getName() : null;
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

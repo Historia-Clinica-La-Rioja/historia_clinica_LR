@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EInternmentPlace;
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PostAnesthesiaStatusBo {
+public class PostAnesthesiaStatusBo implements IpsBo {
 
     private Long id;
     private Boolean intentionalSensitivity;
@@ -53,5 +54,10 @@ public class PostAnesthesiaStatusBo {
 
     public Short getIntermentPlaceId() {
         return internmentPlace != null ? internmentPlace.getId() : null;
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitPostAnesthesiaStatus(this);
     }
 }

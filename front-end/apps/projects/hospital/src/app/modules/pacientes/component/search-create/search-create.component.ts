@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { VALIDATIONS, hasError, updateForm } from '@core/utils/form.utils';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PatientMasterDataService } from '@api-rest/services/patient-master-data.service';
@@ -9,10 +9,9 @@ import { ContextService } from '@core/services/context.service';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { INVALID_INPUT, ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { MatDialog } from '@angular/material/dialog';
-import { NavigationService } from "@pacientes/services/navigation.service";
 import { PatientInformationScan } from '@pacientes/pacientes.model';
+import { PatientSearchNagivationService } from '@pacientes/services/patient-search-nagivation.service';
 
-const ROUTE_SEARCH = 'pacientes/search';
 const ROUTE_PROFILE = 'pacientes/profile/';
 
 @Component({
@@ -20,8 +19,9 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 	templateUrl: './search-create.component.html',
 	styleUrls: ['./search-create.component.scss']
 })
-export class SearchCreateComponent implements OnInit {
+export class SearchCreateComponent implements OnInit, OnDestroy {
 
+	paramsToSearchPerson: ParamsToSearchPerson;
 	public formSearch: UntypedFormGroup;
 	public formSearchSubmitted = false;
 	public genderOptions;
@@ -36,6 +36,13 @@ export class SearchCreateComponent implements OnInit {
 	private readonly routePrefix;
 	private additionalInfoScanned: AdditionalInformationScanned;
 
+	@Input() set searchPerson(paramsToSearchPerson: ParamsToSearchPerson) {
+		if (paramsToSearchPerson.identificationTypeId) {
+			this.paramsToSearchPerson = paramsToSearchPerson;
+			this.navigateToSearchPatient();
+		}
+	}
+
 	constructor(
 		private formBuilder: UntypedFormBuilder,
 		private router: Router,
@@ -44,9 +51,19 @@ export class SearchCreateComponent implements OnInit {
 		private personMasterDataService: PersonMasterDataService,
 		private contextService: ContextService,
 		private dialog: MatDialog,
-		public navigationService: NavigationService
+		readonly patientSearchNavigateService: PatientSearchNagivationService,
+		private readonly activatedRoute: ActivatedRoute,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
+	}
+
+	ngOnDestroy(): void {
+		if (this.paramsToSearchPerson)
+			this.router.navigate([], {
+				relativeTo: this.activatedRoute,
+				queryParams: null,
+				replaceUrl: true
+			});
 	}
 
 	ngOnInit(): void {
@@ -66,7 +83,6 @@ export class SearchCreateComponent implements OnInit {
 
 		this.patientMasterDataService.getIdentityVerificationStatus().subscribe(
 			data => { this.identityVerificationStatusArray = data; });
-		this.navigationService.resetURL();
 	}
 
 	search(formDirectiveSearchForm: FormGroupDirective): void {
@@ -78,7 +94,7 @@ export class SearchCreateComponent implements OnInit {
 			const identificationNumber = this.formSearch.controls?.identifNumber.value ? this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '') : null;
 			const searchRequest = {
 				identificationTypeId: this.formSearch.controls.identifType.value,
-				identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g,'') : identificationNumber,
+				identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g, '') : identificationNumber,
 				genderId: this.formSearch.controls.gender.value,
 			};
 			if (this.noIdentity) {
@@ -99,23 +115,10 @@ export class SearchCreateComponent implements OnInit {
 	}
 
 	private navigateToSearchPatient(): void {
-		const identificationNumber = this.formSearch.controls?.identifNumber.value ? this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '') : null;
-		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
-			{
-				queryParams: {
-					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g,'') : identificationNumber,
-					genderId: this.formSearch.controls.gender.value,
-					identityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
-					comments: this.formSearch.controls.comments.value,
-					noIdentity: this.noIdentity,
-					firstName: this.additionalInfoScanned?.firstName,
-					middleNames: this.additionalInfoScanned?.middleNames,
-					lastName: this.additionalInfoScanned?.lastName,
-					otherLastNames: this.additionalInfoScanned?.otherLastNames,
-					birthDate: this.additionalInfoScanned?.birthDate
-				}
-			});
+		let params = this.paramsToSearchPerson;
+		if (!params)
+			params = this.buildParamsToSearchPerson();
+		this.patientSearchNavigateService.calculateNavigation(params);
 	}
 
 	noIdentityChange() {
@@ -227,6 +230,23 @@ export class SearchCreateComponent implements OnInit {
 			birthDate: dateStr
 		}
 	}
+
+	private buildParamsToSearchPerson(): ParamsToSearchPerson {
+		const identificationNumber = this.formSearch.controls?.identifNumber.value ? this.formSearch.controls?.identifNumber.value.replace(/^(0+)/g, '') : null;
+		return {
+			identificationTypeId: this.formSearch.controls.identifType.value,
+			identificationNumber: (this.formSearch.controls.identifType.value === IDENTIFICATION_TYPE_IDS.DNI && !!this.formSearch.controls?.identifNumber.value) ? identificationNumber.replaceAll(/\W/g, '') : identificationNumber,
+			genderId: this.formSearch.controls.gender.value,
+			identityVerificationStatus: this.formSearch.controls.IdentityVerificationStatus.value,
+			comments: this.formSearch.controls.comments.value,
+			noIdentity: this.noIdentity,
+			firstName: this.additionalInfoScanned?.firstName,
+			middleNames: this.additionalInfoScanned?.middleNames,
+			lastName: this.additionalInfoScanned?.lastName,
+			otherLastNames: this.additionalInfoScanned?.otherLastNames,
+			birthDate: this.additionalInfoScanned?.birthDate
+		}
+	}
 }
 
 interface AdditionalInformationScanned {
@@ -235,4 +255,22 @@ interface AdditionalInformationScanned {
 	lastName: string,
 	otherLastNames: string,
 	birthDate: string
+}
+
+export interface ParamsToSearchPerson {
+	identificationTypeId: number,
+	identificationNumber: number,
+	genderId: number,
+	identityVerificationStatus?: string,
+	comments?: string,
+	noIdentity?: boolean,
+	photo?: string,
+	cuil?: string,
+	typeId?: number,
+	firstName?: string,
+	middleNames?: string,
+	lastName?: string,
+	otherLastNames?: string,
+	birthDate?: string,
+	fromGuardModule?: boolean,
 }

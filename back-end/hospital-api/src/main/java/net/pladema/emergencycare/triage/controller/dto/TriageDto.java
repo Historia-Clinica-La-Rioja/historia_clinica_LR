@@ -23,4 +23,7 @@ public abstract class TriageDto implements Serializable {
 
 	@Nullable
 	List<OutpatientReasonDto> reasons;
+
+	@Nullable
+	Integer clinicalSpecialtySectorId;
 }

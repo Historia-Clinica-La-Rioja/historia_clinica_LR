@@ -26,6 +26,8 @@ enum EstablishmentsDescription {
     EMERGENCY_CARE = 'Guardia',
     AGAINST_VIOLENCE = 'Comité contras las violencias',
     ADDRESS = 'Dirección',
+    SAME = 'SAME',
+    MUNICIPAL_HOSPITAL = 'Hospital municipal',
     OTHER = 'Otros'
 }
 
@@ -81,11 +83,6 @@ enum OrganizationsDescription {
 enum ComplaintsDescription {
     INJURIES = 'Lesiones graves o gravísimas a personas adultas',
     VIOLENCE = 'Violencias contra niñeces y adolescencias',
-    OTHER = 'Otro'
-}
-
-enum OrganizationsExtendedDescription {
-    COMPLAINT = 'Denuncia medio digital de seguridad pasa a fiscalía',
     OTHER = 'Otro'
 }
 
@@ -247,12 +244,7 @@ export const OrganizationsExtended: ValueOption[] = [
         checked: false
     },
     {
-        text: OrganizationsExtendedDescription.COMPLAINT,
-        value: EInstitutionReportPlace.DIGITAL_SECURITY_REPORT,
-        checked: false
-    },
-    {
-        text: OrganizationsExtendedDescription.OTHER,
+        text: ComplaintsDescription.OTHER,
         value: EInstitutionReportPlace.OTHER,
         checked: false
     },
@@ -437,6 +429,16 @@ export const Establishments: ValueOption[] = [
         checked: false
     },
     {
+        text: EstablishmentsDescription.MUNICIPAL_HOSPITAL,
+        value: EHealthInstitutionOrganization.MUNICIPAL_HOSPITAL,
+        checked: false
+    },
+    {
+        text: EstablishmentsDescription.SAME,
+        value: EHealthInstitutionOrganization.SAME,
+        checked: false
+    },
+    {
         text: EstablishmentsDescription.GYNECOLOGIC_OBSTRETRIC,
         value: EHealthInstitutionOrganization.GYNECOLOGY_OBSTETRICS,
         checked: false
@@ -452,11 +454,6 @@ export const Establishments: ValueOption[] = [
         checked: false
     },
     {
-        text: EstablishmentsDescription.OTHER,
-        value: EHealthInstitutionOrganization.OTHERS,
-        checked: false
-    },
-    {
         text: EstablishmentsDescription.PEDIATRIC,
         value: EHealthInstitutionOrganization.PEDIATRICS,
         checked: false
@@ -469,6 +466,11 @@ export const Establishments: ValueOption[] = [
     {
         text: EstablishmentsDescription.SOCIAL_WORK,
         value: EHealthInstitutionOrganization.SOCIAL_WORK,
+        checked: false
+    },
+    {
+        text: EstablishmentsDescription.OTHER,
+        value: EHealthInstitutionOrganization.OTHERS,
         checked: false
     },
 ]
@@ -500,11 +502,6 @@ export const Areas: ValueOption[] = [
         checked: false
     },
     {
-        text: AreaDescription.OTHER,
-        value: EHealthSystemOrganization.OTHERS,
-        checked: false
-    },
-    {
         text: AreaDescription.POSTAS,
         value: EHealthSystemOrganization.POSTAS,
         checked: false
@@ -527,6 +524,11 @@ export const Areas: ValueOption[] = [
     {
         text: AreaDescription.VACCINATION,
         value: EHealthSystemOrganization.VACCINATION_CENTER,
+        checked: false
+    },
+    {
+        text: AreaDescription.OTHER,
+        value: EHealthSystemOrganization.OTHERS,
         checked: false
     },
 ]
@@ -571,13 +573,13 @@ export const ViolenceTypes: ValueOption[] = [
 
 export const EscolarizationLevels: ValueOption[] = [
     {
-        text: EscolarizationLevelDescription.INITIAL,
-        value: ESchoolLevel.NURSERY_SCHOOL,
+        text: EscolarizationLevelDescription.MATERNAL,
+        value: ESchoolLevel.KINDERGARTEN,
         checked: false
     },
     {
-        text: EscolarizationLevelDescription.MATERNAL,
-        value: ESchoolLevel.KINDERGARTEN,
+        text: EscolarizationLevelDescription.INITIAL,
+        value: ESchoolLevel.NURSERY_SCHOOL,
         checked: false
     },
     {
@@ -594,11 +596,6 @@ export const EscolarizationLevels: ValueOption[] = [
 
 export const RiskLevels: ValueOption[] = [
     {
-        text: RiskLevelDescription.HIGH,
-        value: EViolenceEvaluationRiskLevel.HIGH,
-        checked: false
-    },
-    {
         text: RiskLevelDescription.LOW,
         value: EViolenceEvaluationRiskLevel.LOW,
         checked: false
@@ -607,7 +604,12 @@ export const RiskLevels: ValueOption[] = [
         text: RiskLevelDescription.MEDIUM,
         value: EViolenceEvaluationRiskLevel.MEDIUM,
         checked: false
-    }
+    },
+    {
+        text: RiskLevelDescription.HIGH,
+        value: EViolenceEvaluationRiskLevel.HIGH,
+        checked: false
+    },
 ]
 
 export const StateOptions: BasicOption[] = [
@@ -735,7 +737,7 @@ export const LiveTogetherStatus: ValueOption[] = [
         checked: false
     },
     {
-        text: "Si, otra casa mismo terreno",
+        text: "Sí, otra casa en mismo terreno o en cercanía",
         value: ELiveTogetherStatus.SAME_SPACE,
         checked: false
     },
@@ -873,11 +875,6 @@ export const RelationOption: ValueOption[] = [
         checked: false
     },
     {
-        text: RelationOptionDescription.OTHER,
-        value: EKeeperRelationship.OTHER,
-        checked: false
-    },
-    {
         text: RelationOptionDescription.REFERRER,
         value: EKeeperRelationship.RELATED,
         checked: false
@@ -886,5 +883,10 @@ export const RelationOption: ValueOption[] = [
         text: RelationOptionDescription.AUNT,
         value: EKeeperRelationship.UNCLE_OR_AUNT,
         checked: false
-    }
+    },
+    {
+        text: RelationOptionDescription.OTHER,
+        value: EKeeperRelationship.OTHER,
+        checked: false
+    },
 ]

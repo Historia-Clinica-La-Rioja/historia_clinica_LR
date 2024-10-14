@@ -3,8 +3,6 @@ package net.pladema.procedure.infrastructure.input.rest.validator.permission;
 import lombok.AllArgsConstructor;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.procedure.infrastructure.input.rest.dto.ProcedureTemplateDto;
-import net.pladema.procedure.infrastructure.output.repository.ProcedureTemplateRepository;
-import net.pladema.procedure.infrastructure.output.repository.ProcedureTemplateSnomedRepository;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;

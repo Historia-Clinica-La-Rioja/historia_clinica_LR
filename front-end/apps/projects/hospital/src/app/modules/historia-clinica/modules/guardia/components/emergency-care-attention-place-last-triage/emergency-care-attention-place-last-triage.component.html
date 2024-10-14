@@ -1,0 +1,22 @@
+<div *ngIf="_lastTriage" fxLayout="column" fxLayoutGap="5px">
+	<p class="mat-body-strong"> {{'guardia.home.attention_places.last_triage.TITLE' | translate}}</p>
+
+    <app-triage-chip [category]="_lastTriage"></app-triage-chip>
+
+	<app-identifier-cases *ngIf="reasons.length"
+		identifierCase={{IDENTIFIER_CASES.REASON}}
+		[description]="reasons | stringSeparator"
+		[showLegend]="true">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="_lastTriage.clinicalSpecialtySector?.id"
+		identifierCase={{IDENTIFIER_CASES.SERVICE}}
+		[description]="_lastTriage.clinicalSpecialtySector.description"
+		[showLegend]="true">
+	</app-identifier-cases>
+
+	<app-register-editor-info *ngIf="registerEditorInfo"
+		registerEditorCase={{REGISTER_EDITOR_CASES.DATE_HOUR}}
+		[registerEditor]="registerEditorInfo">
+	</app-register-editor-info>
+</div>

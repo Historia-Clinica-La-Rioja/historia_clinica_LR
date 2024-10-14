@@ -1,16 +1,15 @@
 package net.pladema.emergencycare.service.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class HistoricEmergencyEpisodeBo {
 
     private Integer emergencyCareEpisodeId;
@@ -25,6 +24,8 @@ public class HistoricEmergencyEpisodeBo {
 
 	private Integer bedId;
 
+	private Short calls;
+
     public HistoricEmergencyEpisodeBo(EmergencyCareBo emergencyCareBo) {
         this.emergencyCareEpisodeId = emergencyCareBo.getId();
         this.emergencyCareStateId = emergencyCareBo.getEmergencyCareStateId();
@@ -36,5 +37,10 @@ public class HistoricEmergencyEpisodeBo {
         this.emergencyCareStateId = emergencyCareStateId;
         this.doctorsOfficeId = doctorsOfficeId;
     }
+
+	public HistoricEmergencyEpisodeBo(Integer emergencyCareEpisodeId, Short emergencyCareStateId) {
+		this.emergencyCareEpisodeId = emergencyCareEpisodeId;
+		this.emergencyCareStateId = emergencyCareStateId;
+	}
 
 }

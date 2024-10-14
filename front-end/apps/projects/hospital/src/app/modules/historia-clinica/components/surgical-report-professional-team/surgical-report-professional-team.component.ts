@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DocumentHealthcareProfessionalDto, EProfessionType, GenericMasterDataDto, HCEHealthcareProfessionalDto, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
@@ -14,22 +14,40 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 	@Input() professionals: ProfessionalDto[];
 	@Input() surgicalReport: SurgicalReportDto;
+	@Input()
+	set canConfirmSurgicalTeam(value: boolean) {
+		if (value) {
+			this.notifySave()
+		}
+	}
+	@Output() validSurgeon = new EventEmitter<boolean>();
 
 	healthcareProfessionals: AddMemberMedicalTeam[] = [];
 	surgeon: DocumentHealthcareProfessionalDto;
 	readonly OTHER = EProfessionType.OTHER;
 	professions: GenericMasterDataDto<EProfessionType>[];
 	showErrorProfessionalRepeated = false;
+	isSelectedSurgeon: boolean | null = null
 
-	constructor(private dialog: MatDialog, private requestMasterDataService: RequestMasterDataService) { }
+	constructor(
+		private dialog: MatDialog,
+		private requestMasterDataService: RequestMasterDataService
+	) { }
+
+
 
 	ngOnInit(): void {
-		this.surgeon = this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === EProfessionType.SURGEON)
+		this.surgeon = this.surgicalReport.surgicalTeam.find(p => p.profession.type === EProfessionType.SURGEON);
+		this.emitValidSurgeon();
+		if (this.surgeon) {
+			this.surgicalReport.surgicalTeam = this.surgicalReport.surgicalTeam.filter(p => p.profession.type !== EProfessionType.SURGEON);
+			this.surgicalReport.surgicalTeam.unshift(this.surgeon);
+		}
 		this.requestMasterDataService.getSurgicalReportProfessionTypes().subscribe(professions => {
 			professions.shift();
 			this.professions = professions;
 			this.setHealthcareProfessionals();
-		})
+		});
 	}
 
 	addProfessional(): void {
@@ -37,19 +55,20 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 			data: {
 				professionals: this.professionals,
 				professions: this.professions,
-				idProfessionalSelected: this.surgeon.healthcareProfessional.id,
+				healthcareProfessionals: this.surgicalReport.surgicalTeam,
 			}
-		})
+		});
 		dialogRef.afterClosed().subscribe((professional: AddMemberMedicalTeam) => {
 			if (professional) {
-				this.surgicalReport.healthcareProfessionals.push(professional.professionalData);
+				this.surgicalReport.surgicalTeam.push(professional.professionalData);
 				this.healthcareProfessionals.push(professional);
+				this.emitValidSurgeon();
 			}
-		})
+		});
 	}
 
 	setHealthcareProfessionals() {
-		this.healthcareProfessionals = this.surgicalReport.healthcareProfessionals
+		this.healthcareProfessionals = this.surgicalReport.surgicalTeam
 			.filter(hp => hp.profession.type !== EProfessionType.SURGEON)
 			.map(hp => {
 				let professional = {
@@ -65,35 +84,34 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	}
 
 	deleteProfessional(index: number): void {
+		const actualIndex = this.surgeon ? index + 1 : index;
 		this.healthcareProfessionals.splice(index, 1);
-		this.surgicalReport.healthcareProfessionals.splice(index, 1);
+		this.surgicalReport.surgicalTeam.splice(actualIndex, 1);
+		this.emitValidSurgeon();
 	}
 
-	selectSurgeon(professional: HCEHealthcareProfessionalDto): void {
-		const indexRemove = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === EProfessionType.SURGEON);
+	selectSurgeon(professional: HCEHealthcareProfessionalDto | null): void {
 		this.showErrorProfessionalRepeated = false;
+		this.surgicalReport.surgicalTeam = this.surgicalReport.surgicalTeam.filter(p => p.profession.type !== EProfessionType.SURGEON);
+
 		if (!professional) {
-			if (indexRemove !== -1) {
-				this.surgicalReport.healthcareProfessionals.splice(indexRemove, 1);
-				this.surgeon = null;
-			}
+			this.surgeon = null;
+			this.emitValidSurgeon();
 			return;
 		}
-		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.healthcareProfessional.id === professional.id);
+
 		this.surgeon = this.mapToDocumentHealthcareProfessionalDto(professional, EProfessionType.SURGEON);
-		
-		if (index === -1) {
-			this.surgicalReport.healthcareProfessionals.push(this.surgeon);
-		} else {
-			if (indexRemove !== -1) {
-				this.surgicalReport.healthcareProfessionals.splice(indexRemove, 1);
-			}
+		const existingProfessional = this.surgicalReport.surgicalTeam.find(p => p.healthcareProfessional.id === professional.id);
+
+		if (existingProfessional) {
 			this.showErrorProfessionalRepeated = true;
 		}
+		this.surgicalReport.surgicalTeam.unshift(this.surgeon);
+		this.emitValidSurgeon();
 	}
 
 	isEmpty(): boolean {
-		return !this.surgicalReport.healthcareProfessionals.length;
+		return !this.surgicalReport.surgicalTeam.length;
 	}
 
 	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto, type: EProfessionType, description?: string): DocumentHealthcareProfessionalDto {
@@ -103,6 +121,22 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 				type: type,
 				otherTypeDescription: description
 			}
+		};
+	}
+
+	protected emitValidSurgeon() {
+		const surgicalTeam = this.surgicalReport.surgicalTeam.length ? this.surgicalReport.surgicalTeam : null;
+		let hasSurgeon: boolean | null = null;
+
+		if (surgicalTeam) {
+			hasSurgeon = surgicalTeam.some(p => p.profession.type === EProfessionType.SURGEON);
 		}
+
+		this.validSurgeon.emit(hasSurgeon && !this.showErrorProfessionalRepeated);
+		this.isSelectedSurgeon = hasSurgeon;
+	}
+
+	private notifySave(): void {
+		this.isSelectedSurgeon = this.isSelectedSurgeon && !this.showErrorProfessionalRepeated ? true : false;
 	}
 }

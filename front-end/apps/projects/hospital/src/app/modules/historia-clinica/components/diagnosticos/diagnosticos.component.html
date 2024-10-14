@@ -27,7 +27,7 @@
 	<app-titled-content-card [title]="'internaciones.anamnesis.diagnosticos.TITLE'">
 		<div *ngFor="let diagnosis of diagnosticos">
 			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false" [type]="type"
-				(removeDiagnosis)="removeDiagnosis($event)" (checkDiagnosis)="updateAll()"></app-elemento-diagnostico>
+				(removeDiagnosis)="removeDiagnosis($event)" (checkDiagnosis)="updateAll()" (editedDiagnosis)="updateDiagnosis($event)"></app-elemento-diagnostico>
 			<hr *ngIf="diagnosticos.length > 1">
 		</div>
 		<div *ngIf="mainDiagnosis && diagnosticos?.length> 1">

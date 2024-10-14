@@ -1,0 +1,6 @@
+<div class="section-description">
+    <div *ngFor="let item of itemsList">
+        <app-title-description-list class="list-item" data-id="{{item.dataId}}" *ngIf="item.descriptionData"
+            title="{{item.title}}" [descriptionData]="item.descriptionData"></app-title-description-list>
+    </div>
+</div>

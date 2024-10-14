@@ -21,6 +21,8 @@ constructor() { }
 			status: source.status,
 			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
+			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
+			localViewerUrl: source.localViewerUrl
 		}
 	}
 
@@ -31,7 +33,9 @@ constructor() { }
 			status: source.status,
 			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
-			associatedStudies: source.diagnosticReports
+			associatedStudies: source.diagnosticReports,
+			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
+			localViewerUrl: source.localViewerUrl
 		}
 	}
 
@@ -43,6 +47,8 @@ constructor() { }
 			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
 			hasActiveAppointment: source.hasActiveAppointment,
+			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
+			localViewerUrl: source.localViewerUrl
 		}
 	}
 
@@ -99,6 +105,7 @@ constructor() { }
 			healthCondition: {id: null , snomed:{sctid: null , pt:studyOrder.healthCondition}},
 			id: studyOrder.diagnosticReportId,
 			observations: null,
+            observationsFromServiceRequest: studyOrder.observationsFromServiceRequest,
 			serviceRequestId: studyOrder.serviceRequestId,
 			snomed: {id: null, sctid: null, pt: studyOrder.snomed},
 			source: studyOrder.source,

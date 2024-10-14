@@ -19,7 +19,7 @@ export class TimePickerComponent implements OnInit {
     @Input() timePickerData?: TimePickerData;
     @Input() submitted?: boolean;
     @Output() timeSelected: EventEmitter<TimePickerDto> = new EventEmitter<TimePickerDto>();
-    
+
     @ViewChild('matAutocompleteHour', { read: MatAutocompleteTrigger })
     autoCompleteHours: MatAutocompleteTrigger;
     @ViewChild('matAutocompleteMinutes', { read: MatAutocompleteTrigger })
@@ -38,7 +38,7 @@ export class TimePickerComponent implements OnInit {
 		private readonly formBuilder: FormBuilder
     ) { }
 
-    ngOnInit(): void {      
+    ngOnInit(): void {
         this.initDefaultValues();
         this.initDisplayValues();
 
@@ -58,6 +58,7 @@ export class TimePickerComponent implements OnInit {
         if (this.submitted) {
             this.touchAndValidateForm();
         }
+        this.setDefaultTimeAndEmitValue();
     }
 
     private touchAndValidateForm() {
@@ -86,7 +87,7 @@ export class TimePickerComponent implements OnInit {
     }
 
     private setDefaultTimeAndEmitValue() {
-        if (this.timePickerData?.defaultTime) {
+        if (this.timePickerForm && this.timePickerData?.defaultTime) {
             let actualTime = this.timePickerData.defaultTime;
             let hours = actualTime.hours.toString();
             let minutes = Number(actualTime.minutes.toString());

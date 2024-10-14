@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { CalendarDateFormatter, DateFormatterParams } from 'angular-calendar';
 import { endOfISOWeek, startOfISOWeek } from 'date-fns';
-import { DatePipe } from '@angular/common';
-import { DEFAULT_LANG } from '../../../app.component';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Injectable()
 export class CustomDateFormatter extends CalendarDateFormatter {
 
-	datePipe = new DatePipe(DEFAULT_LANG);
+	datePipe = new DateFormatPipe();
 	public weekViewTitle({ date }: DateFormatterParams): string {
-		const start = this.datePipe.transform(startOfISOWeek(date), DatePipeFormat.LONG_DATE)
-		const end = this.datePipe.transform(endOfISOWeek(date), DatePipeFormat.LONG_DATE)
+		const start = this.datePipe.transform(startOfISOWeek(date), 'fulldate')
+		const end = this.datePipe.transform(endOfISOWeek(date), 'fulldate')
 		return `${start} - ${end}`;
 	}
 
 	public dayViewTitle({ date }: DateFormatterParams): string {
-		return this.datePipe.transform(date, DatePipeFormat.LONG_DATE);
+		return this.datePipe.transform(date, 'fulldate');
 	}
 
 }

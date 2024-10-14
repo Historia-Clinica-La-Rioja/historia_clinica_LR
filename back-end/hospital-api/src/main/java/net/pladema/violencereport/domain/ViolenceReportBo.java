@@ -50,7 +50,7 @@ public class ViolenceReportBo {
 			CoordinationInsideHealthSectorBo coordinationInsideHealthSectorBo = initializeCoordinationInsideHealthSectorBo(coordinationWithinHealthSystem, coordinationWithinHealthInstitution, internmentIndicatedStatusId);
 			result.setCoordinationInsideHealthSector(coordinationInsideHealthSectorBo);
 		}
-		else {
+		if (coordinationWithOtherSocialOrganizations != null) {
 			CoordinationOutsideHealthSectorBo coordinationOutsideHealthSectorBo = initializeCoordinationOutsideHealthSector(coordinationWithOtherSocialOrganizations);
 			result.setCoordinationOutsideHealthSector(coordinationOutsideHealthSectorBo);
 		}

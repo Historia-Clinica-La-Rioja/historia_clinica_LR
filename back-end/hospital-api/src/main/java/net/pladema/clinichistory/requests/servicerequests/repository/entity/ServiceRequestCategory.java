@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "service_request_category")
 @Getter
@@ -34,4 +36,7 @@ public class ServiceRequestCategory {
 	@Column(name = "orden")
 	private Short orden;
 
+	public boolean isDiagnosticImaging() {
+		return Objects.equals(this.id, DIAGNOSTIC_IMAGING);
+	}
 }

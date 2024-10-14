@@ -3,7 +3,7 @@
         <div fxLayout="column">
             <span>{{ procedimiento.snomed.pt }}</span>
             <span *ngIf="procedimiento?.performedDate" class="mat-caption gray-caption">
-                {{ procedimiento.performedDate | dateFormat : 'date' }}
+                {{ procedimiento.performedDate }}
             </span>
         </div>
         <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">

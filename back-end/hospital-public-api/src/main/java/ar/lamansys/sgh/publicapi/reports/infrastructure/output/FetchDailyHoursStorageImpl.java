@@ -7,16 +7,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.FetchDailyHoursStorage;
-import ar.lamansys.sgh.publicapi.reports.application.port.out.GetHierarchicalUnitServiceParent;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate.AppointmentAssnBo;
 import ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate.DailyHoursBo;
@@ -31,8 +29,6 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 
 	private EntityManager entityManager;
 
-	private GetHierarchicalUnitServiceParent getHierarchicalUnitServiceParent;
-
 	private static final Short SERVICE_TYPE = 8;
 
 	@Override
@@ -41,6 +37,8 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 		LocalDate dateTo = LocalDate.parse(to);
 
 		final String WHERE_INSTITUTION_ID = institutionId == null ? "" : " AND i.id = " + institutionId;
+		final String WHERE_HIERARCHICAL_UNIT_ID = hierarchicalUnitId == null ? "" : " AND coalesce(hu.closest_service_id, hu2.closest_service_id) = " + hierarchicalUnitId;
+
 
 		String query = "select distinct " +
 				"i.id as id_institucion, i.name as nombre_institucion, " +
@@ -53,19 +51,21 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 		"p.first_name as primer_nombre, p.middle_names as medio_nombre, p.last_name as apellido, " +
 		"p.other_last_names as otros_apellidos, pe.name_self_determination as nombre_autodeterminado, " +
 		"p.identification_number as numero_ident_profesional, cs.sctid_code, cs.name, " +
-		"case when dp.id is null then 'Consulta' else 'Práctica' end, hu.type_id  " +
+		"case when dp.id is null then 'Consulta' else 'Práctica' end, hu.type_id,  " +
+		"hu2.id as closest_service_id, hu2.alias as closest_service_alias " +
 		"from diary d join diary_opening_hours doh on doh.diary_id = d.id " +
 		"join opening_hours oh on oh.id = doh.opening_hours_id " +
 		"join doctors_office do2 on do2.id = d.doctors_office_id " +
 		"join institution i on i.id = do2.institution_id " +
-		"join hierarchical_unit hu on hu.id = d.hierarchical_unit_id " +
+		"left join hierarchical_unit hu on hu.id = d.hierarchical_unit_id " +
+		"left join hierarchical_unit hu2 on hu2.id = hu.closest_service_id " +
 		"join healthcare_professional hp on hp.id = d.healthcare_professional_id " +
 		"join person p on p.id = hp.person_id " +
 		"join identification_type it on it.id = p.identification_type_id " +
 		"left join person_extended pe on pe.person_id = p.id " +
 		"left join clinical_specialty cs on cs.id = d.clinical_specialty_id " +
 		"left join diary_practice dp on dp.diary_id = d.id " +
-		"where d.deleted is not true and (:from <= d.end_date and d.start_date <= :to) " + WHERE_INSTITUTION_ID;
+		"where d.deleted is not true and (:from <= d.end_date and d.start_date <= :to) " + WHERE_INSTITUTION_ID + WHERE_HIERARCHICAL_UNIT_ID;
 
 
 		var queryResult = entityManager.createNativeQuery(query)
@@ -94,19 +94,12 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 	private List<DailyHoursBo> generateDay(LocalDate date, List<Object[]> queryResult, Integer hierarchicalUnitId) {
 
 		var filteredList = queryResult.stream()
-				//filtro los otro día de la semana
+				//filtro los otros día de la semana
 				.filter(a -> a[12].equals((short)(date.getDayOfWeek().getValue() % 7)))
 				//filtro las agendas que están por fuera de ese día
 				.filter(a -> !(((Date)a[3]).toLocalDate().isAfter(date) || ((Date)a[4]).toLocalDate().isBefore(date)))
 				.map(this::generateDiaryOhsBo)
 				.collect(Collectors.toList());
-
-		if(hierarchicalUnitId != null){
-			filteredList = filteredList.stream()
-					//filtro las que no tienen la unidad jerárquica requerida
-					.filter(a -> a.getHierarchicalParentServiceUnitId() != null && a.getHierarchicalParentServiceUnitId().equals(hierarchicalUnitId))
-					.collect(Collectors.toList());
-		}
 
 		var ohs = filteredList.stream()
 				.map(DiaryOhsBo::getOpeningHourId)
@@ -125,11 +118,6 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 	}
 
 	private DiaryOhsBo generateDiaryOhsBo(Object[] a) {
-		Optional<HierarchicalUnitBo> parent = getHierarchicalUnitServiceParent.getServiceParent(new HierarchicalUnitBo(
-				(Integer)a[6],
-				(String)a[7],
-				((Integer)a[25]).shortValue()
-		));
 
 		return DiaryOhsBo.builder()
 				.institutionId((Integer)a[0])
@@ -158,8 +146,9 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 				.clinicalSpecialtySnomed((String)a[22])
 				.clinicalSpecialtyName((String)a[23])
 				.diaryType((String)a[24])
-				.hierarchicalParentServiceUnitAlias(parent.map(HierarchicalUnitBo::getDescription).orElse(null))
-				.hierarchicalParentServiceUnitId(parent.map(HierarchicalUnitBo::getId).orElse(null))
+				.hierarchicalUnitType((Integer)a[25])
+				.hierarchicalParentServiceUnitId((Integer)a[26])
+				.hierarchicalParentServiceUnitAlias((String)a[27])
 				.build();
 	}
 
@@ -176,8 +165,10 @@ public class FetchDailyHoursStorageImpl implements FetchDailyHoursStorage {
 				.diaryId(firstElem.getDiaryId())
 				.institutionCode(firstElem.getInstitutionId().toString())
 				.institutionName(firstElem.getInstitutionName())
-				.hierarchicalUnit(new HierarchicalUnitBo(firstElem.getHierarchicalUnitId(),
-						firstElem.getHierarchicalUnitAlias(), firstElem.getHierarchicalUnitType().shortValue()))
+				.hierarchicalUnit(firstElem.getHierarchicalUnitId() != null ?
+						new HierarchicalUnitBo(firstElem.getHierarchicalUnitId(),
+						firstElem.getHierarchicalUnitAlias(), firstElem.getHierarchicalUnitType().shortValue()) :
+						new HierarchicalUnitBo(null, null, null))
 				.serviceHierarchicalUnit(firstElem.getHierarchicalParentServiceUnitId() != null ?
 						new HierarchicalUnitBo(firstElem.getHierarchicalParentServiceUnitId(),
 						firstElem.getHierarchicalParentServiceUnitAlias(), SERVICE_TYPE) :

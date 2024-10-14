@@ -15,8 +15,8 @@ public abstract class TriageNoAdministrativeDto extends TriageDto {
     @Nullable
     String notes;
 
-    public TriageNoAdministrativeDto(Short categoryId, Integer doctorsOfficeId, String notes, List<OutpatientReasonDto> reasons){
-        super(categoryId, doctorsOfficeId, reasons);
+    public TriageNoAdministrativeDto(Short categoryId, Integer doctorsOfficeId, String notes, List<OutpatientReasonDto> reasons, Integer clinicalSpecialtySectorId){
+        super(categoryId, doctorsOfficeId, reasons, clinicalSpecialtySectorId);
         this.notes = notes;
     }
 

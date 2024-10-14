@@ -68,7 +68,7 @@ export class PatientInformationComponent implements OnInit {
 				fullName: this.patientNameService.completeName(this.patientData.person.firstName, this.patientData.person.nameSelfDetermination, this.patientData.person.lastName, this.patientData.person.middleNames, this.patientData.person.otherLastNames),
 				id: this.prescriptionData.patientId,
 				identification: {
-					number: Number(this.patientData.person.identificationNumber),
+					number: this.patientData.person.identificationNumber,
 					type: this.patientData.person.identificationType
 				}
 			};

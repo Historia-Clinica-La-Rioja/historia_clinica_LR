@@ -18,6 +18,7 @@ public interface MedicineFinancingStatusRepository extends SGXAuditableEntityJPA
 	@Query("SELECT NEW net.pladema.medicine.domain.MedicineFinancingStatusBo(m.id, s.sctid, s.pt, m.financed) " +
 			"FROM MedicineFinancingStatus m " +
 			"JOIN Snomed s ON (m.id = s.id) " +
+			"WHERE m.deleteable.deleted IS FALSE " +
 			"ORDER BY s.pt ASC")
 	List<MedicineFinancingStatusBo> getAll();
 

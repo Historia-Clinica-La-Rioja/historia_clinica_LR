@@ -7,6 +7,19 @@ export const VITAL_SIGNS_AND_RISK_FACTORS = {
     MILIMITERS:'mm',
     MINUTE: '/min',
     TEMPERATURE: '°',
+    CENTIMETERS: 'cm',
+}
+
+export const CRITICITY_ID = {
+    LOW: 1,
+    HIGH: 2,
+    UNABLE_TO_EVALUATE: 3,
+}
+
+export const CRITICITY_DESCRIPTION = {
+    [CRITICITY_ID.LOW]: "Criticidad baja",
+    [CRITICITY_ID.HIGH]: "Criticidad alta",
+    [CRITICITY_ID.UNABLE_TO_EVALUATE]: "Incapaz de evaluar",
 }
 
 export const ANESTHESIC_CLINICAL_EVALUATION = {
@@ -85,6 +98,12 @@ export const ANESTHETIC_TECHNIQUE_DESCRIPTION_ITEM = {
     icon: 'assignment',
 }
 
+export const SURGICAL_PROCEDURES_DESCRIPTION_ITEM = {
+    title: 'internaciones.anesthesic-report.anesthetic-technique.PROCEDURES',
+    subtitle: 'internaciones.anesthesic-report.anesthetic-technique.TECHNIQUE_RECORDS',
+    icon: 'assignment',
+}
+
 export const FLUID_ADMINISTRATION_DESCRIPTION_ITEM = {
     title: 'internaciones.anesthesic-report.fluid-administration.TITLE',
     subtitle: 'internaciones.anesthesic-report.fluid-administration.FLUID_RECORDS',
@@ -107,6 +126,55 @@ export const ANTIBIOTIC_PROPHYLAXIS_DESCRIPTION_ITEM = {
     title: 'internaciones.anesthesic-report.antibiotic-prophylaxis.TITLE',
     subtitle: 'internaciones.anesthesic-report.antibiotic-prophylaxis.REGISTERED_ANTIBIOTIC_PROPHYLAXIS',
     icon: 'assignment',
+}
+
+export const REASONS_DESCRIPTION_ITEM = {
+    title: 'guardia.documents-summary.reasons.TITLE',
+    subtitle: 'guardia.documents-summary.reasons.REGISTERED_REASONS',
+    icon: 'feedback',
+}
+
+export const SURGERY_TEAM_DESCRIPTION_ITEM = {
+	title: 'internaciones.surgical-report.equipo-quirofano.TITLE',
+    subtitle: 'internaciones.surgical-report.equipo-quirofano.SURGEON',
+    icon: 'brush',
+}
+
+export const PATHOLOGIST_DESCRIPTION_ITEM = {
+	title: 'internaciones.surgical-report.equipo-patologo.TITLE',
+	subtitle: 'internaciones.surgical-report.equipo-patologo.PROFESSIONAL',
+	icon: 'blur_circular',
+}
+
+export const TRANSFUSIONIST_DESCRIPTION_ITEM = {
+	title: 'internaciones.surgical-report.equipo-transfucionista.TITLE',
+    subtitle: 'internaciones.surgical-report.equipo-transfucionista.PROFESSIONAL',
+    icon: 'water_drop',
+}
+
+
+export const CULTURES_SURGERY_DESCRIPTION_ITEM = {
+    title: 'internaciones.surgical-report.cultivo.TITLE',
+    subtitle: 'internaciones.surgical-report.cultivo.PROCEDURES',
+    icon: 'brush',
+}
+
+export const FROZEN_BIOPSY_SURGERY_DESCRIPTION_ITEM = {
+    title: 'internaciones.surgical-report.biopsia.TITLE',
+    subtitle: 'internaciones.surgical-report.biopsia.PROCEDURES',
+    icon: 'thermostat',
+}
+
+export const DRAINAGE_SURGERY_DESCRIPTION_ITEM = {
+    title: 'internaciones.surgical-report.drenaje.TITLE',
+    subtitle: 'internaciones.surgical-report.drenaje.PROCEDURES',
+    icon: 'vaccines',
+}
+
+export const PROTESIS_SURGERY_DESCRIPTION_ITEM = {
+    title: 'internaciones.surgical-report.protesis.TITLE',
+    subtitle: 'internaciones.surgical-report.protesis.PROCEDURES',
+    icon: 'accessibility',
 }
 
 export const HEADER_DATA_SCOPE = {

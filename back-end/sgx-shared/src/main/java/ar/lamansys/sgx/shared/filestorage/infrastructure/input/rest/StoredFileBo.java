@@ -29,4 +29,8 @@ public class StoredFileBo {
 		sb.append('}');
 		return sb.toString();
 	}
+
+	public String getContentType() {
+		return contentType.toString();
+	}
 }

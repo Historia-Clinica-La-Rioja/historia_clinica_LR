@@ -1,0 +1,19 @@
+<div fxLayout="column" fxLayoutGap="5px">
+	<p class="mat-body-strong"> {{'guardia.home.attention_places.entry.TITLE' | translate}}</p>
+
+	<div *ngIf="reason">
+		<app-identifier-cases
+			identifierCase={{IDENTIFIER_CASES.REASON}}
+			[description]="reason"
+			[showLegend]="true">
+		</app-identifier-cases>
+	</div>
+
+	<div *ngIf="type">
+		<app-identifier-cases
+			identifierCase={{IDENTIFIER_CASES.EMERGENCY_CARE_TYPE}}
+			[description]="type.description"
+			[showLegend]="true">
+		</app-identifier-cases>
+	</div>
+</div>

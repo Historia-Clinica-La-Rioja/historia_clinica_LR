@@ -1,6 +1,7 @@
 package net.pladema.establishment.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo;
 import net.pladema.establishment.repository.domain.SectorOfTypeVo;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.service.domain.AttentionPlacesQuantityBo;
@@ -84,5 +85,15 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 			"FROM Sector s " +
 			"WHERE s.id = :sectorId")
 	String getSectorName(@Param("sectorId") Integer sectorId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo(s.id, s.description, s.sectorOrganizationId, s.sectorId) " +
+			"FROM Sector s " +
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.sectorTypeId = :sectorType " +
+			"AND s.deleteable.deleted IS FALSE " +
+			"ORDER BY COALESCE(s.sectorId, s.id), CASE WHEN s.sectorId IS NULL THEN 0 ELSE 1 END, s.id")
+	List<EmergencyCareAttentionPlaceBo> findAllEmergencyCareSectorByInstitutionOrderByHierarchy(@Param("institutionId") Integer institutionId,
+																								@Param("sectorType") Short sectorType);
 
 }

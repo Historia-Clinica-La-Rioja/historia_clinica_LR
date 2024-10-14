@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 
 import org.hibernate.annotations.ColumnDefault;
 

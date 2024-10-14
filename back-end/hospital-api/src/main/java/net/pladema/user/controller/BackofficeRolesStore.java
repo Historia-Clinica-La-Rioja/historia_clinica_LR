@@ -37,15 +37,19 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 		if (!backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR) || !featureFlagsService.isOn(AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO))
 			content.removeIf(role -> role.getId().equals(ERole.GESTOR_CENTRO_LLAMADO.getId()));
 		if(!backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO)){
-			content = content.stream().filter(role -> !role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) &&
-					!role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) &&
-					!role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
+			content = content.stream()
+					.filter(role -> !role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) &&
+							!role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) &&
+							!role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId()) &&
+							!role.getId().equals(ERole.GESTOR_DE_ACCESO_INSTITUCIONAL.getId()))
+					.collect(Collectors.toList());
 		} else {
 			if (!backofficeAuthoritiesValidator.hasRole(ERole.ROOT) && !backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR)) {
-				content = content.stream().filter(role -> role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) ||
+				content = content.stream().filter(role ->
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) ||
 						role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) ||
-						role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
-
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId()) ||
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_INSTITUCIONAL.getId())).collect(Collectors.toList());
 			}
 		}
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_ADMINISTRADOR_DATOS_PERSONALES)) {

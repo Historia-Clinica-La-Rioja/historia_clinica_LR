@@ -1,7 +1,9 @@
-<h1>{{this.data.title | translate}}</h1>
+<h1 mat-dialog-title>{{this.data.title | translate}}</h1>
 
-<mat-selection-list [multiple]="false">
-    <mat-list-option *ngFor="let opt of options" (click)="cancel(opt.value)">
-        <span [translate]="opt.title"></span>
-    </mat-list-option>
-</mat-selection-list>
+<div mat-dialog-content>
+    <mat-selection-list [multiple]="false">
+        <mat-list-option *ngFor="let opt of options" (click)="cancel(opt.value)">
+            <span [translate]="opt.title"></span>
+        </mat-list-option>
+    </mat-selection-list>
+</div>

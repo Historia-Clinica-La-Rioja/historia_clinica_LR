@@ -42,7 +42,7 @@ public class AnnexIIBo {
 
     private String specialty;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String sisaCode;
 
@@ -65,6 +65,10 @@ public class AnnexIIBo {
 	private Boolean showProcedures;
 	private Integer missingProcedures;
 
+	private Short patientIdentityAccreditationStatusId;
+
+	private AnnexIIProfessionalBo professional;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
@@ -78,7 +82,7 @@ public class AnnexIIBo {
         this.existsConsultation = annexIIOutpatientVo.getExistsConsultation();
         this.hasProcedures = annexIIOutpatientVo.getHasProcedures();
         this.specialty = annexIIOutpatientVo.getSpecialty();
-        this.consultationDate = annexIIOutpatientVo.getConsultationDate();
+        this.consultationDate = annexIIOutpatientVo.getCreatedOn();
         this.problems = annexIIOutpatientVo.getProblems();
 
 		this.medicalCoverage = annexIIOutpatientVo.getMedicalCoverage();
@@ -101,12 +105,7 @@ public class AnnexIIBo {
         this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
         this.medicalCoverageCuit = annexIIAppointmentVo.getMedicalCoverageCuit();
 		this.rnos = annexIIAppointmentVo.getRnos();
+		this.patientIdentityAccreditationStatusId = annexIIAppointmentVo.getPatientIdentityAccreditationStatusId();
     }
 
-    public LocalDate getConsultationOrAttentionDate(){
-    	if (this.getConsultationDate() != null)
-    		return this.getConsultationDate();
-    	else
-    		return this.getAttentionDate();
-    }
 }

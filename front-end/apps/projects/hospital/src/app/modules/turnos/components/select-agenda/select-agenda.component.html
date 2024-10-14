@@ -53,28 +53,17 @@
 				</mat-option>
 			</mat-optgroup>
 		</mat-select>
-		<button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected" matSuffix color="warn"
+		<button id="clear_agenda_selected" type="button"  *ngIf="agendaSelected" matSuffix color="warn"
 			mat-icon-button (click)="clear(agendaSelected); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
 	</mat-form-field>
 
 	<div class="actions" *ngIf="agendaSelected" fxLayout="row" fxLayoutGap="3px">
-		<button mat-flat-button color="primary" id="print_agenda" name="print_agenda" (click)="printAgenda()">
-			<mat-icon>print</mat-icon>
-		</button>
-		<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda"
-			name="edit_agenda" (click)="goToEditAgenda()">
-			<mat-icon>edit</mat-icon>
-		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA', 'ADMINISTRATIVO']" id="block_agenda"
-			(click)="blockAgenda()">
-			<mat-icon>block</mat-icon>
-		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda"
-			name="delete_agenda" (click)="deleteAgenda()">
-			<mat-icon>delete</mat-icon>
-		</button>
+		<app-button text="imprimir" color="primary" id="print_agenda" name="print_agenda" (clicked)="printAgenda()" ></app-button>
+		<app-button text="editar" color="primary" id="edit_agenda" name="edit_agenda" (clicked)="goToEditAgenda()" *appHasRole="['ADMINISTRADOR_AGENDA']"></app-button>
+		<app-button text="bloquear" color="warn" id="block_agenda" (clicked)="blockAgenda()" *appHasRole="['ADMINISTRADOR_AGENDA', 'ADMINISTRATIVO']"></app-button>
+		<app-button text="eliminar" color="warn" id="delete_agenda" name="delete_agenda" (clicked)="deleteAgenda()" *appHasRole="['ADMINISTRADOR_AGENDA']"></app-button>
 	</div>
 
 </section>
@@ -97,3 +86,4 @@
 </ng-container>
 
 <router-outlet></router-outlet>
+

@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterBo;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -10,10 +12,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtySectorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterizedFormPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
@@ -34,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +60,7 @@ public class AuditableContextBuilder {
 	private final Function<Integer, BasicPatientDto> basicDataFromPatientLoader;
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 	private final Function<Integer, ClinicalSpecialtyDto> clinicalSpecialtyDtoFunction;
+	private final Function<Integer, ClinicalSpecialtySectorDto> clinicalSpecialtySectorDtoFunction;
 	private final SharedImmunizationPort sharedImmunizationPort;
 	private final RiskFactorMapper riskFactorMapper;
 	private final LocalDateMapper localDateMapper;
@@ -83,6 +90,8 @@ public class AuditableContextBuilder {
 
 	private final SharedAddressPort sharedAddressPort;
 
+	private final MapCompletedForms mapCompletedForms;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -90,6 +99,7 @@ public class AuditableContextBuilder {
 			SharedPatientPort sharedPatientPort,
 			DocumentAuthorFinder documentAuthorFinder,
 			ClinicalSpecialtyFinder clinicalSpecialtyFinder,
+			ClinicalServiceSectorFinder clinicalServiceSectorFinder,
 			SharedImmunizationPort sharedImmunizationPort,
 			RiskFactorMapper riskFactorMapper,
 			LocalDateMapper localDateMapper,
@@ -104,7 +114,8 @@ public class AuditableContextBuilder {
 			DoctorsOfficeFinder doctorsOfficeFinder,
 			ShockRoomFinder shockRoomFinder,
 			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder,
-			SharedAddressPort sharedAddressPort) {
+			SharedAddressPort sharedAddressPort,
+			MapCompletedForms mapCompletedForms) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -114,6 +125,7 @@ public class AuditableContextBuilder {
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
 		this.authorFromDocumentFunction = documentAuthorFinder::getAuthor;
 		this.clinicalSpecialtyDtoFunction = clinicalSpecialtyFinder::getClinicalSpecialty;
+		this.clinicalSpecialtySectorDtoFunction = clinicalServiceSectorFinder::getClinicalSpecialtySector;
 		this.riskFactorMapper = riskFactorMapper;
 		this.featureFlagsService = featureFlagsService;
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
@@ -126,14 +138,18 @@ public class AuditableContextBuilder {
 		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
 		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
 		this.sharedAddressPort = sharedAddressPort;
+		this.mapCompletedForms = mapCompletedForms;
 	}
 
-	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
+	public <T extends IDocumentBo> Map<String,Object> buildContext(T document) {
 		logger.debug("Input parameters -> document {}", document);
+
+		Integer patientId = document.getPatientId();
 		Map<String,Object> contextMap = new HashMap<>();
-		addPatientInfo(contextMap, patientId, document.getDocumentType());
+		BasicPatientDto patientDto = basicDataFromPatientLoader.apply(patientId);
+		addPatientInfo(contextMap, patientDto, document.getDocumentType());
 		if (document.getDocumentType() == DocumentType.DIGITAL_RECIPE) {
-			addDigitalRecipeContextDocumentData(contextMap, document);
+			addDigitalRecipeContextDocumentData(contextMap, document, patientDto);
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
@@ -147,17 +163,12 @@ public class AuditableContextBuilder {
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
-		if (document.getDocumentType() == DocumentType.ANESTHETIC_REPORT) {
-			this.addAnestheticReportData(contextMap, document);
-			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
-			return contextMap;
-		}
 		addDocumentInfo(contextMap, document);
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
 	}
-	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId, Short documentType) {
-		var patientDto = basicDataFromPatientLoader.apply(patientId);
+
+	private void addPatientInfo(Map<String,Object> contextMap, BasicPatientDto patientDto, Short documentType) {
 		contextMap.put("patient", patientDto);
 		contextMap.put("patientCompleteName", patientDto.getCompletePersonName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 		contextMap.put("patientAge", calculatePatientAge(patientDto));
@@ -212,7 +223,11 @@ public class AuditableContextBuilder {
 		var involvedProfessionals = documentInvolvedProfessionalFinder.find(document.getInvolvedHealthcareProfessionalIds());
 		contextMap.put("involvedProfessionals", involvedProfessionals);
 
+		var completedForms = mapCompletedForms.execute(document.getCompleteForms());
+		contextMap.put("completedForms", completedForms);
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
+		contextMap.put("clinicalSpecialtySector", document.getClinicalSpecialtySectorId() != null ?
+				clinicalSpecialtySectorDtoFunction.apply(document.getClinicalSpecialtySectorId()) : null);
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		contextMap.put("appLogo", generatePdfImage("pdf/hsi-footer-118x21.png"));
@@ -277,21 +292,30 @@ public class AuditableContextBuilder {
 		}
 	}
 
-	private <T extends IDocumentBo> void addAnestheticReportData(Map<String, Object> ctx, T document) {
-		ctx.put("chart", document.getAnestheticChart());
-	}
-
-	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {
+	/**
+	 * Some jurisdictions/flavors need the bar code to read as:
+	 * {patient identification number}-{recipe domain}-{encounter id}
+	 * while others use: {recipe domain}-{encounter id}
+	 *
+	 * The template used for the prescription can choose which one to use
+	 */
+	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document, BasicPatientDto patientDto) {
 		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		var dateUntil = document.getPerformedDate().plusDays(30).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("requestDate", date);
 		ctx.put("dateUntil", dateUntil);
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 
-
 		var recipeNumberWithDomain = recipeDomain + "-" + document.getEncounterId().toString();
 		var recipeNumberBarCode = generateDigitalRecipeBarCode(recipeNumberWithDomain);
+		var recipeNumberWithIdentificationNumber = String.format(
+			"%s-%s-%s",
+			patientDto.getIdentificationNumber(),
+			recipeDomain,
+			document.getEncounterId().toString());
+		var recipeNumberBarCodeWithIdentificationNumber = generateDigitalRecipeBarCode(recipeNumberWithIdentificationNumber);
 		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
+		ctx.put("recipeNumberBarCodeWithIdentificationNumber", recipeNumberBarCodeWithIdentificationNumber);
 		ctx.put("recipeNumber", recipeNumberWithDomain);
 
 		var recipeUuidWithDomain = completeDomain(recipeDomain.toString()) + "-" + document.getUuid().toString();
@@ -389,5 +413,6 @@ public class AuditableContextBuilder {
 		return String.format("%0" + (11 - domain.length()) + "d%s", 0, domain);
 
 	}
+
 }
 

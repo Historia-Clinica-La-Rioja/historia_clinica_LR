@@ -1,5 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
+import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
+import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
@@ -304,6 +306,15 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		Optional<ReferenceStudyBo> result = referenceRepository.getReferenceStudy(referenceId);
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	@Override
+	public void updateDestinationInstitution(Integer referenceId, Integer institutionId) {
+		log.debug("Input parameteres -> referenceId {}, institutionId {}", referenceId, institutionId);
+		var reference = this.referenceRepository.findById(referenceId).orElseThrow(() ->
+				new ReferenceException(ReferenceExceptionEnum.INVALID_REFERENCE_ID,  String.format("La referencia con id %s no existe", referenceId)));
+		reference.setDestinationInstitutionId(institutionId);
+		this.referenceRepository.save(reference);
 	}
 
 }

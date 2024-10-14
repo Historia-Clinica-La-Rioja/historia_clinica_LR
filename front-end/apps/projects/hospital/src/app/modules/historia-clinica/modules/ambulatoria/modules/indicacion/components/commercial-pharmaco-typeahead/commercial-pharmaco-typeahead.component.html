@@ -1,0 +1,24 @@
+<form class="full-width" fxLayout="row" fxLayoutGap="10px">
+	<mat-form-field class="full-width" appearance="outline">
+		<input type="text" placeholder="{{ placeholder | translate }}" aria-label="Number" matInput
+			[formControl]="myControl" [matAutocomplete]="autoGroup" (focus)="inputFocused" [required]="required">
+		<mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="handleOptionSelected($event)" [displayWith]="getDisplayName">
+			<mat-optgroup *ngFor="let option of filteredOptions | async" [label]="option.commercialPt">
+			  <mat-option [value]="option">
+				{{option.genericMedication.pt}}
+			  </mat-option>
+		  </mat-optgroup>
+		</mat-autocomplete>
+		<mat-hint *ngIf="snomedConcept == null && inputFocused">
+			{{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
+		</mat-hint>
+		<mat-error *ngIf="myControl.hasError('required')" translate="forms.REQUIRED"></mat-error>
+		<button type="button" matSuffix mat-icon-button *ngIf="snomedConcept == null">
+			<mat-icon>search</mat-icon>
+		</button>
+		<button *ngIf="snomedConcept != null" id="clear" type="button" matSuffix color="warn" mat-icon-button
+			(click)="clear()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+</form>

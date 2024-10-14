@@ -2,8 +2,8 @@ package net.pladema.medicalconsultation.equipmentdiary.service.impl;
 
 
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
+import net.pladema.medicalconsultation.appointment.application.UpdateEquipmentAppointmentOpeningHours;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.medicalconsultation.equipmentdiary.repository.EquipmentDiaryRepository;
@@ -49,12 +49,9 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
     private static final String OUTPUT = "Output -> {}";
 
     private final EquipmentDiaryOpeningHoursService equipmentDiaryOpeningHoursService;
-
     private final EquipmentDiaryRepository equipmentDiaryRepository;
-
     private final AppointmentService appointmentService;
-
-    private final UpdateAppointmentOpeningHoursService updateApmtOHService;
+    private final UpdateEquipmentAppointmentOpeningHours updateEquipmentAppointmentOpeningHours;
 
     @Override
     @Transactional
@@ -197,7 +194,7 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
                 savedDoh -> apmts.forEach(apmt -> apmt.setOpeningHoursId(savedDoh.getOpeningHours().getId()))));
         List<AppointmentBo> apmtsToUpdate = apmtsByNewDOH.values().stream().flatMap(Collection::stream)
                 .collect(toList());
-        apmtsToUpdate.forEach(appointment -> updateApmtOHService.execute(appointment, true));
+        apmtsToUpdate.forEach(updateEquipmentAppointmentOpeningHours::run);
     }
 
     private void adjustExistingAppointmentsOpeningHours(HashMap<EquipmentDiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH,
@@ -208,7 +205,7 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
                 throw new OverturnsLimitException(
                         "Se encuentran asignados una cantidad mayor de sobreturnos al límite establecido en la franja del dia " +
                                 EDayOfWeek.map(doh.getOpeningHours().getDayWeekId()).getDescription() +
-                                ", en el horario de " + doh.getOpeningHours().getFrom() + " a " + doh.getOpeningHours().getTo());
+                                ", en el horario de " + doh.getOpeningHours().getFrom() + "hs. a " + doh.getOpeningHours().getTo() + "hs.");
             }
         });
     }

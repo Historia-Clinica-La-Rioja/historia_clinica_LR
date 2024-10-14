@@ -32,7 +32,7 @@ public class CipresWSConfig extends WSConfig {
 
 	private static final String NACIONALITY = "/api/referencias/nacionalidades";
 
-	private static final Duration DEFAULT_TOKEN_EXPIRATION = Duration.ofSeconds(10L);
+	private static final Duration DEFAULT_TOKEN_EXPIRATION = Duration.ofSeconds(3600L);
 
 	private String username;
 

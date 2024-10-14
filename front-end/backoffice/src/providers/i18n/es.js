@@ -1,4 +1,3 @@
-
 const sectorMessages = {
     name: 'Sector |||| Sectores',
     fields: {
@@ -209,7 +208,10 @@ const messages = {
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
                 provinceCode: 'Código de provincia',
-                hierarchicalUnits: 'Unidades jerárquicas'
+                hierarchicalUnits: 'Unidades jerárquicas',
+                parameterizedForm: 'Formularios configurables',
+                institutionalParameterizedForm: 'Formularios configurables institucionales',
+                pharmacos: 'Fármacos y grupos de fármacos'
             },
         },
         "booking-institution": {
@@ -608,7 +610,7 @@ const messages = {
             },
         },
         "properties": {
-            name: 'Propiedades del sistema |||| Propiedades del sistema',
+            name: 'Propiedad del sistema |||| Propiedades del sistema',
             fields: {
                 property: 'Propiedad',
                 value: 'Valor',
@@ -616,6 +618,15 @@ const messages = {
                 nodeId: 'Nodo',
                 updatedOn: 'Última actualización',
                 description: 'Descripción',
+            }
+        },
+        'report-queue': {
+            name: 'Reporte generado |||| Reportes generados',
+            fields: {
+                createdOn: 'Creación',
+                generatedOn: 'Generación',
+                generatedError: 'Mensaje de generación',
+                fileId: 'Archivo',
             }
         },
         "healthinsurances": {
@@ -794,7 +805,9 @@ const messages = {
                 executionEndTime:'Hora de fin de ejecución',
                 weightDays:'Peso asignado a la cantidad dias',
                 weightSize:'Peso asignado al tamaño',
-                weightPriority:'Peso asignado a la prioridad'
+                weightPriority:'Peso asignado a la prioridad',
+                massiveRetry: 'Reintentar movimiento masivo',
+                findStudies:'Buscar posibles estudios'
 
             },
             parameter:'Parámetros de configuración ',
@@ -857,6 +870,18 @@ const messages = {
             }
         },
 
+        resultstudies: {
+            name: 'Posibles  Estudios',
+            fields: {
+                patientId: 'DNI',
+                patientName: 'Apellido y Nombre',
+                studyDate: 'Fecha del estudio',
+                studyTime: 'Hora del estudio',
+                studyInstanceUid: 'Id estudios',
+                modality: 'Modalidad'
+            }
+        },
+
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
             fields: {
@@ -866,6 +891,7 @@ const messages = {
         },
         hierarchicalunits: {
             name: 'Unidad jerárquica |||| Unidades jerárquicas',
+            closestServiceId: 'Tu vieja',
             fields: {
                 id: 'Id',
                 institutionId: 'Institución',
@@ -873,7 +899,9 @@ const messages = {
                 typeId: 'Tipo',
                 alias: 'Alias',
                 clinicalSpecialtyId: 'Servicio',
-                hierarchicalUnitIdToReport: 'Productividad asociada a'
+                hierarchicalUnitIdToReport: 'Productividad asociada a',
+                closestServiceId: 'Servicio inmediato superior',
+                closestService: 'Servicio inmediato superior'
             },
             createRelated: 'Crear Unidad jerárquica'
         },
@@ -881,7 +909,7 @@ const messages = {
             name: 'Relación entre unidades jerárquicas',
             fields : {
                 hierarchicalUnitChildId: 'Unidad jerárquica hija',
-                hierarchicalUnitParentId: 'Unidad jerárquica padre',
+                hierarchicalUnitParentId: 'Unidad jerárquica padre'
             },
             parents : {
                 name: 'Unidades jerárquicas padres',
@@ -891,7 +919,11 @@ const messages = {
                 name: 'Unidades jerárquicas hijas',
                 createRelated: 'Crear unidad hija'
             },
-            createRelated: 'Asociar Unidad jeárquica'
+            closestService: {
+                name: 'Servicio inmediato superior',
+                addRelated: 'Asociar servicio inmediato superior'
+            },
+            createRelated: 'Asociar Unidad jerárquica'
         },
         hierarchicalunitstaff: {
             name: 'Usuarios',
@@ -1016,6 +1048,7 @@ const messages = {
                 code: 'Unidad',
                 enabled: 'Disponible en sistema'
             },
+            title: 'Estándar UCOM'
         },
         proceduretemplateparameters: {
             name: 'Parametros asociados',
@@ -1099,15 +1132,93 @@ const messages = {
             }
         },
         medicinegroups: {
-            name: "Grupo de fármacos |||| Grupos de fármacos",
+            name: 'Grupo de fármacos |||| Grupos de fármacos',
             fields: {
-                name: "Nombre del grupo",
-                requiresAudit: "Requiere auditoría",
-                outpatient: "Ambulatoria",
-                emergencyCare: "Guardia", 
-                internment: "Internación"
+                name: 'Nombre del grupo',
+                requiresAudit: 'Requiere auditoría',
+                outpatient: 'Ambulatoria',
+                emergencyCare: 'Guardia', 
+                internment: 'Internación',
+                addpharmaco: 'Agregar fármaco',
+                addproblem: 'Agregar problema',
+                allDiagnoses: 'Incluir todos',
+                message: 'Mensaje',
+                requiredDocumentation: 'Documentación requerida'
+            },
+            tabs: {
+                pharmacos: 'Fármacos',
+                diagnoses: 'Diagnósticos/Problemas'
             },
             createRelated: 'Crear Grupo de fármacos'
+        },
+        parameterizedform: {
+            name: "Formulario Configurable |||| Formularios Configurables",
+            statusId: {
+                draft: 'Borrador',
+                active: 'Activo',
+                inactive: 'Inactivo',
+                activate: 'Activar',
+                deactivate: 'Desactivar'
+            },
+            formName: 'Nombre del formulario',
+            scope: 'Ámbito',
+            status: 'Estado',
+            excludeInactive: 'Excluir inactivos',
+            description: 'Descripción',
+            outpatient: 'Ambulatorio',
+            emergencyCare: 'Guardia',
+            internment: 'Internación',
+            createRelated: 'Crear formulario'
+        },
+        parameterizedformparameter: {
+            name: '',
+            button: 'Asociar parámetro',
+            associatedParameters: 'Parámetros asociados',
+            order: 'Orden',
+            formName: 'Nombre de formulario'
+        },
+        medicinegroupmedicines: {
+            name: 'asociación de fármaco a grupo de fármacos'
+        },
+        medicinegroupproblems: {
+            name: 'asociación de problema/diagnósticos a grupo de fármacos',
+            fields: {
+                conceptPt: 'Nombre'
+            }
+        },
+        'institutions-prescription': {
+            name: 'Establecimiento para prescripción  |||| Establecimientos para prescripción',
+            fields: {
+                name: 'Nombre',
+                sisaCode: 'Código SISA',
+                addressId: 'Dirección',
+                dependencyId: 'Dependencia',
+                provinceId: 'Provincia'
+            }
+        },
+        institutionmedicinesfinancingstatus: {
+            name: "Fármaco",
+            fields: {
+                conceptPt: "Fármaco de uso clínico",
+                conceptSctid: "COD Snomed",
+                financedByDomain: "Financiado por dominio",
+                financedByInstitution: "Financiado por institución"
+            }
+        },
+        institutionmedicinegroups: {
+            name: "Grupo de fármacos de institución",
+            fields: {
+                name: 'Nombre del grupo',
+                requiresAudit: 'Requiere auditoría',
+                outpatient: 'Ambulatoria',
+                emergencyCare: 'Guardia', 
+                internment: 'Internación',
+                allDiagnoses: 'Incluir todos',
+                message: 'Mensaje',
+                enabled: 'Habilitado por la institución',
+                requiredDocumentation: 'Documentación requerida'
+            },
+            addRelated: 'Agregar grupo de fármacos'
         }
     }
 };

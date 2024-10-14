@@ -15,15 +15,13 @@
 	<div class="spinner" *ngIf="isLoading">
 		<mat-spinner color="primary"></mat-spinner>
 	</div>
-	<app-selectable-card *ngIf="!isLoading"
+	<app-summary-card-multiple-sign *ngIf="!isLoading"
 		[dataList]="documents"
 		[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
 		[hasHeader]="!!selectedDocumentId"
-		[isDownloadable]="true"
         [detailedInformation]="detailedInformation"
-		(downloadId)="download($event)"
-		(selectedId)="seeDetails($event)"
-		(selectedDataList)="selectedIds($event)">
+		(selectedIdOnChange)="seeDetails($event)"
+		(checkedIdsOnChange)="selectedIds($event)">
 		<span translate="digital-signature.UNSELECTED_DOCUMENT" *ngIf="!selectedDocumentId"	class="no-detailed-information"></span>
 		<div class="header-information" *ngIf="!!selectedDocumentId">
 			<app-header-attention-detail
@@ -32,7 +30,7 @@
 				[title]="'firma-conjunta.TITLE_HEADER'">
 			</app-header-attention-detail>
 		</div>
-	</app-selectable-card>
+	</app-summary-card-multiple-sign>
 	<mat-paginator #paginator
 		(page)="handlePageEvent($event)"
 		[length]="elementsAmount"

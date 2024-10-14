@@ -10,4 +10,6 @@ public interface DischargeTypeMasterDataService {
 
     List<DischargeTypeBo> getAllEmergencyCareDischargeTypes();
 
+	List<DischargeTypeBo> getAllNursingEmergencyCareDischargeTypes();
+
 }

@@ -1,7 +1,7 @@
 @import "./modules/ambulatoria/ambulatoria-mixins.scss";
 @import "./modules/odontologia/odontologia-mixins.scss";
 @import "./modules/ambulatoria/modules/internacion/internacion-mixins.scss";
-@import "./components/box-message/box-message-theme.scss";
+@import "../presentation/components/box-message/box-message-theme.scss";
 @import "./modules/ambulatoria/modules/indicacion/indicacion-mixins.scss";
 
 @mixin historia-clinica-mixins($theme) {

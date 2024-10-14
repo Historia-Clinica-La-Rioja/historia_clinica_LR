@@ -14,7 +14,7 @@ import java.util.List;
 public class TriageAdministrativeDto extends TriageDto {
 
     @Builder(builderMethodName = "administrativeBuilder")
-    public TriageAdministrativeDto(Short categoryId, Integer doctorsOfficeId, List<OutpatientReasonDto> reasons){
-        super(categoryId, doctorsOfficeId, reasons);
+    public TriageAdministrativeDto(Short categoryId, Integer doctorsOfficeId, List<OutpatientReasonDto> reasons, Integer clinicalSpecialtySectorId){
+        super(categoryId, doctorsOfficeId, reasons, clinicalSpecialtySectorId);
     }
 }

@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto, TriageBreathingDto, TriageCirculationDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, TitleDescriptionListItem, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
-import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender } from '@historia-clinica/constants/document-summary.constants';
+import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM, CRITICITY_DESCRIPTION, PROPOSED_SURGERIES_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
-const INFO_DIVIDER = ' | ';
 
 @Injectable({
     providedIn: 'root'
@@ -49,12 +48,31 @@ export class DocumentsSummaryMapperService {
         }
     }
 
+    mapEmergencyCareToHeaderDescription(header: HospitalizationDocumentHeaderDto, title: string, canEdit?: boolean, canDelete?: boolean, canDownload?: boolean): HeaderDescription {
+        return {
+            title,
+            edit: canEdit,
+            delete: canDelete,
+            download: canDownload,
+            headerDescriptionData: {
+                scope: header.sourceTypeName,
+                specialty: header.clinicalSpecialtyName,
+                dateTime: this.dateFormatPipe.transform(dateTimeDtotoLocalDate(header.createdOn), 'datetime'),
+                professional: header.professionalName,
+                institution: header.institutionName,
+                sector: header.bed?.room.sector.description,
+                room: header.bed?.room.description,
+                bed: header.bed?.bedNumber,
+            },
+        }
+    }
+
     toDescriptionItemData(description: string,  dateToShow?: DateToShow): DescriptionItemData {
         return {
             description,
             ...(dateToShow && { dateToShow }),
         }
-    }        
+    }
 
     mapDiagnosisToDescriptionItemData(diagnosis: DiagnosisDto[]): DescriptionItemData[] {
         return diagnosis.map(diag => this.toDescriptionItemData(this.mapDescriptionAndStatusToString(diag)));
@@ -82,11 +100,12 @@ export class DocumentsSummaryMapperService {
         return date ? { date: dateTimeDtoToDate(date), format: DateFormat.DATE } : null;
     }
 
-    mapToAnthropometricData(antropometricData: AnthropometricDataDto): AnthropometricData {
+    mapToAnthropometricData(anthropometricData: AnthropometricDataDto): AnthropometricData {
         return {
-            ...(antropometricData.height && { height: [this.toDescriptionItemData(antropometricData.height.value)] }),
-            ...(antropometricData.bloodType && { bloodType:[ this.toDescriptionItemData(antropometricData.bloodType.value)] }),
-            ...(antropometricData.weight && { weight: [this.toDescriptionItemData(`${antropometricData.weight.value} ${VITAL_SIGNS_AND_RISK_FACTORS.KG}`)] }),
+            ...(anthropometricData.height && { height: [this.toDescriptionItemData(`${anthropometricData.height.value} ${VITAL_SIGNS_AND_RISK_FACTORS.CENTIMETERS}`)] }),
+            ...(anthropometricData.bloodType && { bloodType:[ this.toDescriptionItemData(anthropometricData.bloodType.value)] }),
+            ...(anthropometricData.weight && { weight: [this.toDescriptionItemData(`${anthropometricData.weight.value} ${VITAL_SIGNS_AND_RISK_FACTORS.KG}`)] }),
+            ...(anthropometricData.headCircumference && { headCircunference: [this.toDescriptionItemData(`${anthropometricData.headCircumference.value} ${VITAL_SIGNS_AND_RISK_FACTORS.CENTIMETERS}`)] }),
         }
     }
 
@@ -106,23 +125,41 @@ export class DocumentsSummaryMapperService {
     }
 
     mapAllergiesToDescriptionItemData(allergies: AllergyConditionDto[]): DescriptionItemData[] {
-        return allergies.map(allergie => this.toDescriptionItemData(allergie.snomed.pt));
+        return allergies.map(allergy => this.toDescriptionItemData(allergy.snomed.pt));
+    }
+
+    mapOutpatientAllergiesToDescriptionItemData(allergies: OutpatientAllergyConditionDto[]): DescriptionItemData[] {
+        return allergies.map(allergy => this.toDescriptionItemData(this.getAllergyDescription(allergy), this.mapStringToDateToShow(allergy.startDate)));
+    }
+
+    getAllergyDescription(allergy: OutpatientAllergyConditionDto): string {
+        return `${allergy.snomed.pt} (${this.mapAllergiesCriticityIdToDescription(allergy.criticalityId)})`
+    }
+
+    mapAllergiesCriticityIdToDescription(criticityId: number): string {
+        return CRITICITY_DESCRIPTION[criticityId];
     }
 
     mapVaccinesToDescriptionItemData(vaccines: ImmunizationDto[]): DescriptionItemData[] {
         return vaccines.map(vaccine => this.toDescriptionItemData(vaccine.snomed.pt, this.mapStringToDateToShow(vaccine.administrationDate)));
     }
 
-    mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[]): DescriptionItemData[] {
+	mapProposedSurgeriesToDescriptionItemData(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
+		return proposedSurgeries.map(proposedSurgery => this.toDescriptionItemData(proposedSurgery.snomed.pt))
+	}
+
+    mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[] | OutpatientFamilyHistoryDto []): DescriptionItemData[] {
         return histories.map(history => this.toDescriptionItemData(history.snomed.pt,  this.mapStringToDateToShow(history.startDate)));
-    }    
-    
+    }
+
     mapMedicationsToDescriptionItemData(medications: MedicationDto[]): DescriptionItemData[] {
         return medications.map(medication => this.toDescriptionItemData(this.getMedicationDescription(medication)));
     }
 
     private getMedicationDescription(medication: MedicationDto): string {
-        return medication.note ? `${medication.snomed.pt} ${this.isSuspended(medication)} ${INFO_DIVIDER} ${medication.note}` : `${medication.snomed.pt} ${this.isSuspended(medication)}`;
+        return medication.note ? `${medication.snomed.pt} ${this.isSuspended(medication)}
+${medication.note}`
+            : `${medication.snomed.pt} ${this.isSuspended(medication)}`;
     }
 
     private isSuspended(medication: MedicationDto): string {
@@ -131,11 +168,11 @@ export class DocumentsSummaryMapperService {
 
     hasClinicalEvaluations(notes: DocumentObservationsDto): boolean {
         return (
-            !!notes.currentIllnessNote?.length 
-            || !!notes.physicalExamNote?.length 
-            || !!notes.studiesSummaryNote?.length 
-            || !!notes.evolutionNote?.length 
-            || !!notes.clinicalImpressionNote?.length 
+            !!notes.currentIllnessNote?.length
+            || !!notes.physicalExamNote?.length
+            || !!notes.studiesSummaryNote?.length
+            || !!notes.evolutionNote?.length
+            || !!notes.clinicalImpressionNote?.length
             || !!notes.otherNote?.length)
     }
 
@@ -169,12 +206,26 @@ export class DocumentsSummaryMapperService {
         }
     }
 
+    mapOutpatientAllergiesToDescriptionItemDataSummary(allergies: OutpatientAllergyConditionDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapOutpatientAllergiesToDescriptionItemData(allergies),
+            ...ALLERGIES_DESCRIPTION_ITEM,
+        }
+    }
+
     mapVaccinesToDescriptionItemDataSummary(vaccines: ImmunizationDto[]): DescriptionItemDataSummary {
         return {
             summary: this.mapVaccinesToDescriptionItemData(vaccines),
             ...VACCINES_DESCRIPTION_ITEM,
         }
     }
+
+	mapProposedSurgeriesToDescriptionItemDataSummary(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemDataSummary {
+		return {
+			summary: this.mapProposedSurgeriesToDescriptionItemData(proposedSurgeries),
+			...PROPOSED_SURGERIES_DESCRIPTION_ITEM,
+		}
+	}
 
     mapPersonalHistoriesToDescriptionItemDataSummary(personalHistories: HealthHistoryConditionDto[]): DescriptionItemDataSummary {
         return {
@@ -190,10 +241,36 @@ export class DocumentsSummaryMapperService {
         }
     }
 
+    mapFamilyHistoriesToReferredDescriptionItemDataSummary(familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>): ReferredDescriptionItemData {
+        return {
+            isReferred: this.isReferred(familyHistories),
+            notReferredText: this.translateService.instant('guardia.documents-summary.family-histories.NOT_REFERRED'),
+            content: {
+                summary: this.mapHistoriesToDescriptionItemData(familyHistories.content),
+                ...FAMILY_HISTORIES_DESCRIPTION_ITEM,
+            }
+        }
+    }
+
+    mapAllergiesToReferredDescriptionItemDataSummary(allergies: ReferableItemDto<OutpatientAllergyConditionDto>): ReferredDescriptionItemData {
+        return {
+            isReferred: this.isReferred(allergies),
+            notReferredText: this.translateService.instant('guardia.documents-summary.allergies.NOT_REFERRED'),
+            content: this.mapOutpatientAllergiesToDescriptionItemDataSummary(allergies.content),
+        }
+    }
+
     mapMedicationsToDescriptionItemDataSummary(medications: MedicationDto[]): DescriptionItemDataSummary {
         return {
             summary: this.mapMedicationsToDescriptionItemData(medications),
             ...USUAL_MEDICATIONS_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapReasonsToDescriptionItemDataSummary(reasons: OutpatientReasonDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapProceduresToDescriptionItemData(reasons),
+            ...REASONS_DESCRIPTION_ITEM,
         }
     }
 
@@ -259,7 +336,7 @@ export class DocumentsSummaryMapperService {
     }
 
     hasExternalCause(externalCause: ExternalCauseDto): boolean {
-        return !!(externalCause.eventLocation || externalCause.externalCauseType || externalCause.snomed);
+        return !!(externalCause && (externalCause.eventLocation || externalCause.externalCauseType || externalCause.snomed));
     }
 
     mapExternalCauseToDescriptionItemDataInfo(externalCause: ExternalCauseDto): DescriptionItemDataInfo[] {
@@ -353,10 +430,108 @@ export class DocumentsSummaryMapperService {
     }
 
     hasObstetricEvent(obstetricEvent: ObstetricEventDto): boolean {
-        return !!(obstetricEvent.newborns.length || 
-                !!(obstetricEvent.currentPregnancyEndDate 
-                || obstetricEvent.gestationalAge 
-                || obstetricEvent.pregnancyTerminationType 
-                || obstetricEvent.previousPregnancies));
+        return !! (obstetricEvent && (obstetricEvent.newborns.length ||
+                !!(obstetricEvent.currentPregnancyEndDate
+                || obstetricEvent.gestationalAge
+                || obstetricEvent.pregnancyTerminationType
+                || obstetricEvent.previousPregnancies)));
+    }
+
+    hasReferredItemContent<T>(item: ReferableItemDto<T>): boolean {
+        return !(item.isReferred == null)
+    }
+
+    isReferred<T>(item: ReferableItemDto<T>): boolean {
+        return item.isReferred
+    }
+
+    mapAppearencesToTitleDescriptionListItem(appearance: TriageAppearanceDto): TitleDescriptionListItem {
+        let appearanceDescription = [];
+
+        appearance.bodyTemperature ? appearanceDescription.push({
+            title: 'guardia.documents-summary.appearance.TEMPERATURE',
+            dataId: 'temperature-section',
+            descriptionData: [this.toDescriptionItemData(appearance.bodyTemperature.description)],
+        }) : null;
+
+        appearance.cryingExcessive ? appearanceDescription.push({
+            title: 'guardia.documents-summary.appearance.CRYING_EXCESSIVE',
+            dataId: 'cryingExcessive-section',
+            descriptionData: appearance.cryingExcessive ? this.mapBooleanToDescription(appearance.cryingExcessive) : [],
+        })  : null;
+
+        appearance.muscleHypertonia ? appearanceDescription.push({
+            title: 'guardia.documents-summary.appearance.MUSCULAR_TONE',
+            dataId: 'muscular-tone-section',
+            descriptionData: [this.toDescriptionItemData(appearance.muscleHypertonia?.description)],
+        }) : null;
+
+        return {
+            title: 'guardia.documents-summary.appearance.TITLE',
+            icon: 'monitor_heart',
+            description: appearanceDescription,
+        }
+    }
+
+    mapBreathingToTitleDescriptionListItem(breathing: TriageBreathingDto): TitleDescriptionListItem {
+        let breathingDescription = [];
+
+        breathing.respiratoryRetraction ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.RESPIRATORY_RETRACTION',
+            dataId: 'respiratory-retraction-section',
+            descriptionData: [this.toDescriptionItemData(breathing.respiratoryRetraction.description)],
+        }) : null;
+
+        breathing.stridor ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.STRIDOR',
+            dataId: 'stridor-section',
+            descriptionData: breathing.stridor ? this.mapBooleanToDescription(breathing.stridor) : [],
+        })  : null;
+
+        breathing.respiratoryRate ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.RESPIRATORY_RATE',
+            dataId: 'respiratory-rate-section',
+            descriptionData: [this.toDescriptionItemData(`${breathing.respiratoryRate?.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)],
+        }) : null;
+
+        breathing.bloodOxygenSaturation ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.BLOOD_OXYGEN_SATURATION',
+            dataId: 'saturation-section',
+            descriptionData: [this.toDescriptionItemData(`${breathing.bloodOxygenSaturation?.value}${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)],
+        }) : null;
+
+        return {
+            title: 'guardia.documents-summary.breathing.TITLE',
+            icon: 'monitor_heart',
+            description: breathingDescription,
+        }
+    }
+
+    mapCirculationToTitleDescriptionListItem(circulation: TriageCirculationDto): TitleDescriptionListItem {
+        let circulationDescription = [];
+
+        circulation.perfusion ? circulationDescription.push({
+            title: 'guardia.documents-summary.circulation.PERFUSION',
+            dataId: 'perfusion-section',
+            descriptionData: [this.toDescriptionItemData(circulation.perfusion.description)],
+        }) : null;
+
+        circulation.heartRate ? circulationDescription.push({
+            title: 'guardia.documents-summary.circulation.HEART_RATE',
+            dataId: 'heart-rate-section',
+            descriptionData: circulation.heartRate ? [this.toDescriptionItemData(`${circulation.heartRate.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] : [],
+        })  : null;
+
+        return {
+            title: 'guardia.documents-summary.circulation.TITLE',
+            icon: 'monitor_heart',
+            description: circulationDescription,
+        }
+    }
+
+    private mapBooleanToDescription(value: boolean): DescriptionItemData[] {
+        return value ?
+            [ this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.YES')) ]
+            : [ this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.NO')) ]
     }
 }

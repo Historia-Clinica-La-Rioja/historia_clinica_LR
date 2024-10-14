@@ -18,7 +18,7 @@ import { mapToLocation } from '@api-presentation/mappers/institution-dto.mapper'
 
 import { MenuService } from '@extensions/services/menu.service';
 
-import { HomeRoutes } from '../home/home-routing.module';
+import { HomeRoutes } from '../home/constants/menu';
 import { AppRoutes } from '../../app-routing.module';
 import { SIDEBAR_MENU } from './constants/menu';
 import { AppFeature} from "@api-rest/api-model";

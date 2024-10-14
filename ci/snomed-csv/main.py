@@ -30,7 +30,7 @@ def write_concepts_synonyms_to_file(sf, data, items):
     for concept in items:
         conceptId = concept.get('conceptId')
         sf.write(data.query("conceptId == " + conceptId)
-                 .drop_duplicates("term", keep=False)
+                 .drop_duplicates("term", keep='first')
                  .to_csv(index=False, columns=["conceptId", "term"], header=False, quotechar='"',
                          quoting=csv.QUOTE_NONNUMERIC))
 
@@ -82,6 +82,8 @@ def generate_csv_file(groupName, ecl, data):
         searchAfter = response.get('searchAfter')
 
     f.close()
+    if snomed_synonyms_search:
+        sf.close()
 
 
 f = open('/exporter/ecls.json')

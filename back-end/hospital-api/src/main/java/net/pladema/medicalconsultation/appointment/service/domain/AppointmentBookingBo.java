@@ -9,7 +9,6 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -26,14 +25,14 @@ public class AppointmentBookingBo {
 
 	private String office;
 
-	private List<String> specialties;
+	private String clinicalSpecialtyName;
 
 	public AppointmentBookingBo(AppointmentBookingVo appointmentBookingVo) {
 		setRespectiveProfessionalName(appointmentBookingVo.getProfessionalFirstName(), appointmentBookingVo.getProfessionalMiddleNames(), appointmentBookingVo.getProfessionalLastName(), appointmentBookingVo.getProfessionalOtherLastNames());
 		this.date = appointmentBookingVo.getDate();
 		this.hour = appointmentBookingVo.getHour();
 		this.office = appointmentBookingVo.getOffice();
-		this.specialties = appointmentBookingVo.getSpecialties();
+		this.clinicalSpecialtyName = appointmentBookingVo.getClinicalSpecialtyName();
 	}
 
 	public void setRespectiveProfessionalName(String firstName, String middleNames, String lastName, String otherLastNames) {

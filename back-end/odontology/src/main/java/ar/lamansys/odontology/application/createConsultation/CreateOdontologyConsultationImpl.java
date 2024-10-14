@@ -12,10 +12,15 @@ import java.util.stream.Collectors;
 
 
 import ar.lamansys.odontology.domain.consultation.ConsultationResponseBo;
+import ar.lamansys.odontology.domain.consultation.CreateOdontologyConsultationServiceRequestBo;
 import ar.lamansys.odontology.domain.consultation.reference.ReferenceBo;
 import ar.lamansys.odontology.domain.consultation.reference.ReferenceProblemBo;
 import ar.lamansys.odontology.domain.consultation.reference.ReferenceStudyBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
@@ -24,6 +29,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceStudyDto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,13 +107,20 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final Publisher publisher;
 
+    private final SharedCreateConsultationServiceRequest sharedCreateConsultationServiceRequest;
+
+    private final SharedPatientPort sharedPatientPort;
+
     public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage,
 											OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider,
 											OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage,
 											DrawOdontogramService drawOdontogramService, SharedAppointmentPort sharedAppointmentPort,
 											CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService,
 											OdontologyAppointmentStorage odontologyAppointmentStorage, GetToothService getToothService,
-											Publisher publisher, SharedReferenceCounterReference sharedReferenceCounterReference) {
+											Publisher publisher, SharedReferenceCounterReference sharedReferenceCounterReference,
+											SharedCreateConsultationServiceRequest sharedCreateOutpatientConsultationServiceRequest,
+											SharedPatientPort sharedPatientPort
+		) {
         this.diagnosticStorage = diagnosticStorage;
         this.proceduresStorage = proceduresStorage;
         this.odontologyConsultationStorage = odontologyConsultationStorage;
@@ -121,11 +135,16 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
         this.getToothService = getToothService;
 		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
 		this.publisher = publisher;
+		this.sharedCreateConsultationServiceRequest = sharedCreateOutpatientConsultationServiceRequest;
+		this.sharedPatientPort = sharedPatientPort;
 	}
 
     @Override
     @Transactional
-    public ConsultationResponseBo run(ConsultationBo consultationBo) {
+    public ConsultationResponseBo run(
+    	ConsultationBo consultationBo,
+    	List<CreateOdontologyConsultationServiceRequestBo> serviceRequestsToCreate)
+	{
 		LOG.debug("Input parameter -> consultationBo {}", consultationBo);
 		if (consultationBo == null)
 			throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CONSULTATION, "La información de la consulta es obligatoria");
@@ -136,7 +155,8 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		assertTeethQuantityValid(consultationBo);
 
 		processDentalActions(consultationBo);
-		drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
+		Integer patientId = consultationBo.getPatientId();
+		drawOdontogramService.run(patientId, consultationBo.getDentalActions());
 
 		setPatientMedicalCoverageIfEmpty(consultationBo, doctorInfoBo);
 
@@ -148,12 +168,11 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 				true
 		));
 
-
 		consultationBo.setConsultationId(encounterId);
 		cpoCeoIndicesCalculator.run(consultationBo);
 
 		Long documentId = odontologyDocumentStorage.save(new OdontologyDocumentBo(null, consultationBo, encounterId, doctorInfoBo.getId(), now));
-		Integer appointmentId = odontologyAppointmentStorage.serveAppointment(consultationBo.getPatientId(), doctorInfoBo.getId(), now);
+		Integer appointmentId = odontologyAppointmentStorage.serveAppointment(patientId, doctorInfoBo.getId(), now);
 		if (appointmentId != null)
 			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
 
@@ -163,19 +182,70 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 					consultationBo.getReferences(),
 					consultationBo.getInstitutionId(),
 					doctorInfoBo.getId(),
-					consultationBo.getPatientMedicalCoverageId(),
-					consultationBo.getPatientId(),
+					consultationBo.getPatientMedicalCoverageId(), patientId,
 					encounterId
 			));
 		}
 
-		publisher.run(consultationBo.getPatientId(), consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
+		publisher.run(patientId, consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
 
+
+
+		/**
+		 * Create a service request for each procedure
+		 */
+		BasicPatientDto patientDto = sharedPatientPort.getBasicDataFromPatient(patientId);
+		List<Integer> orderIdsFromProcedures = createServiceRequest(
+			doctorInfoBo.getId(),
+			serviceRequestsToCreate,
+			consultationBo.getPatientMedicalCoverageId(),
+			patientDto,
+			consultationBo.getInstitutionId(),
+			encounterId);
+		orderIds.addAll(orderIdsFromProcedures);
 		ConsultationResponseBo result = new ConsultationResponseBo(encounterId, orderIds);
 
 		LOG.debug("Output -> result {}", result);
 		return result;
     }
+
+	/**
+	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
+	 *
+	 * @return
+	 */
+	private List<Integer> createServiceRequest(
+			Integer doctorId,
+			List<CreateOdontologyConsultationServiceRequestBo> procedures,
+			Integer medicalCoverageId,
+			BasicPatientDto patientDto,
+			Integer institutionId,
+			Integer newConsultationId)
+	{
+		List<Integer> orderIds = new ArrayList<>();
+		for (int i = 0; i < procedures.size(); i++) {
+			var procedure = procedures.get(i);
+			if (procedure != null) {
+
+				String categoryId = procedure.getCategoryId();
+				String healthConditionSctid = procedure.getHealthConditionSctid();
+				String healthConditionPt = procedure.getHealthConditionPt();
+				SnomedDto snomed = new SnomedDto(procedure.getSnomedSctid(), procedure.getSnomedPt());
+				Boolean createWithStatusFinal = procedure.getCreationStatusIsFinal();
+				Optional<SharedAddObservationsCommandVo> addObservationsCommand = procedure.getObservations();
+
+				Integer patientId = patientDto.getId();
+				Short patientGenderId = patientDto.getPerson().getGender().getId();
+				Short patientAge = patientDto.getPerson().getAge();
+
+				Integer orderId = sharedCreateConsultationServiceRequest.createOdontologyServiceRequest(doctorId, categoryId, institutionId,
+						healthConditionSctid, healthConditionPt, medicalCoverageId, newConsultationId, snomed.getSctid(), snomed.getPt(),
+						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				orderIds.add(orderId);
+			}
+		}
+		return orderIds;
+	}
 
 	private void setPatientMedicalCoverageIfEmpty(ConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
 		if (consultationBo.getPatientMedicalCoverageId() == null) {

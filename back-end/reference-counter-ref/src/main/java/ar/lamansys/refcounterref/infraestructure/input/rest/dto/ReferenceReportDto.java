@@ -2,7 +2,6 @@ package ar.lamansys.refcounterref.infraestructure.input.rest.dto;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
-import ar.lamansys.refcounterref.domain.enums.EReferenceForwardingType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;

@@ -1,12 +1,12 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
     <h1 mat-dialog-title>{{ prescriptionData.titleLabel | translate}}</h1>
-    <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
+    <button id="close-modal"  mat-icon-button aria-label="close" (click)="closeModal()">
         <mat-icon>close</mat-icon>
     </button>
 </div>
 <div *ngIf="isHabilitarRecetaDigitalEnabled else habilitarRecetaDigitalDisabled">
     <div mat-dialog-content #dialog>
-        <mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
+        <mat-stepper linear [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
             <form [formGroup]="prescriptionForm" class="form" id="form">
                 <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_LABEL' | translate}}"
                     [editable]="editableStepModality">
@@ -23,7 +23,7 @@
 
             <mat-step label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
                 <app-medication-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
-                [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
+                [submitted]="submitted" [hasSelectedCoverage]="!!prescriptionForm.value.patientMedicalCoverage" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
                 </app-medication-information>
             </mat-step>
         </mat-stepper>
@@ -64,3 +64,4 @@
         </app-button>
     </mat-dialog-actions>
 </ng-template>
+

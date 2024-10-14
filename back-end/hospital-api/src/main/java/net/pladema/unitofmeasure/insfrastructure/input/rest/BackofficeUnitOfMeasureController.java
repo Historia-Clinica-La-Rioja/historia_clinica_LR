@@ -1,7 +1,6 @@
 package net.pladema.unitofmeasure.insfrastructure.input.rest;
 
 
-import net.pladema.loinc.infrastructure.output.entity.LoincCode;
 import net.pladema.sgx.backoffice.exceptions.PermissionDeniedException;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
@@ -17,7 +16,6 @@ import net.pladema.unitofmeasure.insfrastructure.output.repository.UnitOfMeasure
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

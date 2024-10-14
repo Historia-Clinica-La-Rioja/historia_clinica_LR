@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.domain.ReferableConceptVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,9 +65,11 @@ public class GeneralHealthConditionBo implements Serializable {
 	}
 
 	private void setHealthConditions(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
-		setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
+		var mainDiagnosis = healthConditionVos.stream().filter(HealthConditionVo::isMain).findFirst();
+		healthConditionVos = healthConditionVos.stream().filter(hc -> !hc.equals(mainDiagnosis.orElse(new HealthConditionVo()))).collect(Collectors.toList());
+		setMainDiagnosis(buildMainDiagnosis(mainDiagnosis));
 		setDiagnosis(buildGeneralState(healthConditionVos,
-				HealthConditionVo::isSecondaryDiagnosis,
+				HealthConditionVo::isDiagnosis,
 				this::mapDiagnosis)
 		);
 		setPersonalHistories(buildReferableGeneralState(healthConditionVos,
@@ -134,7 +137,7 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
-        result.setMain(healthConditionVo.isMain());
+        result.setMain(false);
 		result.setType(ProblemTypeEnum.map(healthConditionVo.getProblemId()));
         log.debug(OUTPUT, result);
         return result;
@@ -226,4 +229,13 @@ public class GeneralHealthConditionBo implements Serializable {
 		return result;
 	}
 
+	public boolean isDifferentFromMainDiagnosis(HealthConditionBo mainDiagnosis, HealthConditionVo diagnosis) {
+		return diagnosis.getProblemId().equals(ProblemType.DIAGNOSIS) && !mainDiagnosis.getSnomed().getSctid().equals(diagnosis.getSnomed().getSctid());
+	}
+
+	private DiagnosisBo setMainFalse(DiagnosisBo diagnosisBo){
+		if (diagnosisBo.isMain())
+			diagnosisBo.setMain(false);
+		return diagnosisBo;
+	}
 }

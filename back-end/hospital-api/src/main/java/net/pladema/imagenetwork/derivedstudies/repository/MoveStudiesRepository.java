@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -126,14 +127,18 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	@Query(" SELECT new net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo( " +
 			"	mo.id, " +
 			"	mo.appointmentId, " +
-			"	mo.moveDate, " +
 			"	a.patientId, " +
 			"	e.modalityId, " +
 			" 	e.id, " +
 			"	aoi.orderId, " +
 			"	aoi.studyId, " +
 			"	aoi.transcribedOrderId, " +
-			"	mo.status " +
+			"	mo.status, " +
+			"	mo.beginOfMove, " +
+			"	mo.endOfMove, " +
+			"	a.dateTypeId, " +
+			"	a.hour, " +
+			"	mo.imageId " +
 			") " +
 			"FROM MoveStudies mo " +
 			"JOIN AppointmentOrderImage aoi ON (aoi.pk.appointmentId = mo.appointmentId) " +
@@ -143,12 +148,12 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"JOIN Equipment e ON (e.id = ed.equipmentId) " +
 			"WHERE (mo.institutionId = :institutionId) " +
 			"AND (mo.result IS NULL or mo.result != :resultNot) " +
-			"AND (mo.moveDate BETWEEN :from AND :to) " +
+			"AND (a.dateTypeId BETWEEN :from AND :to) " +
 			"ORDER BY mo.id")
 	List<ImageQueueBo> findImagesNotMovedByInstitutionId(
 			@Param("institutionId") Integer institutionId,
-			@Param("from") Date from,
-			@Param("to") Date to,
+			@Param("from") LocalDate from,
+			@Param("to") LocalDate to,
 			@Param("resultNot") String resultNot
 	);
 
@@ -162,4 +167,33 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 							   @Param("result") String result,
 							   @Param("attemptsNumbers") Integer attemptsNumbers);
 
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.status = :updateStatus, mo.attempsNumber = :attemptsNumbers " +
+			"WHERE mo.result != :result "+
+			"AND mo.status = :status "+
+			"AND mo.orchestratorId = :orchestratorId "+
+			"AND DATE(mo.moveDate) = :date")
+	void updateFailedCurrentDate(@Param("date") LocalDate date,
+								 @Param("orchestratorId")Integer orchestratorId,
+								 @Param("status") String status,
+								 @Param("result") String result,
+								 @Param("updateStatus") String updateStatus,
+								 @Param("attemptsNumbers") Integer attemptsNumbers);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.status = :status, " +
+			"	 mo.result= :result, " +
+			"	 mo.attempsNumber = :attemptsNumbers, " +
+			"	 mo.imageId = :newUID " +
+			"WHERE mo.id = :idMove")
+	void updateUIDAndStatusAndResultAndAttemptsNumber(
+			@Param("idMove") Integer idMove,
+			@Param("newUID") String newUID,
+			@Param("status") String status,
+			@Param("result") String result,
+			@Param("attemptsNumbers") Integer attemptsNumbers
+	);
 }

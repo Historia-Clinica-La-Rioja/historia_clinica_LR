@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,4 +30,11 @@ public abstract class ClinicalTermDto implements Serializable {
     @Valid
     private SnomedDto snomed;
 
+    @Nullable
+    @JsonIgnore
+    private String status;
+
+    @Nullable
+    @JsonIgnore
+    private String verification;
 }

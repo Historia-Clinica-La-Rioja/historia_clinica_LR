@@ -39,7 +39,7 @@ databaseChangeLog:
               sql: |
                 SELECT count(column_name)
                 FROM information_schema.columns
-                WHERE table_name='appointment' and column_name2='appointment_id'
+                WHERE table_name='appointment' and column_name='appointment_id'
 
     - changeSet:
         id: customAppointment-createTable

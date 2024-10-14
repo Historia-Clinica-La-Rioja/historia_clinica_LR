@@ -1,13 +1,10 @@
 package net.pladema.reports.application.encountertoappointment;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import net.pladema.medicalconsultation.appointment.service.DocumentAppointmentService;
 import net.pladema.reports.application.ports.EncounterToAppointmentPort;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
