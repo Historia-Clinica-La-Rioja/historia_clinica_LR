@@ -80,7 +80,7 @@ export class AlergiasSummaryComponent {
 	}
 
 	private getCategoryDisplayName(categoryId): string {
-		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId).display : '';
+		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId)?.display : '';
 	}
 
 	private setCategoryAndCriticallyAndAllergies(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
