@@ -39,9 +39,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class MarkAsErrorAProblem {
 
     private final HealthConditionRepository healthConditionRepository;
@@ -77,7 +77,7 @@ public class MarkAsErrorAProblem {
 
         this.regenerateOutpatientDocument(problem.getId());
 		updateLastOdontogramDrawingFromHistoricPort.run(patientId, problem.getId());
-//		regenerateOdontologyDocument(problem.getId());
+		regenerateOdontologyDocument(problem.getId());
         log.debug("Output -> {}", true);
         return true;
     }
@@ -135,9 +135,7 @@ public class MarkAsErrorAProblem {
     }
 
     private void regenerateOutpatientDocument(Integer healthConditionId) {
-        Long documentId = outpatientConsultationRepository.getOutpatientConsultationDocument(healthConditionId)
-                .orElseThrow(() -> new NotFoundException("OutpatientConsultationDocument-not-found", "OutpatientConsultationDocument not found"));
-        rebuildFile.run(documentId);
+        outpatientConsultationRepository.getOutpatientConsultationDocument(healthConditionId).ifPresent((rebuildFile::run));
     }
 
 	private void regenerateOdontologyDocument(Integer healthConditionId) {
