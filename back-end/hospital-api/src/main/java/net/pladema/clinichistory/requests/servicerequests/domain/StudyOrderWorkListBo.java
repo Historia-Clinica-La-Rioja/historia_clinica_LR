@@ -35,4 +35,6 @@ public class StudyOrderWorkListBo {
 
 	private LocalDateTime createdDate;
 
+	private StudyOrderPatientLocationBo patientLocation;
+
 }

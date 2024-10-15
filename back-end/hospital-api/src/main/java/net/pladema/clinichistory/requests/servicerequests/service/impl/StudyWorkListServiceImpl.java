@@ -74,7 +74,8 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				row[16] instanceof Short ? (Short) row[16] : null,
 				row[17] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[17]).toLocalDateTime() : null,
 				(String) row[19],
-				row[18] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[18]).toLocalDateTime() : null
+				row[18] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[18]).toLocalDateTime() : null,
+				null
 		);
 	}
 }

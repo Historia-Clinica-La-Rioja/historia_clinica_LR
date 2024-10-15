@@ -39,4 +39,6 @@ public class StudyOrderWorkListDto {
 	private EDiagnosticReportStatus status;
 
 	private DateTimeDto createdDate;
+
+	private StudyOrderPatientLocationDto patientLocation;
 }

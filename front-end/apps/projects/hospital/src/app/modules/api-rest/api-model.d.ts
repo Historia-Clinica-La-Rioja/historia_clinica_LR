@@ -5306,6 +5306,7 @@ export interface StudyOrderWorkListDto {
     createdDate: DateTimeDto;
     deferredDate?: DateTimeDto;
     patientDto: StudyOrderBasicPatientDto;
+    patientLocation: StudyOrderPatientLocationDto;
     requiresTransfer: boolean;
     snomed: SnomedDto;
     sourceTypeId: ESourceType;
