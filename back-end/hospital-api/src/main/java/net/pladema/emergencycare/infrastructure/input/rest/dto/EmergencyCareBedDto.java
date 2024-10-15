@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,4 +14,7 @@ public class EmergencyCareBedDto {
 	private String description;
 	private boolean isAvailable;
 	private String sectorDescription;
+	private String roomDescription;
+	private String bedDescription;
+	private Boolean isBlocked;
 }

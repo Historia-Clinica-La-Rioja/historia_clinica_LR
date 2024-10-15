@@ -18,6 +18,7 @@ import { RejectedCallComponent } from './components/rejected-call/rejected-call.
 //dialogs
 import { NurseAssignComponent } from './dialogs/nurse-assign/nurse-assign.component';
 //standalone
+import { BlockedAttentionPlaceDetailsComponent } from '@historia-clinica/modules/guardia/standalone/blocked-attention-place-details/blocked-attention-place-details.component';
 import { CallDetailsComponent } from '../telemedicina/components/call-details/call-details.component';
 
 @NgModule({
@@ -43,6 +44,7 @@ import { CallDetailsComponent } from '../telemedicina/components/call-details/ca
 		PresentationModule,
 		JitsiModule,
 		//Standalone Components
+		BlockedAttentionPlaceDetailsComponent,
 		CallDetailsComponent
 	],
 	exports: [

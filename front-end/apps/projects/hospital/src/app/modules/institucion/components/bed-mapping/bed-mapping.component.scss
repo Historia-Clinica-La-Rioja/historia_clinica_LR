@@ -17,6 +17,13 @@
     border: 1px solid $free-bed;
 }
 
+
+.blocked {
+    background-color: white;
+    color: #6D6D6D;
+    border: 1px solid #6D6D6D;
+}
+
 #mat-divider{
     margin: 10px 0px 10px 0px;
 }

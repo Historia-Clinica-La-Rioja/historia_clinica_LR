@@ -66,6 +66,7 @@ export class BedManagement {
 		bedId: number;
 		bedNumber: string;
 		free: boolean;
+		isBlocked: boolean;
 	}[];
 	sectorTypeDescription: string
 }

@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class EmergencyCareBedDetailDto extends EmergencyCareAttentionPlaceDetailDto {
-
 	private EmergencyCareBedDto bed;
-
 
 }

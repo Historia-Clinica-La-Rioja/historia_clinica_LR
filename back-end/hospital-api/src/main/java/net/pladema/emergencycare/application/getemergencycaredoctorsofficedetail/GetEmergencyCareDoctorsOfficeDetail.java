@@ -15,6 +15,8 @@ import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOffic
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -28,10 +30,9 @@ public class GetEmergencyCareDoctorsOfficeDetail {
 		log.debug("Input GetEmergencyCareDoctorsOfficeDetail parameters -> doctorsOfficeId {}", doctorsOfficeId);
 		DoctorsOfficeBo doctorsOffice = getDoctorsOfficeOrFail(doctorsOfficeId);
 		EmergencyCareDoctorsOfficeDetailBo result = new EmergencyCareDoctorsOfficeDetailBo(doctorsOffice);
-		if (!doctorsOffice.isAvailable()){
-			EmergencyCareBo ec = getEmergencyCareEpisodeOrFail(doctorsOfficeId);
-			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result, ec);
-		}
+		getEmergencyCareEpisodeOrFail(doctorsOfficeId).ifPresent(ec ->
+			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result, ec)
+		);
 		log.debug("Output -> result {}", result);
 		return result;
 	}
@@ -44,11 +45,7 @@ public class GetEmergencyCareDoctorsOfficeDetail {
 				);
 	}
 
-	private EmergencyCareBo getEmergencyCareEpisodeOrFail(Integer doctorsOfficeId){
-		return emergencyCareEpisodeStorage.getByDoctorsOfficeIdInAttention(doctorsOfficeId)
-				.orElseThrow(() -> new EmergencyCareAttentionPlaceException(
-						EmergencyCareAttentionPlaceExceptionEnum.NO_EPISODE_ASSOCIATED_WITH_DOCTORS_OFFICE,
-						"No se encontró un episodio asociado al consultorio con id " + doctorsOfficeId)
-				);
+	private Optional<EmergencyCareBo> getEmergencyCareEpisodeOrFail(Integer doctorsOfficeId){
+		return emergencyCareEpisodeStorage.getByDoctorsOfficeIdInAttention(doctorsOfficeId);
 	}
 }

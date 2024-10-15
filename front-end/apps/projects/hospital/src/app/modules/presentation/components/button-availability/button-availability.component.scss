@@ -31,6 +31,13 @@ button {
 	border: 1px solid #9A9A9A;
 }
 
+.blocked {
+  background-color: white;
+  color: #6D6D6D;
+  border: 1px solid #6D6D6D;
+  box-shadow: none;
+}
+
 .selected {
 	border: 2px solid rgba(38, 135, 197, 1);
 	border-radius: 4px;

@@ -122,7 +122,6 @@ import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-po
 import { ProblemStatusPipe } from './pipes/problem-status.pipe';
 import { ShowSpaceDetailTitlePipe } from './pipes/show-space-detail-title.pipe';
 import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
-import { ShowTimeElapsedPipe } from './pipes/show-time-elapsed.pipe';
 //Porque estan aca?
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
@@ -339,7 +338,6 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		ProblemStatusPipe,
 		ShowSpaceDetailTitlePipe,
 		ShowTitleByPatientDataPipe,
-  		ShowTimeElapsedPipe,
     	AddStudyComponent,
 	],
 	imports: [
@@ -406,7 +404,6 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		//pipes
 		ProblemStatusPipe,
 		ShowSpaceDetailTitlePipe,
-		ShowTimeElapsedPipe,
 	],
 	providers: [
 		InternmentSummaryFacadeService,

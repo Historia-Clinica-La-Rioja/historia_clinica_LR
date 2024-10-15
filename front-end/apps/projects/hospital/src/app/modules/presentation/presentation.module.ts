@@ -122,6 +122,7 @@ import { IsoToDatePipe } from './pipes/iso-to-date.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { PatientToPersonPipe } from './pipes/PatientToPersonPipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
+import { ShowTimeElapsedPipe } from './pipes/show-time-elapsed.pipe';
 import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
@@ -248,6 +249,7 @@ import { PatientSummaryPipe } from './pipes/patient-summary.pipe';
 		PatientToPersonPipe,
 		PatientSummaryPipe,
 		PersonIdentificationPipe,
+		ShowTimeElapsedPipe,
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
@@ -374,6 +376,7 @@ import { PatientSummaryPipe } from './pipes/patient-summary.pipe';
 		PatientSummaryPipe,
 		PersonIdentificationPipe,
 		ShowMoreConceptsPipe,
+		ShowTimeElapsedPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 	],

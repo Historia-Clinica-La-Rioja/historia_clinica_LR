@@ -15,6 +15,8 @@ import net.pladema.establishment.domain.bed.EmergencyCareBedBo;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -28,10 +30,10 @@ public class GetEmergencyCareBedDetail {
 		log.debug("Input GetEmergencyCareBedDetail parameters -> bedId {}", bedId);
 		EmergencyCareBedBo bed = getBedOrFail(bedId);
 		EmergencyCareBedDetailBo result = new EmergencyCareBedDetailBo(bed);
-		if (!bed.isAvailable()){
-			EmergencyCareBo ec = getEmergencyCareEpisodeOrFail(bedId);
-			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result,ec);
-		}
+		var episode = getEmergencyCareEpisode(bedId);
+		episode.ifPresent(ec ->
+			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result, ec)
+		);
 		log.debug("Output -> result {}", result);
 		return result;
 	}
@@ -44,11 +46,7 @@ public class GetEmergencyCareBedDetail {
 				);
 	}
 
-	private EmergencyCareBo getEmergencyCareEpisodeOrFail(Integer bedId){
-		return emergencyCareEpisodeStorage.getByBedIdInAttention(bedId)
-				.orElseThrow(() -> new EmergencyCareAttentionPlaceException(
-						EmergencyCareAttentionPlaceExceptionEnum.NO_EPISODE_ASSOCIATED_WITH_BED,
-						"No se encontró un episodio asociado a la cama con id " + bedId)
-				);
+	private Optional<EmergencyCareBo> getEmergencyCareEpisode(Integer bedId){
+		return emergencyCareEpisodeStorage.getByBedIdInAttention(bedId);
 	}
 }

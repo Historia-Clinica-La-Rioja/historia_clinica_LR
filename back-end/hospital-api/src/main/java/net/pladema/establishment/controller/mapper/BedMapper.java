@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.establishment.controller.dto.BedSummaryDto;
+import net.pladema.establishment.infrastructure.input.rest.mapper.AttentionPlaceMapper;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -16,7 +17,7 @@ import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.Bed;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
-@Mapper(uses = {LocalDateMapper.class})
+@Mapper(uses = {LocalDateMapper.class, AttentionPlaceMapper.class})
 public interface BedMapper {
 
     @Named("toBedDto")

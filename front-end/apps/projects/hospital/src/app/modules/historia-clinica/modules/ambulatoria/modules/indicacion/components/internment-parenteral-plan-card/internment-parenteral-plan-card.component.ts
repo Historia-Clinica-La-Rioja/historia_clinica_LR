@@ -9,7 +9,7 @@ import { InternmentIndicationDetailComponent } from '../../dialogs/internment-in
 import { IndicationService } from '@api-rest/services/indication.service';
 import { Subject } from 'rxjs';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { ShowTimeElapsedPipe } from '@historia-clinica/pipes/show-time-elapsed.pipe';
+import { ShowTimeElapsedPipe } from '@presentation/pipes/show-time-elapsed.pipe';
 
 const DIALOG_SIZE = '35%';
 @Component({

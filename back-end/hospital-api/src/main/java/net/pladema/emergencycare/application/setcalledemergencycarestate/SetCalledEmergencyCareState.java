@@ -12,6 +12,10 @@ import net.pladema.emergencycare.service.NotifyEmergencyCareSchedulerCallService
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
+
+import net.pladema.establishment.domain.FetchAttentionPlaceBlockStatusBo;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +30,15 @@ public class SetCalledEmergencyCareState {
 	private final EmergencyCareEpisodeStateStorage emergencyCareEpisodeStateStorage;
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 	private final NotifyEmergencyCareSchedulerCallService notifyEmergencyCareSchedulerCallService;
+	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
 	private static final Short INITIAL_CALLS_COUNT = 1;
+
 
 	@Transactional
 	public Boolean run(Integer episodeId, Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo emergencyCareEpisodeAttentionPlaceBo){
 		log.debug("Input SetCalledEmergencyCareState parameters -> episodeId {}", episodeId);
 		validateStateChange(episodeId);
+		validateAttentionPlaceStatus(institutionId, emergencyCareEpisodeAttentionPlaceBo);
 		Optional<HistoricEmergencyEpisodeBo> hee = historicEmergencyEpisodeStorage.getLatestByEpisodeId(episodeId);
 		if (hee.isPresent() && hee.get().getEmergencyCareStateId().equals(EEmergencyCareState.LLAMADO.getId()))
 			saveHistoricEmergencyEpisode(episodeId, emergencyCareEpisodeAttentionPlaceBo, (short) (hee.get().getCalls() + 1));
@@ -46,6 +53,21 @@ public class SetCalledEmergencyCareState {
 		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, LocalDateTime.now(),EEmergencyCareState.LLAMADO.getId(),
 				eceap.getDoctorsOfficeId(), eceap.getShockroomId(), eceap.getBedId(), calls);
 		historicEmergencyEpisodeStorage.create(toSave);
+	}
+
+	private void validateAttentionPlaceStatus(Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo attentionPlace) {
+		if (attentionPlace.isBed())
+			 checkBlocked(fetchAttentionPlaceBlockStatus.findForBed(institutionId, attentionPlace.getBedId()));
+		if (attentionPlace.isDoctorsOffice())
+			checkBlocked(fetchAttentionPlaceBlockStatus.findForDoctorsOffice(institutionId, attentionPlace.getDoctorsOfficeId()));
+		if (attentionPlace.isShockRoom())
+			checkBlocked(fetchAttentionPlaceBlockStatus.findForShockRoom(institutionId, attentionPlace.getShockroomId()));
+	}
+
+	private void checkBlocked(Optional<FetchAttentionPlaceBlockStatusBo> status) {
+		if(status.map(x -> x.getIsBlocked()).orElse(false))
+			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.BLOCKED,
+					"El lugar de atención se encuentra bloqueado.");
 	}
 
 	private void validateStateChange(Integer episodeId){

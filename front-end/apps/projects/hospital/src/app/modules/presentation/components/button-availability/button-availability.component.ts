@@ -27,7 +27,8 @@ export class ButtonAvailabilityComponent {
 export enum AvailableButtonType{
 	AVAILABLE = 'available',
 	NOT_AVAILABLE = 'not-available',
-	DISABLE = 'disable'
+	DISABLE = 'disable',
+	BLOCKED = 'blocked'
 }
 
 export enum AvailableButtonWidth {

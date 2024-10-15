@@ -165,7 +165,8 @@
 					"SHOCKROOM": "Shockroom",
 					"BED": "Habitación",
 					"FREE": "Libre",
-					"NOT_FREE": "Ocupada"
+					"NOT_FREE": "Ocupada",
+					"BLOCKED": "bloqueado"
 				},
 				"entry": {
 					"TITLE": "Ingreso"
@@ -397,6 +398,25 @@
 			"DIAGNOSIS": "Diagnóstico",
 			"SAVE_SUCCESS": "Nota de evolución de enfermería guardada correctamente",
 			"SAVE_ERROR": "Error al guardar la nota de evolución de enfermería"
+		},
+		"block_unblock_attention_place": {
+			"BLOCK_BUTTON": "Bloquear lugar",
+			"UNBLOCK_BUTTON": "Desbloquear lugar",
+			"dialog": {
+				"TITLE_BLOCK": "Motivo de bloqueo",
+				"TITLE_UNBLOCK": "¿Desbloquear lugar de atención?",
+				"CONFIRM_BUTTON_BLOCK": "Bloquear lugar",
+				"CONFIRM_BUTTON_UNBLOCK": "Desbloquear lugar",
+				"block_reason": {
+					"REASONS": "Motivo",
+					"OBSERVATIONS": "Observaciones",
+					"OBSERVATIONS_PLACEHOLDER": "Ingrese observaciones"
+				},
+				"SNACKBAR_SUCCESS_BLOCK": "Se bloqueó el lugar de atención correctamente",
+				"SNACKBAR_ERROR_BLOCK": "Hubo un error al bloquear el lugar de atención",
+				"SNACKBAR_SUCCESS_UNBLOCK": "Se desbloqueo el lugar de atención correctamente",
+				"SNACKBAR_ERROR_UNBLOCK": "Hubo un error al desbloquear el lugar de atención"
+			}
 		}
 	}
 }

@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { EmergencyCareAttentionPlaceDto, EmergencyCareBedDto, EmergencyCareDoctorsOfficeDto, ShockroomDto } from '@api-rest/api-model';
+import { SpaceTypeDetails } from '../emergency-care-attention-place-details/emergency-care-attention-place-details.component';
+import { getSpaceState } from '../../utils/space-state';
 
 const ORGANIZED_BY_SPECIALTY_ID = 1;
 @Component({
@@ -27,16 +29,25 @@ export class EmergencyCareAttentionPlaceSectorComponent {
 
 	private getNonEmptySpaces(sector: EmergencyCareAttentionPlaceDto): SpaceItem[] {
 		return [
-			{ type: SpaceType.DoctorsOffices, items: sector.doctorsOffices },
-			{ type: SpaceType.ShockRooms, items: sector.shockRooms },
-			{ type: SpaceType.Beds, items: sector.beds }
-		].filter(space => space.items?.length );
+			{ type: SpaceType.DoctorsOffices, items: this.mapToSpaceTypeDetails(sector.doctorsOffices) },
+			{ type: SpaceType.ShockRooms, items: this.mapToSpaceTypeDetails(sector.shockRooms) },
+			{ type: SpaceType.Beds, items: this.mapToSpaceTypeDetails(sector.beds) }
+		].filter(space => space.items?.length);
 	}
 
 	private getSpecialtyDescriptions(sector: EmergencyCareAttentionPlaceDto): string[] {
 		return sector.clinicalSpecialtySectors?.length > 0
 			? sector.clinicalSpecialtySectors.map(specialty => specialty.description)
 			: [];
+	}
+
+	private mapToSpaceTypeDetails(details: EmergencyCareDoctorsOfficeDto[] | ShockroomDto[] | EmergencyCareBedDto[]): SpaceTypeDetails[] {
+		return details.map(detail => {
+			return {
+				...detail,
+				state: getSpaceState(detail)
+			}
+		});
 	}
 }
 
@@ -48,5 +59,5 @@ export enum SpaceType {
 
 export interface SpaceItem {
 	type: SpaceType;
-	items: EmergencyCareDoctorsOfficeDto[] | ShockroomDto[] | EmergencyCareBedDto[];
+	items: SpaceTypeDetails[];
 }

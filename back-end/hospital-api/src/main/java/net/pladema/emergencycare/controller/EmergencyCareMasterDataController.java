@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/emergency-care/masterdata")
@@ -73,5 +75,19 @@ public class EmergencyCareMasterDataController {
 	public ResponseEntity<Collection<MasterDataDto>> getEmergencyCareStates() {
 		LOG.debug("{}", "All emergency care status");
 		return ResponseEntity.ok().body(EnumWriter.writeList(emergencyCareMasterDataService.getEmergencyCareStates()));
+	}
+
+	@GetMapping(value = "/attention-place-block-reasons")
+	public List<MasterDataDto> getAttentionPlaceBlockReasons() {
+		LOG.debug("{}", "All attention place block reasons");
+		return emergencyCareMasterDataService
+			.getAttentionPlaceBlockReasons()
+			.stream()
+			.map(value -> {
+				var ret = new MasterDataDto();
+				ret.setId(value.getId());
+				ret.setDescription(value.getDescription());
+				return ret;
+			}).collect(Collectors.toList());
 	}
 }

@@ -45,4 +45,9 @@ export class EmergencyCareMasterDataService {
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
+	getAttentionPlaceBlockReasons(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/attention-place-block-reasons`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 }

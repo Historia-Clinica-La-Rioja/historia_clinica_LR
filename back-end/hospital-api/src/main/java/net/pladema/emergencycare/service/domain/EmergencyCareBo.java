@@ -96,7 +96,7 @@ public class EmergencyCareBo {
             this.policeInterventionDetails = new PoliceInterventionDetailsBo(emergencyCareVo.getPoliceInterventionDetails());
         this.createdOn = emergencyCareVo.getCreatedOn();
         this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
-		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription()) : null;
+		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription(), false) : null;
 		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), emergencyCareVo.getRoom() != null ? new RoomBo(emergencyCareVo.getRoom()) : null) : null;
 		this.endDate = emergencyCareVo.getEndDate();
 		this.institutionName = emergencyCareVo.getInstitutionName();

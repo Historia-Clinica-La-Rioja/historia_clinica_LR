@@ -19,4 +19,15 @@ public class EmergencyCareEpisodeAttentionPlaceBo {
 		this.shockroomId = hee.getShockroomId();
 		this.bedId = hee.getBedId();
 	}
+
+	public Boolean isDoctorsOffice() {
+		return this.getDoctorsOfficeId() != null;
+	}
+	public Boolean isShockRoom() {
+		return this.getShockroomId() != null;
+	}
+
+	public Boolean isBed() {
+		return this.getBedId() != null;
+	}
 }

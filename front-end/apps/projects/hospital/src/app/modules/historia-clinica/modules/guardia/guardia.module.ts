@@ -19,6 +19,10 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 // components
 import { AdministrativeTriageComponent } from './components/administrative-triage/administrative-triage.component';
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
+import { AttentionPlaceBlockReasonComponent } from './components/attention-place-block-reason/attention-place-block-reason.component';
+import { AttentionPlaceSummaryComponent } from './components/attention-place-summary/attention-place-summary.component';
+import { BlockedAttentionPlaceDetailsComponent } from '@historia-clinica/modules/guardia/standalone/blocked-attention-place-details/blocked-attention-place-details.component';
+import { BlockUnblockAttentionPlaceComponent } from './components/block-unblock-attention-place/block-unblock-attention-place.component';
 import { TitledGridSummaryComponent } from './components/titled-grid-summary/titled-grid-summary.component';
 import { EmergencyCareAttentionPlaceAttentionStateComponent } from './components/emergency-care-attention-place-attention-state/emergency-care-attention-place-attention-state.component';
 import { EmergencyCareAttentionPlaceDetailsComponent } from './components/emergency-care-attention-place-details/emergency-care-attention-place-details.component';
@@ -76,6 +80,7 @@ import { SpecialtySummaryComponent } from './components/specialty-summary/specia
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
+import { BlockUnblockAttentionPlacePopupComponent } from './dialogs/block-unblock-attention-place-popup/block-unblock-attention-place-popup.component';
 import { EmergencyCareChangeAttentionPlaceDialogComponent } from './dialogs/emergency-care-change-attention-place-dialog/emergency-care-change-attention-place-dialog.component';
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 // services
@@ -110,6 +115,9 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		// components
 		AdministrativeTriageComponent,
 		AdultGynecologicalTriageComponent,
+		AttentionPlaceBlockReasonComponent,
+		AttentionPlaceSummaryComponent,
+ 		BlockUnblockAttentionPlaceComponent,
 		EmergencyCareAttentionPlaceAttentionStateComponent,
 		EmergencyCareAttentionPlaceDetailsComponent,
 		EmergencyCareAttentionPlaceEntryDetailsComponent,
@@ -163,6 +171,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		// dialogs
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
+		BlockUnblockAttentionPlacePopupComponent,
 		PediatricTriageDialogComponent,
 		EmergencyCareChangeAttentionPlaceDialogComponent,
 		EmergencyCareEvolutionsComponent,
@@ -172,7 +181,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		//pipes
 		ShowTriageCategoryDescriptionPipe,
 		ShowTypeDescriptionPipe,
-		ShowStateDescriptionPipe,
+		ShowStateDescriptionPipe, 
 	],
 	imports: [
 		CommonModule,
@@ -184,6 +193,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		LazyMaterialModule,
 		PresentationModule,
 		// standalone
+		BlockedAttentionPlaceDetailsComponent,
 		EmergencyCareStatusLabelsComponent,
 		IdentifierCasesComponent,
 		PatientSummaryComponent,

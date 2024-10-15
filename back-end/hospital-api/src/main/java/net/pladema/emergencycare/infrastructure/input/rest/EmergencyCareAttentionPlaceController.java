@@ -20,6 +20,8 @@ import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareDoct
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareShockRoomDetailDto;
 import net.pladema.emergencycare.infrastructure.input.rest.mapper.EmergencyCareAttentionPlaceMapper;
 
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
+import net.pladema.establishment.infrastructure.input.rest.mapper.AttentionPlaceMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +47,8 @@ public class EmergencyCareAttentionPlaceController {
 	private final GetEmergencyCareShockRoomDetail getEmergencyCareShockRoomDetail;
 	private final GetEmergencyCareDoctorsOfficeDetail getEmergencyCareDoctorsOfficeDetail;
 	private final ChangeEmergencyCareAttentionPlace changeEmergencyCareAttentionPlace;
+	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
+	private final AttentionPlaceMapper attentionPlaceMapper;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -61,7 +65,11 @@ public class EmergencyCareAttentionPlaceController {
 	public EmergencyCareBedDetailDto getBedDetail(@PathVariable(name = "institutionId") Integer institutionId,
 												  @PathVariable(name = "bedId") Integer bedId){
 		log.debug("Input get emergency care bed detail parameters -> institutionId {}, bedId {}", institutionId, bedId);
-		EmergencyCareBedDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareBedDetailDto(getEmergencyCareBedDetail.run(bedId));
+		EmergencyCareBedDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareBedDetailDto(
+			getEmergencyCareBedDetail.run(bedId)
+		);
+		var statusDto = attentionPlaceMapper.toDto(fetchAttentionPlaceBlockStatus.findForBed(institutionId, bedId).orElse(null));
+		result.setStatus(statusDto);
 		setPersonPhoto(result);
 		log.debug("Output -> {}", result);
 		return result;
@@ -75,6 +83,8 @@ public class EmergencyCareAttentionPlaceController {
 		EmergencyCareShockRoomDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareShockRoomDetailDto(
 				getEmergencyCareShockRoomDetail.run(shockroomId)
 		);
+		var statusDto = attentionPlaceMapper.toDto(fetchAttentionPlaceBlockStatus.findForShockRoom(institutionId, shockroomId).orElse(null));
+		result.setStatus(statusDto);
 		setPersonPhoto(result);
 		log.debug("Output -> {}", result);
 		return result;
@@ -88,6 +98,8 @@ public class EmergencyCareAttentionPlaceController {
 		EmergencyCareDoctorsOfficeDetailDto result = emergencyCareAttentionPlaceMapper.toEmergencyCareDoctorsOfficeDetailDto(
 				getEmergencyCareDoctorsOfficeDetail.run(doctorsOfficeId)
 		);
+		var statusDto = attentionPlaceMapper.toDto(fetchAttentionPlaceBlockStatus.findForDoctorsOffice(institutionId, doctorsOfficeId).orElse(null));
+		result.setStatus(statusDto);
 		setPersonPhoto(result);
 		log.debug("Output -> {}", result);
 		return result;

@@ -38,7 +38,7 @@ export class EmergencyCareChangeAttentionPlaceButtonComponent {
 			if (newAttentionPlace) {
 				this.emergencyCareAttentionPlaceService.changeAttentionPlace(newAttentionPlace).subscribe(
 					_ => {
-						this.attentionPlaceUpdateService.notifyUpdate(newAttentionPlace);
+						this.attentionPlaceUpdateService.notifyUpdate();
 						this.snackBarService.showSuccess('guardia.home.attention_places.change-attention-place.SUCESS')
 					},
 					_ => this.snackBarService.showError('guardia.home.attention_places.change-attention-place.ERROR')

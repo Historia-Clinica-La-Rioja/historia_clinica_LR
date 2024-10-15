@@ -49,7 +49,10 @@ export class EmergencyCareChangeAttentionPlaceBedsComponent implements OnInit, O
 			id: bedInfo.bed.id,
 			sectorDescription: bedInfo.bed.room.sector.description,
 			available: bedInfo.bed.free,
-			description: `${bedInfo.bed.room.description} - ${bedInfo.bed.bedNumber}`
+			description: `${bedInfo.bed.room.description} - ${bedInfo.bed.bedNumber}`,
+			roomDescription: bedInfo.bed.room.description,
+			bedDescription: bedInfo.bed.bedNumber,
+			isBlocked: bedInfo.bed.isBlocked,
 		};
 		this.selectedBedInfo.emit(selectedBedDto);
 	}

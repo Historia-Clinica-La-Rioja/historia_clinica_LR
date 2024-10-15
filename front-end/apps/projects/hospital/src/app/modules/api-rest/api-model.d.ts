@@ -669,6 +669,7 @@ export interface BedDto extends Serializable {
     bedNumber: string;
     free: boolean;
     id: number;
+    isBlocked: boolean;
     room: RoomDto;
 }
 
@@ -677,6 +678,7 @@ export interface BedInfoDto extends Serializable {
     bedNurse: BedNurseDto;
     patient: BasicPatientDto;
     probableDischargeDate: string;
+    status: FetchAttentionPlaceStatusDto;
 }
 
 export interface BedNurseDto {
@@ -691,6 +693,11 @@ export interface BedSummaryDto {
     probableDischargeDate?: string;
     sector: SectorSummaryDto;
     sectorType: SectorTypeDto;
+}
+
+export interface BlockAttentionPlaceCommandDto {
+    reason: string;
+    reasonId: number;
 }
 
 export interface BlockDto {
@@ -1430,6 +1437,7 @@ export interface DoctorsOfficeDto {
     closingTime: string;
     description: string;
     id: number;
+    isBlocked: boolean;
     openingTime: string;
 }
 
@@ -1710,6 +1718,7 @@ export interface EmergencyCareAttentionPlaceDetailDto {
     professional?: ProfessionalPersonDto;
     reason?: string;
     state?: MasterDataDto;
+    status?: FetchAttentionPlaceStatusDto;
     type?: MasterDataDto;
     updatedOn?: DateTimeDto;
 }
@@ -1731,8 +1740,11 @@ export interface EmergencyCareBedDetailDto extends EmergencyCareAttentionPlaceDe
 
 export interface EmergencyCareBedDto {
     available: boolean;
+    bedDescription: string;
     description: string;
     id: number;
+    isBlocked: boolean;
+    roomDescription: string;
     sectorDescription: string;
 }
 
@@ -1749,6 +1761,7 @@ export interface EmergencyCareDoctorsOfficeDto {
     available: boolean;
     description: string;
     id: number;
+    isBlocked: boolean;
     sectorDescription: string;
 }
 
@@ -2150,6 +2163,18 @@ export interface ExternalTemporaryHealthcareProfessionalDto {
     identificationTypeId: number;
     lastName: string;
     licenseNumber: string;
+}
+
+export interface FetchAttentionPlaceStatusDto {
+    blockedBy: ProfessionalPersonDto;
+    createdOn: DateTimeDto;
+    id: number;
+    isBlocked: boolean;
+    reason: string;
+    reasonEnum: EBlockAttentionPlaceReason;
+    reasonEnumDescription: string;
+    reasonId: number;
+    userId: number;
 }
 
 export interface FhirAddressDto {
@@ -5050,6 +5075,7 @@ export interface ShockroomDto {
     available: boolean;
     description: string;
     id: number;
+    isBlocked: boolean;
     sectorDescription: string;
 }
 
@@ -6033,6 +6059,12 @@ export const enum EAuditType {
 export const enum EBirthCondition {
     BORN_ALIVE = "BORN_ALIVE",
     FETAL_DEATH = "FETAL_DEATH",
+}
+
+export const enum EBlockAttentionPlaceReason {
+    HOUSEKEEPING = "HOUSEKEEPING",
+    CONTAMINATED = "CONTAMINATED",
+    OTHER = "OTHER",
 }
 
 export const enum ECHDocumentType {

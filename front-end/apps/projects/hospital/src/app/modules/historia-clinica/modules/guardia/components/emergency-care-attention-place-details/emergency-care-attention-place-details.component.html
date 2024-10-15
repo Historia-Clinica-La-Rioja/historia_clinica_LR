@@ -1,8 +1,8 @@
 <div *ngIf="details$ | async as details">
-	<div *ngIf="spaceTypeDetails">
+	<div *ngIf="spaceTypeDetails" class="flex-container">
 		<app-emergency-care-detail-place-type [spaceType]="selectedSpace.spaceType" [spaceTypeDetails]="spaceTypeDetails"></app-emergency-care-detail-place-type>
 
-		<div *ngIf="!spaceTypeDetails.available" class="more-details">
+		<div *ngIf="spaceTypeDetails.state === SpaceState.NOT_AVAILABLE" class="more-details">
             <div *ngIf="details.moreDetails?.patient">
                 <mat-divider></mat-divider>
                 <app-emergency-care-attention-place-patient [patient]="details.moreDetails?.patient"></app-emergency-care-attention-place-patient>
@@ -28,5 +28,15 @@
 				</app-emergency-care-change-attention-place-button>
 			</div>
 		</div>
+		
+		<ng-container *ngIf="spaceTypeDetails.state === SpaceState.BLOCKED">
+			<mat-divider></mat-divider>
+			<app-blocked-attention-place-details [blockedAttentionPlaceDetails]="blockedAttentionPlaceDetails"></app-blocked-attention-place-details>
+		</ng-container>
+		
+		<app-block-unblock-attention-place *ngIf="spaceTypeDetails.state !== SpaceState.NOT_AVAILABLE"
+			[emergencyCareDetails]="details" [selectedSpace]="selectedSpace"
+		></app-block-unblock-attention-place>
+		
 	</div>
 </div>

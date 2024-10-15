@@ -3,8 +3,10 @@ package net.pladema.medicalconsultation.doctorsoffice.repository;
 import java.util.List;
 import java.util.Optional;
 
+import net.pladema.access.domain.enums.EClinicHistoryAccessReason;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,8 +21,11 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo(" +
-            "do.id, do.description, do.openingTime, do.closingTime) " +
+            "	do.id, do.description, do.openingTime, do.closingTime, " +
+			"	COALESCE(status.isBlocked, false) " +
+            ") " +
             "FROM DoctorsOffice do " +
+			"LEFT JOIN AttentionPlaceStatus status ON status.id = do.statusId " +
             "WHERE do.institutionId = :institutionId " +
             "AND do.sectorId = :sectorId " +
 			"AND do.deleteable.deleted IS FALSE " +
@@ -30,9 +35,15 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo(" +
-            "do.id, do.description, do.openingTime, do.closingTime) " +
+            "	do.id, " +
+            "	do.description, " +
+            "	do.openingTime, " +
+            "	do.closingTime, " +
+			"	COALESCE(status.isBlocked, false) " +
+            ") " +
             "FROM DoctorsOffice do " +
             "JOIN Sector s on (do.sectorId = s.id) " +
+			"LEFT JOIN AttentionPlaceStatus status ON status.id = do.statusId " +
             "WHERE do.institutionId = :institutionId " +
             "AND s.sectorTypeId = :sectorTypeId " +
 			"AND do.deleteable.deleted IS FALSE " +
@@ -78,25 +89,41 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo(" +
-			"d.id, d.description, d.openingTime, d.closingTime, " +
-			"CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END, "+
-			"s.description "+
+			"	d.id, " +
+			"	d.description, " +
+			"	d.openingTime, " +
+			"	d.closingTime, " +
+			"	CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END, "+
+			"	s.description, "+
+			"	COALESCE(status.isBlocked, false)" +
 			") " +
 			"FROM DoctorsOffice d " +
 			"LEFT JOIN EmergencyCareEpisode e ON e.doctorsOfficeId = d.id AND e.emergencyCareStateId = :emergencyCareStateId AND e.deleteable.deleted = false " +
 			"LEFT JOIN Sector s ON d.sectorId = s.id " +
+			"LEFT JOIN AttentionPlaceStatus status ON status.id = d.statusId " +
 			"WHERE d.sectorId = :sectorId AND d.deleteable.deleted = false " +
-			"GROUP BY d.id, d.description, d.openingTime, d.closingTime, s.description")
+			"GROUP BY d.id, d.description, d.openingTime, d.closingTime, s.description, status.isBlocked")
 	List<DoctorsOfficeBo> getAllBySectorId(@Param("sectorId") Integer sectorId, @Param("emergencyCareStateId") Short emergencyCareStateId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo(" +
-			"d.id, d.description, d.openingTime, d.closingTime, " +
-			"CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END, s.description) " +
+			"	d.id, " +
+			"	d.description, " +
+			"	d.openingTime, " +
+			"	d.closingTime, " +
+			"	CASE WHEN (COUNT(e.id) = 0) THEN true ELSE false END, " +
+			"	s.description, " +
+			"	COALESCE(status.isBlocked, false)" +
+			") " +
 			"FROM DoctorsOffice d " +
 			"LEFT JOIN EmergencyCareEpisode e ON e.doctorsOfficeId = d.id AND e.emergencyCareStateId = :emergencyCareStateId AND e.deleteable.deleted = false " +
 			"LEFT JOIN Sector s ON d.sectorId = s.id " +
+			"LEFT JOIN AttentionPlaceStatus status ON status.id = d.statusId " +
 			"WHERE d.id = :id " +
-			"GROUP BY d.id, d.description, d.openingTime, d.closingTime, s.description")
+			"GROUP BY d.id, d.description, d.openingTime, d.closingTime, s.description, status.isBlocked")
 	Optional<DoctorsOfficeBo> findEmergencyCareDoctorOfficeById(@Param("id") Integer id, @Param("emergencyCareStateId") Short emergencyCareStateId);
+
+	@Modifying
+	@Query("UPDATE DoctorsOffice d SET d.statusId = :newStatusId WHERE d.id = :doctorsOfficeId")
+	void updateStatus(@Param("doctorsOfficeId") Integer doctorsOfficeId, @Param("newStatusId") Integer newStatusId);
 }

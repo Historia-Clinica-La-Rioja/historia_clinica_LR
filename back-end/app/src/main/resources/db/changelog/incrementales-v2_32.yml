@@ -10,3 +10,147 @@ databaseChangeLog:
                     newDataType:  TEXT
                     tableName:  report_queue
 
+    - changeSet:
+        id: createTable-attention_place_status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: attention_place_block_reason
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_attention_place_block_reason
+                - column:
+                    name: description
+                    type: text
+                    constraints:
+                      nullable: false
+
+          - sql:
+              sql: |-
+                INSERT INTO attention_place_block_reason (id, description) VALUES
+                (1, 'Mantenimiento'), (2, 'Alerta infectológica'), (3, 'Otro');
+
+          - createTable:
+              tableName: attention_place_status
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_attention_place_status
+                - column:
+                    name: is_blocked
+                    type: boolean
+                    constraints:
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_on
+                    type: timestamp with time zone
+                    defaultValueComputed: now()
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: text
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: attention_place_status
+              constraintName: FK_attention_place_status__user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: reason_id
+              baseTableName: attention_place_status
+              constraintName: FK_attention_place_status__reason_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: attention_place_block_reason
+              validate: true
+          - addColumn:
+              tableName: bed
+              columns:
+                - column:
+                    name: status_id
+                    type: int
+                    constraints:
+                      nullable: true
+          - addForeignKeyConstraint:
+              baseTableName: bed
+              baseColumnNames: status_id
+              referencedTableName: attention_place_status
+              referencedColumnNames: id
+              constraintName: FK_bed__status_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              validate: true
+
+    - changeSet:
+        id: addColumn-status_id-doctors_office-shockroom
+        author: efernandez
+        changes:
+          - addColumn:
+              tableName: doctors_office
+              columns:
+                - column:
+                    name: status_id
+                    type: int
+                    constraints:
+                      nullable: true
+          - addColumn:
+              tableName: shockroom
+              columns:
+                - column:
+                    name: status_id
+                    type: int
+                    constraints:
+                      nullable: true
+          - addForeignKeyConstraint:
+              baseTableName: doctors_office
+              baseColumnNames: status_id
+              referencedTableName: attention_place_status
+              referencedColumnNames: id
+              constraintName: FK_doctors_office__status_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              validate: true
+          - addForeignKeyConstraint:
+              baseTableName: shockroom
+              baseColumnNames: status_id
+              referencedTableName: attention_place_status
+              referencedColumnNames: id
+              constraintName: FK_shockroom__status_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              validate: true
+
+    - changeSet:
+        id: drop-not-null-constraint-attention_place_status__reason
+        author: efernandez
+        changes:
+          - dropNotNullConstraint:
+              tableName: attention_place_status
+              columnName: reason

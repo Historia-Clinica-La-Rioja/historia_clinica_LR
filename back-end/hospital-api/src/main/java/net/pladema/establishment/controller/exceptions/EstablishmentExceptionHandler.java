@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.application.attentionplaces.exceptions.BlockAttentionPlaceException;
 import net.pladema.establishment.application.bed.exceptions.BedRelocationException;
 import net.pladema.establishment.application.rules.determineregulatedreference.exceptions.RuleException;
 import net.pladema.establishment.controller.service.exceptions.HierarchicalUnitStaffException;
@@ -58,6 +59,13 @@ public class EstablishmentExceptionHandler {
 	@ExceptionHandler({ BackofficeClinicalServiceSectorException.class })
 	protected ApiErrorMessageDto handleBackofficeClinicalServiceSectorException(BackofficeClinicalServiceSectorException ex, Locale locale) {
 		log.debug("BackofficeClinicalServiceSectorException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BlockAttentionPlaceException.class })
+	protected ApiErrorMessageDto handleBlockBedException(BlockAttentionPlaceException ex, Locale locale) {
+		log.debug("BlockBedException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

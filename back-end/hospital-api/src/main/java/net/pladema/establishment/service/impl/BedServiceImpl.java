@@ -1,6 +1,5 @@
 package net.pladema.establishment.service.impl;
 
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
 import net.pladema.establishment.domain.bed.BedRelocationBo;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
@@ -39,7 +39,7 @@ public class BedServiceImpl implements BedService {
 	private final InternmentEpisodeExternalService internmentEpisodeExtService;
 	private final PersonService personService;
 	private final HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository;
-	private final LocalDateMapper localDateMapper;
+	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
 
 	@Override
 	public Bed updateBedStatusOccupied(Integer id) {
@@ -133,6 +133,12 @@ public class BedServiceImpl implements BedService {
 		if (result.isPresent() && result.get().getBedNurse() != null) {
 			BedInfoVo r = result.get();
 			r.getBedNurse().setFullName(personService.getCompletePersonNameById(r.getBedNurse().getPersonId()));
+		}
+		if (result.isPresent()) {
+			BedInfoVo r = result.get();
+			fetchAttentionPlaceBlockStatus
+					.findForBed(r.getInstitutionId(), bedId)
+					.ifPresent(status ->r.setStatus(status));
 		}
 		log.debug(OUTPUT, result);
 		return result;

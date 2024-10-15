@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ChangeEmergencyCareEpisodeAttentionPlaceDto } from '@api-rest/api-model';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class AttentionPlaceUpdateService {
-	private updateSubject = new Subject<ChangeEmergencyCareEpisodeAttentionPlaceDto>();
+	private updateSubject = new Subject<void>();
 
-	get update$(): Observable<ChangeEmergencyCareEpisodeAttentionPlaceDto> {
+	get update$(): Observable<void> {
 	  return this.updateSubject.asObservable();
 	}
 
-	notifyUpdate(newAttentionPlace: ChangeEmergencyCareEpisodeAttentionPlaceDto) {
-	  this.updateSubject.next(newAttentionPlace);
+	notifyUpdate() {
+	  this.updateSubject.next();
 	}
 }

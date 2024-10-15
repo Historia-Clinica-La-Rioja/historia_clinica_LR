@@ -13,7 +13,10 @@ import net.pladema.emergencycare.domain.EmergencyCareEpisodeAttentionPlaceBo;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
 import net.pladema.establishment.controller.service.BedExternalService;
+
+import net.pladema.establishment.domain.FetchAttentionPlaceBlockStatusBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +33,7 @@ public class SetUnderCareEmergencyCareState {
 	private final EmergencyCareEpisodeStateStorage emergencyCareEpisodeStateStorage;
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 	private final BedExternalService bedExternalService;
+	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
 
 	@Transactional
 	public Boolean run(Integer episodeId, Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo eceap){
@@ -40,7 +44,7 @@ public class SetUnderCareEmergencyCareState {
 		Integer shockroomId = eceap.getShockroomId();
 		Integer bedId = eceap.getBedId();
 		Short emergencyCareStateId = EEmergencyCareState.ATENCION.getId();
-
+		validateAttentionPlaceStatus(institutionId, bedId, doctorsOfficeId, shockroomId);
 		if (doctorsOfficeId != null || shockroomId != null)
 			validateAttentionPlace(doctorsOfficeId, shockroomId);
 
@@ -102,5 +106,22 @@ public class SetUnderCareEmergencyCareState {
 			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.BED_NOT_AVAILABLE,
 					"La cama seleccionada no está disponible.");
 		}
+	}
+
+	private void validateAttentionPlaceStatus(
+			Integer institutionId, Integer bedId, Integer doctorsOfficeId, Integer shockroomId
+	) {
+		if (bedId != null)
+			checkBlocked(fetchAttentionPlaceBlockStatus.findForBed(institutionId, bedId));
+		if (doctorsOfficeId != null)
+			checkBlocked(fetchAttentionPlaceBlockStatus.findForDoctorsOffice(institutionId, doctorsOfficeId));
+		if (shockroomId != null)
+			checkBlocked(fetchAttentionPlaceBlockStatus.findForShockRoom(institutionId, shockroomId));
+	}
+
+	private void checkBlocked(Optional<FetchAttentionPlaceBlockStatusBo> status) {
+		if(status.map(x -> x.getIsBlocked()).orElse(false))
+			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.BLOCKED,
+					"El lugar de atención se encuentra bloqueado.");
 	}
 }
