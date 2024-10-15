@@ -76,6 +76,7 @@ public interface StudyMapper {
 	@Mapping(target = "status", expression = "java(EDiagnosticReportStatus.map(studyOrderWorkListBo.getStatus()))")
 	@Mapping(target = "patientDto", source = "patientBo")
 	@Mapping(target = "createdDate", source = "createdDate")
+	@Mapping(target = "patientLocation", source = "patientLocation")
 	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }
