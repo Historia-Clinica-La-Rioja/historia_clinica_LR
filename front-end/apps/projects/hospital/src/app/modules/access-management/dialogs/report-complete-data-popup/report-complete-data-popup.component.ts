@@ -22,8 +22,7 @@ import { TabsService } from '@access-management/services/tabs.service';
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 const TAB_OFERTA_POR_REGULACION = 1;
-const PENDING_STATE = REFERENCE_STATES.PENDING;
-const ABSENT_STATE = REFERENCE_STATES.ABSENT;
+const APPOINTMENT_STATES = REFERENCE_STATES;
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -41,7 +40,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
 	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
-	waitingAppointment = PENDING_STATE;
 	observation: string;
 	derivation: string;
 	registerEditor: RegisterEditor = null;
@@ -52,7 +50,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
 	isRoleGestor: boolean;
-	hasNoAppointment = false;
+	hasAppointment: boolean;
 	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
 	pendingAttentionState = PENDING_ATTENTION_STATE;
 	selectedFiles: File[] = [];
@@ -213,7 +211,11 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			reference: referenceDetails.reference,
 			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment,
 		}
-		this.hasNoAppointment = this.reportCompleteData.appointment.state.description === (PENDING_STATE || ABSENT_STATE);
+		this.hasAppointment = this.reportHasAppointment(this.reportCompleteData.appointment.state.description);
+	}
+
+	private reportHasAppointment(appointmentStateDescription: string): boolean {
+		return appointmentStateDescription === (APPOINTMENT_STATES.ASSIGNED || APPOINTMENT_STATES.SERVED);
 	}
 }
 

@@ -29,8 +29,7 @@
 
 				<mat-divider></mat-divider>
 
-				<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !referenceCompleteData.reference.closureType
-					&& reportCompleteData.appointment.state.description === waitingAppointment">
+				<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !hasAppointment">
 					<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="getReferenceDetails($event)"></app-edit-reference>
 				</div>
 			</div>
@@ -76,7 +75,7 @@
 		<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
 
 		<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading" class="assign-turn-button">
-			<button *ngIf="referenceRegulationDto.state === approvedState && isRoleGestor && !referenceCompleteData.reference.closureType && hasNoAppointment"
+			<button *ngIf="referenceRegulationDto.state === approvedState && isRoleGestor && !hasAppointment"
 				mat-flat-button color="primary" (click)="redirectToOfferByRegulation()">
 				{{'access-management.appointment_result_view.ASSIGN_APPOINTMENT' | translate | uppercase}}
 			</button>
