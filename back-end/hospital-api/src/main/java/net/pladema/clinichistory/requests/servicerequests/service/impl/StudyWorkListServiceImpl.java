@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderPatientLocationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
@@ -65,6 +66,12 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				.birthDate(row[11] != null ? ((java.sql.Date) row[11]).toLocalDate() : null)
 				.build();
 
+		StudyOrderPatientLocationBo locationBo = StudyOrderPatientLocationBo.builder()
+				.bedNumber(null)
+				.roomNumber(null)
+				.sector(null)
+				.build();
+
 		return new StudyOrderWorkListBo(
 				(Integer) row[0],
 				patientBo,
@@ -75,7 +82,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				row[17] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[17]).toLocalDateTime() : null,
 				(String) row[19],
 				row[18] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[18]).toLocalDateTime() : null,
-				null
+				locationBo
 		);
 	}
 }
