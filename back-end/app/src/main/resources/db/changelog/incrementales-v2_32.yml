@@ -154,3 +154,87 @@ databaseChangeLog:
           - dropNotNullConstraint:
               tableName: attention_place_status
               columnName: reason
+
+    - changeSet:
+        id: createTable-fhir_diagnostic_report_performer_practitioner-organization
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: fhir_diagnostic_report_performer_practitioner
+              columns:
+                - column:
+                    name: diagnostic_report_id
+                    type: integer
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_fhir_diagnostic_report_performer_practitioner
+                      foreignKeyName: FK_fhir_diagnostic_report_performer_practitioner__diagnostic_report
+                      references: diagnostic_report(id)
+                - column:
+                    name: identification_number
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: first_name
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: last_name
+                    type: text
+                    constraints:
+                      nullable: true
+          - createTable:
+              tableName: fhir_diagnostic_report_performer_organization
+              columns:
+                - column:
+                    name: diagnostic_report_id
+                    type: integer
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_fhir_diagnostic_report_performer_organization
+                      foreignKeyName: FK_fhir_diagnostic_report_performer_organization__diagnostic_report
+                      references: diagnostic_report(id)
+                - column:
+                    name: name
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: address
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: city
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: postcode
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: province
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: country
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: phone_number
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: email
+                    type: text
+                    constraints:
+                      nullable: true

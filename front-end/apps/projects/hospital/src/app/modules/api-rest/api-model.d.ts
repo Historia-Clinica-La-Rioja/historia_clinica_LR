@@ -2190,6 +2190,11 @@ export interface FhirCodeDto {
     theDisplay: string;
 }
 
+export interface FhirDiagnosticReportPerformersDto {
+    organizations: Organization[];
+    practitioners: Practitioner[];
+}
+
 export interface FhirObservationGroupInfoDto {
     diagnosticReportId: number;
     id: number;
@@ -3616,6 +3621,17 @@ export interface OrderImageFileInfoDto {
     name: string;
 }
 
+export interface Organization {
+    address: string;
+    city: string;
+    country: string;
+    email: string;
+    name: string;
+    phoneNumber: string;
+    postcode: string;
+    province: string;
+}
+
 export interface OrganizationDto extends Serializable {
     address: FhirAddressDto;
     custodian: string;
@@ -4159,6 +4175,12 @@ export interface PracticeDto {
     description: string;
     id: number;
     snomedId: number;
+}
+
+export interface Practitioner {
+    firstName: string;
+    identificationNumber: string;
+    lastName: string;
 }
 
 export interface PreferredTermDto {

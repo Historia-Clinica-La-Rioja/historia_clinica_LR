@@ -66,8 +66,14 @@ public class OrganizationResource extends ISingleResourceFhir {
         Organization resource = (Organization) baseResource;
         data.setId(resource.getIdElement().getIdPart());
         data.setName(resource.getName());
-        if(resource.hasTelecom())
-            data.setPhoneNumber(resource.getTelecom().get(0).getValue());
+        if(resource.hasTelecom()) {
+			for (var contactPoint : resource.getTelecom()) {
+				if (contactPoint.getSystem().equals(ContactPoint.ContactPointSystem.PHONE))
+					data.setPhoneNumber(contactPoint.getValue());
+				if (contactPoint.getSystem().equals(ContactPoint.ContactPointSystem.EMAIL))
+					data.setEmail(contactPoint.getValue());
+			}
+		}
         if(resource.hasAddress())
             data.setFullAddress(decodeAddress(resource.getAddress().get(0)));
         return data;

@@ -26,6 +26,7 @@ public class OrganizationVo {
 
     private Integer addressId;
     private FhirAddress fullAddress;
+    private String email;
 
     public boolean hasPhoneNumber() {
         return FhirString.hasText(phoneNumber);
