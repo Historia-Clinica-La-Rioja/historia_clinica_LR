@@ -14,7 +14,7 @@
 
 			<app-datos-antropometricos-form formControlName="anthropometricData" [patientId]="data.patientId"> </app-datos-antropometricos-form>
 
-			<app-antecedentes-familiares-form formControlName="familyHistories" (isFamilyHistoriesNoRefer)="isFamilyHistoriesNoRefer = $event"></app-antecedentes-familiares-form>
+			<app-antecedentes-familiares-form formControlName="familyHistories" [isFamilyHistoryNoRefer]="data.emergencyCareEvolutionNote?.familyHistories.isReferred" (isFamilyHistoriesNoRefer)="isFamilyHistoriesNoRefer = $event"></app-antecedentes-familiares-form>
 
 			<app-medicaciones-form formControlName="medications"></app-medicaciones-form>
 
@@ -22,7 +22,7 @@
 
 			<app-factores-de-riesgo-form-v2 formControlName="riskFactors"></app-factores-de-riesgo-form-v2>
 
-			<app-alergias-form formControlName="allergies" (isAllergyNoRefer)="isAllergyNoRefer = $event"></app-alergias-form>
+			<app-alergias-form formControlName="allergies" [isAllergyNoReferInput]="data.emergencyCareEvolutionNote?.allergies.isReferred" (isAllergyNoRefer)="isAllergyNoRefer = $event"></app-alergias-form>
 
 		</form>
 	</div>
@@ -31,7 +31,7 @@
     <div actions id="buttons">
 		<div fxLayoutAlign="end">
 			<app-button [color]="'primary'" [isLoading]="disableConfirmButton" [text]="'buttons.CONFIRM' | translate | uppercase"
-				[buttonType]="'mat-raised-button'" (clicked)="save()">
+				[buttonType]="'mat-raised-button'" (clicked)="persist()">
 			</app-button>
 		</div>
 	</div>

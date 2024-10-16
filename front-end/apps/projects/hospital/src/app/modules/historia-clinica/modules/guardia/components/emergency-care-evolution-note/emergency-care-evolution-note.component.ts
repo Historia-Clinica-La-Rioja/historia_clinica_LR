@@ -15,6 +15,7 @@ import { DocumentsSummaryService } from '@api-rest/services/documents-summary.se
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
+import { EvolutionNoteDockPopupByNurseComponent } from '@historia-clinica/components/evolution-note-dock-popup-by-nurse/evolution-note-dock-popup-by-nurse.component';
 
 @Component({
 	selector: 'app-emergency-care-evolution-note',
@@ -97,8 +98,9 @@ export class EmergencyCareEvolutionNoteComponent {
 	}
 
 	private openEvolutionNote(evolutionNoteData: EmergencyCareEvolutionNoteDto) {
+		const evolutionNoteComponent = evolutionNoteData.type === EEmergencyCareEvolutionNoteType.DOCTOR ? NotaDeEvolucionDockPopupComponent : EvolutionNoteDockPopupByNurseComponent;
 		if (!this.evolutionNoteDialogRef) {
-			this.evolutionNoteDialogRef = this.dockPopupService.open(NotaDeEvolucionDockPopupComponent, this.getEvolutionNoteData(evolutionNoteData));
+			this.evolutionNoteDialogRef = this.dockPopupService.open(evolutionNoteComponent,  this.getEvolutionNoteData(evolutionNoteData));
 			this.evolutionNoteDialogRef.afterClosed().subscribe(_ => {
 				delete this.evolutionNoteDialogRef;
 			})
