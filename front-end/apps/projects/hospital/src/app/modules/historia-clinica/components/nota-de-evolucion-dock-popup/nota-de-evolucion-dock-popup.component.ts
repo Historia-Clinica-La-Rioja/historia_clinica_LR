@@ -36,7 +36,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		medications: [],
 		procedures: [],
 		riskFactors: [],
-		allergies: []
+		allergies: [],
+		isolationAlerts: [],
 	});
 
 	diagnosis;

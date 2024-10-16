@@ -52,6 +52,7 @@ import { HistoriesSummaryComponent } from './components/histories-summary/histor
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
+import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
 import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
@@ -246,6 +247,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		InternacionAntecedentesPersonalesSummaryComponent,
 		InterveningProfessionalsComponent,
 		IntrasurgicalAnestheticProceduresSummaryComponent,
+		IsolationAlertSectionComponent, 
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
 		MeasuringPointSummaryComponent,

@@ -184,6 +184,10 @@
 				"OTHER_MEMBERS": "Otros miembros",
 				"CULTURES": "Cultivos"
 			}
+		},
+		"isolation-alert": {
+			"ISOLATION_ALERT": "Alerta de aislamiento",
+			"ADD_ISOLATION_ALERT": "Agregar alerta de aislamiento"
 		}
 	}
 }
