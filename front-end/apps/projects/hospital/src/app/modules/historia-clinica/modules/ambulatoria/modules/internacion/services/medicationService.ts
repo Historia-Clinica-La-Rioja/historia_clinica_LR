@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateTimeDto, MasterDataDto, AnestheticSubstanceDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
+import { MasterDataDto, AnestheticSubstanceDto, SnomedDto, SnomedECL, TimeDto, DateDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NoWhitespaceValidator } from '@core/utils/form.utils';
+import { newDate } from '@core/utils/moment.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -78,6 +79,7 @@ export class MedicationService {
                 unit: this.form.value.unit,
                 via: this.form.value.via,
                 time: this.form.value.time,
+				date: dateToDateDto(newDate()),
                 viaNote: this.form.value.viaNote,
             };
             if (this.handleAddMedication(medicationData))
@@ -126,19 +128,15 @@ export class MedicationService {
                         unit: medication.unit,
                         value: medication.dosis
                     },
-                    startDateTime: this.getMedicationTime(medication.time)
+                    startDateTime: {
+						time: medication.time ? medication.time : null,
+						date: medication.date ? medication.date : null
+					}
                 },
                 viaId: medication.via?.id,
                 viaNote: medication.viaNote
             }
         })
-    }
-
-    private getMedicationTime(time: TimeDto): DateTimeDto{
-        return time ? {
-            date: dateToDateDto(new Date()),
-            time: time
-        } : null
     }
 
     getViaInputStatus():Observable<MasterDataDto> {
@@ -191,6 +189,7 @@ export class MedicationService {
 				description: medication.viaId ? this.getViaDescription(viasType, medication.viaId) : null,
 			},
 			time: medication.dosage ? medication.dosage.startDateTime.time : null,
+			date: medication.dosage.startDateTime.date ? medication.dosage.startDateTime.date : null,
 			viaNote: medication.viaNote,
 		}));
 
@@ -220,5 +219,6 @@ export interface MedicationData {
     unit: string,
     via: MasterDataDto,
     time: TimeDto,
+	date: DateDto,
     viaNote?: string
 }
