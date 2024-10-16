@@ -28,48 +28,85 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 		String sqlString =
 			"WITH diagnostic_report_last_modification AS (SELECT DISTINCT ON " +
-				"(sr.id, dr.snomed_id, dr.health_condition_id) dr.id, dr.status_id " +
-				"FROM diagnostic_report dr " +
-				"JOIN document_diagnostic_report ddr ON ddr.diagnostic_report_id = dr.id " +
-				"JOIN document d ON d.id = ddr.document_id " +
-				"JOIN service_request sr ON sr.id = d.source_id " +
-				"ORDER BY sr.id, dr.snomed_id, dr.health_condition_id, dr.created_on DESC ) " +
-				"SELECT " +
-				"    sr.id AS studyId, " +
-				"    sr.patient_id AS patientId, " +
-				"    pe.first_name AS firstName, " +
-				"    pe.middle_names AS middleNames, " +
-				"    pe.last_name AS lastName, " +
-				"    pe.other_last_names AS otherLastNames, " +
-				"    pex.name_self_determination AS nameSelfDetermination, " +
-				"    pe.identification_number AS identificationNumber, " +
-				"    pe.identification_type_id AS identificationTypeId, " +
-				"    pe.gender_id AS genderId, " +
-				"    g.description AS genderDescription, " +
-				"    pe.birth_date AS birthDate, " +
-				"    s.sctid AS snomedSctid, " +
-				"    s.pt AS snomedPt, " +
-				"    sr.study_type_id AS studyType, " +
-				"    sr.requires_transfer AS requiresTransfer, " +
-				"    sr.source_type_id AS sourceTypeId, " +
-				"    sr.deferred_date AS deferredDate, " +
-				"    sr.created_on AS createdDate, " +
-				"    dr.status_id AS statusId " +
-				"FROM service_request sr " +
-				"JOIN document d ON sr.id = d.source_id " +
-				"JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
-				"JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
-				"JOIN snomed s ON dr.snomed_id = s.id " +
-				"JOIN patient p ON sr.patient_id = p.id " +
-				"JOIN person pe ON pe.id = p.person_id " +
-				"JOIN person_extended pex ON pe.id = pex.person_id " +
-				"LEFT JOIN gender g ON pe.gender_id = g.id " +
-				"JOIN diagnostic_report_last_modification drlm ON drlm.id = dr.id " +
-				"WHERE sr.institution_id = :institutionId " +
-				"AND dr.status_id = :statusId " +
-				"AND sr.category_id IN (:categories) " +
-				"AND sr.source_type_id IN (:sourceTypeIds) " +
-				"AND d.type_id = :documentType ";
+					"(sr.id, dr.snomed_id, dr.health_condition_id) dr.id, dr.status_id " +
+					"FROM diagnostic_report dr " +
+					"JOIN document_diagnostic_report ddr ON ddr.diagnostic_report_id = dr.id " +
+					"JOIN document d ON d.id = ddr.document_id " +
+					"JOIN service_request sr ON sr.id = d.source_id " +
+					"ORDER BY sr.id, dr.snomed_id, dr.health_condition_id, dr.created_on DESC ) " +
+					"SELECT " +
+					"    sr.id AS studyId, " +
+					"    sr.patient_id AS patientId, " +
+					"    pe.first_name AS firstName, " +
+					"    pe.middle_names AS middleNames, " +
+					"    pe.last_name AS lastName, " +
+					"    pe.other_last_names AS otherLastNames, " +
+					"    pex.name_self_determination AS nameSelfDetermination, " +
+					"    pe.identification_number AS identificationNumber, " +
+					"    pe.identification_type_id AS identificationTypeId, " +
+					"    pe.gender_id AS genderId, " +
+					"    g.description AS genderDescription, " +
+					"    pe.birth_date AS birthDate, " +
+					"    s.sctid AS snomedSctid, " +
+					"    s.pt AS snomedPt, " +
+					"    sr.study_type_id AS studyType, " +
+					"    sr.requires_transfer AS requiresTransfer, " +
+					"    sr.source_type_id AS sourceTypeId, " +
+					"    sr.deferred_date AS deferredDate, " +
+					"    sr.created_on AS createdDate, " +
+					"    dr.status_id AS statusId, " +
+					"    CASE " +
+					"        WHEN sr.source_type_id = 0 THEN ie_bed.bed_number " +
+					"        ELSE ec_bed.bed_number" +
+					"    END AS bedNumber, " +
+					"    CASE " +
+					"        WHEN sr.source_type_id = 0 THEN ie_room.room_number " +
+					"        ELSE ec_room.room_number " +
+					"    END AS roomNumber, " +
+					"    CASE " +
+					"        WHEN sr.source_type_id = 0 THEN ie_sector.description " +
+					"        ELSE ec_sector.description " +
+					"    END AS sector " +
+					"FROM service_request sr " +
+					"JOIN document d ON sr.id = d.source_id " +
+					"JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
+					"JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
+					"JOIN snomed s ON dr.snomed_id = s.id " +
+					"JOIN patient p ON sr.patient_id = p.id " +
+					"JOIN person pe ON pe.id = p.person_id " +
+					"JOIN person_extended pex ON pe.id = pex.person_id " +
+					"LEFT JOIN gender g ON pe.gender_id = g.id " +
+					"JOIN diagnostic_report_last_modification drlm ON drlm.id = dr.id " +
+					"LEFT JOIN ( " +
+					"    SELECT DISTINCT ON (ie.patient_id) " +
+					"        ie.patient_id, ie.bed_id, ie.created_on, " +
+					"        bi.bed_number, ri.room_number, " +
+					"        se.description AS sector_description " +
+					"    FROM internment_episode ie " +
+					"    JOIN bed bi ON ie.bed_id = bi.id " +
+					"    JOIN room ri ON bi.room_id = ri.id " +
+					"    LEFT JOIN sector se ON ri.sector_id = se.id " +
+					"    WHERE ie.institution_id = :institutionId AND ie.deleted = FALSE " +
+					"    ORDER BY ie.patient_id, ie.created_on DESC " +
+					") ie ON ie.patient_id = sr.patient_id " +
+					"LEFT JOIN ( " +
+					"    SELECT DISTINCT ON (ec.patient_id) " +
+					"        ec.patient_id, ec.bed_id, ec.created_on " +
+					"    FROM emergency_care_episode ec " +
+					"    WHERE ec.institution_id = :institutionId AND ec.deleted = FALSE " +
+					"    ORDER BY ec.patient_id, ec.created_on DESC " +
+					") ec ON ec.patient_id = sr.patient_id " +
+					"LEFT JOIN bed ec_bed ON ec.bed_id = ec_bed.id " +
+					"LEFT JOIN bed ie_bed ON ie.bed_id = ie_bed.id " +
+					"LEFT JOIN room ec_room ON ec_bed.room_id = ec_room.id " +
+					"LEFT JOIN room ie_room ON ie_bed.room_id = ie_room.id " +
+					"LEFT JOIN sector ec_sector ON ec_room.sector_id = ec_sector.id " +
+					"LEFT JOIN sector ie_sector ON ie_room.sector_id = ie_sector.id " +
+					"WHERE sr.institution_id = :institutionId " +
+					"AND dr.status_id = :statusId " +
+					"AND sr.category_id IN (:categories) " +
+					"AND sr.source_type_id IN (:sourceTypeIds) " +
+					"AND d.type_id = :documentType ";
 
 		Query query = entityManager.createNativeQuery(sqlString);
 		query.setParameter("institutionId", institutionId)
@@ -79,6 +116,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 				.setParameter("documentType", documentType);
 
 		return (List<Object[]>) query.getResultList();
+
 	}
 
 

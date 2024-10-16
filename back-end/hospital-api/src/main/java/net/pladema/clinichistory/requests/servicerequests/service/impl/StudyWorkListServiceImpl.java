@@ -67,9 +67,9 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				.build();
 
 		StudyOrderPatientLocationBo locationBo = StudyOrderPatientLocationBo.builder()
-				.bedNumber(null)
-				.roomNumber(null)
-				.sector(null)
+				.bedNumber((String) row[20])
+				.roomNumber((String) row[21])
+				.sector((String) row[22])
 				.build();
 
 		return new StudyOrderWorkListBo(
