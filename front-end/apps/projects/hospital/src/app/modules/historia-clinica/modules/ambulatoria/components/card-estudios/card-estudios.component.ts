@@ -438,7 +438,7 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	private getEmergencyCareEpisodeDiagnoses(): Observable<any[]> {
-		return this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.episodeId).
+		return this.emergencyCareStateService.getEmergencyCareEpisodeDiagnosesWithoutNursingAttentionDiagnostic(this.episodeId).
 			pipe(
 				map((d: DiagnosesGeneralStateDto[]) => d.map(this.mapDiagnosesGeneralStateDto))
 			)

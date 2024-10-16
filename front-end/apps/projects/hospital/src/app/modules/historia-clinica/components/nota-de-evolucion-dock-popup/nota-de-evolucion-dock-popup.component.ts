@@ -64,7 +64,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 			return;
 		}
 
-		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
+		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnosesWithoutNursingAttentionDiagnostic(this.data.episodeId).subscribe(
 			diagnoses => {
 				if (diagnoses.length) {
 					const mainDiagnosis = diagnoses.find(d => d.main);
