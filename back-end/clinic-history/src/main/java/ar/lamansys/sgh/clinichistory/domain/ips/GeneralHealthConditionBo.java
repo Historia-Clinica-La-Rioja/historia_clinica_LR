@@ -64,6 +64,27 @@ public class GeneralHealthConditionBo implements Serializable {
 		setHealthConditions(healthConditionVos, referredConcepts);
 	}
 
+	/**
+	 * Exclude the nursing procedure (see the constant in the Snomed entity).
+	 * If there's no main diagnostic choose the first of the list (that's an actual diagnosis) as the main one.
+	 */
+	public static GeneralHealthConditionBo excludingNursingDiagnostic(List<HealthConditionVo> episodeRelatedDiagnoses) {
+		var withoutNursingProcedure = episodeRelatedDiagnoses
+			.stream()
+			.filter(diagnostic -> !diagnostic.isNursingProcedure())
+			.collect(Collectors.toList());
+		var mainDiagnosticExists = withoutNursingProcedure.stream().anyMatch(x -> x.isMain());
+
+		//Choose the main diagnosis
+		if (!withoutNursingProcedure.isEmpty() && !mainDiagnosticExists)
+			withoutNursingProcedure.stream()
+				.filter(x -> x.isDiagnosis())
+				.findFirst()
+				.ifPresent(found -> found.setMain(true));
+
+		return new GeneralHealthConditionBo(withoutNursingProcedure);
+	}
+
 	private void setHealthConditions(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
 		var mainDiagnosis = healthConditionVos.stream().filter(HealthConditionVo::isMain).findFirst();
 		healthConditionVos = healthConditionVos.stream().filter(hc -> !hc.equals(mainDiagnosis.orElse(new HealthConditionVo()))).collect(Collectors.toList());
