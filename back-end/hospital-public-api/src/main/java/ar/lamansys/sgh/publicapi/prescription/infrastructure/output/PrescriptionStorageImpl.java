@@ -146,8 +146,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"LEFT JOIN {h-schema}medication_statement_commercial_prescription mscp ON (mscp.medication_statement_id = ms.id) " +
 		"where p2.identification_number LIKE :identificationNumber " +
 		"and mr.id = :numericPrescriptionId " +
-		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
-				"and (ms.status_id LIKE CAST(" + COMPLETO + "AS varchar) OR ms.status_id LIKE CAST(" + ACTIVO + "AS varchar)) " +
+		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + " AS VARCHAR) " +
+				"and (ms.status_id LIKE CAST(" + COMPLETO + " AS VARCHAR) OR ms.status_id LIKE CAST(" + ACTIVO + " AS VARCHAR)) " +
 		"order by mr.id desc";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
