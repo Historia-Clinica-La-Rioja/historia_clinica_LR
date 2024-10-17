@@ -5,18 +5,17 @@
 		[translate]="'access-management.search_references.reference.approval.ENTERED_BY'"
 		[translateParams]="{rule: referenceRegulationDto.ruleLevel}"></span>
 
-	<div *ngIf="(!hasGestorRole && referenceRegulationDto.state === referenceApprovalState.pending) || 
-		referenceRegulationDto.state !== referenceApprovalState.pending; else managerOptions">
+	<div *ngIf="(hasGestorRole || hasGestorInstitucionalRole) && canEditApprovalState; else showRegulationState">
+		<app-institutional-network-actions-dropdown
+			*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
+			[reportCompleteData]="referenceCompleteDataDto" [hasGestorInstitucionalRole]="hasGestorInstitucionalRole" (newState)="onNewState($event)">
+		</app-institutional-network-actions-dropdown>
+	</div>
+
+	<ng-template #showRegulationState>
 		<app-colored-label [description]="regulationState.description | translate | uppercase"
 			[color]="regulationState.color" [icon]="regulationState.icon">
 		</app-colored-label>
-	</div>
-
-	<ng-template #managerOptions>
-		<app-institutional-network-actions-dropdown
-			*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL']"
-			[reportCompleteData]="referenceCompleteDataDto" (newState)="onNewState($event)">
-		</app-institutional-network-actions-dropdown>
 	</ng-template>
 
 	<div *ngIf="referenceRegulationDto?.reason" fxLayout="column" fxLayoutGap="10px">

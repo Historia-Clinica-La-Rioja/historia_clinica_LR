@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
+import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
@@ -22,16 +23,19 @@ export class ApprovalComponent implements OnInit {
 		pending: EReferenceRegulationState.WAITING_APPROVAL,
 	}
 	hasGestorRole = false;
+	hasGestorInstitucionalRole = false;
 
 	@Input() referenceCompleteDataDto: ReferenceCompleteDataDto;
 	@Input() set approval(value: ReferenceRegulationDto) {
 		this.referenceRegulationDto = value;
 		this.regulationState = getIconState[value.state];
 	};
+	@Input() canEditApprovalState: boolean;
 
 	constructor(
 		private readonly accountService: AccountService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
+		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly permissionsService: PermissionsService,
 	) { }
 
@@ -42,16 +46,24 @@ export class ApprovalComponent implements OnInit {
 		);
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.hasGestorRole = anyMatch<ERole>(userRoles, [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL]);
+			this.hasGestorInstitucionalRole = anyMatch<ERole>(userRoles, [ERole.GESTOR_DE_ACCESO_INSTITUCIONAL]);
 		});
 	}
 
 	onNewState(hasChange : boolean){
 		if (hasChange){
-			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteDataDto.reference.id).subscribe(
-				(result) => {
-					this.referenceRegulationDto = result.regulation;
-					this.regulationState = getIconState[result.regulation.state];
-				  });
+			if (this.hasGestorInstitucionalRole)
+				this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteDataDto.reference.id).subscribe(
+					(result) => {
+						this.referenceRegulationDto = result.regulation;
+						this.regulationState = getIconState[result.regulation.state];
+					});
+			else 
+				this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteDataDto.reference.id).subscribe(
+					(result) => {
+						this.referenceRegulationDto = result.regulation;
+						this.regulationState = getIconState[result.regulation.state];
+					});
 		}
 	}
 }

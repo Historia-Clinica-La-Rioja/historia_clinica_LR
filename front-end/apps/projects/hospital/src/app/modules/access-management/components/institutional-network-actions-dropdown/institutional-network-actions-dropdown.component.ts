@@ -3,8 +3,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EReferenceRegulationState, ReferenceCompleteDataDto } from '@api-rest/api-model';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
+import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { NON_WHITESPACE_REGEX } from '@core/utils/form.utils';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-institutional-network-actions-dropdown',
@@ -21,6 +23,7 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	];
 	waitingApproval =  EReferenceRegulationState.WAITING_APPROVAL;
 	selectedOption: EReferenceRegulationState = this.waitingApproval;
+	initialOption: EReferenceRegulationState;
 	selectedOptionData: ReasonData;
 	private selectedOptionId: number;
 	showReasonArea: boolean = false;
@@ -28,16 +31,21 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	reason: FormGroup;
 
 	@Input() reportCompleteData: ReferenceCompleteDataDto;
+	@Input() hasGestorInstitucionalRole: boolean;
 	@Output() newState = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
+		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService
 	) { }
 
 	ngOnInit(): void {
+		this.initialOption = this.reportCompleteData.regulation.state? this.reportCompleteData.regulation?.state : this.waitingApproval;
+		if (this.reportCompleteData.regulation?.state) this.setSelectedOption(this.reportCompleteData.regulation.state);
 		this.reason = new FormGroup<ReasonForm>({
 			reason: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]),
 		});
+		if (this.initialOption !== this.waitingApproval) this.regulationStates.shift();
 	}
 
 	get selectedStateOption() {
@@ -96,8 +104,14 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 
 	private updateStateAndEmit(stateId: number) {
 		const reason = this.reason.controls.reason.value;
-		const updateState$ = this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(this.reportCompleteData.reference.id, stateId, reason || null);
+		let updateState$: Observable<boolean>;
+		if (this.hasGestorInstitucionalRole)
+			updateState$ = this.institutionalReferenceReportService.changeReferenceRegulationStateAsGestorInstitucional(this.reportCompleteData.reference.id, stateId, reason || null);
+		else 
+			updateState$ = this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(this.reportCompleteData.reference.id, stateId, reason || null);
+		
 		updateState$.subscribe(_ => this.newState.next(true));
+		this.initialOption = this.selectedOption;
 	}
 
 	private toReasonData(titleKey: string, subtitleKey: string, placeholderKey: string): ReasonData {

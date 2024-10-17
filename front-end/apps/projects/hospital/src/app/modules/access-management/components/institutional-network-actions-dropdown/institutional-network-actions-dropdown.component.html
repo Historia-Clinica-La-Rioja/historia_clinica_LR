@@ -15,7 +15,7 @@
 	</mat-form-field>
 </form>
 
-<div *ngIf="selectedOption != waitingApproval" fxLayout="column" fxLayoutGap="8px">
+<div *ngIf="selectedOption != initialOption" fxLayout="column" fxLayoutGap="8px">
 	<span class="capitalize-first-letter">{{ selectedOptionData.subtitle | translate }}</span>
 
 	<form [formGroup]="reason" *ngIf="showReasonArea">

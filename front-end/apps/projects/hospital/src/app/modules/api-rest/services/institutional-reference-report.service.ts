@@ -52,6 +52,17 @@ export class InstitutionalReferenceReportService {
 		return this.http.post<boolean>(url, {}, { params: queryParams });
 	}
 
+	changeReferenceRegulationStateAsGestorInstitucional(referenceId: number, stateId: number, reason?: string): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/change-regulation-state`;
+		let params: HttpParams = new HttpParams();
+		params = params.append('stateId', stateId);
+		if (!reason)
+			return this.http.put<boolean>(url, null, { params });
+
+		params = params.append('reason', reason);
+		return this.http.put<boolean>(url, null, { params });
+	}
+
 	cancelReference(referenceId: number): Observable<boolean> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/cancel`;
 		return this.http.put<boolean>(url, {});
