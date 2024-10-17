@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto, PrescriptionItemDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
-import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
@@ -246,7 +246,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 			studyType: studyType.value,
 			requiresTransfer: requiresTechnical.value,
 			...(this.form.controls.date?.value && {
-				deferredDate: dateToDateTimeDto(this.form.controls.date.value)
+				deferredDate: dateToDateTimeDtoUTC(this.form.controls.date.value)
 			}),
 			items: this.createPrescriptionItems(studies, healthProblem.value.id, studyCategory.value)
 		};
