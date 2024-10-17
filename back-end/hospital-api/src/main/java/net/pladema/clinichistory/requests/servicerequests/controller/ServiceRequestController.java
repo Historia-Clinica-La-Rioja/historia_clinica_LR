@@ -185,7 +185,6 @@ public class ServiceRequestController {
     }
 
 	@PutMapping("/{appointmentId}/completeByRDI")
-	@Transactional
 	@ResponseStatus(code = HttpStatus.OK)
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, TECNICO')")
 	public void completeByRDI(@PathVariable(name = "institutionId") Integer institutionId,

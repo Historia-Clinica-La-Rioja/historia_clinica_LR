@@ -1,16 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { ButtonType } from "@presentation/components/button/button.component";
 import { StudyStatusPopupComponent } from '../study-status-popup/study-status-popup.component';
 import { AppointmentsService } from "@api-rest/services/appointments.service";
-import { ApiErrorMessageDto, DetailsOrderImageDto } from "@api-rest/api-model";
+import { DetailsOrderImageDto } from "@api-rest/api-model";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 
-import {catchError, concatMap, map, switchMap, tap} from 'rxjs/operators';
-import { EMPTY, Observable } from "rxjs";
+import {catchError, map, tap} from 'rxjs/operators';
+import { Observable, of } from "rxjs";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { processErrors } from "@core/utils/form.utils";
-import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { DetailOrderImage } from '../../components/order-image-detail/order-image-detail.component';
 
@@ -19,20 +19,22 @@ import { DetailOrderImage } from '../../components/order-image-detail/order-imag
 	templateUrl: './finish-study.component.html',
 	styleUrls: ['./finish-study.component.scss']
 })
-export class FinishStudyComponent  implements OnInit {
+export class FinishStudyComponent implements OnInit {
 
 	observations: string;
 	reportNotRequired = false;
 	detailOrderInfo$: Observable<DetailOrderImage>
 	private served =  APPOINTMENT_STATES_ID.SERVED;
+	private confirmed =  APPOINTMENT_STATES_ID.CONFIRMED;
+	ButtonType = ButtonType;
+	isLoading = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
 		public dialogRef: MatDialogRef<FinishStudyComponent>,
 		public translateService: TranslateService,
-		private readonly appointmentsService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
-		private readonly prescriptionService: PrescripcionesService,
+		private readonly appointmentsService: AppointmentsService,
 		public dialog: MatDialog) {
 	}
 
@@ -48,33 +50,34 @@ export class FinishStudyComponent  implements OnInit {
 			}}))
 	}
 
-	confirm() {
+	confirmFinishStudy() {
 		const detailsOrderImage: DetailsOrderImageDto = {
 			observations: this.observations,
 			isReportRequired: !this.reportNotRequired,
+			patientId: this.data.patientId,
 		};
 		const appointmentId = this.data.appointmentId;
+		this.isLoading = true;
 
-        this.appointmentsService.addStudyObservations(appointmentId, detailsOrderImage)
+        this.appointmentsService.finishStudy(appointmentId, detailsOrderImage)
             .pipe(
                 tap(() => this.openStatusDialog('check_circle', 'green', 'image-network.appointments.STUDY_COMPLETED')),
-                concatMap(
-                    () => this.appointmentsService.changeStateAppointmentEquipment(appointmentId, this.served)
-                            .pipe(
-                                catchError((error: ApiErrorMessageDto) => {
-                                    processErrors(error, (msg) => this.snackBarService.showError(msg));
-                                    return EMPTY;
-                                }),
-								switchMap( _ => this.prescriptionService.completeStudyByRdi(this.data.patientId, this.data.appointmentId) ))
-                            ),
-                catchError((error: ApiErrorMessageDto) => {
-                    processErrors(error, (msg) => this.snackBarService.showError(msg));
+                catchError((error) => {
+					processErrors(error, (msg: string) => this.snackBarService.showError(msg));
                     this.openStatusDialog('cancel', 'red', 'image-network.appointments.STUDY_ERROR');
-                    return EMPTY;
+                    return of(false);
                 })
             )
-            .subscribe((_) => {
-                this.dialogRef.close({ updateState: this.served, reportRequired: !this.reportNotRequired });
+            .subscribe((result) => {
+				this.isLoading = false;
+                this.dialogRef.close({
+					updateState: result
+						? this.served
+						: this.confirmed,
+					reportRequired: result
+						? !this.reportNotRequired
+						: this.reportNotRequired
+				});
             });
     }
 

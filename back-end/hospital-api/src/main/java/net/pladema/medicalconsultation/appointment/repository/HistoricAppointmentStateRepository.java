@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface HistoricAppointmentStateRepository extends SGXAuditableEntityJPARepository<HistoricAppointmentState, HistoricAppointmentStatePK> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT CASE WHEN count(*) > 0 THEN TRUE ELSE FALSE END " +
+    @Query("SELECT CASE WHEN count(*) > 1 THEN TRUE ELSE FALSE END " +
             "FROM HistoricAppointmentState has " +
             "WHERE has.pk.appointmentId = :appointmentId " +
             "AND has.appointmentStateId = " + AppointmentState.CONFIRMED)

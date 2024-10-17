@@ -1251,6 +1251,7 @@ export interface DependencyDto extends Serializable {
 export interface DetailsOrderImageDto {
     isReportRequired: boolean;
     observations: string;
+    patientId: number;
 }
 
 export interface DiagnosesGeneralStateDto extends DiagnosisDto {

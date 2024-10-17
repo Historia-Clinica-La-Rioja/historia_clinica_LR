@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -20,6 +19,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exception
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import net.pladema.imagenetwork.application.equipmentchangestate.EquipmentChangeState;
+import net.pladema.imagenetwork.application.finishstudy.FinishImageStudy;
 import net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState;
 import net.pladema.medicalconsultation.appointment.application.GetAppointment;
 import net.pladema.medicalconsultation.appointment.application.createexpiredappointment.CreateExpiredAppointment;
@@ -29,7 +30,6 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentState
 import net.pladema.medicalconsultation.appointment.infrastructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
-import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
 
@@ -70,8 +70,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.mqtt.application.ports.MqttClientService;
-import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCoverageDto;
@@ -86,12 +84,10 @@ import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.s
 import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.service.domain.HierarchicalUnitBo;
-import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
-import net.pladema.medicalconsultation.appointment.controller.constraints.ValidDetailsOrderImage;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidEquipmentAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidTranscribedEquipmentAppointment;
@@ -157,8 +153,6 @@ public class AppointmentsController {
 
 	private final AppointmentOrderImageService appointmentOrderImageService;
 
-	private final MoveStudiesService moveStudiesService;
-
 	private final AppointmentValidatorService appointmentValidatorService;
 
 	private final CreateAppointmentService createAppointmentService;
@@ -189,8 +183,6 @@ public class AppointmentsController {
 
 	private final DetailOrderImageMapper detailOrderImageMapper;
 
-	private final MqttClientService mqttClientService;
-
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
 	private final FeatureFlagsService featureFlagsService;
@@ -220,6 +212,10 @@ public class AppointmentsController {
 	private final ChangeAppointmentState changeAppointmentState;
 
 	private final GetAppointment getAppointment;
+
+	private final FinishImageStudy finishImageStudy;
+
+	private final EquipmentChangeState equipmentChangeState;
 
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
@@ -604,26 +600,12 @@ public class AppointmentsController {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
 
 		var stateId = Short.parseShort(appointmentStateId);
-		Supplier<Boolean> updateState = () -> appointmentService.updateState(appointmentId, stateId, UserInfo.getCurrentAuditor(), reason);
-
-		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, stateId, reason);
-
-		if (stateId != 2) {
-			return ResponseEntity.ok().body(updateState.get());
+		if (stateId == AppointmentState.SERVED) {
+			throw new IllegalStateException("RDI - Este endpoint no debe ser invocado al finalizar un estudio");
 		}
-
-		try {
-			MqttMetadataBo data = equipmentAppointmentService.publishWorkList(institutionId, appointmentId);
-			if (data != null){
-				mqttClientService.publish(data);
-				return ResponseEntity.ok().body(updateState.get());
-			}
-			log.warn("Not publishWorkList -> institutionId {},appointmentId {}", institutionId, appointmentId);
-			return ResponseEntity.ok().body(false);
-		} catch (AlreadyPublishedWorklistException e) {
-			return ResponseEntity.ok().body(updateState.get());
-		}
-
+		var result = equipmentChangeState.run(institutionId, appointmentId, stateId, reason);
+		log.debug("Equipment appointment state changed -> {}, {}", appointmentStateId, result);
+		return ResponseEntity.ok().body(result);
 	}
 
 
@@ -674,22 +656,24 @@ public class AppointmentsController {
 		return ResponseEntity.ok().body(Boolean.TRUE);
 	}
 
-	@PostMapping("/study-observations/{appointmentId}")
+	@PostMapping("/finish-study/{appointmentId}")
 	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
-	@ValidDetailsOrderImage
-	public ResponseEntity<Boolean> addStudyObservations(
+	public ResponseEntity<Boolean> finishStudy(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId,
 			@RequestBody DetailsOrderImageDto detailsOrderImageDto
-			) {
+	) {
 		Integer technicianId = UserInfo.getCurrentAuditor();
-		log.debug("Input parameters -> institutionId {}, appointmentId {}, technicianId {}, {}", institutionId, appointmentId, technicianId, detailsOrderImageDto);
-		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId, detailsOrderImageDto.getObservations(), LocalDateTime.now(), technicianId, detailsOrderImageDto.getIsReportRequired());
-		appointmentOrderImageService.updateCompleted(detailsOrderImageBo);
-		Integer idMove = moveStudiesService.create(appointmentId, institutionId);
-		moveStudiesService.getSizeFromOrchestrator(idMove);
-		log.debug(OUTPUT, Boolean.TRUE);
-		return ResponseEntity.ok().body(Boolean.TRUE);
+		log.trace("Input parameters -> institutionId {}, appointmentId {}, technicianId {}, {}", institutionId, appointmentId, technicianId, detailsOrderImageDto);
+		DetailsOrderImageBo detailsOrderImageBo = new DetailsOrderImageBo(appointmentId,
+				detailsOrderImageDto.getObservations(),
+				LocalDateTime.now(),
+				technicianId,
+				detailsOrderImageDto.getIsReportRequired(),
+				detailsOrderImageDto.getPatientId());
+		var result = finishImageStudy.run(institutionId, detailsOrderImageBo);
+		log.trace("Image study finished -> {}", result);
+		return ResponseEntity.ok().body(result);
 	}
 
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO_RED_DE_IMAGENES')")
