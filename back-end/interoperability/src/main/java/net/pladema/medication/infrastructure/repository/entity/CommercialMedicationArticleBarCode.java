@@ -1,5 +1,6 @@
 package net.pladema.medication.infrastructure.repository.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "article_bar_code", schema = "commercial_medication")
 @Entity
 public class CommercialMedicationArticleBarCode implements Serializable {

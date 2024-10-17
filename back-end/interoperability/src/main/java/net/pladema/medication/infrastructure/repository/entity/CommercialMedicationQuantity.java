@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medication.domain.CommercialMedicationMasterData;
 
 @Getter
 @Setter
@@ -27,4 +28,8 @@ public class CommercialMedicationQuantity implements Serializable {
 	@Column(name = "description", length = 50)
 	private String description;
 
+	public CommercialMedicationQuantity(CommercialMedicationMasterData quantity) {
+		this.id = quantity.getId();
+		this.description = quantity.getDescription();
+	}
 }

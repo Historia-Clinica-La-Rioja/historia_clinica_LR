@@ -3,7 +3,7 @@ package net.pladema.medication.domain.decodedResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.pladema.medication.domain.commercialMedicationArticle.CommercialMedicationArticle;
+import net.pladema.medication.domain.commercialMedicationArticle.Article;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,6 +19,6 @@ import java.util.List;
 public class ArticleList {
 
 	@XmlElement(name = "articulo")
-	private List<CommercialMedicationArticle> articles;
+	private List<Article> articles;
 
 }

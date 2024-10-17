@@ -3,6 +3,7 @@ package net.pladema.medication.infrastructure.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medication.domain.commercialMedicationArticle.NewDrug;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -24,9 +26,14 @@ public class CommercialMedicationArticleDrug implements Serializable {
 	private CommercialMedicationArticleDrugPK pk;
 
 	@Column(name = "potency")
-	private Float potency;
+	private BigDecimal potency;
 
 	@Column(name = "potency_id")
 	private Integer potencyId;
 
+	public CommercialMedicationArticleDrug(Integer articleId, NewDrug drug) {
+		this.pk = new CommercialMedicationArticleDrugPK(articleId, drug.getId());
+		this.potency = drug.getPotency();
+		this.potencyId = drug.getPotencyUnityId();
+	}
 }

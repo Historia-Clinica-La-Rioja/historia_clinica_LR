@@ -3,6 +3,7 @@ package net.pladema.medication.infrastructure.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medication.domain.CommercialMedicationMasterData;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,4 +28,8 @@ public class CommercialMedicationLaboratory implements Serializable {
 	@Column(name = "description", length = 50)
 	private String description;
 
+	public CommercialMedicationLaboratory(CommercialMedicationMasterData laboratory) {
+		this.id =  laboratory.getId();
+		this.description = laboratory.getDescription();
+	}
 }

@@ -3,6 +3,7 @@ package net.pladema.medication.infrastructure.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medication.domain.commercialMedicationArticle.Article;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -26,7 +29,7 @@ public class CommercialMedicationArticle implements Serializable {
 	private Integer id;
 
 	@Column(name = "price")
-	private Float price;
+	private BigDecimal price;
 
 	@Column(name = "price_validity_date")
 	private LocalDate priceValidityDate;
@@ -100,4 +103,32 @@ public class CommercialMedicationArticle implements Serializable {
 	@Column(name = "prospect")
 	private Integer prospect;
 
+	public CommercialMedicationArticle(Article article) {
+		this.id = article.getId();
+		this.price = article.getPrice();
+		this.priceValidityDate = LocalDate.parse(article.getPriceValidFrom(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		this.name = article.getName();
+		this.presentation = article.getPresentation();
+		this.laboratoryId = article.getLaboratoryId();
+		this.troquel = article.getPackageId();
+		this.presentationStatus = article.getPresentationStatus();
+		this.isImported = article.getIsImported();
+		this.needsFridgePreservation = article.getNeedRefrigeration();
+		this.iva = article.getHasIVATax();
+		this.sellTypeId = article.getSellTypeId();
+		this.controlId =  article.getPublicSanityInternCodeId();
+		this.sizeId = article.getSizeId();
+		this.formId = article.getFormId();
+		this.viaId = article.getViaId();
+		this.monoDrugId = article.getDrugId();
+		this.actionId = article.getActionId();
+		this.potencyValue = article.getPotency();
+		this.potencyId = article.getPotencyUnitId();
+		this.presentationUnit = article.getPresentationUnit();
+		this.quantityId = article.getPresentationUnitId();
+		this.gravamen = article.getBrand();
+		this.glutenFree = article.getIsCeliacSuitable();
+		this.snomedId = article.getSnomedId();
+		this.prospect = article.getProspect();
+	}
 }

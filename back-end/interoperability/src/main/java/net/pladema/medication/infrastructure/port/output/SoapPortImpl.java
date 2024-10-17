@@ -71,13 +71,20 @@ public class SoapPortImpl implements SoapPort {
 	}
 
 	@Override
-	public void fetchCommercialMedicationCompleteDataBase() throws JAXBException, IOException {
+	public CommercialMedicationDecodedResponse fetchCommercialMedicationCompleteDataBase() throws JAXBException, IOException {
 		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null);
-		CommercialMedicationRequestEnvelope commercialMedicationRequestEnvelope = new CommercialMedicationRequestEnvelope(ID, PASSWORD, parameters.toXmlString());
-		CommercialMedicationDecodedResponse response = callAPI(commercialMedicationRequestEnvelope);
+		return callAPI(parameters);
 	}
 
-	private CommercialMedicationDecodedResponse callAPI(CommercialMedicationRequestEnvelope commercialMedicationRequestEnvelope) throws JAXBException, IOException {
+	@Override
+	public CommercialMedicationDecodedResponse fetchCommercialMedicationAtcData() throws JAXBException, IOException {
+		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST);
+		return callAPI(parameters);
+	}
+
+	private CommercialMedicationDecodedResponse callAPI(CommercialMedicationRequestParameter parameters) throws JAXBException, IOException {
+		CommercialMedicationRequestEnvelope commercialMedicationRequestEnvelope = new CommercialMedicationRequestEnvelope(ID, PASSWORD, parameters.toXmlString());
+
 		StringWriter xmlWriter = new StringWriter();
 		marshaller.marshal(commercialMedicationRequestEnvelope, xmlWriter);
 

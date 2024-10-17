@@ -9,18 +9,20 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "articulo")
-public class CommercialMedicationArticle {
+public class Article {
 
 	@XmlElement(name = "reg")
 	private Integer id;
 
 	@XmlElement(name = "prc")
-	private Float price;
+	private BigDecimal price;
 
 	@XmlElement(name = "vig")
 	private String priceValidFrom;

@@ -3,6 +3,7 @@ package net.pladema.medication.infrastructure.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.medication.domain.decodedResponse.ATCDetail;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -31,12 +33,12 @@ public class CommercialMedicationAtc implements Serializable {
 	private String comment;
 
 	@Column(name = "daily_defined_dose")
-	private Float dailyDefinedDose;
+	private BigDecimal dailyDefinedDose;
 
 	@Column(name = "unit")
 	private String unit;
 
-	@Column(name = "administration_via", length = 1)
+	@Column(name = "administration_via")
 	private String administrationVia;
 
 	@Column(name = "daily_defined_dose_comment")
@@ -45,4 +47,14 @@ public class CommercialMedicationAtc implements Serializable {
 	@Column(name = "level")
 	private String level;
 
+	public CommercialMedicationAtc(ATCDetail atc) {
+		this.id = atc.getCode();
+		this.description = atc.getDescription();
+		this.comment = atc.getComment();
+		this.dailyDefinedDose = atc.getDailyDose();
+		this.unit = atc.getUnit();
+		this.administrationVia = atc.getVia();
+		this.dailyDefinedDoseComment = atc.getDddComment();
+		this.level = atc.getLevel();
+	}
 }

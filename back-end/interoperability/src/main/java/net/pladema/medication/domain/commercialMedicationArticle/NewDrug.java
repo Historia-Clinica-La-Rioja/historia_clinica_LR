@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class NewDrug {
 	private Integer id;
 
 	@XmlElement(name = "po")
-	private Integer potency;
+	private BigDecimal potency;
 
 	@XmlElement(name = "upo")
 	private Integer potencyUnityId;

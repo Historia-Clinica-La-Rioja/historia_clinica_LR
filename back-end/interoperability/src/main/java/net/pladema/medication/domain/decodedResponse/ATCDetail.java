@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +28,7 @@ public class ATCDetail {
 	private String comment;
 
 	@XmlElement(name = "ddd")
-	private Float dailyDose;
+	private BigDecimal dailyDose;
 
 	@XmlElement(name = "tu")
 	private String unit;
