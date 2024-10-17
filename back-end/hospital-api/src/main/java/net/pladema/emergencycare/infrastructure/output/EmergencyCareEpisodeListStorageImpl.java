@@ -121,7 +121,8 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						"lt.creatorMiddleNames as triageCreatorMiddleNames, " +
 						"lt.creatorNameSelfDetermination as triageCreatorNameSelfDetermination, " +
 						"lt.creatornOtherLastNames as triageCreatorOtherLastName, " +
-						"css.description as clinicalSpecialtySectorDescription ";
+						"css.description as clinicalSpecialtySectorDescription, " +
+						"ece.patient_description as patientDescription ";
 
 		String sqlFromStatement =
 				"FROM emergency_care_episode AS ece " +
@@ -231,6 +232,8 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 		result.setShockroomId((Integer) row[11]);
 		result.setBedId((Integer) row[12]);
 		result.setReason((String) row[13]);
+		if (row[52] != null)
+			result.setPatientDescription((String) row[52]);
 		return result;
 	}
 
