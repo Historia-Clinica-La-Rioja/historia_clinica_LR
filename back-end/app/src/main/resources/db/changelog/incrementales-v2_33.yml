@@ -1,3 +1,166 @@
 databaseChangeLog:
     - logicalFilePath: incrementales-v2_33
 
+    - changeSet:
+        id: createTable-isolation_alert-isolation_type
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: isolation_criticality
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_criticality
+                - column:
+                    name: description
+                    type: text
+                    constraints:
+                      nullable: false
+
+          - sql:
+              sql: |-
+                INSERT INTO isolation_criticality VALUES (1, 'Baja');
+                INSERT INTO isolation_criticality VALUES (2, 'Alta');
+                INSERT INTO isolation_criticality VALUES (3, 'Incapaz de evaluar');        
+
+          - createTable:
+              tableName: isolation_alert
+              columns:
+                - column:
+                    name: id
+                    type: integer
+                    autoIncrement: true
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_alert
+                - column:
+                    name: health_condition_id
+                    type: integer
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_isolation_alert__health_condition_id
+                      references: health_condition(id)
+                - column:
+                    name: isolation_criticality_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_isolation_alert__criticality_id
+                      references: isolation_criticality(id)
+                - column:
+                    name: end_date
+                    type: date
+                    constraints:
+                      nullable: false
+                - column:
+                    name: observations
+                    type: text
+                    constraints:
+                      nullable: true
+                - column:
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+          - createTable:
+              tableName: isolation_type
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    autoIncrement: false
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_type
+                - column:
+                    name: description
+                    type: text
+                    constraints:
+                      nullable: false
+
+          - sql:
+              sql: |-
+                INSERT INTO isolation_type (id, description) VALUES
+                (1, 'Contacto'), (2, 'Gotas'), (3, 'Aereo (respiratorio)'),
+                (4, 'Aislamiento protector'), (5, 'Aislamiento entomológico'), (6, 'Otros');
+
+          - createTable:
+              tableName: isolation_alert_isolation_type
+              columns:
+                - column:
+                    name: isolation_alert_id
+                    type: integer
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_alert_isolation_type
+                      foreignKeyName: FK_isolation_alert_isolation_type__isolation_alert_id
+                      references: isolation_alert(id)
+                - column:
+                    name: isolation_type_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_alert_isolation_type
+                      foreignKeyName: FK_isolation_alert_isolation_type__isolation_type_id
+                      references: isolation_type(id)
+
+          - createTable:
+              tableName: document_isolation_alert
+              columns:
+                - column:
+                    name: isolation_alert_id
+                    type: integer
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_document_isolation_alert
+                      foreignKeyName: FK_document_isolation_alert__isolation_alert_id
+                      references: isolation_alert(id)
+                - column:
+                    name: document_id
+                    type: bigint
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_document_isolation_alert
+                      foreignKeyName: FK_document_isolation_alert__document_id
+                      references: document(id)

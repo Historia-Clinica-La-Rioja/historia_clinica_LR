@@ -1843,6 +1843,7 @@ export interface EmergencyCareEvolutionNoteClinicalData {
     diagnosis: DiagnosisDto[];
     evolutionNote: string;
     familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
+    isolationAlerts: IsolationAlertDto[];
     mainDiagnosis: HealthConditionDto;
     medications: OutpatientMedicationDto[];
     procedures: OutpatientProcedureDto[];
@@ -1869,6 +1870,7 @@ export interface EmergencyCareEvolutionNoteDto {
     diagnosis: DiagnosisDto[];
     evolutionNote: string;
     familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
+    isolationAlerts: IsolationAlertDto[];
     mainDiagnosis: HealthConditionDto;
     medications: OutpatientMedicationDto[];
     patientId: number;
@@ -3041,6 +3043,16 @@ export interface InternmentSummaryDto {
     responsibleContact?: ResponsibleContactDto;
     specialty: ClinicalSpecialtyDto;
     totalInternmentDays: number;
+}
+
+export interface IsolationAlertDto {
+    criticality: MasterDataDto;
+    endDate: DateDto;
+    healthConditionId: number;
+    healthConditionPt: string;
+    healthConditionSctid: string;
+    observations?: string;
+    types: MasterDataDto[];
 }
 
 export interface Iterable<T> {

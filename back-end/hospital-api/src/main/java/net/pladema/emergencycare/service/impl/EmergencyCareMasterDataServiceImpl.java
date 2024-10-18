@@ -1,5 +1,7 @@
 package net.pladema.emergencycare.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationCriticality;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationType;
 import net.pladema.emergencycare.repository.EmergencyEpisodeAttendSectorType;
 import net.pladema.emergencycare.service.EmergencyCareMasterDataService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -55,6 +58,20 @@ public class EmergencyCareMasterDataServiceImpl implements EmergencyCareMasterDa
 	@Override
 	public List<EBlockAttentionPlaceReason> getAttentionPlaceBlockReasons() {
 		var result = EBlockAttentionPlaceReason.getAll();
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<EIsolationType> getIsolationTypes() {
+		var result = EIsolationType.getAll();
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<EIsolationCriticality> getCriticalities() {
+		var result = EIsolationCriticality.getAll();
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

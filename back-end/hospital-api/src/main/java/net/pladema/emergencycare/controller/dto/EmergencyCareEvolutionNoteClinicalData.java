@@ -2,6 +2,7 @@ package net.pladema.emergencycare.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.IsolationAlertDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,5 +39,7 @@ public class EmergencyCareEvolutionNoteClinicalData {
 	private ReferableItemDto<OutpatientAllergyConditionDto> allergies;
 
 	private List<OutpatientProcedureDto> procedures;
+
+	private List<IsolationAlertDto> isolationAlerts;
 
 }

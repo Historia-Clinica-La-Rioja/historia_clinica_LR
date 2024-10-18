@@ -90,4 +90,32 @@ public class EmergencyCareMasterDataController {
 				return ret;
 			}).collect(Collectors.toList());
 	}
+
+	@GetMapping(value = "/isolation-types")
+	public List<MasterDataDto> getIsolationTypes() {
+		LOG.debug("{}", "All isolation types");
+		return emergencyCareMasterDataService
+				.getIsolationTypes()
+				.stream()
+				.map(value -> {
+					var ret = new MasterDataDto();
+					ret.setId(value.getId());
+					ret.setDescription(value.getDescription());
+					return ret;
+				}).collect(Collectors.toList());
+	}
+
+	@GetMapping(value = "/isolation-criticalities")
+	public List<MasterDataDto> getCriticalities() {
+		LOG.debug("{}", "All isolation criticalities");
+		return emergencyCareMasterDataService
+				.getCriticalities()
+				.stream()
+				.map(value -> {
+					var ret = new MasterDataDto();
+					ret.setId(value.getId());
+					ret.setDescription(value.getDescription());
+					return ret;
+				}).collect(Collectors.toList());
+	}
 }

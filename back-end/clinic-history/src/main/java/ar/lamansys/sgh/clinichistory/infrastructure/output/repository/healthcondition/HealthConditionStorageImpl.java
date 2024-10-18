@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,5 +45,30 @@ public class HealthConditionStorageImpl implements HealthConditionStorage {
         log.debug("Output parameter -> result {}", result);
         return result;
     }
+
+	@Override
+	public List<Integer> getHealthConditionIdByDocumentIdAndSnomedConcept(Long documentId, String sctid, String pt) {
+		log.debug("Input parameters documentId {}, sctid {} , pt {}", documentId, sctid, pt);
+
+		String sqlString = "SELECT hc.id as id "
+				+"  FROM Document d"
+				+"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId)"
+				+"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id)"
+				+"  JOIN Snomed s ON (s.id = hc.snomedId)"
+				+"  WHERE d.id = :documentId"
+				+"  AND s.sctid = :sctid"
+				+"  AND s.pt = :pt"
+				+"  ORDER BY hc.updateable.updatedOn DESC"
+				;
+
+		List<Integer> result = entityManager.createQuery(sqlString)
+				.setParameter("documentId", documentId)
+				.setParameter("sctid", sctid)
+				.setParameter("pt", pt)
+				.getResultList();
+
+		log.debug("Output parameter -> result {}", result);
+		return result;
+	}
 
 }

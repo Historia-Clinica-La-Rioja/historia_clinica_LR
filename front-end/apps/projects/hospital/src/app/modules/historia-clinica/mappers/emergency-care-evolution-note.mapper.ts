@@ -54,6 +54,7 @@ export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHist
 		},
 		patientId,
 		type: evolutionNoteType,
+		isolationAlerts: []
 	}
 }
 

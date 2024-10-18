@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IsolationAlertBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -86,6 +87,8 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 	private Map<String, Object> contextMap;
 
 	private EEmergencyCareEvolutionNoteType type;
+
+	private List<IsolationAlertBo> isolationAlerts;
 
 	@Override
 	public Integer getPatientId() {

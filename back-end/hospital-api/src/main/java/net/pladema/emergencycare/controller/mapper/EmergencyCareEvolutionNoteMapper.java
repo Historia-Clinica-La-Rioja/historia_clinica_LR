@@ -1,5 +1,8 @@
 package net.pladema.emergencycare.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.IsolationAlertMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDocumentDto;
@@ -14,7 +17,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, HealthcareProfessionalMapper.class, SnomedMapper.class})
+@Mapper(uses = {LocalDateMapper.class, HealthcareProfessionalMapper.class, SnomedMapper.class, IsolationAlertMapper.class})
 public interface EmergencyCareEvolutionNoteMapper {
 
 	@Named("fromEmergencyCareEvolutionNoteDto")
@@ -35,6 +38,7 @@ public interface EmergencyCareEvolutionNoteMapper {
 	@Mapping(target = "professional", source = "professional", qualifiedByName = "fromHealthcareProfessionalBo")
 	@Mapping(target = "editor", source = "editor", qualifiedByName = "fromHealthcareProfessionalBo")
 	@Mapping(target = "type", source = "type")
+	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.isolationAlerts", source = "isolationAlerts")
 	EmergencyCareEvolutionNoteDocumentDto toEmergencyCareEvolutionNoteDocumentDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNote);
 
 	@Named("toEmergencyCareEvolutionNoteDocumentListDto")
@@ -43,5 +47,8 @@ public interface EmergencyCareEvolutionNoteMapper {
 
 	@Named("toEmergencyCareEvolutionNoteDto")
 	EmergencyCareEvolutionNoteDto toEmergencyCareEvolutionNoteDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocumentBo);
+
+	@Mapping(target = "isAdded", expression = "java(true)")
+	DiagnosisDto diagnosisBoToDiagnosisDto(DiagnosisBo diagnosisBo);
 
 }

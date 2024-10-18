@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IpsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IsolationAlertBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
@@ -242,5 +243,7 @@ public interface IDocumentBo {
     default Integer getBusinessObjectId() { return null; }
 
 	default List<CompleteParameterizedFormBo> getCompleteForms() { return Collections.emptyList(); }
+
+	default List<IsolationAlertBo> getIsolationAlerts() { return Collections.emptyList(); }
     
 }
