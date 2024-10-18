@@ -347,6 +347,7 @@
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
 			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
 			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
+			"ADMINISTRATIVE_CLOSURE": "Referencia con cierre administrativo",
 			"REFERENCE_REQUESTED": "Referencia solicitada"
 		},
 		"report-complete-data": {
