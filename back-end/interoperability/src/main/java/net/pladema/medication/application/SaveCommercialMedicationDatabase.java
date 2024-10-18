@@ -23,7 +23,6 @@ import net.pladema.medication.domain.decodedResponse.CommercialMedicationDecoded
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
 
 import java.io.IOException;
@@ -61,11 +60,13 @@ public class SaveCommercialMedicationDatabase {
 
 	private final CommercialMedicationViaPort commercialMedicationViaPort;
 
-	@PostConstruct
 	@Transactional
-	public void run() throws JAXBException, IOException {
+	public Long run() throws JAXBException, IOException {
 		log.debug("Fetching commercial medication database...");
-		CommercialMedicationDecodedResponse database = soapPort.fetchCommercialMedicationCompleteDataBase();
+		CommercialMedicationDecodedResponse database = soapPort.fetchCommercialMedicationAtcData();
+		commercialMedicationAtcPort.saveAll(database.getAtcDetailList());
+
+		database = soapPort.fetchCommercialMedicationCompleteDataBase();
 		commercialMedicationActionPort.saveAll(database.getCommercialMedicationCompleteDatabase().getActionList());
 		commercialMedicationControlPort.saveAll(database.getCommercialMedicationCompleteDatabase().getPublicSanityInternCodeList());
 		commercialMedicationFormPort.saveAll(database.getCommercialMedicationCompleteDatabase().getForms());
@@ -79,9 +80,7 @@ public class SaveCommercialMedicationDatabase {
 		commercialMedicationViaPort.saveAll(database.getCommercialMedicationCompleteDatabase().getViaList());
 		commercialMedicationArticlePort.saveAll(database.getCommercialMedicationCompleteDatabase().getArticleList());
 
-		//Search ATC elements
-		database = soapPort.fetchCommercialMedicationAtcData();
-		commercialMedicationAtcPort.saveAll(database.getAtcDetailList());
+		return database.getCommercialMedicationCompleteDatabase().getLastLog();
 	}
 
 }
