@@ -4578,6 +4578,12 @@ export interface ReferableItemDto<T> extends CustomContainer<T> {
     isReferred: boolean;
 }
 
+export interface ReferenceAdministrativeClosureDto {
+    closureNote: string;
+    fileIds: number[];
+    referenceId: number;
+}
+
 export interface ReferenceAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;

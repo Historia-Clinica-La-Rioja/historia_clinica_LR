@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.domain.document;
 
 import ar.lamansys.refcounterref.domain.allergy.CounterReferenceAllergyBo;
+import ar.lamansys.refcounterref.domain.counterreference.ReferenceAdministrativeClosureBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceBo;
 import ar.lamansys.refcounterref.domain.medication.CounterReferenceMedicationBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
@@ -13,29 +14,29 @@ import java.util.List;
 @Getter
 public class CounterReferenceDocumentBo {
 
-    private final Long id;
+    private Long id;
 
-    private final Integer patientId;
+    private Integer patientId;
 
-    private final Integer encounterId;
+    private Integer encounterId;
 
-    private final Integer institutionId;
+    private Integer institutionId;
 
-    private final Integer doctorId;
+    private Integer doctorId;
 
-    private final Integer clinicalSpecialtyId;
+    private Integer clinicalSpecialtyId;
 
-    private final String counterReferenceNote;
+    private String counterReferenceNote;
 
-    private final Integer patientMedicalCoverage;
+    private Integer patientMedicalCoverage;
 
-    private final List<CounterReferenceProcedureBo> procedures;
+    private List<CounterReferenceProcedureBo> procedures;
 
-    private final List<CounterReferenceMedicationBo> medications;
+    private List<CounterReferenceMedicationBo> medications;
 
-    private final ReferableItemBo<CounterReferenceAllergyBo> allergies;
+    private ReferableItemBo<CounterReferenceAllergyBo> allergies;
 
-    private final LocalDate performedDate;
+    private LocalDate performedDate;
 
 	private Integer medicalCoverageId;
 
@@ -58,5 +59,13 @@ public class CounterReferenceDocumentBo {
         this.performedDate = performedDate;
 		this.medicalCoverageId = counterReferenceBo.getPatientMedicalCoverageId();
     }
+
+	public CounterReferenceDocumentBo(ReferenceAdministrativeClosureBo closureBo, Integer encounterId) {
+		this.patientId = closureBo.getPatientId();
+		this.encounterId = encounterId;
+		this.institutionId = closureBo.getInstitutionId();
+		this.counterReferenceNote = closureBo.getClosureNote();
+		this.performedDate = closureBo.getDate();
+	}
 
 }

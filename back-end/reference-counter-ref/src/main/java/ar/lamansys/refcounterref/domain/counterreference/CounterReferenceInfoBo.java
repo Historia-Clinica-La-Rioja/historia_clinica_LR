@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.domain.counterreference;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,13 +39,12 @@ public class CounterReferenceInfoBo {
 
 	private Long noteId;
 
-	public CounterReferenceInfoBo(ReferenceAdministrativeClosureBo referenceAdministrativeClosureBo, Long noteId) {
+	public CounterReferenceInfoBo(ReferenceAdministrativeClosureBo referenceAdministrativeClosureBo) {
 		this.referenceId = referenceAdministrativeClosureBo.getReferenceId();
 		this.patientId = referenceAdministrativeClosureBo.getPatientId();
 		this.institutionId = referenceAdministrativeClosureBo.getInstitutionId();
 		this.performedDate = referenceAdministrativeClosureBo.getDate();
 		this.closureTypeId = EReferenceClosureType.CIERRE_ADMINISTRATIVO.getId();
-		this.noteId = noteId;
 	}
 
 }

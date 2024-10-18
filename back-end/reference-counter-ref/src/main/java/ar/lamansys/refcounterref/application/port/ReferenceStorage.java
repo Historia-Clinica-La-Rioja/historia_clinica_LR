@@ -40,4 +40,6 @@ public interface ReferenceStorage {
 	boolean updateDestinationInstitution(Integer referenceId, Integer institutionId);
 
 	Integer getDestinationInstitutionId(Integer referenceId);
+
+	Integer getPatientId(Integer referenceId);
 }
