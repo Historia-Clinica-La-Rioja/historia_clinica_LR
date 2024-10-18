@@ -12,6 +12,7 @@ import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceClinica
 import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.doctor.CounterReferenceDoctorInfoBo;
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
@@ -92,7 +93,9 @@ public class CreateCounterReference {
 	}
 
     private void assertContextValid(CounterReferenceBo counterReferenceBo, CounterReferenceDoctorInfoBo doctorInfoBo, boolean consultation) {
-        if (counterReferenceBo.getInstitutionId() == null)
+		if (counterReferenceBo.getClosureTypeId().equals(EReferenceClosureType.CIERRE_ADMINISTRATIVO.getId()))
+			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_CLOSURE_TYPE, "No cuenta con suficientes privilegios para darle un cierre administrativo a la referencia");
+		if (counterReferenceBo.getInstitutionId() == null)
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
         if (counterReferenceBo.getCounterReferenceNote() == null)
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_COUNTER_REFERENCE_NOTE, "La contrarreferencia es un dato obligatorio");
