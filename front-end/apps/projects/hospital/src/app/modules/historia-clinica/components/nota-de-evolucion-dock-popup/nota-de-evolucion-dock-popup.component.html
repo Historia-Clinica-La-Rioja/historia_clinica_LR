@@ -14,7 +14,7 @@
 
 			<app-datos-antropometricos-form formControlName="anthropometricData" [patientId]="data.patientId"> </app-datos-antropometricos-form>
 
-			<app-antecedentes-familiares-form formControlName="familyHistories" (isFamilyHistoriesNoRefer)="setIsFamilyHistoriesNoRefer($event)"></app-antecedentes-familiares-form>
+			<app-antecedentes-familiares-form formControlName="familyHistories" [isFamilyHistoryNoRefer]="data.emergencyCareEvolutionNote?.familyHistories.isReferred" (isFamilyHistoriesNoRefer)="setIsFamilyHistoriesNoRefer($event)"></app-antecedentes-familiares-form>
 
 			<app-medicaciones-form formControlName="medications"></app-medicaciones-form>
 

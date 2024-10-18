@@ -41,7 +41,7 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		}
 	}
 	@Output() isAllergyNoRefer = new EventEmitter<boolean>();
-	@Input() isAllergyNoReferInput: boolean = null;
+	@Input() isAllergyNoReferInput: boolean;
 
 	alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 

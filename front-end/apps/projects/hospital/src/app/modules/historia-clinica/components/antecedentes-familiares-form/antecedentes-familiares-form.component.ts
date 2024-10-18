@@ -1,4 +1,4 @@
-import { Component, forwardRef, EventEmitter, Output } from '@angular/core';
+import { Component, forwardRef, EventEmitter, Output, Input } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
@@ -43,6 +43,7 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
 		}
 	}
+	@Input() isFamilyHistoryNoRefer: boolean;
 	@Output() isFamilyHistoriesNoRefer = new EventEmitter<boolean>();
 
 	constructor(
