@@ -15,6 +15,7 @@ import ar.lamansys.refcounterref.domain.doctor.CounterReferenceDoctorInfoBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedNotePort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ public class CreateCounterReference {
     private final CounterReferenceStorage counterReferenceStorage;
     private final CounterReferenceDocumentStorage counterReferenceDocumentStorage;
 	private final ReferenceStorage referenceStorage;
+	private final SharedNotePort sharedNotePort;
 
     @Transactional
     public void run(CounterReferenceBo counterReferenceBo) {
@@ -44,6 +46,8 @@ public class CreateCounterReference {
 		CounterReferenceDoctorInfoBo doctorInfoBo = validate(counterReferenceBo);
 
 		LocalDate now = dateTimeProvider.nowDate();
+
+		var noteId = sharedNotePort.saveNote(counterReferenceBo.getCounterReferenceNote());
 
         var encounterId = counterReferenceStorage.save(
                 new CounterReferenceInfoBo(null,
@@ -57,7 +61,8 @@ public class CreateCounterReference {
                         true,
                         counterReferenceBo.getFileIds(),
 						counterReferenceBo.getClosureTypeId(),
-						counterReferenceBo.getHierarchicalUnitId()));
+						counterReferenceBo.getHierarchicalUnitId(),
+						noteId));
 
 		counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId(), now));
 

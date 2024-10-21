@@ -35,4 +35,16 @@ public class CounterReferenceInfoBo {
 	private Short closureTypeId;
 
 	private Integer hierarchicalUnitId;
+
+	private Long noteId;
+
+	public CounterReferenceInfoBo(ReferenceAdministrativeClosureBo referenceAdministrativeClosureBo, Long noteId) {
+		this.referenceId = referenceAdministrativeClosureBo.getReferenceId();
+		this.patientId = referenceAdministrativeClosureBo.getPatientId();
+		this.institutionId = referenceAdministrativeClosureBo.getInstitutionId();
+		this.performedDate = referenceAdministrativeClosureBo.getDate();
+		this.closureTypeId = EReferenceClosureType.CIERRE_ADMINISTRATIVO.getId();
+		this.noteId = noteId;
+	}
+
 }

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public interface CounterReferenceDocumentMapper {
 
     @Named("fromCounterReferenceDocumentBo")
-    @Mapping(target = "notes.evolutionNote", source = "counterReferenceNote")
     @Mapping(target = "procedures", source = "procedures")
     @Mapping(target = "medications", source = "medications")
     @Mapping(target = "allergies", source = "allergies")

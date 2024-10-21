@@ -20,19 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CounterReferenceRepository extends JpaRepository<CounterReference, Integer> {
 
     @Query(value = " SELECT new ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo("
-            + " cr.id, cr.performedDate, hp.id, p.firstName, px.nameSelfDetermination, p.lastName, cs.name, n.description, i.name, cr.closureTypeId,p.middleNames,p.otherLastNames)"
+            + " cr.id, cr.performedDate, up.pk.personId, cs.name, n.description, i.name, cr.closureTypeId, cr.creationable.createdOn)"
             + "  FROM CounterReference cr"
 			+ "  JOIN Institution i ON (cr.institutionId = i.id)"
-            + "  JOIN ClinicalSpecialty cs ON (cr.clinicalSpecialtyId = cs.id)"
-            + "  JOIN Document doc ON (doc.sourceId = cr.id)"
-            + "  LEFT JOIN Note n ON (n.id = doc.evolutionNoteId)"
+            + "  JOIN ClinicalSpecialty cs ON (cr.clinicalSpecialtyId = cs.id) "
+			+ "	 JOIN UserPerson up ON (cr.creationable.createdBy = up.pk.userId) "
+            + "  LEFT JOIN Note n ON (cr.noteId = n.id) "
             + "  JOIN HealthcareProfessional hp ON (hp.id = cr.doctorId)"
             + "  JOIN Person p ON (p.id = hp.personId)"
 			+ "  LEFT JOIN PersonExtended px ON (px.id = p.id)"
-            + "  WHERE cr.referenceId = :referenceId"
-            + "  AND doc.statusId = '" + DocumentStatus.FINAL + "'"
-            + "  AND doc.sourceTypeId =" + SourceType.COUNTER_REFERENCE
-            + "  AND doc.typeId =" + DocumentType.COUNTER_REFERENCE)
+            + "  WHERE cr.referenceId = :referenceId")
     List<CounterReferenceSummaryBo> findByReferenceId(@Param("referenceId") Integer referenceId);
 
     @Query(value = "SELECT new ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo("
