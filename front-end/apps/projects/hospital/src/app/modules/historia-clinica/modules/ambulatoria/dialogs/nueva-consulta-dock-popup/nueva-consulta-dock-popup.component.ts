@@ -47,7 +47,7 @@ import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confir
 import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
-import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '@historia-clinica/components/concepts-list/concepts-list.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ButtonType } from '@presentation/components/button/button.component';

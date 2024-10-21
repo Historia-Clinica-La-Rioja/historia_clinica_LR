@@ -1,8 +1,9 @@
 <app-concepts-list
 	id="alergias"
 	[hasConcepts]="!alergiasNuevaConsultaService.isEmpty()"
+	[isEmpty]="isEmpty"
 	[content]="allergyContent"
-	[initialCheckboxState]="isAllergyNoReferInput == undefined ? null : !isAllergyNoReferInput"
+	[initialCheckboxState]="isNotReferred == undefined ? null : !isNotReferred"
 	(openEmit)="checkAllergyEvent($event)">
 	<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
 </app-concepts-list>

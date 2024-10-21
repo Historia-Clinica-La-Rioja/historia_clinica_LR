@@ -24,8 +24,6 @@ export class NewConsultationExpansionSectionComponent {
 	}
 	@Input() isToAddSnomedConcepts = false;
 
-	@Input() iconsToAdd = true;
-
 	get fixedExpanded() {
 		return this._fixedExpanded;
 	}

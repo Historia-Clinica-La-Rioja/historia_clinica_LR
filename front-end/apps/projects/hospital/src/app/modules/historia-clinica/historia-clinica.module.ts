@@ -156,7 +156,7 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
-import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
+import { ConceptsListComponent } from './components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 import { AddStudyComponent } from './dialogs/add-study/add-study.component';
@@ -192,6 +192,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		AntropometricosSummaryComponent,
 		BackgroundListComponent,
         ClinicalEvaluationSummaryComponent,
+		ConceptsListComponent,
 		ConceptsSearchComponent,
 		CreateOrderComponent,
 		CustomFormComponent,
@@ -351,7 +352,6 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		//standalone
 		IdentifierCasesComponent,
 		ConceptTypeaheadSearchComponent,
-		ConceptsListComponent,
 		PatientSummaryComponent
 	],
 	exports: [
@@ -361,6 +361,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		AntecedentesFamiliaresSummaryComponent,
 		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
+		ConceptsListComponent,
 		ConceptsSearchComponent,
         DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,

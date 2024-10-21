@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PresentationModule } from '@presentation/presentation.module';
 
 export interface ConceptsList {
 	id: string,
@@ -18,8 +17,6 @@ export interface ConceptsList {
 	selector: 'app-concepts-list',
 	templateUrl: './concepts-list.component.html',
 	styleUrls: ['./concepts-list.component.scss'],
-	standalone: true,
-	imports: [PresentationModule]
 })
 export class ConceptsListComponent {
 
@@ -32,6 +29,7 @@ export class ConceptsListComponent {
 			this.setOpenEmit(false, this.checkboxOn);
 		}
 	};
+	@Input() isEmpty = true;
 	@Output() openEmit = new EventEmitter<{ addPressed: boolean, checkboxSelected: boolean }>();
 
 	checkboxOn: boolean = false;

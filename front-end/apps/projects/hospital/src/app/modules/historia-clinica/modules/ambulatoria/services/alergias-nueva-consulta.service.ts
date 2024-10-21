@@ -19,7 +19,7 @@ export class AlergiasNuevaConsultaService {
 	private criticalityTypes: any[];
 	private readonly ECL = SnomedECL.ALLERGY;
 
-	private readonly emitter = new Subject();
+	private readonly emitter = new Subject<Alergia[]>();
 	alergias$ = this.emitter.asObservable()
 
 	constructor(

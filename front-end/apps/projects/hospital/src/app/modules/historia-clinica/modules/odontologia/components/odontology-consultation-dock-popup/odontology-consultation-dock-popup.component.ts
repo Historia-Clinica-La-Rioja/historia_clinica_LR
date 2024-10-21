@@ -41,7 +41,7 @@ import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical
 import { ConfirmarPrescripcionComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
-import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '@historia-clinica/components/concepts-list/concepts-list.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';

@@ -1,8 +1,9 @@
 <app-concepts-list
 	id="antecedentes-familiares"
 	[hasConcepts]="!antecedentesFamiliaresNuevaConsultaService.isEmpty()"
+	[isEmpty]="isEmpty"
 	[content]="familyHistoriesContent"
-	[initialCheckboxState]="isFamilyHistoryNoRefer == undefined ? null : !isFamilyHistoryNoRefer"
+	[initialCheckboxState]="isNotReferred == undefined ? null : !isNotReferred"
 	(openEmit)="checkFamilyHistoriesEvent($event)">
 	<app-background-list [familyHistory]="antecedentesFamiliaresNuevaConsultaService.getAntecedentes()" (remove)="antecedentesFamiliaresNuevaConsultaService.remove($event)"></app-background-list>
 </app-concepts-list>

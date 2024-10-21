@@ -26,7 +26,7 @@ import { ReferenceMasterDataService } from '@api-rest/services/reference-master-
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
-import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '@historia-clinica/components/concepts-list/concepts-list.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 @Component({

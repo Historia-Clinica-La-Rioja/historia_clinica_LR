@@ -1,4 +1,7 @@
-<app-hide-show-toggle [header]="content.header">
+<app-new-consultation-expansion-section 
+	[isEmpty]="isEmpty"
+	[title]="content.header.text | translate"
+	[icon]="content.header.icon">
 	<app-titled-content-card *ngIf="hasConcepts" [title]="content.titleList">
 		<ng-content></ng-content>
 	</app-titled-content-card>
@@ -11,4 +14,4 @@
 		<mat-checkbox id="{{content.id}}" color="primary" *ngIf="content.actions.checkbox" (change)="toggleCheckbox()"
 			[disabled]="hasConcepts" [checked]="checkboxOn">{{content.actions.checkbox | translate}}</mat-checkbox>
 	</article>
-</app-hide-show-toggle>
+</app-new-consultation-expansion-section>

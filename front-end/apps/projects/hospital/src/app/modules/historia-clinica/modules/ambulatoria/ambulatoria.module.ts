@@ -78,7 +78,6 @@ import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
-import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../../../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 //dialog
@@ -245,7 +244,6 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		//Standalone Component
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
-		ConceptsListComponent,
 		ConceptTypeaheadSearchComponent,
 		PatientSummaryComponent,
 	],
