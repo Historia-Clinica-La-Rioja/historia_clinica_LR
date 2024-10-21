@@ -2,6 +2,7 @@ package ar.lamansys.sgx.shared.notifications.infrastructure.controller;
 
 import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.NotificationTemplateInputUtils.NEW_APPOINTMENT_MESSAGE;
 import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.NotificationTemplateInputUtils.NEW_BOOKING_CONFIRM_MESSAGE;
+import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.NotificationTemplateInputUtils.NEW_GENERATION_REPORT_MESSAGE;
 import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.NotificationTemplateInputUtils.NEW_MEDICATION_REQUEST_MESSAGE;
 import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.NotificationTemplateInputUtils.NEW_RESTORE_PASSWORD_MESSAGE;
 import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.NotificationTemplateInputUtils.NEW_VIRTUAL_CONSULTATION_APPOINTMENT_MESSAGE;
@@ -9,6 +10,8 @@ import static ar.lamansys.sgx.shared.notifications.infrastructure.controller.Not
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.pladema.reports.domain.notification.GenerationReportTemplateInput;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +45,7 @@ public class NotificationTemplateController {
 		result.add(newItem(RestorePasswordTemplateInput.TEMPLATE_ID, NEW_RESTORE_PASSWORD_MESSAGE));
 		result.add(newItem(VirtualConsultationAppointmentTemplateInput.TEMPLATE_ID, NEW_VIRTUAL_CONSULTATION_APPOINTMENT_MESSAGE));
 		result.add(newItem(ConfirmarReservaTemplateInput.TEMPLATE_ID, NEW_BOOKING_CONFIRM_MESSAGE));
+		result.add(newItem(GenerationReportTemplateInput.TEMPLATE_ID, NEW_GENERATION_REPORT_MESSAGE));
 		return result;
 	}
 

@@ -11,6 +11,10 @@ public class GenerationReportTemplateInput extends NotificationTemplateInput<Gen
     public final static String TEMPLATE_ID = "generation-report";
 
     public GenerationReportTemplateInput(GenerationReportNotificationArgs args, String subject) {
-        super(TEMPLATE_ID, args, AppFeature.HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS, Collections.emptyList(), subject);
+		super(TEMPLATE_ID, args, AppFeature.HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS, Collections.emptyList(), subject);
     }
+
+	public GenerationReportTemplateInput(GenerationReportNotificationArgs args) {
+		super(TEMPLATE_ID, args, AppFeature.HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS);
+	}
 }
