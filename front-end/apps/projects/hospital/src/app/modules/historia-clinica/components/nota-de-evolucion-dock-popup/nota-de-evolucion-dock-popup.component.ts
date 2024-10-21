@@ -11,6 +11,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { buildEmergencyCareEvolutionNoteDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
 import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
+import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diagnoses.service';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -57,6 +58,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly newRiskFactorsService: NewRiskFactorsService,
 		private readonly evolutionNoteEditionService: EvolutionNoteEditionService,
+		private readonly episodeDiagnosesService: EpisodeDiagnosesService,
 	) { }
 
 	ngOnInit(): void {
@@ -73,6 +75,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 					this.setDiagnosis(mainDiagnosis, otherDiagnoses);
 				}
 			});
+
+		this.subscribeToDiagnosesForm();
 	}
 
 	ngAfterViewInit() {
@@ -125,6 +129,13 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		const evolutionNoteData = this.data.emergencyCareEvolutionNote;
 		this.setDiagnosis(evolutionNoteData.mainDiagnosis, evolutionNoteData.diagnosis);
 		this.evolutionNoteEditionService.loadFormByEvolutionNoteData(this.form, evolutionNoteData);
+	}
+
+	private subscribeToDiagnosesForm() {
+		this.form.controls.diagnosis.valueChanges.subscribe(diagnosis => {
+			const { mainDiagnostico, otrosDiagnosticos } = diagnosis;
+			this.episodeDiagnosesService.setEpisodeDiagnoses({ main: mainDiagnostico, others: otrosDiagnosticos.filter(diagnoses => !diagnoses.isAdded) });
+		});
 	}
 }
 
