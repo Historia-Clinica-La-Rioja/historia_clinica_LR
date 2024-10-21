@@ -30,7 +30,7 @@
 		},
 		"monthly-report": {
 			"TITLE": "Mensuales descargables",
-			"PREPARING_MESSAGE": "Estamos generando su reporte, este proceso puede demorar unos minutos. Si lo desea, puede regresar más tarde para visualizarlo, a su vez, le enviaremos un correo electrónico cuando esté listo para su descarga."
+			"PREPARING_MESSAGE": "Estamos generando su reporte, este proceso puede demorar unos minutos. Si lo desea, puede regresar más tarde para visualizarlo. Además, si tiene un correo electrónico registrado en el sistema, le notificaremos cuando el reporte esté disponible para su descarga."
 		},
 		"reportes-estadisticos": {
 			"TITLE": "Reportes estadísticos"
