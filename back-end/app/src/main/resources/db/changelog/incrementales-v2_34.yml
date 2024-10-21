@@ -10,3 +10,56 @@ databaseChangeLog:
               tableName: fhir_quantity
               columnName: value
               newDataType: numeric
+
+    - changeSet:
+        id: dropForeignKey-counter_reference-institution_id
+        author: bchacon
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: counter_reference
+              constraintName: FK_counter_reference_institution_id
+
+    - changeSet:
+        id: addColumn-note_id-counter_reference
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: counter_reference
+              columns:
+                - column:
+                    name: note_id
+                    type: bigint
+          - addForeignKeyConstraint:
+              baseTableName: counter_reference
+              baseColumnNames: note_id
+              referencedTableName: note
+              referencedColumnNames: id
+              constraintName: FK_counter_reference_note_id
+
+    - changeSet:
+        id: migrate-note_id-counter_reference
+        author: bchacon
+        comment: migrate column note_id from document to counter_reference
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE counter_reference
+                SET note_id = doc.evolution_note_id
+                FROM document doc 
+                WHERE counter_reference.id = doc.source_id 
+                AND doc.evolution_note_id IS NOT NULL
+                AND doc.status_id = '445665009'
+                AND doc.source_type_id = 8
+                AND doc.type_id = 11
+
+    - changeSet:
+        id: addNotNullConstraint-note_id-counter_reference
+        author: bchacon
+        changes:
+          - addNotNullConstraint:
+              columnDataType: bigint
+              columnName: note_id
+              tableName: counter_reference
+              validate: true
+
