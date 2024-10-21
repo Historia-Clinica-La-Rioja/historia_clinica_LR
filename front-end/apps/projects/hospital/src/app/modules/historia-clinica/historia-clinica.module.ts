@@ -20,6 +20,7 @@ import { BackgroundListComponent } from './components/background-list/background
 import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
+import { CriticalityPickerComponent } from './components/criticality-picker/criticality-picker.component';
 import { CustomFormComponent } from './components/custom-form/custom-form.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
@@ -194,6 +195,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		BackgroundListComponent,
         ClinicalEvaluationSummaryComponent,
 		ConceptsListComponent,
+		CriticalityPickerComponent,
 		ConceptsSearchComponent,
 		CreateOrderComponent,
 		CustomFormComponent,

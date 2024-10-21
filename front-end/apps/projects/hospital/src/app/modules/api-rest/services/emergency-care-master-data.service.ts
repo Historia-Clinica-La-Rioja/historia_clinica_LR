@@ -50,4 +50,9 @@ export class EmergencyCareMasterDataService {
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
+	getCriticalities(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/isolation-criticalities`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 }
