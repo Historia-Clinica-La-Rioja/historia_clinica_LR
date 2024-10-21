@@ -1,13 +1,11 @@
 package net.pladema.emergencycare.servicerequest.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
-import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
-import ca.uhn.fhir.model.primitive.DateTimeDt;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +23,6 @@ import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,14 +35,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -109,7 +101,8 @@ public class EmergencyCareServiceRequestController {
 		log.debug("parseTo -> doctorId {}, patientDto {}, categoryId {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, categoryId, medicalCoverageId, studies);
 		ExtendedServiceRequestBo result = new ExtendedServiceRequestBo();
 		result.setCategoryId(categoryId);
-		result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
+		BasicDataPersonDto person = patientDto.getPerson();
+		result.setPatientInfo(new PatientInfoBo(patientDto.getId(), person != null ? person.getGender().getId() : null, person != null ? person.getAge(): null));
 		result.setDoctorId(doctorId);
 		result.setDiagnosticReports(studyMapper.parseToList(studies));
 		result.setMedicalCoverageId(medicalCoverageId);
