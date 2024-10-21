@@ -62,6 +62,7 @@ import { MedicationListComponent } from './components/medication-list/medication
 import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 import { NotaDeEvolucionDockPopupComponent } from './components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { ObservationsCustomFormComponent } from './components/observations-custom-form/observations-custom-form.component';
 import { ObstetricEventSummaryComponent } from './components/obstetric-event-summary/obstetric-event-summary.component';
 import { PatientEvolutionChartsButtonComponent } from './components/patient-evolution-charts-button/patient-evolution-charts-button.component';
 import { PatientEvolutionChartsComponent } from './components/patient-evolution-charts/patient-evolution-charts.component';
@@ -258,6 +259,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		MeasuringPointItemComponent,
 		MedicacionSummaryComponent,
 		NewConsultationExpansionSectionComponent,
+		ObservationsCustomFormComponent,
         ObstetricEventSummaryComponent,
 		PatientEvolutionChartsButtonComponent,
 		PatientEvolutionChartsButtonComponent,

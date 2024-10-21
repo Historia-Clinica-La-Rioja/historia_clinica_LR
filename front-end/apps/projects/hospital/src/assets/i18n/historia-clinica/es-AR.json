@@ -2,8 +2,10 @@
 	"historia-clinica": {
 		"general": {
 			"SELECT": "Seleccione",
-			"CRITICALITY": "Criticidad"
-		}
+			"CRITICALITY": "Criticidad",
+			"OBSERVATIONS": "Observaciones",
+			"ENTER_OBSERVATIONS": "Ingrese observaciones"
+		},
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
 			"SPECIALTIES": "Especialidades",
