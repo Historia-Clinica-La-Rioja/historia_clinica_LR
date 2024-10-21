@@ -38,7 +38,7 @@ public class ReferenceAdministrativeClosureController {
 										 @RequestBody @Valid ReferenceAdministrativeClosureDto administrativeClosure) {
 		log.debug("Input parameters -> institutionId {}, administrativeClosure {}", institutionId, administrativeClosure);
 		var closure = new ReferenceAdministrativeClosureBo(institutionId, administrativeClosure.getReferenceId(), administrativeClosure.getClosureNote(), administrativeClosure.getFileIds());
-		administrativeReferenceClosure.run(closure);
+		administrativeReferenceClosure.run(closure, institutionId);
 		return true;
 	}
 

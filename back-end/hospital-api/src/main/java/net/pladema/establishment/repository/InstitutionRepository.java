@@ -217,4 +217,13 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE i.sisaCode = :sisaCode ")
 	List<Integer> findIdsBySisaCode(@Param("sisaCode") String sisaCode);
 
+
+	@Transactional(readOnly = true)
+	@Query("SELECT i.id "+
+			"FROM Institution AS i " +
+			"JOIN UserRole ur ON (i.id = ur.institutionId) " +
+			"WHERE ur.userId = :userId " +
+			"AND ur.deleteable.deleted IS FALSE")
+	List<Integer> getInstitutionsByUser(@Param("userId") Integer userId);
+
 }

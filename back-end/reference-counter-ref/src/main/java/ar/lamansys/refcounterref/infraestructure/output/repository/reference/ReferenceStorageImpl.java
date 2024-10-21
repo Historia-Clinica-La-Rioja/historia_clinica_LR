@@ -333,5 +333,10 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		log.debug("Input parameteres -> referenceId {}", referenceId);
 		return this.referenceRepository.getPatientId(referenceId);
 	}
+	
+	public Integer getOriginInstitutionId(Integer referenceId) {
+		log.debug("Input parameteres -> referenceId {}", referenceId);
+		return this.referenceRepository.getOriginInstitutionId(referenceId);
+	}
 
 }

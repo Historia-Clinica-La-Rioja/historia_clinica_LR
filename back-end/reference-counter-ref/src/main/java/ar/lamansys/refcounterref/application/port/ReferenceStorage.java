@@ -42,4 +42,7 @@ public interface ReferenceStorage {
 	Integer getDestinationInstitutionId(Integer referenceId);
 
 	Integer getPatientId(Integer referenceId);
+	
+	Integer getOriginInstitutionId(Integer referenceId);
+
 }

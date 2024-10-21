@@ -175,8 +175,7 @@ public class InstitutionController {
 	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<List<InstitutionBasicInfoDto>> getInstitutionsByManagerUser(){
 		logger.debug("Get institutions by manager user");
-		Integer userId = UserInfo.getCurrentAuditor();
-		List<InstitutionBasicInfoBo> institutions = institutionService.getInstitutionsByManagerUser(userId);
+		List<InstitutionBasicInfoBo> institutions = institutionService.getInstitutionsByManagerUser();
 		List<InstitutionBasicInfoDto> result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
 		logger.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);

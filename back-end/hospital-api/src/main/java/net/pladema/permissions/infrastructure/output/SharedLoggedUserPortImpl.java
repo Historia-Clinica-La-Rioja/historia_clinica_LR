@@ -2,6 +2,7 @@ package net.pladema.permissions.infrastructure.output;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.RoleInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
@@ -57,7 +58,8 @@ public class SharedLoggedUserPortImpl implements SharedLoggedUserPort {
 	}
 
 	@Override
-	public boolean hasInstitutionalManagerRole(Integer userId) {
+	public boolean hasInstitutionalManagerRole() {
+		var userId = UserInfo.getCurrentAuditor();
 		return userRoleStorage.getRolesByUser(userId)
 				.stream()
 				.anyMatch(ur -> ur.getRoleId() == ERole.GESTOR_DE_ACCESO_INSTITUCIONAL.getId());

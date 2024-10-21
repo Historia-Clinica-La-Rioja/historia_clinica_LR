@@ -3,11 +3,13 @@ package ar.lamansys.refcounterref.application.administrativeclosurereference;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
+import ar.lamansys.refcounterref.application.port.output.GetInstitutionsByManagerUser;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.counterreference.ReferenceAdministrativeClosureBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedNotePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +30,12 @@ public class AdministrativeReferenceClosure {
 
 	private final SharedNotePort sharedNotePort;
 
+	private final SharedLoggedUserPort sharedLoggedUserPort;
+
 	@Transactional
-	public void run(ReferenceAdministrativeClosureBo closure) {
-		log.debug("Input parameters -> closure {}", closure);
-		assertValid(closure);
+	public void run(ReferenceAdministrativeClosureBo closure, Integer institutionId) {
+		log.debug("Input parameters -> closure {}, institutionId {}", closure, institutionId);
+		assertValid(closure, institutionId);
 		var patientId = referenceStorage.getPatientId(closure.getReferenceId());
 		var noteId = sharedNotePort.saveNote(closure.getClosureNote());
 	 	closure.setPatientId(patientId);
@@ -45,8 +49,9 @@ public class AdministrativeReferenceClosure {
 		return result;
 	}
 
-	private void assertValid(ReferenceAdministrativeClosureBo closure) {
+	private void assertValid(ReferenceAdministrativeClosureBo closure, Integer institutionId) {
 		var referenceId = closure.getReferenceId();
+		validateInstitutionalManagerAction(referenceId, institutionId);
 		boolean referenceIsClosed = counterReferenceStorage.existsCounterReference(referenceId);
 		if (referenceIsClosed)
 			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.CLOSED_REFERENCE, "La referencia ya posee un cierre");
@@ -57,4 +62,12 @@ public class AdministrativeReferenceClosure {
 			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.NULL_COUNTER_REFERENCE_NOTE, "La observación es un dato obligatorio");
 	}
 
+	private void validateInstitutionalManagerAction(Integer referenceId, Integer institutionId) {
+		var userHasInstitutionalManagerRole = sharedLoggedUserPort.hasInstitutionalManagerRole();
+		if (!userHasInstitutionalManagerRole)
+			return;
+		var originInstitutionId = referenceStorage.getOriginInstitutionId(referenceId);
+		if (!originInstitutionId.equals(institutionId))
+			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE, "No es posible cerrar una solicitud realizada en una institucion ajena a su usuario");
+	}
 }

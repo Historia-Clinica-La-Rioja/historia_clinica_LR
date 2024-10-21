@@ -32,7 +32,7 @@ public class GetRequestedReferences {
 
 	private boolean userHasAdministrativeOrManagerRole(Integer institutionId) {
 		boolean hasAdministrativeRole = sharedLoggedUserPort.hasAdministrativeRole(institutionId);
-		boolean hasInstitutionManagerRole = sharedLoggedUserPort.hasInstitutionalManagerRole(UserInfo.getCurrentAuditor());
+		boolean hasInstitutionManagerRole = sharedLoggedUserPort.hasInstitutionalManagerRole();
 		return hasAdministrativeRole || hasInstitutionManagerRole;
 	}
 
