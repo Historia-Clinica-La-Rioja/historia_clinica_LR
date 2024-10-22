@@ -134,7 +134,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	private subscribeToDiagnosesForm() {
 		this.form.controls.diagnosis.valueChanges.subscribe(diagnosis => {
 			const { mainDiagnostico, otrosDiagnosticos } = diagnosis;
-			this.episodeDiagnosesService.setEpisodeDiagnoses({ main: mainDiagnostico, others: otrosDiagnosticos.filter(diagnoses => !diagnoses.isAdded) });
+			this.episodeDiagnosesService.setEpisodeDiagnoses({ main: mainDiagnostico, others: otrosDiagnosticos.filter(diagnoses => diagnoses.isAdded) });
 		});
 	}
 }

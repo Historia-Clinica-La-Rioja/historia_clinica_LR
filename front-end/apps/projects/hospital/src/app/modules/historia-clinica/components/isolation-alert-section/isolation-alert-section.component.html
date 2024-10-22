@@ -1,7 +1,7 @@
 <app-new-consultation-expansion-section id="isolation-alert"
     title="{{'historia-clinica.isolation-alert.ISOLATION_ALERT' | translate }}" icon="warning_amber" [isEmpty]="true">
     <div>
-        <button mat-button id="add-isolation-alert-button" color="primary">
+        <button mat-button id="add-isolation-alert-button" color="primary" (click)="addIsolationAlert()">
             + {{ "historia-clinica.isolation-alert.ADD_ISOLATION_ALERT" | translate }}
         </button>
     </div>

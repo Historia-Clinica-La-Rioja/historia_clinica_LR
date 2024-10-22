@@ -55,4 +55,9 @@ export class EmergencyCareMasterDataService {
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
+	getIsolationTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/isolation-types`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 }

@@ -193,7 +193,11 @@
 		},
 		"isolation-alert": {
 			"ISOLATION_ALERT": "Alerta de aislamiento",
-			"ADD_ISOLATION_ALERT": "Agregar alerta de aislamiento"
+			"ADD_ISOLATION_ALERT": "Agregar alerta de aislamiento",
+			"ASSOCIATED_DIAGNOSIS": "Diagnóstico asociado",
+			"ISOLATION_TYPE": "Tipo de aislamiento",
+			"CONFIRM_BUTTON": "Confirmar alerta",
+			"END_OF_ALERT": "Fin de alerta"
 		}
 	}
 }

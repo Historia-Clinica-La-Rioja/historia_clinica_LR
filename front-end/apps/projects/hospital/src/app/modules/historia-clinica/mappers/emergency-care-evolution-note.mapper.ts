@@ -1,8 +1,10 @@
 import { FormGroup } from "@angular/forms";
-import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EffectiveClinicalObservationDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
+import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EffectiveClinicalObservationDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, IsolationAlertDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
+import { dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
 import { dateISOParseDate } from "@core/utils/moment.utils";
+import { IsolationAlert } from "@historia-clinica/components/isolation-alert-form/isolation-alert-form.component";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { AntecedenteFamiliar } from "@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service";
 import { AnthropometricDataValues } from "@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service";
@@ -34,6 +36,7 @@ export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHist
 	const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
 	const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
 	const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
+	const isolationAlerts = toIsolationAlertsDto(value.isolationAlerts);
 	return {
 		clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
 		reasons: value.reasons?.motivo || [],
@@ -54,7 +57,7 @@ export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHist
 		},
 		patientId,
 		type: evolutionNoteType,
-		isolationAlerts: []
+		isolationAlerts,
 	}
 }
 
@@ -173,3 +176,18 @@ export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[],
 		mainDiagnosis: diagnosisFormValue?.mainDiagnostico
 	}
 }
+
+const toIsolationAlert = (isolationAlert: IsolationAlert): IsolationAlertDto => {
+	return {
+		criticality: isolationAlert.criticality,
+		endDate: dateToDateDto(isolationAlert.endDate),
+		healthConditionId: isolationAlert.diagnosis.id,
+		healthConditionPt: isolationAlert.diagnosis.snomed.pt,
+		healthConditionSctid: isolationAlert.diagnosis.snomed.sctid,
+		types: isolationAlert.types,
+		...(isolationAlert.observations && { observations: isolationAlert.observations }),
+	}
+}
+
+export const toIsolationAlertsDto = (isolationAlerts: IsolationAlert[]): IsolationAlertDto[] => 
+	isolationAlerts.map(isolationAlert => toIsolationAlert(isolationAlert));

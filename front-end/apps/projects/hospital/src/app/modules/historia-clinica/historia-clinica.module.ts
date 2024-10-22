@@ -53,6 +53,7 @@ import { HistoriesSummaryComponent } from './components/histories-summary/histor
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
+import { IsolationAlertFormComponent } from './components/isolation-alert-form/isolation-alert-form.component';
 import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
 import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
@@ -111,6 +112,7 @@ import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.
 import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
+import { IsolationAlertPopupComponent } from './dialogs/isolation-alert-popup/isolation-alert-popup.component';
 import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
@@ -250,7 +252,8 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		InternacionAntecedentesPersonalesSummaryComponent,
 		InterveningProfessionalsComponent,
 		IntrasurgicalAnestheticProceduresSummaryComponent,
-		IsolationAlertSectionComponent, 
+		IsolationAlertSectionComponent,
+		IsolationAlertFormComponent, 
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
 		MeasuringPointSummaryComponent,
@@ -292,6 +295,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
 		EffectiveTimeDialogComponent,
+		IsolationAlertPopupComponent,
 		RemoveDiagnosisComponent,
 		PatientEvolutionChartsPopupComponent,
 		ProbableDischargeDialogComponent,
