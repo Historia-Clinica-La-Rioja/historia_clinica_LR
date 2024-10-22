@@ -171,7 +171,7 @@ public class OdontologicalReportsController {
 
 		try {
 			String title = "Reporte de odontología - Procedimientos odontológicos";
-			String[] headers = {"Nombre de profesional", "DNI", "Matrícula", "Fecha de atención", "Hora", "Nombre de paciente", "DNI", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Obra social", "Domicilio", "Localidad", "CPO permanentes", "CEO permanentes", "Motivos", "Otros diagnósticos", "Otros procedimientos", "Alergias e intolerancias", "Medicación habitual", "Diagnósticos dentales", "Procedimientos dentales", "Evolución"};
+			String[] headers = {"Nombre de profesional", "DNI", "Matrícula", "Fecha de atención", "Hora", "Nombre de paciente", "DNI", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Obra social", "Domicilio", "Localidad", "CPO permanentes", "CEO temporales", "Motivos", "Otros diagnósticos", "Otros procedimientos", "Alergias e intolerancias", "Medicación habitual", "Diagnósticos dentales", "Procedimientos dentales", "Evolución"};
 
 			logger.debug("building odontological procedures excel report");
 			IWorkbook wb = excelService.buildOdontologicalProceduresExcel(title, headers, queryFactory.queryOdontologicalProcedures(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
