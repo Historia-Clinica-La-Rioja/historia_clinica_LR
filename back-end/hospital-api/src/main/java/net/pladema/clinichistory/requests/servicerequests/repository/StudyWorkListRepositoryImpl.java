@@ -22,9 +22,9 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Object[]> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType) {
+	public List<Object[]> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType, Short emergencyCareState, Short internmentEpisodeState) {
 
-		log.debug("Input parameters -> institutionId: {}, categories: {}, sourceTypeIds: {}, statusId: {}, documentType: {}", institutionId, categories, sourceTypeIds, statusId, documentType);
+		log.debug("Input parameters -> institutionId: {}, categories: {}, sourceTypeIds: {}, statusId: {}, documentType: {}, emergencyCareState: {}, internmentEpisodeState: {}", institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState);
 
 		String sqlString =
 			"WITH diagnostic_report_last_modification AS (SELECT DISTINCT ON " +
@@ -87,6 +87,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"    JOIN room ri ON bi.room_id = ri.id " +
 					"    LEFT JOIN sector se ON ri.sector_id = se.id " +
 					"    WHERE ie.institution_id = :institutionId AND ie.deleted = FALSE " +
+					"	 AND ie.status_id IN (:internmentEpisodeState) " +
 					"    ORDER BY ie.patient_id, ie.created_on DESC " +
 					") ie ON ie.patient_id = sr.patient_id " +
 					"LEFT JOIN ( " +
@@ -94,6 +95,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"        ec.patient_id, ec.bed_id, ec.created_on " +
 					"    FROM emergency_care_episode ec " +
 					"    WHERE ec.institution_id = :institutionId AND ec.deleted = FALSE " +
+					"	 AND ec.emergency_care_state_id IN (:emergencyCareState) " +
 					"    ORDER BY ec.patient_id, ec.created_on DESC " +
 					") ec ON ec.patient_id = sr.patient_id " +
 					"LEFT JOIN bed ec_bed ON ec.bed_id = ec_bed.id " +
@@ -113,7 +115,9 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 				.setParameter("categories", categories)
 				.setParameter("sourceTypeIds", sourceTypeIds)
 				.setParameter("statusId", statusId)
-				.setParameter("documentType", documentType);
+				.setParameter("documentType", documentType)
+				.setParameter("emergencyCareState", emergencyCareState)
+				.setParameter("internmentEpisodeState", internmentEpisodeState);
 
 		return (List<Object[]>) query.getResultList();
 

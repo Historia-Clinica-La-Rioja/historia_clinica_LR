@@ -13,6 +13,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkL
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.vademecum.domain.SnomedBo;
 
 import org.springframework.stereotype.Service;
@@ -39,8 +40,10 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				ESourceType.EMERGENCY_CARE.getId()
 		);
 		Short documentType = EDocumentType.ORDER.getId();
+		Short emergencyCareState = EEmergencyCareState.ATENCION.getId();
+		Short internmentEpisodeState = 1;
 
-		List<StudyOrderWorkListBo> result = studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType)
+		List<StudyOrderWorkListBo> result = studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState)
 				.stream()
 				.map(this::createStudyOrderWorkListBo)
 				.collect(Collectors.toList());
