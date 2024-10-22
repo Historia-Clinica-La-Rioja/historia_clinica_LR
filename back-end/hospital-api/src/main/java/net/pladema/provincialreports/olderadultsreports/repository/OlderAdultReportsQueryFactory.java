@@ -29,4 +29,8 @@ public class OlderAdultReportsQueryFactory {
 	public List<PolypharmacyConsultationDetail> queryPolypharmacy(Integer institutionId, LocalDate start, LocalDate end) {
 		return repositoryUtils.executeQuery("OlderAdultsReports.PolypharmacyConsultationDetail", institutionId, start, end, null);
 	}
+
+	public List<GerontologicalAssessmentsConsultationDetail> queryGerontologicalAssessments(Integer institutionId, LocalDate start, LocalDate end) {
+		return repositoryUtils.executeQuery("OlderAdultsReports.GerontologicalAssessmentsConsultationDetail", institutionId, start, end, null);
+	}
 }
