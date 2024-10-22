@@ -238,10 +238,13 @@
 	</div>
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
-		<button id="sign-draft" type="button" mat-stroked-button color="primary" *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-			(click)="saveDraft()" [disabled]="isDisableConfirmButton">
-			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
-		</button>
+		<div *ngIf="!isConfirmed">
+			<button id="sign-draft" type="button" mat-stroked-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="saveDraft()"
+				[disabled]="isDisableConfirmButton">
+				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
+			</button>
+		</div>
 		<div *ngIf="!isDraft">
 			<button [disabled]="isDisableConfirmButton" id="sign-confirm" type="button" mat-raised-button
 				color="primary" *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="save()">
