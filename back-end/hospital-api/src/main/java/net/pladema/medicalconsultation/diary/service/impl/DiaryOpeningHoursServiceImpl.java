@@ -7,7 +7,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotEmpty;
@@ -29,7 +35,6 @@ import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.TimeRangeBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,51 +56,87 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
     @Override
     @Transactional
     public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
-        diaryOpeningHoursRepository.deleteAll(diaryId);
-        load(diaryId, diaryOpeningHours);
-    }
-
-    private void load(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
         Sort sort = Sort.by("dayWeekId", "from");
-        List<OpeningHours> savedOpeningHours = openingHoursRepository.findAll(sort);
 
-        diaryOpeningHours
-                .forEach(diaryOpeningHoursBo -> updateDiaryWithOpeningHours(diaryId, diaryOpeningHoursBo, savedOpeningHours));
+        Map<OpeningHours, Integer> openingHoursMap = createUniqueOpeningHoursMap(sort);
+
+        Set<DiaryOpeningHoursPK> newPKs = diaryOpeningHours.stream()
+                .peek(doh -> setOpeningHours(doh, openingHoursMap))
+                .map(doh -> new DiaryOpeningHoursPK(diaryId, doh.getOpeningHours().getId()))
+                .collect(Collectors.toSet());
+
+        diaryOpeningHoursRepository.deleteAllByDiaryIdAndNotInPK(diaryId, newPKs);
+
+        this.updateOrSaveAssociations(diaryId, diaryOpeningHours);
     }
 
-    private void updateDiaryWithOpeningHours(Integer diaryId, DiaryOpeningHoursBo diaryOpeningHoursBo, List<OpeningHours> savedOpeningHours) {
+    private Map<OpeningHours, Integer> createUniqueOpeningHoursMap(Sort sort) {
+        List<OpeningHours> allOpeningHours = openingHoursRepository.findAll(sort);
+
+        Set<OpeningHours> uniqueOpeningHoursSet = new HashSet<>(allOpeningHours);
+
+        return uniqueOpeningHoursSet.stream()
+                .collect(Collectors.toMap(Function.identity(), OpeningHours::getId));
+    }
+
+    private void setOpeningHours(DiaryOpeningHoursBo diaryOpeningHoursBo, Map<OpeningHours, Integer> openingHoursMap) {
         OpeningHoursBo openingHoursBo = diaryOpeningHoursBo.getOpeningHours();
         OpeningHours newOpeningHours = diaryBoMapper.toOpeningHours(openingHoursBo);
 
-        Integer openingHoursId = savedOpeningHours.stream()
-               .filter(oh -> oh.equals(newOpeningHours))
-               .findFirst()
-               .map(OpeningHours::getId)
-               .orElseGet(() -> openingHoursRepository.save(newOpeningHours).getId());
-        openingHoursBo.setId(openingHoursId);
-
-        DiaryOpeningHours diaryOpeningHoursEntity = createDiaryOpeningHoursInstance(diaryId, openingHoursId, diaryOpeningHoursBo);
-        try {
-            diaryOpeningHoursRepository.saveAndFlush(diaryOpeningHoursEntity);
-        } catch (DataIntegrityViolationException ex) {
-            log.warn("TICKET -> hsi-6586");
-            log.error("DataIntegrityViolationException -> {}", ex.getMessage(), ex);
-            log.debug("Ignore situation because openinghours {}, is already saved with diary {}", openingHoursBo, diaryId);
+        Integer openingHoursId = openingHoursMap.get(newOpeningHours);
+        if (openingHoursId == null) {
+            openingHoursId = openingHoursRepository.save(newOpeningHours).getId();
         }
+        openingHoursBo.setId(openingHoursId);
     }
 
-    private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, Integer openingHoursId, DiaryOpeningHoursBo doh) {
+    private void updateOrSaveAssociations(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
+        diaryOpeningHours.forEach(diaryOpeningHoursBo -> updateDiaryWithOpeningHoursIfNecessary(diaryId, diaryOpeningHoursBo));
+    }
+
+    private void updateDiaryWithOpeningHoursIfNecessary(Integer diaryId, DiaryOpeningHoursBo diaryOpeningHoursBo) {
+        Optional<DiaryOpeningHours> persistedEntity = diaryOpeningHoursRepository.findById(new DiaryOpeningHoursPK(diaryId, diaryOpeningHoursBo.getOpeningHoursId()));
+
+        if (persistedEntity.isEmpty()) {
+            DiaryOpeningHours newDiaryOpeningHours = createDiaryOpeningHoursInstance(diaryId, diaryOpeningHoursBo);
+            diaryOpeningHoursRepository.save(newDiaryOpeningHours);
+            return;
+        }
+
+        persistedEntity.filter(existingEntity -> shouldUpdateDiaryOpeningHours(existingEntity, diaryOpeningHoursBo))
+                .ifPresent(existingEntity -> {
+                            setValues(existingEntity, diaryOpeningHoursBo);
+                            diaryOpeningHoursRepository.save(existingEntity);
+                });
+    }
+
+    private boolean shouldUpdateDiaryOpeningHours(DiaryOpeningHours existingEntity, DiaryOpeningHoursBo doh) {
+        return !(Objects.equals(existingEntity.getMedicalAttentionTypeId(), doh.getMedicalAttentionTypeId())
+                && Objects.equals(existingEntity.getOverturnCount(), doh.getOverturnCount())
+                && Objects.equals(existingEntity.getExternalAppointmentsAllowed(), doh.getExternalAppointmentsAllowed())
+                && Objects.equals(existingEntity.getProtectedAppointmentsAllowed(), doh.getProtectedAppointmentsAllowed())
+                && Objects.equals(existingEntity.getOnSiteAttentionAllowed(), doh.getOnSiteAttentionAllowed())
+                && Objects.equals(existingEntity.getPatientVirtualAttentionAllowed(), doh.getPatientVirtualAttentionAllowed())
+                && Objects.equals(existingEntity.getSecondOpinionVirtualAttentionAllowed(), doh.getSecondOpinionVirtualAttentionAllowed())
+                && Objects.equals(existingEntity.getRegulationProtectedAppointmentsAllowed(), doh.getRegulationProtectedAppointmentsAllowed()));
+    }
+
+    private DiaryOpeningHours createDiaryOpeningHoursInstance(Integer diaryId, DiaryOpeningHoursBo doh) {
         DiaryOpeningHours diaryOpeningHours = new DiaryOpeningHours();
-        diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, openingHoursId));
-        diaryOpeningHours.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
-        diaryOpeningHours.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
-        diaryOpeningHours.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
-        diaryOpeningHours.setProtectedAppointmentsAllowed(doh.getProtectedAppointmentsAllowed());
-        diaryOpeningHours.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
-        diaryOpeningHours.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
-        diaryOpeningHours.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
-        diaryOpeningHours.setRegulationProtectedAppointmentsAllowed(doh.getRegulationProtectedAppointmentsAllowed());
+        diaryOpeningHours.setPk(new DiaryOpeningHoursPK(diaryId, doh.getOpeningHoursId()));
+        setValues(diaryOpeningHours, doh);
         return diaryOpeningHours;
+    }
+
+    private static void setValues(DiaryOpeningHours entity, DiaryOpeningHoursBo doh) {
+        entity.setMedicalAttentionTypeId(doh.getMedicalAttentionTypeId());
+        entity.setOverturnCount((doh.getOverturnCount() != null) ? doh.getOverturnCount() : 0);
+        entity.setExternalAppointmentsAllowed(doh.getExternalAppointmentsAllowed());
+        entity.setProtectedAppointmentsAllowed(doh.getProtectedAppointmentsAllowed());
+        entity.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
+        entity.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
+        entity.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
+        entity.setRegulationProtectedAppointmentsAllowed(doh.getRegulationProtectedAppointmentsAllowed());
     }
 
     @Override

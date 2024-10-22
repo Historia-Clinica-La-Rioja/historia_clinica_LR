@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningHours, DiaryOpeningHoursPK> {
@@ -92,13 +93,6 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
                              @NotNull @Param("openingHoursId") Integer openingHoursId,
                              @NotNull @Param("newAppointmentDate") LocalDate newAppointmentDate);
 
-	@Transactional
-	@Modifying
-	@Query("DELETE FROM DiaryOpeningHours doh WHERE doh.pk.diaryId = :diaryId ")
-	void deleteAll(@Param("diaryId") Integer diaryId);
-
-
-
     @Transactional(readOnly = true)
     @Query( "SELECT (case when count(doh) > 0 then true else false end) " +
             "FROM DiaryOpeningHours AS doh " +
@@ -132,4 +126,7 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 			"AND doh.pk.openingHoursId = :openingHoursId")
 	Boolean getIfExternalAppointmentsAreAllowed(@Param("diaryId") Integer diaryId, @Param("openingHoursId") Integer openingHoursId);
 
+	@Modifying
+	@Query("DELETE FROM DiaryOpeningHours doh WHERE doh.pk.diaryId = :diaryId AND doh.pk NOT IN :newPKs")
+	void deleteAllByDiaryIdAndNotInPK(@Param("diaryId") Integer diaryId, @Param("newPKs") Set<DiaryOpeningHoursPK> newPKs);
 }
