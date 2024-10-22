@@ -60,12 +60,4 @@ public class CounterReferenceDocumentBo {
 		this.medicalCoverageId = counterReferenceBo.getPatientMedicalCoverageId();
     }
 
-	public CounterReferenceDocumentBo(ReferenceAdministrativeClosureBo closureBo, Integer encounterId) {
-		this.patientId = closureBo.getPatientId();
-		this.encounterId = encounterId;
-		this.institutionId = closureBo.getInstitutionId();
-		this.counterReferenceNote = closureBo.getClosureNote();
-		this.performedDate = closureBo.getDate();
-	}
-
 }

@@ -22,13 +22,10 @@ public interface CounterReferenceRepository extends JpaRepository<CounterReferen
     @Query(value = " SELECT new ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo("
             + " cr.id, cr.performedDate, up.pk.personId, cs.name, n.description, i.name, cr.closureTypeId, cr.creationable.createdOn)"
             + "  FROM CounterReference cr"
-			+ "  JOIN Institution i ON (cr.institutionId = i.id)"
-            + "  JOIN ClinicalSpecialty cs ON (cr.clinicalSpecialtyId = cs.id) "
+			+ "  LEFT JOIN Institution i ON (cr.institutionId = i.id)"
+            + "  LEFT JOIN ClinicalSpecialty cs ON (cr.clinicalSpecialtyId = cs.id) "
 			+ "	 JOIN UserPerson up ON (cr.creationable.createdBy = up.pk.userId) "
             + "  LEFT JOIN Note n ON (cr.noteId = n.id) "
-            + "  JOIN HealthcareProfessional hp ON (hp.id = cr.doctorId)"
-            + "  JOIN Person p ON (p.id = hp.personId)"
-			+ "  LEFT JOIN PersonExtended px ON (px.id = p.id)"
             + "  WHERE cr.referenceId = :referenceId")
     List<CounterReferenceSummaryBo> findByReferenceId(@Param("referenceId") Integer referenceId);
 

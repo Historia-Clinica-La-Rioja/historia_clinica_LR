@@ -2,7 +2,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.summa
 
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEReferenceProblemBo;
-import ar.lamansys.sgh.clinichistory.domain.hce.summary.CHPersonBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.CounterReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceCounterReferenceFileBo;
@@ -55,12 +54,7 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
                 counterReferenceSummaryDto.getClinicalSpecialty(),
                 counterReferenceSummaryDto.getNote(),
                 counterReferenceSummaryDto.getPerformedDate(),
-                counterReferenceSummaryDto.getProfessional() != null ? new CHPersonBo(counterReferenceSummaryDto.getProfessional().getId(),
-                        counterReferenceSummaryDto.getProfessional().getFirstName(),
-                        counterReferenceSummaryDto.getProfessional().getLastName(), null,
-						counterReferenceSummaryDto.getProfessional().getNameSelfDetermination(),
-						counterReferenceSummaryDto.getProfessional().getMiddleNames(),
-				counterReferenceSummaryDto.getProfessional().getOtherLastNames()) : null,
+                counterReferenceSummaryDto.getAuthorFullName(),
                 counterReferenceSummaryDto.getFiles() != null ? counterReferenceSummaryDto.getFiles()
                         .stream()
                         .map(crf -> new ReferenceCounterReferenceFileBo(crf.getFileId(), crf.getFileName()))

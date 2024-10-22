@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.CounterReferenceProcedureBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.CounterReferenceSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ProfessionalInfoBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.reference.ReferenceCounterReferenceFileBo;
 import org.springframework.stereotype.Service;
 
@@ -42,9 +41,7 @@ public class ReferenceCounterReferenceStorageImpl implements ReferenceCounterRef
                 counterReferenceSummaryDto.getClinicalSpecialty(),
                 counterReferenceSummaryDto.getNote(),
                 counterReferenceSummaryDto.getPerformedDate(),
-                counterReferenceSummaryDto.getProfessional() != null ? new ProfessionalInfoBo(counterReferenceSummaryDto.getProfessional().getId(),
-                        counterReferenceSummaryDto.getProfessional().getFirstName(),
-                        counterReferenceSummaryDto.getProfessional().getLastName()) : null,
+                counterReferenceSummaryDto.getAuthorFullName(),
                 counterReferenceSummaryDto.getFiles() != null ? counterReferenceSummaryDto.getFiles()
                         .stream()
                         .map(crf -> new ReferenceCounterReferenceFileBo(crf.getFileId(), crf.getFileName()))

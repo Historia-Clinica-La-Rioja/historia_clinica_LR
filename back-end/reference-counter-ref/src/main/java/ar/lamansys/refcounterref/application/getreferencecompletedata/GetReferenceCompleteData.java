@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.application.getreferencecompletedata;
 
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataException;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataExceptionEnum;
+import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentInfoStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceObservationStorage;
@@ -41,6 +42,8 @@ public class GetReferenceCompleteData {
 	
 	private final ReferenceForwardingStorage referenceForwardingStorage;
 
+	private final CounterReferenceStorage counterReferenceStorage;
+
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 
 	public ReferenceCompleteDataBo run(Integer referenceId) {
@@ -53,9 +56,12 @@ public class GetReferenceCompleteData {
 		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentInfoStorage.getAppointmentData(referenceData.getId());
 		setContactInformation(patientData, referenceData, appointmentData);
 		Optional<ReferenceRegulationBo> referenceRegulation = historicReferenceRegulationStorage.getByReferenceId(referenceId);
+
+		var closure = counterReferenceStorage.getCounterReference(referenceId);
 		var observation = referenceObservationStorage.getReferenceObservation(referenceId).orElse(null);
 
-		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null), referenceRegulation.orElse(null), observation);
+		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null),
+				referenceRegulation.orElse(null), observation, closure.orElse(null));
 
 		if (sharedLoggedUserPort.hasManagerRole(UserInfo.getCurrentAuditor()))
 			result.setForwarding(referenceForwardingStorage.getForwardingByReferenceId(referenceId));

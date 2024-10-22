@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
 
     private final CounterReferenceRepository counterReferenceRepository;
     private final ReferenceCounterReferenceFileStorage referenceCounterReferenceFileStorage;
+	private final SharedPersonPort sharedPersonPort;
 
     @Override
     public Integer save(CounterReferenceInfoBo counterReferenceInfoBo) {
@@ -39,6 +41,7 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
         List<CounterReferenceSummaryBo> counterReferences = counterReferenceRepository.findByReferenceId(referenceId);
         if (!counterReferences.isEmpty()) {
 			CounterReferenceSummaryBo cr = counterReferences.get(0);
+			cr.setAuthorFullName(sharedPersonPort.getFormalPersonNameById(cr.getAuthorPersonId()));
 			cr.setProcedures(this.getProceduresByCounterReference(cr.getId()));
 			cr.setFiles(referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdAndType(cr.getId(),
                     EReferenceCounterReferenceType.CONTRARREFERENCIA.getId().intValue()));

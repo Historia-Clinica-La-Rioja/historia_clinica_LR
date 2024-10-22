@@ -1100,6 +1100,7 @@ export interface CounterReferenceProcedureDto extends Serializable {
 }
 
 export interface CounterReferenceSummaryDto extends Serializable {
+    authorFullName: string;
     clinicalSpecialty: string;
     closureType: string;
     files: ReferenceCounterReferenceFileDto[];
@@ -1108,7 +1109,6 @@ export interface CounterReferenceSummaryDto extends Serializable {
     note: string;
     performedDate: Date;
     procedures: CounterReferenceSummaryProcedureDto[];
-    professional: ProfessionalPersonDto;
 }
 
 export interface CounterReferenceSummaryProcedureDto extends Serializable {
@@ -2541,6 +2541,7 @@ export interface HCERiskFactorDto extends Serializable {
 }
 
 export interface HCESummaryCounterReferenceDto {
+    authorFullName: string;
     clinicalSpecialtyId: string;
     closureType: string;
     counterReferenceNote: string;
@@ -2549,7 +2550,6 @@ export interface HCESummaryCounterReferenceDto {
     institution: string;
     performedDate: DateDto;
     procedures: CounterReferenceSummaryProcedureDto[];
-    professional: ProfessionalPersonDto;
 }
 
 export interface HCEToothRecordDto extends Serializable {
@@ -3756,6 +3756,7 @@ export interface OutpatientRiskFactorDto extends Serializable {
 }
 
 export interface OutpatientSummaryCounterReferenceDto {
+    authorFullName: string;
     clinicalSpecialtyId: string;
     closureType: string;
     counterReferenceNote: string;
@@ -3764,7 +3765,6 @@ export interface OutpatientSummaryCounterReferenceDto {
     institution: string;
     performedDate: DateDto;
     procedures: CounterReferenceSummaryProcedureDto[];
-    professional: ProfessionalPersonDto;
 }
 
 export interface OutpatientSummaryHealthConditionDto extends ClinicalTermDto {
@@ -4608,8 +4608,17 @@ export interface ReferenceClosureDto {
     referenceId: number;
 }
 
+export interface ReferenceClosureSummaryDto {
+    authorFullName: string;
+    closureType: EReferenceClosureType;
+    createdOn: DateTimeDto;
+    files: ReferenceCounterReferenceFileDto[];
+    note: string;
+}
+
 export interface ReferenceCompleteDataDto {
     appointment: ReferenceAppointmentDto;
+    closure: ReferenceClosureSummaryDto;
     forwarding: ReferenceForwardingDto;
     observation: ReferenceObservationDto;
     patient: ReferencePatientDto;
