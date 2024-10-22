@@ -45,4 +45,6 @@ public interface ReferenceStorage {
 	
 	Integer getOriginInstitutionId(Integer referenceId);
 
+	Optional<Integer> getServiceRequestId(Integer referenceId);
+
 }

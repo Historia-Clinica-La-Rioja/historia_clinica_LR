@@ -524,11 +524,17 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"WHERE r.id = :referenceId")
 	Integer getPatientId(@Param("referenceId") Integer referenceId);
-	
+
+	@Transactional(readOnly = true)
 	@Query("SELECT oc.institutionId " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"WHERE r.id = :referenceId")
 	Integer getOriginInstitutionId(@Param("referenceId") Integer referenceId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT r.serviceRequestId " +
+			"FROM Reference r " +
+			"WHERE r.id = :referenceId")
+	Optional<Integer> getServiceRequestId(@Param("referenceId") Integer referenceId);
 }

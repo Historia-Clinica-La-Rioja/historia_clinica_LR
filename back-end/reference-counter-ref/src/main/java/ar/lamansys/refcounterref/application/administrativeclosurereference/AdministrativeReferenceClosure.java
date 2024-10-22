@@ -3,12 +3,12 @@ package ar.lamansys.refcounterref.application.administrativeclosurereference;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
-import ar.lamansys.refcounterref.application.port.output.GetInstitutionsByManagerUser;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.counterreference.ReferenceAdministrativeClosureBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDiagnosticReportPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedNotePort;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,7 @@ public class AdministrativeReferenceClosure {
 	private final ReferenceAppointmentStorage referenceAppointmentStorage;
 
 	private final SharedNotePort sharedNotePort;
+	private final SharedDiagnosticReportPort sharedDiagnosticReportPort;
 
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 
@@ -36,10 +37,16 @@ public class AdministrativeReferenceClosure {
 	public void run(ReferenceAdministrativeClosureBo closure, Integer institutionId) {
 		log.debug("Input parameters -> closure {}, institutionId {}", closure, institutionId);
 		assertValid(closure, institutionId);
-		var patientId = referenceStorage.getPatientId(closure.getReferenceId());
+		var referenceId = closure.getReferenceId();
+		var patientId = referenceStorage.getPatientId(referenceId);
+        referenceStorage.getServiceRequestId(referenceId).ifPresent(srId -> completeStudy(srId, patientId, closure.getClosureNote()));
 		var noteId = sharedNotePort.saveNote(closure.getClosureNote());
 	 	closure.setPatientId(patientId);
 		counterReferenceStorage.save(mapToCounterReferenceInfoBo(closure, noteId));
+	}
+
+	private void completeStudy(Integer serviceRequestId, Integer patientId, String notes) {
+		sharedDiagnosticReportPort.completeDiagnosticReport(serviceRequestId, patientId, notes);
 	}
 
 	private CounterReferenceInfoBo mapToCounterReferenceInfoBo(ReferenceAdministrativeClosureBo closure, Long noteId) {

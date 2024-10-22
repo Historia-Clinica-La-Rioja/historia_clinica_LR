@@ -225,7 +225,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId){
-		log.debug("Input parameters -> serviceRequestId {} ", serviceRequestId);
+		log.debug("Input parameter -> serviceRequestId {} ", serviceRequestId);
 		Optional<ReferenceRequestBo> ref =  referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
 		ref.ifPresent(r ->
 				r.setClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(r.getId())
@@ -235,13 +235,13 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<Reference> findById(Integer referenceId) {
-		log.debug("Input parameters -> referenceId {} ", referenceId);
+		log.debug("Input parameter -> referenceId {} ", referenceId);
 		return referenceRepository.findById(referenceId);
 	}
 
 	@Override
 	public Short getReferenceRegulationStateId(Integer referenceId) {
-		log.debug("Input parameters -> referenceId {} ", referenceId);
+		log.debug("Input parameter -> referenceId {} ", referenceId);
 		return referenceRepository.getReferenceRegulationStateId(referenceId).get(0);
 	}
 
@@ -295,7 +295,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<Integer> getReferenceEncounterTypeId(Integer referenceId){
-		log.debug("Input parameters -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		Optional<Integer> result = Optional.ofNullable(referenceRepository.getReferenceEncounterTypeId(referenceId));
 		log.debug("Output -> {}", result);
 		return result;
@@ -303,7 +303,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<ReferenceStudyBo> getReferenceStudy (Integer referenceId){
-		log.debug("Input parameteres -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		Optional<ReferenceStudyBo> result = referenceRepository.getReferenceStudy(referenceId);
 		log.debug("Output -> {}", result);
 		return result;
@@ -324,19 +324,25 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Integer getDestinationInstitutionId(Integer referenceId) {
-		log.debug("Input parameteres -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		return this.referenceRepository.getDestinationInstitutionId(referenceId);
 	}
 
 	@Override
 	public Integer getPatientId(Integer referenceId) {
-		log.debug("Input parameteres -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		return this.referenceRepository.getPatientId(referenceId);
 	}
 	
 	public Integer getOriginInstitutionId(Integer referenceId) {
-		log.debug("Input parameteres -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		return this.referenceRepository.getOriginInstitutionId(referenceId);
+	}
+
+	@Override
+	public Optional<Integer> getServiceRequestId(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		return this.referenceRepository.getServiceRequestId(referenceId);
 	}
 
 }

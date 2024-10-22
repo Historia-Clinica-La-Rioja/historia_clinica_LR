@@ -78,4 +78,21 @@ public class GetDiagnosticReportInfoRepositoryImpl implements GetDiagnosticRepor
 		List<Object[]> result = query.getResultList();
 		return (result.size() != 0 ? result.get(0) : null);
 	}
+
+	@Transactional(readOnly = true)
+	public Integer getDiagnosticReportIdByServiceRequestId(Integer serviceRequestId) {
+		log.debug("Input parameters -> serviceRequestId {}", serviceRequestId);
+
+		String sqlString = "SELECT dr.id " +
+				"FROM {h-schema}document d " +
+				"JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
+				"JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
+				"JOIN {h-schema}service_request sr ON (d.source_id = sr.id) " +
+				"WHERE d.type_id = 6 " +
+				"AND sr.id = :serviceRequestId ";
+		Query query = entityManager.createNativeQuery(sqlString);
+		query.setParameter("serviceRequestId", serviceRequestId);
+		List<Integer> result = query.getResultList();
+		return (!result.isEmpty() ? result.get(0) : null);
+	}
 }
