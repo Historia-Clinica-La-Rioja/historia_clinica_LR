@@ -23,18 +23,17 @@ public class UpdateCommercialMedicationDatabase {
 
 	private final SaveCommercialMedicationDatabase saveCommercialMedicationDatabase;
 
+	private final UpdateCommercialMedicationSchema updateCommercialMedicationSchema;
+
 	@PostConstruct
 	public void run() throws JAXBException, IOException {
 		log.warn("Scheduled CommercialMedicationDatabaseJob starting at {}", new Date());
-		Long lastLogEntry = commercialMedicationUpdateFilePort.getLastNonProcessedLogId();
-		if (lastLogEntry == null)
-			fetchAndRegisterCompleteDatabase();
+		boolean schemaAlreadyInitialized = commercialMedicationUpdateFilePort.schemaAlreadyInitialized();
+		if (!schemaAlreadyInitialized)
+			saveCommercialMedicationDatabase.run();
+		else
+			updateCommercialMedicationSchema.run();
 		log.warn("Scheduled CommercialMedicationDatabaseJob done at {}", new Date());
-	}
-
-	private void fetchAndRegisterCompleteDatabase() throws JAXBException, IOException {
-		Long logId = saveCommercialMedicationDatabase.run();
-		commercialMedicationUpdateFilePort.saveNewEntry(logId);
 	}
 
 }

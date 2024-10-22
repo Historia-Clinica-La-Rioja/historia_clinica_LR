@@ -14,6 +14,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,7 +33,7 @@ public class DatabaseUpdate {
 	private String tableName;
 
 	@XmlElement(name = "id")
-	private String affectedRecordId;
+	private Integer affectedRecordId;
 
 	@XmlElement(name = "des")
 	private String newEntryDescription;
@@ -40,7 +42,7 @@ public class DatabaseUpdate {
 	private Integer articleId;
 
 	@XmlElement(name = "prc")
-	private Float price;
+	private BigDecimal price;
 
 	@XmlElement(name = "vig")
 	private String priceValidFrom;

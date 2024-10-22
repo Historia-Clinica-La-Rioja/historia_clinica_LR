@@ -26,8 +26,8 @@ public class CommercialMedicationUpdateFile implements Serializable {
 	@Column(name = "log_id")
 	private Long logId;
 
-	@Column(name = "file_name")
-	private String fileName;
+	@Column(name = "file_path")
+	private String filePath;
 
 	@Column(name = "processed")
 	private Boolean processed;

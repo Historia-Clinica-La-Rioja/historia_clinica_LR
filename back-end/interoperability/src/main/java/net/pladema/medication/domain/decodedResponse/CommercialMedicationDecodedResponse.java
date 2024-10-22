@@ -29,5 +29,7 @@ public class CommercialMedicationDecodedResponse {
 	@XmlElement(name = "atcdetalle")
 	private ATCDetailList atcDetailList;
 
+	private String fileName;
+
 }
 

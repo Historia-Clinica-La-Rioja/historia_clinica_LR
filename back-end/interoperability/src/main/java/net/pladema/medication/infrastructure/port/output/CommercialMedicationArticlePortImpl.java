@@ -7,6 +7,7 @@ import net.pladema.medication.domain.commercialMedicationArticle.Article;
 import net.pladema.medication.domain.commercialMedicationArticle.NewDrug;
 import net.pladema.medication.domain.decodedResponse.ArticleList;
 
+import net.pladema.medication.domain.decodedResponse.DatabaseUpdate;
 import net.pladema.medication.infrastructure.repository.CommercialMedicationArticleAtcRepository;
 import net.pladema.medication.infrastructure.repository.CommercialMedicationArticleBarCodeRepository;
 import net.pladema.medication.infrastructure.repository.CommercialMedicationArticleCoverageRepository;
@@ -29,11 +30,15 @@ import net.pladema.medication.infrastructure.repository.entity.CommercialMedicat
 import net.pladema.medication.infrastructure.repository.entity.CommercialMedicationArticleGtinPK;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class CommercialMedicationArticlePortImpl implements CommercialMedicationArticlePort {
@@ -65,6 +70,58 @@ public class CommercialMedicationArticlePortImpl implements CommercialMedication
 		commercialMedicationArticleAtcRepository.saveAll(articleAtcs);
 		commercialMedicationArticleDrugRepository.saveAll(articleDrugs);
 		commercialMedicationArticleGtinRepository.saveAll(articleGtins);
+	}
+
+	@Override
+	public void saveAllNewArticlesFromUpdate(List<DatabaseUpdate> databaseUpdates) {
+		ArticleList articleList = new ArticleList(databaseUpdates.stream().map(Article::new).collect(Collectors.toList()));
+		saveAll(articleList);
+	}
+
+	@Override
+	public void editArticles(List<DatabaseUpdate> databaseUpdates) {
+		deleteAll(databaseUpdates);
+		saveAllNewArticlesFromUpdate(databaseUpdates);
+	}
+
+	@Override
+	public void reEnableAll(List<DatabaseUpdate> databaseUpdates) {
+		commercialMedicationArticleRepository.reEnableAll(databaseUpdates.stream().map(DatabaseUpdate::getArticleId).collect(Collectors.toList()));
+	}
+
+	@Override
+	public void updatePrices(List<DatabaseUpdate> databaseUpdates) {
+		List<Integer> articleIds = databaseUpdates.stream().map(DatabaseUpdate::getArticleId).collect(Collectors.toList());
+		List<CommercialMedicationArticle> articles = commercialMedicationArticleRepository.findAllById(articleIds);
+		articles.forEach(article -> updateArticlePrice(databaseUpdates, article));
+	}
+
+	private void updateArticlePrice(List<DatabaseUpdate> databaseUpdates, CommercialMedicationArticle article) {
+		Optional<DatabaseUpdate> latestArticlePriceUpdate = databaseUpdates.stream()
+				.filter(update -> update.getArticleId().equals(article.getId()))
+				.max(Comparator.comparingLong(DatabaseUpdate::getLogId));
+		article.setPrice(latestArticlePriceUpdate.get().getPrice());
+		article.setPriceValidityDate(latestArticlePriceUpdate.get().getPriceValidFrom());
+	}
+
+	@Override
+	public void deleteAll(List<DatabaseUpdate> databaseUpdates) {
+		databaseUpdates.forEach(this::deleteAllRelatedData);
+	}
+
+	private void deleteAllRelatedData(DatabaseUpdate update) {
+		if (commercialMedicationArticleRepository.existsById(update.getArticleId()))
+			commercialMedicationArticleRepository.deleteById(update.getArticleId());
+		if (commercialMedicationArticleBarCodeRepository.existsByArticleId(update.getArticleId()) != null)
+			commercialMedicationArticleBarCodeRepository.deleteByArticleId(update.getArticleId());
+		if (commercialMedicationArticleCoverageRepository.existsById(update.getArticleId()))
+			commercialMedicationArticleCoverageRepository.deleteById(update.getArticleId());
+		if (commercialMedicationArticleAtcRepository.existsByArticleId(update.getArticleId()) != null)
+			commercialMedicationArticleAtcRepository.deleteByArticleId(update.getArticleId());
+		if (commercialMedicationArticleDrugRepository.existsByArticleId(update.getArticleId()) != null)
+			commercialMedicationArticleDrugRepository.deleteByArticleId(update.getArticleId());
+		if (commercialMedicationArticleGtinRepository.existsByArticleId(update.getArticleId()) != null)
+			commercialMedicationArticleGtinRepository.deleteByArticleId(update.getArticleId());
 	}
 
 	private void handleArticle(Article article, List<CommercialMedicationArticle> articlesEntities,

@@ -1,5 +1,6 @@
 package net.pladema.medication.infrastructure.repository.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "new_drug", schema = "commercial_medication")
 @Entity
 public class CommercialMedicationNewDrug implements Serializable {

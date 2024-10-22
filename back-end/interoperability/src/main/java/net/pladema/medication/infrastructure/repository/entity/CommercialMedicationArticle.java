@@ -131,4 +131,9 @@ public class CommercialMedicationArticle implements Serializable {
 		this.snomedId = article.getSnomedId();
 		this.prospect = article.getProspect();
 	}
+
+	public void setPriceValidityDate(String priceValidityDate) {
+		this.priceValidityDate = LocalDate.parse(priceValidityDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+	}
+
 }

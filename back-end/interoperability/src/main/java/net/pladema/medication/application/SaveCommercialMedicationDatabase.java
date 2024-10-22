@@ -15,13 +15,18 @@ import net.pladema.medication.application.port.CommercialMedicationPotencyPort;
 import net.pladema.medication.application.port.CommercialMedicationQuantityPort;
 import net.pladema.medication.application.port.CommercialMedicationSellTypePort;
 import net.pladema.medication.application.port.CommercialMedicationSizePort;
+import net.pladema.medication.application.port.CommercialMedicationUpdateFilePort;
 import net.pladema.medication.application.port.CommercialMedicationViaPort;
 import net.pladema.medication.application.port.SoapPort;
 
+import net.pladema.medication.domain.CommercialMedicationRequestParameter;
 import net.pladema.medication.domain.decodedResponse.CommercialMedicationDecodedResponse;
+
+import net.pladema.medication.domain.decodedResponse.ErrorCode;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXBException;
 
@@ -60,13 +65,19 @@ public class SaveCommercialMedicationDatabase {
 
 	private final CommercialMedicationViaPort commercialMedicationViaPort;
 
+	private final CommercialMedicationUpdateFilePort commercialMedicationUpdateFilePort;
+
 	@Transactional
-	public Long run() throws JAXBException, IOException {
+	public void run() throws JAXBException, IOException {
 		log.debug("Fetching commercial medication database...");
-		CommercialMedicationDecodedResponse database = soapPort.fetchCommercialMedicationAtcData();
+		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, false);
+		CommercialMedicationDecodedResponse database = soapPort.callAPIWithNoFile(parameters);
+		assertUpdateData(database);
 		commercialMedicationAtcPort.saveAll(database.getAtcDetailList());
 
-		database = soapPort.fetchCommercialMedicationCompleteDataBase();
+		parameters = new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null, false);
+		database = soapPort.callAPIWithNoFile(parameters);
+		assertUpdateData(database);
 		commercialMedicationActionPort.saveAll(database.getCommercialMedicationCompleteDatabase().getActionList());
 		commercialMedicationControlPort.saveAll(database.getCommercialMedicationCompleteDatabase().getPublicSanityInternCodeList());
 		commercialMedicationFormPort.saveAll(database.getCommercialMedicationCompleteDatabase().getForms());
@@ -80,7 +91,11 @@ public class SaveCommercialMedicationDatabase {
 		commercialMedicationViaPort.saveAll(database.getCommercialMedicationCompleteDatabase().getViaList());
 		commercialMedicationArticlePort.saveAll(database.getCommercialMedicationCompleteDatabase().getArticleList());
 
-		return database.getCommercialMedicationCompleteDatabase().getLastLog();
+		commercialMedicationUpdateFilePort.saveNewEntry(database.getCommercialMedicationCompleteDatabase().getLastLog());
+	}
+
+	private void assertUpdateData(CommercialMedicationDecodedResponse updateData) {
+		Assert.isTrue(updateData.getErrorCode().getCode().equals(ErrorCode.NO_ERROR_CODE), String.format("There's an error fetching commercial medication data. Error code: %s", updateData.getErrorCode()));
 	}
 
 }

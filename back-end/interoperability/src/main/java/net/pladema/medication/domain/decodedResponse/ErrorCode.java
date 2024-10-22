@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "error")
 public class ErrorCode {
 
+	public final static Short NO_ERROR_CODE = 0;
+
 	@XmlElement(name = "codigo")
 	private Short code;
 
