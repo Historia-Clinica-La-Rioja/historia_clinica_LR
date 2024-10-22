@@ -311,10 +311,9 @@
 			</section>
 
 
-			<div *ngIf="form.valid" align="end">
-				<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
-					<span [translate]="'buttons.CONFIRM'"></span>
-				</button>
+			<div *ngIf="form.valid" class="confirm-button">
+				<app-button id="confirmAgenda" [isLoading]="isSaving" name="confirmAgenda" [buttonType]="ButtonType.RAISED" [text]="'buttons.CONFIRM'">
+				</app-button>
 			</div>
 		</form>
 	</section>

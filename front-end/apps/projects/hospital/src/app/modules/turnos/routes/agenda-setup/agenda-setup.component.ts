@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SECTOR_AMBULATORIO } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable, filter, map, switchMap } from 'rxjs';
+import { Observable, filter, finalize, map, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -16,6 +16,7 @@ import { SectorService } from '@api-rest/services/sector.service';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
+	ApiErrorDto,
 	AppFeature,
 	CareLineDto,
 	CompleteDiaryDto,
@@ -41,6 +42,7 @@ import { PracticesService } from '@api-rest/services/practices.service';
 import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -101,8 +103,9 @@ export class AgendaSetupComponent implements OnInit {
 	diaryLabels: DiaryLabelDto[] = [];
 	diaryStartDate: Date;
 	diaryEndDate: Date;
-
+	isSaving = false;
 	isHabilitarSolicitudReferenciaOn = false;
+	ButtonType = ButtonType;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -451,25 +454,7 @@ export class AgendaSetupComponent implements OnInit {
 					okButtonLabel: 'Confirmar'
 				}
 			});
-
-			dialogRef.afterClosed().subscribe(confirmed => {
-				if (confirmed) {
-					this.errors = [];
-					if (this.editMode) {
-						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(this.diaryLabels));
-						this.diaryService.updateDiary(agendaEdit)
-							.subscribe((agendaId: number) => {
-								this.processSuccess(agendaId);
-							}, error => processErrors(error, (msg) => this.errors.push(msg)));
-					} else {
-						const agenda: DiaryADto = this.buildDiaryADto(this.diaryLabels);
-						this.diaryService.addDiary(agenda)
-							.subscribe((agendaId: number) => {
-								this.processSuccess(agendaId);
-							}, error => processErrors(error, (msg) => this.errors.push(msg)));
-					}
-				}
-			});
+			dialogRef.afterClosed().subscribe(confirmed => this.savedDiary(confirmed));
 		});
 	}
 
@@ -489,6 +474,37 @@ export class AgendaSetupComponent implements OnInit {
 			.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate);
 
 		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
+	}
+
+	private savedDiary = (confirmed: boolean) => {
+		if (!confirmed) return;
+
+		this.isSaving = true;
+		this.errors = [];
+		if (this.editMode) 
+			this.updateDiary();
+		else 
+			this.addDiary();
+	}
+
+	private updateDiary = () => {
+		const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(this.diaryLabels));
+		this.diaryService.updateDiary(agendaEdit)
+		.pipe(finalize(() => this.isSaving = false))
+		.subscribe({
+			next: (diaryId: number) => this.processSuccess(diaryId),
+			error: (error: ApiErrorDto) => processErrors(error, (msg) => this.errors.push(msg)) 
+		});
+	}
+
+	private addDiary = () => {
+		const agenda: DiaryADto = this.buildDiaryADto(this.diaryLabels);
+		this.diaryService.addDiary(agenda)
+		.pipe(finalize(() => this.isSaving = false))
+		.subscribe({
+			next: (diaryId: number) => this.processSuccess(diaryId),
+			error: (error: ApiErrorDto) => processErrors(error, (msg) => this.errors.push(msg)) 
+		});
 	}
 
 	private processSuccess(agendaId: number) {

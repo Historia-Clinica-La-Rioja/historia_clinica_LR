@@ -88,3 +88,8 @@ input[type="number"]::-webkit-inner-spin-button {
 app-chips-autocomplete {
 	width: 35%;
 }
+
+.confirm-button {
+	display: flex;
+	justify-content: flex-end;
+}
