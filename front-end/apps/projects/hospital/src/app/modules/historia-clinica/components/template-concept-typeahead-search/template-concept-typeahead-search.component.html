@@ -8,16 +8,14 @@
 
 				<mat-optgroup *ngIf="(mostFrequentStudies?.length)"
 					label="{{ 'historia-clinica.template-concept-search.MOST_FREQUENT_STUDIES' | translate }}">
-					<mat-option *ngFor="let option of mostFrequentStudies" [value]="option"
-						[matTooltip]="option.data.pt.term" matTooltipClass="tooltip">
+					<mat-option *ngFor="let option of mostFrequentStudies" [value]="option">
 						<span>{{option.data.pt.term | capitalizeFirstLetter}}</span>
 					</mat-option>
 				</mat-optgroup>
 
 				<mat-optgroup *ngIf="(!hideTemplateOptions && templateOptions?.length)"
 					label="{{ 'historia-clinica.template-concept-search.TEMPLATE_OPTION_GROUP' | translate }}">
-					<mat-option *ngFor="let option of templateOptions" [value]="option"
-						[matTooltip]="option.data.description" matTooltipClass="tooltip">
+					<mat-option *ngFor="let option of templateOptions" [value]="option">
 						<div fxLayoutAlign="space-between">
 							<span>
 								{{option.data.description}}
@@ -32,8 +30,7 @@
 
 				<mat-optgroup *ngIf="(conceptOptions?.length)"
 					label="{{ 'historia-clinica.template-concept-search.ALL_STUDIES' | translate }}">
-					<mat-option *ngFor="let option of conceptOptions" [value]="option"
-						[matTooltip]="option.data.pt.term" matTooltipClass="tooltip">
+					<mat-option *ngFor="let option of conceptOptions" [value]="option">
 						{{option.data.pt.term | capitalizeFirstLetter}}
 					</mat-option>
 				</mat-optgroup>

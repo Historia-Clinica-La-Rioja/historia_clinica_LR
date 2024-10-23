@@ -122,3 +122,20 @@ div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 	word-break: break-word;
 	white-space: pre-line;
 }
+
+//https://lamansys.atlassian.net/browse/HSI-12065. En M3 te hace automaticamente. 
+mat-option .mat-option-text {
+	white-space: normal;
+	overflow: visible;
+	text-overflow: unset;
+	word-wrap: break-word;
+	line-height: normal;
+	padding: 0.25rem 0.25rem !important;
+	min-height: 48px !important;
+	display: flex;
+	align-items: center;
+}
+
+ mat-option {
+	height: fit-content !important;
+}
