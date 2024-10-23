@@ -9,6 +9,7 @@
 
 			<ng-container *ngIf="study.diagnosticInformation.category === IMAGE_DIAGNOSIS && study.diagnosticInformation.infoOrderInstances?.imageId">
 					<app-study-images-reports
+						class="study-reports"
 						[appointmentId]="study.appointmentId"
 						[studyInfo]="study.diagnosticInformation">
 				</app-study-images-reports>
