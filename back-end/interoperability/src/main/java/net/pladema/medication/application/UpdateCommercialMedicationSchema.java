@@ -11,8 +11,6 @@ import net.pladema.medication.application.port.SoapPort;
 import net.pladema.medication.domain.CommercialMedicationFileUpdateBo;
 import net.pladema.medication.domain.CommercialMedicationRequestParameter;
 
-import net.pladema.medication.domain.CommercialMedicationResponse;
-
 import net.pladema.medication.domain.decodedResponse.CommercialMedicationDatabaseUpdate;
 
 import net.pladema.medication.domain.decodedResponse.CommercialMedicationDecodedResponse;
@@ -21,6 +19,7 @@ import net.pladema.medication.domain.decodedResponse.DatabaseUpdate;
 import net.pladema.medication.domain.decodedResponse.ErrorCode;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXBException;
@@ -57,28 +56,14 @@ public class UpdateCommercialMedicationSchema {
 
 	private final CommercialMedicationMasterDataPort commercialMedicationMasterDataPort;
 
+	@Transactional
 	public void run() throws JAXBException, IOException {
 		CommercialMedicationFileUpdateBo lastEntry = commercialMedicationUpdateFilePort.getLastNonProcessedEntry();
-		if (lastEntry.getFilePath() != null)
-			handleOldUpdate(lastEntry);
-		handleNewUpdate(lastEntry.getLogId());
-	}
-
-	private void handleOldUpdate(CommercialMedicationFileUpdateBo lastEntry) throws IOException, JAXBException {
-		CommercialMedicationDecodedResponse oldUpdateData = commercialMedicationUpdateFilePort.getOldUpdateFile(lastEntry.getFilePath());
-		assertUpdateData(oldUpdateData);
-		Long lastLogId = updateCommercialMedications(oldUpdateData.getCommercialMedicationDatabaseUpdate());
-		commercialMedicationUpdateFilePort.setEntryAsProcessed(lastEntry.getLogId(), lastLogId);
-		lastEntry.setLogId(lastLogId);
-	}
-
-	private void handleNewUpdate(Long logId) throws JAXBException, IOException {
-		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(logId, null, null, null, true);
-		CommercialMedicationResponse updateData = soapPort.callAPIWithFile(parameters);
-		assertUpdateData(updateData.getCommercialMedicationDecodedResponse());
-		commercialMedicationUpdateFilePort.updateEntryFilePath(logId, updateData.getFilePath());
-		Long lastLogId = updateCommercialMedications(updateData.getCommercialMedicationDecodedResponse().getCommercialMedicationDatabaseUpdate());
-		commercialMedicationUpdateFilePort.setEntryAsProcessed(logId, lastLogId);
+		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(lastEntry.getLogId(), null, null, null);
+		CommercialMedicationDecodedResponse updateData = soapPort.callAPI(parameters);
+		assertUpdateData(updateData);
+		Long lastLogId = updateCommercialMedications(updateData.getCommercialMedicationDatabaseUpdate());
+		commercialMedicationUpdateFilePort.setEntryAsProcessed(lastEntry.getId(), lastLogId);
 	}
 
 	private void assertUpdateData(CommercialMedicationDecodedResponse updateData) {
@@ -89,12 +74,10 @@ public class UpdateCommercialMedicationSchema {
 		List<DatabaseUpdate> toProcess = new ArrayList<>();
 		int index = 0;
 		while (index < updateData.getDatabaseUpdates().size()) {
-			toProcess.add(updateData.getDatabaseUpdates().get(index));
-			index++;
-			while (index < updateData.getDatabaseUpdates().size() && updateData.getDatabaseUpdates().get(index).getOperationType().equals(toProcess.get(0).getOperationType())) {
+			do {
 				toProcess.add(updateData.getDatabaseUpdates().get(index));
 				index++;
-			}
+			} while (index < updateData.getDatabaseUpdates().size() && updateData.getDatabaseUpdates().get(index).getOperationType().equals(toProcess.get(0).getOperationType()));
 			processUpdates(toProcess, toProcess.get(0).getOperationType());
 			if (index < updateData.getDatabaseUpdates().size())
 				toProcess.clear();

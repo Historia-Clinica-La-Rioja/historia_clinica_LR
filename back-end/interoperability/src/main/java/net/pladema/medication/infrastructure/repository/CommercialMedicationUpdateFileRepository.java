@@ -18,20 +18,15 @@ public interface CommercialMedicationUpdateFileRepository extends JpaRepository<
 			"FROM CommercialMedicationUpdateFile cmuf")
 	Long schemaAlreadyInitialized();
 
-	@Modifying
-	@Transactional
-	@Query("UPDATE CommercialMedicationUpdateFile SET filePath = :filePath WHERE logId = :logId ")
-	void updateEntryFilePath(@Param("logId") Long logId, @Param("filePath") String filePath);
-
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.medication.domain.CommercialMedicationFileUpdateBo(logId, filePath) " +
+	@Query("SELECT NEW net.pladema.medication.domain.CommercialMedicationFileUpdateBo(id, logId) " +
 			"FROM CommercialMedicationUpdateFile cmuf " +
 			"WHERE cmuf.processed = FALSE")
 	CommercialMedicationFileUpdateBo fetchLastNonProcessedEntry();
 
 	@Modifying
 	@Transactional
-	@Query("UPDATE CommercialMedicationUpdateFile SET processed = FALSE WHERE logId = :oldLogId")
-    void setEntryAsProcessed(@Param("oldLogId") Long oldLogId);
+	@Query("UPDATE CommercialMedicationUpdateFile SET processed = TRUE WHERE id = :id")
+    void setEntryAsProcessed(@Param("id") Integer id);
 
 }

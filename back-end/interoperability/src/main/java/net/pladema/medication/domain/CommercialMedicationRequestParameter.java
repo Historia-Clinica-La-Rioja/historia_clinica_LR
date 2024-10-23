@@ -21,8 +21,6 @@ public class CommercialMedicationRequestParameter {
 
 	private Character requestAtcDetails;
 
-	private boolean generatesFile;
-
 	public String toXmlString() {
 		if (lastLogId == null && requestCompleteDatabase == null && requestOnlyTables == null && requestAtcDetails == null)
 			return null;

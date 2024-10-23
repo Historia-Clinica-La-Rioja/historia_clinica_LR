@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -23,11 +25,12 @@ public class CommercialMedicationUpdateFile implements Serializable {
 	private static final long serialVersionUID = 5626820266663252786L;
 
 	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
 	@Column(name = "log_id")
 	private Long logId;
-
-	@Column(name = "file_path")
-	private String filePath;
 
 	@Column(name = "processed")
 	private Boolean processed;

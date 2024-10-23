@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommercialMedicationFileUpdateBo {
 
-	private Long logId;
+	private Integer id;
 
-	private String filePath;
+	private Long logId;
 
 }

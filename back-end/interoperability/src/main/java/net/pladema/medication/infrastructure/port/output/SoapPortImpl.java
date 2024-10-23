@@ -1,18 +1,11 @@
 package net.pladema.medication.infrastructure.port.output;
 
-import ar.lamansys.sgx.shared.files.FileService;
-
-import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
-
-import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
-
 import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
 
 import net.pladema.medication.application.port.SoapPort;
 
 import net.pladema.medication.configuration.SoapRestTemplate;
 
-import net.pladema.medication.domain.CommercialMedicationResponse;
 import net.pladema.medication.domain.decodedResponse.CommercialMedicationDecodedResponse;
 import net.pladema.medication.domain.CommercialMedicationRequestEnvelope;
 
@@ -57,13 +50,10 @@ public class SoapPortImpl implements SoapPort {
 
 	private final Unmarshaller unmarshaller;
 
-	private final FileService fileService;
-
-	public SoapPortImpl(SoapRestTemplate restTemplate, FileService fileService) throws JAXBException {
+	public SoapPortImpl(SoapRestTemplate restTemplate) throws JAXBException {
 		this.restTemplate = restTemplate;
 		this.marshaller = initializeMarshaller();
 		this.unmarshaller = initializeUnmarshaller();
-		this.fileService = fileService;
 	}
 
 	private Unmarshaller initializeUnmarshaller() throws JAXBException {
@@ -81,7 +71,7 @@ public class SoapPortImpl implements SoapPort {
 	}
 
 	@Override
-	public CommercialMedicationDecodedResponse callAPIWithNoFile(CommercialMedicationRequestParameter parameters) throws JAXBException, IOException  {
+	public CommercialMedicationDecodedResponse callAPI(CommercialMedicationRequestParameter parameters) throws JAXBException, IOException  {
 		String content = fetchResponseContent(parameters);
 		InputStream stream = new ByteArrayInputStream(Objects.requireNonNull(content).getBytes(StandardCharsets.UTF_8));
 		return (CommercialMedicationDecodedResponse) unmarshaller.unmarshal(stream);
@@ -90,22 +80,6 @@ public class SoapPortImpl implements SoapPort {
 	private String fetchResponseContent(CommercialMedicationRequestParameter parameters) throws JAXBException, IOException {
 		byte[] decodedData = fetchContent(parameters);
 		return handleZip(decodedData);
-	}
-
-	@Override
-	public CommercialMedicationResponse callAPIWithFile(CommercialMedicationRequestParameter parameters) throws JAXBException, IOException {
-		String content = fetchResponseContent(parameters);
-		InputStream stream = new ByteArrayInputStream(Objects.requireNonNull(content).getBytes(StandardCharsets.UTF_8));
-		CommercialMedicationResponse result = new CommercialMedicationResponse();
-		result.setCommercialMedicationDecodedResponse((CommercialMedicationDecodedResponse) unmarshaller.unmarshal(stream));
-		if (parameters.isGeneratesFile())
-			result.setFilePath(generateFileFromContent(content));
-		return result;
-	}
-
-	@Override
-	public CommercialMedicationDecodedResponse unmarshallCommercialMedicationDecodedResponseXml(InputStream fileContent) throws JAXBException {
-		return (CommercialMedicationDecodedResponse) unmarshaller.unmarshal(fileContent);
 	}
 
 	private String handleZip(byte[] decodedData) throws IOException {
@@ -127,15 +101,6 @@ public class SoapPortImpl implements SoapPort {
 		content = baos.toString();
 		zis.closeEntry();
 		return content;
-	}
-
-	private String generateFileFromContent(String content) {
-		String uuid = fileService.createUuid();
-		String path = String.format("commercial-medication/schema-update/%s.txt", uuid);
-		FilePathBo filePath = fileService.buildCompletePath(path);
-		FileContentBo fileContent = FileContentBo.fromString(content);
-		fileService.saveStreamInPath(filePath, uuid, "COMMERCIAL-MEDICATION-UPDATE", true, fileContent);
-		return path;
 	}
 
 	private byte[] fetchContent(CommercialMedicationRequestParameter parameters) throws JAXBException {

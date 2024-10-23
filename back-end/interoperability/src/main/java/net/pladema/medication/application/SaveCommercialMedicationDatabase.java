@@ -70,13 +70,13 @@ public class SaveCommercialMedicationDatabase {
 	@Transactional
 	public void run() throws JAXBException, IOException {
 		log.debug("Fetching commercial medication database...");
-		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, false);
-		CommercialMedicationDecodedResponse database = soapPort.callAPIWithNoFile(parameters);
+		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST);
+		CommercialMedicationDecodedResponse database = soapPort.callAPI(parameters);
 		assertUpdateData(database);
 		commercialMedicationAtcPort.saveAll(database.getAtcDetailList());
 
-		parameters = new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null, false);
-		database = soapPort.callAPIWithNoFile(parameters);
+		parameters = new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null);
+		database = soapPort.callAPI(parameters);
 		assertUpdateData(database);
 		commercialMedicationActionPort.saveAll(database.getCommercialMedicationCompleteDatabase().getActionList());
 		commercialMedicationControlPort.saveAll(database.getCommercialMedicationCompleteDatabase().getPublicSanityInternCodeList());
