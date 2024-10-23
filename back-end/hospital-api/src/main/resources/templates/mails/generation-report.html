@@ -2,7 +2,8 @@
 <html lang="en">
 <body>
 <p>Estimado/a,</p>
-<p>El reporte solicitado, <span th:if="${args.reportType}" th:text="${args.reportType}"></span>, el día <span th:if="${args.createdOn}" th:text="${#temporals.format(args.createdOn, 'dd/MM/yyyy')}"></span> a las <span th:if="${args.createdOn}" th:text="${#temporals.format(args.createdOn, 'HH:mm')}"></span>hs., está listo para su descarga.</p>
+<p>El reporte solicitado, <strong th:if="${args.reportType}" th:text="${args.reportType}"></strong>, el día <strong th:if="${args.createdOn}" th:text="${#temporals.format(args.createdOn, 'dd/MM/yyyy')}"></strong> a las <strong th:if="${args.createdOn}" th:text="${#temporals.format(args.createdOn, 'HH:mm')}"></strong><strong>hs</strong>, está listo para su descarga.</p>
 <p>Saludos cordiales.</p>
 </body>
+<footer th:replace="fragments/footer :: footer"></footer>
 </html>
