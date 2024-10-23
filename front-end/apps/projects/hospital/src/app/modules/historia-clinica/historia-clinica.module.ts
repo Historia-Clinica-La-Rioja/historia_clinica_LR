@@ -55,6 +55,7 @@ import { InterveningProfessionalsComponent } from './components/intervening-prof
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
 import { IsolationAlertFormComponent } from './components/isolation-alert-form/isolation-alert-form.component';
 import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
+import { IsolationAlertSummaryComponent } from './components/isolation-alert-summary/isolation-alert-summary.component';
 import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
@@ -254,6 +255,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		IntrasurgicalAnestheticProceduresSummaryComponent,
 		IsolationAlertSectionComponent,
 		IsolationAlertFormComponent, 
+		IsolationAlertSummaryComponent,
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
 		MeasuringPointSummaryComponent,

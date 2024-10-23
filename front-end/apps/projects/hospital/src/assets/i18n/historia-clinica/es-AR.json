@@ -4,7 +4,8 @@
 			"SELECT": "Seleccione",
 			"CRITICALITY": "Criticidad",
 			"OBSERVATIONS": "Observaciones",
-			"ENTER_OBSERVATIONS": "Ingrese observaciones"
+			"ENTER_OBSERVATIONS": "Ingrese observaciones",
+			"TYPE": "Tipo"
 		},
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
@@ -59,15 +60,15 @@
 			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 		},
 		"include-previous-data-question": {
-			"TITLE":"Aviso",
+			"TITLE": "Aviso",
 			"DESCRIPTION": "Últimos {{dataName}} cargados previamente el {{date}}",
 			"QUESTION": "¿Desea incluirlos en la consulta?",
 			"ADD": "Si, incluirlos",
 			"DISCARD": "No, descartarlos",
 			"ERROR": "Respuesta requerida",
 			"violence-situations": {
-                "DESCRIPTION": "Se incluyó el problema{{problem}}, se recomienda incluir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
-                "QUESTION": "¿Desea incluir una solicitud de referencia en la consulta?",
+				"DESCRIPTION": "Se incluyó el problema{{problem}}, se recomienda incluir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
+				"QUESTION": "¿Desea incluir una solicitud de referencia en la consulta?",
 				"ADD": "Si, incluir",
 				"DISCARD": "No, descartar"
 			}
@@ -114,7 +115,7 @@
 			"IS_A_REPLACEMENT": "Es un reemplazo",
 			"PLACEHOLDER": "Seleccione una unidad jerárquica"
 		},
-		"audit-access":{
+		"audit-access": {
 			"TITLE": "Alerta de acceso",
 			"RESUME": "Esta historia clínica es confidencial y tiene restricciones de acceso. Para verla, indicar motivo de consulta.",
 			"MOTIVE": "Motivo de ingreso",
@@ -123,7 +124,7 @@
 			"GO_TO_PATIENT": "Ver historia clinica"
 		},
 		"evolution-charts": {
-			"SHOW_EVOLUTION_CHART_BUTTON":" ver graficos de evoluciones"
+			"SHOW_EVOLUTION_CHART_BUTTON": " ver graficos de evoluciones"
 		},
 		"evolution-charts-popup": {
 			"TITLE": "Información antropométrica | Gráficos de evolución {{gender}}",
@@ -197,7 +198,8 @@
 			"ASSOCIATED_DIAGNOSIS": "Diagnóstico asociado",
 			"ISOLATION_TYPE": "Tipo de aislamiento",
 			"CONFIRM_BUTTON": "Confirmar alerta",
-			"END_OF_ALERT": "Fin de alerta"
+			"END_OF_ALERT": "Fin de alerta",
+			"REGISTERED_ISOLATION_ALERTS": "Alertas de aislamiento registradas"
 		}
 	}
 }

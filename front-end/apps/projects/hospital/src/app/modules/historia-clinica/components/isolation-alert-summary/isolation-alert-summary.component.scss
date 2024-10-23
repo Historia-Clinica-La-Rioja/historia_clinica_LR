@@ -1,0 +1,15 @@
+.display-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subtitle {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.text-overflow {
+    word-break: break-word;
+	white-space: pre-line;
+}

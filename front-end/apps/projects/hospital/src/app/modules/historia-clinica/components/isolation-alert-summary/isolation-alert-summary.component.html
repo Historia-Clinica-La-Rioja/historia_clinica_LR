@@ -1,0 +1,7 @@
+<div class="display-column text-overflow">
+    <span class="subtitle">{{ 'historia-clinica.general.TYPE' | translate }}: {{ typesDisplay | stringSeparator}}</span>
+    <span>{{ 'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS' | translate }}: {{ _isolationAlert.diagnosis.snomed.pt}}</span>
+    <span>{{ 'historia-clinica.general.CRITICALITY' | translate }}: {{_isolationAlert.criticality.description}}</span>
+    <span>{{ 'historia-clinica.isolation-alert.END_OF_ALERT' | translate }}: {{_isolationAlert.endDate | dateFormat: 'date'}}</span>
+    <span *ngIf="_isolationAlert.observations">{{'historia-clinica.general.OBSERVATIONS' | translate }}: {{ _isolationAlert.observations }}</span>
+</div>

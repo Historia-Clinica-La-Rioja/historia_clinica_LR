@@ -1,8 +1,21 @@
 <app-new-consultation-expansion-section id="isolation-alert"
-    title="{{'historia-clinica.isolation-alert.ISOLATION_ALERT' | translate }}" icon="warning_amber" [isEmpty]="true">
-    <div>
-        <button mat-button id="add-isolation-alert-button" color="primary" (click)="addIsolationAlert()">
-            + {{ "historia-clinica.isolation-alert.ADD_ISOLATION_ALERT" | translate }}
-        </button>
+    title="{{'historia-clinica.isolation-alert.ISOLATION_ALERT' | translate }}" icon="warning_amber"
+    [isEmpty]="!form.value.isolationAlerts?.length">
+    <div class="display-column">
+        <ng-container *ngIf="form.value.isolationAlerts.length">
+            <app-titled-content-card *ngIf="form.value.isolationAlerts as isolationAlerts"
+                title="historia-clinica.isolation-alert.REGISTERED_ISOLATION_ALERTS">
+                <div *ngFor="let isolationAlert of isolationAlerts; index as index; last as isLast">
+                    <app-isolation-alert-summary [isolationAlert]="isolationAlert"></app-isolation-alert-summary>
+                    <mat-divider class="separation" *ngIf="!isLast"></mat-divider>
+                </div>
+            </app-titled-content-card>
+        </ng-container>
+
+        <div>
+            <button mat-button id="add-isolation-alert-button" color="primary" (click)="addIsolationAlert()">
+                + {{ "historia-clinica.isolation-alert.ADD_ISOLATION_ALERT" | translate }}
+            </button>
+        </div>
     </div>
 </app-new-consultation-expansion-section>
