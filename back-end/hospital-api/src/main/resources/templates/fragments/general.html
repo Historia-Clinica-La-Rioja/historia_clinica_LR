@@ -697,7 +697,7 @@
 
     <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories.content) || familyHistories.isReferred != null}">
         <p class="section-title">Antecedentes familiares</p>
-        <div th:if="${personalHistories.isReferred != null && familyHistories.isReferred == false}">
+        <div th:if="${familyHistories.isReferred != null && familyHistories.isReferred == false}">
             <p class="section-data">No refiere</p>
         </div>
         <div th:if="${(familyHistories.isReferred == null && not #lists.isEmpty(familyHistories.content)) || familyHistories.isReferred == true}">
