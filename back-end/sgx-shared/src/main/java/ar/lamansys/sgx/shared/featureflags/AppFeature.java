@@ -258,7 +258,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_MODULO_CAMAS,
 
 	@Label("Indica si se encuentra habilitada la lista de estudios a realizar en guardia e internación")
-	HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO
+	HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la creación de alertas de aislamiento para pacientes colonizados")
+	HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO
 	;
 
 	public boolean isActive() {
