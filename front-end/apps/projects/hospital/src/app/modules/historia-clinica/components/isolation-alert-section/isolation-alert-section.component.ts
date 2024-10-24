@@ -59,6 +59,12 @@ export class IsolationAlertSectionComponent extends AbstractCustomForm implement
 		});
 	}
 
+	removeIsolationAlert(indexToRemove: number) {
+		const isolationAlertsAdded = this.form.value.isolationAlerts;
+		isolationAlertsAdded.splice(indexToRemove, 1);
+		this.form.controls.isolationAlerts.setValue(isolationAlertsAdded);
+	}
+
 }
 
 interface IsolationAlertForm {
