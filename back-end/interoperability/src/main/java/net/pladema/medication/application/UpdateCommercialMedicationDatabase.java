@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.javacrumbs.shedlock.core.SchedulerLock;
 import net.pladema.medication.application.port.CommercialMedicationUpdateFilePort;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
 
 import java.io.IOException;
@@ -25,7 +26,8 @@ public class UpdateCommercialMedicationDatabase {
 
 	private final UpdateCommercialMedicationSchema updateCommercialMedicationSchema;
 
-	@PostConstruct
+	@Scheduled(cron = "${scheduledjobs.commercial-medication-database.cron}")
+	@SchedulerLock(name = "CommercialMedicationDatabaseJob")
 	public void run() throws JAXBException, IOException {
 		log.warn("Scheduled CommercialMedicationDatabaseJob starting at {}", new Date());
 		boolean schemaAlreadyInitialized = commercialMedicationUpdateFilePort.schemaAlreadyInitialized();

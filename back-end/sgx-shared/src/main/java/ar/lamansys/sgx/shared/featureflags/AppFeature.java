@@ -264,7 +264,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO,
 
 	@Label("Indica si se encuentra habilitada la creación de sobreturnos mediante API pública (booking)")
-	HABILITAR_SOBRETURNOS_API_PUBLICA
+	HABILITAR_SOBRETURNOS_API_PUBLICA,
+	
+	@Label("Indica si se encuentra habilitada la actualizacion del esquema de medicacion comercial")
+	HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS
 	;
 
 	public boolean isActive() {

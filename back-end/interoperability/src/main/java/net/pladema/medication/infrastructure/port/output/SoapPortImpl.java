@@ -38,10 +38,10 @@ import java.util.zip.ZipInputStream;
 @Service
 public class SoapPortImpl implements SoapPort {
 
-	@Value("${commercial_medication.api.id}")
+	@Value("${commercial-medication.api.id}")
 	private Long ID;
 
-	@Value("${commercial_medication.api.password}")
+	@Value("${commercial-medication.api.password}")
 	private String PASSWORD;
 
 	private final SoapRestTemplate restTemplate;
