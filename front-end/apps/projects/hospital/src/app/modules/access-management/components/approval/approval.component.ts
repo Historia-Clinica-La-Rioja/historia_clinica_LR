@@ -24,6 +24,7 @@ export class ApprovalComponent implements OnInit {
 	}
 	hasGestorRole = false;
 	hasGestorInstitucionalRole = false;
+	hideReason = false;
 
 	@Input() referenceCompleteDataDto: ReferenceCompleteDataDto;
 	@Input() set approval(value: ReferenceRegulationDto) {
@@ -65,5 +66,12 @@ export class ApprovalComponent implements OnInit {
 						this.regulationState = getIconState[result.regulation.state];
 					});
 		}
+	}
+
+	onEditingState(editing: boolean){
+		if (editing) 
+			this.hideReason = true;
+		else 
+			this.hideReason = false;
 	}
 }

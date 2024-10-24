@@ -33,6 +33,7 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	@Input() reportCompleteData: ReferenceCompleteDataDto;
 	@Input() hasGestorInstitucionalRole: boolean;
 	@Output() newState = new EventEmitter<boolean>();
+	@Output() editing = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
@@ -63,6 +64,8 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	setSelectedOption(option: EReferenceRegulationState) {
 		this.selectedOption = option;
 		this.setValuesInOptions[option]();
+		if (this.selectedOption !== this.initialOption)
+			this.editing.next(true);
 	}
 
 	private setValuesInOptions = {
@@ -94,12 +97,14 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 		}
 		else
 			this.updateStateAndEmit(this.selectedOptionId);
+
+		this.editing.next(false);
 	}
 
 	cancel() {
-		this.selectedOption = this.waitingApproval;
-		this.selectedOptionId = ReferenceApprovalState.WAITING_APPROVAL;
+		this.selectedOption = this.initialOption;
 		this.showReasonArea = false;
+		this.editing.next(false);
 	}
 
 	private updateStateAndEmit(stateId: number) {
@@ -112,6 +117,7 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 		
 		updateState$.subscribe(_ => this.newState.next(true));
 		this.initialOption = this.selectedOption;
+		this.reason.controls.reason.setValue(null);
 	}
 
 	private toReasonData(titleKey: string, subtitleKey: string, placeholderKey: string): ReasonData {
