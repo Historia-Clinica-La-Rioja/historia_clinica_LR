@@ -1998,7 +1998,7 @@
 			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=d.id and s_vs.id=677) as cardiovascularRisk,
 			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=d.id and s_vs.id=675) as bloodSugar,
 			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures proc ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
-			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.other_note_id=ev.id) AS evolution
+			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.source_id=ev.id) AS evolution
 			FROM nursing_consultation oc
 			LEFT JOIN institution ins ON oc.institution_id=ins.id
 			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
