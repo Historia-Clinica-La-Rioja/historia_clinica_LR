@@ -153,6 +153,10 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		this.dialogRef.close();
 	}
 
+	newRegulationState(newState: EReferenceRegulationState) {
+		this.referenceCompleteData.regulation.state = newState;
+	}
+
 	private updateDerivation() {
 		this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId).subscribe(
 			referenceDetails => this.setDerivation(referenceDetails)

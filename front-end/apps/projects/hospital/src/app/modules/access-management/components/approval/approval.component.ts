@@ -1,5 +1,5 @@
 import { getIconState } from '@access-management/constants/approval';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { AccountService } from '@api-rest/services/account.service';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
@@ -32,6 +32,7 @@ export class ApprovalComponent implements OnInit {
 		this.regulationState = getIconState[value.state];
 	};
 	@Input() canEditApprovalState: boolean;
+	@Output() regulationStateEmmiter: EventEmitter<EReferenceRegulationState> = new EventEmitter<EReferenceRegulationState>();
 
 	constructor(
 		private readonly accountService: AccountService,
@@ -58,12 +59,14 @@ export class ApprovalComponent implements OnInit {
 					(result) => {
 						this.referenceRegulationDto = result.regulation;
 						this.regulationState = getIconState[result.regulation.state];
+						this.regulationStateEmmiter.next(result.regulation.state);
 					});
 			else 
 				this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteDataDto.reference.id).subscribe(
 					(result) => {
 						this.referenceRegulationDto = result.regulation;
 						this.regulationState = getIconState[result.regulation.state];
+						this.regulationStateEmmiter.next(result.regulation.state);
 					});
 		}
 	}
