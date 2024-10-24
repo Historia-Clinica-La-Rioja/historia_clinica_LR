@@ -97,7 +97,7 @@ public class GeneralReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 20, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 21, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
@@ -186,17 +186,18 @@ public class GeneralReportsExcelService {
 		excelUtilsService.setCellValue(row, 8, style, content.getRelatedDiagnosis());
 		excelUtilsService.setCellValue(row, 9, style, content.getIsChronic());
 		excelUtilsService.setCellValue(row, 10, style, content.getEvent());
-		excelUtilsService.setCellValue(row, 11, style, content.getMedicine());
-		excelUtilsService.setCellValue(row, 12, style, content.getDuration());
-		excelUtilsService.setCellValue(row, 13, style, content.getFrequency());
-		excelUtilsService.setCellValue(row, 14, style, dateTools.newReformatDate(content.getStartDate(), "dd-MM-yyyy HH:mm"));
-		excelUtilsService.setCellValue(row, 15, style, dateTools.newReformatDate(content.getEndDate(), "dd-MM-yyyy HH:mm"));
-		excelUtilsService.setCellValue(row, 16, style, dateTools.newReformatDate(content.getSuspensionStartDate(), "dd-MM-yyyy"));
-		excelUtilsService.setCellValue(row, 17, style, dateTools.newReformatDate(content.getSuspensionEndDate(), "dd-MM-yyyy"));
-		excelUtilsService.setCellValue(row, 18, style, content.getDosage());
-		excelUtilsService.setCellValue(row, 19, style, content.getDosePerDay());
-		excelUtilsService.setCellValue(row, 20, style, content.getDosePerUnit());
-		excelUtilsService.setCellValue(row, 21, style, content.getObservations());
-		excelUtilsService.setCellValue(row, 22, style, content.getPrescriptionStatus());
+		excelUtilsService.setCellValue(row, 11, style, content.getPrescription());
+		excelUtilsService.setCellValue(row, 12, style, content.getMedicine());
+		excelUtilsService.setCellValue(row, 13, style, content.getDuration());
+		excelUtilsService.setCellValue(row, 14, style, content.getFrequency());
+		excelUtilsService.setCellValue(row, 15, style, dateTools.newReformatDate(content.getStartDate(), "dd-MM-yyyy HH:mm"));
+		excelUtilsService.setCellValue(row, 16, style, dateTools.newReformatDate(content.getEndDate(), "dd-MM-yyyy HH:mm"));
+		excelUtilsService.setCellValue(row, 17, style, dateTools.newReformatDate(content.getSuspensionStartDate(), "dd-MM-yyyy"));
+		excelUtilsService.setCellValue(row, 18, style, dateTools.newReformatDate(content.getSuspensionEndDate(), "dd-MM-yyyy"));
+		excelUtilsService.setCellValue(row, 19, style, content.getDosage());
+		excelUtilsService.setCellValue(row, 20, style, content.getDosePerDay());
+		excelUtilsService.setCellValue(row, 21, style, content.getDosePerUnit());
+		excelUtilsService.setCellValue(row, 22, style, content.getObservations());
+		excelUtilsService.setCellValue(row, 23, style, content.getPrescriptionStatus());
 	}
 }
