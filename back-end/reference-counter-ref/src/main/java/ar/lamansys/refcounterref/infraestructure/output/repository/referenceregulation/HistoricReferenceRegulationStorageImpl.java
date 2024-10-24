@@ -6,7 +6,7 @@ import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRuleDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRulePort;
 
@@ -27,13 +27,15 @@ import java.util.Optional;
 @Service
 public class HistoricReferenceRegulationStorageImpl implements HistoricReferenceRegulationStorage {
 
+	private final static Integer NONE_USER = -1;
+
 	private final HistoricReferenceRegulationRepository historicReferenceRegulationRepository;
 
 	private final ReferenceRepository referenceRepository;
 
 	private final SharedRulePort sharedRulePort;
 
-	private final SharedStaffPort sharedStaffPort;
+	private final SharedPersonPort sharedPersonPort;
 
 	@Override
 	public Short saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference) {
@@ -129,7 +131,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		result.setState(EReferenceRegulationState.getById(entity.getStateId()));
 		result.setReason(entity.getReason());
 		result.setCreatedOn(entity.getCreatedOn());
-		result.setProfessionalName(entity.getRuleId() != null ? sharedStaffPort.getProfessionalCompleteNameByUserId(entity.getCreatedBy()).orElse(null) : null);
+		result.setProfessionalName(!entity.getCreatedBy().equals(NONE_USER) ? sharedPersonPort.getCompletePersonNameByUserId(entity.getCreatedBy()) : null);
 		return result;
 	}
 
