@@ -167,6 +167,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 import { AddStudyComponent } from './dialogs/add-study/add-study.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
+import { EmergencyCareDiagnosesComponent } from './components/emergency-care-diagnoses/emergency-care-diagnoses.component';
 
 @NgModule({
 	declarations: [
@@ -352,6 +353,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		ShowSpaceDetailTitlePipe,
 		ShowTitleByPatientDataPipe,
     	AddStudyComponent,
+     EmergencyCareDiagnosesComponent,
 	],
 	imports: [
 		CommonModule,

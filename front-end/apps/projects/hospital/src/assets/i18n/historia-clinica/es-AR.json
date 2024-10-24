@@ -199,7 +199,8 @@
 			"ISOLATION_TYPE": "Tipo de aislamiento",
 			"CONFIRM_BUTTON": "Confirmar alerta",
 			"END_OF_ALERT": "Fin de alerta",
-			"REGISTERED_ISOLATION_ALERTS": "Alertas de aislamiento registradas"
+			"REGISTERED_ISOLATION_ALERTS": "Alertas de aislamiento registradas",
+			"DIAGNOSIS_ASSOCIATED_TO_ISOLATION_ALERT": "Existen diagnósticos asociados a alertas de aislamiento."
 		}
 	}
 }

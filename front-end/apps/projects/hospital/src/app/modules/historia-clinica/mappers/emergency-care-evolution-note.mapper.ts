@@ -4,6 +4,7 @@ import { dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
 import { dateISOParseDate } from "@core/utils/moment.utils";
+import { EmergencyCareDiagnosis, EmergencyCareMainDiagnosis } from "@historia-clinica/components/emergency-care-diagnoses/emergency-care-diagnoses.component";
 import { IsolationAlert } from "@historia-clinica/components/isolation-alert-form/isolation-alert-form.component";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { AntecedenteFamiliar } from "@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service";
@@ -36,7 +37,7 @@ export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHist
 	const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
 	const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
 	const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
-	const isolationAlerts = toIsolationAlertsDto(value.isolationAlerts);
+	const isolationAlerts = value.isolationAlerts?.isolationAlerts ? toIsolationAlertsDto(value.isolationAlerts?.isolationAlerts) : [];
 	return {
 		clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
 		reasons: value.reasons?.motivo || [],
@@ -171,9 +172,11 @@ export const toAnthropometricDataValues = (antropometricData: OutpatientAnthropo
 }
 
 export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
+	const mainDiagnosis: EmergencyCareMainDiagnosis = diagnosisFormValue.mainDiagnostico;
+	const others: EmergencyCareDiagnosis[] = diagnosisFormValue.otrosDiagnosticos;
 	return {
-		diagnosis: diagnosisFormValue?.otrosDiagnosticos?.filter(d => d.isAdded) || [],
-		mainDiagnosis: diagnosisFormValue?.mainDiagnostico
+		diagnosis: others?.filter(otherDiagnosis => otherDiagnosis.diagnosis.isAdded).map(otherDiagnosis => otherDiagnosis.diagnosis) || [],
+		mainDiagnosis: mainDiagnosis.main
 	}
 }
 
@@ -189,5 +192,6 @@ const toIsolationAlert = (isolationAlert: IsolationAlert): IsolationAlertDto => 
 	}
 }
 
-export const toIsolationAlertsDto = (isolationAlerts: IsolationAlert[]): IsolationAlertDto[] => 
-	isolationAlerts.map(isolationAlert => toIsolationAlert(isolationAlert));
+export const toIsolationAlertsDto = (isolationAlerts: IsolationAlert[]): IsolationAlertDto[] => {
+	return isolationAlerts.map(isolationAlert => toIsolationAlert(isolationAlert));
+}

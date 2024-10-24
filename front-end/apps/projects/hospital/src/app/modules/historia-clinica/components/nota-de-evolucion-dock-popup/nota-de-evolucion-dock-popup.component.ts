@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EmergencyCareEvolutionNoteDto, HealthConditionDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
@@ -12,6 +12,9 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { buildEmergencyCareEvolutionNoteDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
 import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
 import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diagnoses.service';
+import { IsolationAlertDiagnosesService } from '@historia-clinica/services/isolation-alert-diagnoses.service';
+import { IsolationAlert } from '../isolation-alert-form/isolation-alert-form.component';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -20,7 +23,7 @@ import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diag
 	providers: [EvolutionNoteEditionService]
 })
 
-export class NotaDeEvolucionDockPopupComponent implements OnInit {
+export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 
 	disableConfirmButton = false;
 	readonly header: DockPopUpHeader = {
@@ -47,6 +50,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	disabled = true;
 	markAsTouched = false;
 
+	formsSubscription: Subscription[] = [];
+
 	constructor(
 		public dockPopupRef: DockPopupRef,
 		private formBuilder: FormBuilder,
@@ -59,9 +64,13 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		private readonly newRiskFactorsService: NewRiskFactorsService,
 		private readonly evolutionNoteEditionService: EvolutionNoteEditionService,
 		private readonly episodeDiagnosesService: EpisodeDiagnosesService,
+		private readonly isolationAlertDiagnosesService: IsolationAlertDiagnosesService
 	) { }
 
 	ngOnInit(): void {
+		this.subscribeToDiagnosesForm();
+		this.subscribeIsolationAlertsForm();
+
 		if (this.data.editMode) {
 			this.setEvolutionNoteDataToEdit();
 			return;
@@ -75,8 +84,12 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 					this.setDiagnosis(mainDiagnosis, otherDiagnoses);
 				}
 			});
+	}
 
-		this.subscribeToDiagnosesForm();
+	ngOnDestroy(): void {
+		if (this.formsSubscription.length) {
+			this.formsSubscription.forEach(subscription => subscription.unsubscribe());
+		}
 	}
 
 	ngAfterViewInit() {
@@ -122,7 +135,9 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 
 	private setDiagnosis(mainDiagnosis: HealthConditionDto, otherDiagnoses: DiagnosisDto[]) {
 		mainDiagnosis.isAdded = !!mainDiagnosis;
-		this.form.controls.diagnosis.setValue({ mainDiagnostico: mainDiagnosis, otrosDiagnosticos: otherDiagnoses });
+		const othersDiagnosis = otherDiagnoses.map(otherDiagnosis => { return { diagnosis: otherDiagnosis } });
+		const main = { main: mainDiagnosis };
+		this.form.controls.diagnosis.setValue({ mainDiagnostico: main, otrosDiagnosticos: othersDiagnosis });
 	}
 
 	private setEvolutionNoteDataToEdit() {
@@ -132,10 +147,22 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	}
 
 	private subscribeToDiagnosesForm() {
-		this.form.controls.diagnosis.valueChanges.subscribe(diagnosis => {
+		const subscription = this.form.controls.diagnosis.valueChanges.subscribe(diagnosis => {
 			const { mainDiagnostico, otrosDiagnosticos } = diagnosis;
-			this.episodeDiagnosesService.setEpisodeDiagnoses({ main: mainDiagnostico, others: otrosDiagnosticos.filter(diagnoses => diagnoses.isAdded) });
+			this.episodeDiagnosesService.setEpisodeDiagnoses({ 
+				main: mainDiagnostico.main, 
+				others: otrosDiagnosticos.filter(otherDiagnosis => otherDiagnosis.diagnosis.isAdded).map(otherDiagnosis => otherDiagnosis.diagnosis) });
 		});
+
+		this.formsSubscription.push(subscription);
+	}
+
+	private subscribeIsolationAlertsForm() {
+		const subscription =  this.form.controls.isolationAlerts.valueChanges.subscribe((isolationAlerts: { isolationAlerts: IsolationAlert[] }) => {
+			this.isolationAlertDiagnosesService.setIsolationAlertDiagnosis(isolationAlerts.isolationAlerts.map(isolationAlert => isolationAlert.diagnosis))
+		});
+
+		this.formsSubscription.push(subscription);
 	}
 }
 
