@@ -26,6 +26,7 @@ public class MedicinesPrescriptionConsultationDetail {
 	private String relatedDiagnosis;
 	private String isChronic;
 	private String event;
+	private String prescription;
 	private String duration;
 	private String frequency;
 	private String startDate;

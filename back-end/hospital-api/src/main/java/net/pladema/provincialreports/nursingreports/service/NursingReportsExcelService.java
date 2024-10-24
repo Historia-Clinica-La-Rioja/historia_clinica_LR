@@ -56,7 +56,7 @@ public class NursingReportsExcelService {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.createHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
-		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 29, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 27, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
@@ -165,7 +165,6 @@ public class NursingReportsExcelService {
 	}
 
 	public void fillNursingOutpatientRow(IRow row, NursingOutpatientConsultationDetail content, ICellStyle style) {
-		// no glycosilated hemoglobin, blood sugar, cardiovascular risk
 		excelUtilsService.setCellValue(row, 0, style, content.getPatientProvider());
 		excelUtilsService.setCellValue(row, 1, style, content.getProviderDni());
 		excelUtilsService.setCellValue(row, 2, style, dateTools.newReformatDate(content.getAttentionDate(), "dd-MM-yyyy"));
@@ -188,14 +187,14 @@ public class NursingReportsExcelService {
 		excelUtilsService.setCellValue(row, 19, style, content.getSystolicPressure());
 		excelUtilsService.setCellValue(row, 20, style, content.getDiastolicPressure());
 		excelUtilsService.setCellValue(row, 21, style, content.getMeanArterialPressure());
-		excelUtilsService.setCellValue(row, 22, style, content.getHeight());
-		excelUtilsService.setCellValue(row, 23, style, content.getWeight());
-		excelUtilsService.setCellValue(row, 24, style, content.getBmi());
-		excelUtilsService.setCellValue(row, 24, style, content.getGlycosylatedHemoglobin());
-		excelUtilsService.setCellValue(row, 25, style, content.getCardiovascularRisk());
-		excelUtilsService.setCellValue(row, 26, style, content.getBloodSugar());
-		excelUtilsService.setCellValue(row, 27, style, content.getProcedures());
-		excelUtilsService.setCellValue(row, 28, style, content.getEvolution());
+		excelUtilsService.setCellValue(row, 22, style, content.getBloodSugar());
+		excelUtilsService.setCellValue(row, 23, style, content.getGlycosylatedHemoglobin());
+		excelUtilsService.setCellValue(row, 24, style, content.getCardiovascularRisk());
+		excelUtilsService.setCellValue(row, 25, style, content.getHeight());
+		excelUtilsService.setCellValue(row, 26, style, content.getWeight());
+		excelUtilsService.setCellValue(row, 27, style, content.getBmi());
+		excelUtilsService.setCellValue(row, 28, style, content.getProcedures());
+		excelUtilsService.setCellValue(row, 29, style, content.getEvolution());
 	}
 
 	public void fillNursingHospitalizationRow(IRow row, NursingHospitalizationConsultationDetail content, ICellStyle style) {
