@@ -85,11 +85,6 @@ public class CommercialMedicationArticlePortImpl implements CommercialMedication
 	}
 
 	@Override
-	public void reEnableAll(List<DatabaseUpdate> databaseUpdates) {
-		commercialMedicationArticleRepository.reEnableAll(databaseUpdates.stream().map(DatabaseUpdate::getArticleId).collect(Collectors.toList()));
-	}
-
-	@Override
 	public void updatePrices(List<DatabaseUpdate> databaseUpdates) {
 		List<Integer> articleIds = databaseUpdates.stream().map(DatabaseUpdate::getArticleId).collect(Collectors.toList());
 		List<CommercialMedicationArticle> articles = commercialMedicationArticleRepository.findAllById(articleIds);

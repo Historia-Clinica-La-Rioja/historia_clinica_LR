@@ -91,10 +91,8 @@ public class UpdateCommercialMedicationSchema {
 				commercialMedicationArticlePort.saveAllNewArticlesFromUpdate(updates);
 				break;
 			case EDITED_ARTICLE_OPERATION_CODE:
-				commercialMedicationArticlePort.editArticles(updates);
-				break;
 			case RE_ENABLED_ARTICLE_OPERATION_CODE:
-				commercialMedicationArticlePort.reEnableAll(updates);
+				commercialMedicationArticlePort.editArticles(updates);
 				break;
 			case PRICE_UPDATE_OPERATION_CODE:
 				commercialMedicationArticlePort.updatePrices(updates);

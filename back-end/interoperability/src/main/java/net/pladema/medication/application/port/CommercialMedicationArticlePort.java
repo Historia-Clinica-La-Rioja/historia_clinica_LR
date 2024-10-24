@@ -13,8 +13,6 @@ public interface CommercialMedicationArticlePort {
 
 	void editArticles(List<DatabaseUpdate> databaseUpdates);
 
-	void reEnableAll(List<DatabaseUpdate> databaseUpdates);
-
 	void updatePrices(List<DatabaseUpdate> databaseUpdates);
 
 	void deleteAll(List<DatabaseUpdate> databaseUpdates);
