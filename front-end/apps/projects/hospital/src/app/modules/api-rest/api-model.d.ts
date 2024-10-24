@@ -5308,7 +5308,7 @@ export interface StudyOrderWorkListDto {
     patientDto: StudyOrderBasicPatientDto;
     patientLocation: StudyOrderPatientLocationDto;
     requiresTransfer: boolean;
-    snomed: SnomedDto;
+    snomed: SnomedDto[];
     sourceTypeId: ESourceType;
     status: EDiagnosticReportStatus;
     studyId: number;

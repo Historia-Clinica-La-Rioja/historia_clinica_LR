@@ -18,8 +18,9 @@ import net.pladema.vademecum.domain.SnomedBo;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+ import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -43,10 +44,16 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 		Short emergencyCareState = EEmergencyCareState.ATENCION.getId();
 		Short internmentEpisodeState = 1;
 
-		List<StudyOrderWorkListBo> result = studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState)
+		var rawGroupedResults = studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState)
 				.stream()
-				.map(this::createStudyOrderWorkListBo)
-				.collect(Collectors.toList());
+				.collect(Collectors.groupingBy(x->(Integer)x[0]));
+
+		var result = rawGroupedResults.values().stream().map(groupedValues -> {
+			var studyOrderWorkListBo = createStudyOrderWorkListBo(groupedValues.get(0));
+			var snomedList = groupedValues.stream().map(StudyWorkListServiceImpl::mapSnomed).collect(Collectors.toList());
+			studyOrderWorkListBo.setSnomed(snomedList);
+			return studyOrderWorkListBo;
+		}).collect(Collectors.toList());
 
 		log.debug("Output -> {}", result);
 
@@ -78,7 +85,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 		return new StudyOrderWorkListBo(
 				(Integer) row[0],
 				patientBo,
-				new SnomedBo((String) row[12], (String) row[13]),
+				new ArrayList<>(),
 				row[14] instanceof Short ? (Short) row[14] : null,
 				row[15] instanceof Boolean ? (Boolean) row[15] : null,
 				row[16] instanceof Short ? (Short) row[16] : null,
@@ -87,5 +94,9 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				row[18] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[18]).toLocalDateTime() : null,
 				locationBo
 		);
+	}
+
+	private static SnomedBo mapSnomed(Object[] row) {
+		return new SnomedBo((String) row[12], (String) row[13]);
 	}
 }

@@ -15,6 +15,8 @@ import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyTyp
 
 import javax.annotation.Nullable;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class StudyOrderWorkListDto {
 
 	private StudyOrderBasicPatientDto patientDto;
 
-	private SnomedDto snomed;
+	private List<SnomedDto> snomed;
 
 	private EStudyType studyTypeId;
 

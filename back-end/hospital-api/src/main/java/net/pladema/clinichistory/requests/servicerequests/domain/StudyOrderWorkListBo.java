@@ -9,6 +9,7 @@ import net.pladema.vademecum.domain.SnomedBo;
 import javax.annotation.Nullable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -20,7 +21,7 @@ public class StudyOrderWorkListBo {
 
 	private StudyOrderBasicPatientBo patientBo;
 
-	private SnomedBo snomed;
+	private List<SnomedBo> snomed;
 
 	private Short studyTypeId;
 
