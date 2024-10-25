@@ -36,4 +36,16 @@ public class CommercialMedicationRequestParameter {
 		return result + "</parametros>";
 	}
 
+	public static CommercialMedicationRequestParameter createUpdateRequest(Long logId) {
+		return new CommercialMedicationRequestParameter(logId, null, null, null);
+	}
+
+	public static CommercialMedicationRequestParameter createAtcRequest() {
+		return new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST);
+	}
+
+	public static CommercialMedicationRequestParameter createCompleteDatabaseRequest() {
+		return new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null);
+	}
+
 }

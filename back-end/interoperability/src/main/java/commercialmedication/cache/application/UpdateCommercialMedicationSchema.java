@@ -59,7 +59,7 @@ public class UpdateCommercialMedicationSchema {
 	@Transactional
 	public void run() throws JAXBException, IOException {
 		CommercialMedicationFileUpdateBo lastEntry = commercialMedicationUpdateFilePort.getLastNonProcessedEntry();
-		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(lastEntry.getLogId(), null, null, null);
+		CommercialMedicationRequestParameter parameters = CommercialMedicationRequestParameter.createUpdateRequest(lastEntry.getLogId());
 		CommercialMedicationDecodedResponse updateData = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(updateData);
 		Long lastLogId = updateCommercialMedications(updateData.getCommercialMedicationDatabaseUpdate());

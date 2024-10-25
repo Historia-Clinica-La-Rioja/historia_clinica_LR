@@ -70,12 +70,12 @@ public class SaveCommercialMedicationDatabase {
 	@Transactional
 	public void run() throws JAXBException, IOException {
 		log.debug("Fetching commercial medication database...");
-		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST);
+		CommercialMedicationRequestParameter parameters = CommercialMedicationRequestParameter.createAtcRequest();
 		CommercialMedicationDecodedResponse database = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(database);
 		commercialMedicationAtcPort.saveAll(database.getAtcDetailList());
 
-		parameters = new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null);
+		parameters = CommercialMedicationRequestParameter.createCompleteDatabaseRequest();
 		database = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(database);
 		commercialMedicationActionPort.saveAll(database.getCommercialMedicationCompleteDatabase().getActionList());
