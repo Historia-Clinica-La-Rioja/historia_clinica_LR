@@ -36,14 +36,16 @@ export class DiagnosticosFormComponent {
 		message: "historia-clinica.isolation-alert.DIAGNOSIS_ASSOCIATED_TO_ISOLATION_ALERT",
 		showButtons: false
 	}
+	isolationAlertsDiagnoses: ClinicalTermDto[] = [];
+
 	constructor(
 		private formBuilder: FormBuilder,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly isolationAlertDiagnoses: IsolationAlertDiagnosesService,
 	) {
 		this.isolationAlertSubscription = this.isolationAlertDiagnoses.isolationAlertDiagnisis$.subscribe(isolationAlertDiagnoses => {
-			this.resetDiagnosesAssociatedToIsolationAlerts();
-			this.disableDiagnosesAssociatedToIsolationAlerts(isolationAlertDiagnoses);
+			this.isolationAlertsDiagnoses = isolationAlertDiagnoses;
+			this.calculateDiagnosesAssociatedToIsolationAlerts();
 		});
 	}
 
@@ -62,6 +64,7 @@ export class DiagnosticosFormComponent {
 			this.formDiagnosticos.setValue(obj);
 			this.componentEvaluationManagerService.mainDiagnosis = obj.mainDiagnostico.main;
 			this.componentEvaluationManagerService.diagnosis = obj.otrosDiagnosticos.diagnosis;
+			this.calculateDiagnosesAssociatedToIsolationAlerts();
 		}
 	}
 
@@ -84,6 +87,11 @@ export class DiagnosticosFormComponent {
 	ngOnDestroy(): void {
 		this.onChangeSub.unsubscribe();
 		this.isolationAlertSubscription && this.isolationAlertSubscription.unsubscribe();
+	}
+
+	private calculateDiagnosesAssociatedToIsolationAlerts() {
+		this.resetDiagnosesAssociatedToIsolationAlerts();
+		this.disableDiagnosesAssociatedToIsolationAlerts(this.isolationAlertsDiagnoses);
 	}
 
 	private resetDiagnosesAssociatedToIsolationAlerts() {

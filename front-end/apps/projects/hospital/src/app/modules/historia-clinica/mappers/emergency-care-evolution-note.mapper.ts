@@ -1,6 +1,6 @@
 import { FormGroup } from "@angular/forms";
-import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EffectiveClinicalObservationDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, IsolationAlertDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
-import { dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
+import { ClinicalTermDto, DiagnosisDto, EEmergencyCareEvolutionNoteType, EffectiveClinicalObservationDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, IsolationAlertDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
+import { dateDtoToDate, dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
 import { dateISOParseDate } from "@core/utils/moment.utils";
@@ -30,14 +30,14 @@ export const toOutpatientRiskFactorDto = (riskFactors: OutpatientRiskFactorDto):
 }
 
 
-export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHistoriesNoRefer: boolean, isAllergyNoRefer: boolean, patientId: number , evolutionNoteType: EEmergencyCareEvolutionNoteType): EmergencyCareEvolutionNoteDto =>{
+export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHistoriesNoRefer: boolean, isAllergyNoRefer: boolean, patientId: number, evolutionNoteType: EEmergencyCareEvolutionNoteType): EmergencyCareEvolutionNoteDto => {
 	const value = form.value;
 	const allDiagnosis = toAllDiagnosis(value.diagnosis);
 	const medications = toOutpatientMedicationDto(value.medications?.data);
 	const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
 	const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
 	const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
-	const isolationAlerts = value.isolationAlerts?.isolationAlerts ? toIsolationAlertsDto(value.isolationAlerts?.isolationAlerts) : [];
+	const isolationAlerts = value.isolationAlerts?.isolationAlerts.length ? toIsolationAlertsDto(value.isolationAlerts?.isolationAlerts) : [];
 	return {
 		clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
 		reasons: value.reasons?.motivo || [],
@@ -112,6 +112,27 @@ export const toAllergies = (allergies: ReferableItemDto<OutpatientAllergyConditi
 	return allergies.content?.map(allergy => toAllergy(allergy));
 }
 
+const toClinicalTermDto = (id: number, pt: string, sctid: string): ClinicalTermDto => {
+	return {
+		id, snomed: { pt, sctid }
+	}
+}
+
+const toIsolationAlert = (isolationAlert: IsolationAlertDto): IsolationAlert => {
+	const { healthConditionId, healthConditionPt, healthConditionSctid } = isolationAlert;
+	return {
+		diagnosis: toClinicalTermDto(healthConditionId, healthConditionPt, healthConditionSctid),
+		types: isolationAlert.types,
+		criticality: isolationAlert.criticality,
+		endDate: dateDtoToDate(isolationAlert.endDate),
+		observations: isolationAlert.observations,
+	}
+}
+
+export const toIsolationAlerts = (isolationAlerts: IsolationAlertDto[]): IsolationAlert[] => {
+	return isolationAlerts.map(isolationAlert => toIsolationAlert(isolationAlert));
+}
+
 const toProcedure = (procedure: OutpatientProcedureDto): Procedimiento => {
 	return { snomed: procedure.snomed, ...(procedure.performedDate && { performedDate: dateISOParseDate(procedure.performedDate) }) }
 }
@@ -180,7 +201,7 @@ export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[],
 	}
 }
 
-const toIsolationAlert = (isolationAlert: IsolationAlert): IsolationAlertDto => {
+const toIsolationAlertDto = (isolationAlert: IsolationAlert): IsolationAlertDto => {
 	return {
 		criticality: isolationAlert.criticality,
 		endDate: dateToDateDto(isolationAlert.endDate),
@@ -193,5 +214,5 @@ const toIsolationAlert = (isolationAlert: IsolationAlert): IsolationAlertDto => 
 }
 
 export const toIsolationAlertsDto = (isolationAlerts: IsolationAlert[]): IsolationAlertDto[] => {
-	return isolationAlerts.map(isolationAlert => toIsolationAlert(isolationAlert));
+	return isolationAlerts.map(isolationAlert => toIsolationAlertDto(isolationAlert));
 }

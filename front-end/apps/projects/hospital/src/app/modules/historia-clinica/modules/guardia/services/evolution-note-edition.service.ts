@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { EmergencyCareEvolutionNoteDto } from '@api-rest/api-model';
-import { toAllergies, toAnthropometricDataValues, toFamilyHistories, toMedications, toMotives, toProcedures, toRiskFactorsValue, } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
+import { IsolationAlert } from '@historia-clinica/components/isolation-alert-form/isolation-alert-form.component';
+import { toAllergies, toAnthropometricDataValues, toFamilyHistories, toIsolationAlerts, toMedications, toMotives, toProcedures, toRiskFactorsValue, } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
 import { Alergia } from '@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service';
 import { AntecedenteFamiliar } from '@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service';
 import { AnthropometricDataValues } from '@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
@@ -31,7 +32,7 @@ export class EvolutionNoteEditionService {
 	}
 }
 
-type FormControlKeys = 'riskFactors' | 'allergies' | 'procedures' | 'medications' | 'familyHistories' | 'reasons' | 'evolutionNote' | 'anthropometricData' | 'clinicalSpecialty';
+type FormControlKeys = 'riskFactors' | 'allergies' | 'procedures' | 'medications' | 'familyHistories' | 'reasons' | 'evolutionNote' | 'anthropometricData' | 'clinicalSpecialty' | 'isolationAlerts';
 type EvolutionNoteKeys =  'clinicalSpecialtyId' | FormControlKeys; 
 type FormValues =
 	{
@@ -44,7 +45,8 @@ type FormValues =
 	| { evolucion: string }
 	| { clinicalSpecialty: Object }
 	| RiskFactorsValue
-	| AnthropometricDataValues;
+	| AnthropometricDataValues
+	| { isolationAlerts: IsolationAlert[]};
 
 interface FieldAssignments {
 	formControl: FormControlKeys,
@@ -96,5 +98,10 @@ const fieldAssignments: FieldAssignments[] = [{
 		formControl: 'allergies',
 		evolutionNoteKeys: 'allergies',
 		assignEvolutionNoteValue: (value) => ({ data: toAllergies(value) }),
+	},
+	{
+		formControl: 'isolationAlerts',
+		evolutionNoteKeys: 'isolationAlerts',
+		assignEvolutionNoteValue: (value) => ({ isolationAlerts: toIsolationAlerts(value) }),
 	},
 ];
