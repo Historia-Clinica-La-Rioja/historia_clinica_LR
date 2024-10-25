@@ -2,10 +2,11 @@ import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { IsolationAlertDiagnosesService } from '@historia-clinica/services/isolation-alert-diagnoses.service';
-import { Subscription } from 'rxjs';
+import { of, Subscription, switchMap, take } from 'rxjs';
 import { EmergencyCareDiagnosis, EmergencyCareMainDiagnosis } from '../emergency-care-diagnoses/emergency-care-diagnoses.component';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
-import { ClinicalTermDto, DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
+import { ClinicalTermDto, DiagnosisDto, HealthConditionDto, AppFeature } from '@api-rest/api-model';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-diagnosticos-form',
@@ -38,15 +39,27 @@ export class DiagnosticosFormComponent {
 	}
 	isolationAlertsDiagnoses: ClinicalTermDto[] = [];
 
+	isolationAlertsFFIsOn = false
+
 	constructor(
 		private formBuilder: FormBuilder,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		private readonly isolationAlertDiagnoses: IsolationAlertDiagnosesService,
+		private readonly featureFlagService: FeatureFlagService
 	) {
-		this.isolationAlertSubscription = this.isolationAlertDiagnoses.isolationAlertDiagnisis$.subscribe(isolationAlertDiagnoses => {
-			this.isolationAlertsDiagnoses = isolationAlertDiagnoses;
-			this.calculateDiagnosesAssociatedToIsolationAlerts();
-		});
+		this.isolationAlertSubscription = this.featureFlagService.isActive(AppFeature.HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO).
+			pipe(
+				take(1),
+				switchMap(isActive => {
+					this.isolationAlertsFFIsOn = isActive;
+					return isActive ? this.isolationAlertDiagnoses.isolationAlertDiagnisis$ : of()
+				})
+			).subscribe((isolationAlertDiagnosis: ClinicalTermDto[]) => {
+				if (isolationAlertDiagnosis) {
+					this.isolationAlertsDiagnoses = isolationAlertDiagnosis;
+					this.calculateDiagnosesAssociatedToIsolationAlerts();
+				}
+			});
 	}
 
 	diagnosisChange(event: EmergencyCareDiagnosis[]) {
@@ -64,7 +77,7 @@ export class DiagnosticosFormComponent {
 			this.formDiagnosticos.setValue(obj);
 			this.componentEvaluationManagerService.mainDiagnosis = obj.mainDiagnostico.main;
 			this.componentEvaluationManagerService.diagnosis = obj.otrosDiagnosticos.diagnosis;
-			this.calculateDiagnosesAssociatedToIsolationAlerts();
+			this.isolationAlertsFFIsOn && this.calculateDiagnosesAssociatedToIsolationAlerts();
 		}
 	}
 

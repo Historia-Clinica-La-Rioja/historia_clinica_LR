@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { DiagnosisDto, EEmergencyCareEvolutionNoteType, EmergencyCareEvolutionNoteDto, HealthConditionDto } from '@api-rest/api-model';
+import { AppFeature, DiagnosisDto, EEmergencyCareEvolutionNoteType, EmergencyCareEvolutionNoteDto, HealthConditionDto } from '@api-rest/api-model';
 import { EmergencyCareEvolutionNoteService } from '@api-rest/services/emergency-care-evolution-note.service';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
@@ -51,6 +51,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 	markAsTouched = false;
 
 	formsSubscription: Subscription[] = [];
+	readonly HABILITAR_PACIENTES_COLONIZADOS = AppFeature.HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO;
 
 	constructor(
 		public dockPopupRef: DockPopupRef,
