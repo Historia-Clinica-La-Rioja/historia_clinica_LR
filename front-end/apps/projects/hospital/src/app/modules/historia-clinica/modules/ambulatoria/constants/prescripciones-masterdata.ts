@@ -66,3 +66,5 @@ export enum STUDY_STATUS_ENUM {
 	FINAL = 'Completado',
 	PARTIAL = 'Completado Parcialmente'
 }
+
+export const pharmaceuticalForm: string[] = ["óvulo", "cápsula", "comprimido", "supositorio"];

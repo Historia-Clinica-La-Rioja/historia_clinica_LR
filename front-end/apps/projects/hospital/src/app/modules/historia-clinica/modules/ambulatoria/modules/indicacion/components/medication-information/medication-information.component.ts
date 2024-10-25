@@ -10,6 +10,8 @@ import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
 import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
 import { PharmacoDetail } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
+import { AddDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/add-digital-prescription-item/add-digital-prescription-item.component';
 
 @Component({
     selector: 'app-medication-information',
@@ -19,7 +21,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 export class MedicationInformationComponent implements OnInit {
 
     @Input() prescriptionData: NewPrescriptionData;
-    @Input() isHabilitarRecetaDigitalEnabled: boolean;
+    @Input() isHabilitarRecetaDigital: boolean;
     @Input() submitted: boolean;
 	@Input() hasSelectedCoverage = false;
 
@@ -39,6 +41,7 @@ export class MedicationInformationComponent implements OnInit {
         private readonly medicationRequestService: MedicationRequestService,
 		private statePrescripcionService: StatePrescripcionService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly dialogService: DialogService<AddDigitalPrescriptionItemComponent>
     ) { }
 
     ngOnInit(): void {
@@ -48,7 +51,9 @@ export class MedicationInformationComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS).subscribe(isOn => this.isEnabledFinancedPharmaco = isOn);
     }
 
-    openPrescriptionItemDialog(item?: NewPrescriptionItem): void {
+    openPrescriptionItemDialog(item?: NewPrescriptionItem): void { 
+		if (this.isHabilitarRecetaDigital) return this.openAddDigitalPrescriptionItemDialog(item);
+
 		const newPrescriptionItemDialog = this.dialog.open(AgregarPrescripcionItemComponent,
 		{
 			data: {
@@ -64,20 +69,7 @@ export class MedicationInformationComponent implements OnInit {
 			width: '35%',
 		});
 
-		newPrescriptionItemDialog.afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => {
-			if (prescriptionItem) {
-				if (!prescriptionItem.id) {
-					prescriptionItem.id = ++this.itemCount;
-					this.prescriptionItems.push(prescriptionItem);
-					this.pharmacosDetail.push(this.buildPharmacoDetail(prescriptionItem));
-					this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
-					this.setShowAddMedicationError();
-				} else {
-					this.editPrescriptionItem(prescriptionItem);
-					this.editPharmacoDetail(prescriptionItem);
-				}
-			}
-		});
+		newPrescriptionItemDialog.afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => this.addPrescriptionItem(prescriptionItem))
 	}
 
     editMedication(id: number): void {
@@ -93,7 +85,7 @@ export class MedicationInformationComponent implements OnInit {
 
     openPharmacosFrequestDialog() {
 		this.isAddMedicationLoading = true;
-		const hasToSearchInFoundedPharmaco = this.isEnabledFinancedPharmaco && this.isHabilitarRecetaDigitalEnabled && !this.hasSelectedCoverage;
+		const hasToSearchInFoundedPharmaco = this.isEnabledFinancedPharmaco && this.isHabilitarRecetaDigital && !this.hasSelectedCoverage;
 		if (hasToSearchInFoundedPharmaco) {
 			this.isAddMedicationLoading = false;
 			this.openPrescriptionItemDialog();
@@ -111,6 +103,41 @@ export class MedicationInformationComponent implements OnInit {
 				this.openPrescriptionItemDialog(mapToNewPrescriptionItem(result.pharmaco));
 			});
 		})
+	}
+
+	private openAddDigitalPrescriptionItemDialog = (item?: NewPrescriptionItem) => {
+		this.dialogService.open(
+			AddDigitalPrescriptionItemComponent, 
+			{dialogWidth: DialogWidth.MEDIUM}, 
+			this.getAddDigitalPrescriptionItemDialogData(item)
+		).afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => this.addPrescriptionItem(prescriptionItem));
+	}
+
+	private addPrescriptionItem = (prescriptionItem: NewPrescriptionItem) => {
+		if (!prescriptionItem) return;
+		if (!prescriptionItem.id) {
+			prescriptionItem.id = ++this.itemCount;
+			this.prescriptionItems.push(prescriptionItem);
+			this.pharmacosDetail.push(this.buildPharmacoDetail(prescriptionItem));
+			this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
+			this.setShowAddMedicationError();
+		} else {
+			this.editPrescriptionItem(prescriptionItem);
+			this.editPharmacoDetail(prescriptionItem);
+		}
+	}
+
+	private getAddDigitalPrescriptionItemDialogData = (item?: NewPrescriptionItem) => {
+		return {
+			patientId: this.prescriptionData.patientId,
+			titleLabel: this.prescriptionData.addPrescriptionItemDialogData.titleLabel,
+			searchSnomedLabel: this.prescriptionData.addPrescriptionItemDialogData.searchSnomedLabel,
+			showDosage: this.prescriptionData.addPrescriptionItemDialogData.showDosage,
+			showStudyCategory: this.prescriptionData.addPrescriptionItemDialogData.showStudyCategory,
+			eclTerm: this.prescriptionData.addPrescriptionItemDialogData.eclTerm,
+			item,
+			hasSelectedCoverage: this.hasSelectedCoverage
+		}
 	}
 
 	private buildPharmacoDetail(prescriptionItem: NewPrescriptionItem): PharmacoDetail {
