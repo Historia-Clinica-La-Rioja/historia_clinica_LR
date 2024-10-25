@@ -19,7 +19,7 @@ public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo( " +
-            "d.id, st, d.creationable.createdOn, p.firstName, p.lastName, p.otherLastNames, dt.id, dt.description, pp.firstName, pp.lastName, pp.otherLastNames) " +
+            "d.id, st, d.creationable.createdOn, dt.id, dt.description, pp.id, p.id) " +
             "FROM Document d " +
             "JOIN DocumentType dt ON (d.typeId = dt.id) " +
             "JOIN DocumentFile df ON (d.id = df.id) " +
