@@ -51,7 +51,8 @@ const MedicineGroupMedicineCreate = (props) => {
                     label="Fármaco"
                     filter={{ financed: true, institutionId: institutionId, medicineId: -1 }}
                     sort={{ field: 'name', order:'ASC' }}
-                    perPage={100}         
+                    perPage={100}
+                    filterToQuery={searchText => ({conceptPt: searchText})}
                 >
                     <AutocompleteInput optionText="conceptPt" onSelect={(selected) => setMedicine(selected)}> </AutocompleteInput>
                 </ReferenceInput>

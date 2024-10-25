@@ -27,7 +27,11 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 	
 	@Override
 	public Page<MedicineFinancingStatusDto> findAll(MedicineFinancingStatusDto example, Pageable pageable) {
-		MedicineFinancingStatusFilterBo filter = new MedicineFinancingStatusFilterBo(example.getConceptSctid(), example.getConceptPt(), example.getFinanced(), null);
+		MedicineFinancingStatusFilterBo filter = new MedicineFinancingStatusFilterBo(
+			example.getConceptSctid(),
+			example.getConceptPt(),
+			example.getFinanced(),
+			null);
 		return medicineFinancingStatusSearchStorage.findAllByFilter(filter, pageable).map(this::mapToDto);
 	}
 
