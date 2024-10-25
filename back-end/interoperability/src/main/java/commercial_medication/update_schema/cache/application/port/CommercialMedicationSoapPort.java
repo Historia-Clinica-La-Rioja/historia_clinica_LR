@@ -7,7 +7,7 @@ import javax.xml.bind.JAXBException;
 
 import java.io.IOException;
 
-public interface SoapPort {
+public interface CommercialMedicationSoapPort {
 
 	CommercialMedicationDecodedResponse callAPI(CommercialMedicationRequestParameter parameters) throws JAXBException, IOException;
 

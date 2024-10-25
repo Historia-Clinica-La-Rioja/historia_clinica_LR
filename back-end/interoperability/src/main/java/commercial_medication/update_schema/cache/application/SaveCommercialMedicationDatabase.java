@@ -17,7 +17,7 @@ import commercial_medication.update_schema.cache.application.port.CommercialMedi
 import commercial_medication.update_schema.cache.application.port.CommercialMedicationSizePort;
 import commercial_medication.update_schema.cache.application.port.CommercialMedicationUpdateFilePort;
 import commercial_medication.update_schema.cache.application.port.CommercialMedicationViaPort;
-import commercial_medication.update_schema.cache.application.port.SoapPort;
+import commercial_medication.update_schema.cache.application.port.CommercialMedicationSoapPort;
 
 import commercial_medication.update_schema.cache.domain.CommercialMedicationRequestParameter;
 import commercial_medication.update_schema.cache.domain.decodedResponse.CommercialMedicationDecodedResponse;
@@ -37,7 +37,7 @@ import java.io.IOException;
 @Service
 public class SaveCommercialMedicationDatabase {
 
-	private final SoapPort soapPort;
+	private final CommercialMedicationSoapPort commercialMedicationSoapPort;
 
 	private final CommercialMedicationActionPort commercialMedicationActionPort;
 
@@ -71,12 +71,12 @@ public class SaveCommercialMedicationDatabase {
 	public void run() throws JAXBException, IOException {
 		log.debug("Fetching commercial medication database...");
 		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(null, null, null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST);
-		CommercialMedicationDecodedResponse database = soapPort.callAPI(parameters);
+		CommercialMedicationDecodedResponse database = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(database);
 		commercialMedicationAtcPort.saveAll(database.getAtcDetailList());
 
 		parameters = new CommercialMedicationRequestParameter(null, CommercialMedicationRequestParameter.AFFIRMATIVE_REQUEST, CommercialMedicationRequestParameter.NEGATIVE_REQUEST, null);
-		database = soapPort.callAPI(parameters);
+		database = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(database);
 		commercialMedicationActionPort.saveAll(database.getCommercialMedicationCompleteDatabase().getActionList());
 		commercialMedicationControlPort.saveAll(database.getCommercialMedicationCompleteDatabase().getPublicSanityInternCodeList());

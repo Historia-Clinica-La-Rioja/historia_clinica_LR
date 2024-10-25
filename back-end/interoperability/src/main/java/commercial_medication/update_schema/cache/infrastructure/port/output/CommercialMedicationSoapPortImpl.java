@@ -2,9 +2,9 @@ package commercial_medication.update_schema.cache.infrastructure.port.output;
 
 import com.sun.xml.bind.marshaller.CharacterEscapeHandler;
 
-import commercial_medication.update_schema.cache.application.port.SoapPort;
+import commercial_medication.update_schema.cache.application.port.CommercialMedicationSoapPort;
 
-import commercial_medication.update_schema.cache.configuration.SoapRestTemplate;
+import commercial_medication.update_schema.cache.configuration.CommercialMedicationSoapRestTemplate;
 
 import commercial_medication.update_schema.cache.domain.decodedResponse.CommercialMedicationDecodedResponse;
 import commercial_medication.update_schema.cache.domain.CommercialMedicationRequestEnvelope;
@@ -36,7 +36,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Service
-public class SoapPortImpl implements SoapPort {
+public class CommercialMedicationSoapPortImpl implements CommercialMedicationSoapPort {
 
 	@Value("${commercial-medication.api.id}")
 	private Long ID;
@@ -44,13 +44,13 @@ public class SoapPortImpl implements SoapPort {
 	@Value("${commercial-medication.api.password}")
 	private String PASSWORD;
 
-	private final SoapRestTemplate restTemplate;
+	private final CommercialMedicationSoapRestTemplate restTemplate;
 
 	private final Marshaller marshaller;
 
 	private final Unmarshaller unmarshaller;
 
-	public SoapPortImpl(SoapRestTemplate restTemplate) throws JAXBException {
+	public CommercialMedicationSoapPortImpl(CommercialMedicationSoapRestTemplate restTemplate) throws JAXBException {
 		this.restTemplate = restTemplate;
 		this.marshaller = initializeMarshaller();
 		this.unmarshaller = initializeUnmarshaller();
@@ -119,7 +119,7 @@ public class SoapPortImpl implements SoapPort {
 		String xmlString = xmlWriter.toString();
 
 		HttpEntity<Object> request = new HttpEntity<>(xmlString, restTemplate.getHeaders());
-		return restTemplate.exchange(SoapRestTemplate.BASE_URL, HttpMethod.POST, request, String.class);
+		return restTemplate.exchange(restTemplate.getBaseUrl(), HttpMethod.POST, request, String.class);
 	}
 
 }

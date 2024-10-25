@@ -1,14 +1,19 @@
 package commercial_medication.update_schema.cache.configuration;
 
+import lombok.Getter;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+@Getter
 @Component
-public class SoapRestTemplate extends RestTemplate {
+public class CommercialMedicationSoapRestTemplate extends RestTemplate {
 
-	public final static String BASE_URL = "http://abws.alfabeta.net:80/alfabeta-webservice/abWsDescargas";
+	@Value("${commercial-medication.api.url}")
+	private String baseUrl;
 
 	public HttpHeaders getHeaders() {
 		HttpHeaders headers = new HttpHeaders();

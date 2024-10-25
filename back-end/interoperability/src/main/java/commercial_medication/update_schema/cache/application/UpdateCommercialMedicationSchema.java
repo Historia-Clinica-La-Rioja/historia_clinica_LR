@@ -6,7 +6,7 @@ import commercial_medication.update_schema.cache.application.port.CommercialMedi
 import commercial_medication.update_schema.cache.application.port.CommercialMedicationMasterDataPort;
 import commercial_medication.update_schema.cache.application.port.CommercialMedicationUpdateFilePort;
 
-import commercial_medication.update_schema.cache.application.port.SoapPort;
+import commercial_medication.update_schema.cache.application.port.CommercialMedicationSoapPort;
 
 import commercial_medication.update_schema.cache.domain.CommercialMedicationFileUpdateBo;
 import commercial_medication.update_schema.cache.domain.CommercialMedicationRequestParameter;
@@ -48,7 +48,7 @@ public class UpdateCommercialMedicationSchema {
 
 	private final String DISABLE_MASTER_DATA_OPERATION_CODE = "D";
 
-	private final SoapPort soapPort;
+	private final CommercialMedicationSoapPort commercialMedicationSoapPort;
 
 	private final CommercialMedicationUpdateFilePort commercialMedicationUpdateFilePort;
 
@@ -60,7 +60,7 @@ public class UpdateCommercialMedicationSchema {
 	public void run() throws JAXBException, IOException {
 		CommercialMedicationFileUpdateBo lastEntry = commercialMedicationUpdateFilePort.getLastNonProcessedEntry();
 		CommercialMedicationRequestParameter parameters = new CommercialMedicationRequestParameter(lastEntry.getLogId(), null, null, null);
-		CommercialMedicationDecodedResponse updateData = soapPort.callAPI(parameters);
+		CommercialMedicationDecodedResponse updateData = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(updateData);
 		Long lastLogId = updateCommercialMedications(updateData.getCommercialMedicationDatabaseUpdate());
 		commercialMedicationUpdateFilePort.setEntryAsProcessed(lastEntry.getId(), lastLogId);
