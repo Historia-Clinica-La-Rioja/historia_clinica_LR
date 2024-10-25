@@ -3055,6 +3055,12 @@ export interface IsolationAlertDto {
     types: MasterDataDto[];
 }
 
+export interface IsolationStatusMasterDataDto {
+    description: string;
+    id: number;
+    isActive: boolean;
+}
+
 export interface Iterable<T> {
 }
 
@@ -3927,6 +3933,19 @@ export interface PatientBedRelocationDto extends Serializable {
     relocationDate: string;
 }
 
+export interface PatientCurrentIsolationAlertDto {
+    author: ProfessionalInfoDto;
+    criticality: MasterDataDto;
+    endDate: DateDto;
+    healthConditionPt: string;
+    healthConditionSctid: string;
+    isolationAlertId: number;
+    observations?: string;
+    startDate: DateTimeDto;
+    status: MasterDataDto;
+    types: MasterDataDto[];
+}
+
 export interface PatientDischargeDto {
     administrativeDischargeDate: Date;
     dischargeTypeId: number;
@@ -4414,6 +4433,7 @@ export interface ProfessionalDto {
 export interface ProfessionalInfoDto {
     clinicalSpecialties: ClinicalSpecialtyDto[];
     firstName: string;
+    fullName: string;
     id: number;
     identificationNumber: string;
     lastName: string;
@@ -4422,6 +4442,7 @@ export interface ProfessionalInfoDto {
     nameSelfDetermination: string;
     otherLastNames: string;
     phoneNumber: string;
+    useSelfDeterminedName: boolean;
 }
 
 export interface ProfessionalLicenseNumberDto extends Serializable {

@@ -9,7 +9,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.IsolationAlertBo;
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;

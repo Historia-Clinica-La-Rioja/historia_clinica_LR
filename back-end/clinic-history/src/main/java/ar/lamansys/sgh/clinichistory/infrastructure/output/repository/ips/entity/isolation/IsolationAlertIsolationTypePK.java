@@ -22,7 +22,7 @@ public class IsolationAlertIsolationTypePK implements Serializable {
 
 	@Column(name = "isolation_alert_id", nullable = false)
 	private Integer isolationAlertId;
-
+	//See EIsolationType
 	@Column(name = "isolation_type_id", nullable = false)
 	private Short isolationType;
 }

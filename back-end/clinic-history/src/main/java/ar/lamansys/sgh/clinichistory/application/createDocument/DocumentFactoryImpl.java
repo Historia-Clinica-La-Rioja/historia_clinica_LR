@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.createDocument;
 
 import ar.lamansys.sgh.clinichistory.application.saveCompletedParameterizedForms.SaveCompletedParameterizedForms;
 import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
-import ar.lamansys.sgh.clinichistory.application.isolationalerts.save.SaveIsolationAlerts;
+import ar.lamansys.sgh.clinichistory.application.isolationalerts.SaveDocumentIsolationAlerts;
 import ar.lamansys.sgh.clinichistory.application.saveanthropometricdatapercentiles.SaveAnthropometricDataPercentiles;
 import java.time.LocalDate;
 import java.time.Period;
@@ -88,7 +88,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final SaveCompletedParameterizedForms saveCompletedParameterizedForms;
 
-	private final SaveIsolationAlerts saveIsolationAlerts;
+	private final SaveDocumentIsolationAlerts saveIsolationAlerts;
 
     @Override
 	@Transactional
@@ -148,7 +148,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 		saveCompletedParameterizedForms.run(doc.getId(), documentBo.getCompleteForms());
 
-		saveIsolationAlerts.run(doc.getId(), doc.getSourceId(), documentBo.getIsolationAlerts());
+		saveIsolationAlerts.run(doc.getId(), documentBo.getIsolationAlerts());
 
         if (createFile)
             generateDocument(documentBo);

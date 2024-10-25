@@ -70,10 +70,20 @@ public class SharedStaffImpl implements SharedStaffPort {
         return Optional.ofNullable(healthcareProfessionalExternalService.findProfessionalByUserId(userId))
                 .map(professional -> {
                     var specialties = clinicalSpecialtyService.getSpecialtiesByProfessional(professional.getId());
-                    return new ProfessionalInfoDto(professional.getId(), professional.getLicenceNumber(), professional.getFirstName(),
-                            professional.getLastName(), professional.getIdentificationNumber(), professional.getPhoneNumber(),
-                            clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(specialties), professional.getNameSelfDetermination(),
-							professional.getMiddleNames(), professional.getOtherLastNames());
+                    var ret = new ProfessionalInfoDto(
+                    		professional.getId(),
+                    		professional.getLicenceNumber(),
+                    		professional.getFirstName(),
+                            professional.getLastName(),
+                            professional.getIdentificationNumber(),
+                            professional.getPhoneNumber(),
+                            clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(specialties),
+                            professional.getNameSelfDetermination(),
+							professional.getMiddleNames(),
+							professional.getOtherLastNames()
+					);
+					ret.setUseSelfDeterminedName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+					return ret;
                 })
                 .get();
     }
@@ -146,7 +156,9 @@ public class SharedStaffImpl implements SharedStaffPort {
 
 	private Optional<String> getCompleteName(ProfessionalCompleteDto professionalInfo) {
 		if (professionalInfo == null) return Optional.empty();
-		String name = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? professionalInfo.getNameSelfDetermination() : FhirString.joining(professionalInfo.getFirstName(), professionalInfo.getMiddleNames());
+		String name = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ?
+			professionalInfo.getNameSelfDetermination() :
+			FhirString.joining(professionalInfo.getFirstName(), professionalInfo.getMiddleNames());
 		String completeName = professionalInfo.getCompleteName(name);
 		return Optional.of(completeName);
 	}

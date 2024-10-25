@@ -35,10 +35,14 @@ public class IsolationAlert extends SGXAuditableEntity<Integer> {
 	private Integer id;
 	@Column(name = "health_condition_id", nullable = false)
 	private Integer healthConditionId;
+	//See EIsolationCriticality
 	@Column(name = "isolation_criticality_id", nullable = false)
 	private Short isolationCriticalityId;
 	@Column(name = "end_date", nullable = false)
 	private LocalDate endDate;
 	@Column(name = "observations", nullable = true)
 	private String observations;
+	//See EisolationStatus
+	@Column(name = "isolation_status_id", nullable = false)
+	private Short isolationStatusId;
 }

@@ -2,7 +2,7 @@ package net.pladema.emergencycare.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.IsolationAlertMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.isolationalert.mapper.IsolationAlertMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDocumentDto;

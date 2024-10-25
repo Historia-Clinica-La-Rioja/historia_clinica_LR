@@ -7,6 +7,7 @@ public class IsolationAlertException extends RuntimeException {
 	private static final String PREFIX = "isolation-alert-exception";
 	public static final String DOC_NOT_FOUND = String.format("%s.%s", PREFIX, "document-not-found");
 	public static final String HC_NOT_FOUND = String.format("%s.%s", PREFIX, "health-condition-not-found");
+	public static final String ALERT_NOT_FOUND = String.format("%s.%s", PREFIX, "alert-not-found");
 
 	private String code;
 
@@ -28,4 +29,11 @@ public class IsolationAlertException extends RuntimeException {
 				HC_NOT_FOUND
 		);
     }
+
+	public static IsolationAlertException alertNotFound(Integer alertId) {
+		return new IsolationAlertException(
+				String.format("No se encontró la alerta con id %s", alertId),
+				ALERT_NOT_FOUND
+		);
+	}
 }

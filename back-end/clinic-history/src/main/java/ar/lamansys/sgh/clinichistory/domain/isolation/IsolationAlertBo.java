@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.domain.ips;
+package ar.lamansys.sgh.clinichistory.domain.isolation;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,5 +23,6 @@ public class IsolationAlertBo {
 	private Short criticalityId;
 	private LocalDate endDate;
 	private String observations;
+	private Short statusId;
 
 }

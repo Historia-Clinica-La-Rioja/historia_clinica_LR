@@ -16,7 +16,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IpsBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.IsolationAlertBo;
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;

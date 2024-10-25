@@ -1,10 +1,16 @@
 package ar.lamansys.sgh.clinichistory.application.ports;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.IsolationAlertBo;
+import ar.lamansys.sgh.clinichistory.domain.isolation.FetchPatientIsolationAlertBo;
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertBo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IsolationAlertStorage {
 	void save(Long documentId, List<IsolationAlertBo> isolationAlerts);
-	List<IsolationAlertBo> fetch(Long documentId);
+	List<IsolationAlertBo> fetchByDocumentId(Long documentId);
+
+	List<FetchPatientIsolationAlertBo> findByPatientId(Integer patientId);
+
+	Optional<FetchPatientIsolationAlertBo> findByAlertId(Integer alertId);
 }

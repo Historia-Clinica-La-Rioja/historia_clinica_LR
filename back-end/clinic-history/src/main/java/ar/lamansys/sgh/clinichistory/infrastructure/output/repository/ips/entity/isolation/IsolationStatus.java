@@ -1,30 +1,23 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.isolation;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 @Entity
-@Table(name = "isolation_type")
+@Table(name = "isolation_status")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-//See EIsolationType
-public class IsolationType {
+public class IsolationStatus {
 	@Id
 	@Column(name = "id")
 	@EqualsAndHashCode.Include
@@ -32,4 +25,3 @@ public class IsolationType {
 	@Column(name = "description", nullable = false)
 	private String description;
 }
-

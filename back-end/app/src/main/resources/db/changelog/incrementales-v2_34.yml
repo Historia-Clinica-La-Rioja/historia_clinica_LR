@@ -105,3 +105,41 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: snomed_group
               validate: true
+
+    - changeSet:
+        id: createTable-isolation_alert-isolation_status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: isolation_status
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_status
+                - column:
+                    name: description
+                    type: text
+                    constraints:
+                      nullable: false
+
+          - sql:
+              sql: |-
+                INSERT INTO isolation_status VALUES (1, 'Vigente');
+                INSERT INTO isolation_status VALUES (2, 'Finalizada');
+                INSERT INTO isolation_status VALUES (3, 'Finalizada');
+
+          - addColumn:
+              tableName: isolation_alert
+              columns:
+                - column:
+                    name: isolation_status_id
+                    type: smallint
+                    defaultValue: 1
+                    constraints:
+                      nullable: false
+                      references: isolation_status(id)
+                      foreignKeyName: FK_isolation_alert__isolation_status_id
+

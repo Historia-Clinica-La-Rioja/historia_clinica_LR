@@ -1,7 +1,7 @@
 package net.pladema.emergencycare.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.application.isolationalerts.fetch.FetchIsolationAlerts;
+import ar.lamansys.sgh.clinichistory.application.isolationalerts.FetchDocumentIsolationAlerts;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.reason.ReasonService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
@@ -55,7 +55,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 	private final LocalDateMapper localDateMapper;
 
 	private final EmergencyCareEvolutionNoteReasonService emergencyCareEvolutionNoteReasonService;
-	private final FetchIsolationAlerts fetchIsolationAlerts;
+	private final FetchDocumentIsolationAlerts fetchIsolationAlerts;
 
 	@Override
 	public List<EmergencyCareEvolutionNoteDocumentBo> getAllDocumentsByEpisodeId(Integer episodeId) {
@@ -130,7 +130,7 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 				.map(ClinicalSpecialtyBo::getName).orElse(null));
 		setEditedOn(evolutionNoteBo);
 		evolutionNoteBo.setType(evolutionNote.getDocumentType());
-		evolutionNoteBo.setIsolationAlerts(fetchIsolationAlerts.run(evolutionNote.getDocumentId(), evolutionNote.getId()));
+		evolutionNoteBo.setIsolationAlerts(fetchIsolationAlerts.run(evolutionNote.getDocumentId()));
 		return evolutionNoteBo;
 	}
 
