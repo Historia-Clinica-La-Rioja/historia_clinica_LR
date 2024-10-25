@@ -1,6 +1,6 @@
 package net.pladema;
 
-import commercial_medication.update_schema.cache.configuration.EnableCommercialMedicationUpdateSchemaAutoConfiguration;
+import commercialmedication.cache.configuration.EnableCommercialMedicationUpdateSchemaAutoConfiguration;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
