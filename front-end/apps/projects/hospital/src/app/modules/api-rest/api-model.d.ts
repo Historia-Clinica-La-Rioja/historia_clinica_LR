@@ -3280,11 +3280,6 @@ export interface MedicineFinancingStatusDto extends Serializable {
     institutionId?: number;
 }
 
-export interface MedicineGroupAuditRequiredDto {
-    name: string;
-    requiredDocumentation: string;
-}
-
 export interface MedicineGroupMedicineDto extends Serializable {
     conceptPt: string;
     financed: boolean;
