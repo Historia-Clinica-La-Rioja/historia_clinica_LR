@@ -85,6 +85,7 @@ import { RouteMenuItemComponent } from './components/route-menu-item/route-menu-
 import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
+import { ShowMoreConceptsComponent } from './components/show-more-concepts/show-more-concepts.component';
 import { TableComponent } from './components/table/table.component';
 import { TextEllipsisTooltipComponent } from './components/text-ellipsis-tooltip/text-ellipsis-tooltip.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
@@ -210,6 +211,7 @@ import { PatientSummaryPipe } from './pipes/patient-summary.pipe';
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
+		ShowMoreConceptsComponent,
 		TableComponent,
 		TextEllipsisTooltipComponent,
 		TimePickerComponent,
@@ -346,6 +348,7 @@ import { PatientSummaryPipe } from './pipes/patient-summary.pipe';
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
+		ShowMoreConceptsComponent,
 		TableComponent,
 		TextEllipsisTooltipComponent,
 		TimePickerComponent,
