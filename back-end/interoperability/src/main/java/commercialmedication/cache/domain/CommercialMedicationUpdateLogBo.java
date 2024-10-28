@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommercialMedicationFileUpdateBo {
+public class CommercialMedicationUpdateLogBo {
 
 	private Integer id;
 

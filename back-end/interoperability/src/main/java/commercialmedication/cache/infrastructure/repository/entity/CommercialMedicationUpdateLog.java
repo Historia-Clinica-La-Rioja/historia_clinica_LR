@@ -18,9 +18,9 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "update_file", schema = "commercial_medication")
+@Table(name = "update_log", schema = "commercial_medication")
 @Entity
-public class CommercialMedicationUpdateFile implements Serializable {
+public class CommercialMedicationUpdateLog implements Serializable {
 
 	private static final long serialVersionUID = 5626820266663252786L;
 
@@ -35,7 +35,7 @@ public class CommercialMedicationUpdateFile implements Serializable {
 	@Column(name = "processed")
 	private Boolean processed;
 
-	public CommercialMedicationUpdateFile(Long logId) {
+	public CommercialMedicationUpdateLog(Long logId) {
 		this.logId = logId;
 		this.processed = false;
 	}

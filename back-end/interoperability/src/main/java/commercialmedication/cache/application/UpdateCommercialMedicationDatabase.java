@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.javacrumbs.shedlock.core.SchedulerLock;
-import commercialmedication.cache.application.port.CommercialMedicationUpdateFilePort;
+import commercialmedication.cache.application.port.CommercialMedicationUpdateLogPort;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.Date;
 @Service
 public class UpdateCommercialMedicationDatabase {
 
-	private final CommercialMedicationUpdateFilePort commercialMedicationUpdateFilePort;
+	private final CommercialMedicationUpdateLogPort commercialMedicationUpdateLogPort;
 
 	private final SaveCommercialMedicationDatabase saveCommercialMedicationDatabase;
 
@@ -30,7 +30,7 @@ public class UpdateCommercialMedicationDatabase {
 	@SchedulerLock(name = "CommercialMedicationDatabaseJob")
 	public void run() throws JAXBException, IOException {
 		log.warn("Scheduled CommercialMedicationDatabaseJob starting at {}", new Date());
-		boolean schemaAlreadyInitialized = commercialMedicationUpdateFilePort.schemaAlreadyInitialized();
+		boolean schemaAlreadyInitialized = commercialMedicationUpdateLogPort.schemaAlreadyInitialized();
 		if (!schemaAlreadyInitialized)
 			saveCommercialMedicationDatabase.run();
 		else

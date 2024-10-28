@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 
 import commercialmedication.cache.application.port.CommercialMedicationArticlePort;
 import commercialmedication.cache.application.port.CommercialMedicationMasterDataPort;
-import commercialmedication.cache.application.port.CommercialMedicationUpdateFilePort;
+import commercialmedication.cache.application.port.CommercialMedicationUpdateLogPort;
 
 import commercialmedication.cache.application.port.CommercialMedicationSoapPort;
 
-import commercialmedication.cache.domain.CommercialMedicationFileUpdateBo;
+import commercialmedication.cache.domain.CommercialMedicationUpdateLogBo;
 import commercialmedication.cache.domain.CommercialMedicationRequestParameter;
 
 import commercialmedication.cache.domain.decodedResponse.CommercialMedicationDatabaseUpdate;
@@ -50,7 +50,7 @@ public class UpdateCommercialMedicationSchema {
 
 	private final CommercialMedicationSoapPort commercialMedicationSoapPort;
 
-	private final CommercialMedicationUpdateFilePort commercialMedicationUpdateFilePort;
+	private final CommercialMedicationUpdateLogPort commercialMedicationUpdateLogPort;
 
 	private final CommercialMedicationArticlePort commercialMedicationArticlePort;
 
@@ -58,12 +58,12 @@ public class UpdateCommercialMedicationSchema {
 
 	@Transactional
 	public void run() throws JAXBException, IOException {
-		CommercialMedicationFileUpdateBo lastEntry = commercialMedicationUpdateFilePort.getLastNonProcessedEntry();
+		CommercialMedicationUpdateLogBo lastEntry = commercialMedicationUpdateLogPort.getLastNonProcessedEntry();
 		CommercialMedicationRequestParameter parameters = CommercialMedicationRequestParameter.createUpdateRequest(lastEntry.getLogId());
 		CommercialMedicationDecodedResponse updateData = commercialMedicationSoapPort.callAPI(parameters);
 		assertUpdateData(updateData);
 		Long lastLogId = updateCommercialMedications(updateData.getCommercialMedicationDatabaseUpdate());
-		commercialMedicationUpdateFilePort.setEntryAsProcessed(lastEntry.getId(), lastLogId);
+		commercialMedicationUpdateLogPort.setEntryAsProcessed(lastEntry.getId(), lastLogId);
 	}
 
 	private void assertUpdateData(CommercialMedicationDecodedResponse updateData) {

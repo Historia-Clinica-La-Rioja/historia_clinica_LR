@@ -15,7 +15,7 @@ import commercialmedication.cache.application.port.CommercialMedicationPotencyPo
 import commercialmedication.cache.application.port.CommercialMedicationQuantityPort;
 import commercialmedication.cache.application.port.CommercialMedicationSellTypePort;
 import commercialmedication.cache.application.port.CommercialMedicationSizePort;
-import commercialmedication.cache.application.port.CommercialMedicationUpdateFilePort;
+import commercialmedication.cache.application.port.CommercialMedicationUpdateLogPort;
 import commercialmedication.cache.application.port.CommercialMedicationViaPort;
 import commercialmedication.cache.application.port.CommercialMedicationSoapPort;
 
@@ -65,7 +65,7 @@ public class SaveCommercialMedicationDatabase {
 
 	private final CommercialMedicationViaPort commercialMedicationViaPort;
 
-	private final CommercialMedicationUpdateFilePort commercialMedicationUpdateFilePort;
+	private final CommercialMedicationUpdateLogPort commercialMedicationUpdateLogPort;
 
 	@Transactional
 	public void run() throws JAXBException, IOException {
@@ -91,7 +91,7 @@ public class SaveCommercialMedicationDatabase {
 		commercialMedicationViaPort.saveAll(database.getCommercialMedicationCompleteDatabase().getViaList());
 		commercialMedicationArticlePort.saveAll(database.getCommercialMedicationCompleteDatabase().getArticleList());
 
-		commercialMedicationUpdateFilePort.saveNewEntry(database.getCommercialMedicationCompleteDatabase().getLastLog());
+		commercialMedicationUpdateLogPort.saveNewEntry(database.getCommercialMedicationCompleteDatabase().getLastLog());
 	}
 
 	private void assertUpdateData(CommercialMedicationDecodedResponse updateData) {
