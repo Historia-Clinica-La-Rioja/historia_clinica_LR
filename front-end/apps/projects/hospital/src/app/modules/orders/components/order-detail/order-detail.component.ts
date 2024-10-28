@@ -16,7 +16,7 @@ export interface OrderDetails {
 	status: string;
 	sourceTypeId: string;
 	EStudyType: string;
-	snomedPt: string;
+	snomed: string[];
 	requiresTransfer: boolean;
 	date: DateTimeDto;
 }

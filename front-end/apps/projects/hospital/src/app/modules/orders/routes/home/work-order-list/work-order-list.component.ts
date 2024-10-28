@@ -34,7 +34,7 @@ export class WorkOrderListComponent {
 				})
 			)
 			.subscribe((allOrders: StudyOrderWorkListDto[]) => {
-				this.allOrders = this.groupStudies(allOrders);
+				this.allOrders = allOrders
 				this.loadFirstPage();
 			});
 	}
@@ -46,22 +46,5 @@ export class WorkOrderListComponent {
 
 	private loadFirstPage() {
 		this.ordersCurrentPage = this.allOrders.slice(0, PAGE_SIZE_OPTIONS[0]);
-	}
-
-	private groupStudies(allOrders: StudyOrderWorkListDto[]): StudyOrderWorkListDto[] {
-		const groupedMap = new Map<number, StudyOrderWorkListDto>();
-
-		allOrders.forEach(study => {
-			if (groupedMap.has(study.studyId)) {
-				const existingStudy = groupedMap.get(study.studyId)!;
-				existingStudy.snomed.pt += ` | ${study.snomed.pt}`;
-			} else {
-				groupedMap.set(study.studyId, { ...study });
-			}
-		});
-
-		this.groupedStudies = Array.from(groupedMap.values());
-
-		return this.groupedStudies;
 	}
 }

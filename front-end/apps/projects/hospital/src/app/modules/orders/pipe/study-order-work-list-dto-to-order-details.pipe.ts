@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { OrderDetails } from '../components/order-detail/order-detail.component';
-import { ESourceType, EStudyType, StudyOrderWorkListDto } from '@api-rest/api-model';
+import { ESourceType, EStudyType, SnomedDto, StudyOrderWorkListDto } from '@api-rest/api-model';
 
 @Pipe({
 	name: 'studyOrderWorkListDtoToOrderDetails'
@@ -16,7 +16,7 @@ export class StudyOrderWorkListDtoToOrderDetailsPipe implements PipeTransform {
 			status: studyOrder.status.description,
 			sourceTypeId: sourceTypeId,
 			EStudyType: studyType,
-			snomedPt: studyOrder.snomed.pt,
+			snomed: studyOrder.snomed.map((e: SnomedDto) => e.pt),
 			requiresTransfer: studyOrder.requiresTransfer,
 			date: {
 				date: {
