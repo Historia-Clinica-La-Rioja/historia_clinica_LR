@@ -63,7 +63,6 @@ public interface StudyMapper {
 	@Mapping(target = "diagnosticReports", source = "studies")
 	@Mapping(target = "observations", expression = "java(serviceRequestDto.getObservations())")
 	@Mapping(target = "studyTypeId", expression = "java(serviceRequestDto.getStudyType().getId())")
-	@Mapping(target = "requiresTransfer", expression = "java(serviceRequestDto.getRequiresTransfer())")
 	ExtendedServiceRequestBo toExtendedServiceRequestBo(BasicPatientDto patientDto, Integer doctorId, String categoryId, PrescriptionDto serviceRequestDto, List<PrescriptionItemDto> studies);
 
 	@Named("toStudyOrderWorkListDto")

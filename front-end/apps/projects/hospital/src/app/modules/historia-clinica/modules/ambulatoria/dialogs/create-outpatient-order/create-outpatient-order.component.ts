@@ -70,7 +70,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			studyType: [EStudyType.ROUTINE, Validators.required],
-			requiresTechnical: [false, Validators.required],
 			healthProblem: [null, Validators.required],
 			notes: [null]
 		});
@@ -199,7 +198,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			hasRecipe: true,
 			observations: this.form.controls.notes.value,
 			studyType: this.form.controls.studyType.value,
-			requiresTransfer: this.form.controls.requiresTechnical.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
