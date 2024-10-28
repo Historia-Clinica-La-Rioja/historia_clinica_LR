@@ -165,7 +165,7 @@
 								[canOnlyViewSelfAddedProblems]="canOnlyViewSelfAddedProblems"></app-resumen>
 						</ng-template>
 					</mat-tab>
-					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
+					<mat-tab id="tab_internacion" *appFeatureFlag="'HABILITAR_INTERNACION' && hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
