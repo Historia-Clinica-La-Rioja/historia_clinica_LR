@@ -77,4 +77,6 @@ public interface InstitutionMedicineGroupRepository extends SGXAuditableEntityJP
 	List<MedicineGroupAuditBo> validateFinancingByInstitutionAndProblem(@Param("institutionId") Integer institutionId,
 																		@Param("medicineSctids") List<String> medicineIds,
 																		@Param("problemSctid") String problemSctid);
+
+	void deleteByInstitutionId(Integer institutionId);
 }

@@ -69,4 +69,11 @@ public class EstablishmentExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BackofficeInstitutionException.class })
+	protected ApiErrorMessageDto handleBackofficeInstitutionException(BackofficeInstitutionException ex, Locale locale) {
+		log.debug("BackofficeInstitutionException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }
