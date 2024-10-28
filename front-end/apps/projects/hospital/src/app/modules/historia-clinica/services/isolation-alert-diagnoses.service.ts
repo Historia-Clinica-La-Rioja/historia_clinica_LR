@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ClinicalTermDto } from '@api-rest/api-model';
+import { DiagnosisDto } from '@api-rest/api-model';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -7,13 +7,13 @@ import { Subject } from 'rxjs';
 })
 export class IsolationAlertDiagnosesService {
 
-	isolationAlertDiagnosisSubject = new Subject<ClinicalTermDto[]>;
-	isolationAlertDiagnisis$ = this.isolationAlertDiagnosisSubject.asObservable();
+	isolationAlertDiagnosesSubject = new Subject<DiagnosisDto[]>;
+	isolationAlertDiagnoses$ = this.isolationAlertDiagnosesSubject.asObservable();
+
 	constructor() { }
 
-
-	setIsolationAlertDiagnosis(diagnoses: ClinicalTermDto[]) {
-		this.isolationAlertDiagnosisSubject.next(diagnoses);
+	setIsolationAlertDiagnosis(diagnoses: DiagnosisDto[]) {
+		this.isolationAlertDiagnosesSubject.next(diagnoses);
 	}
 
 }

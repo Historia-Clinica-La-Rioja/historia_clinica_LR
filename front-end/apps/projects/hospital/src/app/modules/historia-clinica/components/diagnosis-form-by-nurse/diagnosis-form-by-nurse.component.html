@@ -18,5 +18,20 @@
 				</span>
 			</div>
 		</app-titled-content-card>
+
+		<ng-container *ngIf="form.value.otrosDiagnosticos.length as otherDiagnosesLength">
+			<section>
+				<app-titled-content-card [title]="'internaciones.anamnesis.diagnosticos.TITLE'">
+					<div *ngFor="let otherDiagnosis of form.value.otrosDiagnosticos">
+						<app-elemento-diagnostico [diagnosis]="otherDiagnosis" [isMain]="true" [disabled]="true"></app-elemento-diagnostico>
+						<hr *ngIf="otherDiagnosesLength > 1">
+					</div>
+				</app-titled-content-card>
+			</section>
+		</ng-container>
 	</app-new-consultation-expansion-section>
+
+	<section>
+		<app-box-message *ngIf="form.value.otrosDiagnosticos.length" [boxMessageInfo]="boxMesaggeInfo"></app-box-message>
+	</section>
 </div>

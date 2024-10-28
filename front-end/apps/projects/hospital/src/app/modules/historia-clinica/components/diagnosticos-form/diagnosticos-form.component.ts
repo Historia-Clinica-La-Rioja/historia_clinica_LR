@@ -52,7 +52,7 @@ export class DiagnosticosFormComponent {
 				take(1),
 				switchMap(isActive => {
 					this.isolationAlertsFFIsOn = isActive;
-					return isActive ? this.isolationAlertDiagnoses.isolationAlertDiagnisis$ : of()
+					return isActive ? this.isolationAlertDiagnoses.isolationAlertDiagnoses$ : of()
 				})
 			).subscribe((isolationAlertDiagnosis: ClinicalTermDto[]) => {
 				if (isolationAlertDiagnosis) {

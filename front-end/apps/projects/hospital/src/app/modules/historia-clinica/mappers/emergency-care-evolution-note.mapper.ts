@@ -203,7 +203,7 @@ export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[],
 
 export const toAllNursingDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
 	return {
-		diagnosis: [],
+		diagnosis: diagnosisFormValue.otrosDiagnosticos,
 		mainDiagnosis: diagnosisFormValue.mainDiagnostico
 	}
 }

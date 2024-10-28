@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClinicalTermDto, MasterDataDto } from '@api-rest/api-model';
+import { ClinicalTermDto, DiagnosisDto, MasterDataDto } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { Observable, Subscription } from 'rxjs';
 import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diagnoses.service';
@@ -92,7 +92,7 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 }
 
 interface IsolationAlertForm {
-	diagnosis: FormControl<ClinicalTermDto>,
+	diagnosis: FormControl<DiagnosisDto>,
 	types: FormControl<MasterDataDto[]>,
 	criticality: FormControl<{ criticality: MasterDataDto }>,
 	endDate: FormControl<Date>,
@@ -100,7 +100,7 @@ interface IsolationAlertForm {
 }
 
 export interface IsolationAlert {
-	diagnosis: ClinicalTermDto,
+	diagnosis: DiagnosisDto,
 	types: MasterDataDto[],
 	criticality: MasterDataDto,
 	endDate: Date,
