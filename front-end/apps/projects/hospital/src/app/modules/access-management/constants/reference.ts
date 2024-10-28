@@ -94,6 +94,10 @@ export const CLOSURE_OPTIONS = [
     {
         id: 4,
         description: "Contrarreferencia"
+    },
+    {
+        id: 5,
+        description: "Cierre administrativo de referencia"
     }
 ];
 
