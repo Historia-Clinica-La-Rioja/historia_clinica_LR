@@ -1,7 +1,7 @@
-<app-text-ellipsis-tooltip text="{{orderDetails.snomedPt | capitalizeFirstLetter | translate}}">
-</app-text-ellipsis-tooltip>
+<div class="content" fxLayout="column">
+	<app-show-more-concepts [concepts]="orderDetails.snomed">
+	</app-show-more-concepts>
 
-<div fxLayoutGap="2px">
 
 	<app-identifier *ngIf="orderDetails?.EStudyType" [identifier]="{iconLegend: {icon: 'error'},
 		description: orderDetails.EStudyType}"></app-identifier>
