@@ -19,10 +19,10 @@ public class CommercialMedicationArticleAtcPK implements Serializable {
 
 	private static final long serialVersionUID = 3258886657128137336L;
 
-	@Column(name = "article_id")
+	@Column(name = "article_id", nullable = false)
 	private Integer articleId;
 
-	@Column(name = "atc_id")
+	@Column(name = "atc_id", nullable = false)
 	private String atcId;
 
 }

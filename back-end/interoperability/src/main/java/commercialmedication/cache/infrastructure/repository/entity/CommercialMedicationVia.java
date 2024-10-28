@@ -27,7 +27,7 @@ public class CommercialMedicationVia implements Serializable {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "description", length = 50)
+	@Column(name = "description", length = 50, nullable = false)
 	private String description;
 
 	public CommercialMedicationVia(CommercialMedicationMasterData via) {
