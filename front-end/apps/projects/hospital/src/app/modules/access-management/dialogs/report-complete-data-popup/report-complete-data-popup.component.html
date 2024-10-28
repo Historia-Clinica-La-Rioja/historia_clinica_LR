@@ -23,15 +23,19 @@
 	
 				<mat-divider></mat-divider>
 	
-				<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'">
+				<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'" [collapsed]="referenceCompleteData.closure?.closureType? true : false">
 					<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
+					<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !hasAppointment && !referenceCompleteData.reference.closureType">
+						<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="getReferenceDetails($event)"></app-edit-reference>
+					</div>
 				</app-expansion-section>
 
 				<mat-divider></mat-divider>
 
-				<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !hasAppointment && !referenceCompleteData.reference.closureType">
-					<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="getReferenceDetails($event)"></app-edit-reference>
-				</div>
+				<app-expansion-section *ngIf="referenceCompleteData.closure?.closureType" [title]="'Cierre de referencia'">
+					<app-reference-closure [closure]="referenceCompleteData.closure"></app-reference-closure>
+				</app-expansion-section>
+				
 			</div>
 	
 			<div fxLayout="column" fxLayoutGap="10px" class="columns" *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">

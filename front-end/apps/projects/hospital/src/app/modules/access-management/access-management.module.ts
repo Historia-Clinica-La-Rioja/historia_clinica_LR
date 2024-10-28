@@ -20,6 +20,7 @@ import { AvailableAppointmentCountInformationComponent } from './components/avai
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { DeriveRequestComponent } from './components/derive-request/derive-request.component';
 import { DestinationInstitutionInformationComponent } from './components/destination-institution-information/destination-institution-information.component';
+import { EditReferenceComponent } from './components/edit-reference/edit-reference.component';
 import { HomeComponent } from './routes/home/home.component';
 import { HomeInstitutionInformationComponent } from './components/home-institution-information/home-institution-information.component';
 import { InstitutionalActionsComponent } from './components/institutional-actions/institutional-actions.component';
@@ -30,6 +31,7 @@ import { PatientProblemsComponent } from './components/patient-problems/patient-
 import { PopupActionsComponent } from './components/popup-actions/popup-actions.component';
 import { PriorizationCriteriaSelectComponent } from './components/priorization-criteria-select/priorization-criteria-select.component';
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
+import { ReferenceClosureComponent } from './components/reference-closure/reference-closure.component';
 import { ReferenceFilesComponent } from './components/reference-files/reference-files.component';
 import { ReferenceMedicalConceptsInformationComponent } from './components/reference-medical-concepts-information/reference-medical-concepts-information.component';
 import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
@@ -42,8 +44,6 @@ import { ReferenceEditionPopUpComponent } from './dialogs/reference-edition-pop-
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 //services
 import { TabsService } from './services/tabs.service';
-import { EditReferenceComponent } from './components/edit-reference/edit-reference.component';
-
 
 @NgModule({
 	declarations: [
@@ -55,6 +55,7 @@ import { EditReferenceComponent } from './components/edit-reference/edit-referen
 		ContactDetailsComponent,
 		DeriveRequestComponent,
 		DestinationInstitutionInformationComponent,
+		EditReferenceComponent,
 		InstitutionalActionsComponent,
 		InstitutionalNetworkActionsDropdownComponent,
 		HomeComponent,
@@ -65,6 +66,7 @@ import { EditReferenceComponent } from './components/edit-reference/edit-referen
 		PopupActionsComponent,
 		PriorizationCriteriaSelectComponent,
 		ReferenceCompleteDataComponent,
+		ReferenceClosureComponent,
 		ReferenceFilesComponent,
 		ReferenceMedicalConceptsInformationComponent,
 		RegulationAppointmentResultViewComponent,
@@ -75,7 +77,6 @@ import { EditReferenceComponent } from './components/edit-reference/edit-referen
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
 		ReportCompleteDataPopupComponent,
-  EditReferenceComponent,
 	],
 	providers: [
 		TabsService

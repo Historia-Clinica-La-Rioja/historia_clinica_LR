@@ -1,0 +1,26 @@
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start">
+	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+		<app-reference-state-label [referenceClosureDescription]="closure.closureType.description"></app-reference-state-label>
+
+		<span class="grey">
+			{{closure.createdOn| viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}
+		</span>
+	</div>
+
+    <div fxLayout="column">
+        <label class="grey">Motivo de cierre:</label>
+        <span>"{{ closure.note }}"</span>
+    </div>
+
+    <div class="primary" *ngFor="let file of closure.files" fxLayout="row">
+		<mat-icon>attachment_icon</mat-icon>
+		<span class="span-clickable" (click)="downloadFile(file)">
+			{{file.fileName}}
+		</span>
+	</div>
+
+    <div>
+        <app-register-editor-info [registerEditor]="{createdBy: this.closure.authorFullName}"></app-register-editor-info>
+    </div>
+    
+</div>
