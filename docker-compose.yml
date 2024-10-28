@@ -113,6 +113,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Local123
       POSTGRES_DB: hospitalDB
+      CREATE_COMMERCIAL_MEDICATION_SCHEMA: false
     volumes:
       # Absolute Path on the host
       - ./SnomedCT_Argentina-EditionRelease:/usr/src/app/Release2405
