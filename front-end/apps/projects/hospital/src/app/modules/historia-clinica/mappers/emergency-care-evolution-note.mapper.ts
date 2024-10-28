@@ -32,7 +32,7 @@ export const toOutpatientRiskFactorDto = (riskFactors: OutpatientRiskFactorDto):
 
 export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHistoriesNoRefer: boolean, isAllergyNoRefer: boolean, patientId: number, evolutionNoteType: EEmergencyCareEvolutionNoteType): EmergencyCareEvolutionNoteDto => {
 	const value = form.value;
-	const allDiagnosis = toAllDiagnosis(value.diagnosis);
+	const allDiagnosis = evolutionNoteType === EEmergencyCareEvolutionNoteType.DOCTOR ? toAllDiagnosis(value.diagnosis) : toAllNursingDiagnosis(value.diagnosis);
 	const medications = toOutpatientMedicationDto(value.medications?.data);
 	const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
 	const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
@@ -198,6 +198,13 @@ export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[],
 	return {
 		diagnosis: others?.filter(otherDiagnosis => otherDiagnosis.diagnosis.isAdded).map(otherDiagnosis => otherDiagnosis.diagnosis) || [],
 		mainDiagnosis: mainDiagnosis.main
+	}
+}
+
+export const toAllNursingDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
+	return {
+		diagnosis: [],
+		mainDiagnosis: diagnosisFormValue.mainDiagnostico
 	}
 }
 

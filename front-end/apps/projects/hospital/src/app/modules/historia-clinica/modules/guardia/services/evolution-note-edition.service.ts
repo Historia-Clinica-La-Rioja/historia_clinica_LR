@@ -18,7 +18,7 @@ export class EvolutionNoteEditionService {
 
 	loadFormByEvolutionNoteData(evolutionNoteForm: FormGroup, evolutionNoteInformation: EmergencyCareEvolutionNoteDto) {
 		const controlsFormInfo = this.buildFormControlsValueMap(evolutionNoteInformation);
-		controlsFormInfo.forEach((value, key) => evolutionNoteForm.get(key).setValue(value))
+		controlsFormInfo.forEach((value, key) => evolutionNoteForm.get(key) && evolutionNoteForm.get(key).setValue(value))
 	}
 
 	private buildFormControlsValueMap(evolutionNoteInformation: EmergencyCareEvolutionNoteDto): Map<FormControlKeys, FormValues> {
