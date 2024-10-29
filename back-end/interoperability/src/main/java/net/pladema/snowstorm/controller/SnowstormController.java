@@ -142,7 +142,7 @@ public class SnowstormController {
 				.stream()
 				.map(this::mapToSnomedSearchItemDto)
 				.collect(Collectors.toList());
-		return new SnomedTemplateDto(snomedTemplateSearchItemBo.getDescription(), items);
+		return new SnomedTemplateDto(snomedTemplateSearchItemBo.getGroupId(), snomedTemplateSearchItemBo.getDescription(), items);
 	}
 
 	private SnomedSearchItemDto mapToSnomedSearchItemDto(SnomedSearchItemBo snomedCachedSearchBo) {

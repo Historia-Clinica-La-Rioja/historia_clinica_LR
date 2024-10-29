@@ -4213,6 +4213,7 @@ export interface PrescriptionDto extends Serializable {
     repetitions?: number;
     requiresTransfer?: boolean;
     studyType?: EStudyType;
+    templateIds?: number[];
 }
 
 export interface PrescriptionItemDto extends Serializable {
@@ -5207,6 +5208,7 @@ export interface SnomedSearchItemDto {
 export interface SnomedTemplateDto {
     concepts: SnomedSearchItemDto[];
     description: string;
+    id: number;
 }
 
 export interface SnvsEventDto {
