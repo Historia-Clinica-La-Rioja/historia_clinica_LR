@@ -130,36 +130,68 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 	public List<BedRelocationInfoBo> getBedRelocationsByActivity(String refsetCode, Long activityId) {
 		LOG.debug("getBedRelocationsByActivity ActivityInfoStorage -> refsetCode {}, activityId {}", refsetCode, activityId);
 
-		String careTypeIdSubQuery = "SELECT ct.description " +
+		final String CARE_TYPE_ID_SUBQUERY = " (SELECT ct.description " +
 				"FROM {h-schema}bed b " +
 				"JOIN {h-schema}room r ON b.room_id = r.id " +
 				"JOIN {h-schema}sector s ON r.sector_id = s.id " +
 				"JOIN {h-schema}care_type ct ON s.care_type_id = ct.id " +
-				"WHERE b.id = hpbr.destination_bed_id ";
+				"WHERE b.id = hpbr.destination_bed_id) ";
 
-		String sqlString = "SELECT hpbr.destination_bed_id, hpbr.relocation_date, snm.sctid, snm.pt, ("+careTypeIdSubQuery+")" +
-				"FROM {h-schema}v_attention va " +
-				"JOIN {h-schema}historic_patient_bed_relocation hpbr ON (hpbr.internment_episode_id = va.encounter_id) " +
-				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"LEFT JOIN (SELECT cs.clinical_specialty_type_id, s.sctid, s.pt " +
-				"FROM {h-schema}clinical_specialty cs " +
-				"JOIN {h-schema}snomed s ON s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
-				"WHERE va.id = :activityId AND va.scope_id = " + HOSPITALIZATION_SOURCE_ID +
-				" UNION ALL " +
-				"SELECT b.id, ie.entry_date, snm.sctid, snm.pt, ct.description " +
-				"FROM {h-schema}v_attention va " +
-				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id " +
-				"JOIN {h-schema}bed b ON b.id = ie.bed_id " +
-				"JOIN {h-schema}room r ON b.room_id = r.id " +
-				"JOIN {h-schema}sector s ON r.sector_id = s.id " +
-				"JOIN {h-schema}care_type ct ON s.care_type_id = ct.id " +
-				"LEFT JOIN (SELECT cs.id, s.sctid, s.pt " +
-				"FROM {h-schema}clinical_specialty cs " +
-				"JOIN {h-schema}snomed s ON s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.id) " +
-				"WHERE va.id = :activityId AND va.scope_id = " + HOSPITALIZATION_SOURCE_ID;
+		final String FILTERED_ATTENTION_VIEW = " WITH filtered_v_attention AS ( " +
+				" SELECT va.id, va.encounter_id, va.institution_id, va.clinical_speciality_id " +
+				" FROM v_attention va " +
+				" WHERE va.id = :activityId ) ";
 
-		Query query = entityManager.createNativeQuery(sqlString)
+		final String SQL_STRING = FILTERED_ATTENTION_VIEW + "(SELECT hpbr.destination_bed_id, b.bed_number, bc.description AS bed_category, hpbr.relocation_date, snm.sctid, snm.pt, " + CARE_TYPE_ID_SUBQUERY +
+			" FROM filtered_v_attention va " +
+			" JOIN historic_patient_bed_relocation hpbr ON (hpbr.internment_episode_id = va.encounter_id) " +
+			" JOIN institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+			" JOIN bed b ON b.id = hpbr.destination_bed_id " +
+			" LEFT JOIN bed_category bc ON bc.id = b.bed_category_id " +
+			" LEFT JOIN (SELECT cs.clinical_specialty_type_id, s.sctid, s.pt " +
+			" FROM clinical_specialty cs " +
+			" JOIN snomed s ON s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.clinical_specialty_type_id) " +
+
+			" UNION ALL " +
+
+			" SELECT b.id, b.bed_number, bc.description as bed_category, ie.entry_date, snm.sctid, snm.pt, ct.description " +
+			" FROM filtered_v_attention va " +
+			" JOIN institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+			" JOIN internment_episode ie ON ie.id = va.encounter_id " +
+			" JOIN bed b ON b.id = ie.bed_id " +
+			" left join bed_category bc on bc.id = b.bed_category_id " +
+			" JOIN room r ON b.room_id = r.id " +
+			" JOIN sector s ON r.sector_id = s.id " +
+			" JOIN care_type ct ON s.care_type_id = ct.id " +
+			" LEFT JOIN (SELECT cs.id, s.sctid, s.pt " +
+			" FROM clinical_specialty cs " +
+			" JOIN snomed s ON s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.id) " +
+			" WHERE not exists (SELECT 1 FROM historic_patient_bed_relocation hpbr2 WHERE hpbr2.internment_episode_id = ie.id) " +
+
+			" UNION ALL " +
+
+			" ( WITH oldest_origin_bed AS (  " +
+			"    SELECT hpbr.origin_bed_id,  " +
+			"    ( ROW_NUMBER() OVER (PARTITION BY internment_episode_id ORDER BY relocation_date ASC)) AS seqnum, " +
+			"    va.encounter_id " +
+			"    FROM historic_patient_bed_relocation hpbr " +
+			"    JOIN filtered_v_attention va ON va.encounter_id = hpbr.internment_episode_id )  " +
+			" (SELECT oob.origin_bed_id, b.bed_number, bc.description AS bed_category, ie.entry_date, snm.sctid, snm.pt, ct.description " +
+			" FROM filtered_v_attention va " +
+			" JOIN institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+			" JOIN internment_episode ie ON ie.id = va.encounter_id " +
+			" JOIN oldest_origin_bed oob ON oob.encounter_id = va.encounter_id " +
+			" JOIN bed b ON b.id = oob.origin_bed_id " +
+			" LEFT JOIN bed_category bc ON bc.id = b.bed_category_id " +
+			" JOIN room r ON b.room_id = r.id " +
+			" JOIN sector s ON r.sector_id = s.id " +
+			" JOIN care_type ct ON s.care_type_id = ct.id " +
+			" LEFT JOIN (SELECT cs.id, s.sctid, s.pt FROM clinical_specialty cs JOIN snomed s ON s.sctid = cs.sctid_code) snm ON (va.clinical_speciality_id = snm.id) " +
+			" WHERE EXISTS (SELECT 1 FROM historic_patient_bed_relocation hpbr2 WHERE hpbr2.internment_episode_id = ie.id) " +
+			" AND oob.seqnum = 1 ))) " +
+			" ORDER BY relocation_date ASC";
+
+		Query query = entityManager.createNativeQuery(SQL_STRING)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("activityId", activityId);
 
@@ -211,9 +243,11 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 	private BedRelocationInfoBo parseToBedRelocationInfoBo(Object[] rawBedRelocation) {
 		return new BedRelocationInfoBo(
 				(Integer) rawBedRelocation[0],
-				((Timestamp) rawBedRelocation[1]).toLocalDateTime(),
-				((String) rawBedRelocation[4]),
-				new SnomedBo((String) rawBedRelocation[2], (String) rawBedRelocation[3])
+				((String) rawBedRelocation[1]),
+				((String) rawBedRelocation[2]),
+				((Timestamp) rawBedRelocation[3]).toLocalDateTime(),
+				((String) rawBedRelocation[6]),
+				new SnomedBo((String) rawBedRelocation[4], (String) rawBedRelocation[5])
 		);
 	}
 

@@ -155,6 +155,8 @@ public class ActivitiesMapper {
 	private BedRelocationInfoDto mapToBedRelocation(BedRelocationInfoBo bedRelocationInfoBo) {
 		return BedRelocationInfoDto.builder()
 				.bedId(bedRelocationInfoBo.getBedId())
+				.bedNumber(bedRelocationInfoBo.getBedNumber())
+				.bedCategory(bedRelocationInfoBo.getBedCategory())
 				.relocationDate(localDateMapper.toDateTimeDto(bedRelocationInfoBo.getRelocationDate()))
 				.careType(bedRelocationInfoBo.getCareType())
 				.service(ClinicalSpecialityDto.builder().snomed(mapToSnomed(bedRelocationInfoBo.getService())).build())
@@ -278,14 +280,14 @@ public class ActivitiesMapper {
 
 			//There's a diagnosis
 			if (groupContainsDiagnosis(attentions)) {
-				SingleAttentionInfoDto lastMainDiagnosis =
-					attentions
-					.stream()
-					.max(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn()))
-					.orElseThrow(() -> noDiagnosticFound());
+				SingleAttentionInfoDto lastMainDiagnosis = attentions
+						.stream()
+						.max(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn()))
+						.orElseThrow(this::noDiagnosticFound);
 
 				DiagnosesDto diagnoses = buildDiagnosis(attentions, lastMainDiagnosis);
 				newAttention = mapToAttention(lastMainDiagnosis, diagnoses);
+
 			}
 			//No diagnosis
 			else {
@@ -315,6 +317,7 @@ public class ActivitiesMapper {
 		return diagnosis;
 	}
 
+
 	private DiagnosticNotFoundException noDiagnosticFound() {
 		return new DiagnosticNotFoundException();
 	}
@@ -329,7 +332,7 @@ public class ActivitiesMapper {
 	}
 
 	private static AttentionInfoDto mapToAttention(SingleAttentionInfoDto attentionSource, DiagnosesDto diagnoses) {
-		AttentionInfoDto attention = AttentionInfoDto.builder()
+		return AttentionInfoDto.builder()
 				.attentionDate(attentionSource.getAttentionDate())
 				.coverage(attentionSource.getCoverage())
 				.scope(attentionSource.getScope())
@@ -344,6 +347,5 @@ public class ActivitiesMapper {
 				.personExtendedInfo(attentionSource.getPersonExtendedInfo())
 				.emergencyCareAdministrativeDischargeDateTime(attentionSource.getEmergencyCareAdministrativeDischargeDateTime())
 				.build();
-		return attention;
 	}
 }
