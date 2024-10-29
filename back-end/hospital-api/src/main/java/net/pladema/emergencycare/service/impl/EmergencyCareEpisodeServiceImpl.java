@@ -372,6 +372,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private EmergencyCareBo saveEmergencyCareEpisode(EmergencyCareBo emergencyCareBo, TriageBo triageBo) {
         log.debug("Input parameters -> emergencyCareBo {}, triageBo {}", emergencyCareBo, triageBo);
+		assertValidEpisodeFields(emergencyCareBo);
         assertValidPatient(emergencyCareBo.getPatient(), emergencyCareBo.getInstitutionId());
         EmergencyCareEpisode emergencyCareEpisode = new EmergencyCareEpisode(emergencyCareBo, triageBo);
         emergencyCareEpisode = emergencyCareEpisodeRepository.save(emergencyCareEpisode);
@@ -379,6 +380,12 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         log.debug(OUTPUT, result);
         return result;
     }
+
+	private void assertValidEpisodeFields(EmergencyCareBo newEmergencyCare) {
+		if (newEmergencyCare.getEmergencyCareTypeId() == null){
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.TYPE_ID_NULL, "care-episode.typeId.mandatory");
+		}
+	}
 
     private TriageBo saveTriageAdult(SaveTriageArgs args) {
         log.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);

@@ -20,31 +20,35 @@
 						</mat-form-field>
 					</div>
 
-					<mat-form-field appearance="outline">
-						<mat-select formControlName="emergencyCareTypeId" name="emergencyCareTypeId" id="emergencyCareTypeId"
-							placeholder="{{'guardia.administrative_admision.form.EMERGENCY_CARE_TYPE' | translate}}">
-							<mat-option *ngFor="let emergencyCareType of (emergencyCareType$ | async )"
-								[value]="emergencyCareType.id">
-								{{emergencyCareType.description}}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
+					<div fxLayout="column" fxLayoutGap="8px">
+						<span>{{'guardia.administrative_admision.form.EMERGENCY_CARE_TYPE' | translate}}</span>
+						<mat-form-field appearance="outline">
+							<mat-select formControlName="emergencyCareTypeId" id="emergencyCareTypeId" placeholder="{{'guardia.administrative_admision.form.SELECT' | translate}}">
+								<mat-option *ngFor="let emergencyCareType of (emergencyCareType$ | async )"
+									[value]="emergencyCareType.id">
+									{{emergencyCareType.description}}
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
 
-					<mat-form-field appearance="outline">
-						<mat-select formControlName="emergencyCareEntranceTypeId" name="emergencyCareEntranceTypeId"
-							id="emergencyCareEntranceTypeId"
-							placeholder="{{'guardia.administrative_admision.form.EMERGENCY_CARE_ENTRANCE_TYPE' | translate}}"
-							(selectionChange)="setAmbulanceCompanyIdStatus()">
-							<mat-option *ngFor="let emergencyCareEntranceType of (emergencyCareEntranceType$ | async )"
-								[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
-							</mat-option>
-						</mat-select>
-						<button id="clear_emergency_care_entrance" type="button"
-							*ngIf="form.value.emergencyCareEntranceTypeId" matSuffix color="warn" mat-icon-button
-							(click)="clear(form.controls.emergencyCareEntranceTypeId); $event.stopPropagation()">
-							<mat-icon>close</mat-icon>
-						</button>
-					</mat-form-field>
+					<div fxLayout="column" fxLayoutGap="8px">
+						<span>{{'guardia.administrative_admision.form.EMERGENCY_CARE_ENTRANCE_TYPE' | translate}}</span>
+						<mat-form-field appearance="outline">
+							<mat-select formControlName="emergencyCareEntranceTypeId" id="emergencyCareEntranceTypeId" placeholder="{{'guardia.administrative_admision.form.SELECT' | translate}}"
+								(selectionChange)="setAmbulanceCompanyIdStatus()">
+								<mat-option *ngFor="let emergencyCareEntranceType of (emergencyCareEntranceType$ | async )"
+									[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
+								</mat-option>
+							</mat-select>
+							<button id="clear_emergency_care_entrance" type="button"
+								*ngIf="form.value.emergencyCareEntranceTypeId" matSuffix color="warn" mat-icon-button
+								(click)="clear(form.controls.emergencyCareEntranceTypeId); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</div>
 
 					<mat-form-field appearance="outline"
 						*ngIf="form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_CON_MEDICO || form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_SIN_MEDICO">
@@ -75,9 +79,9 @@
 				</div>
 			</div>
 
-			<div fxLayout="column" fxLayoutGap="16px">	
+			<div fxLayout="column" fxLayoutGap="16px">
 				<h2 [translate]="'Intervención policial'"></h2>
-				<mat-radio-group formControlName="hasPoliceIntervention" name="policeIntervention"
+				<mat-radio-group fxLayout="column" formControlName="hasPoliceIntervention" name="policeIntervention"
 					id="policeInterventionRadio" (change)="onChange()">
 					<mat-radio-button id="policeIntervention" [value]="true" [checked]="form.value.hasPoliceIntervention">
 						Si
@@ -87,7 +91,7 @@
 						No
 					</mat-radio-button>
 				</mat-radio-group>
-			
+
 
 				<div fxLayout="column" fxLayoutGap="16px" *ngIf="form.value.hasPoliceIntervention">
 
