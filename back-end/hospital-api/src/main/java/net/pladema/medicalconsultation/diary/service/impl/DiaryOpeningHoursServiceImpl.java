@@ -99,14 +99,14 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
         if (persistedEntity.isEmpty()) {
             DiaryOpeningHours newDiaryOpeningHours = createDiaryOpeningHoursInstance(diaryId, diaryOpeningHoursBo);
-            diaryOpeningHoursRepository.save(newDiaryOpeningHours);
+            diaryOpeningHoursRepository.saveAndFlush(newDiaryOpeningHours);
             return;
         }
 
         persistedEntity.filter(existingEntity -> shouldUpdateDiaryOpeningHours(existingEntity, diaryOpeningHoursBo))
                 .ifPresent(existingEntity -> {
                             setValues(existingEntity, diaryOpeningHoursBo);
-                            diaryOpeningHoursRepository.save(existingEntity);
+                            diaryOpeningHoursRepository.saveAndFlush(existingEntity);
                 });
     }
 
