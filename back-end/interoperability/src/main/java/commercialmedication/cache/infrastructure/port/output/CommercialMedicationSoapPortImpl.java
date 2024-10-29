@@ -38,10 +38,10 @@ import java.util.zip.ZipInputStream;
 @Service
 public class CommercialMedicationSoapPortImpl implements CommercialMedicationSoapPort {
 
-	@Value("${commercial-medication.api.id}")
+	@Value("${ws.commercialmedication.id}")
 	private Long ID;
 
-	@Value("${commercial-medication.api.password}")
+	@Value("${ws.commercialmedication.password}")
 	private String PASSWORD;
 
 	private final CommercialMedicationSoapRestTemplate restTemplate;

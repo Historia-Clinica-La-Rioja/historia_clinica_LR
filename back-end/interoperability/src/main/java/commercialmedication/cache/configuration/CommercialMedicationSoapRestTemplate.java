@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class CommercialMedicationSoapRestTemplate extends RestTemplate {
 
-	@Value("${commercial-medication.api.url}")
+	@Value("${ws.commercialmedication.url}")
 	private String baseUrl;
 
 	public HttpHeaders getHeaders() {
