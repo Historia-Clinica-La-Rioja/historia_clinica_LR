@@ -88,7 +88,8 @@ export class EmergencyCareEvolutionNoteComponent {
 
 	private canEditEmergencyCareEvolutionNote(hasMedicalDischarge: boolean, documentType: EEmergencyCareEvolutionNoteType): boolean {
 		const canEditNurseEvolution = documentType === EEmergencyCareEvolutionNoteType.NURSE && this.userAssignments.some(role => role === ERole.ENFERMERO);
-		const isProfessional = this.userAssignments.some(role => role === (ERole.ESPECIALISTA_MEDICO || ERole.ESPECIALISTA_EN_ODONTOLOGIA || ERole.PROFESIONAL_DE_SALUD));
+		const professionalRoles = [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD];
+		const isProfessional = this.userAssignments.some(role => professionalRoles.includes(role));
 		const canEditMedicalEvolution = documentType === EEmergencyCareEvolutionNoteType.DOCTOR && isProfessional;
 		return !hasMedicalDischarge && this.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA && (canEditMedicalEvolution || canEditNurseEvolution);
 	}
