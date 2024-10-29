@@ -158,6 +158,7 @@ import { MeasuringPointComponent } from './modules/ambulatoria/modules/internaci
 import { MeasuringPointBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-background-list/measuring-point-background-list.component';
 import { MeasuringPointItemComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-item/measuring-point-item.component';
 import { MedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/medication-background-list/medication-background-list.component';
+import { MostFrequentTemplatesSelectorComponent } from './components/most-frequent-templates-selector/most-frequent-templates-selector.component';
 import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery/proposed-surgery.component';
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
@@ -264,6 +265,7 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 		MedicationListComponent,
 		MeasuringPointItemComponent,
 		MedicacionSummaryComponent,
+		MostFrequentTemplatesSelectorComponent,
 		NewConsultationExpansionSectionComponent,
 		ObservationsCustomFormComponent,
         ObstetricEventSummaryComponent,

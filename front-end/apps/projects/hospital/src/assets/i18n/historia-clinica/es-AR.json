@@ -77,7 +77,8 @@
 			"TEMPLATE_OPTION_GROUP": "Conjunto de estudios",
 			"ALL_STUDIES": "Todos los estudios",
 			"MOST_FREQUENT_STUDIES": "Estudios más frecuentes...",
-			"INCLUDES_STUDIES": "Incluye {{count}} estudios"
+			"INCLUDES_STUDIES": "Incluye {{count}} estudios",
+			"MOST_FREQUENT_TEMPLATES": "Conjunto de estudios más frecuentes..."
 		},
 		"new-consultation-add-reason-form": {
 			"ADD_REASON": "Agregar motivo",

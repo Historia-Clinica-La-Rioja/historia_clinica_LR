@@ -6,6 +6,12 @@
 
 			<ng-container *ngIf="initialOptionsLoaded">
 
+				<app-most-frequent-templates-selector
+					*ngIf="(!hideTemplateOptions && mostFrequentTemplateOptions?.length)"
+					[mostFrequentTemplateOptions]="mostFrequentTemplateOptions"
+					(onSelected)="handleOptionSelected($event)">
+				</app-most-frequent-templates-selector>
+
 				<mat-optgroup *ngIf="(mostFrequentStudies?.length)"
 					label="{{ 'historia-clinica.template-concept-search.MOST_FREQUENT_STUDIES' | translate }}">
 					<mat-option *ngFor="let option of mostFrequentStudies" [value]="option"

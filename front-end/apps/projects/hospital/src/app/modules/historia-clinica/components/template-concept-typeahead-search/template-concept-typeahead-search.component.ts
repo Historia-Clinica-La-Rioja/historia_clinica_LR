@@ -28,6 +28,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	conceptOptions: TemplateOrConceptOption[];
 	templateOptions: TemplateOrConceptOption[];
 	mostFrequentStudies: TemplateOrConceptOption[] = [];
+	mostFrequentTemplateOptions: TemplateOrConceptOption[] = [];
 	initialMostFrequentStudies: TemplateOrConceptOption[] = [];
 	opts = [];
 	selectedOption: TemplateOrConceptOption;
@@ -166,8 +167,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	}
 
 	handleOptionSelected(event) {
-		this.selectedOption = event.option.value;
-
+		this.selectedOption = event.option?.value || event;
 		if (this.selectedOption.type === TemplateOrConceptType.CONCEPT) {
 			this.myControl.setValue(this.selectedOption.data.pt.term);
 		} else if (this.selectedOption.type === TemplateOrConceptType.TEMPLATE) {
