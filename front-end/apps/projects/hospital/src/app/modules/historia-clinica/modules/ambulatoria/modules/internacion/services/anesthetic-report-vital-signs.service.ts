@@ -13,6 +13,11 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { isAfter } from 'date-fns';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 
+const DEFAULT_TIME: TimeDto = {
+	hours: 0,
+	minutes: 0
+}
+
 const vitalSignsData: VitalSignsDataWithTimePicker = {
     anesthesiaStartDate: null,
     anesthesiaEndDate: null,
@@ -23,15 +28,19 @@ const vitalSignsData: VitalSignsDataWithTimePicker = {
     surgeryStartTime: null,
     surgeryEndTime: null,
     anesthesiaStartTimePicker: {
+		defaultTime: DEFAULT_TIME,
         hideLabel: true,
     },
     anesthesiaEndTimePicker: {
+		defaultTime: DEFAULT_TIME,
         hideLabel: true,
     },
     surgeryStartTimePicker: {
+		defaultTime: DEFAULT_TIME,
         hideLabel: true,
     },
     surgeryEndTimePicker: {
+		defaultTime: DEFAULT_TIME,
         hideLabel: true,
     },
 };
@@ -294,9 +303,24 @@ export class AnestheticReportVitalSignsService {
     }
 
     setFormTimeAttributeValue(attribute: VitalSignsAttribute, time: TimeDto) {
-        this.vitalSignsForm.get(attribute).setValue(time);
-        this.vitalSignsIsEmptySource.next(false);
-    }
+		this.vitalSignsForm.get(attribute)?.setValue(time);
+		const isAnyFieldFilled = !this.areTimeFieldsEmpty();
+		this.vitalSignsIsEmptySource.next(!isAnyFieldFilled);
+	}
+
+	private areTimeFieldsEmpty(): boolean {
+		const fields = [
+			'anesthesiaStartTime',
+			'anesthesiaEndTime',
+			'surgeryStartTime',
+			'surgeryEndTime'
+		];
+
+		return fields.every(field => {
+			const time = this.vitalSignsForm.get(field)?.value as TimeDto;
+			return time?.hours === DEFAULT_TIME.hours && time?.minutes === DEFAULT_TIME.minutes;
+		});
+	}
 
     setMeasuringPointData(data: MeasuringPointData) {
         data.measuringPointStartDate ? this.form.controls.measuringPointStartDate.setValue(data.measuringPointStartDate) : null ;
