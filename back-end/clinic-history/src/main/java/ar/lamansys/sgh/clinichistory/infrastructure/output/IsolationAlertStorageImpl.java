@@ -37,7 +37,7 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		isolationAlerts.forEach(alertBo -> {
 			var newAlert = isolationAlertRepository.save(
 				new IsolationAlert(
-					alertBo.getHealthConditionId(),
+					null,
 					alertBo.getHealthConditionId(),
 					alertBo.getCriticalityId(),
 					alertBo.getEndDate(),
