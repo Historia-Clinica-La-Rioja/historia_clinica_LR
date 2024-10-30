@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,9 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Stud
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,24 +38,23 @@ public class ServiceRequestWorkListController {
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
-	public ResponseEntity<List<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
-															   @RequestParam(value = "categories") List<String> categories){
+	public ResponseEntity<PageDto<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
+																		@RequestParam(name = "pageNumber") Integer pageNumber,
+																		@RequestParam(name = "pageSize") Integer pageSize,
+																	    @RequestParam(value = "categories") List<String> categories){
 
-		log.debug("Input parameters -> institutionId {}", institutionId);
+		log.debug("Input parameters -> institutionId {}, pageNumber {}, pageSize {}", institutionId, pageNumber, pageSize);
 
 		if (!AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO.isActive()) {
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 		}
-
-		List<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, categories);
-		List<StudyOrderWorkListDto> result = resultService
-				.stream()
-				.map(studyOrderWorkListBo -> studyMapper.toStudyOrderWorkListDto(studyOrderWorkListBo))
-				.collect(Collectors.toList());
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, categories, pageable);
+		Page<StudyOrderWorkListDto> result = resultService.map(studyOrderWorkListBo -> studyMapper.toStudyOrderWorkListDto(studyOrderWorkListBo));
 
 		log.debug("Output -> {}", result);
 
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(PageDto.fromPage(result));
 	}
 
 }

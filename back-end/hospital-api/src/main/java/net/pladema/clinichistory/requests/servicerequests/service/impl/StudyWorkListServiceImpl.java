@@ -16,6 +16,8 @@ import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListS
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.vademecum.domain.SnomedBo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,9 +33,9 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 	private final FeatureFlagsService featureFlagsService;
 
 	@Override
-	public List<StudyOrderWorkListBo> execute(Integer institutionId, List<String> categories){
+	public Page<StudyOrderWorkListBo> execute(Integer institutionId, List<String> categories, Pageable pageable){
 
-		log.debug("Input parameters -> institutionId: {}, categories: {}", institutionId, categories);
+		log.debug("Input parameters -> institutionId: {}, categories: {}, pageable: {}", institutionId, categories, pageable);
 
 		String statusId = EDiagnosticReportStatus.REGISTERED.getId();
 		List<Short> sourceTypeIds = List.of(
@@ -57,7 +59,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 
 		log.debug("Output -> {}", result);
 
-		return result;
+		return (Page<StudyOrderWorkListBo>) result;
 	}
 
 	private StudyOrderWorkListBo createStudyOrderWorkListBo(Object[] row) {
