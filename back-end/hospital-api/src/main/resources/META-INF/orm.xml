@@ -1421,7 +1421,12 @@
 			(select string_agg(concat(psp.description_profession_ref, ': ', lic.license_number), ' | ') FROM professional_professions ppr inner join professional_specialty psp ON psp.id=ppr.professional_specialty_id inner join professional_license_numbers lic on ppr.id=lic.professional_profession_id WHERE ppr.healthcare_professional_id=hp.id and lic.type_license_number=2) as prescriberProvincialLicense,
 			concat(pe.last_name, ' ', pe.other_last_names, ' ', pe.first_name, ' ', pe.middle_names) AS patient, pe.identification_number AS patientDNI, concat(mc.name, '(RNOS: ', hi.rnos, ')') AS medicalCoverage,
 			concat(s.pt, '(SNOMED: ', s.sctid,')') AS medicine, concat(sn_hc.pt, '(SNOMED: ', sn_hc.sctid,')') AS relatedDiagnosis,
-			case when dsg.chronic is true then 'Sí' else 'No' end as isChronic, dsg.event as event, concat(dsg.duration, ' ', dsg.duration_unit) as duration, concat(dsg.frequency, ' ', dsg.period_unit) as frequency,
+			case when dsg.chronic is true then 'Sí' else 'No' end as isChronic, dsg.event as event,
+			CASE
+			WHEN mr.has_recipe IS FALSE THEN 'Sin receta'
+			ELSE concat('Receta #', mr.id)
+			END AS prescription,
+			concat(dsg.duration, ' ', dsg.duration_unit) as duration, concat(dsg.frequency, ' ', dsg.period_unit) as frequency,
 			dsg.start_date as startDate, dsg.end_date as endDate, dsg.suspended_start_date as suspensionStartDate, dsg.suspended_end_date as suspensionEndDate,
 			concat(qt.value, ' ', qt.unit) as dosage, dsg.doses_by_day as dosePerDay, dsg.doses_by_unit as dosePerUnit, ev.description as observations
 			FROM medication_request mr
@@ -2083,7 +2088,7 @@
 			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=d.id and s_vs.id=677) as cardiovascularRisk,
 			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=d.id and s_vs.id=675) as bloodSugar,
 			(SELECT string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') FROM document_procedure dp INNER JOIN procedures proc ON dp.procedure_id=proc.id INNER JOIN procedures_status ps ON proc.status_id=ps.id INNER JOIN snomed s_proc ON proc.snomed_id=s_proc.id WHERE dp.document_id=d.id) AS procedures,
-			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.other_note_id=ev.id) AS evolution
+			(SELECT string_agg(ev.description, ', ') FROM note ev WHERE d.source_id=ev.id) AS evolution
 			FROM nursing_consultation oc
 			LEFT JOIN institution ins ON oc.institution_id=ins.id
 			LEFT JOIN clinical_specialty cs ON oc.clinical_specialty_id=cs.id
@@ -3142,6 +3147,7 @@
 			<column name="relatedDiagnosis" class="java.lang.String"/>
 			<column name="isChronic" class="java.lang.String"/>
 			<column name="event" class="java.lang.String"/>
+			<column name="prescription" class="java.lang.String"/>
 			<column name="duration" class="java.lang.String"/>
 			<column name="frequency" class="java.lang.String"/>
 			<column name="startDate" class="java.lang.String"/>
