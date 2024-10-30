@@ -450,8 +450,8 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			medicationPackQuantity: new FormControl(null),
 			studyCategory: new FormControl(null),
 			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
-			administrationTimeDays: new FormControl(null),
-			quantity: new FormControl(null),
+			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
+			quantity: new FormControl(null, [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]),
 			interval: new FormControl(this.DEFAULT_RADIO_OPTION),
 			intervalHours: new FormControl(null)
 		});
@@ -462,7 +462,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		if (this.data.showDosage) 
 			this.prescriptionItemForm.controls.interval.setValidators([Validators.required]);
 		
-
 		if (this.data.showStudyCategory) 
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 
