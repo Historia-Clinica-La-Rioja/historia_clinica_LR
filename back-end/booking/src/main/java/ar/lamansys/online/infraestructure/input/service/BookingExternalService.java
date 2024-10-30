@@ -17,6 +17,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exception
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookAppointment;
@@ -77,6 +80,8 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchIfAppointmentWereAlreadyAssigned fetchIfAppointmentWereAlreadyAssigned;
 	private final FetchIfAppointmentCanBeAssignedAsOverturn fetchIfAppointmentCanBeAssignedAsOverturn;
 
+	private final FeatureFlagsService featureFlagsService;
+
 	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
 		assertValidAppointment(bookingDto.getBookingAppointmentDto());
 		BookingBo bookingBo = new BookingBo(
@@ -97,6 +102,8 @@ public class BookingExternalService implements SharedBookingPort {
 		Boolean appointmentAlreadyAssigned = fetchIfAppointmentWereAlreadyAssigned.run(bookingAppointment.getDiaryId(), bookingAppointment.getOpeningHoursId(), appointmentDate, appointmentTime);
 		if (!appointmentAlreadyAssigned)
 			return;
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_SOBRETURNOS_API_PUBLICA))
+			throw new SaveExternalBookingException(SaveExternalBookingExceptionEnum.OVERTURN_CANNOT_BE_CREATED, "No puede asignarse como sobreturno");
 		boolean canBeOverturn = fetchIfAppointmentCanBeAssignedAsOverturn.run(bookingAppointment.getDiaryId(), bookingAppointment.getOpeningHoursId(), appointmentDate);
 		if (!canBeOverturn)
 			throw new SaveExternalBookingException(SaveExternalBookingExceptionEnum.APPOINTMENT_CANNOT_BE_CREATED, "El turno no puede ser asignado");

@@ -261,7 +261,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO,
 
 	@Label("Indica si se encuentra habilitada la creación de alertas de aislamiento para pacientes colonizados")
-	HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO
+	HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la creación de sobreturnos mediante API pública (booking)")
+	HABILITAR_SOBRETURNOS_API_PUBLICA
 	;
 
 	public boolean isActive() {
