@@ -9,7 +9,6 @@ import { AttentionPlace, PatientType } from '@historia-clinica/constants/summari
 import { ContextService } from '@core/services/context.service';
 import { Router } from '@angular/router';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
-import { MatDialog } from '@angular/material/dialog';
 import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
 import { Subscription, switchMap, take } from 'rxjs';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
@@ -19,6 +18,9 @@ import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
+import { AdministrativeTriageDialogComponent } from '../../dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
+import { PediatricTriageDialogComponent } from '../../dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
+import { AdultGynecologicalTriageDialogComponent } from '../../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 
 @Component({
 	selector: 'app-emergency-care-dashboard-actions',
@@ -47,7 +49,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
-		private readonly dialog: MatDialog,
+		private readonly dialogTriageService: DialogService<AdministrativeTriageDialogComponent|PediatricTriageDialogComponent|AdultGynecologicalTriageDialogComponent>,
 		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeCallOrAttendService,
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
@@ -113,7 +115,10 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	private openTriageDialog() {
 		this.triageDefinitionsService.getTriagePath(this.episode.type?.id)
 			.subscribe(({ component }) => {
-				const dialogRef = this.dialog.open(component, { autoFocus: false, disableClose: true, data: this.episode.id });
+				const dialogRef = this.dialogTriageService.open(component,
+					{dialogWidth: DialogWidth.SMALL, blockCloseClickingOut: false},
+					this.episode.id
+				);
 				dialogRef.afterClosed().subscribe(idReturned => {
 					this.triageDialogClosed.emit(idReturned);
 				});
