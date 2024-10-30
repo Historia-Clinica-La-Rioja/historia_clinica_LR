@@ -109,4 +109,29 @@ public class OlderAdultReportsController {
 			throw new RuntimeException("error generating report", e);
 		}
 	}
+
+	@GetMapping(value = "/{institutionId}/gerontological-assessments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<byte[]> getGerontologicalAssessmentsExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+		logger.info("getGerontologicalAssessmentsExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
+
+		try {
+			String title = "Reporte de adulto mayor - Escalas de evaluación gerontológica";
+			String[] headers = {"Nombre de prestador", "DNI de prestador", "Especialidad", "Fecha de atención", "Hora", "Nombre de paciente", "DNI de paciente", "Sexo", "Fecha de nacimiento", "Edad al registro de evaluación", "Obra(s) social(es)", "Escala realizada", "Puntuación", "Interpretación"};
+
+			logger.debug("building gerontological assessments excel report");
+			IWorkbook wb = excelService.buildGerontologicalAssessmentsExcel(title, headers, queryFactory.queryGerontologicalAssessments(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+
+			String filename = "Adulto mayor - Escalas de evaluación gerontológica - " + excelUtilsService.getPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			logger.debug("excel report generated successfully with filename = {}", filename);
+
+			return excelUtilsService.createResponseEntity(wb, filename);
+		} catch (Exception e) {
+			logger.error("error generating gerontological assessments excel report for institutionId {}", institutionId, e);
+			throw new RuntimeException("error generating report", e);
+		}
+	}
 }

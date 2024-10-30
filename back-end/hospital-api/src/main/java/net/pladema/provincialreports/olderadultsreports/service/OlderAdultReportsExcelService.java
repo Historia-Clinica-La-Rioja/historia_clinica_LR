@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.pladema.provincialreports.olderadultsreports.repository.GerontologicalAssessmentsConsultationDetail;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
@@ -88,6 +90,26 @@ public class OlderAdultReportsExcelService {
 		return workbook;
 	}
 
+	public IWorkbook buildGerontologicalAssessmentsExcel(String title, String[] headers, List<GerontologicalAssessmentsConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+		excelUtilsService.createHeaderCellsStyle(workbook);
+		ISheet sheet = workbook.createSheet(title);
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 11, 0, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId, null));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+		ICellStyle dataCellsStyle = excelUtilsService.createDataCellsStyle(workbook);
+
+		result.forEach(resultData -> {
+			IRow row = sheet.createRow(rowNumber.getAndIncrement());
+			fillGerontologicalAssessmentsRow(row, resultData, dataCellsStyle);
+		});
+
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
+
+		return workbook;
+	}
+
 	public void fillOlderAdultsOutpatientRow(IRow row, OlderAdultsOutpatientConsultationDetail content, ICellStyle style) {
 		excelUtilsService.setCellValue(row, 0, style, content.getLender());
 		excelUtilsService.setCellValue(row, 1, style, content.getLenderDni());
@@ -138,5 +160,22 @@ public class OlderAdultReportsExcelService {
 		excelUtilsService.setCellValue(row, 11, style, content.getSnomed());
 		excelUtilsService.setCellValue(row, 12, style, content.getMedication());
 		excelUtilsService.setCellValue(row, 13, style, content.getMedicalInsurance());
+	}
+
+	public void fillGerontologicalAssessmentsRow(IRow row, GerontologicalAssessmentsConsultationDetail content, ICellStyle style) {
+		excelUtilsService.setCellValue(row, 0, style, content.getProfessionalFullName());
+		excelUtilsService.setCellValue(row, 1, style, content.getProfessionalIdentificationNumber());
+		excelUtilsService.setCellValue(row, 2, style, content.getClinicalSpecialty());
+		excelUtilsService.setCellValue(row, 3, style, content.getAttentionDate());
+		excelUtilsService.setCellValue(row, 4, style, content.getHour());
+		excelUtilsService.setCellValue(row, 5, style, content.getPatientFullName());
+		excelUtilsService.setCellValue(row, 6, style, content.getPatientIdentificationNumber());
+		excelUtilsService.setCellValue(row, 7, style, content.getGender());
+		excelUtilsService.setCellValue(row, 8, style, content.getBirthDate());
+		excelUtilsService.setCellValue(row, 9, style, content.getAgeAtAssessmentRecord());
+		excelUtilsService.setCellValue(row, 10, style, content.getMedicalCoverage());
+		excelUtilsService.setCellValue(row, 11, style, content.getAssessmentName());
+		excelUtilsService.setCellValue(row, 12, style, content.getAssessmentScore());
+		excelUtilsService.setCellValue(row, 13, style, content.getAssessmentScoreInterpretation());
 	}
 }
