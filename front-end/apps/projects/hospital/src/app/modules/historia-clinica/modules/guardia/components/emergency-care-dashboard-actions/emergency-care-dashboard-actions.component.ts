@@ -1,26 +1,26 @@
+import { AdministrativeTriageDialogComponent } from '../../dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
+import { AdultGynecologicalTriageDialogComponent } from '../../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
+import { anyMatch } from '@core/utils/array.utils';
+import { AppFeature, ERole } from '@api-rest/api-model';
+import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
+import { ContextService } from '@core/services/context.service';
+import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
+import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { Episode } from '../emergency-care-episodes-summary/emergency-care-episodes-summary.component';
+import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { EstadosEpisodio } from '../../constants/masterdata';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AppFeature, ERole } from '@api-rest/api-model';
-import { PermissionsService } from '@core/services/permissions.service';
-import { anyMatch } from '@core/utils/array.utils';
-import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
-import { ContextService } from '@core/services/context.service';
-import { Router } from '@angular/router';
-import { TriageDefinitionsService } from '../../services/triage-definitions.service';
-import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
-import { Subscription, switchMap, take } from 'rxjs';
-import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
-import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
-import { TranslateService } from '@ngx-translate/core';
-import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
-import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
-import { AdministrativeTriageDialogComponent } from '../../dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { PediatricTriageDialogComponent } from '../../dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
-import { AdultGynecologicalTriageDialogComponent } from '../../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
+import { PermissionsService } from '@core/services/permissions.service';
+import { Router } from '@angular/router';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Subscription, switchMap, take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 
 @Component({
 	selector: 'app-emergency-care-dashboard-actions',
@@ -116,7 +116,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		this.triageDefinitionsService.getTriagePath(this.episode.type?.id)
 			.subscribe(({ component }) => {
 				const dialogRef = this.dialogTriageService.open(component,
-					{dialogWidth: DialogWidth.SMALL, blockCloseClickingOut: false},
+					{dialogWidth: DialogWidth.SMALL},
 					this.episode.id
 				);
 				dialogRef.afterClosed().subscribe(idReturned => {
