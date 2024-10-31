@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @ToString
@@ -14,7 +16,7 @@ import lombok.ToString;
 public class FhirQuantityBo {
 
 	private Integer id;
-	private Float value;
+	private BigDecimal value;
 	private String unit;
 
 	static public FhirQuantityBo empty() {
