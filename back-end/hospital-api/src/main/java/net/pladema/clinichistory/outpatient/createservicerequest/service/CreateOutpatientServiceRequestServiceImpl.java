@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.createservicerequest.service;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.application.port.output.ServiceRequestTemplatePort;
 import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
@@ -16,11 +17,14 @@ public class CreateOutpatientServiceRequestServiceImpl implements CreateOutpatie
 
 	private final CreateServiceRequestService createServiceRequestService;
 
+	private final ServiceRequestTemplatePort serviceRequestTemplatePort;
+
 	@Override
 	public Integer execute(ExtendedServiceRequestBo extendedServiceRequestBo) {
 		log.debug("Input parameter -> outpatientServiceRequestBo {}", extendedServiceRequestBo);
 		ServiceRequestBo serviceRequestBo = mapToServiceRequestBo(extendedServiceRequestBo);
 		Integer result = createServiceRequestService.execute(serviceRequestBo);
+		serviceRequestTemplatePort.saveAll(result, extendedServiceRequestBo.getTemplateIds());
 		log.debug("Output -> {}", result);
 		return result;
 	}
