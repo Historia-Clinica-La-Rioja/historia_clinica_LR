@@ -32,6 +32,8 @@ public class UpdateDiaryAppointmentBo {
 
 	private Integer newOpeningHoursId;
 
+	private Short weekDay;
+
 	public boolean isScheduledForTheFuture() {
 		return date.isAfter(LocalDate.now());
 	}

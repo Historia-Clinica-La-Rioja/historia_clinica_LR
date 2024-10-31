@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
-
 import java.time.LocalTime;
 
 @Getter
@@ -48,8 +47,10 @@ public class DiaryOpeningHoursBo {
 		LocalTime from = openingHours.getFrom();
 		LocalTime to = openingHours.getTo();
 		LocalTime appointmentLocalTime = a.getTime();
+		Short weekDay = openingHours.getDayWeekId();
 		return (appointmentLocalTime.equals(from) || appointmentLocalTime.isAfter(from))
-				&& appointmentLocalTime.isBefore(to);
+				&& appointmentLocalTime.isBefore(to)
+				&& weekDay.equals(a.getWeekDay());
 	}
 
 	public void updateMeWithDiaryInformation(DiaryBo diaryBo) {
