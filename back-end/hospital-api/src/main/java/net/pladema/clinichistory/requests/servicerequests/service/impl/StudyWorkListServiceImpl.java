@@ -17,12 +17,14 @@ import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.vademecum.domain.SnomedBo;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
- import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -46,20 +48,29 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 		Short emergencyCareState = EEmergencyCareState.ATENCION.getId();
 		Short internmentEpisodeState = 1;
 
-		var rawGroupedResults = studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState)
+		var rawGroupedResults =
+				studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState)
 				.stream()
-				.collect(Collectors.groupingBy(x->(Integer)x[0]));
+				.collect(Collectors.groupingBy(x -> (Integer) x[0]));
 
-		var result = rawGroupedResults.values().stream().map(groupedValues -> {
+		var result = rawGroupedResults.values()
+				.stream()
+				.map(groupedValues -> {
 			var studyOrderWorkListBo = createStudyOrderWorkListBo(groupedValues.get(0));
 			var snomedList = groupedValues.stream().map(StudyWorkListServiceImpl::mapSnomed).collect(Collectors.toList());
 			studyOrderWorkListBo.setSnomed(snomedList);
 			return studyOrderWorkListBo;
 		}).collect(Collectors.toList());
 
-		log.debug("Output -> {}", result);
+		int start = (int) pageable.getOffset();
+		int end = Math.min((start + pageable.getPageSize()), result.size());
+		List<StudyOrderWorkListBo> paginatedList = result.subList(start, end);
 
-		return (Page<StudyOrderWorkListBo>) result;
+		Page<StudyOrderWorkListBo> resultPage = new PageImpl<>(paginatedList, pageable, result.size());
+
+		log.debug("Output -> {}", resultPage);
+
+		return resultPage;
 	}
 
 	private StudyOrderWorkListBo createStudyOrderWorkListBo(Object[] row) {
