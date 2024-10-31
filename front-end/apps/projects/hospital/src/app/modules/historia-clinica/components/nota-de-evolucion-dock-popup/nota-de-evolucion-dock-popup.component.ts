@@ -15,6 +15,7 @@ import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diag
 import { IsolationAlertDiagnosesService } from '@historia-clinica/services/isolation-alert-diagnoses.service';
 import { IsolationAlert } from '../isolation-alert-form/isolation-alert-form.component';
 import { Subscription } from 'rxjs';
+import { PatientIsolationAlertsService } from '@historia-clinica/services/patient-isolation-alerts.service';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -65,7 +66,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 		private readonly newRiskFactorsService: NewRiskFactorsService,
 		private readonly evolutionNoteEditionService: EvolutionNoteEditionService,
 		private readonly episodeDiagnosesService: EpisodeDiagnosesService,
-		private readonly isolationAlertDiagnosesService: IsolationAlertDiagnosesService
+		private readonly isolationAlertDiagnosesService: IsolationAlertDiagnosesService,
+		private readonly patientIsolationAlertService: PatientIsolationAlertsService,
 	) { }
 
 	ngOnInit(): void {
@@ -115,8 +117,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 			saved => {
 				this.snackBarService.showSuccess('Nota de evolución guardada correctamente');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
-				if (emergencyCareEvolutionNoteDto.riskFactors)
-					this.newRiskFactorsService.newRiskFactors();
+				emergencyCareEvolutionNoteDto.riskFactors && this.newRiskFactorsService.newRiskFactors();
+				emergencyCareEvolutionNoteDto.isolationAlerts.length && this.patientIsolationAlertService.newIsolationAlert(this.data.patientId);
 				this.dockPopupRef.close(true)
 			},
 			error => {

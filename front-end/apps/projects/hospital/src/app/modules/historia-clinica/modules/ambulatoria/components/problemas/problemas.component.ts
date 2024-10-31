@@ -67,6 +67,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	public selectedTab: number = 0;
 	isHabilitarGuardiaOn = false;
 	isHabilitarInternacionOn = false;
+	readonly HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO = AppFeature.HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO;
 
 	private readonly routePrefix;
 	private historicalProblems$: Subscription;

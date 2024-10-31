@@ -205,7 +205,9 @@
 			"without_associated_diagnosis": {
 				"TITLE": "No es posible crear una alerta sin un diagnóstico médico asociado.",
 				"SUBTITLE": "Consulte con el/la profesional responsable"
-			}
+			},
+			"CARD_TITLE": "Alertas de aislamiento",
+			"ALERT_STATE": "Estado de alerta"
 		}
 	}
 }

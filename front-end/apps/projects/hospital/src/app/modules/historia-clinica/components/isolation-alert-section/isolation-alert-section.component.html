@@ -1,20 +1,18 @@
 <app-new-consultation-expansion-section id="isolation-alert"
     [title]="'historia-clinica.isolation-alert.ISOLATION_ALERT' | translate" icon="warning_amber"
-    [isEmpty]="!form.value.isolationAlerts?.length">
+    [isEmpty]="!isolationAlertsDetail.length">
     <div class="display-column">
-        <ng-container *ngIf="form.value.isolationAlerts.length">
-            <app-titled-content-card *ngIf="form.value.isolationAlerts as isolationAlerts"
-                [title]="'historia-clinica.isolation-alert.REGISTERED_ISOLATION_ALERTS'">
-                <div *ngFor="let isolationAlert of isolationAlerts; index as index; last as isLast">
-                    <div class="flex-container">
-                        <app-isolation-alert-summary [isolationAlert]="isolationAlert"></app-isolation-alert-summary>
-                        <app-button buttonType="mat-icon-button" matIcon="delete_outline" color="warn"
-                            (clicked)="removeIsolationAlert(index)"></app-button>
-                    </div>
-                    <mat-divider class="separation" *ngIf="!isLast"></mat-divider>
+        <app-titled-content-card *ngIf="isolationAlertsDetail.length"
+            [title]="'historia-clinica.isolation-alert.REGISTERED_ISOLATION_ALERTS'">
+            <div *ngFor="let isolationAlert of isolationAlertsDetail; index as index; last as isLast">
+                <div class="flex-container">
+                    <app-isolation-alert-detail [isolationAlertDetail]="isolationAlert"></app-isolation-alert-detail>
+                    <app-button buttonType="mat-icon-button" matIcon="delete_outline" color="warn"
+                        (clicked)="removeIsolationAlert(index)"></app-button>
                 </div>
-            </app-titled-content-card>
-        </ng-container>
+                <mat-divider class="separation" *ngIf="!isLast"></mat-divider>
+            </div>
+        </app-titled-content-card>
 
         <div *ngIf="episodeDiagnosisService.hasDiagnosesAssociated$ | async else showInformationCard">
             <button mat-button id="add-isolation-alert-button" color="primary" (click)="addIsolationAlert()">

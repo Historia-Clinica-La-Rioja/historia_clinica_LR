@@ -10,6 +10,9 @@ import { BoxMessageInformation } from '@presentation/components/box-message/box-
 import { PermissionsService } from '@core/services/permissions.service';
 import { ERole } from '@api-rest/api-model';
 
+import { IsolationAlertDetail } from '../isolation-alert-detail/isolation-alert-detail.component';
+import { mapIsolationAlertsToIsolationAlertsDetails } from '@historia-clinica/mappers/isolation-alerts.mapper';
+
 const PROFESSIONAL_ROLES = [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD];
 const BOX_MESSAGE_TITLE = 'historia-clinica.isolation-alert.without_associated_diagnosis.TITLE';
 @Component({
@@ -34,6 +37,7 @@ export class IsolationAlertSectionComponent extends AbstractCustomForm implement
 	form: FormGroup<IsolationAlertForm>;
 	popUpSubscription: Subscription;
 	isProfessional = false;
+	isolationAlertsDetail: IsolationAlertDetail[] = [];
 
 	readonly nurseBoxMesaggeInfo: BoxMessageInformation = {
 		title: BOX_MESSAGE_TITLE,
@@ -79,6 +83,7 @@ export class IsolationAlertSectionComponent extends AbstractCustomForm implement
 				const isolationAlertsAdded = this.form.value.isolationAlerts;
 				isolationAlertsAdded.push(isolationAlert);
 				this.form.controls.isolationAlerts.setValue(isolationAlertsAdded);
+				this.isolationAlertsDetail = mapIsolationAlertsToIsolationAlertsDetails(isolationAlertsAdded);
 			}
 		});
 	}
@@ -87,6 +92,7 @@ export class IsolationAlertSectionComponent extends AbstractCustomForm implement
 		const isolationAlertsAdded = this.form.value.isolationAlerts;
 		isolationAlertsAdded.splice(indexToRemove, 1);
 		this.form.controls.isolationAlerts.setValue(isolationAlertsAdded);
+		this.isolationAlertsDetail = mapIsolationAlertsToIsolationAlertsDetails(isolationAlertsAdded);
 	}
 
 }

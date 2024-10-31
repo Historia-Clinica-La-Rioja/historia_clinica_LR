@@ -54,8 +54,9 @@ import { InterveningProfessionalsComponent } from './components/intervening-prof
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
 import { IsolationAlertFormComponent } from './components/isolation-alert-form/isolation-alert-form.component';
 import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
-import { IsolationAlertSummaryComponent } from './components/isolation-alert-summary/isolation-alert-summary.component';
+import { IsolationAlertDetailComponent } from './components/isolation-alert-detail/isolation-alert-detail.component';
 import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
+import { IsolationAlertsSummaryCardComponent } from './components/isolation-alerts-summary-card/isolation-alerts-summary-card.component';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
@@ -258,7 +259,8 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 		IntrasurgicalAnestheticProceduresSummaryComponent,
 		IsolationAlertSectionComponent,
 		IsolationAlertFormComponent, 
-		IsolationAlertSummaryComponent,
+		IsolationAlertDetailComponent,
+		IsolationAlertsSummaryCardComponent,
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
 		MeasuringPointSummaryComponent,
@@ -388,6 +390,7 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
+		IsolationAlertsSummaryCardComponent,
 		FactoresDeRiesgoFormComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,

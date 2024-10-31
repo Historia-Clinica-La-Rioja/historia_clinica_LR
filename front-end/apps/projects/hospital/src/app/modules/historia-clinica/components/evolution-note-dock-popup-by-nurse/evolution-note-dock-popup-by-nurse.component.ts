@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { IsolationAlert } from '../isolation-alert-form/isolation-alert-form.component';
 import { IsolationAlertDiagnosesService } from '@historia-clinica/services/isolation-alert-diagnoses.service';
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { PatientIsolationAlertsService } from '@historia-clinica/services/patient-isolation-alerts.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup-by-nurse',
@@ -46,6 +47,7 @@ export class EvolutionNoteDockPopupByNurseComponent implements OnInit, OnDestroy
 		private readonly episodeDiagnosesService: EpisodeDiagnosesService,
 		private readonly isolationAlertDiagnosesService: IsolationAlertDiagnosesService,
 		readonly dockPopupRef: DockPopupRef,
+		private readonly patientIsolationAlertService: PatientIsolationAlertsService,
 		@Inject(OVERLAY_DATA) readonly data: NotaDeEvolucionData,
 	) { }
 
@@ -85,8 +87,8 @@ export class EvolutionNoteDockPopupByNurseComponent implements OnInit, OnDestroy
 			next: saved => {
 				this.snackBarService.showSuccess('guardia.nursing_evolution_note.SAVE_SUCCESS');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
-				if (emergencyCareEvolutionNoteDto.riskFactors)
-					this.newRiskFactorsService.newRiskFactors();
+				emergencyCareEvolutionNoteDto.riskFactors && this.newRiskFactorsService.newRiskFactors();
+				emergencyCareEvolutionNoteDto.isolationAlerts.length && this.patientIsolationAlertService.newIsolationAlert(this.data.patientId);
 				this.dockPopupRef.close(true);
 			},
 			error: error => {
