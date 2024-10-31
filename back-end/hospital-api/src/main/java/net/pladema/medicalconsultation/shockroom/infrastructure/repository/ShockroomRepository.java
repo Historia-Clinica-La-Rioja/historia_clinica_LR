@@ -31,7 +31,7 @@ public interface ShockroomRepository extends SGXAuditableEntityJPARepository<Sho
 			"FROM Shockroom s " +
 			"LEFT JOIN Sector se ON s.sectorId = se.id " +
 			"LEFT JOIN AttentionPlaceStatus status ON status.id = s.statusId " +
-			"WHERE s.deleteable.deleted = false "
+			"WHERE s.institutionId = :institutionId AND s.deleteable.deleted = false "
 	)
 	List<ShockRoomBo> getShockroomsByInstitutionId(@Param("institutionId") Integer institutionId);
 
