@@ -63,3 +63,45 @@ databaseChangeLog:
               tableName: counter_reference
               validate: true
 
+
+    - changeSet:
+        id: createTable-service_request_template
+        author: jirimoldi
+        changes:
+          - createTable:
+              tableName: service_request_template
+              columns:
+                - column:
+                    name: service_request_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: group_id
+                    type: int
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: service_request_id, group_id
+              constraintName: PK_service_request_template
+              tableName: service_request_template
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: service_request_id
+              baseTableName: service_request_template
+              constraintName: FK_service_request_template_service_request_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: service_request
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: group_id
+              baseTableName: service_request_template
+              constraintName: FK_service_request_template_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed_group
+              validate: true
