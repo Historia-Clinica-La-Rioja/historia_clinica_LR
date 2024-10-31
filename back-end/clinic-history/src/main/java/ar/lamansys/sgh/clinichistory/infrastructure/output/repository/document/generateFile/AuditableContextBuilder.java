@@ -344,8 +344,10 @@ public class AuditableContextBuilder {
 			stateProvinceData.ifPresent(licenseNumberDto -> ctx.put("stateLicense", licenseNumberDto.getNumber()));
 		}
 
-		ctx.put("logo", generatePdfImage("pdf/digital_recipe_logo.png"));
-		ctx.put("headerLogos", generatePdfImage("pdf/digital_recipe_header_logo.png"));
+		String logo = String.join(",","data:image/png;charset=utf-8;base64", generatePdfImage("pdf/digital_recipe_logo.png"));
+		String headerLogo = String.join(",","data:image/png;charset=utf-8;base64", generatePdfImage("pdf/digital_recipe_header_logo.png"));
+		ctx.put("logo", logo);
+		ctx.put("headerLogos", headerLogo);
 		ctx.put("isArchived", document.getIsArchived());
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 		ctx.put("patientAddress", sharedAddressPort.fetchPatientCompleteAddress(document.getPatientId()));
