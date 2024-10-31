@@ -14,7 +14,7 @@ public enum EIsolationType {
 	//See https://browser.ihtsdotools.org/?perspective=full&conceptId1=40174006&edition=MAIN/2024-10-01&release=&languages=en&latestRedirect=false
 	CONTACT((short) 1, "Contacto"),
 	RESPIRATORY_SECRETION((short) 2, "Gotas"),
-	AIRBORNE((short) 3, "Aereo (respiratorio)"),
+	AIRBORNE((short) 3, "Aéreo (respiratorio)"),
 	PREVENTIVE((short) 4, "Aislamiento protector"),
 	ENTOMOLOGICAL((short) 5, "Aislamiento entomológico"),
 	OTHER((short) 6, "Otros");

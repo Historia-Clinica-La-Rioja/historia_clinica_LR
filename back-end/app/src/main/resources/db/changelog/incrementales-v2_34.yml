@@ -143,3 +143,11 @@ databaseChangeLog:
                       references: isolation_status(id)
                       foreignKeyName: FK_isolation_alert__isolation_status_id
 
+    - changeSet:
+        id: update-isolation_types-fix-name
+        author: efernandez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE isolation_type SET description = 'Aéreo (respiratorio)' WHERE id = 3;
+
