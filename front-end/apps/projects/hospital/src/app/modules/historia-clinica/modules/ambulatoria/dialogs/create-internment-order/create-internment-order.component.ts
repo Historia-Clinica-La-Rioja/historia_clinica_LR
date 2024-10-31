@@ -13,6 +13,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { OrderTemplateService } from '@historia-clinica/services/order-template.service';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 
@@ -21,7 +22,8 @@ const MAX_DATE = 45;
 @Component({
 	selector: 'app-create-order',
 	templateUrl: './create-internment-order.component.html',
-	styleUrls: ['./create-internment-order.component.scss']
+	styleUrls: ['./create-internment-order.component.scss'],
+	providers: [OrderTemplateService]
 })
 export class CreateInternmentOrderComponent implements OnInit {
 
@@ -63,6 +65,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService,
+		private readonly orderTemplate: OrderTemplateService
 
 	) {
 		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
@@ -162,6 +165,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 		if (this.selectedStudyIsTemplate()) {
 			const conceptsToLoad = this.selectedStudy.data.concepts.map(mapConceptToStudy);
 			conceptsToLoad.forEach(addStudy);
+			this.addTemplateId();
 		} else {
 			const conceptToLoad = mapConceptToStudy(this.selectedStudy.data);
 			addStudy(conceptToLoad);
@@ -169,6 +173,8 @@ export class CreateInternmentOrderComponent implements OnInit {
 	}
 
 	removeStudy(i) {
+		const study = this.orderStudiesService.getStudyByIndex(i);
+		this.orderTemplate.removeStudiesFromTemplate(study.snomed.sctid);
 		this.orderStudiesService.remove(i);
 	}
 
@@ -222,6 +228,14 @@ export class CreateInternmentOrderComponent implements OnInit {
 		this.form.controls.selectSectionDeferredDate.setValue(isSelected);
 	}
 
+	private addTemplateId = () => {
+		this.selectedStudy.data.concepts.forEach(concept => {
+			const templateId = this.selectedStudy.data.id;
+			const sctid = concept.conceptId;
+			this.orderTemplate.addStudy(sctid, templateId)
+		});
+	}
+
 	private isDateInThePast(selectedDate: Date): boolean {
 		return this.today > selectedDate;
 	}
@@ -248,7 +262,8 @@ export class CreateInternmentOrderComponent implements OnInit {
 			...(this.form.controls.date?.value && {
 				deferredDate: dateToDateTimeDtoUTC(this.form.controls.date.value)
 			}),
-			items: this.createPrescriptionItems(studies, healthProblem.value.id, studyCategory.value)
+			items: this.createPrescriptionItems(studies, healthProblem.value.id, studyCategory.value),
+			templateIds: this.orderTemplate.getTemplatesIds()
 		};
 	}
 

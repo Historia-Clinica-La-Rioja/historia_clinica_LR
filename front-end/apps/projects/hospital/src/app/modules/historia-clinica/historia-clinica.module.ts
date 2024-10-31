@@ -33,7 +33,6 @@ import { DocumentsSummaryComponent } from './components/documents-summary/docume
 import { DocumentSummaryHeaderComponent } from './components/document-summary-header/document-summary-header.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
-import { EmergencyCareEpisodeCallOrAttendService } from './services/emergency-care-episode-call-or-attend.service';
 import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
 import { EpicrisisDocumentSummaryComponent } from './components/epicrisis-document-summary/epicrisis-document-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
@@ -124,6 +123,10 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-popup/vital-signs-chart-popup.component';
+//services
+import { EmergencyCareEpisodeCallOrAttendService } from './services/emergency-care-episode-call-or-attend.service';
+import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+// import { OrderTemplateService } from './services/order-template.service';
 //pipes
 import { ProblemStatusPipe } from './pipes/problem-status.pipe';
 import { ShowSpaceDetailTitlePipe } from './pipes/show-space-detail-title.pipe';
@@ -153,7 +156,6 @@ import { AnesthesiaFormComponent } from './dialogs/anesthesia-form/anesthesia-fo
 import { AnestheticReportEndOfAnesthesiaStatusComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-end-of-anesthesia-status/anesthetic-report-end-of-anesthesia-status.component';
 import { AnestheticReportVitalSignsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-vital-signs/anesthetic-report-vital-signs.component';
 import { AnestheticReportDocumentSummaryComponent } from './components/anesthetic-report-document-summary/anesthetic-report-document-summary.component';
-import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { MeasuringPointComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point/measuring-point.component';
 import { MeasuringPointBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-background-list/measuring-point-background-list.component';
 import { MeasuringPointItemComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-item/measuring-point-item.component';
@@ -424,7 +426,8 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 	],
 	providers: [
 		InternmentSummaryFacadeService,
-		EmergencyCareEpisodeCallOrAttendService
+		EmergencyCareEpisodeCallOrAttendService,
+		// OrderTemplateService
 	]
 })
 export class HistoriaClinicaModule {
