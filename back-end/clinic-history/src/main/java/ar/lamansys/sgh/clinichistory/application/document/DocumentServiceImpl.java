@@ -538,9 +538,9 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public DocumentDownloadDataBo getDocumentDownloadDataByAppointmentId(Integer appointmentId) {
+	public DocumentDownloadDataBo getImageReportDownloadDataByAppointmentId(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		DocumentDownloadDataBo result = mapToDocumentDownloadDataBo(documentRepository.getDocumentIdByAppointmentId(appointmentId));
+		DocumentDownloadDataBo result = mapToDocumentDownloadDataBo(documentRepository.getImageReportByAppointmentId(appointmentId));
 		log.debug("Output -> {}", result);
 		return result;
 	}

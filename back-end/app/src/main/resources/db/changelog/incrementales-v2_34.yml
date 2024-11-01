@@ -151,3 +151,11 @@ databaseChangeLog:
               sql: |-
                 UPDATE isolation_type SET description = 'Aéreo (respiratorio)' WHERE id = 3;
 
+    - changeSet:
+          id: createIndex-file_info_relative_path
+          author: mromero
+          changes:
+              - sql:
+                    sql: |-
+                       CREATE INDEX "IDX_file_info_relative_path" ON file_info (relative_path);
+

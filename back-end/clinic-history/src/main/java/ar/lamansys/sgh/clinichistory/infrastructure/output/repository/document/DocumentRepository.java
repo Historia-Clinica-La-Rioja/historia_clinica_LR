@@ -16,8 +16,6 @@ import java.util.Optional;
 @Repository
 public interface DocumentRepository extends SGXAuditableEntityJPARepository<Document, Long>, DocumentRepositoryCustom {
 
-	public static final short MEDICAL_IMAGE_REPORT = (short) 17;
-
     @Query(value = "SELECT d.updateable " +
             "FROM Document d " +
             "WHERE d.sourceId = :internmentEpisodeId " +
@@ -72,12 +70,11 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 	DocumentDownloadDataVo getDocumentIdByTriageId(@Param("triageId") Integer triageId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo(d.id, df.filename) " +
-			"FROM Document d " +
-			"JOIN DocumentFile df ON (df.id = d.id) " +
-			"WHERE df.sourceId = :appointmentId " +
-			"AND df.typeId = "+MEDICAL_IMAGE_REPORT+"")
-	DocumentDownloadDataVo getDocumentIdByAppointmentId(@Param("appointmentId") Integer appointmentId);
+	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo(df.id, df.filename) " +
+			"FROM AppointmentOrderImage aoi " +
+			"JOIN DocumentFile df ON (aoi.documentId = df.id) " +
+			"WHERE aoi.pk.appointmentId = :appointmentId ")
+	DocumentDownloadDataVo getImageReportByAppointmentId(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d " +

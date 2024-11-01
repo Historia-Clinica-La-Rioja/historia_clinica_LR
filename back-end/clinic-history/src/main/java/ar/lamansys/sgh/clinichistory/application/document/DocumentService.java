@@ -142,7 +142,7 @@ public interface DocumentService {
 
 	DocumentDownloadDataBo getDocumentDownloadDataByTriage(Integer triageId);
 
-	DocumentDownloadDataBo getDocumentDownloadDataByAppointmentId(Integer appointmentId);
+	DocumentDownloadDataBo getImageReportDownloadDataByAppointmentId(Integer appointmentId);
 
 	DocumentTriage createDocumentTriage(Long documentId, Integer triageId);
 
