@@ -126,3 +126,183 @@ databaseChangeLog:
                   AND diagnostic_report_observation.value != ''
                   AND diagnostic_report_observation.value ~ '^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$'
                 ;
+
+    - changeSet:
+        id: createTable-commercial_medication_dosage_form_unit
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: commercial_medication_dosage_form_unit
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_commercial_medication_dosage_form_unit
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: add_data_to_commercial_medication_dosage_form_unit
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO commercial_medication_dosage_form_unit VALUES 
+                  (1, 'comprimido'), 
+                  (2, 'cápsula'),
+                  (3, 'ampolla'),
+                  (4, 'goma de mascar'),
+                  (5, 'apósito'),
+                  (6, 'óvulo vaginal'),
+                  (7, 'pastilla'),
+                  (8, 'supositorio'),
+                  (9, 'parche'),
+                  (10, 'implante'),
+                  (11, 'aplicador'),
+                  (12, 'comprimido de disolución oral'),
+                  (13, 'píldora pequeña'),
+                  (14, 'cilindro'),
+                  (15, 'ml'),
+                  (16, 'gotas'),
+                  (17, 'U'),
+                  (18, 'mg'),
+                  (19, 'mcg'),
+                  (20, 'aplicación');
+
+    - changeSet:
+        id: createTable-commercial_medication_dosage_form
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: commercial_medication_dosage_form
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_commercial_medication_dosage_form
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: add_data_to_commercial_medication_dosage_form
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO commercial_medication_dosage_form VALUES 
+                  (1, 'comprimido'), 
+                  (2, 'cápsula'),
+                  (3, 'ampolla'),
+                  (4, 'goma de mascar'),
+                  (5, 'apósito'),
+                  (6, 'óvulo vaginal'),
+                  (7, 'pastilla'),
+                  (8, 'supositorio'),
+                  (9, 'parche'),
+                  (10, 'implante'),
+                  (11, 'aplicador'),
+                  (12, 'comprimido de disolución oral'),
+                  (13, 'píldora pequeña'),
+                  (14, 'cilindro'),
+                  (15, 'jeringa'),
+                  (16, 'bolsa'),
+                  (17, 'pipeta'),
+                  (18, 'sachet'),
+                  (19, 'vaso'),
+                  (20, 'envase'),
+                  (21, 'frasco'),
+                  (22, 'cartucho'),
+                  (23, 'vial'),
+                  (24, 'lapicera'),
+                  (25, 'liofilizado'),
+                  (26, 'tubo'),
+                  (27, 'disparo'),
+                  (28, 'inhalador'),
+                  (29, 'sistema'),
+                  (30, 'tampón'),
+                  (31, 'tarro');
+
+    - changeSet:
+        id: createTable-commercial_medication_presentation
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: commercial_medication_presentation
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: commercial_medication_dosage_form(id)
+                      foreignKeyName: FK_commercial_medication_dosage_form_commercial_medication_presentation
+                    name: commercial_medication_dosage_form_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: commercial_medication_dosage_form_unit(id)
+                      foreignKeyName: FK_commercial_medication_dosage_form_unit_commercial_medication_presentation
+                    name: commercial_medication_dosage_form_unit_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: commercial_medication_dosage_form_id, commercial_medication_dosage_form_unit_id
+              constraintName: PK_commercial_medication_presentation
+              tableName: commercial_medication_presentation
+              validate: true
+
+    - changeSet:
+        id: add_data_to_commercial_medication_presentation
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO commercial_medication_presentation VALUES 
+                  (1, 1), 
+                  (2, 2),
+                  (3, 3),
+                  (4, 4),
+                  (5, 5),
+                  (6, 6),
+                  (7, 7),
+                  (8, 8),
+                  (9, 9),
+                  (10, 10),
+                  (11, 11),
+                  (12, 12),
+                  (13, 13),
+                  (14, 14),
+                  (15, 15),
+                  (16, 15),
+                  (17, 15),
+                  (18, 15),
+                  (19, 15),
+                  (20, 15),
+                  (21, 15),
+                  (21, 16),
+                  (22, 15),
+                  (22, 17),
+                  (23, 15),
+                  (23, 18),
+                  (24, 17),
+                  (25, 18),
+                  (25, 19),
+                  (26, 20),
+                  (27, 20),
+                  (28, 20),
+                  (29, 20),
+                  (30, 20);
