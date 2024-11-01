@@ -28,4 +28,8 @@ public class VCommercialMedication {
 
 	@Column(name = "generic_pt", nullable = false)
 	private String genericPt;
+
+	@Column(name = "presentation_unit", nullable = false)
+	private String presentationUnit;
+
 }
