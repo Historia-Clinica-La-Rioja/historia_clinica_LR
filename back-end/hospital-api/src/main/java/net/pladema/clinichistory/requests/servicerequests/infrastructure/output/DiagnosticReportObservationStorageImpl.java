@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.infrastructure.output;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.observations.ex
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.ObservationGroupNotFoundException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.ObservationNotFoundException;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.ObservationNumericValueMissing;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.UnitOfMeasureNotFoundException;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportObservation;
 
@@ -134,7 +136,7 @@ public class DiagnosticReportObservationStorageImpl implements DiagnosticReportO
 		if (dro.getUnitOfMeasureId().isPresent()) {
 			Short uomId = dro.getUnitOfMeasureId().get();
 			unitOfMeasureRepository.findById(uomId).orElseThrow(uomNotFound(uomId));
-			newObs = DiagnosticReportObservation.newNumericObservation(groupId, dro.getProcedureParameterId(), dro.getValue(), uomId);
+			newObs = DiagnosticReportObservation.newNumericObservation(groupId, dro.getProcedureParameterId(), dro.getValue(), uomId, dro.getValueNumeric());
 		}
 		else {
 			newObs = DiagnosticReportObservation.newNonNumericObservation(groupId, dro.getProcedureParameterId(), dro.getValue());
@@ -161,9 +163,11 @@ public class DiagnosticReportObservationStorageImpl implements DiagnosticReportO
 			var uomId = updatedObservation.getUnitOfMeasureId().get();
 			var uom = unitOfMeasureRepository.findById(uomId).orElseThrow(uomNotFound(uomId));
 			forUpdate.setUnitOfMeasureId(uom.getId());
+			forUpdate.setValueNumeric(updatedObservation.getValueNumeric().orElse(null));
 		}
 		else {
 			forUpdate.setUnitOfMeasureId(null);
+			forUpdate.setValueNumeric(null);
 		}
 		diagnosticReportObservationRepository.save(forUpdate);
 	}
@@ -214,5 +218,10 @@ public class DiagnosticReportObservationStorageImpl implements DiagnosticReportO
 	private Supplier<DiagnosticReportObservationException> groupNotFound(Integer observationGroupId) {
 		return () -> new ObservationGroupNotFoundException(observationGroupId);
 	}
+
+	private Supplier<DiagnosticReportObservationException> numericValueMissing(Integer observationId) {
+		return () -> new ObservationNumericValueMissing(observationId);
+	}
+
 
 }

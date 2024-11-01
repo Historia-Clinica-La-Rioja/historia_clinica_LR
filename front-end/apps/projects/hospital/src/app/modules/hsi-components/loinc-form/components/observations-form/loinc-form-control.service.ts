@@ -87,7 +87,8 @@ class FormValuesService {
 				value: newValue.value,
 				unitOfMeasureId: newValue.unitOfMeasureId,
 				snomedPt: newValue?.snomedPt,
-				snomedSctid: newValue?.snomedSctid
+				snomedSctid: newValue?.snomedSctid,
+				valueNumeric: newValue.valueNumeric
 			});
 		}
 		return !!this.changedValues.length; // hasChange

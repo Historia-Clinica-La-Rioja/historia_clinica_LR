@@ -98,6 +98,7 @@ export interface AddDiagnosticReportObservationCommandDto {
     snomedSctid: string;
     unitOfMeasureId: number;
     value: string;
+    valueNumeric: number;
 }
 
 export interface AddDiagnosticReportObservationsCommandDto {

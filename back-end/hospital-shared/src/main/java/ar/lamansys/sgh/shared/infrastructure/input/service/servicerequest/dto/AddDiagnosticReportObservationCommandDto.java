@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @ToString
@@ -13,4 +15,5 @@ public class AddDiagnosticReportObservationCommandDto {
 	private Short unitOfMeasureId;
 	private String snomedSctid;
 	private String snomedPt;
+	private BigDecimal valueNumeric;
 }

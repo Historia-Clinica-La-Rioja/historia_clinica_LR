@@ -2,7 +2,12 @@
 
 <div fxLayoutGap="8px" fxLayout="row" fxLayoutAlign="none center">
 	<mat-form-field appearance="outline">
-		<input matInput type="number" [(value)]="preloadValue" (change)="emitValueChange($event)">
+		<style>
+		input:invalid {
+			background-color: red;
+		}
+		</style>
+		<input matInput type="text" pattern="^[\-\+]?[0-9]*,?[0-9]+([eE][\-\+]?[0-9]+)?$" [(value)]="preloadValue" (change)="emitValueChange($event)">
 
 	</mat-form-field>
 	<div>

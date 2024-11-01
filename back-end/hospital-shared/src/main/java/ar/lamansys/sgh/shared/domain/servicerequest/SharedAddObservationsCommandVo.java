@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -29,6 +30,7 @@ public class SharedAddObservationsCommandVo {
 		private @Getter Short unitOfMeasureId;
 		private @Getter String snomedSctid;
 		private @Getter String snomedPt;
+		private @Getter BigDecimal valueNumeric;
 
 		public boolean isNumeric() {
 			return unitOfMeasureId != null;
@@ -66,9 +68,9 @@ public class SharedAddObservationsCommandVo {
 	private List<Observation> values;
 	private SharedReferenceRequestClosureBo referenceClosure;
 
-	public void addValue(Integer procedureParameterId, String value, Short unitOfMeasureId, String snomedSctid, String snomedPt) {
+	public void addValue(Integer procedureParameterId, String value, Short unitOfMeasureId, String snomedSctid, String snomedPt, BigDecimal valueNumeric) {
 		if (this.values == null) values = new ArrayList<>();
-		values.add(new Observation(procedureParameterId, value, unitOfMeasureId, snomedSctid, snomedPt));
+		values.add(new Observation(procedureParameterId, value, unitOfMeasureId, snomedSctid, snomedPt, valueNumeric));
 	}
 	public List<Integer> getParameterIds() {
 		return this.getValues()

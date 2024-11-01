@@ -131,7 +131,8 @@ public class OdontologyConsultationController {
 								value.getValue(),
 								value.getUnitOfMeasureId(),
 								value.getSnomedSctid(),
-								value.getSnomedPt()
+								value.getSnomedPt(),
+								value.getValueNumeric()
 							);
 						});
 					}

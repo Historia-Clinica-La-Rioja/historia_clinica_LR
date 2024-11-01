@@ -124,7 +124,11 @@ public class AddDiagnosticReportObservations {
 			NewDiagnosticReportObservationBo newObservation;
 			valueBo.translateSnomed(this::translateSnomed);
 			if (valueBo.isNumeric())
-				newObservation = NewDiagnosticReportObservationBo.buildNumeric(valueBo.getProcedureParameterId(), valueBo.getValue(), valueBo.getUnitOfMeasureId());
+				newObservation = NewDiagnosticReportObservationBo.buildNumeric(
+					valueBo.getProcedureParameterId(),
+					valueBo.getValue(),
+					valueBo.getUnitOfMeasureId(),
+					valueBo.getValueNumeric());
 			else {
 				newObservation = NewDiagnosticReportObservationBo.buildNonNumeric(valueBo.getProcedureParameterId(), valueBo.getValue());
 			}

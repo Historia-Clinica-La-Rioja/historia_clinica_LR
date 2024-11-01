@@ -103,3 +103,26 @@ databaseChangeLog:
                 WHERE administrative_state_id IS NOT NULL
                 AND destination_institution_id IS NOT NULL;
 
+    - changeSet:
+        id: add-value_numeric-to-diagnostic_report_observation
+        comment: Adds a numeric value column to diagnostic_report_observation. The sql part tries to set the value of the new column.
+        author: efernandez
+        changes:
+          - addColumn:
+              tableName: diagnostic_report_observation
+              columns:
+                - column:
+                    name: value_numeric
+                    type: numeric
+          - sql:
+              sql: |-
+                UPDATE
+                  diagnostic_report_observation
+                SET
+                  value_numeric = value::numeric
+                WHERE
+                  diagnostic_report_observation.unit_of_measure_id IS NOT null
+                  AND diagnostic_report_observation.value IS NOT null
+                  AND diagnostic_report_observation.value != ''
+                  AND diagnostic_report_observation.value ~ '^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$'
+                ;

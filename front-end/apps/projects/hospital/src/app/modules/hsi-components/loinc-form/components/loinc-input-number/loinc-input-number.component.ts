@@ -14,6 +14,7 @@ export class LoincInputNumberComponent implements OnInit {
 	_preloadUnit
 	unitOfMeasureId: number;
 	value = '';
+	valueNumeric : number = 0;
 	@Input() title: string;
 	@Input() listOptionsUnits: ProcedureParameterUnitOfMeasureFullSummaryDto[];
 	@Input() preloadValue;
@@ -58,7 +59,8 @@ export class LoincInputNumberComponent implements OnInit {
 	private emitValueSelected() {
 		const value: NumberWithUnit = {
 			value: this.value,
-			unitOfMeasureId: this.unitOfMeasureId
+			unitOfMeasureId: this.unitOfMeasureId,
+			valueNumeric: parseFloat(this.value && this.value.replace(',', '.')),
 		}
 		this.valueSelected.emit(value)
 	}
@@ -73,5 +75,6 @@ export class LoincInputNumberComponent implements OnInit {
 
 export interface NumberWithUnit {
 	value: string,
-	unitOfMeasureId: number
+	unitOfMeasureId: number,
+	valueNumeric: number
 }
