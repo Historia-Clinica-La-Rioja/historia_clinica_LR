@@ -29,7 +29,7 @@ const DNI_TYPE_ID = 1;
 
 export class MedicalCoverageComponent implements OnInit {
 
-	patientMedicalCoverages: PatientMedicalCoverage[] = [];
+	patientMedicalCoverages: PatientMedicalCoverage[];
 	loading = true;
 
 	private healthInsuranceMasterData: MedicalCoverageDto[];
@@ -49,7 +49,9 @@ export class MedicalCoverageComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly mapperService: MapperService,
 		private readonly dateFormatPipe: DateFormatPipe
-	) {	}
+	) {
+		this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
+	}
 
 	ngOnInit(): void {
 		this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
