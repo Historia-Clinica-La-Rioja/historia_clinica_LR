@@ -45,7 +45,7 @@
 
 	<app-title-description *ngIf="pharmaco.interval"
 		[title]="'pharmaco-detail.INTERVAL'"
-		[text]="pharmaco.interval">
+		[text]="pharmaco.interval | translate">
 	</app-title-description>
 
 	<div class="grouped-info" *ngIf="pharmaco.commercialMedicationPrescription">

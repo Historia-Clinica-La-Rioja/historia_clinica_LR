@@ -136,24 +136,6 @@
 			</mat-select>
 		</mat-form-field>
 
-        <div *ngIf="data.showDosage" class="mat-form-field-wrapper" fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="50px">
-			<div fxLayout="column" fxLayoutGap="10px">
-				<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL' | translate}}</mat-label>
-				<mat-radio-group formControlName="interval" fxLayout="column" fxLayoutGap="10px">
-					<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
-						{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_DEFAULT_OPTION' | translate}}
-					</mat-radio-button>
-					<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
-						Cada <input #intervalHoursInput [style.width.ch]="getInputNumberWidth('intervalHours')"
-								formControlName="intervalHours" type="number" matInput> hs.
-						<mat-error *ngIf="intervalValidation(prescriptionItemForm, 'intervalHours', 'interval')">
-							<span translate="ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.INTERVAL_HOURS_REQUIRED"></span>
-						</mat-error>
-					</mat-radio-button>
-				</mat-radio-group>
-			</div>
-		</div>
-
         <div fxLayout="row" fxLayoutGap="30px" *ngIf="HABILITAR_RELACIONES_SNOMED && HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO">
 			<mat-form-field appearance="outline" fxFlex="50">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.PRESENTATION_UNITS' | translate}}</mat-label>

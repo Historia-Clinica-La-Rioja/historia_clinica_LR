@@ -160,10 +160,16 @@ export class MedicationInformationComponent implements OnInit {
 			unitDose: prescriptionItem.unitDose,
 			commercialMedicationPrescription: prescriptionItem.commercialMedicationPrescription,
 			commercialPt: prescriptionItem.suggestedCommercialMedication?.pt,
-			interval: prescriptionItem.isDailyInterval ? "Diario" : prescriptionItem.intervalHours + " hs",
+			interval: this.buildInterval(prescriptionItem),
 			observations: prescriptionItem.observations,
 			healthProblem: prescriptionItem.healthProblem.description
 		}
+	}
+
+	private buildInterval = (prescriptionItem: NewPrescriptionItem): string | null => {
+		if (prescriptionItem.isDailyInterval) return 'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAILY';
+		if (prescriptionItem.intervalHours) return `${prescriptionItem.intervalHours} hs`;
+		return null;
 	}
 
     private setShowAddMedicationError() {

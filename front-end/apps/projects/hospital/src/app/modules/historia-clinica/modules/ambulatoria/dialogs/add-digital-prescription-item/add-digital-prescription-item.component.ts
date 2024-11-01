@@ -24,8 +24,6 @@ import { intervalValidation } from '../ordenes-prescripciones/utils/ordenesypres
 import { pharmaceuticalForm } from '../../constants/prescripciones-masterdata';
 import { SnomedFinancedAuditRequired } from '../../components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
 
-const MIN_INPUT_LENGTH = 1;
-
 @Component({
 	selector: 'app-add-digital-prescription-item',
 	templateUrl: './add-digital-prescription-item.component.html',
@@ -64,9 +62,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO = false;
 	HABILITAR_REPORTE_EPIDEMIOLOGICO = false;
 
-	intervalValidation = intervalValidation;
-
-	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
 	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
@@ -208,8 +203,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 				id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
 				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
 			},
-			isDailyInterval: showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
-			intervalHours: showDosage ? this.prescriptionItemForm.controls.interval.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
 			observations: this.prescriptionItemForm.controls.observations.value,
 			unitDose: this.prescriptionItemForm.controls.unitDose.value,
 			dayDose: this.prescriptionItemForm.controls.dayDose.value,
@@ -232,10 +225,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		}
 	}
 
-	getInputNumberWidth(formControl: string) {
-		return this.prescriptionItemForm.controls[formControl].value ? this.prescriptionItemForm.controls[formControl].value.toString().length : MIN_INPUT_LENGTH;
-	}
-
 	get isSuggestCommercialMedicationChecked(): boolean {
 		return this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.value;
 	}
@@ -248,7 +237,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		if (!this.prescriptionItemForm.valid
 			|| !this.snomedConcept
 			|| this.snomedConcept.pt === ''
-			|| intervalValidation(this.prescriptionItemForm, 'intervalHours', 'interval')
 			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays', 'administrationTime'))
 			{
 				scrollIntoError(this.prescriptionItemForm, this.el);
@@ -337,26 +325,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		this.prescriptionItemForm.controls.quantity.setValue(prescriptionItem.quantity?.value);
 
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem?.sctId);
-
-		if (this.data.showDosage) {
-			if (prescriptionItem.isDailyInterval) {
-				this.prescriptionItemForm.controls.interval.setValue(this.DEFAULT_RADIO_OPTION);
-			} else {
-				this.prescriptionItemForm.controls.interval.setValue(this.OTHER_RADIO_OPTION);
-				this.prescriptionItemForm.controls.intervalHours.setValue(prescriptionItem.intervalHours);
-				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
-				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
-			}
-
-			if (prescriptionItem.isChronicAdministrationTime) {
-				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
-			} else {
-				this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
-				this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
-				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
-				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
-			}
-		}
 
 		if (prescriptionItem.studyCategory?.id)
 			this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id);
@@ -452,16 +420,11 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			quantity: new FormControl(null, [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]),
-			interval: new FormControl(this.DEFAULT_RADIO_OPTION),
-			intervalHours: new FormControl(null)
 		});
 		this.setInitialValidators();
 	}
 
 	private setInitialValidators = () => {
-		if (this.data.showDosage)
-			this.prescriptionItemForm.controls.interval.setValidators([Validators.required]);
-
 		if (this.data.showStudyCategory)
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 
@@ -509,8 +472,6 @@ interface PrescriptionItemForm {
 	administrationTime: FormControl<number>
 	administrationTimeDays: FormControl<string>
 	quantity: FormControl<number>,
-	interval: FormControl<number>,
-	intervalHours: FormControl<string>
 }
 
 interface NewPrescriptionItem {
@@ -525,9 +486,7 @@ interface NewPrescriptionItem {
 		id: string;
 		description: string;
 	};
-	isDailyInterval: boolean;
 	isChronicAdministrationTime?: boolean;
-	intervalHours?: string;
 	observations: string;
 	administrationTimeDays?: string;
 	unitDose: number;
