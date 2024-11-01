@@ -42,6 +42,11 @@ const routes: Routes = [
 				component: MonthlyReportComponent,
 				data: {
 					label: {key: 'reportes.monthly-report.TITLE'},
+					allowedRoles: [
+						ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+						ERole.PERSONAL_DE_ESTADISTICA,
+						ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR,
+					],
 				},
 			},
 			{
