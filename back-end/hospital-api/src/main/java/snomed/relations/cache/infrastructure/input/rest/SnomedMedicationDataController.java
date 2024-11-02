@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import snomed.relations.cache.application.fetchcommercialmedications.FetchCommercialMedications;
+import snomed.relations.cache.application.getCommercialMedicationDosageFormUnitValues.GetCommercialMedicationDosageFormUnitValues;
 import snomed.relations.cache.application.getMedicationPresentationUnits.GetMedicationPresentationUnits;
 import snomed.relations.cache.infrastructure.input.rest.dto.CommercialMedicationDto;
 
@@ -30,6 +31,8 @@ public class SnomedMedicationDataController {
 	private final FetchCommercialMedications fetchCommercialMedications;
 
 	private final GetMedicationPresentationUnits getMedicationPresentationUnits;
+
+	private final GetCommercialMedicationDosageFormUnitValues getCommercialMedicationDosageFormUnitValues;
 
 	@GetMapping("/commercials")
 	@PreAuthorize("hasPermission(#institutionId, 'PRESCRIPTOR, ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
@@ -48,6 +51,16 @@ public class SnomedMedicationDataController {
 														@PathVariable("medicationSctid") String medicationSctid) {
 		log.debug("Input parameters -> institutionId {}, medicationSctid {}", institutionId, medicationSctid);
 		List<Integer> result = getMedicationPresentationUnits.run(medicationSctid);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/{genericSctid}/get-commercial-medication-dosage-form-units")
+	@PreAuthorize("hasPermission(#institutionId, 'PRESCRIPTOR, ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	public List<String> getCommercialMedicationDosageFormUnits(@PathVariable("institutionId") Integer institutionId,
+															   @PathVariable("genericSctid") String genericSctid) {
+		log.debug("Input parameters -> institutionId {}, medicationSctid {}", institutionId, genericSctid);
+		List<String> result = getCommercialMedicationDosageFormUnitValues.run(genericSctid);
 		log.debug("Output -> {}", result);
 		return result;
 	}

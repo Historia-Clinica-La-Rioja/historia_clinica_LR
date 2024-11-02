@@ -1,5 +1,6 @@
 package snomed.relations.cache.infrastructure.output;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.medicationstatement.CommercialMedicationDosageFormUnitSharedPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +29,8 @@ public class SnomedRelationCacheStorageImpl implements SnomedRelationCacheStorag
 
 	private final VMedicationPresentationUnitRepository vMedicationPresentationUnitRepository;
 
+	private final CommercialMedicationDosageFormUnitSharedPort commercialMedicationDosageFormUnitSharedPort;
+
 	@Override
 	public List<CommercialMedicationBo> getCommercialMedications() {
 		List<CommercialMedicationBo> result = vCommercialMedicationRepository.getCommercialMedications();
@@ -42,6 +45,8 @@ public class SnomedRelationCacheStorageImpl implements SnomedRelationCacheStorag
 		return vCommercialMedicationRepository.fetchCommercialMedicationSnomedListByName(commercialMedicationName, pageable);
 	}
 
+	/*DISCLAIMER: "Presentation unit" en éste método hace referencia a la *cantidad* de unidades que contiene una caja del fármaco.
+	* Está mal nombrado el atributo en la vista (y por consiguiente, la propia vista) */
 	@Transactional(readOnly = true)
 	@Override
 	public List<Integer> getMedicationPresentationUnits(String commercialMedicationSctid) {
@@ -54,6 +59,12 @@ public class SnomedRelationCacheStorageImpl implements SnomedRelationCacheStorag
 	@Override
 	public List<SnomedBo> getSuggestedCommercialMedicationSnomedListByGeneric(String genericMedicationSctid) {
 		return vCommercialMedicationRepository.fetchSuggestedCommercialMedicationSnomedListByGeneric(genericMedicationSctid);
+	}
+
+	@Override
+	public List<String> getAllGenericPresentationUnitUnitValues(String genericSctid) {
+		String genericPresentationUnit = vCommercialMedicationRepository.fetchGenericPresentationUnit(genericSctid);
+		return commercialMedicationDosageFormUnitSharedPort.getAllValuesByDosageFormName(genericPresentationUnit);
 	}
 
 	private Integer parsePresentationUnitValue(String presentationUnitValue) {
