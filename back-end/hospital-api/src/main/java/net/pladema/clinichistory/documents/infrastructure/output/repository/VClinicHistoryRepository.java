@@ -62,9 +62,12 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" JOIN UserPerson up ON d.creationable.createdBy = up.pk.userId" +
 			" JOIN Person p ON up.pk.personId = p.id" +
 			" WHERE d.patientId = :patientId" +
-			" AND oc.creationable.createdOn >= :startDate")
-	List<CHDocumentSummaryBo> getOutpatientConsultationPatientClinicHistory(@Param("patientId") Integer patientId,
-																   @Param("startDate") LocalDateTime startDate);
+			" AND oc.creationable.createdOn >= :startDate AND oc.creationable.createdOn <= :endDate")
+	List<CHDocumentSummaryBo> getOutpatientConsultationPatientClinicHistory(
+		@Param("patientId") Integer patientId,
+		@Param("startDate") LocalDateTime startDate,
+		@Param("endDate") LocalDateTime endDate
+	);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, sr.patientId, sr.creationable.createdOn, sr.creationable.createdOn, p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
@@ -77,9 +80,12 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" AND sr.sourceTypeId = " + SourceType.OUTPATIENT +
 			" AND d.typeId = " + DocumentType.ORDER +
 			" AND sr.statusId IN ('" + ServiceRequestStatus.ACTIVE + "', '" + ServiceRequestStatus.COMPLETED + "')" +
-			" AND sr.creationable.createdOn >= :startDate")
-	List<CHDocumentSummaryBo> getOutpatientServiceRequestPatientClinicHistory(@Param("patientId") Integer patientId,
-																			  @Param("startDate") LocalDateTime startDate);
+			" AND sr.creationable.createdOn >= :startDate AND sr.creationable.createdOn <= :endDate")
+	List<CHDocumentSummaryBo> getOutpatientServiceRequestPatientClinicHistory(
+		@Param("patientId") Integer patientId,
+		@Param("startDate") LocalDateTime startDate,
+		@Param("endDate") LocalDateTime endDate
+	);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo(d.id, cr.patientId, cr.creationable.createdOn, cr.creationable.createdOn, p.id, i.name, d.typeId, d.sourceTypeId, d.sourceTypeId)" +
@@ -90,9 +96,12 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" JOIN Person p ON up.pk.personId = p.id" +
 			" WHERE cr.patientId = :patientId" +
 			" AND d.typeId = " + DocumentType.COUNTER_REFERENCE +
-			" AND cr.creationable.createdOn >= :startDate")
-	List<CHDocumentSummaryBo> getCounterReferencePatientClinicHistory(@Param("patientId") Integer patientId,
-																	  @Param("startDate") LocalDateTime startDate);
+			" AND cr.creationable.createdOn >= :startDate AND cr.creationable.createdOn <= :endDate")
+	List<CHDocumentSummaryBo> getCounterReferencePatientClinicHistory(
+		@Param("patientId") Integer patientId,
+		@Param("startDate") LocalDateTime startDate,
+		@Param("endDate") LocalDateTime endDate
+	);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.id as documentId, nc.patient_id, nc.created_on as startDate, nc.created_on as endDate, p.id as personId, i.name, d.type_id, d.source_type_id as sourceTypeId, d.source_type_id as dSourceTypeId" +
@@ -102,9 +111,13 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" JOIN user_person up ON d.created_by = up.user_id" +
 			" JOIN person p ON up.person_id = p.id" +
 			" WHERE d.patient_id = :patientId" +
-			" AND nc.created_on >= :startDate", nativeQuery = true)
-	List<Object[]> getNursingOutpatientConsultationPatientClinicHistory(@Param("patientId") Integer patientId,
-																@Param("startDate") LocalDateTime startDate);
+			" AND nc.created_on >= :startDate AND nc.created_on <= :endDate",
+			nativeQuery = true)
+	List<Object[]> getNursingOutpatientConsultationPatientClinicHistory(
+		@Param("patientId") Integer patientId,
+		@Param("startDate") LocalDateTime startDate,
+		@Param("endDate") LocalDateTime endDate
+	);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.id as documentId, oc.patient_id, oc.created_on as startDate, oc.created_on as endDate, p.id as personId, i.name, d.type_id, d.source_type_id as sourceTypeId, d.source_type_id as dSourceTypeId" +
@@ -116,9 +129,13 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 			" WHERE oc.patient_id = :patientId" +
 			" AND d.source_type_id = '"+ SourceType.ODONTOLOGY +"'" +
 			" AND d.type_id = '"+ DocumentType.ODONTOLOGY +"'" +
-			" AND oc.created_on >= :startDate", nativeQuery = true)
-	List<Object[]> getOdontologyPatientClinicHistory(@Param("patientId") Integer patientId,
-																@Param("startDate") LocalDateTime startDate);
+			" AND oc.created_on >= :startDate AND oc.created_on <= :endDate ",
+			nativeQuery = true)
+	List<Object[]> getOdontologyPatientClinicHistory(
+		@Param("patientId") Integer patientId,
+		@Param("startDate") LocalDateTime startDate,
+		@Param("endDate") LocalDateTime endDate
+	);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT s.pt " +

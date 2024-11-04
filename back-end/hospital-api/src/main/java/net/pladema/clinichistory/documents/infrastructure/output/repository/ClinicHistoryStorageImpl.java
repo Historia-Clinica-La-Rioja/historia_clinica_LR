@@ -56,13 +56,17 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
     public List<CHDocumentSummaryBo> getPatientClinicHistory(Integer patientId, LocalDate from, LocalDate to) {
 
 		List<CHDocumentSummaryBo> result = new ArrayList<>();
-        List<CHDocumentSummaryBo> internmentResult = repository.getInternmentPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN), LocalDateTime.of(to, LocalTime.MAX));
-		List<CHDocumentSummaryBo> emergencyCareResult = repository.getEmergencyCarePatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN), LocalDateTime.of(to, LocalTime.MAX));
-		List<CHDocumentSummaryBo> outpatientResult = repository.getOutpatientConsultationPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN));
-		outpatientResult.addAll(repository.getOutpatientServiceRequestPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN)));
-		outpatientResult.addAll(repository.getCounterReferencePatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN)));
-		List<Object[]> nursingOutpatientResult = repository.getNursingOutpatientConsultationPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN));
-		List<Object[]> odontologyResult = repository.getOdontologyPatientClinicHistory(patientId, LocalDateTime.of(from, LocalTime.MIN));
+		LocalDateTime fromDateTime = LocalDateTime.of(from, LocalTime.MIN);
+		LocalDateTime toDateTime = LocalDateTime.of(to, LocalTime.MAX);
+
+		List<CHDocumentSummaryBo> internmentResult = repository.getInternmentPatientClinicHistory(patientId, fromDateTime, toDateTime);
+		List<CHDocumentSummaryBo> emergencyCareResult = repository.getEmergencyCarePatientClinicHistory(patientId, fromDateTime, toDateTime);
+
+		List<CHDocumentSummaryBo> outpatientResult = repository.getOutpatientConsultationPatientClinicHistory(patientId, fromDateTime, toDateTime);
+		outpatientResult.addAll(repository.getOutpatientServiceRequestPatientClinicHistory(patientId, fromDateTime, toDateTime));
+		outpatientResult.addAll(repository.getCounterReferencePatientClinicHistory(patientId, fromDateTime, toDateTime));
+		List<Object[]> nursingOutpatientResult = repository.getNursingOutpatientConsultationPatientClinicHistory(patientId, fromDateTime, toDateTime);
+		List<Object[]> odontologyResult = repository.getOdontologyPatientClinicHistory(patientId, fromDateTime, toDateTime);
 
 
 		result.addAll(internmentResult);
