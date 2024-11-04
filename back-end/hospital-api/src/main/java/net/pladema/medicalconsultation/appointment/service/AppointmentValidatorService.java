@@ -13,4 +13,6 @@ public interface AppointmentValidatorService {
 	LocalDate checkAppointmentEveryWeek(String hour, String date, Integer diaryId, Integer appointmentId, Short recurringAppointmentOption, Integer openingHoursId);
 
 	void checkCustomAppointment(CreateCustomAppointmentBo bo);
+
+	void validateReason(short appointmentStateId, String reason);
 }

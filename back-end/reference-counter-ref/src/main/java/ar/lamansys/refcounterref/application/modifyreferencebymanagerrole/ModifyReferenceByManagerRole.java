@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyRe
 import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,14 +31,24 @@ public class ModifyReferenceByManagerRole {
 
 	private final ReferenceAppointmentStorage referenceAppointmentStorage;
 
+	private final ReferenceCounterReferenceAppointmentStorage referenceCounterReferenceAppointmentStorage;
+
 	@Transactional
 	public void run(Integer referenceId, Integer destinationInstitutionId, List<Integer> fileIds) {
 		log.debug("Input parameter -> referenceId {},  destinationInstitutionId {}, fileIds {} ", referenceId, destinationInstitutionId, fileIds);
 		assertValid(referenceId, destinationInstitutionId);
-		referenceStorage.updateDestinationInstitution(referenceId, destinationInstitutionId);
+		updateDestinationInstitution(referenceId, destinationInstitutionId);
 		if (fileIds != null && !fileIds.isEmpty())
 			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, fileIds);
 		log.debug("reference successfully modified");
+	}
+
+	private void updateDestinationInstitution(Integer referenceId, Integer destinationInstitutionId) {
+		var isDestinationInstitutionUpdated  = referenceStorage.updateDestinationInstitution(referenceId, destinationInstitutionId);
+		if (isDestinationInstitutionUpdated) {
+			Optional<Integer> absentAppointmentId = referenceAppointmentStorage.getAbsentAppointmentIdByReferenceId(referenceId);
+			absentAppointmentId.ifPresent(aptId -> referenceCounterReferenceAppointmentStorage.cancelAbsentAppointment(aptId, "Turno cancelado por cambio de institución destino en solicitud de referencia"));
+		}
 	}
 
 	private void assertValid(Integer referenceId, Integer institutionId) {

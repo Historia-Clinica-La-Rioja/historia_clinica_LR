@@ -2,6 +2,7 @@ package ar.lamansys.refcounterref.application.port;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ReferenceAppointmentStorage {
 
@@ -12,5 +13,7 @@ public interface ReferenceAppointmentStorage {
 	Map<Integer, List<Integer>>  getReferenceAppointmentsIds(List<Integer> referenceId);
 
 	boolean referenceHasAppointment(Integer referenceId);
+
+	Optional<Integer> getAbsentAppointmentIdByReferenceId(Integer referenceId);
 
 }

@@ -29,6 +29,8 @@ public interface SharedAppointmentPort {
 
 	void cancelAppointment(Integer institutionId, Integer appointmentId, String reason);
 
+	void cancelAbsentAppointment(Integer appointmentId, String reason);
+
 	SavedBookingAppointmentDto saveBooking(BookingAppointmentDto bookingAppointmentDto, BookingPersonDto bookingPersonDto, String email) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException;
 
 	boolean existsEmail(String email);

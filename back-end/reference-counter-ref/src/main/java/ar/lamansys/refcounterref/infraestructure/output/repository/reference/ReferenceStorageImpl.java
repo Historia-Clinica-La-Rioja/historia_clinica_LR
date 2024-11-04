@@ -310,14 +310,16 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	}
 
 	@Override
-	public void updateDestinationInstitution(Integer referenceId, Integer institutionId) {
+	public boolean updateDestinationInstitution(Integer referenceId, Integer institutionId) {
 		log.debug("Input parameteres -> referenceId {}, institutionId {}", referenceId, institutionId);
 		var reference = this.referenceRepository.findById(referenceId).orElseThrow(() ->
 				new ReferenceException(ReferenceExceptionEnum.INVALID_REFERENCE_ID,  String.format("La referencia con id %s no existe", referenceId)));
 		if (!Objects.equals(reference.getDestinationInstitutionId(), institutionId)) {
 			reference.setDestinationInstitutionId(institutionId);
 			this.referenceRepository.save(reference);
+			return Boolean.TRUE;
 		}
+		return Boolean.FALSE;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package ar.lamansys.refcounterref.application.createcounterreference;
 
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceException;
 import ar.lamansys.refcounterref.application.createcounterreference.exceptions.CreateCounterReferenceExceptionEnum;
-import ar.lamansys.refcounterref.application.port.CounterReferenceAppointmentStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceDoctorStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceDocumentStorage;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
@@ -30,7 +30,7 @@ import java.time.LocalDate;
 public class CreateCounterReference {
 
     private final CounterReferenceDoctorStorage counterReferenceDoctorStorage;
-    private final CounterReferenceAppointmentStorage counterReferenceAppointmentStorage;
+    private final ReferenceCounterReferenceAppointmentStorage referenceCounterReferenceAppointmentStorage;
     private final DateTimeProvider dateTimeProvider;
     private final CounterReferenceStorage counterReferenceStorage;
     private final CounterReferenceDocumentStorage counterReferenceDocumentStorage;
@@ -61,7 +61,7 @@ public class CreateCounterReference {
 
 		counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId(), now));
 
-		counterReferenceAppointmentStorage.run(counterReferenceBo.getPatientId(), doctorInfoBo.getId(), now);
+		referenceCounterReferenceAppointmentStorage.run(counterReferenceBo.getPatientId(), doctorInfoBo.getId(), now);
     }
 
 	public void runValidations(CounterReferenceBo counterReferenceBo) {
@@ -82,7 +82,7 @@ public class CreateCounterReference {
 
 		assertValidReferenceStatus(referenceData);
 
-		counterReferenceBo.setPatientMedicalCoverageId(counterReferenceAppointmentStorage.getPatientMedicalCoverageId(counterReferenceBo.getPatientId(), doctorInfoBo.getId()));
+		counterReferenceBo.setPatientMedicalCoverageId(referenceCounterReferenceAppointmentStorage.getPatientMedicalCoverageId(counterReferenceBo.getPatientId(), doctorInfoBo.getId()));
 		return doctorInfoBo;
 	}
 

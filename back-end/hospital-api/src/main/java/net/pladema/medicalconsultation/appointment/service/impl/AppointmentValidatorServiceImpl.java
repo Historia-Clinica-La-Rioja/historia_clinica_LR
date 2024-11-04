@@ -115,9 +115,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		if (apmtOpt.isPresent() && !validStateTransition(appointmentStateId, apmtOpt.get())) {
 			throw new AppointmentException(AppointmentEnumException.TRANSITION_STATE_INVALID, "Nuevo estado de turno inválido");
 		}
-        if (!validReason(appointmentStateId, reason)) {
-			throw new AppointmentException(AppointmentEnumException.ABSENT_REASON_REQUIRED, "Debe especificarse el motivo");
-		}
+		validateReason(appointmentStateId, reason);
         validateRole(institutionId, apmtOpt);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return Boolean.TRUE;
@@ -136,8 +134,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
         }
     }
 
-    private boolean validReason(short appointmentStateId, String reason) {
-        return !statesWithReason.contains(appointmentStateId) || reason != null;
+	@Override
+    public void validateReason(short appointmentStateId, String reason) {
+		if (statesWithReason.contains(appointmentStateId) && (reason.isBlank() || reason.isEmpty()))
+			throw new AppointmentException(AppointmentEnumException.ABSENT_REASON_REQUIRED, "Debe especificarse el motivo");
     }
 
     private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
