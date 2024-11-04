@@ -16,10 +16,14 @@
             </app-titled-content-card>
         </ng-container>
 
-        <div>
+        <div *ngIf="episodeDiagnosisService.hasDiagnosesAssociated$ | async else showInformationCard">
             <button mat-button id="add-isolation-alert-button" color="primary" (click)="addIsolationAlert()">
                 + {{ "historia-clinica.isolation-alert.ADD_ISOLATION_ALERT" | translate }}
             </button>
         </div>
+
+        <ng-template #showInformationCard>
+            <app-box-message [boxMessageInfo]="isProfessional ? professionalBoxMesaggeInfo : nurseBoxMesaggeInfo"></app-box-message>
+        </ng-template>
     </div>
 </app-new-consultation-expansion-section>

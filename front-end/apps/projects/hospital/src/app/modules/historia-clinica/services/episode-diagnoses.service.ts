@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { deepClone } from '@core/utils/core.utils';
+import { Subject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -8,11 +9,14 @@ import { deepClone } from '@core/utils/core.utils';
 export class EpisodeDiagnosesService {
 
 	episodeDiagnoses: EpisodeDiagnoses;
+	private hasDiagnosesAssociatedSubject = new Subject<boolean>();
+	hasDiagnosesAssociated$ = this.hasDiagnosesAssociatedSubject.asObservable();
 
 	constructor() { }
 
 	setEpisodeDiagnoses(diagnoses: EpisodeDiagnoses) {
 		this.episodeDiagnoses = diagnoses;
+		this.hasDiagnosesAssociatedSubject.next(!!diagnoses.main || !!diagnoses.others.length)
 	}
 
 	getEpisodeDiagnoses(): DiagnosisDto[] {

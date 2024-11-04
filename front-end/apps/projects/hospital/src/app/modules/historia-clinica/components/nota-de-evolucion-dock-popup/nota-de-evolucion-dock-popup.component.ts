@@ -151,7 +151,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 		const subscription = this.form.controls.diagnosis.valueChanges.subscribe(diagnosis => {
 			const { mainDiagnostico, otrosDiagnosticos } = diagnosis;
 			this.episodeDiagnosesService.setEpisodeDiagnoses({ 
-				main: mainDiagnostico.main, 
+				main: mainDiagnostico?.main, 
 				others: otrosDiagnosticos.filter(otherDiagnosis => otherDiagnosis.diagnosis.isAdded).map(otherDiagnosis => otherDiagnosis.diagnosis) });
 		});
 

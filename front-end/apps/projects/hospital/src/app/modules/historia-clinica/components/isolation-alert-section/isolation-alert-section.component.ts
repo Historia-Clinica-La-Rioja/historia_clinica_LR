@@ -1,11 +1,17 @@
-import { Component, forwardRef, OnDestroy } from '@angular/core';
+import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
 import { IsolationAlertPopupComponent } from '@historia-clinica/dialogs/isolation-alert-popup/isolation-alert-popup.component';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { IsolationAlert } from '../isolation-alert-form/isolation-alert-form.component';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
+import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diagnoses.service';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { PermissionsService } from '@core/services/permissions.service';
+import { ERole } from '@api-rest/api-model';
 
+const PROFESSIONAL_ROLES = [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PROFESIONAL_DE_SALUD];
+const BOX_MESSAGE_TITLE = 'historia-clinica.isolation-alert.without_associated_diagnosis.TITLE';
 @Component({
 	selector: 'app-isolation-alert-section',
 	templateUrl: './isolation-alert-section.component.html',
@@ -23,16 +29,34 @@ import { Subscription } from 'rxjs';
 		},
 	],
 })
-export class IsolationAlertSectionComponent extends AbstractCustomForm implements OnDestroy {
+export class IsolationAlertSectionComponent extends AbstractCustomForm implements OnInit, OnDestroy {
 
 	form: FormGroup<IsolationAlertForm>;
 	popUpSubscription: Subscription;
+	isProfessional = false;
+
+	readonly nurseBoxMesaggeInfo: BoxMessageInformation = {
+		title: BOX_MESSAGE_TITLE,
+		message: 'historia-clinica.isolation-alert.without_associated_diagnosis.SUBTITLE',
+		showButtons: false
+	}
+
+	readonly professionalBoxMesaggeInfo: BoxMessageInformation = {
+		title: BOX_MESSAGE_TITLE,
+		showButtons: false
+	}
 
 	constructor(
 		private readonly dialogService: DialogService<IsolationAlertPopupComponent>,
+		readonly episodeDiagnosisService: EpisodeDiagnosesService,
+		private readonly permissionService: PermissionsService
 	) {
 		super();
 		this.createForm();
+	}
+
+	ngOnInit() {
+		this.permissionService.hasContextAssignments$(PROFESSIONAL_ROLES).pipe(take(1)).subscribe(isProfessional => this.isProfessional = isProfessional);
 	}
 
 	ngOnDestroy(): void {
