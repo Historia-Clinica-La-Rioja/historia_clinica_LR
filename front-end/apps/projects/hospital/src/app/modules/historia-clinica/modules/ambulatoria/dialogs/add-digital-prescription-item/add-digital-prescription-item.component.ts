@@ -204,10 +204,10 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
 			},
 			observations: this.prescriptionItemForm.controls.observations.value,
-			unitDose: this.prescriptionItemForm.controls.unitDose.value,
-			dayDose: this.prescriptionItemForm.controls.dayDose.value,
+			unitDose: this.prescriptionItemForm.controls.quantity.value,
+			dayDose: this.prescriptionItemForm.controls.frequency.value,
 			quantity: {
-				value: this.prescriptionItemForm.controls.quantity.value,
+				value: this.prescriptionItemForm.controls.totalQuantity.value,
 				unit: this.prescriptionItemForm.controls.unit.value
 			},
 			commercialMedicationPrescription: commercialMedicationPrescription,
@@ -218,10 +218,10 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 
 	setQuantityMultiplication = () => {
 		if (this.pharmaceuticalForm.some(value => this.snomedConcept?.pt.includes(value))) {
-			const dayDose = this.prescriptionItemForm.controls.dayDose.value;
+			const frequency = this.prescriptionItemForm.controls.frequency.value;
 			const administrationTimeDays = this.prescriptionItemForm.controls.administrationTimeDays.value;
-			if (dayDose && administrationTimeDays)
-				this.prescriptionItemForm.controls.quantity.setValue(dayDose * Number(administrationTimeDays))
+			if (frequency && administrationTimeDays)
+				this.prescriptionItemForm.controls.totalQuantity.setValue(frequency * Number(administrationTimeDays))
 		}
 	}
 
@@ -319,10 +319,10 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		} else {
 			this.disableUnitDoseAndDayDose();
 		}
-		this.prescriptionItemForm.controls.unitDose.setValue(prescriptionItem.unitDose);
-		this.prescriptionItemForm.controls.dayDose.setValue(prescriptionItem.dayDose);
+		this.prescriptionItemForm.controls.quantity.setValue(prescriptionItem.unitDose);
+		this.prescriptionItemForm.controls.frequency.setValue(prescriptionItem.dayDose);
 		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
-		this.prescriptionItemForm.controls.quantity.setValue(prescriptionItem.quantity?.value);
+		this.prescriptionItemForm.controls.totalQuantity.setValue(prescriptionItem.quantity?.value);
 
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem?.sctId);
 
@@ -347,16 +347,16 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	}
 
 	private enableUnitDoseAndDayDose = () => {
-		this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
-		this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
+		this.prescriptionItemForm.controls.quantity.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
+		this.prescriptionItemForm.controls.frequency.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
 		this.enableExtendedFields = true;
 	}
 
 	private disableUnitDoseAndDayDose = () => {
-		this.prescriptionItemForm.controls.unitDose.clearValidators();
-		this.prescriptionItemForm.controls.unitDose.setValue(null);
-		this.prescriptionItemForm.controls.dayDose.clearValidators();
-		this.prescriptionItemForm.controls.dayDose.setValue(null);
+		this.prescriptionItemForm.controls.quantity.clearValidators();
+		this.prescriptionItemForm.controls.quantity.setValue(null);
+		this.prescriptionItemForm.controls.frequency.clearValidators();
+		this.prescriptionItemForm.controls.frequency.setValue(null);
 		this.enableExtendedFields = false;
 	}
 
@@ -403,23 +403,20 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	private setPrescriptionItemForm = () => {
 		this.prescriptionItemForm = new FormGroup<PrescriptionItemForm>({
 			snomed: new FormControl(null, Validators.required),
-			quantityPerTime: new FormControl(null),
-			frequency: new FormControl(null),
-			totalQuantity: new FormControl(null),
 			healthProblem: new FormControl(null, Validators.required),
 			pharmacoSearchType: new FormControl(this.DEFAULT_RADIO_OPTION),
 			observations: new FormControl(null, Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)),
 			isSuggestCommercialMedicationChecked: new FormControl(false),
 			suggestedCommercialMedication: new FormControl(null),
 			presentationUnit: new FormControl(null),
-			dayDose: new FormControl(null),
-			unitDose: new FormControl(null),
+			frequency: new FormControl(null),
+			quantity: new FormControl(null),
 			unit: new FormControl(null),
 			medicationPackQuantity: new FormControl(null),
 			studyCategory: new FormControl(null),
 			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
-			quantity: new FormControl(null, [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]),
+			totalQuantity: new FormControl(null, [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]),
 		});
 		this.setInitialValidators();
 	}
@@ -455,23 +452,20 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 
 interface PrescriptionItemForm {
 	snomed: FormControl<SnomedDto>,
-	quantityPerTime: FormControl<number>,
-	frequency: FormControl<number>,
-	totalQuantity: FormControl<QuantityDto>,
 	healthProblem: FormControl<string>,
 	pharmacoSearchType: FormControl<number>,
 	observations: FormControl<string>,
 	isSuggestCommercialMedicationChecked: FormControl<boolean>
 	suggestedCommercialMedication: FormControl<SnomedDto>
 	presentationUnit: FormControl<number>
-	unitDose: FormControl<number>,
-	dayDose: FormControl<number>,
+	quantity: FormControl<number>,
+	frequency: FormControl<number>,
 	unit: FormControl<string>,
 	medicationPackQuantity: FormControl<number>,
 	studyCategory: FormControl<string>,
 	administrationTime: FormControl<number>
 	administrationTimeDays: FormControl<string>
-	quantity: FormControl<number>,
+	totalQuantity: FormControl<number>,
 }
 
 interface NewPrescriptionItem {
