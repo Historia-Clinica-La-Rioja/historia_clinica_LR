@@ -55,6 +55,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	MAX_QUANTITY: number = this.MAX_VALUE * this.MAX_VALUE;
 	TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	auditRequiredInput: string[];
+	medicationPresentation: string[] = [];
 
 	HABILITAR_RELACIONES_SNOMED = false
 	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS = false;
@@ -141,6 +142,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			}
 		}
 
+		this.setMedicationPresentationByGenericSctid(selectedConcept.sctid);
 		this.clearCommercialMedication();
 	}
 
@@ -231,6 +233,12 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 
 	get healthProblem(): string {
 		return this.prescriptionItemForm.controls.healthProblem.value;
+	}
+
+	private setMedicationPresentationByGenericSctid = (sctid: string) => {
+		this.presentationUnits.getMedicationPresentationByGenericSctid(sctid).subscribe({
+			next: (value: string[]) => this.medicationPresentation = value
+		});
 	}
 
 	private isAddPrescriptionValid = (): boolean => {
