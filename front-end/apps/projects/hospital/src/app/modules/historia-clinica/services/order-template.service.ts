@@ -5,7 +5,7 @@ export class OrderTemplateService {
 
 	studies: RelatedSnomedTemplate[] = [];
 
-	removeStudiesFromTemplate = (sctid: string) => {
+	updateStudiesFromTemplate = (sctid: string) => {
 		const templateId: number = this.studies.find((study: RelatedSnomedTemplate) => study.sctid === sctid)?.templateId;
 		this.studies = this.studies.filter((study: RelatedSnomedTemplate) => study.templateId !== templateId);
 	}
@@ -19,8 +19,7 @@ export class OrderTemplateService {
 	}
 
 	getTemplatesIds = (): number[] | null => {
-		const uniqueTemplateIds = Array.from(new Set(this.studies.map((study: RelatedSnomedTemplate) => study.templateId)));
-		return uniqueTemplateIds.length ? uniqueTemplateIds : null;
+		return Array.from(new Set(this.studies.map((study: RelatedSnomedTemplate) => study.templateId)));
 	}
 }
 

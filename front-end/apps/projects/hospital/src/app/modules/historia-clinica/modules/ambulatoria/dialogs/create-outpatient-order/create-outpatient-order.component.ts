@@ -182,7 +182,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 
 	removeStudy(i) {
 		const study = this.orderStudiesService.getStudyByIndex(i);
-		this.orderTemplate.removeStudiesFromTemplate(study.snomed.sctid);
+		this.orderTemplate.updateStudiesFromTemplate(study.snomed.sctid);
 		this.orderStudiesService.remove(i);
 	}
 

@@ -126,7 +126,6 @@ import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-po
 //services
 import { EmergencyCareEpisodeCallOrAttendService } from './services/emergency-care-episode-call-or-attend.service';
 import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
-// import { OrderTemplateService } from './services/order-template.service';
 //pipes
 import { ProblemStatusPipe } from './pipes/problem-status.pipe';
 import { ShowSpaceDetailTitlePipe } from './pipes/show-space-detail-title.pipe';
@@ -427,7 +426,6 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 	providers: [
 		InternmentSummaryFacadeService,
 		EmergencyCareEpisodeCallOrAttendService,
-		// OrderTemplateService
 	]
 })
 export class HistoriaClinicaModule {

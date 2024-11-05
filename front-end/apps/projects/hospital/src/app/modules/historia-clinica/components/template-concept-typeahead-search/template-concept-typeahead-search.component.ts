@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { SharedSnomedDto, SnomedECL, SnomedSearchItemDto } from "@api-rest/api-model";
+import { SharedSnomedDto, SnomedECL, SnomedSearchItemDto, SnomedTemplateDto } from "@api-rest/api-model";
 import { UntypedFormControl } from "@angular/forms";
 import { forkJoin, Observable, of } from "rxjs";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { debounceTime, distinctUntilChanged, map, mergeMap, startWith } from "rxjs/operators";
 import { ContextService } from "@core/services/context.service";
 import { MostFrequentConceptsService } from '@api-rest/services/most-frequent-concepts.service';
+import { MapperService } from '@historia-clinica/modules/ambulatoria/services/mapper.service';
 
 const MAX_ITEMS_DISPLAY = 30;
 
@@ -42,6 +43,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 		private readonly snowstormService: SnowstormService,
 		private readonly constextService: ContextService,
 		private readonly mostFrequentConceptsService: MostFrequentConceptsService,
+		private readonly mapper: MapperService
 	) {
 
 		this.myControl.valueChanges.pipe(
@@ -85,8 +87,9 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	private setInitialValues() {
 		forkJoin([
 			this.mostFrequentConceptsService.getMostFrequentConceptsService(),
-			this.snowstormService.searchTemplates({ ecl: this.ecl, institutionId: this.constextService.institutionId })
-		]).subscribe(([mostFrequentStudies, templateOptions]) => {
+			this.snowstormService.searchTemplates({ ecl: this.ecl, institutionId: this.constextService.institutionId }),
+			this.mostFrequentConceptsService.getMostFrequentTemplates()
+		]).subscribe(([mostFrequentStudies, templateOptions, mostFrequentTemplates]) => {
 
 			this.mostFrequentStudies = mostFrequentStudies.map((study: SharedSnomedDto) => {
 				return { data: this.mapToSnomedSearchItemDto(study), type: TemplateOrConceptType.CONCEPT }
@@ -99,7 +102,12 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 			});
 			this.initialOptionsLoaded = true;
 			this.myControl.reset();
+			this.mapSnomedTemplateDtoToTemplateOrConceptOption(mostFrequentTemplates);
 		});
+	}
+
+	private mapSnomedTemplateDtoToTemplateOrConceptOption = (mostFrequentTemplates: SnomedTemplateDto[]) => {
+		this.mostFrequentTemplateOptions = mostFrequentTemplates.map((template: SnomedTemplateDto) => this.mapper.toTemplateOrConceptOption(template));
 	}
 
 	private filterMostFrequent(value: string): Observable<TemplateOrConceptOption[]> {
