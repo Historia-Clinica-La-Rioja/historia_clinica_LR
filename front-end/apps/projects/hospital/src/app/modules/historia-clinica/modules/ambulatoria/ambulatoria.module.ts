@@ -76,6 +76,7 @@ import { ViolenceSituationViolentPersonInformationComponent } from './components
 import { AuditRequiredMedicationComponent } from './dialogs/ordenes-prescripciones/audit-required-medication/audit-required-medicine.component';
 //pipes
 import { ShowMissingAlertsPipe } from './pipes/show-missing-alerts.pipe';
+import { MedicationPresentationPipe } from './pipes/medication-presentation.pipe';
 import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
@@ -224,6 +225,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		ViolenceSituationViolentPersonInformationComponent,
 		ViolenceSituationsComponent,
 		//pipe
+		MedicationPresentationPipe,
 		TranslateDeviceTextPipe,
 		ShowMissingAlertsPipe,
 	],
