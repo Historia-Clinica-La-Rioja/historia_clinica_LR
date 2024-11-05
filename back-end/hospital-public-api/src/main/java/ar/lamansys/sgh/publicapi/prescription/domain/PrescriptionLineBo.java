@@ -4,9 +4,11 @@ import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class PrescriptionLineBo {
 	private Integer prescriptionLineNumber;
 	private String prescriptionLineStatus;
@@ -21,6 +23,7 @@ public class PrescriptionLineBo {
 	private Short presentationQuantity;
 	private Short presentationPackageQuantity;
 	private Double quantity;
+	private String quantityUnit;
 
 	@Override
 	public boolean equals(Object o) {

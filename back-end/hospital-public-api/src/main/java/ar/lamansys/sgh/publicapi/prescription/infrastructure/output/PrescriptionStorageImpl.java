@@ -107,7 +107,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"patient_city.description AS city, "  +
 		"patient_address.street AS person_street, " +
 		"patient_address.number AS person_street_number, " +
-		"s3.sctid, s3.pt, mscp.presentation_unit_quantity " + 
+		"s3.sctid, s3.pt, mscp.presentation_unit_quantity, q.unit " +
 		"from medication_statement ms " +
 		"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
@@ -297,7 +297,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"d2.period_unit AS frequency_unit, " +
 				"cs.name AS specialty, " +
 				"cs.sctid_code AS snomed_id, " +
-				"s3.sctid, s3.pt, mscp.presentation_unit_quantity " +
+				"s3.sctid, s3.pt, mscp.presentation_unit_quantity, q.unit " +
 				"FROM {h-schema}medication_statement ms " +
 				"JOIN {h-schema}document_medicamention_statement dms ON (ms.id = dms.medication_statement_id) " +
 				"JOIN {h-schema}document d ON (d.id = dms.document_id) " +
@@ -437,7 +437,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								queryResult[43] != null ? (Double)queryResult[43] : null,
 								queryResult[53] != null ? (Integer)queryResult[53] : null,
 								queryResult[54] != null ? (String)queryResult[54] : null,
-								(Short) queryResult[59]),
+								(Short) queryResult[59],
+								(String) queryResult[60]),
 						(Integer) queryResult[45],
 						queryResult[52] != null ? (String)queryResult[52] : null
 				)),
@@ -828,7 +829,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						(String)queryResult[39],
 						(Short) queryResult[40],
 						queryResult[53] != null ? (Short) queryResult[53] : null,
-						queryResult[43] != null ? (Double)queryResult[43] : null
+						queryResult[43] != null ? (Double)queryResult[43] : null,
+						(String) queryResult[54]
 				))
 		);
 	}

@@ -31,6 +31,8 @@ public class PrescriptionDosageBo {
 
 	private Short presentationPackageQuantity;
 
+	private String quantityUnit;
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

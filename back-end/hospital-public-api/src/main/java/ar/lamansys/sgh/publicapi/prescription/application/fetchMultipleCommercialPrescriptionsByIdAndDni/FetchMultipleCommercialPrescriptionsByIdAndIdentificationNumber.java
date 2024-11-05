@@ -3,8 +3,10 @@ package ar.lamansys.sgh.publicapi.prescription.application.fetchMultipleCommerci
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionRequestException;
+import ar.lamansys.sgh.publicapi.prescription.domain.utils.GroupOneCommercialMedication;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.PrescriptionPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionRequestAccessDeniedException;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +34,18 @@ public class FetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber {
 		assertDomainNumber(prescriptionIdentifier.domain);
 		MultipleCommercialPrescriptionBo result = prescriptionStorage.getMultipleCommercialPrescriptionByIdAndIdentificationNumber(prescriptionIdentifier, identificationNumber)
 				.orElseThrow(() -> new PrescriptionRequestException("Message", new Throwable()));
+		correctQuantityValues(result);
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void correctQuantityValues(MultipleCommercialPrescriptionBo prescription) {
+		prescription.getPrescriptionLines().forEach(line -> correctQuantityValue(line.getPrescriptionDosage()));
+	}
+
+	private void correctQuantityValue(PrescriptionDosageBo lineDosage) {
+		if (!GroupOneCommercialMedication.UNITS.contains(lineDosage.getQuantityUnit()))
+			lineDosage.setQuantity(Double.valueOf(lineDosage.getPresentationPackageQuantity()));
 	}
 
 	private void assertDomainNumber(String domain) {
