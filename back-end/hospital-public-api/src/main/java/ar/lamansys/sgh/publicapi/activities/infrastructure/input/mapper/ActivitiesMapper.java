@@ -282,6 +282,7 @@ public class ActivitiesMapper {
 			if (groupContainsDiagnosis(attentions)) {
 				SingleAttentionInfoDto lastMainDiagnosis = attentions
 						.stream()
+						.filter(a -> a.getSingleDiagnosticDto().getUpdatedOn() != null)
 						.max(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn()))
 						.orElseThrow(this::noDiagnosticFound);
 
@@ -309,6 +310,7 @@ public class ActivitiesMapper {
 		DiagnosesDto diagnosis = new DiagnosesDto();
 		diagnosis.setMain(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis());
 		diagnosis.setOthers(attentions.stream()
+				.filter(diag -> diag.getSingleDiagnosticDto().getDiagnosisType() != null)
 				.filter(diag -> ProblemTypeEnum.map(diag.getSingleDiagnosticDto().getDiagnosisType()).equals(ProblemTypeEnum.DIAGNOSIS))
 				.filter(diag -> !diag.getSingleDiagnosticDto().getDiagnosis().equals(lastMainDiagnosis.getSingleDiagnosticDto().getDiagnosis()))
 				.map(diag -> diag.getSingleDiagnosticDto().getDiagnosis())
