@@ -1,10 +1,4 @@
 <span>{{title | translate}}</span>
-<app-concept-typeahead-search
-	 [ecl]="eclSelected"
-     [appearanceOutline]="true"
-	 [placeholder]="'Busqueda'"
-	 [showSearchIcon]="true"
-	 [clearButton]="true"
-	 [preload]="preloadSnomed"
-	 (conceptSelected)="valueSelected.emit($event)">
-</app-concept-typeahead-search>
+<app-concept-typeahead-search-v2 [preload]="preloadSnomed" [conceptTypeaheadInfo]="conceptTypeaheadInfo"
+	(conceptSelected)="valueSelected.emit($event)">
+</app-concept-typeahead-search-v2>
