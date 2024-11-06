@@ -1,8 +1,8 @@
 <app-content width="full">
-	<mat-card>
-		<div *ngIf="allOrders?.length > 0 else noInfo">
+	<mat-card *ngIf="(allOrders$ | async) as orders">
 
-			<div *ngFor="let order of ordersCurrentPage; last as isLast">
+		<div *ngIf="totalElementsAmount > 0 else noInfo">
+			<div *ngFor="let order of orders.content; last as isLast">
 				<app-row-content>
 
 					<app-patient-summary class="patient-summary" [person]="order.patientDto | patientSummary">
@@ -21,14 +21,14 @@
 
 			<mat-divider></mat-divider>
 
-			<mat-paginator [length]="allOrders?.length" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
+			<mat-paginator [length]="totalElementsAmount" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
 				(page)="onPageChange($event)">
 			</mat-paginator>
-
 		</div>
 
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>
 		</ng-template>
+
 	</mat-card>
 </app-content>

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { AppFeature, StudyOrderWorkListDto } from '@api-rest/api-model';
+import { AppFeature, PageDto, StudyOrderWorkListDto } from '@api-rest/api-model';
 import { ServiceRequestWorkListControllerService } from '@api-rest/services/service-request-work-list-controller.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
+const PAGE_INIT = 0;
+const PAGE_MIN_SIZE = 5;
 
 const LABORATORIO = "108252007";
 const DIAGNOSTICO_POR_IMAGEN = "363679005";
@@ -16,35 +18,46 @@ const DIAGNOSTICO_POR_IMAGEN = "363679005";
 	templateUrl: './work-order-list.component.html',
 	styleUrls: ['./work-order-list.component.scss']
 })
+
 export class WorkOrderListComponent {
 	pageSizeOptions = PAGE_SIZE_OPTIONS;
 	pageSize: Observable<number>;
-	ordersCurrentPage = [];
 	allOrders = [];
+	totalElementsAmount = 0;
 	groupedStudies: StudyOrderWorkListDto[] = [];
+	private categories = [];
+	private references = new BehaviorSubject<PageDto<StudyOrderWorkListDto[]>>(null);
+	readonly allOrders$ = this.references.asObservable();
 	constructor(
 		private serviceRequestWorkListControllerService: ServiceRequestWorkListControllerService,
 		private featureFlagService: FeatureFlagService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES)
-			.pipe(
-				switchMap(ffIsOn => {
-					const categories = ffIsOn ? [LABORATORIO] : [LABORATORIO, DIAGNOSTICO_POR_IMAGEN];
-					return this.serviceRequestWorkListControllerService.getList(categories);
-				})
-			)
-			.subscribe((allOrders: StudyOrderWorkListDto[]) => {
-				this.allOrders = allOrders
-				this.loadFirstPage();
-			});
+		this.firstGetOrders(PAGE_INIT, PAGE_MIN_SIZE)
 	}
 
 	onPageChange($event: PageEvent) {
-		const startPage = $event.pageIndex * $event.pageSize;
-		this.ordersCurrentPage = this.allOrders.slice(startPage, $event.pageSize + startPage);
+		this.getOrders($event.pageIndex, $event.pageSize);
 	}
 
-	private loadFirstPage() {
-		this.ordersCurrentPage = this.allOrders.slice(0, PAGE_SIZE_OPTIONS[0]);
+	private firstGetOrders(pageNumber: number, pageSize: number) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES)
+			.pipe(
+				switchMap((ffIsOn: boolean) => {
+					this.categories = ffIsOn ? [LABORATORIO] : [LABORATORIO, DIAGNOSTICO_POR_IMAGEN];
+					return this.serviceRequestWorkListControllerService.getList(this.categories, pageNumber, pageSize);
+				})
+			)
+			.subscribe((allOrders: PageDto<StudyOrderWorkListDto[]>) => {
+				this.references.next(allOrders);
+				this.totalElementsAmount = allOrders.totalElementsAmount;
+			});
+	}
+
+	private getOrders(pageNumber: number, pageSize: number) {
+		this.serviceRequestWorkListControllerService.getList(this.categories, pageNumber, pageSize)
+			.subscribe((allOrders: PageDto<StudyOrderWorkListDto[]>) => {
+				this.references.next(allOrders);
+				this.totalElementsAmount = allOrders.totalElementsAmount;
+			});
 	}
 }

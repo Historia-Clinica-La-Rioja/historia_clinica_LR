@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StudyOrderWorkListDto } from '@api-rest/api-model';
+import { PageDto, StudyOrderWorkListDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -16,9 +16,12 @@ export class ServiceRequestWorkListControllerService {
 
 	) { }
 
-	getList(categories: string[]): Observable<StudyOrderWorkListDto[]> {
+	getList(categories: string[], pageNumber: number, pageSize: number): Observable<PageDto<StudyOrderWorkListDto[]>> {
+		let params: HttpParams = new HttpParams()
+			.set('pageNumber', pageNumber)
+			.set('pageSize', pageSize)
+			.set('categories', categories.join(','));
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/service-request-work-list`;
-		const params = new HttpParams().append('categories', categories.join(','));
-		return this.http.get<StudyOrderWorkListDto[]>(url, { params });
+		return this.http.get<PageDto<StudyOrderWorkListDto[]>>(url, { params });
 	}
 }
