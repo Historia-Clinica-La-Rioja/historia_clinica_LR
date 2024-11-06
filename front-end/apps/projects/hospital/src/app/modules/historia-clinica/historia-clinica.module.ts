@@ -172,6 +172,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 import { AddStudyComponent } from './dialogs/add-study/add-study.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
+import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typeahead-search-v2/concept-typeahead-search-v2.component';
 
 @NgModule({
 	declarations: [
@@ -373,6 +374,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		//standalone
 		IdentifierCasesComponent,
 		ConceptTypeaheadSearchComponent,
+		ConceptTypeaheadSearchV2Component,
 		PatientSummaryComponent
 	],
 	exports: [

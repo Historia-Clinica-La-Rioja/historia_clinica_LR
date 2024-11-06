@@ -20,6 +20,9 @@
 		"concept-typeahead-search": {
 			"AT_LEAST_THREE_CHARACTERS_MESSAGE": "Ingrese al menos 3 caracteres"
 		},
+		"concept-typeahead-search-v2": {
+			"DISPLAYED_RESULTS": "Mostrando {{ maxResults }} de {{ totalResults }} conceptos coincidentes. Refine la búsqueda para obtener más resultados."
+		},
 		"summary-card": {
 			"evolution-notes-filter": {
 				"filterFieldIsRequiredWhenInputIsSet": "Debe seleccionar un tipo de filtro",
