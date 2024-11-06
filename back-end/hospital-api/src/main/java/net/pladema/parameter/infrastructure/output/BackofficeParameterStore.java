@@ -1,6 +1,8 @@
 package net.pladema.parameter.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.parameter.application.port.ParameterStorage;
+import net.pladema.parameter.domain.ParameterBo;
 import net.pladema.parameter.domain.ParameterTextOptionBo;
 import ar.lamansys.sgh.shared.domain.forms.enums.EParameterType;
 import net.pladema.parameter.infrastructure.input.rest.dto.ParameterDto;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +35,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 	private final ParameterTextOptionRepository parameterTextOptionRepository;
 	private final ParameterUnitOfMeasureRepository parameterUnitOfMeasureRepository;
 	private final LoincCodeRepository loincCodeRepository;
+	private final ParameterStorage parameterStorage;
 
 	@Override
 	public Page<ParameterDto> findAll(ParameterDto example, Pageable pageable) {
@@ -252,4 +256,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 		return parameterTextOptionRepository.getAllByParameterId(id).stream().map(ParameterTextOptionBo::getDescription).collect(Collectors.toList());
 	}
 
+	public List<ParameterBo> findForAutocomplete(String description) {
+		return parameterStorage.findByDescription(description);
+	}
 }
