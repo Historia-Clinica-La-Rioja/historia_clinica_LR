@@ -158,6 +158,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	private loadSelectedConceptsIntoOrderStudiesService() {
 		const addStudy = (study: Study) => {
 			const added = this.orderStudiesService.add(study);
+			this.orderTemplate.addTemplate(this.orderStudiesService.getStudies());
 			if (!added) {
 				this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED');
 			}
