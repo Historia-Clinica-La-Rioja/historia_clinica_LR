@@ -53,6 +53,7 @@ public class AdministrativeReferenceClosure {
 		var result = new CounterReferenceInfoBo(closure);
 		result.setClosureTypeId(EReferenceClosureType.CIERRE_ADMINISTRATIVO.getId());
 		result.setNoteId(noteId);
+		result.setFileIds(closure.getFileIds());
 		return result;
 	}
 
