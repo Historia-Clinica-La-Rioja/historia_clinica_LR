@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 // @Transactional
 @DataJpaTest(showSql = false)
 @EnableJpaRepositories(basePackages = {"net.pladema", "ar.lamansys.sgh.clinichistory"})
-@EntityScan(basePackages = {"net.pladema", "ar.lamansys.sgh.clinichistory"})
+@EntityScan(basePackages = {"net.pladema", "ar.lamansys.sgh.clinichistory", "ar.lamansys.sgx"})
 public class UnitRepository {
 	
     @Autowired

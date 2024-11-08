@@ -29,8 +29,7 @@ public class BackofficeInstitutionUserPersonStore implements BackofficeStore<Ins
 
 	@Override
 	public Page<InstitutionUserPersonDto> findAll(InstitutionUserPersonDto example, Pageable pageable) {
-		List<Integer> userIds = userRepository.findAllIds();
-		List<InstitutionUserPersonDto> list = userPersonRepository.findAllByInstitutionIdAndUserIds(example.getInstitutionId(), userIds)
+		List<InstitutionUserPersonDto> list = userPersonRepository.findAllByInstitutionIdAndUserIds(example.getInstitutionId())
 				.stream()
 				.map(this::mapToInstitutionPersonDto)
 				.collect(Collectors.toList());
