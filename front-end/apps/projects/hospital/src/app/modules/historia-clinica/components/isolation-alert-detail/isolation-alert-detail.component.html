@@ -1,7 +1,14 @@
-<div class="display-column text-overflow" *ngIf="isolationAlertDetail">
-    <span class="subtitle">{{ 'historia-clinica.general.TYPE' | translate }}: {{ isolationAlertDetail.types | stringSeparator}}</span>
-    <span>{{ 'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS' | translate }}: {{ isolationAlertDetail.diagnosis}}</span>
-    <span>{{ 'historia-clinica.general.CRITICALITY' | translate }}: {{ isolationAlertDetail.criticality}}</span>
-    <span>{{ 'historia-clinica.isolation-alert.END_OF_ALERT' | translate }}: {{ isolationAlertDetail.endDate | dateFormat: 'date'}}</span>
-    <span *ngIf="isolationAlertDetail.observations">{{'historia-clinica.general.OBSERVATIONS' | translate }}: {{ isolationAlertDetail.observations }}</span>
+<div id="isolation-alert-detail" class="display-column text-overflow" *ngIf="isolationAlertDetail">
+    <div id="creator" *ngIf="isolationAlertDetail.creator" fxLayout="row" fxLayoutGap="5px">
+        <span>{{'historia-clinica.general.START' | translate}}:</span>
+        <app-register-editor-info class="register-editor-info" [registerEditor]="isolationAlertDetail.creator" [registerEditorCase]="REGISTER_EDITOR_CASES"></app-register-editor-info>
+    </div>
+    <span id="types" class="subtitle">{{ 'historia-clinica.general.TYPE' | translate }}: {{ isolationAlertDetail.types | stringSeparator}}</span>
+    <span id="diagnosis">{{ 'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS' | translate }}: {{ isolationAlertDetail.diagnosis }}</span>
+    <span id="criticality">{{ 'historia-clinica.general.CRITICALITY' | translate }}: {{ isolationAlertDetail.criticality}}</span>
+    <div id="end-date" fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="5px">
+        <span>{{ 'historia-clinica.isolation-alert.END_OF_ALERT' | translate }}: </span>
+        <span [ngClass]="{ 'grey': endDateColor}">{{ isolationAlertDetail.endDate | dateFormat: 'date'}}</span>
+    </div>
+    <span id="observations" *ngIf="isolationAlertDetail.observations">{{'historia-clinica.general.OBSERVATIONS' | translate }}: {{ isolationAlertDetail.observations }}</span>
 </div>

@@ -3,7 +3,7 @@ import { IsolationAlertMasterDataService } from '@api-rest/services/isolation-al
 import { ISOLATION_ALERT_HEADER } from '@historia-clinica/constants/summaries';
 import { PatientIsolationAlertsService } from '@historia-clinica/services/patient-isolation-alerts.service';
 
-const ISOLATION_ALERT_COLUMNS = ['diagnosis', 'types', 'criticality', 'endAlert'];
+const ISOLATION_ALERT_COLUMNS = ['diagnosis', 'types', 'criticality', 'endAlert', 'actions'];
 
 @Component({
 	selector: 'app-isolation-alerts-summary-card',

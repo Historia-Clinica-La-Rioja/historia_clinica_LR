@@ -1,3 +1,5 @@
+@import '../../../../../assets/styles/mixins';
+
 .display-column {
     display: flex;
     flex-direction: column;
@@ -6,10 +8,14 @@
 
 .subtitle {
     font-size: 15px;
-    font-weight: 500;
+    @include font-weight-bold;
 }
 
 .text-overflow {
     word-break: break-word;
 	white-space: pre-line;
+}
+
+.register-editor-info {
+    width: 90%;
 }

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 
 @Component({
 	selector: 'app-isolation-alert-detail',
@@ -7,6 +8,8 @@ import { Component, Input } from '@angular/core';
 })
 export class IsolationAlertDetailComponent {
 
+	readonly REGISTER_EDITOR_CASES = REGISTER_EDITOR_CASES.DATE_HOUR;
+	@Input() endDateColor: string;
 	@Input() isolationAlertDetail: IsolationAlertDetail;
 
 	constructor() { }
@@ -19,4 +22,9 @@ export interface IsolationAlertDetail {
 	criticality: string,
 	endDate: Date,
 	observations: string,
+	creator?: RegisterEditor,
+}
+
+export enum EndDateColor {
+	GREY = 'grey'
 }

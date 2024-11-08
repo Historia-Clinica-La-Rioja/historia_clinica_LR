@@ -29,6 +29,13 @@
 				</td>
 			</ng-container>
 
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+				<td mat-cell class="cell-style" *matCellDef="let isolationAlert">
+					<app-isolation-alerts-summary-actions [isolationAlertId]="isolationAlert.id"></app-isolation-alerts-summary-actions>
+				</td>
+			</ng-container>
+
 			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 		</table>

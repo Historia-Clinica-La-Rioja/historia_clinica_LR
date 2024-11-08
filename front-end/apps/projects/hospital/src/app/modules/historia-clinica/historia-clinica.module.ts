@@ -33,6 +33,7 @@ import { DocumentsSummaryComponent } from './components/documents-summary/docume
 import { DocumentSummaryHeaderComponent } from './components/document-summary-header/document-summary-header.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
+import { EmergencyCareDiagnosesComponent } from './components/emergency-care-diagnoses/emergency-care-diagnoses.component';
 import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
 import { EpicrisisDocumentSummaryComponent } from './components/epicrisis-document-summary/epicrisis-document-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
@@ -55,6 +56,8 @@ import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/
 import { IsolationAlertFormComponent } from './components/isolation-alert-form/isolation-alert-form.component';
 import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
 import { IsolationAlertDetailComponent } from './components/isolation-alert-detail/isolation-alert-detail.component';
+import { IsolationAlertActionPopupComponent } from './dialogs/isolation-alert-action-popup/isolation-alert-action-popup.component';
+import { IsolationAlertsSummaryActionsComponent } from './components/isolation-alerts-summary-actions/isolation-alerts-summary-actions.component';
 import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
 import { IsolationAlertsSummaryCardComponent } from './components/isolation-alerts-summary-card/isolation-alerts-summary-card.component';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
@@ -170,7 +173,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 import { AddStudyComponent } from './dialogs/add-study/add-study.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
-import { EmergencyCareDiagnosesComponent } from './components/emergency-care-diagnoses/emergency-care-diagnoses.component';
 
 @NgModule({
 	declarations: [
@@ -213,6 +215,7 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 		DocumentsSummaryComponent,
 		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
+		EmergencyCareDiagnosesComponent,
 		EndOfAnesthesiaStatusSummaryComponent,
         EpicrisisDocumentSummaryComponent,
 		EpisodeDataComponent,
@@ -258,6 +261,8 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 		InterveningProfessionalsComponent,
 		IntrasurgicalAnestheticProceduresSummaryComponent,
 		IsolationAlertSectionComponent,
+		IsolationAlertsSummaryActionsComponent,
+		IsolationAlertActionPopupComponent,
 		IsolationAlertFormComponent, 
 		IsolationAlertDetailComponent,
 		IsolationAlertsSummaryCardComponent,
@@ -358,7 +363,6 @@ import { EmergencyCareDiagnosesComponent } from './components/emergency-care-dia
 		ShowSpaceDetailTitlePipe,
 		ShowTitleByPatientDataPipe,
     	AddStudyComponent,
-     EmergencyCareDiagnosesComponent,
 	],
 	imports: [
 		CommonModule,

@@ -1,0 +1,11 @@
+<div id="dialog-header" fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title class="mat-h2">{{ data.title | translate }}</span>
+    <button id="close" mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<app-isolation-alert-detail id="dialog-content" mat-dialog-content [isolationAlertDetail]="isolationAlertDetail$ | async" [endDateColor]="END_DATE_COLOR"></app-isolation-alert-detail>
+<mat-dialog-actions id="dialog-actions" *ngIf="data.hasActions">
+    <app-button id="cancel" text="{{'buttons.CANCEL'}}"></app-button>
+    <app-button id="confirm" buttonType="{{RAISED}}" text="{{data.confirmLabel}}"></app-button>
+</mat-dialog-actions>

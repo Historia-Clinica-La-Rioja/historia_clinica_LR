@@ -22,4 +22,9 @@ export class IsolationAlertService {
 		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/patient/${patientId}`;
 		return this.http.get<PatientCurrentIsolationAlertDto[]>(url);
 	}
+
+	getAlertDetail(id: number): Observable<PatientCurrentIsolationAlertDto> {
+		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/${id}`;
+		return this.http.get<PatientCurrentIsolationAlertDto>(url);
+	} 
 }

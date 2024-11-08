@@ -1,0 +1,6 @@
+<button id="isolation-alert-actions" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item id="isolation-alert-detail-button" (click)="openViewDetail()">{{'historia-clinica.general.VIEW_DETAIL' | translate}}</button>
+</mat-menu>

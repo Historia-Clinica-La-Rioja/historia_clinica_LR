@@ -5,7 +5,9 @@
 			"CRITICALITY": "Criticidad",
 			"OBSERVATIONS": "Observaciones",
 			"ENTER_OBSERVATIONS": "Ingrese observaciones",
-			"TYPE": "Tipo"
+			"TYPE": "Tipo",
+			"VIEW_DETAIL": "Ver detalle",
+			"START": "Inicio"
 		},
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
@@ -207,7 +209,8 @@
 				"SUBTITLE": "Consulte con el/la profesional responsable"
 			},
 			"CARD_TITLE": "Alertas de aislamiento",
-			"ALERT_STATE": "Estado de alerta"
+			"ALERT_STATE": "Estado de alerta",
+			"ISOLATION_ALERT_DETAILS": "Detalle de alerta de aislamiento"
 		}
 	}
 }
