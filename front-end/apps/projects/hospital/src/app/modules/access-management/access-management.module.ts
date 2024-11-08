@@ -34,6 +34,7 @@ import { PriorizationCriteriaSelectComponent } from './components/priorization-c
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
 import { ReferenceClosureComponent } from './components/reference-closure/reference-closure.component';
 import { ReferenceFilesComponent } from './components/reference-files/reference-files.component';
+import { ReferenceOriginStateComponent } from './components/reference-origin-state/reference-origin-state.component';
 import { ReferenceMedicalConceptsInformationComponent } from './components/reference-medical-concepts-information/reference-medical-concepts-information.component';
 import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
 import { RegulationSearchCriteriaComponent } from './components/regulation-search-criteria/regulation-search-criteria.component';
@@ -73,6 +74,7 @@ import { TabsService } from './services/tabs.service';
 		ReferenceClosureComponent,
 		ReferenceFilesComponent,
 		ReferenceMedicalConceptsInformationComponent,
+		ReferenceOriginStateComponent,
 		RegulationAppointmentResultViewComponent,
 		RegulationSearchCriteriaComponent,
 		SearchAppointmentsForRegulationComponent,

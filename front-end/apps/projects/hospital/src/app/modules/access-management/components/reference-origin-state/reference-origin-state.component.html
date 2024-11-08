@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutGap="5px">
+    <div>
+        <app-colored-label [description]="regulationState.description | translate | uppercase"
+            [color]="regulationState.color" [icon]="regulationState.icon">
+        </app-colored-label>
+    </div>
+    <div *ngIf="regulation?.state !== referenceStates" fxLayout="column" fxLayoutGap="5px">
+        <span *ngIf="regulation?.reason" class="reason">"{{regulation.reason}}"</span>
+        <div class="grey" fxLayout="row" fxLayoutAlign="space-between">
+            <span>{{regulation.professionalName}}</span>
+            <span>{{regulation.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
+        </div>
+    </div>
+</div>

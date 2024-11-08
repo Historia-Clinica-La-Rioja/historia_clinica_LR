@@ -34,7 +34,8 @@
 			"VIEW_APPLICATION": "Ver solicitud",
 			"DOCUMENT_SEARCH": "Buscar por documento",
             "PRACTICE": "Práctica/Procedimiento",
-			"REGULATION_STATES": "Estado de aprobación",
+			"REGULATION_STATES": "Estado de auditoria",
+			"APPROVAL_STATES": "Estado de aprobación",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",
@@ -46,10 +47,13 @@
 					"TITLE": "estado de aprobación",
 					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
 					"states": {
-						"PENDING": "Esperando aprobacion",
+						"PENDING_APPROVAL": "Esperando aprobacion",
+						"PENDING_AUDIT": "Esperando auditoria",
 						"SUGGESTED": "Revision sugerida",
-						"REJECTED": "Solicitud rechazada",
-						"APPROVED": "Solicitud aprobada"
+						"REJECTED": "Rechazada",
+						"APPROVED": "Aprobada",
+						"AUDITED": "Auditada",
+						"AUDIT_NOT_REQUIRED": "No requiere auditoria"
 					}
 				},
 				"institutional_network_actions": {
