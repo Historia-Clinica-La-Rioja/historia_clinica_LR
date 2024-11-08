@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DateTimeDto } from '@api-rest/api-model';
+import { IDENTIFIER_CASES } from '@hsi-components/identifier-cases/identifier-cases.component';
+import { Color } from '@presentation/colored-label/colored-label.component';
 
 @Component({
 	selector: 'app-order-detail',
@@ -7,6 +9,8 @@ import { DateTimeDto } from '@api-rest/api-model';
 	styleUrls: ['./order-detail.component.scss']
 })
 export class OrderDetailComponent {
+	colorRED = Color.RED;
+	identiferCases = IDENTIFIER_CASES;
 	@Input() orderDetails: OrderDetails;
 }
 
