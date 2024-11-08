@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppFeature, SnomedDto } from '@api-rest/api-model';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { AppFeature, SnomedDto, SnomedECL, SnomedSearchDto } from '@api-rest/api-model';
+import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PresentationModule } from '@presentation/presentation.module';
-import { debounceTime, distinctUntilChanged, mergeMap, Observable, of, startWith, tap } from 'rxjs';
 
 const MIN_SEARCH_LENGTH: number = 3;
 
@@ -16,130 +17,150 @@ const MIN_SEARCH_LENGTH: number = 3;
 })
 export class ConceptTypeaheadSearchV2Component implements OnInit {
 
-	@Input() preload: SnomedDto = null;
+	@Input() preload: SnomedDto
+	@Input() ecl: SnomedECL;
 	@Input() conceptTypeaheadInfo: ConceptTypeaheadInfo;
 
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
 	form: FormGroup;
 	snomedConcept: SnomedDto;
-	inputFocused: boolean = false;
 	loading: boolean = false;
 	items: SnomedDto[] = [];
-	filteredOptions: Observable<SnomedDto[]>;
+	itemsSearchDto: SnomedSearchDto = null;
 	inputText: string = '';
 	totalResults: number = 0;
 	clearButton: boolean = false;
 	hintVisibility: boolean = false;
 	isCacheEnabled: boolean = false;
+	minSearchLength: number = MIN_SEARCH_LENGTH
+
+	@ViewChild('input', { read: MatAutocompleteTrigger })
+    inputAutocomplete: MatAutocompleteTrigger;
 
 	constructor(
-		private fb: FormBuilder,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly fb: FormBuilder,
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly snowstormService: SnowstormService
 	) {
 		this.setFeatureFlags();
-		this.verifyPreloadData();
 		this.checkClearButtonVisibility();
 		this.form = this.fb.group({
 			snomedInput: new FormControl('', this.conceptTypeaheadInfo?.required ? Validators.required : null)
 		});
-		this.checkHintVisibility();
 	}
 
 	ngOnInit(): void {
-		this.filteredOptions = this.form.controls.snomedInput.valueChanges.pipe(
-			startWith(''),
-			debounceTime(this.conceptTypeaheadInfo?.debounceTime),
-			tap(() => (this.loading = true)),
-			distinctUntilChanged(),
-			mergeMap(searchValue => this.filter(searchValue).pipe(tap(() => (this.loading = false))))
-		);
-
+		this.verifyPreloadData();
+		this.form.controls.snomedInput.valueChanges.subscribe(data => {
+			this.inputText = data
+			this.hintVisibility = true
+			if (this.inputText && this.inputText.length >= MIN_SEARCH_LENGTH) {
+				this.loading = true;
+				this.filter(this.inputText)
+			} else {
+				this.hintVisibility = true
+				this.totalResults = this.inputText?.length === 0 ? this.itemsSearchDto.total : 0
+			}
+		})
 		this.form.controls.snomedInput.statusChanges.subscribe(() => {
 			this.checkClearButtonVisibility();
-			this.checkHintVisibility();
 		});
+		window.addEventListener('scroll', this.scrollEventMatAutocomplete, true);
 	}
 
-	onInputFocus(): void {
-		this.inputFocused = true;
-		if (this.isCacheEnabled) {
-			this.filteredOptions = of(this.items);
+	onInputFocus() {
+		this.hintVisibility = false
+
+		if (this.isCacheEnabled && !this.itemsSearchDto?.items?.length) {
+			this.loading = true;
+			this.snowstormService.searchSNOMEDConceptsWithoutTerms(this.ecl).subscribe(data => {
+				const items = data.total > this.conceptTypeaheadInfo.maxSearchResults ? data.items.slice(0, this.conceptTypeaheadInfo.maxSearchResults) : data.items
+				this.itemsSearchDto = data
+				this.totalResults = this.itemsSearchDto.total
+				this.itemsSearchDto.items = items
+				this.loading = false;
+			});
+		} else {
+			this.hintVisibility = true
 		}
-		this.checkHintVisibility()
 	}
 
-	filter(searchValue: string): Observable<SnomedDto[]> {
-		if (this.isCacheEnabled) {
-			this.totalResults = this.items.length;
-			return of(this.items);
-		} else if (searchValue && searchValue.length >= MIN_SEARCH_LENGTH) {
-			const filterValue = searchValue.toLowerCase();
-			const matchingItems = this.items.filter(item =>
-				item.parentFsn?.toLowerCase().startsWith(filterValue)
-			);
-			this.totalResults = matchingItems.length;
-			const limitedItems = matchingItems.slice(0, this.conceptTypeaheadInfo?.maxSearchResults);
-			return of(limitedItems);
-		}
-		this.totalResults = 0;
-		return of([]);
+	filter(searchValue: string) {
+		this.hintVisibility = false
+		const filterValue = searchValue.toLowerCase();
+		this.snowstormService.getSNOMEDConcepts({ term: filterValue, ecl: this.ecl }).subscribe(data => {
+			this.totalResults = data.total
+			this.items = data.items.length > this.conceptTypeaheadInfo.maxSearchResults ? data.items.slice(0, this.conceptTypeaheadInfo.maxSearchResults) : data.items
+		})
+		this.loading = false
 	}
 
-	onOptionSelected(selectedOption: string): void {
-		const selectedItem = this.items.find(item => item.parentFsn === selectedOption);
-		if (selectedItem) {
-			this.snomedConcept = selectedItem
-			this.form.controls.snomedInput?.setValue(selectedItem.parentFsn)
+	onOptionSelected(selectedOption: any): void {
+		if (this.isCacheEnabled && !this.inputText?.length) {
+			const selectedItem = this.itemsSearchDto.items.find(item => item.pt.term === selectedOption?.pt?.term);
+			if (selectedItem) {
+				this.snomedConcept = {
+					sctid: selectedItem.conceptId,
+					pt: selectedItem.pt.term
+				};
+				this.conceptSelected.emit(this.snomedConcept);
+				this.form.controls.snomedInput?.setValue(selectedItem.pt.term);
+			}
+		} else {
+			const selectedItem = this.items.find(item => item.pt === selectedOption.pt);
+			if (selectedItem) {
+				this.snomedConcept = selectedItem;
+				this.conceptSelected.emit(this.snomedConcept);
+				this.form.controls.snomedInput?.setValue(selectedItem.pt);
+			}
 		}
 	}
 
 	clearInput(): void {
-		this.snomedConcept = null;
+		this.snomedConcept = {
+			sctid: null,
+			pt: null
+		}
+		this.itemsSearchDto = null
 		this.form.reset();
+		this.conceptSelected.emit(this.snomedConcept);
 		this.checkClearButtonVisibility();
-		this.checkHintVisibility();
 	}
 
 	private verifyPreloadData() {
-		if (this.preload) {
+		if (this.preload.pt && this.preload.sctid) {
 			this.setPreload()
 		}
 	}
 
 	private setPreload() {
-		let concept = {
-			conceptId: "",
-			id: "",
-			fsn: {
-				term: this.preload.pt,
-				lang: ""
-			},
-			pt: {
-				term: this.preload.pt,
-				lang: ""
-			}
-		}
 		this.snomedConcept = {
 			sctid: this.preload.sctid,
 			pt: this.preload.pt
 		};
-		this.form.setValue(concept);
+		this.form.controls.snomedInput?.setValue(this.preload?.pt);
+		this.checkClearButtonVisibility()
 		this.conceptSelected.emit(this.snomedConcept);
-
 	}
 
 	private checkClearButtonVisibility() {
-		this.clearButton = this.snomedConcept && this.conceptTypeaheadInfo?.clearButton && !this.form.controls.snomedInput.errors;
-	}
-
-	private checkHintVisibility() {
-		this.hintVisibility = !this.isCacheEnabled && this.inputFocused && (!this.form.controls.snomedInput.value || this.form.controls.snomedInput.value.length < MIN_SEARCH_LENGTH);
+		this.clearButton = this.snomedConcept
+			&& this.conceptTypeaheadInfo?.clearButton
+			&& !this.form.controls.snomedInput.errors
+			&& this.snomedConcept.sctid !== null
+			&& this.snomedConcept.pt !== null;
 	}
 
 	private setFeatureFlags() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.isCacheEnabled = isOn);
 	}
+
+	private scrollEventMatAutocomplete = (event: any): void => {
+        if(this.inputAutocomplete?.panelOpen){
+            this.inputAutocomplete.updatePosition();
+        }
+    };
 }
 
 export interface ConceptTypeaheadInfo {

@@ -1,4 +1,4 @@
 <span>{{title | translate}}</span>
-<app-concept-typeahead-search-v2 [preload]="preloadSnomed" [conceptTypeaheadInfo]="conceptTypeaheadInfo"
+<app-concept-typeahead-search-v2 [preload]="preloadSnomed" [ecl]="eclSelected" [conceptTypeaheadInfo]="conceptTypeaheadInfo"
 	(conceptSelected)="valueSelected.emit($event)">
 </app-concept-typeahead-search-v2>
