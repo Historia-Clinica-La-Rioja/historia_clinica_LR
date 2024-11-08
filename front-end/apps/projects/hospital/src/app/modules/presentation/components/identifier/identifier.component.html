@@ -1,11 +1,11 @@
 <div [class]="position">
-	<div class="color display" *ngIf="showLegend else tooltip">
+	<div class="colorDefault display" *ngIf="showLegend else tooltip">
 		<mat-icon class="material-icons-outlined">{{identifier.iconLegend.icon}}</mat-icon>
 		<span>{{identifier.iconLegend.legend}}:</span>
 	</div>
 
 	<ng-template #tooltip>
-		<mat-icon class="material-icons-outlined color"
+		<mat-icon class="material-icons-outlined {{color}} || colorDefault"
 			[matTooltip]="identifier.iconLegend.legend">{{identifier.iconLegend.icon}}</mat-icon>
 	</ng-template>
 
