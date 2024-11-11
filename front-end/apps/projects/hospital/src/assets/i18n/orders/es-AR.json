@@ -1,0 +1,7 @@
+{
+    "orders": {
+        "orders-detail": {
+			"REQUIRES_TRANSFER": "Requiere translado"
+		}
+	}
+}

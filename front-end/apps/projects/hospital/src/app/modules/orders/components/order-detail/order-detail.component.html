@@ -7,11 +7,10 @@
 	</app-identifier-cases>
 
 	<app-identifier-cases *ngIf="orderDetails.requiresTransfer" [identifierCase]="identiferCases.PIN_DROP"
-		[description]="'Requiere translado'">
+		[description]="'orders.orders-detail.REQUIRES_TRANSFER' | translate">
 	</app-identifier-cases>
 
-	<app-identifier-cases [identifierCase]="identiferCases.LOCAL_HOSPITAL"
-		[description]="orderDetails.sourceTypeId">
+	<app-identifier-cases [identifierCase]="identiferCases.LOCAL_HOSPITAL" [description]="orderDetails.sourceTypeId">
 	</app-identifier-cases>
 
 	<div>
