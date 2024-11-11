@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReferenceClosureSummaryDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
-import { ReferenceFileService } from '@api-rest/services/reference-file.service';
+import { CounterreferenceFileService } from '@api-rest/services/counterreference-file.service';
 
 @Component({
     selector: 'app-reference-closure',
@@ -12,14 +12,14 @@ export class ReferenceClosureComponent implements OnInit {
     @Input() closure: ReferenceClosureSummaryDto;
 
     constructor(
-        private readonly referenceFileService: ReferenceFileService,
+        private readonly counterreferenceFileService: CounterreferenceFileService,
     ) { }
 
     ngOnInit(): void {
     }
 
     downloadFile(file: ReferenceCounterReferenceFileDto) {
-		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
+		this.counterreferenceFileService.downloadCounterreferenceFiles(file.fileId, file.fileName);
 	}
 
 }

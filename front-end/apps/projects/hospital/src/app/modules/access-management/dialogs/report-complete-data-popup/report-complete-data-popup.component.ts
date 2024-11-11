@@ -19,8 +19,11 @@ import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
 import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { TabsService } from '@access-management/services/tabs.service';
+import { DashboardService } from '@access-management/services/dashboard.service';
+import { DashboardView } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
+const GESTOR_INSTITUCIONAL = ERole.GESTOR_DE_ACCESO_INSTITUCIONAL;
 const TAB_OFERTA_POR_REGULACION = 1;
 const APPOINTMENT_STATES = REFERENCE_STATES;
 
@@ -50,10 +53,12 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
 	isRoleGestor: boolean;
+	isRoleGestorInstitucional: boolean;
 	hasAppointment: boolean;
 	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
 	pendingAttentionState = PENDING_ATTENTION_STATE;
 	selectedFiles: File[] = [];
+	requested = DashboardView.REQUESTED;
 
 	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -65,18 +70,19 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly tabsService: TabsService,
+		readonly dashboardService: DashboardService,
 		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
 	ngOnInit(): void {
 		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
-		const referenceDetails$ = this.getObservable();
-		this.getReferenceDetails(referenceDetails$);
+		this.updateReference();
 		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
+		this.permissionService.hasContextAssignments$([GESTOR_INSTITUCIONAL]).subscribe(hasRole => this.isRoleGestorInstitucional = hasRole);
 	}
 
-	getReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
+	setReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
 		referenceDetails$.subscribe(
 			referenceDetails => {
 				this.setAppointment(referenceDetails.appointment);
@@ -93,6 +99,11 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		return this.domainRole ?
 			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :
 			this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
+	}
+
+	updateReference() {
+		const referenceDetails$ = this.getObservable();
+		this.setReferenceDetails(referenceDetails$);
 	}
 
 	addObservation(observation: string) {

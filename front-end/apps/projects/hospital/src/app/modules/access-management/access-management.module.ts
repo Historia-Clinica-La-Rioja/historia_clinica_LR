@@ -13,6 +13,7 @@ import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-
 import { ViewMedicalHistoryButtonComponent } from '../hsi-components/view-medical-history-button/view-medical-history-button.component';
 import { ToAvailableAppointmentDataPipe } from '@turnos/standalone/pipes/to-available-appointment-data.pipe';
 //components
+import { AdministrativeReferenceClosureComponent } from './components/administrative-reference-closure/administrative-reference-closure.component';
 import { ApprovalComponent } from './components/approval/approval.component';
 import { ApprovalActionsComponent } from './components/approval-actions/approval-actions.component';
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
@@ -39,15 +40,18 @@ import { RegulationSearchCriteriaComponent } from './components/regulation-searc
 import { SearchAppointmentsForRegulationComponent } from './components/search-appointments-for-regulation/search-appointments-for-regulation.component';
 import { ShowPriorityComponent } from './components/show-priority/show-priority.component';
 //dialogs
+import { AdministrativeReferenceClosurePopupComponent } from './dialogs/administrative-reference-closure-popup/administrative-reference-closure-popup.component';
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { ReferenceEditionPopUpComponent } from './dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 //services
 import { TabsService } from './services/tabs.service';
 
+
 @NgModule({
 	declarations: [
 		//components
+		AdministrativeReferenceClosureComponent,
 		ApprovalComponent,
 		ApprovalActionsComponent,
 		AppointmentSummaryComponent,
@@ -74,6 +78,7 @@ import { TabsService } from './services/tabs.service';
 		SearchAppointmentsForRegulationComponent,
 		ShowPriorityComponent,
 		//dialogs
+		AdministrativeReferenceClosurePopupComponent,
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
 		ReportCompleteDataPopupComponent,

@@ -26,7 +26,7 @@
 				<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'" [collapsed]="referenceCompleteData.closure?.closureType? true : false">
 					<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
 					<div fxLayout="column" fxLayoutAlign="start start" *ngIf="isRoleGestor && !hasAppointment && !referenceCompleteData.reference.closureType">
-						<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="getReferenceDetails($event)"></app-edit-reference>
+						<app-edit-reference [referenceCompleteData]="referenceCompleteData" (newReferenceDetail)="setReferenceDetails($event)"></app-edit-reference>
 					</div>
 				</app-expansion-section>
 
@@ -62,7 +62,7 @@
 					(observationEmmiter)="addObservation($event)">
 				</app-add-observations>
 	
-				<div fxLayout="column" fxLayoutGap="20px"
+				<div fxLayout="column" fxLayoutGap="10px"
 				*ngIf="(referenceRegulationDto.state === approvedState || referenceRegulationDto.state === waitingApprovalState) && isRoleGestor">
 					<mat-divider *ngIf="observation || derivation"></mat-divider>
 	
@@ -71,6 +71,15 @@
 							[derivation]="derivation" [registerDerivationEditor]="registerDeriveEditor$.getValue()" (derivationEmmiter)="performDerivationAction($event)">
 						</app-derive-request>
 					</div>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="10px" *ngIf="!hasAppointment && !referenceCompleteData.reference.closureType && (isRoleGestor ||
+					(isRoleGestorInstitucional && dashboardService.dashboardView == requested))">
+					<mat-divider *ngIf="observation || derivation"></mat-divider>
+
+					<app-administrative-reference-closure [referenceId]="referenceCompleteData.reference.id" [patientId]="this.reportCompleteData.patient.id"
+						(updateReference)="updateReference()">
+					</app-administrative-reference-closure>
 				</div>
 	
 			</div>

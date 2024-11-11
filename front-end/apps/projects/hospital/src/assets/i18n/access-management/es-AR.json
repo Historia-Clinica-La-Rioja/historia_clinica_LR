@@ -119,6 +119,16 @@
 			"SHOW_ERROR_DERIVATION:": "Error al cargar la derivación",
 			"DERIVATION_MESSAGE_TITLE": "DERIVADO A GESTIÓN {{forwardingType}}"
 		},
+		"administrative_reference_closure": {
+			"CLOSURE_BUTTON": "Cierre administrativo de referencia",
+			"DIALOG_TITLE": "¿Confirmar cierre administrativo?",
+			"DIALOG_DESCRIPTION": "La referencia se dará por finalizada y ya no podrá reabrirse.",
+			"DIALOG_INPUT_LABEL": "Motivo de cierre",
+			"DIALOG_INPUT_PLACEHOLDER": "Describa motivo de cierre",
+			"DIALOG_CANCEL_BUTTON": "Cancelar",
+			"DIALOG_CONFIRM_BUTTON": "Confirmar cierre",
+			"CLOSURE_NOTE_LABEL": "Motivo de cierre:"
+		},
 		"reference-edition": {
 			"TITLE": "Editar solicitud de referencia",
 			"EDIT_REFERENCE_DATA": "Editar datos de referencia",
@@ -156,7 +166,9 @@
 				"REFERENCE_EDITION_SUCCESS": "Se edito la referencia exitosamente",
 				"REFERENCE_EDITION_ERROR": "Hubo un error al editar la referencia",
 				"FILES_DELETE_SUCCESS": "Se eliminaron los archivos correctamente",
-				"FILES_DELETE_ERROR": "Hubo un error al eliminar los archivos"
+				"FILES_DELETE_ERROR": "Hubo un error al eliminar los archivos",
+				"ADMINISTRATIVE_CLOSURE_SUCCESS": "Cierre administrativo realizado con éxito",
+				"ADMINISTRATIVE_CLOSURE_ERROR": "Hubo un error al cerrar la referencia"
 			}
 		},
 		"holiday_warning": {
