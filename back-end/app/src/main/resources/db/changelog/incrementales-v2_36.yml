@@ -1,3 +1,82 @@
 databaseChangeLog:
     - logicalFilePath: incrementales-v2_36
 
+    - changeSet:
+        id: addColumn-administrative_state_id
+        comment: Add column administrative_state_id to reference
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: administrative_state_id
+                    type: smallint
+
+    - changeSet:
+        id: createTable-historic_reference_administrative_state
+        author: fsimaro
+        comment: Create table historic_reference_administrative_state
+        changes:
+          - createTable:
+              tableName: historic_reference_administrative_state
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_historic_reference_administrative_state
+                    name: id
+                    type: int
+                - column:
+                    name: reference_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_historic_reference_administrative_state_reference_id
+                      references: reference(id)
+                - column:
+                    name: state_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+

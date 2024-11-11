@@ -72,3 +72,4 @@ databaseChangeLog:
                                   type: int
                                   constraints:
                                       nullable: true
+
