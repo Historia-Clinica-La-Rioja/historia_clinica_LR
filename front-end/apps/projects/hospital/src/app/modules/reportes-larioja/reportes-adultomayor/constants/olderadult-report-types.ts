@@ -13,7 +13,7 @@ export const OLDERADULT_REPORT_TYPES = [
         id: 3,
     },
     {
-        description: 'Escalas de evaluación gerontológica',
+        description: 'Escalas de Evaluación Gerontológica',
         id: 4,
     }
 ]
