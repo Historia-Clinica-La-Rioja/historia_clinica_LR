@@ -100,7 +100,10 @@ export class ReportesAdultomayorComponent implements OnInit {
         case 3:
           this.olderadultReportsService.getPolypharmacyReport(params, `${this.REPORT_TYPES[2].description}.xls`).subscribe();
           break;
-        default:
+        case 4:
+          this.olderadultReportsService.getGerontologicalAssessmentsExcelReport(params, `${this.REPORT_TYPES[3].description}.xls`).subscribe();
+          break;
+          default:
       }
     }
   }

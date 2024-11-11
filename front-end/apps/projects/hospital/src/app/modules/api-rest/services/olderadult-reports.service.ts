@@ -38,5 +38,9 @@ export class OlderadultReportsService {
     const url = `${environment.apiBase}/olderadultsreports/${this.contextService.institutionId}/polypharmacy`;
     return this.getOlderadultReport(params, fileName, url);
   }
-
+  
+  getGerontologicalAssessmentsExcelReport(params: any, fileName: string): Observable<any> {
+    const url = `${environment.apiBase}/olderadultsreports/${this.contextService.institutionId}/gerontological-assessments`;
+    return this.getOlderadultReport(params, fileName, url);
+  }
 }
