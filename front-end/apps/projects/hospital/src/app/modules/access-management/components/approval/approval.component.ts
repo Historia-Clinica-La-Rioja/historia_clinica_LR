@@ -19,8 +19,8 @@ export class ApprovalComponent implements OnInit {
 	referenceRegulationDto: ReferenceRegulationDto;
 	loggedUserCanDoActions = false;
 	referenceApprovalState = {
-		approved: EReferenceRegulationState.APPROVED,
-		pending: EReferenceRegulationState.WAITING_APPROVAL,
+		audited: EReferenceRegulationState.AUDITED,
+		pending: EReferenceRegulationState.WAITING_AUDIT,
 	}
 	hasGestorRole = false;
 	hasGestorInstitucionalRole = false;

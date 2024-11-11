@@ -2,11 +2,13 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceExceptionEnum;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceAdministrativeStateStorage;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
@@ -47,7 +49,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	private static final Integer OUTPATIENT_SOURCE_TYPE_ID = 1;
 
-	private static final Short APPROVED_REGULATION_STATE = 1;
+	private static final Short APPROVED_ADMINISTRATIVE_STATE = EReferenceAdministrativeState.APPROVED.getId();
 
     private final ReferenceRepository referenceRepository;
 
@@ -68,6 +70,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
 	
 	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
+
+	private final HistoricReferenceAdministrativeStateStorage historicReferenceAdministrativeStateStorage;
 
     @Override
 	@Transactional
@@ -95,8 +99,18 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	}
 
 	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {
-		var regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
+		Short regulationStateId;
+		if (referenceBo.getRegulationState() != null && referenceBo.getRegulationState().equals(EReferenceRegulationState.SUGGESTED_REVISION))
+			regulationStateId = EReferenceRegulationState.AUDITED.getId();
+		else
+			regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
 		reference.setRegulationStateId(regulationStateId);
+		if ((regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()) || regulationStateId.equals(EReferenceRegulationState.AUDITED.getId()))
+			&& reference.getDestinationInstitutionId() != null )
+		{
+			reference.setAdministrativeStateId(EReferenceAdministrativeState.WAITING_APPROVAL.getId());
+			historicReferenceAdministrativeStateStorage.save(reference.getId(), reference.getAdministrativeStateId(), null);
+		}
 		referenceRepository.save(reference);
 	}
 
@@ -126,8 +140,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	@Override
     public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds) {
 		log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}, loggedUserRoleIds {}", patientId, clinicalSpecialtyIds, loggedUserRoleIds);
-		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE);
-       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE));
+		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_ADMINISTRATIVE_STATE);
+       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_ADMINISTRATIVE_STATE));
 		return setReferenceDetails(queryResult);
     }
 

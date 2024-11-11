@@ -41,8 +41,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	registerEditorAppointment: RegisterEditor;
 	referenceAppointment: ReferenceAppointmentDto;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
-	approvedState = EReferenceRegulationState.APPROVED;
-	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
+	auditedState = EReferenceRegulationState.AUDITED;
+	waitingAuditedState = EReferenceRegulationState.WAITING_AUDIT;
 	observation: string;
 	derivation: string;
 	registerEditor: RegisterEditor = null;

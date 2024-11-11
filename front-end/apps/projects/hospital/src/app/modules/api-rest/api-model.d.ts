@@ -6469,10 +6469,11 @@ export const enum EReferenceForwardingType {
 }
 
 export const enum EReferenceRegulationState {
-    WAITING_APPROVAL = "WAITING_APPROVAL",
-    APPROVED = "APPROVED",
+    WAITING_AUDIT = "WAITING_AUDIT",
+    DONT_REQUIRES_AUDIT = "DONT_REQUIRES_AUDIT",
     REJECTED = "REJECTED",
     SUGGESTED_REVISION = "SUGGESTED_REVISION",
+    AUDITED = "AUDITED",
 }
 
 export const enum ERejectDocumentElectronicJointSignatureReason {

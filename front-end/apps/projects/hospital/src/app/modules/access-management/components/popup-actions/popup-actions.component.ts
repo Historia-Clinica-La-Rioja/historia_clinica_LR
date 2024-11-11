@@ -13,8 +13,8 @@ export class PopupActionsComponent {
 	NO_INSTITUTION = NO_INSTITUTION;
 
 	referenceApprovalState = {
-		approved: EReferenceRegulationState.APPROVED,
-		pending: EReferenceRegulationState.WAITING_APPROVAL,
+		audited: EReferenceRegulationState.AUDITED,
+		pending: EReferenceRegulationState.WAITING_AUDIT,
 	}
 
 	@Input() reportCompleteData: ReferenceCompleteDataDto;

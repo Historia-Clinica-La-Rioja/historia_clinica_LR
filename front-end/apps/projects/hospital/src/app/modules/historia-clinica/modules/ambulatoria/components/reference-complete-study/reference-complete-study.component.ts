@@ -22,7 +22,8 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 	_reference$: Observable<ReferenceCompleteData>;
 	buttonTypeFlat = ButtonType.FLAT;
 	boxMessageInfo: BoxMessageInformation;
-	APPROVED = EReferenceRegulationState.APPROVED;
+	AUDITED = EReferenceRegulationState.AUDITED;
+	DONT_REQUIRES_AUDIT = EReferenceRegulationState.DONT_REQUIRES_AUDIT;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			reference: ReferenceRequestDto;

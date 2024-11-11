@@ -1,11 +1,14 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation;
 
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity.HistoricReferenceAdministrativeState;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity.HistoricReferenceRegulation;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRuleDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRulePort;
@@ -48,18 +51,19 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		if (rules.isEmpty())
 			return saveEmptyRegulation(referenceId);
 		rules.forEach(rule -> saveHistoricReferenceRegulation(referenceId, rule));
-		return EReferenceRegulationState.WAITING_APPROVAL.getId();
+		return EReferenceRegulationState.WAITING_AUDIT.getId();
 	}
 
 	private Short saveEmptyRegulation(Integer referenceId) {
-		Short regulationStateId =  EReferenceRegulationState.APPROVED.getId();
+		Short regulationStateId =  EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId();
 		HistoricReferenceRegulation emptyRegulation = new HistoricReferenceRegulation(null, referenceId, null, null, regulationStateId, null);
 		historicReferenceRegulationRepository.save(emptyRegulation);
+
 		return regulationStateId;
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId, SharedRuleDto rule) {
-		HistoricReferenceRegulation historicReferenceRegulation = new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_APPROVAL.getId(), null);
+		HistoricReferenceRegulation historicReferenceRegulation = new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_AUDIT.getId(), null);
 		historicReferenceRegulationRepository.save(historicReferenceRegulation);
 	}
 
@@ -68,7 +72,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
     }
 
 	@Override
-	public void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
+	public void auditReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
 		log.debug("Input parameters -> ruleId {}, institutionIds {}", ruleId, institutionIds);
 		List<HistoricReferenceRegulation> historicReferenceRegulations;
 		if (institutionIds.isEmpty())
@@ -81,13 +85,13 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 				referencesMap.put(hrr.getReferenceId(), hrr.getStateId());
 		});
 		referencesMap.forEach((referenceId, stateId) -> {
-			if (stateId.equals(EReferenceRegulationState.WAITING_APPROVAL.getId()))
+			if (stateId.equals(EReferenceRegulationState.WAITING_AUDIT.getId()))
 				saveHistoricReferenceRegulation(referenceId);
 		});
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId) {
-		Short approvedStateId = EReferenceRegulationState.APPROVED.getId();
+		Short approvedStateId = EReferenceRegulationState.AUDITED.getId();
 		HistoricReferenceRegulation entity = new HistoricReferenceRegulation(referenceId, approvedStateId);
 		historicReferenceRegulationRepository.save(entity);
 		updateReferenceRegulationStateId(referenceId, approvedStateId);

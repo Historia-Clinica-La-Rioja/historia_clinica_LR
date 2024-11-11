@@ -40,11 +40,11 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId is NULL " +
 			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)) " +
-			"AND r.regulationStateId = :regulationStateId")
+			"AND r.administrativeStateId = :administrativeStateId")
     List<ReferenceDataBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId,
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds,
-																  @Param("regulationStateId") Short regulationStateId);
+																  @Param("administrativeStateId") Short administrativeStateId);
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
@@ -66,11 +66,11 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId IS NULL " +
 			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)) " +
-			"AND r.regulationStateId = :regulationStateId")
+			"AND r.administrativeStateId = :administrativeStateId")
     List<ReferenceDataBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId,
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds,
-																  @Param("regulationStateId") Short regulationStateId);
+																  @Param("administrativeStateId") Short administrativeStateId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +

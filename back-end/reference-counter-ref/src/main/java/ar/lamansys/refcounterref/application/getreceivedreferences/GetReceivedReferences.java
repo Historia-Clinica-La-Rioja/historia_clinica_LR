@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class GetReceivedReferences {
@@ -16,6 +18,7 @@ public class GetReceivedReferences {
 	private final ReferenceReportStorage referenceReportStorage;
 	
 	public Page<ReferenceReportBo> run(ReferenceReportFilterBo filter, Pageable pageable) {
+		filter.setReceived(true);
 		return referenceReportStorage.fetchReferencesReport(filter, pageable);
 	}
 

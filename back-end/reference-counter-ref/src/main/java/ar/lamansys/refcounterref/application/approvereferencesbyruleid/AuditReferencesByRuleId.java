@@ -13,14 +13,14 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ApproveReferencesByRuleId {
+public class AuditReferencesByRuleId {
 
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
 
 	@Transactional
 	public void run(Integer ruleId, List<Integer> institutionIds){
 		log.debug("Input parameters -> ruleId {}", ruleId);
-		historicReferenceRegulationStorage.approveReferencesByRuleId(ruleId, institutionIds);
+		historicReferenceRegulationStorage.auditReferencesByRuleId(ruleId, institutionIds);
 	}
 
 }

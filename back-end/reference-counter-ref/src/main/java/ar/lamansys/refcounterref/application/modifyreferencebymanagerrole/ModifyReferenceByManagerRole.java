@@ -3,10 +3,15 @@ package ar.lamansys.refcounterref.application.modifyreferencebymanagerrole;
 import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyReferenceException;
 import ar.lamansys.refcounterref.application.modifyReference.exceptions.ModifyReferenceExceptionEnum;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceAdministrativeStateStorage;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,11 +38,16 @@ public class ModifyReferenceByManagerRole {
 
 	private final ReferenceCounterReferenceAppointmentStorage referenceCounterReferenceAppointmentStorage;
 
+	private final HistoricReferenceAdministrativeStateStorage historicReferenceAdministrativeStateStorage;
+
+	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
+
 	@Transactional
 	public void run(Integer referenceId, Integer destinationInstitutionId, List<Integer> fileIds) {
 		log.debug("Input parameter -> referenceId {},  destinationInstitutionId {}, fileIds {} ", referenceId, destinationInstitutionId, fileIds);
 		assertValid(referenceId, destinationInstitutionId);
 		updateDestinationInstitution(referenceId, destinationInstitutionId);
+		updateReferenceAdministrativeState(referenceId);
 		if (fileIds != null && !fileIds.isEmpty())
 			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, fileIds);
 		log.debug("reference successfully modified");
@@ -62,4 +72,16 @@ public class ModifyReferenceByManagerRole {
 				throw new ModifyReferenceException(ModifyReferenceExceptionEnum.HAS_APPOINTMENT, "No es posible modificar la institucion de la referencia porque la misma tiene un turno asignado");
 		}
 	}
+
+	private void updateReferenceAdministrativeState(Integer referenceId){
+		referenceStorage.findById(referenceId).map(Reference::getAdministrativeStateId)
+				.ifPresent(administrativeStateId -> {
+					if (administrativeStateId.equals(EReferenceAdministrativeState.SUGGESTED_REVISION.getId())){
+						historicReferenceRegulationStorage.updateReferenceRegulationState(referenceId, EReferenceRegulationState.AUDITED.getId(), null);
+						historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
+					}
+					historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
+			});
+	}
+
 }

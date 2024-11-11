@@ -5,6 +5,7 @@ import java.util.List;
 
 import ar.lamansys.refcounterref.domain.careline.CareLineBo;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
@@ -71,6 +72,8 @@ public class ReferenceDataBo {
 	private EReferenceStatus status;
 
 	private EReferenceRegulationState regulationState;
+
+	private EReferenceAdministrativeState administrativeState;
 
 	public ReferenceDataBo(Integer id, LocalDateTime date, String note,
 						   Integer careLineId, String careLineDescription,

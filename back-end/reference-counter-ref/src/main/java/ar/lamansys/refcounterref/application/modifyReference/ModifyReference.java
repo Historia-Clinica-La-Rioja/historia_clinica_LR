@@ -83,6 +83,8 @@ public class ModifyReference {
 		result.setPatientId(referenceData.getPatientId());
 		result.setPatientMedicalCoverageId(referenceData.getPatientMedicalCoverageId());
 		result.setStudy(referenceStudy.orElse(null));
+		result.setRegulationState(referenceData.getRegulationState());
+		result.setAdministrativeState(referenceData.getAdministrativeState());
 
 		return result;
 	}

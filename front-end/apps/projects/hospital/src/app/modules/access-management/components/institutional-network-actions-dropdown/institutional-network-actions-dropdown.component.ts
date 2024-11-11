@@ -16,12 +16,13 @@ import { Observable } from 'rxjs';
 export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 
 	regulationStates: EReferenceRegulationState[] = [
-		EReferenceRegulationState.WAITING_APPROVAL,
+		EReferenceRegulationState.WAITING_AUDIT,
 		EReferenceRegulationState.SUGGESTED_REVISION,
 		EReferenceRegulationState.REJECTED,
-		EReferenceRegulationState.APPROVED,
+		EReferenceRegulationState.AUDITED,
+		EReferenceRegulationState.DONT_REQUIRES_AUDIT
 	];
-	waitingApproval =  EReferenceRegulationState.WAITING_APPROVAL;
+	waitingApproval =  EReferenceRegulationState.WAITING_AUDIT;
 	selectedOption: EReferenceRegulationState = this.waitingApproval;
 	initialOption: EReferenceRegulationState;
 	selectedOptionData: ReasonData;

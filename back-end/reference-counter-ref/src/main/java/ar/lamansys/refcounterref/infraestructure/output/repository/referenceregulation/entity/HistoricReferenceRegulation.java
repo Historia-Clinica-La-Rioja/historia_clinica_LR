@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation;
+package ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;

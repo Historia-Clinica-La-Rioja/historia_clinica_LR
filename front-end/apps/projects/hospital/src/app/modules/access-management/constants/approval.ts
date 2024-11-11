@@ -26,10 +26,10 @@ export const PENDING: ColoredLabel = {
 }
 
 export const getIconState = {
-    [EReferenceRegulationState.WAITING_APPROVAL]: PENDING,
+    [EReferenceRegulationState.WAITING_AUDIT]: PENDING,
     [EReferenceRegulationState.SUGGESTED_REVISION]: SUGGESTED,
     [EReferenceRegulationState.REJECTED]: REJECTED,
-    [EReferenceRegulationState.APPROVED]: APPROVAL,
+    [EReferenceRegulationState.AUDITED]: APPROVAL,
 }
 
 export enum ReferenceApprovalState {

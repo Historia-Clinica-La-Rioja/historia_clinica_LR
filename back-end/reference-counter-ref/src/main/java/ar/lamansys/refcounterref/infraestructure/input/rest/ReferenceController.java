@@ -3,7 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.getreferencesummary.GetReferenceSummary;
 import ar.lamansys.refcounterref.application.getreference.GetReference;
 import ar.lamansys.refcounterref.application.modifyreferencebymanagerrole.ModifyReferenceByManagerRole;
-import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceSummaryDto;
@@ -62,7 +62,7 @@ public class ReferenceController {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
 		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(institutionId, patientId, clinicalSpecialtyId, careLineId, practiceId);
 		referenceSummaryBoList = referenceSummaryBoList.stream()
-				.filter(r -> r.getRegulationState().equals(EReferenceRegulationState.APPROVED))
+				.filter(r -> r.getAdministrativeState().equals(EReferenceAdministrativeState.APPROVED))
 				.collect(Collectors.toList());
 		List<ReferenceSummaryDto> result = getReferenceMapper.toReferenceSummaryDtoList(referenceSummaryBoList);
 		log.debug("Output -> result {}", result);

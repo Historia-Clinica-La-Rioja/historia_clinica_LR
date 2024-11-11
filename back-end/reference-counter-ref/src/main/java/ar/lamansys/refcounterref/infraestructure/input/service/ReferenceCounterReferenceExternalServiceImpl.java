@@ -1,6 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.service;
 
-import ar.lamansys.refcounterref.application.approvereferencesbyruleid.ApproveReferencesByRuleId;
+import ar.lamansys.refcounterref.application.approvereferencesbyruleid.AuditReferencesByRuleId;
 import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
 import ar.lamansys.refcounterref.application.createreference.CreateReference;
 import ar.lamansys.refcounterref.application.getcounterreference.GetCounterReference;
@@ -60,7 +60,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     private final ReferenceAppointmentRepository referenceAppointmentRepository;
 	private final GetReferenceByServiceRequest getReferenceByServiceRequest;
 	private final SharedStaffPort sharedStaffPort;
-	private final ApproveReferencesByRuleId approveReferencesByRuleId;
+	private final AuditReferencesByRuleId auditReferencesByRuleId;
 	private final UpdateRuleOnReferenceRegulation updateRuleIdOnReferences;
 	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
 	private final ReferenceRepository referenceRepository;
@@ -144,7 +144,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	@Override
 	public void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
 		log.debug("Input parameter -> ruleId {}", ruleId);
-		approveReferencesByRuleId.run(ruleId, institutionIds);
+		auditReferencesByRuleId.run(ruleId, institutionIds);
 	}
 
 	@Override

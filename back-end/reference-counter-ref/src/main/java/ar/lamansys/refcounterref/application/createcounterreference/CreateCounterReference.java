@@ -13,7 +13,7 @@ import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.doctor.CounterReferenceDoctorInfoBo;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
-import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedNotePort;
@@ -125,7 +125,7 @@ public class CreateCounterReference {
 	private void assertValidReferenceStatus(Reference reference){
 		if (!reference.getStatusId().equals(EReferenceStatus.ACTIVE.getId()))
 			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE_STATUS, "La referencia debe estar activa");
-		if (!reference.getRegulationStateId().equals(EReferenceRegulationState.APPROVED.getId()))
+		if (!reference.getAdministrativeStateId().equals(EReferenceAdministrativeState.APPROVED.getId()))
 			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE_REGULATION_STATE, "La referencia debe haber sido aprobada previamente");
 	}
 

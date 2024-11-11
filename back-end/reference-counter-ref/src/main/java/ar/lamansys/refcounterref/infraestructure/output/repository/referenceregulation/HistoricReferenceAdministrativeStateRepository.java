@@ -1,0 +1,7 @@
+package ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation;
+
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity.HistoricReferenceAdministrativeState;
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+
+public interface HistoricReferenceAdministrativeStateRepository extends SGXAuditableEntityJPARepository<HistoricReferenceAdministrativeState, Integer> {
+}

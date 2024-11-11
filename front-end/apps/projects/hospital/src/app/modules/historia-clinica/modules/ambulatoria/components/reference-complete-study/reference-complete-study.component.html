@@ -19,7 +19,7 @@
 			<mat-divider></mat-divider>
 			<mat-divider [vertical]="true"></mat-divider>
 
-			<ng-container *ngIf="_reference.state===APPROVED  else warningMessage ">
+			<ng-container *ngIf="_reference.state===AUDITED  else warningMessage ">
 				<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
 					[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference"
 					[studies]="data.studies" [resultsPractices]="data.resultsPractices">
