@@ -32,28 +32,24 @@ export class OrderTemplateService {
 	}
 
 	addTemplate = (studies: Study[]) => {
-		const template = this.getTemplatesWithStudies(studies);
-		if (template) 
+		const templates = this.getTemplatesWithStudies(studies);
+		templates.forEach(template => {
 			template.concepts.forEach(concept => this.addStudy(concept.conceptId, template.id));
+		});
 	}
 
 	private compare = (r: RelatedSnomedTemplate, rst: RelatedSnomedTemplate): boolean => {
 		return r.sctid === rst.sctid;
 	}
 
-	private getTemplatesWithStudies = (studies: Study[]): SnomedTemplateDto => {
-		const foundTemplate = this.allTemplates.find(template => {
+	private getTemplatesWithStudies = (studies: Study[]): SnomedTemplateDto[] => {
+		const matchingTemplates = this.allTemplates.filter(template => {
 			const allConceptsMatch = template.concepts.every(concept =>
 				studies.some(study => concept.conceptId === study.snomed.sctid)
 			);
-		
-			const allStudiesMatch = studies.every(study =>
-				template.concepts.some(concept => concept.conceptId === study.snomed.sctid)
-			);
-		
-			return allConceptsMatch && allStudiesMatch;
+			return allConceptsMatch;
 		});
-		return foundTemplate;
+		return matchingTemplates;
 	}
 }
 

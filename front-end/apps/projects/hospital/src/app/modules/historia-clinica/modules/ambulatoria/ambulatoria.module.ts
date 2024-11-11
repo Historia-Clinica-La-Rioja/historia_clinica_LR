@@ -119,7 +119,6 @@ import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situatio
 import { AddDigitalPrescriptionItemComponent } from './dialogs/add-digital-prescription-item/add-digital-prescription-item.component';
 //providers
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
-import { MapperService } from './services/mapper.service';
 //review
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
@@ -251,7 +250,6 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 	],
 	providers: [
 		HistoricalProblemsFacadeService,
-		MapperService
 	]
 })
 export class AmbulatoriaModule {
