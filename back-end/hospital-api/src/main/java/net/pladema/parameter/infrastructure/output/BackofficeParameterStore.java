@@ -15,17 +15,17 @@ import net.pladema.parameter.infrastructure.output.repository.entity.ParameterUn
 import net.pladema.loinc.infrastructure.output.repository.LoincCodeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -41,6 +41,16 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 	public Page<ParameterDto> findAll(ParameterDto example, Pageable pageable) {
 		List<ParameterDto> result = findAll();
 
+		if (example.getLoincCode() != null)
+			result = result.stream().filter(parameter -> parameter.getLoincCode() != null && parameter.getLoincCode().contains(example.getLoincCode())).collect(Collectors.toList());
+		if (example.getDescription() != null)
+			result = result.stream().filter(parameter -> parameter.getDescription() != null && parameter.getDescription().toLowerCase().contains(example.getDescription().toLowerCase())).collect(Collectors.toList());
+
+		if (pageable.getSort().getOrderFor("description") != null && pageable.getSort().getOrderFor("description").isDescending())
+			result.sort(Comparator.comparing(parameter -> StringUtils.stripAccents(parameter.getDescription()).toLowerCase(), Comparator.reverseOrder()));
+		else
+			result.sort(Comparator.comparing(parameter -> StringUtils.stripAccents(parameter.getDescription()).toLowerCase(), Comparator.naturalOrder()));
+
 		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
 		int maxIndex = minIndex + pageable.getPageSize();
 		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.isEmpty() ? 0 : result.size());
@@ -48,24 +58,29 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 
 	@Override
 	public List<ParameterDto> findAll() {
-		Stream<ParameterDto> resultStream = parameterRepository.findAll()
+		List<ParameterDto> resultStream = parameterRepository.findAll()
 				.stream()
 				.map(this::mapEntityToDto)
 				.peek(dto -> dto.setTextOptions(getDescriptionsFromParameterId(dto.getId())))
-				.peek(this::setLoincDescription);
+				.peek(this::setLoincDescription)
+				.collect(Collectors.toList());
+
+		resultStream.forEach(parameterDto -> {if (parameterDto.getLoincId() != null) this.setLoincDescription(parameterDto);});
 
 		return groupParametersAndSetUnitsOfMeasure(resultStream);
 	}
 
 	@Override
 	public List<ParameterDto> findAllById(List<Integer> ids) {
-		 Stream<ParameterDto> resultStream = parameterRepository.findAllById(ids)
+		 List<ParameterDto> resultStream = parameterRepository.findAllById(ids)
 				.stream()
 				.map(this::mapEntityToDto)
 				.peek(dto -> dto.setTextOptions(getDescriptionsFromParameterId(dto.getId())))
-				 .peek(this::setLoincDescription);
+				 .collect(Collectors.toList());
 
-		 return groupParametersAndSetUnitsOfMeasure(resultStream);
+		resultStream.forEach(parameterDto -> {if (parameterDto.getLoincId() != null) this.setLoincDescription(parameterDto);})				 ;
+
+		return groupParametersAndSetUnitsOfMeasure(resultStream);
 	}
 
 	@Override
@@ -208,8 +223,8 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 		parameterTextOptionRepository.save(parameterTextOption);
 	}
 
-	private List<ParameterDto> groupParametersAndSetUnitsOfMeasure(Stream<ParameterDto> parameterDtoStream) {
-		return  parameterDtoStream.collect(Collectors.groupingBy(dto -> dto.getLoincId() != null ? dto.getLoincId() : dto.getDescription()))
+	private List<ParameterDto> groupParametersAndSetUnitsOfMeasure(List<ParameterDto> parameterDtoStream) {
+		return  parameterDtoStream.stream().collect(Collectors.groupingBy(dto -> dto.getLoincId() != null ? dto.getLoincId() : dto.getDescription()))
 				.values().stream()
 				.map(parameterGroup -> {
 					ParameterDto firstDto = parameterGroup.get(0);
@@ -248,6 +263,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 				}
 				else
 					dto.setDescription(loinc.getDescription());
+				dto.setLoincCode(loinc.getCode());
 			});
 		}
 	}

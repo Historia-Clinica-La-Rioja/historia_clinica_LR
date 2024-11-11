@@ -3844,6 +3844,7 @@ export interface ParameterDto {
     description: string;
     id: number;
     inputCount: number;
+    loincCode: string;
     loincId: number;
     snomedGroupId: number;
     textOptions: string[];
