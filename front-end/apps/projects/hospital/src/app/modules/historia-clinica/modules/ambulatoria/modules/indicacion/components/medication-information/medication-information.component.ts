@@ -114,7 +114,7 @@ export class MedicationInformationComponent implements OnInit {
 	private openAddDigitalPrescriptionItemDialog = (item?: NewPrescriptionItem) => {
 		this.dialogService.open(
 			AddDigitalPrescriptionItemComponent,
-			{dialogWidth: DialogWidth.MEDIUM},
+			{dialogWidth: DialogWidth.LARGE},
 			this.getAddDigitalPrescriptionItemDialogData(item)
 		).afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => this.addPrescriptionItem(prescriptionItem));
 	}

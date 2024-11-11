@@ -1,3 +1,5 @@
+@import '../../../../../../../assets/styles/variables.scss';
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -10,16 +12,40 @@ mat-option button {
     text-align: left;
 }
 
-.unit-day-dose-container, .administration-days-quantity-container {
+// .unit-day-dose-container, .administration-days-quantity-container {
+//     display: flex;
+//     justify-content: space-between;
+//     width: 100%;
+
+//     mat-form-field {
+//         width: 45%;
+//     }
+// }
+
+// .unit-day-dose-container {
+//     margin-bottom: 1rem;
+// }
+
+.field-container {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-
-    mat-form-field {
-        width: 45%;
-    }
+    width: 25%;
 }
 
-.unit-day-dose-container {
-    margin-bottom: 1rem;
+.field {
+    width: 60%;
+}
+
+.selector {
+    width: 30%;
+}
+
+.frequency-quantity-days {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.comp {
+    color: $grey;
 }

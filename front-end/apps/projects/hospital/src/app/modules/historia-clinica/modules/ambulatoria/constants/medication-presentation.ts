@@ -102,7 +102,6 @@ map.set(AugmentativeMedicationPresentation.SISTEMA, PresentationGroup.GROUP_THRE
 map.set(AugmentativeMedicationPresentation.TAMPON, PresentationGroup.GROUP_THREE);
 map.set(AugmentativeMedicationPresentation.APLICACION, PresentationGroup.GROUP_THREE);
 
-
 export const getPresentationGroup = (presentation: string): number => {
     return map.get(presentation);
 }
