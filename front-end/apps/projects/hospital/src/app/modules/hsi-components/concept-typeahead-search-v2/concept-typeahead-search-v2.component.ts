@@ -60,7 +60,8 @@ export class ConceptTypeaheadSearchV2Component implements OnInit {
 				this.filter(this.inputText)
 			} else {
 				this.hintVisibility = true
-				this.totalResults = this.inputText?.length === 0 ? this.itemsSearchDto.total : 0
+				this.items = []
+				this.totalResults = 0
 			}
 		})
 		this.form.controls.snomedInput.statusChanges.subscribe(() => {
@@ -70,17 +71,22 @@ export class ConceptTypeaheadSearchV2Component implements OnInit {
 	}
 
 	onInputFocus() {
-		this.hintVisibility = false
-
-		if (this.isCacheEnabled && !this.itemsSearchDto?.items?.length) {
-			this.loading = true;
-			this.snowstormService.searchSNOMEDConceptsWithoutTerms(this.ecl).subscribe(data => {
-				const items = data.total > this.conceptTypeaheadInfo.maxSearchResults ? data.items.slice(0, this.conceptTypeaheadInfo.maxSearchResults) : data.items
-				this.itemsSearchDto = data
-				this.totalResults = this.itemsSearchDto.total
-				this.itemsSearchDto.items = items
-				this.loading = false;
-			});
+		if (this.isCacheEnabled && !this.inputText?.length) {
+			this.hintVisibility = false
+			if (!this.items.length) {
+				this.loading = true;
+				this.snowstormService.searchSNOMEDConceptsWithoutTerms(this.ecl).subscribe(data => {
+					const items = data.total > this.conceptTypeaheadInfo.maxSearchResults ? data.items.slice(0, this.conceptTypeaheadInfo.maxSearchResults) : data.items
+					this.itemsSearchDto = data
+					this.totalResults = this.itemsSearchDto.total
+					this.itemsSearchDto.items = items
+					this.items = items.map(item => ({
+						sctid: item.conceptId,
+						pt: item.pt.term
+					}));
+					this.loading = false;
+				});
+			}
 		} else {
 			this.hintVisibility = true
 		}
@@ -96,24 +102,12 @@ export class ConceptTypeaheadSearchV2Component implements OnInit {
 		this.loading = false
 	}
 
-	onOptionSelected(selectedOption: any): void {
-		if (this.isCacheEnabled && !this.inputText?.length) {
-			const selectedItem = this.itemsSearchDto.items.find(item => item.pt.term === selectedOption?.pt?.term);
-			if (selectedItem) {
-				this.snomedConcept = {
-					sctid: selectedItem.conceptId,
-					pt: selectedItem.pt.term
-				};
-				this.conceptSelected.emit(this.snomedConcept);
-				this.form.controls.snomedInput?.setValue(selectedItem.pt.term);
-			}
-		} else {
-			const selectedItem = this.items.find(item => item.pt === selectedOption.pt);
-			if (selectedItem) {
-				this.snomedConcept = selectedItem;
-				this.conceptSelected.emit(this.snomedConcept);
-				this.form.controls.snomedInput?.setValue(selectedItem.pt);
-			}
+	onOptionSelected(selectedOption: SnomedDto): void {
+		const selectedItem = this.items.find(item => item.pt === selectedOption.pt);
+		if (selectedItem) {
+			this.snomedConcept = selectedItem;
+			this.conceptSelected.emit(this.snomedConcept);
+			this.form.controls.snomedInput?.setValue(selectedItem.pt);
 		}
 	}
 

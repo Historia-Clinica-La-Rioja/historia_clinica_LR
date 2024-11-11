@@ -3,26 +3,24 @@
 		<input #input matInput [matAutocomplete]="auto" formControlName="snomedInput" (focus)="onInputFocus()"
 			[placeholder]="conceptTypeaheadInfo?.placeholder | translate" [required]="conceptTypeaheadInfo?.required">
 
-			<mat-autocomplete #auto="matAutocomplete">
-				<ng-container *ngIf="inputText?.length >= minSearchLength else noCache">
-					<mat-option *ngFor="let item of items" [value]="item.pt" (click)="onOptionSelected(item)">
-						{{ item.pt }}
-					</mat-option>
-				</ng-container>
+		<mat-autocomplete #auto="matAutocomplete">
+			<mat-option *ngFor="let item of items" [value]="item.pt" (click)="onOptionSelected(item)">
+				{{ item.pt }}
+			</mat-option>
 
-				<ng-container *ngIf="totalResults > conceptTypeaheadInfo?.maxSearchResults">
-					<div class="fixed-legend-container">
-						<mat-divider></mat-divider>
-						<mat-option disabled>
-							{{ 'historia-clinica.concept-typeahead-search-v2.DISPLAYED_RESULTS' | translate:
-							{ maxResults: totalResults >= conceptTypeaheadInfo?.maxSearchResults ?
-							conceptTypeaheadInfo?.maxSearchResults :
-							totalResults,
-							totalResults: totalResults } }}
-						</mat-option>
-					</div>
-				</ng-container>
-			</mat-autocomplete>
+			<ng-container *ngIf="totalResults > conceptTypeaheadInfo?.maxSearchResults">
+				<div class="fixed-legend-container">
+					<mat-divider></mat-divider>
+					<mat-option disabled>
+						{{ 'historia-clinica.concept-typeahead-search-v2.DISPLAYED_RESULTS' | translate:
+						{ maxResults: totalResults >= conceptTypeaheadInfo?.maxSearchResults ?
+						conceptTypeaheadInfo?.maxSearchResults :
+						totalResults,
+						totalResults: totalResults } }}
+					</mat-option>
+				</div>
+			</ng-container>
+		</mat-autocomplete>
 
 		<mat-hint *ngIf="hintVisibility">
 			{{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
@@ -38,11 +36,3 @@
 		<mat-spinner *ngIf="loading" matSuffix [diameter]="25" color="primary"></mat-spinner>
 	</mat-form-field>
 </form>
-
-
-<ng-template #noCache>
-	<mat-option #matOption *ngFor="let item of itemsSearchDto?.items" [value]="item.pt.term"
-		(click)="onOptionSelected(item)">
-		{{ item.pt.term }}
-	</mat-option>
-</ng-template>
