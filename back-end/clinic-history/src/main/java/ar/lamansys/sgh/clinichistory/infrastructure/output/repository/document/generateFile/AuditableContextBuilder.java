@@ -1,5 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
+import ar.lamansys.sgh.clinichistory.application.isolationalerts.FetchIsolationAlertsForPdfDocument;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterBo;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -86,6 +89,7 @@ public class AuditableContextBuilder {
 	private final SharedAddressPort sharedAddressPort;
 
 	private final MapCompletedForms mapCompletedForms;
+	private final FetchIsolationAlertsForPdfDocument fetchIsolationAlertsForPdfDocument;
 
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
@@ -110,7 +114,8 @@ public class AuditableContextBuilder {
 			ShockRoomFinder shockRoomFinder,
 			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder,
 			SharedAddressPort sharedAddressPort,
-			MapCompletedForms mapCompletedForms) {
+			MapCompletedForms mapCompletedForms,
+			FetchIsolationAlertsForPdfDocument fetchIsolationAlertsForPdfDocument) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -134,6 +139,7 @@ public class AuditableContextBuilder {
 		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
 		this.sharedAddressPort = sharedAddressPort;
 		this.mapCompletedForms = mapCompletedForms;
+		this.fetchIsolationAlertsForPdfDocument = fetchIsolationAlertsForPdfDocument;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document) {
@@ -211,6 +217,7 @@ public class AuditableContextBuilder {
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
 		contextMap.put("otherRiskFactors", document.getOtherRiskFactors());
 		contextMap.put("notes", document.getNotes());
+		contextMap.put("isolationAlerts", fetchIsolationAlertsForPdfDocument.run(document.getId()));
 
 		var author = authorFromDocumentFunction.apply(document.getId());
 		contextMap.put("author", author);

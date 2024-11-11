@@ -16,6 +16,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationType;
 
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertForPdfDocumentBo;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.isolationalerts.exceptions.IsolationAlertException;
@@ -71,7 +73,7 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 	}
 
 	@Override
-	public List<IsolationAlertBo> fetchByDocumentId(Long documentId) {
+	public List<IsolationAlertBo> findByDocumentId(Long documentId) {
 		String sqlString = "" +
 		"SELECT " +
 		"	isolation_alert.id, " +
@@ -188,6 +190,14 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 			.findFirst()
 			.map(xx -> toFetchPatientIsolationAlertBo(xx));
 
+	}
+
+	@Override
+	public List<IsolationAlertForPdfDocumentBo> findByDocumentIdForDocumentPdf(Long documentId) {
+		return this.findByDocumentId(documentId)
+			.stream()
+			.map(alert -> new IsolationAlertForPdfDocumentBo(alert))
+			.collect(Collectors.toList());
 	}
 
 	private List<IsolationAlertBo> mapToIsolationAlertBo(List<Object[]> rows) {

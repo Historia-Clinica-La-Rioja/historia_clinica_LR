@@ -1285,6 +1285,22 @@
             </dl>
         </div>
 
+        <div th:fragment="isolationAlerts" th:if="${isolationAlerts != null && not #lists.isEmpty(isolationAlerts)}">
+            <p class="section-title">Alertas de aislamiento</p>
+            <div>
+                <dl th:each="alert,iter: ${isolationAlerts}" class="section-data">
+                    <dl>
+                        <dd><strong>Diagnóstico: </strong> <label th:text="${alert.healthConditionPt}"></label></dd>
+                        <dd><strong>Nivel: </strong> <label th:text="${alert.criticality.description}"></label></dd>
+                        <dd><strong>Fecha de fin: </strong> <label th:text="${alert.endDate}"></label></dd>
+                        <dd><strong>Tipos: </strong> <label th:text="${#strings.listJoin(alert.types.![description], ', ')}"></label></dd>
+                        <dd><strong>Observaciones: </strong><label th:text="${alert.observations}"></label></dd>
+                        <dd><strong>Estado: </strong><label th:text="${alert.status.description}"></label></dd>
+                    </dl>
+                </dl>
+            </div>
+        </div>
+
     </div>
 
 
