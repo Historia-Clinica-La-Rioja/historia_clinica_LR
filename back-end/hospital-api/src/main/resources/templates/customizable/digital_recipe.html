@@ -121,7 +121,7 @@
                                 <strong>DOSIS/UNIDAD</strong><br/>
                                 <span th:text="${medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit}"></span><br/>
                             </div>
-                            <div>
+                            <div th:if="${ medication.dosage.dosesByDay != null }">
                                 <strong>DOSIS/DIA</strong><br/>
                                 <span th:text="${medication.dosage.dosesByDay % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByDay,0,0) : medication.dosage.dosesByDay}"></span><br/>
                             </div>
@@ -257,7 +257,7 @@
                                     <strong>DOSIS/UNIDAD</strong><br/>
                                     <span th:text="${medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit}"></span><br/>
                                 </div>
-                                <div>
+                                <div th:if="${ medication.dosage.dosesByDay != null }">
                                     <strong>DOSIS/DIA</strong><br/>
                                     <span th:text="${medication.dosage.dosesByDay % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByDay,0,0) : medication.dosage.dosesByDay}"></span><br/>
                                 </div>

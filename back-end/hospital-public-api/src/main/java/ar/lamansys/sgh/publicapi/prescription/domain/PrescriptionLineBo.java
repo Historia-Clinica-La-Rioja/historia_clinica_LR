@@ -25,6 +25,25 @@ public class PrescriptionLineBo {
 	private Double quantity;
 	private String quantityUnit;
 
+	public PrescriptionLineBo(Integer prescriptionLineNumber, String prescriptionLineStatus, PrescriptionProblemBo prescriptionProblemBo,
+							  GenericMedicationBo genericMedicationBo, SuggestedCommercialMedicationBo suggestedCommercialMedicationBo,
+							  CommercialMedicationBo commercialMedicationBo, Double unitDosis, Double dayDosis, Double duration,
+							  String presentation, Short presentationQuantity, Short presentationPackageQuantity, Double quantity) {
+		this.prescriptionLineNumber = prescriptionLineNumber;
+		this.prescriptionLineStatus = prescriptionLineStatus;
+		this.prescriptionProblemBo = prescriptionProblemBo;
+		this.genericMedicationBo = genericMedicationBo;
+		this.suggestedCommercialMedicationBo = suggestedCommercialMedicationBo;
+		this.commercialMedicationBo = commercialMedicationBo;
+		this.unitDosis = unitDosis;
+		this.dayDosis = dayDosis;
+		this.duration = duration;
+		this.presentation = presentation;
+		this.presentationQuantity = presentationQuantity;
+		this.presentationPackageQuantity = presentationPackageQuantity;
+		this.quantity = quantity;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

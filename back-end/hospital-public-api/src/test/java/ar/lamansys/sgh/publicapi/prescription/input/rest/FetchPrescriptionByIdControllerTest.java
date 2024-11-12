@@ -242,7 +242,8 @@ public class FetchPrescriptionByIdControllerTest {
 						"Caja",
 						(short) 2,
 						(short) 12,
-						2.5
+						2.5,
+						"comprimido"
 				))
 		);
 
