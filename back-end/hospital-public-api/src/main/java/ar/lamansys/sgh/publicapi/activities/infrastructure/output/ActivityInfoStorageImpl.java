@@ -28,7 +28,6 @@ import lombok.AllArgsConstructor;
 public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActivityInfoStorageImpl.class);
-	private static final int HOSPITALIZATION_SOURCE_ID = 0;
 	private static final short PARENTERAL = 0;
 	private static final short PHARMACO = 1;
 	private static final short VACCINE = 2;
@@ -100,15 +99,6 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 				"JOIN {h-schema}parenteral_plan p4 ON p4.id = i2.id " +
 				"JOIN {h-schema}snomed s2 ON s2.id = p4.snomed_id " +
 				"WHERE va.id = :activityId AND nr.status_id = " + ENursingRecordStatus.COMPLETED.getId();
-
-		String vaccineQueryString = "SELECT " + VACCINE + " AS type, " + EIndicationStatus.COMPLETED.getId() + " , s2.pt, s2.sctid, i2.created_on " +
-				"FROM {h-schema}v_attention va " +
-				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}document d ON (d.source_id = va.encounter_id AND d.source_type_id = va.scope_id) " +
-				"JOIN {h-schema}document_inmunization di ON di.document_id = d.id " +
-				"JOIN {h-schema}inmunization i2 ON i2.id = di.inmunization_id " +
-				"JOIN {h-schema}snomed s2 ON s2.id = i2.snomed_id " +
-				"WHERE va.id = :activityId AND i2.status_id = CAST(255594003 AS VARCHAR)";
 
 		String suppliesQuery = parenteralQueryString + " UNION ALL " + pharmacoQueryString;
 
@@ -253,14 +243,14 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 
 	private SupplyInformationBo parseSupplyInformationBo(Object[] supplyInformation) {
 		return SupplyInformationBo.builder()
-				.supplyType(mapSupplyTypes((Integer) supplyInformation[0]))
-				.status(EIndicationStatus.map(((Integer)supplyInformation[1]).shortValue()).getValue())
+				.supplyType(mapSupplyTypes(((Integer) supplyInformation[0]).shortValue()))
+				.status(EIndicationStatus.map((Short) supplyInformation[1]).getValue())
 				.snomedBo(new SnomedBo((String) supplyInformation[3], (String) supplyInformation[2]))
 				.administrationTime(((Timestamp)supplyInformation[4]).toLocalDateTime())
 				.build();
 	}
 
-	private String mapSupplyTypes(Integer type) {
+	private String mapSupplyTypes(short type) {
 		if(type == PHARMACO) return "Fármaco";
 		if(type == PARENTERAL) return "Parenteral";
 		if(type == VACCINE) return "Vacuna";
