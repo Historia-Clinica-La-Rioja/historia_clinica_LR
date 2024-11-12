@@ -40,6 +40,11 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 	private final DocumentRepository documentRepository;
 	private final EntityManager entityManager;
 
+	/**
+	 * When an evolution note is modified the alert bo's have an id. The modified alerts are stored
+	 * as new rows that point to the alert being modified.
+	 * See {@link IsolationAlert} parentId field.
+	 */
 	@Override
 	public void save(Long documentId, List<IsolationAlertBo> isolationAlerts) {
 		if (!documentRepository.existsById(documentId)) throw documentNotFound(documentId);
@@ -51,7 +56,8 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 					alertBo.getCriticalityId(),
 					alertBo.getEndDate(),
 					alertBo.getObservations(),
-					EIsolationStatus.ONGOING.getId()
+					EIsolationStatus.ONGOING.getId(),
+					alertBo.getId()
 				)
 			);
 			alertBo.getTypeIds().forEach(

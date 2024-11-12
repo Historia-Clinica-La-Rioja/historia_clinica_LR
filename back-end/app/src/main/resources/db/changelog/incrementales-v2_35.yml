@@ -1,3 +1,33 @@
 databaseChangeLog:
     - logicalFilePath: incrementales-v2_35
 
+    - changeSet:
+        id: add-isolation_alert-parent_id
+        author: efernandez
+        changes:
+          - addColumn:
+              tableName: isolation_alert
+              columns:
+                - column:
+                    name: parent_id
+                    type: int
+                    constraints:
+                      nullable: true
+                      references: isolation_alert(id)
+                      foreignKeyName: FK_isolation_alert__isolation_parent_id
+
+          - sql:
+              sql: |-
+                UPDATE
+                  isolation_alert SET parent_id = alert_parent.id
+                FROM
+                  document_isolation_alert dia_child
+                  JOIN document doc_child ON (dia_child.document_id = doc_child.id)
+                  JOIN document doc_parent ON (doc_child.initial_document_id = doc_parent.id)
+                  JOIN document_isolation_alert dia_parent ON (dia_parent.document_id = doc_parent.id)
+                  JOIN isolation_alert alert_parent ON (alert_parent.id = dia_parent.isolation_alert_id)
+                WHERE
+                  dia_child.isolation_alert_id = isolation_alert.id
+                  AND isolation_alert.isolation_criticality_id = alert_parent.isolation_criticality_id
+                  AND isolation_alert.observations = alert_parent.observations
+                  AND isolation_alert.end_date = alert_parent.end_date;

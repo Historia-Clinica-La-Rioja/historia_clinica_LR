@@ -217,6 +217,7 @@ const toIsolationAlertDto = (isolationAlert: IsolationAlert): IsolationAlertDto 
 		healthConditionSctid: isolationAlert.diagnosis.snomed.sctid,
 		types: isolationAlert.types,
 		...(isolationAlert.observations && { observations: isolationAlert.observations }),
+		id: null
 	}
 }
 

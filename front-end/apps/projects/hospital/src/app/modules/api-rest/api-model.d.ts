@@ -3051,6 +3051,7 @@ export interface IsolationAlertDto {
     healthConditionId: number;
     healthConditionPt: string;
     healthConditionSctid: string;
+    id: number;
     observations?: string;
     types: MasterDataDto[];
 }

@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 @Getter
 @Setter
 public class IsolationAlertDto {
+	private Integer id;
 	private Integer healthConditionId;
  	private String healthConditionSctid;
 	private String healthConditionPt;

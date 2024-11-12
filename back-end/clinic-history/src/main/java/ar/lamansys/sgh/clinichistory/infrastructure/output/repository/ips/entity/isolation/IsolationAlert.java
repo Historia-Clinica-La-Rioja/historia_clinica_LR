@@ -45,4 +45,11 @@ public class IsolationAlert extends SGXAuditableEntity<Integer> {
 	//See EisolationStatus
 	@Column(name = "isolation_status_id", nullable = false)
 	private Short isolationStatusId;
+	/**
+	 * When parentId is null: This is a new alert created from an evolution note.
+	 * Otherwise: This alert is a copy of an existing alert, possibly with some changes. The parentId carries
+	 * the id of the alert being modified.
+	 */
+	@Column(name = "parent_id", nullable = true)
+	private Integer parentId;
 }
