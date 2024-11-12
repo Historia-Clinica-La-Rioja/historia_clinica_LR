@@ -8,8 +8,8 @@
     </button>
 </div>
 
-<form [formGroup]="closureForm" (ngSubmit)="confirmClosure()">
-    <mat-dialog-content fxLayout="column">
+<mat-dialog-content>
+    <form [formGroup]="closureForm" (ngSubmit)="confirmClosure()" fxLayout="column">
         <p>{{"access-management.administrative_reference_closure.DIALOG_DESCRIPTION" | translate}}</p>
         <mat-label>{{"access-management.administrative_reference_closure.DIALOG_INPUT_LABEL" | translate}}</mat-label>
         <mat-form-field appearance="outline">
@@ -38,15 +38,14 @@
                 </button>
             </div>
         </div>
-    </mat-dialog-content>
+    </form>
+</mat-dialog-content>
 
-    <mat-dialog-actions fxLayoutAlign="flex-end" fxLayoutGap="10px">
-        <app-button [buttonType]="ButtonType.STROKED" [color]="'warn'" mat-dialog-close
-            [text]="'access-management.administrative_reference_closure.DIALOG_CANCEL_BUTTON'">
-        </app-button>
-        <app-button [buttonType]="ButtonType.RAISED" [isLoading]="loading" [color]="'warn'" type="submit"
-            [text]="'access-management.administrative_reference_closure.DIALOG_CONFIRM_BUTTON'">
-        </app-button>
-    </mat-dialog-actions>
-
-</form>
+<mat-dialog-actions fxLayoutAlign="flex-end" fxLayoutGap="10px">
+    <app-button [buttonType]="ButtonType.STROKED" [color]="'warn'" mat-dialog-close
+        [text]="'access-management.administrative_reference_closure.DIALOG_CANCEL_BUTTON'">
+    </app-button>
+    <app-button [buttonType]="ButtonType.RAISED" [isLoading]="loading" [color]="'warn'" type="submit" (clicked)="confirmClosure()"
+        [text]="'access-management.administrative_reference_closure.DIALOG_CONFIRM_BUTTON'">
+    </app-button>
+</mat-dialog-actions>
