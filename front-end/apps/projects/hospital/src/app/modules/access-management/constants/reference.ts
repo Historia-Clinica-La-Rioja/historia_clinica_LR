@@ -1,7 +1,8 @@
 import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 import { DescriptionPriority } from "@presentation/components/priority-select/priority-select.component";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
-import { ReferenceApprovalState, ReferenceState } from "./approval";
+import { ReferenceApprovalState, ReferenceOriginState } from "./approval";
+import { EReferenceRegulationState } from '@api-rest/api-model';
 
 const NO_CLOSURE = -1;
 const NO_APPOINTMENT = -1;
@@ -106,7 +107,7 @@ export const PENDING: ColoredLabel = {
     color: Color.YELLOW
 }
 
-export const APPROVAL_OPTIONS = [
+export const REFERENCE_APPROVAL_OPTIONS = [
     {
         id: ReferenceApprovalState.WAITING_APPROVAL,
         description: "Esperando aprobación"
@@ -125,25 +126,33 @@ export const APPROVAL_OPTIONS = [
     }
 ];
 
-export const REFERENCE_STATE_OPTIONS = [
+export const REFERENCE_ORIGIN_STATE_OPTIONS = [
     {
-        id: ReferenceState.PENDING_AUDIT,
+        id: ReferenceOriginState.PENDING_AUDIT,
         description: "Esperando auditoria"
     },
     {
-        id: ReferenceState.AUDIT,
+        id: ReferenceOriginState.AUDIT,
         description: "Auditada"
     },
     {
-        id: ReferenceState.REJECTED,
+        id: ReferenceOriginState.REJECTED,
         description: "Rechazada"
     },
     {
-        id: ReferenceState.SUGGESTED_REVISION,
+        id: ReferenceOriginState.SUGGESTED_REVISION,
         description: "Revisión sugerida"
     },
     {
-        id: ReferenceState.AUDIT_NOT_REQUIRED,
+        id: ReferenceOriginState.AUDIT_NOT_REQUIRED,
         description: "No requiere auditoria"
     }
 ]
+
+export const REFERENCE_ORIGIN_STATES = {
+    waitingAudit: EReferenceRegulationState.WAITING_AUDIT,
+    audited: EReferenceRegulationState.AUDITED,
+    rejected: EReferenceRegulationState.REJECTED,
+    suggestedRevision: EReferenceRegulationState.SUGGESTED_REVISION,
+    noAuditRequired: EReferenceRegulationState.DONT_REQUIRES_AUDIT
+}

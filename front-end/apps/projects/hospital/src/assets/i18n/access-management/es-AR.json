@@ -44,7 +44,8 @@
 				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK": " asignar turno en red de atencion",
 				"ASSIGNED_BY": "Asignado por:",
 				"approval": {
-					"TITLE": "estado de aprobación",
+					"TITLE": "Estado de aprobación",
+					"SUBTITLE": "Solicitud ingresada por Regla General",
 					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
 					"states": {
 						"PENDING_APPROVAL": "Esperando aprobacion",
@@ -54,6 +55,11 @@
 						"APPROVED": "Aprobada",
 						"AUDITED": "Auditada",
 						"AUDIT_NOT_REQUIRED": "No requiere auditoria"
+					},
+					"stepper-labels": {
+						"ORIGIN": "Origen",
+						"DESTINATION": "Destino",
+						"APPOINTMENT": "Turno"
 					}
 				},
 				"institutional_network_actions": {
@@ -62,19 +68,19 @@
 					"APPROVE": "aprobar"
 				},
 				"discard_popup": {
-					"approved": {
-						"TITLE": "aprobar solicitud",
-						"SUBTITLE": "se marcará la solicitud como aprobada"
+					"audit": {
+						"TITLE": "auditar revisión"
 					},
 					"rejected": {
 						"TITLE": "rechazar solicitud",
-						"SUBTITLE": "se marcará la solicitud como rechazada",
 						"PLACEHOLDER": "Explique el motivo de rechazo"
 					},
 					"suggested-review": {
 						"TITLE": "sugerir revisión",
-						"SUBTITLE": "se marcará la solicitud como revisión sugerida",
 						"PLACEHOLDER": "Explique el motivo de la revisión"
+					},
+					"approved": {
+						"TITLE": "aprobar solicitud"
 					}
 				},
 				"approval_actions": {

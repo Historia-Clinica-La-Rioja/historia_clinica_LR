@@ -2,7 +2,7 @@ import { SharedSnomedDto, ClinicalSpecialtyDto, CareLineDto, InstitutionBasicInf
 import { filter } from "@presentation/components/filters-select/filters-select.component";
 import { FilterTypeahead, FiltersType } from "@presentation/components/filters/filters.component";
 import { careLinesToTypeaheadOptions, institutionalGroupsToTypeaheadOptions, institutionsToTypeaheadOptions, practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
-import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, APPROVAL_OPTIONS } from "@access-management/constants/reference";
+import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, REFERENCE_ORIGIN_STATE_OPTIONS } from "@access-management/constants/reference";
 
 
 export enum EDashboardFilters {
@@ -133,7 +133,7 @@ const getFilterSelects: filter[] =
 		{
 			key: EDashboardFilters.REGULATION_STATES,
 			name: "access-management.search_references.REGULATION_STATES",
-			options: APPROVAL_OPTIONS,
+			options: REFERENCE_ORIGIN_STATE_OPTIONS,
 		}
 	];
 

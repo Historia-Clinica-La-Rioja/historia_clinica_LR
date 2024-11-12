@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { EReferenceRegulationState, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
@@ -16,11 +16,8 @@ import { RegisterEditor } from '@presentation/components/register-editor-info/re
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
-import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
-import { TabsService } from '@access-management/services/tabs.service';
 import { ReferencePermissionCombinationService } from '@access-management/services/reference-permission-combination.service';
 
-const TAB_OFERTA_POR_REGULACION = 1;
 @Component({
 	selector: 'app-report-complete-data-popup',
 	templateUrl: './report-complete-data-popup.component.html',
@@ -35,7 +32,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
 	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
 
-	registerEditorAppointment: RegisterEditor;
 	referenceAppointment: ReferenceAppointmentDto;
 	auditedState = EReferenceRegulationState.AUDITED;
 	waitingAuditedState = EReferenceRegulationState.WAITING_AUDIT;
@@ -49,15 +45,11 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	domainRole = false;
 	colapseContactDetails = false;
 
-	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
-
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly contextService: ContextService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly snackBarService: SnackBarService,
-		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
-		private readonly tabsService: TabsService,
 		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		public permissionService: ReferencePermissionCombinationService,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -66,6 +58,10 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	ngOnInit(): void {
 		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
 		this.updateReference();
+	}
+
+	closeDialog() {
+		this.dialogRef.close();
 	}
 
 	setReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
@@ -142,12 +138,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		})
 	}
 
-	redirectToOfferByRegulation(): void {
-		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
-		this.tabsService.setTabActive(TAB_OFERTA_POR_REGULACION);
-		this.dialogRef.close();
-	}
-
 	newRegulationState(newState: EReferenceRegulationState) {
 		this.referenceCompleteData.regulation.state = newState;
 	}
@@ -179,7 +169,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		if(referenceDetails) {
 			const {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName} = referenceDetails;
 			this.referenceAppointment = {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName};
-			this.registerEditorAppointment = {createdBy: authorFullName, date: convertDateTimeDtoToDate(createdOn)}
+			this.permissionService.setEditorAppointment(authorFullName, convertDateTimeDtoToDate(createdOn));
 		}
 	}
 

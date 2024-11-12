@@ -1,33 +1,29 @@
-<div fxLayout="column" fxLayoutGap="10px">
-	<span class="title capitalize-first-letter">{{'access-management.search_references.reference.approval.TITLE' | translate}}</span>
+<span class="grey" *ngIf="referenceRegulationDto?.ruleLevel"
+	[translate]="'access-management.search_references.reference.approval.ENTERED_BY'"
+	[translateParams]="{rule: referenceRegulationDto.ruleLevel}"></span>
 
-	<span class="grey" *ngIf="referenceRegulationDto?.ruleLevel"
-		[translate]="'access-management.search_references.reference.approval.ENTERED_BY'"
-		[translateParams]="{rule: referenceRegulationDto.ruleLevel}"></span>
+<div *ngIf="hasGestorRole && referenceRegulationDto.state === referenceApprovalState.pending; else showRegulationState">
+	<app-institutional-network-actions-dropdown
+		*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
+		[isOrigin]="false" (newState)="onNewState($event)" (editing)="onEditingState($event)">
+	</app-institutional-network-actions-dropdown>
+</div>
 
-	<div *ngIf="(hasGestorRole || hasGestorInstitucionalRole) && canEditApprovalState; else showRegulationState">
-		<app-institutional-network-actions-dropdown
-			*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
-			[reportCompleteData]="referenceCompleteDataDto" [hasGestorInstitucionalRole]="hasGestorInstitucionalRole" (newState)="onNewState($event)" (editing)="onEditingState($event)">
-		</app-institutional-network-actions-dropdown>
+<ng-template #showRegulationState>
+	<app-colored-label [description]="regulationState.description | translate | uppercase"
+		[color]="regulationState.color" [icon]="regulationState.icon">
+	</app-colored-label>
+</ng-template>
+
+<div *ngIf="referenceRegulationDto?.reason && !hideReason" fxLayout="column" fxLayoutGap="10px">
+	<span class="reason">{{referenceRegulationDto.reason}}</span>
+	<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
+		<span>{{referenceRegulationDto.professionalName}}</span>
+		<span>{{referenceRegulationDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
 	</div>
+</div>
 
-	<ng-template #showRegulationState>
-		<app-colored-label [description]="regulationState.description | translate | uppercase"
-			[color]="regulationState.color" [icon]="regulationState.icon">
-		</app-colored-label>
-	</ng-template>
-
-	<div *ngIf="referenceRegulationDto?.reason && !hideReason" fxLayout="column" fxLayoutGap="10px">
-		<span class="reason">{{referenceRegulationDto.reason}}</span>
-		<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
-			<span>{{referenceRegulationDto.professionalName}}</span>
-			<span>{{referenceRegulationDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
-		</div>
-	</div>
-
-	<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-		<app-approval-actions *ngIf="loggedUserCanDoActions"
-			[referenceCompleteDataDto]="referenceCompleteDataDto"></app-approval-actions>
-	</div>
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+	<app-approval-actions *ngIf="loggedUserCanDoActions"
+		[referenceCompleteDataDto]="referenceCompleteDataDto"></app-approval-actions>
 </div>

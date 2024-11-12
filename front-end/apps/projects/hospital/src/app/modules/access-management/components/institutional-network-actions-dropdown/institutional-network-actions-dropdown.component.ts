@@ -1,7 +1,8 @@
-import { ReferenceApprovalState, getIconState } from '@access-management/constants/approval';
+import { ReferenceOriginState, getIconState } from '@access-management/constants/approval';
+import { ReferencePermissionCombinationService } from '@access-management/services/reference-permission-combination.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EReferenceRegulationState, ReferenceCompleteDataDto } from '@api-rest/api-model';
+import { EReferenceRegulationState } from '@api-rest/api-model';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { NON_WHITESPACE_REGEX } from '@core/utils/form.utils';
@@ -15,15 +16,8 @@ import { Observable } from 'rxjs';
 })
 export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 
-	regulationStates: EReferenceRegulationState[] = [
-		EReferenceRegulationState.WAITING_AUDIT,
-		EReferenceRegulationState.SUGGESTED_REVISION,
-		EReferenceRegulationState.REJECTED,
-		EReferenceRegulationState.AUDITED,
-		EReferenceRegulationState.DONT_REQUIRES_AUDIT
-	];
-	waitingApproval =  EReferenceRegulationState.WAITING_AUDIT;
-	selectedOption: EReferenceRegulationState = this.waitingApproval;
+	waitingAudit =  EReferenceRegulationState.WAITING_AUDIT;
+	selectedOption: EReferenceRegulationState = this.waitingAudit;
 	initialOption: EReferenceRegulationState;
 	selectedOptionData: ReasonData;
 	private selectedOptionId: number;
@@ -31,23 +25,23 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	private readonly translatePrefixRoute = 'access-management.search_references.reference.discard_popup';
 	reason: FormGroup;
 
-	@Input() reportCompleteData: ReferenceCompleteDataDto;
-	@Input() hasGestorInstitucionalRole: boolean;
+	@Input() regulationOriginStates: EReferenceRegulationState[];
+	@Input() isOrigin: boolean;
 	@Output() newState = new EventEmitter<boolean>();
 	@Output() editing = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
-		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService
+		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
+		private readonly permissionService: ReferencePermissionCombinationService,
 	) { }
 
 	ngOnInit(): void {
-		this.initialOption = this.reportCompleteData.regulation.state? this.reportCompleteData.regulation?.state : this.waitingApproval;
-		if (this.reportCompleteData.regulation?.state) this.setSelectedOption(this.reportCompleteData.regulation.state);
+		if (this.permissionService.referenceCompleteData.regulation?.state) 
+			this.setSelectedOption(this.permissionService.referenceCompleteData.regulation.state);
 		this.reason = new FormGroup<ReasonForm>({
 			reason: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]),
 		});
-		if (this.initialOption !== this.waitingApproval) this.regulationStates.shift();
 	}
 
 	get selectedStateOption() {
@@ -65,33 +59,32 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	setSelectedOption(option: EReferenceRegulationState) {
 		this.selectedOption = option;
 		this.setValuesInOptions[option]();
-		if (this.selectedOption !== this.initialOption)
-			this.editing.next(true);
 	}
 
 	private setValuesInOptions = {
-		WAITING_APPROVAL: () => {
+		WAITING_AUDIT: () => {
 			this.showReasonArea = false;
-			this.selectedOptionId = ReferenceApprovalState.WAITING_APPROVAL;
+			this.selectedOptionId = ReferenceOriginState.PENDING_AUDIT;
 		},
 		REJECTED: () => {
 			this.showReasonArea = true;
-			this.selectedOptionData = this.toReasonData('rejected.TITLE', 'rejected.SUBTITLE', 'rejected.PLACEHOLDER');
-			this.selectedOptionId = ReferenceApprovalState.REJECTED;
+			this.selectedOptionData = this.toReasonData('rejected.TITLE', 'rejected.PLACEHOLDER');
+			this.selectedOptionId = ReferenceOriginState.REJECTED;
 		},
 		SUGGESTED_REVISION: () => {
 			this.showReasonArea = true;
-			this.selectedOptionData = this.toReasonData('suggested-review.TITLE', 'suggested-review.SUBTITLE', 'suggested-review.PLACEHOLDER');
-			this.selectedOptionId = ReferenceApprovalState.SUGGESTED_REVISION;
+			this.selectedOptionData = this.toReasonData('suggested-review.TITLE', 'suggested-review.PLACEHOLDER');
+			this.selectedOptionId = ReferenceOriginState.SUGGESTED_REVISION;
 		},
-		APPROVED: () => {
+		AUDITED: () => {
 			this.showReasonArea = false;
-			this.selectedOptionData = this.toReasonData('approved.TITLE', 'approved.SUBTITLE', '');
-			this.selectedOptionId = ReferenceApprovalState.APPROVED;
+			this.selectedOptionData = this.toReasonData('approved.TITLE', '');
+			this.selectedOptionId = ReferenceOriginState.AUDIT;
 		}
 	}
 
 	confirm() {
+		console.log('ID', this.selectedOption)
 		if (this.showReasonArea) {
 			if (this.reason.valid)
 				this.updateStateAndEmit(this.selectedOptionId);
@@ -103,7 +96,6 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	}
 
 	cancel() {
-		this.selectedOption = this.initialOption;
 		this.showReasonArea = false;
 		this.editing.next(false);
 	}
@@ -111,20 +103,19 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	private updateStateAndEmit(stateId: number) {
 		const reason = this.reason.controls.reason.value;
 		let updateState$: Observable<boolean>;
-		if (this.hasGestorInstitucionalRole)
-			updateState$ = this.institutionalReferenceReportService.changeReferenceRegulationStateAsGestorInstitucional(this.reportCompleteData.reference.id, stateId, reason || null);
+		if (this.permissionService.isRoleGestorInstitucional)
+			updateState$ = this.institutionalReferenceReportService.changeReferenceRegulationStateAsGestorInstitucional(
+				this.permissionService.referenceCompleteData.reference.id, stateId, reason || null);
 		else 
-			updateState$ = this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(this.reportCompleteData.reference.id, stateId, reason || null);
+			updateState$ = this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(
+				this.permissionService.referenceCompleteData.reference.id, stateId, reason || null);
 		
 		updateState$.subscribe(_ => this.newState.next(true));
-		this.initialOption = this.selectedOption;
-		this.reason.controls.reason.setValue(null);
 	}
 
-	private toReasonData(titleKey: string, subtitleKey: string, placeholderKey: string): ReasonData {
+	private toReasonData(titleKey: string, placeholderKey: string): ReasonData {
 		return {
 			title: `${this.translatePrefixRoute}.${titleKey}`,
-			subtitle: `${this.translatePrefixRoute}.${subtitleKey}`,
 			placeholder: `${this.translatePrefixRoute}.${placeholderKey}`,
 		}
 	}
@@ -132,7 +123,6 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 
 interface ReasonData {
 	title: string;
-	subtitle: string;
 	placeholder: string;
 }
 

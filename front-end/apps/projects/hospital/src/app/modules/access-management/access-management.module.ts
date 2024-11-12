@@ -47,6 +47,7 @@ import { ReferenceEditionPopUpComponent } from './dialogs/reference-edition-pop-
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 //services
 import { TabsService } from './services/tabs.service';
+import { ReferenceStateComponent } from './components/reference-state/reference-state.component';
 
 
 @NgModule({
@@ -84,6 +85,7 @@ import { TabsService } from './services/tabs.service';
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
 		ReportCompleteDataPopupComponent,
+  ReferenceStateComponent,
 	],
 	providers: [
 		TabsService

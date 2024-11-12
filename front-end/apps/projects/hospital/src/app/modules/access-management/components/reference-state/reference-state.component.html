@@ -1,0 +1,40 @@
+<div fxLayout="column">
+	<h2>{{'access-management.search_references.reference.approval.TITLE' | translate}}</h2>
+	<p class="grey">{{'access-management.search_references.reference.approval.SUBTITLE' | translate}}</p>
+
+    <mat-stepper id="state-stepper" orientation="vertical" [linear]="true">
+        <mat-step [completed]="originAudited">
+            <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.ORIGIN' | translate}}</ng-template>
+            <app-reference-origin-state [referenceCompleteData]="permissionService.referenceCompleteData" (regulationStateEmmiter)="newOriginState($event)"
+            ></app-reference-origin-state>
+        </mat-step>
+
+        <mat-step [completed]="destinationApproved">
+            <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.DESTINATION' | translate}}</ng-template>
+            <app-approval [approval]="referenceRegulation" [referenceCompleteDataDto]="permissionService.referenceCompleteData"
+				[canEditApprovalState]="permissionService.visualPermissions.canEditApproval"
+			></app-approval>
+        </mat-step>
+
+        <mat-step>
+            <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.APPOINTMENT' | translate}}</ng-template>
+            <app-appointment-summary [appointmentSummary]="appointment"></app-appointment-summary>
+
+            <div *ngIf="(this.permissionService.registerEditorAppointment !== permissionService.pendingAttentionState)" class="grey">
+                <span>{{'access-management.search_references.reference.ASSIGNED_BY' | translate }}</span>
+                <app-register-editor-info
+                    [registerEditor]="this.permissionService.registerEditorAppointment"
+                    [registerEditorCase]="permissionService.registerEditorCasesDateHour">
+                </app-register-editor-info>
+            </div>
+
+            <div class="assign-turn-button">
+                <button *ngIf="permissionService.visualPermissions.showAssignAppointmentButton"
+                    mat-flat-button color="primary" (click)="redirectToOfferByRegulation()">
+                    {{'access-management.appointment_result_view.ASSIGN_APPOINTMENT' | translate | uppercase}}
+                </button>
+            </div>
+        </mat-step>
+    </mat-stepper>
+
+</div>
