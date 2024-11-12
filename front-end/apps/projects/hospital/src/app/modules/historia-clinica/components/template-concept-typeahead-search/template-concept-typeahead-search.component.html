@@ -3,14 +3,23 @@
 		<input type="text" placeholder="{{ this.placeholder | translate }}" aria-label="Number" matInput
 			[formControl]="myControl" [matAutocomplete]="auto">
 		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleOptionSelected($event)">
-
 			<ng-container *ngIf="initialOptionsLoaded">
 
-				<app-most-frequent-templates-selector
-					*ngIf="(!hideTemplateOptions && mostFrequentTemplateOptions?.length)"
-					[mostFrequentTemplateOptions]="mostFrequentTemplateOptions"
-					(onSelected)="handleOptionSelected($event)">
-				</app-most-frequent-templates-selector>
+				<mat-optgroup *ngIf="(!hideTemplateOptions && mostFrequentTemplateOptions?.length)"
+					label="{{ 'historia-clinica.template-concept-search.MOST_FREQUENT_TEMPLATES' | translate }}">
+					<mat-option *ngFor="let option of mostFrequentTemplateOptions" [value]="option"
+						[matTooltip]="option.data.description" matTooltipClass="tooltip">
+						<div fxLayoutAlign="space-between">
+							<span>
+								{{option.data.description}}
+							</span>
+							<span class="color-grey">
+								{{ 'historia-clinica.template-concept-search.INCLUDES_STUDIES' | translate:{ count:
+								option.data.concepts.length } }}
+							</span>
+						</div>
+					</mat-option>
+				</mat-optgroup>
 
 				<mat-optgroup *ngIf="(mostFrequentStudies?.length)"
 					label="{{ 'historia-clinica.template-concept-search.MOST_FREQUENT_STUDIES' | translate }}">
