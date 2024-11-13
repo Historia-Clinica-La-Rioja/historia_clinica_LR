@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto, TriageBreathingDto, TriageCirculationDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, IsolationAlertDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto, TriageBreathingDto, TriageCirculationDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, TitleDescriptionListItem, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, IsolationAlertDescriptionItemData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, TitleDescriptionListItem, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -67,7 +67,7 @@ export class DocumentsSummaryMapperService {
         }
     }
 
-    toDescriptionItemData(description: string,  dateToShow?: DateToShow): DescriptionItemData {
+    toDescriptionItemData(description: string, dateToShow?: DateToShow): DescriptionItemData {
         return {
             description,
             ...(dateToShow && { dateToShow }),
@@ -103,7 +103,7 @@ export class DocumentsSummaryMapperService {
     mapToAnthropometricData(anthropometricData: AnthropometricDataDto): AnthropometricData {
         return {
             ...(anthropometricData.height && { height: [this.toDescriptionItemData(`${anthropometricData.height.value} ${VITAL_SIGNS_AND_RISK_FACTORS.CENTIMETERS}`)] }),
-            ...(anthropometricData.bloodType && { bloodType:[ this.toDescriptionItemData(anthropometricData.bloodType.value)] }),
+            ...(anthropometricData.bloodType && { bloodType: [this.toDescriptionItemData(anthropometricData.bloodType.value)] }),
             ...(anthropometricData.weight && { weight: [this.toDescriptionItemData(`${anthropometricData.weight.value} ${VITAL_SIGNS_AND_RISK_FACTORS.KG}`)] }),
             ...(anthropometricData.headCircumference && { headCircunference: [this.toDescriptionItemData(`${anthropometricData.headCircumference.value} ${VITAL_SIGNS_AND_RISK_FACTORS.CENTIMETERS}`)] }),
         }
@@ -144,12 +144,12 @@ export class DocumentsSummaryMapperService {
         return vaccines.map(vaccine => this.toDescriptionItemData(vaccine.snomed.pt, this.mapStringToDateToShow(vaccine.administrationDate)));
     }
 
-	mapProposedSurgeriesToDescriptionItemData(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
-		return proposedSurgeries.map(proposedSurgery => this.toDescriptionItemData(proposedSurgery.snomed.pt))
-	}
+    mapProposedSurgeriesToDescriptionItemData(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
+        return proposedSurgeries.map(proposedSurgery => this.toDescriptionItemData(proposedSurgery.snomed.pt))
+    }
 
-    mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[] | OutpatientFamilyHistoryDto []): DescriptionItemData[] {
-        return histories.map(history => this.toDescriptionItemData(history.snomed.pt,  this.mapStringToDateToShow(history.startDate)));
+    mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[] | OutpatientFamilyHistoryDto[]): DescriptionItemData[] {
+        return histories.map(history => this.toDescriptionItemData(history.snomed.pt, this.mapStringToDateToShow(history.startDate)));
     }
 
     mapMedicationsToDescriptionItemData(medications: MedicationDto[]): DescriptionItemData[] {
@@ -220,12 +220,12 @@ ${medication.note}`
         }
     }
 
-	mapProposedSurgeriesToDescriptionItemDataSummary(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemDataSummary {
-		return {
-			summary: this.mapProposedSurgeriesToDescriptionItemData(proposedSurgeries),
-			...PROPOSED_SURGERIES_DESCRIPTION_ITEM,
-		}
-	}
+    mapProposedSurgeriesToDescriptionItemDataSummary(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapProposedSurgeriesToDescriptionItemData(proposedSurgeries),
+            ...PROPOSED_SURGERIES_DESCRIPTION_ITEM,
+        }
+    }
 
     mapPersonalHistoriesToDescriptionItemDataSummary(personalHistories: HealthHistoryConditionDto[]): DescriptionItemDataSummary {
         return {
@@ -411,27 +411,29 @@ ${medication.note}`
 
     private mapToNewBornsInfo(newBornsData: NewBornsData[]): NewBornsSummary[] {
         return newBornsData.map(newBorn => {
-            return { newBornSummary: [{
-                title: "internaciones.documents-summary.obstetric-event.new-born.WEIGHT",
-                dataId: "weight",
-                descriptionData: newBorn.birthWeight
-            },
-            {
-                title: "internaciones.documents-summary.obstetric-event.new-born.CONDITION",
-                dataId: "condition",
-                descriptionData: newBorn.birthCondition
-            },
-            {
-                title: "internaciones.documents-summary.obstetric-event.new-born.GENDER",
-                dataId: "gender",
-                descriptionData: newBorn.gender
-            }]
-        }})
+            return {
+                newBornSummary: [{
+                    title: "internaciones.documents-summary.obstetric-event.new-born.WEIGHT",
+                    dataId: "weight",
+                    descriptionData: newBorn.birthWeight
+                },
+                {
+                    title: "internaciones.documents-summary.obstetric-event.new-born.CONDITION",
+                    dataId: "condition",
+                    descriptionData: newBorn.birthCondition
+                },
+                {
+                    title: "internaciones.documents-summary.obstetric-event.new-born.GENDER",
+                    dataId: "gender",
+                    descriptionData: newBorn.gender
+                }]
+            }
+        })
     }
 
     hasObstetricEvent(obstetricEvent: ObstetricEventDto): boolean {
-        return !! (obstetricEvent && (obstetricEvent.newborns.length ||
-                !!(obstetricEvent.currentPregnancyEndDate
+        return !!(obstetricEvent && (obstetricEvent.newborns.length ||
+            !!(obstetricEvent.currentPregnancyEndDate
                 || obstetricEvent.gestationalAge
                 || obstetricEvent.pregnancyTerminationType
                 || obstetricEvent.previousPregnancies)));
@@ -458,7 +460,7 @@ ${medication.note}`
             title: 'guardia.documents-summary.appearance.CRYING_EXCESSIVE',
             dataId: 'cryingExcessive-section',
             descriptionData: appearance.cryingExcessive ? this.mapBooleanToDescription(appearance.cryingExcessive) : [],
-        })  : null;
+        }) : null;
 
         appearance.muscleHypertonia ? appearanceDescription.push({
             title: 'guardia.documents-summary.appearance.MUSCULAR_TONE',
@@ -486,7 +488,7 @@ ${medication.note}`
             title: 'guardia.documents-summary.breathing.STRIDOR',
             dataId: 'stridor-section',
             descriptionData: breathing.stridor ? this.mapBooleanToDescription(breathing.stridor) : [],
-        })  : null;
+        }) : null;
 
         breathing.respiratoryRate ? breathingDescription.push({
             title: 'guardia.documents-summary.breathing.RESPIRATORY_RATE',
@@ -520,7 +522,7 @@ ${medication.note}`
             title: 'guardia.documents-summary.circulation.HEART_RATE',
             dataId: 'heart-rate-section',
             descriptionData: circulation.heartRate ? [this.toDescriptionItemData(`${circulation.heartRate.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] : [],
-        })  : null;
+        }) : null;
 
         return {
             title: 'guardia.documents-summary.circulation.TITLE',
@@ -531,7 +533,24 @@ ${medication.note}`
 
     private mapBooleanToDescription(value: boolean): DescriptionItemData[] {
         return value ?
-            [ this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.YES')) ]
-            : [ this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.NO')) ]
+            [this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.YES'))]
+            : [this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.NO'))]
     }
+
+    mapIsolationAlertDescriptionItemDataList(isolationAlerts: IsolationAlertDto[]): IsolationAlertDescriptionItemData[] {
+        return isolationAlerts.map(isolationAlert => this.mapIsolationAlertDescriptionItemData(isolationAlert));
+    }
+
+    mapIsolationAlertDescriptionItemData(isolationAlert: IsolationAlertDto): IsolationAlertDescriptionItemData {
+        const dateFormatPipe = new DateFormatPipe();
+        const endDate: string = dateFormatPipe.transform(dateDtoToDate(isolationAlert.endDate), 'date');
+        return {
+            diagnosis: [this.toDescriptionItemData(isolationAlert.healthConditionPt)],
+            types: isolationAlert.types.map(type => this.toDescriptionItemData(type.description)),
+            criticality: [this.toDescriptionItemData(isolationAlert.criticality.description)],
+            endAlert: [this.toDescriptionItemData(endDate)],
+            ...(isolationAlert.observations && { observations: [this.toDescriptionItemData(isolationAlert.observations)] })
+        }
+    }
+
 }
