@@ -66,14 +66,14 @@ const ELEMENT_DATA: RutasPeriodic[] = [
   },
   {
     Miniature1: IMAGE_ITEM + "DR-CC.png",
-    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    Miniature2: IMAGE_ITEM + "DT-CC.png",
     IconDR: ICON + "DR-active-icon.png",
     IconDT: ICON + "DT-active-icon.png",
     Orden: 5,
     Nombre: " Cáncer colorrectal",
     pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/CancerColorectal-RutaAsistencial.pdf",
     routerLink: '../../../assets/rutas-lr/', 
-    pdfDT: null,
+    pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/CancerColorrectal-RutaAsistencial-DocumentoTecnico.pdf",
   },
   {
     Miniature1: IMAGE_ITEM + "DR-AF.png",
