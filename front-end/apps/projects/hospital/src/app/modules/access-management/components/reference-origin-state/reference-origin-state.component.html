@@ -11,7 +11,8 @@
             [color]="regulationState.color" [icon]="regulationState.icon">
         </app-colored-label>
     </ng-template>
-    <div *ngIf="referenceRegulationData?.state !== (permissionService.referenceOriginStates.waitingAudit || permissionService.referenceOriginStates.noAuditRequired)
+    <div *ngIf="referenceRegulationData?.state !== permissionService.referenceOriginStates.noAuditRequired
+            && referenceRegulationData?.state !== permissionService.referenceOriginStates.waitingAudit
             && !hideReason" fxLayout="column" fxLayoutGap="5px">
         <span *ngIf="referenceRegulationData?.reason" class="reason">"{{referenceRegulationData.reason}}"</span>
         <div class="grey" fxLayout="row" fxLayoutAlign="space-between">
