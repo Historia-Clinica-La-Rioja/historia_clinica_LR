@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { GetCommercialMedicationSnomedDto, SnomedECL } from '@api-rest/api-model';
 import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
-import { distinctUntilChanged, mergeMap, Observable, of, startWith } from 'rxjs';
+import { distinctUntilChanged, mergeMap, Observable, of, startWith, tap } from 'rxjs';
 
 @Component({
 	selector: 'app-commercial-pharmaco-typeahead',
@@ -27,6 +27,7 @@ export class CommercialPharmacoTypeaheadComponent {
 	filteredOptions: Observable<any[]>;
 	opts: GetCommercialMedicationSnomedDto[] = [];
 	formGroup: UntypedFormGroup;
+	loading = false;
 
 	constructor(
 		private readonly commercialMedicationService: CommercialMedicationService
@@ -34,9 +35,10 @@ export class CommercialPharmacoTypeaheadComponent {
 
 		this.filteredOptions = this.myControl.valueChanges.pipe(
 			startWith(''),
+			tap(_ => this.loading = true),
 			distinctUntilChanged(),
 			mergeMap(searchValue => {
-				return this.filter(searchValue || '')
+				return this.filter(searchValue || '').pipe(tap(_ => this.loading = false))
 			})
 		)
 
