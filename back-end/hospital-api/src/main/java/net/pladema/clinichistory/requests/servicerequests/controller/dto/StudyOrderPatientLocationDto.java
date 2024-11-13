@@ -12,5 +12,6 @@ public class StudyOrderPatientLocationDto {
 	private String bedNumber;
 	private String roomNumber;
 	private String sector;
+	private String location;
 
 }

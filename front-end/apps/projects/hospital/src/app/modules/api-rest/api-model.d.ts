@@ -5328,6 +5328,7 @@ export interface StudyOrderBasicPatientDto {
 
 export interface StudyOrderPatientLocationDto {
     bedNumber: string;
+    location: string;
     roomNumber: string;
     sector: string;
 }
