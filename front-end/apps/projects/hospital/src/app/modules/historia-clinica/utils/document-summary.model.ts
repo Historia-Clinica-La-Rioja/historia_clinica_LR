@@ -210,3 +210,11 @@ export interface TitleDescriptionListItem {
     icon: string,
     description: DescriptionItemDataInfo[],
 }
+
+export interface IsolationAlertDescriptionItemData {
+    diagnosis: DescriptionItemData[];
+    types: DescriptionItemData[];
+    criticality: DescriptionItemData[];
+    endAlert: DescriptionItemData[];
+    observations?: DescriptionItemData[];
+}

@@ -54,6 +54,7 @@ import { InternacionAntecedentesPersonalesSummaryComponent } from './components/
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
 import { IsolationAlertFormComponent } from './components/isolation-alert-form/isolation-alert-form.component';
+import { IsolationAlertSummaryComponent } from './components/isolation-alert-summary/isolation-alert-summary.component';
 import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
 import { IsolationAlertDetailComponent } from './components/isolation-alert-detail/isolation-alert-detail.component';
 import { IsolationAlertActionPopupComponent } from './dialogs/isolation-alert-action-popup/isolation-alert-action-popup.component';
@@ -261,6 +262,7 @@ import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typea
 		InterveningProfessionalsComponent,
 		IntrasurgicalAnestheticProceduresSummaryComponent,
 		IsolationAlertSectionComponent,
+		IsolationAlertSummaryComponent,
 		IsolationAlertsSummaryActionsComponent,
 		IsolationAlertActionPopupComponent,
 		IsolationAlertFormComponent,
@@ -391,6 +393,7 @@ import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typea
 		DocumentsSummaryComponent,
 		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
+		IsolationAlertSummaryComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,

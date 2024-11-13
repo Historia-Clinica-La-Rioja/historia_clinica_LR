@@ -1,0 +1,20 @@
+<div id="isolation-alert-section">
+    <app-iconed-titled-section id="isolation-alert-header" icon="warning_amber"
+        [title]="'historia-clinica.isolation-alert.ISOLATION_ALERT'">
+    </app-iconed-titled-section>
+
+    <div id="isolation-alert-list" class="isolation-alerts" *ngFor="let isolationAlert of isolationAlerts" fxLayout="column" fxLayoutGap="8px">
+        <app-title-description-list id="diagnosis" [title]="'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS'"
+            [descriptionData]="isolationAlert.diagnosis"></app-title-description-list>
+        <app-title-description-list id="types" [title]="'historia-clinica.isolation-alert.ISOLATION_TYPE'"
+            [descriptionData]="isolationAlert.types"></app-title-description-list>
+        <app-title-description-list id="criticality" [title]="'historia-clinica.general.CRITICALITY'"
+            [descriptionData]="isolationAlert.criticality"></app-title-description-list>
+        <app-title-description-list id="end-alert" [title]="'historia-clinica.isolation-alert.END_OF_ALERT'"
+            [descriptionData]="isolationAlert.endAlert"></app-title-description-list>
+        <app-title-description-list id="observations" *ngIf="isolationAlert.observations"
+            [title]="'historia-clinica.general.OBSERVATIONS'"
+            [descriptionData]="isolationAlert.observations"></app-title-description-list>
+    </div>
+
+</div>
