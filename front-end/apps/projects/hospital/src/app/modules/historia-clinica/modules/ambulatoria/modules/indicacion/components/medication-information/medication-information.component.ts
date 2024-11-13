@@ -154,8 +154,8 @@ export class MedicationInformationComponent implements OnInit {
 		return {
 			id: prescriptionItem.id,
 			pt: prescriptionItem.snomed.pt,
-			dayDose: prescriptionItem.dayDose,
-			quantity: prescriptionItem.quantity.value,
+			dayDose: prescriptionItem.dayDose && prescriptionItem.frequencyType ? `cada ${prescriptionItem.dayDose} ${prescriptionItem.frequencyType}`: null,
+			quantity: prescriptionItem.quantity?.value ? `${prescriptionItem.quantity.value} ${prescriptionItem.quantity.unit}`: '',
 			treatmentDays: prescriptionItem.administrationTimeDays,
 			unitDose: prescriptionItem.unitDose,
 			commercialMedicationPrescription: prescriptionItem.commercialMedicationPrescription,
@@ -178,7 +178,6 @@ export class MedicationInformationComponent implements OnInit {
 
     private editPrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
 		const editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
-
 		editPrescriptionItem.snomed = prescriptionItem.snomed;
 		editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;
 		editPrescriptionItem.unitDose = prescriptionItem.unitDose;
@@ -192,6 +191,7 @@ export class MedicationInformationComponent implements OnInit {
 		editPrescriptionItem.observations = prescriptionItem.observations;
 		editPrescriptionItem.commercialMedicationPrescription = prescriptionItem.commercialMedicationPrescription;
 		editPrescriptionItem.suggestedCommercialMedication = prescriptionItem.suggestedCommercialMedication;
+		editPrescriptionItem.frequencyType = prescriptionItem.frequencyType;
 	}
 
 	private editPharmacoDetail(prescriptionItem: NewPrescriptionItem): void {

@@ -104,7 +104,7 @@
                 </mat-form-field>
     
                 <mat-form-field class="selector" appearance="outline" *ngIf="quantitySelectorOptions.length > 1 && HABILITAR_RELACIONES_SNOMED">
-                    <mat-select formControlName="quantitySelector" (selectionChange)="setTotalQuantityAvailability([$event.value])">
+                    <mat-select formControlName="unit" (selectionChange)="setTotalQuantityAvailability([$event.value])">
                         <mat-option *ngFor="let opt of quantitySelectorOptions" [value]="opt">
                             {{opt}}
                         </mat-option>
@@ -122,7 +122,7 @@
                 </mat-form-field>
     
                 <mat-form-field class="selector" appearance="outline">
-                    <mat-select formControlName="frequencySelector">
+                    <mat-select formControlName="frequencyType">
                         <mat-option *ngFor="let opt of frequencySelectorOptions" [value]="opt">
                             {{opt}}
                         </mat-option>

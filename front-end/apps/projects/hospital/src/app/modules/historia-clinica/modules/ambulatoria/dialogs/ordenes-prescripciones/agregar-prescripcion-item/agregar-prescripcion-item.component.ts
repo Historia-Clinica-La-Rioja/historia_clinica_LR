@@ -15,7 +15,6 @@ import { intervalValidation } from "@historia-clinica/modules/ambulatoria/dialog
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnomedFinancedAuditRequired } from '@historia-clinica/modules/ambulatoria/components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
-import { pharmaceuticalForm } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -46,7 +45,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	MAX_QUANTITY: number = this.MAX_VALUE * this.MAX_VALUE;
 	MIN_VALUE: number = 1;
 	HABILITAR_RECETA_DIGITAL: AppFeature = AppFeature.HABILITAR_RECETA_DIGITAL;
-	pharmaceuticalForm: string[] = pharmaceuticalForm;
 	isEnabledFinancedPharmaco = false;
 	markFormAsTouched = false;
 
@@ -396,4 +394,5 @@ export class NewPrescriptionItem {
 	quantity?: QuantityDto;
 	commercialMedicationPrescription?: CommercialMedicationPrescriptionDto;
     suggestedCommercialMedication?: SnomedDto;
+	frequencyType?: string
 }

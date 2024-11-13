@@ -62,9 +62,9 @@ export class MedicationDispensePopupComponent implements OnInit {
 			id: this.medicationInfo.id,
 			pt: this.medicationInfo.snomed.pt,
 			unitDose: dosage.dosesByUnit,
-			dayDose: dosage.dosesByDay,
+			dayDose: `${dosage.dosesByDay}`,
 			treatmentDays: `${dosage.duration}`,
-			quantity: dosage.quantityDto.value
+			quantity: `${dosage.quantityDto.value}`
 		}
 	}
 
