@@ -197,7 +197,7 @@
             <div>
                 <div class="row-content">
                     <div class="data-title">Fecha :</div>
-                    <div class="data-text" th:text="${#temporals.format(performedDate, 'dd-MM-yyyy HH:mm')}"></div>
+                    <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy') + ' - ' + #temporals.format(performedDate, 'HH:mm') + ' hs.'}"></div>
                 </div>
                 <div class="row-content width-row">
                     <div class="data-title-span">Estudios :</div>
@@ -288,17 +288,22 @@
                         </div>
                     </div>
                 </div>
+                <div th:if="${authorTranscribedOrder != null}">
+                    <div>
+                        <div class="data-text" th:text="${' - '}"></div>
+                    </div>
+                </div>
             </div>
             <div class="row-content">
                 <div class="data-title">MN</div>
-                <span th:if="${authorTranscribedOrder != null || (authorOrder != null && #lists.isEmpty(authorOrder.professions))}">
+                <span th:if="${authorTranscribedOrder != null || (authorOrder != null && !authorOrder.hasMN())}">
                     <span class="data-text" th:text="${' - '}"></span>
                 </span>
                 <span th:if="${authorOrder != null && not #lists.isEmpty(authorOrder.professions)}">
                     <span th:each="profession,iter: ${authorOrder.professions}">
                         <span th:if="${not #lists.isEmpty(profession.licenses)}">
                             <span class="comma-list" th:each="license,iter: ${profession.licenses}">
-                                <span th:if="${#strings.equals(license.type, 'MN')}">
+                                <span class="row-line" th:if="${#strings.equals(license.type, 'MN')}">
                                     <span class="data-text" th:text="${license.number}"></span>
                                 </span>
                             </span>
@@ -317,7 +322,7 @@
             </div>
             <div class="row-content">
                 <div class="data-title">MP</div>
-                <span th:if="${authorTranscribedOrder != null || (authorOrder != null && #lists.isEmpty(authorOrder.professions))}">
+                <span th:if="${authorTranscribedOrder != null || (authorOrder != null && !authorOrder.hasMP())}">
                     <span class="data-text" th:text="${' - '}"></span>
                 </span>
                 <span th:if="${authorOrder != null && not #lists.isEmpty(authorOrder.professions)}">
@@ -391,14 +396,14 @@
                 </div>
             </div>
             <span class="data-text">M.N</span>
-            <span th:if="${#lists.isEmpty(author.professions)}">
+            <span th:if="${!author.hasMN()}">
                 <span class="data-text" th:text="${' - '}"></span>
             </span>
             <span th:if="${not #lists.isEmpty(author.professions)}">
                 <span th:each="profession,iter: ${author.professions}">
                     <span th:if="${not #lists.isEmpty(profession.licenses)}">
                         <span class="comma-list" th:each="license,iter: ${profession.licenses}">
-                            <span th:if="${#strings.equals(license.type, 'MN')}">
+                            <span class="row-line" th:if="${#strings.equals(license.type, 'MN')}">
                                 <span class="data-text" th:text="${license.number}"></span>
                             </span>
                         </span>
@@ -407,7 +412,7 @@
                         <span th:each="specialty,iter: ${profession.specialties}">
                             <span class="comma-list" th:each="license,iter: ${specialty.licenses}">
                                 <span th:if="${#strings.equals(license.type, 'MN')}">
-                                    <span th:text="${license.number}"></span>
+                                    <span class="data-text" th:text="${license.number}"></span>
                                 </span>
                             </span>
                         </span>
@@ -416,7 +421,7 @@
             </span>
             <br />
             <span class="data-text">M.P </span>
-            <span th:if="${#lists.isEmpty(author.professions)}">
+            <span th:if="${!author.hasMP()}">
                 <span class="data-text" th:text="${' - '}"></span>
             </span>
             <span th:if="${not #lists.isEmpty(author.professions)}">

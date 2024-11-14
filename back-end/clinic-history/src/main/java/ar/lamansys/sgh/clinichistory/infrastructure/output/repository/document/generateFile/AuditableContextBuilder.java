@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
-import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterBo;
-import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
@@ -17,8 +15,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
-import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterizedFormPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
@@ -39,7 +35,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
