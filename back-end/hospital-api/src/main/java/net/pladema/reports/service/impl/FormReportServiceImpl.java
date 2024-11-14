@@ -1,7 +1,5 @@
 package net.pladema.reports.service.impl;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -205,17 +203,16 @@ public class FormReportServiceImpl implements FormReportService {
         ctx.put("affiliateNumber", reportDataDto.getAffiliateNumber());
 		ctx.put("problems", reportDataDto.getProblems());
 		ctx.put("cie10Codes", reportDataDto.getCie10Codes());
-		ctx.put("consultationDate", reportDataDto.getConsultationDate() != null ? formatConsultationDate(reportDataDto.getConsultationDate()) : null);
         return ctx;
     }
 
-	private String formatConsultationDate(LocalDateTime consultationDate) {
-		return consultationDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-	}
-
     @Override
     public Map<String, Object> createConsultationContext(FormVDto reportDataDto){
-		return createAppointmentContext(reportDataDto);
+        Map<String, Object> ctx = this.createAppointmentContext(reportDataDto);
+		ctx.put("consultationDate",
+				reportDataDto.getConsultationDate() != null ? reportDataDto.getConsultationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+						: null);
+        return ctx;
     }
 
     private Map<String, Object> loadBasicContext(FormVDto reportDataDto){

@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 
 @Getter
 @Setter
 public class FormVOutpatientVo extends FormVVo{
 
-    private LocalDateTime consultationDate;
+    private LocalDate consultationDate;
 
     private String problems;
 
@@ -23,7 +22,7 @@ public class FormVOutpatientVo extends FormVVo{
 	private String affiliateNumber;
 
     public FormVOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
-                             LocalDate patientBirthDate, String documentType, String documentNumber, LocalDateTime consultationDate, String problems,
+                             LocalDate patientBirthDate, String documentType, String documentNumber, LocalDate consultationDate, String problems,
                              String streetName, String streetNumber, String city, String sisaCode, String cie10Codes, String medicalCoverage, String affiliateNumber){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType,
                 documentNumber, streetName, streetNumber, city, sisaCode);
@@ -38,7 +37,7 @@ public class FormVOutpatientVo extends FormVVo{
     public Short getAge(){
         if (super.getPatientBirthDate() == null)
             return null;
-        Period p = Period.between(super.getPatientBirthDate(), consultationDate.toLocalDate());
+        Period p = Period.between(super.getPatientBirthDate(), consultationDate);
         return (short) p.getYears();
     }
 

@@ -1,6 +1,5 @@
 package net.pladema.reports.service.domain;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +43,7 @@ public class FormVBo {
 
     private String affiliateNumber;
 
-    private LocalDateTime consultationDate;
+    private LocalDate consultationDate;
 
     private String problems;
 
