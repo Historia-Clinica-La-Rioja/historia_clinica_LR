@@ -15,10 +15,10 @@
 	},
 	"pharmaco-detail": {
 		"PHARMACO": "Fármaco indicado",
-		"UNIT_DOSE": "Cantidad por vez",
-		"DAY_DOSE": "Frecuencia",
+		"UNIT_DOSE": "Dosis / Unidad",
+		"DAY_DOSE": "Dosis / Día",
 		"TREATMENT_DAYS": "Días de tratamiento",
-		"QUANTITY": "Cantidad total",
+		"QUANTITY": "Cantidad",
 		"SUGGESTED_COMMERCIAL": "Marca sugerida",
 		"PRESENTATION": "Presentación",
 		"MEDICATION_PACK": "Envases",

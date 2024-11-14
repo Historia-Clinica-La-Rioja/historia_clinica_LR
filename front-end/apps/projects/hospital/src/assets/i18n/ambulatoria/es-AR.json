@@ -569,6 +569,11 @@
                     "ENABLED_IN_VADEME": "Habilitado en Vademe",
                     "AUDIT_REQUIRED_TEXT":"Al incluir la indicación de este fármaco se requiere la siguiente documentación para ser auditada:"
                 },
+                "old_digital_prescription_item_dialog": {
+                    "UNIT_DOSE":"Dosis / Unidad",
+                    "DAY_DOSE":"Dosis / Día",
+                    "QUANTITY":"Cantidad"
+                },
                 "add_digital_prescription_item_dialog": {
                     "QUANTITY": "Cantidad por vez",
                     "TOTAL_QUANTITY": "Cantidad total",

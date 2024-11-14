@@ -12,7 +12,11 @@ import { IDENTIFIER_CASES, IdentifierCasesComponent } from "../identifier-cases/
 })
 export class PharmacoDetailComponent {
 
-	@Input() pharmaco: PharmacoDetail;
+	@Input() set pharmaco(pharmaco: PharmacoDetail) {
+		this.pharmacoDetail = pharmaco;
+		this.setDefaultTitles(pharmaco.titles);
+	}
+	pharmacoDetail: PharmacoDetail;
 	@Input() disabled = false;
 	@Input() showButtons = false;
 
@@ -22,11 +26,21 @@ export class PharmacoDetailComponent {
 	identiferCases = IDENTIFIER_CASES;
 
 	emitEdit(): void {
-		this.editEmitter.emit(this.pharmaco.id);
+		this.editEmitter.emit(this.pharmacoDetail.id);
 	}
 
 	emitDelete(): void {
-		this.deleteEmitter.emit(this.pharmaco.id);
+		this.deleteEmitter.emit(this.pharmacoDetail.id);
+	}
+
+	private setDefaultTitles = (titles: PharmacoDetailTitle) => {
+		if (titles) return;
+
+		this.pharmacoDetail.titles = {
+			unitDose: 'pharmaco-detail.UNIT_DOSE',
+			dayDose: 'pharmaco-detail.DAY_DOSE',
+			quantity: 'pharmaco-detail.QUANTITY'
+		}
 	}
 }
 
@@ -41,5 +55,12 @@ export interface PharmacoDetail {
 	commercialPt?: string,
 	commercialMedicationPrescription?: CommercialMedicationPrescriptionDto,
 	observations?: string,
-	healthProblem?: string
+	healthProblem?: string,
+	titles?: PharmacoDetailTitle
+}
+
+export interface PharmacoDetailTitle {
+	unitDose: string,
+	dayDose: string,
+	quantity: string
 }

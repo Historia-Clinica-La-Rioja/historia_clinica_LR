@@ -8,11 +8,12 @@ import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '@historia
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
 import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
-import { PharmacoDetail } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
+import { PharmacoDetail, PharmacoDetailTitle } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { AddDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/add-digital-prescription-item/add-digital-prescription-item.component';
 import { TranslateService } from '@ngx-translate/core';
+import { OldDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/old-digital-prescription-item/old-digital-prescription-item.component';
 
 @Component({
     selector: 'app-medication-information',
@@ -36,14 +37,16 @@ export class MedicationInformationComponent implements OnInit {
     showAddMedicationError = false;
     isAddMedicationLoading = false;
 	isEnabledFinancedPharmaco = false;
+	HABILITAR_RECETA_DIGITAL_ACTUALIZADA = false;
 
     constructor(
         private readonly dialog: MatDialog,
         private readonly medicationRequestService: MedicationRequestService,
 		private statePrescripcionService: StatePrescripcionService,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly dialogService: DialogService<AddDigitalPrescriptionItemComponent>,
 		private readonly translate: TranslateService,
+		private readonly oldDigital: DialogService<OldDigitalPrescriptionItemComponent>,
+		private readonly newDigital: DialogService<AddDigitalPrescriptionItemComponent>
     ) { }
 
     ngOnInit(): void {
@@ -57,10 +60,12 @@ export class MedicationInformationComponent implements OnInit {
 		});
 		this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS).subscribe(isOn => this.isEnabledFinancedPharmaco = isOn);
+		this.setFeatureFlags();
     }
 
     openPrescriptionItemDialog(item?: NewPrescriptionItem): void {
-		if (this.isHabilitarRecetaDigital) return this.openAddDigitalPrescriptionItemDialog(item);
+		if (this.HABILITAR_RECETA_DIGITAL_ACTUALIZADA) return this.openAddDigitalPrescriptionItemDialog(item);
+		if (this.isHabilitarRecetaDigital) return this.openOldAddDigitalPrescriptionItemDialog(item);
 
 		const newPrescriptionItemDialog = this.dialog.open(AgregarPrescripcionItemComponent,
 		{
@@ -112,9 +117,21 @@ export class MedicationInformationComponent implements OnInit {
 		})
 	}
 
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA).subscribe((value: boolean) => this.HABILITAR_RECETA_DIGITAL_ACTUALIZADA = value);
+	}
+
 	private openAddDigitalPrescriptionItemDialog = (item?: NewPrescriptionItem) => {
-		this.dialogService.open(
+		this.newDigital.open(
 			AddDigitalPrescriptionItemComponent,
+			{dialogWidth: DialogWidth.LARGE},
+			this.getAddDigitalPrescriptionItemDialogData(item)
+		).afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => this.addPrescriptionItem(prescriptionItem));
+	}
+
+	private openOldAddDigitalPrescriptionItemDialog = (item?: NewPrescriptionItem) => {
+		this.oldDigital.open(
+			OldDigitalPrescriptionItemComponent,
 			{dialogWidth: DialogWidth.LARGE},
 			this.getAddDigitalPrescriptionItemDialogData(item)
 		).afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => this.addPrescriptionItem(prescriptionItem));
@@ -163,18 +180,31 @@ export class MedicationInformationComponent implements OnInit {
 			commercialPt: prescriptionItem.suggestedCommercialMedication?.pt,
 			interval: this.buildInterval(prescriptionItem),
 			observations: prescriptionItem.observations,
-			healthProblem: prescriptionItem.healthProblem.description
+			healthProblem: prescriptionItem.healthProblem.description,
+			titles: this.buildTitles()
+		}
+	}
+
+	private buildTitles = (): PharmacoDetailTitle => {
+		if (this.HABILITAR_RECETA_DIGITAL_ACTUALIZADA) {
+			return {
+				unitDose: 'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.QUANTITY',
+				dayDose: 'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.FREQUENCY',
+				quantity: 'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.TOTAL_QUANTITY'
+			}
 		}
 	}
 
 	private buildDayDose = (prescriptionItem: NewPrescriptionItem) => {
-		if (prescriptionItem.dayDose && prescriptionItem.frequencyType) {
+		if (prescriptionItem.dayDose && prescriptionItem.frequencyType && this.HABILITAR_RECETA_DIGITAL_ACTUALIZADA) {
 			return this.translate.instant('ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.INTERVAL', {
 				frequency: prescriptionItem.dayDose,
 				frequencyType: prescriptionItem.frequencyType
 			});
 		}
-		return null;
+
+		if (prescriptionItem.dayDose)
+			return `${prescriptionItem.dayDose}`;
 	}
 
 	private buildInterval = (prescriptionItem: NewPrescriptionItem): string | null => {

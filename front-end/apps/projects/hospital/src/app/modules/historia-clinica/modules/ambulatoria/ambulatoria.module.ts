@@ -104,6 +104,7 @@ import { NewViolentPersonInfomationComponent } from './dialogs/new-violent-perso
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { NumericalParameterComponent } from './components/numerical-parameter/numerical-parameter.component';
+import { OldDigitalPrescriptionItemComponent } from './dialogs/old-digital-prescription-item/old-digital-prescription-item.component';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
 import { OptionListParameterComponent } from './components/option-list-parameter/option-list-parameter.component';
 import { ParameterizedFormDialogComponent } from './dialogs/parameterized-form-dialog/parameterized-form-dialog.component';
@@ -183,6 +184,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		NuevaConsultaDockPopupComponent,
 		NuevaConsultaDockPopupEnfermeriaComponent,
 		NumericalParameterComponent,
+		OldDigitalPrescriptionItemComponent,
 		OperationDeniedComponent,
 		OptionListParameterComponent,
 		OriginInstitutionReferenceComponent,
