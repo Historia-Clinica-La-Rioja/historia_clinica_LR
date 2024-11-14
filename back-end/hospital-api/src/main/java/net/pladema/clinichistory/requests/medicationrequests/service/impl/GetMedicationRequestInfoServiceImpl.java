@@ -6,7 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import net.pladema.clinichistory.requests.medicationrequests.repository.GetMedicationRequestInfoRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.GetMedicationRequestInfoService;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

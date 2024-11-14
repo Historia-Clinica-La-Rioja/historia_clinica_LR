@@ -17,7 +17,7 @@ import net.pladema.clinichistory.requests.medicationrequests.repository.entity.M
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.DigitalRecipeMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.DocumentRequestBo;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;

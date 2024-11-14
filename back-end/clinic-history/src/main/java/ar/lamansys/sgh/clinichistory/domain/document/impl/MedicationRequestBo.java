@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.medicationrequests.service.domain;
+package ar.lamansys.sgh.clinichistory.domain.document.impl;
 
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;

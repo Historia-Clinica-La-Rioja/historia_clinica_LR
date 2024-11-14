@@ -70,7 +70,7 @@ import net.pladema.clinichistory.requests.medicationrequests.service.NewMedicati
 import net.pladema.clinichistory.requests.medicationrequests.service.ValidateMedicationRequestGenerationService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.ChangeStateMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationFilterBo;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.impl.notification.NewMedicationRequestNotificationArgs;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.service.PatientExternalMedicalCoverageService;

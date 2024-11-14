@@ -15,8 +15,8 @@ import net.pladema.clinichistory.requests.controller.dto.CommercialMedicationPre
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.DigitalRecipeMedicationRequestBo;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.DigitalRecipeMedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.slf4j.Logger;
