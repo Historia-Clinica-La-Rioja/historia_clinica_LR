@@ -12,9 +12,7 @@
 
 			<app-evolucion-form [markAsTouched]="markAsTouched" formControlName="evolutionNote"></app-evolucion-form>
 
-			<ng-container *appFeatureFlag="HABILITAR_PACIENTES_COLONIZADOS">
-				<app-isolation-alert-section *ngIf="!data.editMode" formControlName="isolationAlerts"></app-isolation-alert-section>
-			</ng-container>
+			<app-isolation-alert-section *appFeatureFlag="HABILITAR_PACIENTES_COLONIZADOS" formControlName="isolationAlerts"></app-isolation-alert-section>
 			
 			<app-datos-antropometricos-form formControlName="anthropometricData" [patientId]="data.patientId"> </app-datos-antropometricos-form>
 

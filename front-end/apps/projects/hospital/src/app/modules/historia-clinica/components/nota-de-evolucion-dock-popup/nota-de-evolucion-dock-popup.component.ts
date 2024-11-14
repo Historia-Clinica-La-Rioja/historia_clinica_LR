@@ -93,6 +93,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 		if (this.formsSubscription.length) {
 			this.formsSubscription.forEach(subscription => subscription.unsubscribe());
 		}
+		this.episodeDiagnosesService.resetDiagnoses();
 	}
 
 	ngAfterViewInit() {

@@ -66,6 +66,7 @@ export class EvolutionNoteDockPopupByNurseComponent implements OnInit, OnDestroy
 
 	ngOnDestroy(): void {
 		this.formSubscription && this.formSubscription.unsubscribe();
+		this.episodeDiagnosesService.resetDiagnoses();
 	}
 
 	persist() {

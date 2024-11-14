@@ -95,6 +95,13 @@ export class IsolationAlertSectionComponent extends AbstractCustomForm implement
 		this.isolationAlertsDetail = mapIsolationAlertsToIsolationAlertsDetails(isolationAlertsAdded);
 	}
 
+	writeValue(value: {isolationAlerts: IsolationAlert[]}) {
+		if (value) {
+			this.form.setValue(value, { emitEvent: false });
+			this.isolationAlertsDetail = mapIsolationAlertsToIsolationAlertsDetails(value.isolationAlerts);
+		}
+	}
+
 }
 
 interface IsolationAlertForm {

@@ -41,6 +41,7 @@ describe('isolation-alerts.mapper', () => {
 	};
 
 	const isolationAlert: IsolationAlert = {
+		id: 1,
 		diagnosis: {
 			snomed: {
 				pt: "fiebre",

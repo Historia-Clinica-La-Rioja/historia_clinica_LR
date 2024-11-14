@@ -121,6 +121,7 @@ const toClinicalTermDto = (id: number, pt: string, sctid: string): ClinicalTermD
 const toIsolationAlert = (isolationAlert: IsolationAlertDto): IsolationAlert => {
 	const { healthConditionId, healthConditionPt, healthConditionSctid } = isolationAlert;
 	return {
+		id: isolationAlert.id,
 		diagnosis: toClinicalTermDto(healthConditionId, healthConditionPt, healthConditionSctid),
 		types: isolationAlert.types,
 		criticality: isolationAlert.criticality,
@@ -217,7 +218,7 @@ const toIsolationAlertDto = (isolationAlert: IsolationAlert): IsolationAlertDto 
 		healthConditionSctid: isolationAlert.diagnosis.snomed.sctid,
 		types: isolationAlert.types,
 		...(isolationAlert.observations && { observations: isolationAlert.observations }),
-		id: null
+		id: isolationAlert.id || null
 	}
 }
 
