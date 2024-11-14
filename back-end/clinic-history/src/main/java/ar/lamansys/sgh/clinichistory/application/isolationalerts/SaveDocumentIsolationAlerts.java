@@ -9,6 +9,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHealthCondition
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
 public class SaveDocumentIsolationAlerts {
 	private final IsolationAlertStorage isolationAlertStorage;
 	private final SharedHealthConditionPort sharedHealthConditionPort;
+
+	@Transactional
 	public void run(Long documentId, List<IsolationAlertBo> isolationAlerts) {
 
 		//Find the actual health condition ids for each alert

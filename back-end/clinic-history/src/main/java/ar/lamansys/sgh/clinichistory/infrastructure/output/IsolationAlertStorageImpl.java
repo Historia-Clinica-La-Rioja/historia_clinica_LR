@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.isolation.IsolationAlertIsolationType;
 import lombok.RequiredArgsConstructor;
 
+import static ar.lamansys.sgx.shared.security.UserInfo.getCurrentAuditor;
+
 @RequiredArgsConstructor
 @Service
 public class IsolationAlertStorageImpl implements IsolationAlertStorage {
@@ -43,33 +47,44 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 	private final EntityManager entityManager;
 
 	/**
-	 * When an evolution note is modified the alert bo's have an id. The modified alerts are stored
-	 * as new rows that point to the alert being modified.
+	 * When an evolution note is modified, its alerts, sent in the alerts array, can be in one of these states:
+	 * 1. The alert is missing from the array. This means that the alert was deleted. There's nothing to be done.
+	 * The old evolution note will be marked as deleted and all of its alerts will be considered deleted as well.
+	 * 2. The alert is present in the array and has a null id. This alert is new and was added during the evolution
+	 * note's edit. A new row for this alert is created and linked to the corresponding document.
+	 * 3. The alert is present in the array and has a non-null id. This alert is being modified. Instead of modifying
+	 * the existing row, a new one is created with the modified values. This new rows parentId stores the id of the
+	 * modified alert. This allows to keep track of an alert's history.
+	 *
 	 * See {@link IsolationAlert} parentId field.
 	 */
 	@Override
 	public void save(Long documentId, List<IsolationAlertBo> isolationAlerts) {
 		if (!documentRepository.existsById(documentId)) throw documentNotFound(documentId);
 		isolationAlerts.forEach(alertBo -> {
-			var newAlert = isolationAlertRepository.save(
-				new IsolationAlert(
-					null,
-					alertBo.getHealthConditionId(),
-					alertBo.getCriticalityId(),
-					alertBo.getEndDate(),
-					alertBo.getObservations(),
-					EIsolationStatus.ONGOING.getId(),
-					alertBo.getId()
-				)
-			);
-			alertBo.getTypeIds().forEach(
-				typeId -> isolationAlertIsolationTypeRepository.save(
-					new IsolationAlertIsolationType(newAlert.getId(), typeId)
-				));
-			documentIsolationAlertRepository.save(
-				new DocumentIsolationAlert(documentId, newAlert.getId())
-			);
+			saveOne(documentId, alertBo);
 		});
+	}
+
+	private IsolationAlert saveOne(Long documentId, IsolationAlertBo alertBo) {
+		var newAlert = isolationAlertRepository.save(
+			IsolationAlert.withoutId(
+				alertBo.getHealthConditionId(),
+				alertBo.getCriticalityId(),
+				alertBo.getEndDate(),
+				alertBo.getObservations(),
+				alertBo.getStatusId(),
+				alertBo.getId()
+			)
+		);
+		alertBo.getTypeIds().forEach(
+			typeId -> isolationAlertIsolationTypeRepository.save(
+				new IsolationAlertIsolationType(newAlert.getId(), typeId)
+			));
+		documentIsolationAlertRepository.save(
+			new DocumentIsolationAlert(documentId, newAlert.getId())
+		);
+		return newAlert;
 	}
 
 	@Override
@@ -98,7 +113,9 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		"	JOIN snomed " +
 		"		ON (health_condition.snomed_id = snomed.id) " +
 		"WHERE  "  +
-		"	document_isolation_alert.document_id = :documentId";
+		"	document_isolation_alert.document_id = :documentId" +
+		"	AND isolation_alert.deleted = false"
+		;
 
 		List<Object[]> rows = entityManager
 			.createNativeQuery(sqlString)
@@ -137,7 +154,9 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		"	JOIN snomed " +
 		"		ON (health_condition.snomed_id = snomed.id) " +
 		"WHERE "  +
-		"	document.patient_id = :patientId AND document.deleted = false " +
+		"	document.patient_id = :patientId " +
+		"	AND document.deleted = false " +
+		"	AND isolation_alert.deleted = false " +
 		"ORDER BY isolation_alert.created_on DESC";
 
 
@@ -179,7 +198,9 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 				"	JOIN snomed " +
 				"		ON (health_condition.snomed_id = snomed.id) " +
 				"WHERE "  +
-				"	isolation_alert.id = :alertId AND document.deleted = false";
+				"	isolation_alert.id = :alertId " +
+				"	AND document.deleted = false " +
+				"	AND isolation_alert.deleted = false";
 
 		List<Object[]> rows = entityManager
 				.createNativeQuery(sqlString)
@@ -198,6 +219,41 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 			.stream()
 			.map(alert -> new IsolationAlertForPdfDocumentBo(alert))
 			.collect(Collectors.toList());
+	}
+
+	/**
+	 * 1. Marks the alert with id = {@alertId} as deleted
+	 * 2. Creates a new alert with status cancelled, endDate=today and parentId = {@alertId}
+	 */
+	@Override
+	public Optional<Integer> cancel(Integer alertId) {
+		var fullSourceAlert = findByAlertId(alertId).orElseThrow(() -> alertNotFound(alertId));
+		var documentId = documentIsolationAlertRepository.findByPk_isolationAlertId(alertId)
+			.orElseThrow(() -> alertNotFound(alertId))
+			.getPk().getDocumentId();
+
+		//Create a new alert with status cancelled and endDate=now
+		var newCancelledAlert = new IsolationAlertBo(
+			alertId, //The new one will have this as the parentId
+			fullSourceAlert.getHealthConditionId(),
+			fullSourceAlert.getHealthConditionSctid(),
+			fullSourceAlert.getHealthConditionPt(),
+			fullSourceAlert.getTypeIds(),
+			fullSourceAlert.getCriticalityId(),
+			LocalDate.now(),
+			fullSourceAlert.getObservations(),
+			EIsolationStatus.CANCELLED.getId()
+		);
+		var savedFinalizedAlert = this.saveOne(documentId, newCancelledAlert);
+
+		//Mark the old one as deleted
+		var sourceAlert = isolationAlertRepository.findById(alertId).orElseThrow(() -> alertNotFound(alertId));
+		sourceAlert.setDeleted(true);
+		sourceAlert.setDeletedBy(getCurrentAuditor());
+		sourceAlert.setDeletedOn(LocalDateTime.now());
+		isolationAlertRepository.save(sourceAlert);
+
+		return Optional.of(savedFinalizedAlert.getId());
 	}
 
 	private List<IsolationAlertBo> mapToIsolationAlertBo(List<Object[]> rows) {
@@ -256,4 +312,9 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 	private IsolationAlertException documentNotFound(Long documentId) {
 		return IsolationAlertException.documentNotFound(documentId);
 	}
+
+	private IsolationAlertException alertNotFound(Integer alertId) {
+		return IsolationAlertException.alertNotFound(alertId);
+	}
+
 }

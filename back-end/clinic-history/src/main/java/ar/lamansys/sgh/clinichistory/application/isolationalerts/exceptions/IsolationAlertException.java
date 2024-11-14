@@ -8,6 +8,8 @@ public class IsolationAlertException extends RuntimeException {
 	public static final String DOC_NOT_FOUND = String.format("%s.%s", PREFIX, "document-not-found");
 	public static final String HC_NOT_FOUND = String.format("%s.%s", PREFIX, "health-condition-not-found");
 	public static final String ALERT_NOT_FOUND = String.format("%s.%s", PREFIX, "alert-not-found");
+	public static final String FINALIZED_ERROR = String.format("%s.%s", PREFIX, "finalized");
+	public static final String ALREADY_FINALIZED_ERROR = String.format("%s.%s", PREFIX, "already-finalized");
 
 	private String code;
 
@@ -34,6 +36,20 @@ public class IsolationAlertException extends RuntimeException {
 		return new IsolationAlertException(
 				String.format("No se encontró la alerta con id %s", alertId),
 				ALERT_NOT_FOUND
+		);
+	}
+
+	public static IsolationAlertException finalizedError(Integer alertId) {
+		return new IsolationAlertException(
+				String.format("No se pudo finalizar la alerta con id %s", alertId),
+				FINALIZED_ERROR
+		);
+	}
+
+	public static IsolationAlertException alreadyFinalized(Integer alertId) {
+		return new IsolationAlertException(
+				String.format("La alerta con id %s ya se encuentra finalizada", alertId),
+				FINALIZED_ERROR
 		);
 	}
 }

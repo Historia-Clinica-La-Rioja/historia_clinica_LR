@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.isolation;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;
@@ -47,9 +48,29 @@ public class IsolationAlert extends SGXAuditableEntity<Integer> {
 	private Short isolationStatusId;
 	/**
 	 * When parentId is null: This is a new alert created from an evolution note.
-	 * Otherwise: This alert is a copy of an existing alert, possibly with some changes. The parentId carries
+	 * Otherwise: This alert is a copy of an existing alert, possibly with some changes. The parentId stores
 	 * the id of the alert being modified.
 	 */
 	@Column(name = "parent_id", nullable = true)
 	private Integer parentId;
+
+
+	public static IsolationAlert withoutId(
+		Integer healthConditionId,
+		Short criticalityId,
+		LocalDate endDate,
+		String observations,
+		Short statusId,
+		Integer parentId)
+	{
+		return new IsolationAlert(
+			null,
+			healthConditionId,
+			criticalityId,
+			endDate,
+			observations,
+			statusId != null ? statusId : EIsolationStatus.ONGOING.getId(),
+			parentId
+		);
+	}
 }

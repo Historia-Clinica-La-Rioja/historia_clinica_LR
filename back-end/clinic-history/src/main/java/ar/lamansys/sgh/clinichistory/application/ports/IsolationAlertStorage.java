@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IsolationAlertStorage {
+
 	void save(Long documentId, List<IsolationAlertBo> isolationAlerts);
+
 	List<IsolationAlertBo> findByDocumentId(Long documentId);
 
 	List<FetchPatientIsolationAlertBo> findByPatientId(Integer patientId);
@@ -16,4 +18,6 @@ public interface IsolationAlertStorage {
 	Optional<FetchPatientIsolationAlertBo> findByAlertId(Integer alertId);
 
 	List<IsolationAlertForPdfDocumentBo> findByDocumentIdForDocumentPdf(Long documentId);
+
+	Optional<Integer> cancel(Integer alert);
 }

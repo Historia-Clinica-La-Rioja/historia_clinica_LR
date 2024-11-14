@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.domain.isolation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -35,5 +36,21 @@ public class FetchPatientIsolationAlertBo {
 		if (status != null && status.isOngoing() && expired)
 			return EIsolationStatus.EXPIRED;
 		return this.status;
+	}
+
+	public List<Short> getTypeIds() {
+		return this.getTypes().stream().map(EIsolationType::getId).collect(Collectors.toList());
+	}
+
+	public Short getCriticalityId() {
+		return this.getCriticality().getId();
+	}
+
+	public Short getStatusId() {
+		return this.getStatus().getId();
+	}
+
+	public boolean isFinalized() {
+		return this.getStatus() != null && (this.getStatus().isCancelled() || this.getStatus().isExpired());
 	}
 }
