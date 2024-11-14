@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -93,6 +92,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				.bedNumber((String) row[20])
 				.roomNumber((String) row[21])
 				.sector((String) row[22])
+				.location((String) row[23])
 				.build();
 
 		return new StudyOrderWorkListBo(

@@ -66,14 +66,18 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"    CASE " +
 					"        WHEN sr.source_type_id = 0 THEN ie_sector.description " +
 					"        ELSE ec_sector.description " +
-					"    END AS sector " +
+					"    END AS sector, " +
+					"    CASE " +
+					"        WHEN sr.source_type_id = 4 AND ec_bed.bed_number is null THEN COALESCE (ec_office.description, ec_shockroom.description) " +
+					"        ELSE null " +
+					"    END AS location " +
 					"FROM service_request sr " +
 					"JOIN document d ON sr.id = d.source_id " +
 					"JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
 					"JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
 					"JOIN snomed s ON dr.snomed_id = s.id " +
 					"JOIN patient p ON sr.patient_id = p.id " +
-					"JOIN person pe ON pe.id = p.person_id " +
+					"JOIN person pe ON p.person_id = pe.id " +
 					"JOIN person_extended pex ON pe.id = pex.person_id " +
 					"LEFT JOIN gender g ON pe.gender_id = g.id " +
 					"JOIN diagnostic_report_last_modification drlm ON drlm.id = dr.id " +
@@ -92,7 +96,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					") ie ON ie.patient_id = sr.patient_id " +
 					"LEFT JOIN ( " +
 					"    SELECT DISTINCT ON (ec.patient_id) " +
-					"        ec.patient_id, ec.bed_id, ec.created_on " +
+					"        ec.patient_id, ec.bed_id, ec.created_on, ec.doctors_office_id, ec.shockroom_id " +
 					"    FROM emergency_care_episode ec " +
 					"    WHERE ec.institution_id = :institutionId AND ec.deleted = FALSE " +
 					"	 AND ec.emergency_care_state_id IN (:emergencyCareState) " +
@@ -104,6 +108,8 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"LEFT JOIN room ie_room ON ie_bed.room_id = ie_room.id " +
 					"LEFT JOIN sector ec_sector ON ec_room.sector_id = ec_sector.id " +
 					"LEFT JOIN sector ie_sector ON ie_room.sector_id = ie_sector.id " +
+					"LEFT JOIN doctors_office ec_office ON ec.doctors_office_id = ec_office.id " +
+					"LEFT JOIN shockroom ec_shockroom ON ec.shockroom_id = ec_shockroom.id  " +
 					"WHERE sr.institution_id = :institutionId " +
 					"AND dr.status_id = :statusId " +
 					"AND sr.category_id IN (:categories) " +
