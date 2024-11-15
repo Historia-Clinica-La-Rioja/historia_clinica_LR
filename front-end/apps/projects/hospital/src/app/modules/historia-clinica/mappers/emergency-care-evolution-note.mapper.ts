@@ -193,11 +193,11 @@ export const toAnthropometricDataValues = (antropometricData: OutpatientAnthropo
 }
 
 export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
-	const mainDiagnosis: EmergencyCareMainDiagnosis = diagnosisFormValue.mainDiagnostico;
-	const others: EmergencyCareDiagnosis[] = diagnosisFormValue.otrosDiagnosticos;
+	const mainDiagnosis: EmergencyCareMainDiagnosis = diagnosisFormValue?.mainDiagnostico;
+	const others: EmergencyCareDiagnosis[] = diagnosisFormValue?.otrosDiagnosticos;
 	return {
 		diagnosis: others?.filter(otherDiagnosis => otherDiagnosis.diagnosis.isAdded).map(otherDiagnosis => otherDiagnosis.diagnosis) || [],
-		mainDiagnosis: mainDiagnosis.main
+		mainDiagnosis: mainDiagnosis?.main || null
 	}
 }
 
