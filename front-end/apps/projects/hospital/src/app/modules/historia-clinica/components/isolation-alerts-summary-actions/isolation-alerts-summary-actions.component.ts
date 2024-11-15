@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IsolationAlertActionPopup, IsolationAlertActionPopupComponent } from '@historia-clinica/dialogs/isolation-alert-action-popup/isolation-alert-action-popup.component';
 import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
+import { IsolationAlertActionType } from '@historia-clinica/services/isolation-alert-actions.service';
 
 @Component({
 	selector: 'app-isolation-alerts-summary-actions',
@@ -9,7 +10,11 @@ import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/s
 })
 export class IsolationAlertsSummaryActionsComponent {
 
+	readonly dialogConfiguration: DialogConfiguration = { dialogWidth: DialogWidth.SMALL, };
+
 	@Input() isolationAlertId: number;
+	@Input() isIsolationAlertActive: boolean;
+	@Output() updateIsolationAlerts = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly dialogService: DialogService<IsolationAlertActionPopupComponent>
@@ -21,8 +26,20 @@ export class IsolationAlertsSummaryActionsComponent {
 			hasActions: false,
 			isolationAlertId: this.isolationAlertId,
 		};
-		const dialogConfiguration: DialogConfiguration = { dialogWidth: DialogWidth.SMALL, };
-		this.dialogService.open(IsolationAlertActionPopupComponent, dialogConfiguration, popupData);
+		this.dialogService.open(IsolationAlertActionPopupComponent, this.dialogConfiguration, popupData);
+	}
+
+	openEndAlert() {
+		const popupData: IsolationAlertActionPopup = {
+			title: 'historia-clinica.isolation-alert-action.finish-alert.END_ALERT_TITLE',
+			hasActions: true,
+			isolationAlertId: this.isolationAlertId,
+			confirmLabel: 'historia-clinica.isolation-alert-action.finish-alert.CONFIRM_END_ALERT',
+			actionType: IsolationAlertActionType.FINALIZE,
+		};
+
+		this.dialogService.open(IsolationAlertActionPopupComponent, this.dialogConfiguration, popupData)
+			.afterClosed().subscribe(action => action && this.updateIsolationAlerts.emit(true));
 	}
 
 }

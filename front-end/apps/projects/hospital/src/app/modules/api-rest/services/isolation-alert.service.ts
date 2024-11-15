@@ -27,4 +27,9 @@ export class IsolationAlertService {
 		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/${id}`;
 		return this.http.get<PatientCurrentIsolationAlertDto>(url);
 	} 
+
+	cancel(id: number): Observable<PatientCurrentIsolationAlertDto> {
+		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/${id}/cancel`;
+		return this.http.put<PatientCurrentIsolationAlertDto>(url, {});
+	}
 }

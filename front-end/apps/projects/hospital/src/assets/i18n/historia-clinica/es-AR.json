@@ -214,6 +214,15 @@
 			"CARD_TITLE": "Alertas de aislamiento",
 			"ALERT_STATE": "Estado de alerta",
 			"ISOLATION_ALERT_DETAILS": "Detalle de alerta de aislamiento"
+		},
+		"isolation-alert-action": {
+			"finish-alert": {
+				"BUTTON_END_ALERT": "Finalizar alerta",
+				"END_ALERT_TITLE": "¿Finalizar alerta?",
+				"CONFIRM_END_ALERT": "Si, finalizar la alerta",
+				"SNACKBAR_SUCCESS": "Alerta finalizada correctamente",
+				"SNACKBAR_ERROR": "Hubo un error al finalizar la alerta"
+			}
 		}
 	}
 }

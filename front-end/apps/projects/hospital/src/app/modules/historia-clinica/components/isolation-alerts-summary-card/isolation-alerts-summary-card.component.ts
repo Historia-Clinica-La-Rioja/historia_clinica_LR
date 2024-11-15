@@ -15,9 +15,10 @@ export class IsolationAlertsSummaryCardComponent implements OnInit {
 	readonly ISOLATION_ALERT_HEADER = ISOLATION_ALERT_HEADER;
 	readonly displayedColumns = ISOLATION_ALERT_COLUMNS;
 	activeStatusId: number;
-
+	_patientId: number;
 	@Input() set patientId(patientId: number) {
-		this.patientIsolationAlertService.loadPatientIsolationAlerts(patientId);
+		this._patientId = patientId;
+		this.loadPatientIsolationAlerts();
 	};
 
 	constructor(
@@ -28,6 +29,10 @@ export class IsolationAlertsSummaryCardComponent implements OnInit {
 	ngOnInit(): void {
 		this.isolationAlertMasterDataService.getStatus().subscribe(isolationAlertStatus =>
 			this.activeStatusId = isolationAlertStatus.find(state => state.isActive).id);
+	}
+
+	loadPatientIsolationAlerts() {
+		this.patientIsolationAlertService.loadPatientIsolationAlerts(this._patientId);
 	}
 
 }

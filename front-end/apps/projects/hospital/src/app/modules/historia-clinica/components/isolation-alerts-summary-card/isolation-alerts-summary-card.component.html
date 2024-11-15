@@ -32,7 +32,8 @@
 			<ng-container matColumnDef="actions">
 				<th mat-header-cell *matHeaderCellDef>&nbsp;</th>
 				<td mat-cell class="cell-style" *matCellDef="let isolationAlert">
-					<app-isolation-alerts-summary-actions [isolationAlertId]="isolationAlert.id"></app-isolation-alerts-summary-actions>
+					<app-isolation-alerts-summary-actions [isolationAlertId]="isolationAlert.id" [isIsolationAlertActive]="isolationAlert.status.id == activeStatusId"
+						(updateIsolationAlerts)="loadPatientIsolationAlerts()"></app-isolation-alerts-summary-actions>
 				</td>
 			</ng-container>
 
