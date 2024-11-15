@@ -28,7 +28,7 @@ public interface GroupAppointmentRepository extends JpaRepository<Appointment, I
 			" WHERE assn.pk.diaryId = :diaryId" +
 			" AND a.dateTypeId = :date" +
 			" AND a.hour = :hour" +
-			" AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR)
+			" AND a.appointmentStateId NOT IN (" + AppointmentState.CANCELLED_STR + "," + AppointmentState.BLOCKED +")")
 	List<GroupAppointmentResponseBo> getApppointmentsFromDeterminatedDiaryDateTime(@Param("diaryId") Integer diaryId,
 																				   @Param("date") LocalDate date,
 																				   @Param("hour") LocalTime hour);
