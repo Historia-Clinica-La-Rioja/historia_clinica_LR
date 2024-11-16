@@ -43,6 +43,7 @@ export class EmergencyCareEpisodesSummaryComponent implements OnInit {
 	}
 
 	loadEpisodes(pageNumber: number): void {
+		this.loading = true;
 		const filterData = this.filterService.filters;
 		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber, filterData )
 			.subscribe((result: PageDto<EmergencyCareListDto>) => {

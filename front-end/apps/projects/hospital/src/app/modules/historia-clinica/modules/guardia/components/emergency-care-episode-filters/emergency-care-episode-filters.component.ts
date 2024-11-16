@@ -30,7 +30,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		this.formControlsSubscription.forEach(subscription => 
+		this.formControlsSubscription.forEach(subscription =>
 			subscription.unsubscribe()
 		);
 
