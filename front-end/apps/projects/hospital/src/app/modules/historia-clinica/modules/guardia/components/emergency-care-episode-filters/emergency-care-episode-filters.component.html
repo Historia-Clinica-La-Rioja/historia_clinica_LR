@@ -8,7 +8,7 @@
 
         <app-service-chips-autocomplete class="service-width" formControlName="clinicalSpecialtySectorIds"></app-service-chips-autocomplete>
 
-        <div class="margin-top">
+        <div class="margin-top-12">
             <span class="font-weigth"
                 translate="guardia.home.episodes.filters.FILTER_BY_PATIENT"></span>
 
@@ -100,6 +100,9 @@
             </mat-slide-toggle>
         </div>
 
-        <span class="clickeable span-color" (click)="resetFilters()">{{'guardia.home.episodes.filters.CLEAN_FILTERS' | translate}}</span>
+		<div class="margin-top-12">
+			<span class="clickeable span-color" (click)="resetFilters()">{{'guardia.home.episodes.filters.CLEAN_FILTERS' | translate}}</span>
+		</div>
+
     </form>
 </div>
