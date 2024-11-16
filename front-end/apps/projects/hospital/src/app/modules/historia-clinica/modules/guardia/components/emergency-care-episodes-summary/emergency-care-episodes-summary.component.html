@@ -46,13 +46,10 @@
 </section>
 
 <ng-template #noData>
-	<div id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center">
-		<h2 *ngIf="episodes?.length || filterService.hasSelectedFilters else noActiveEpisodes" class="mat-h2"
-			style="text-align: center" translate="guardia.home.episodes.NO_DATA_FOR_FILTER">
-		</h2>
-		<ng-template #noActiveEpisodes>
-			<h2 class="mat-h2" style="text-align: center" translate="guardia.home.episodes.NO_DATA">
-			</h2>
-		</ng-template>
+	<div class="no-data-height" id="no-data" fxFlex="100%" fxLayout="column" fxLayoutAlign="center center">
+		<app-no-data [message]="episodes?.length || filterService.hasSelectedFilters
+			? 'guardia.home.episodes.NO_DATA_FOR_FILTER'
+			: 'guardia.home.episodes.NO_DATA' ">
+		</app-no-data>
 	</div>
 </ng-template>
