@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.CommonDocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
@@ -15,7 +15,7 @@ import net.pladema.clinichistory.hospitalization.service.documents.validation.Sn
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.DigitalRecipeMedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.DigitalRecipeMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.DocumentRequestBo;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 
@@ -38,7 +38,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 
     private final MedicationRequestRepository medicationRequestRepository;
 
-    private final DocumentFactory documentFactory;
+    private final CommonDocumentFactory documentFactory;
 
     private final HealthConditionService healthConditionService;
 

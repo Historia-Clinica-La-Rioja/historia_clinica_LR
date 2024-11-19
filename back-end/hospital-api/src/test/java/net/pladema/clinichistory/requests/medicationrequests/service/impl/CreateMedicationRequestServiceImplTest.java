@@ -1,6 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.CommonDocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
@@ -42,7 +42,7 @@ class CreateMedicationRequestServiceImplTest extends UnitRepository {
 	private MedicationRequestRepository medicationRequestRepository;
 
 	@Mock
-	private DocumentFactory documentFactory;
+	private CommonDocumentFactory documentFactory;
 
 	@Mock
 	private HealthConditionService healthConditionService;

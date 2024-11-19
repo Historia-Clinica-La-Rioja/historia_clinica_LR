@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.application.document.visitors;
 
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.visitor.AnestheticReportVisitorMethods;
+import ar.lamansys.sgh.clinichistory.application.medicationrequest.GenerateMedicationRequestDocumentContext;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
@@ -16,6 +18,7 @@ public class GenerateDocumentContextVisitor implements DocumentVisitor {
 
     private final AnestheticReportVisitorMethods anestheticReportVisitorMethods;
     private final AuditableContextBuilder auditableContextBuilder;
+	private final GenerateMedicationRequestDocumentContext generateMedicationRequestDocumentContext;
 
     @Override
     public void visitAnestheticReport(AnestheticReportBo anestheticReportBo) {
@@ -23,7 +26,12 @@ public class GenerateDocumentContextVisitor implements DocumentVisitor {
         anestheticReportBo.setContextMap(contextMap);
     }
 
-    @Override
+	@Override
+	public void visitMedicationRequest(MedicationRequestBo medicationRequest) {
+		medicationRequest.setContextMap(generateMedicationRequestDocumentContext.run(medicationRequest));
+	}
+
+	@Override
     public void visit(IDocumentBo documentBo) {
         Map<String,Object> contextMap = auditableContextBuilder.buildContext(documentBo);
         documentBo.setContextMap(contextMap);

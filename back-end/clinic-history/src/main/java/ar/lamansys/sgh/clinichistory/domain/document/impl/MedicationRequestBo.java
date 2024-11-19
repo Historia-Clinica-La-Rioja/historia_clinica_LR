@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.document.impl;
 
 
+import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
@@ -75,6 +76,13 @@ public class MedicationRequestBo implements IDocumentBo {
         return patientInfo.getId();
     }
 
+	public void setPatientId(Integer patientId) {
+		if (patientInfo == null)
+			patientInfo = new PatientInfoBo(patientId);
+		else
+			patientInfo.setId(patientId);
+	}
+
 	public MedicationRequestBo(MedicationRequestBo medicationRequestBo, Integer key, LocalDate value) {
 		this.id = medicationRequestBo.getId();
 		this.medicationRequestId = medicationRequestBo.getMedicationRequestId();
@@ -91,6 +99,11 @@ public class MedicationRequestBo implements IDocumentBo {
 		this.uuid = medicationRequestBo.getUuid();
 		this.encounterId = key;
 		this.requestDate = value;
+	}
+
+	@Override
+	public void accept(DocumentVisitor documentVisitor) {
+		documentVisitor.visitMedicationRequest(this);
 	}
 
 }
