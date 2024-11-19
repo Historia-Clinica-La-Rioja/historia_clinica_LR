@@ -17,7 +17,7 @@ import { ButtonType } from '@presentation/components/button/button.component';
 import { EmergencyCarePatient } from '../../components/emergency-care-patient/emergency-care-patient.component';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { ActivatedRoute } from '@angular/router';
-
+import { EmergencyCareTypes } from '../../constants/masterdata';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -32,6 +32,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 	readonly PERSON = PERSON;
 	readonly AMBULANCE = AMBULANCE;
 	readonly EMERGENCY_CARE_ENTRANCE_TYPE = EmergencyCareEntranceType;
+	readonly EMERGENCY_CARE_TYPES = EmergencyCareTypes;
 	readonly minDate = MIN_DATE;
 	readonly buttonType = ButtonType;
 	readonly buttonThemeWarn = 'warn';
@@ -62,11 +63,11 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 	) { }
 
-	ngOnDestroy(): void {
+	ngOnDestroy() {
 		this.patientDescriptionSubscription?.unsubscribe();
 	}
 
-	ngOnInit(): void {
+	ngOnInit() {
 		this.route.queryParams
 			.subscribe(params => {
 				if(params.patientId){
@@ -78,6 +79,8 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
 		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
+
+		this.isEmergencyCareTypeEditable = this.checkEmergencyCareTypeEditability(this.isEpisodeCreation,this.initData.emergencyCareTypeId)
 
 		this.form = this.formBuilder.group({
 			patientMedicalCoverageId: [null],
@@ -99,11 +102,15 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		this.setExistingInfo();
 	}
 
+	private checkEmergencyCareTypeEditability(isEpisodeCreation: boolean, emergencyCareTypeId: number): boolean {
+		return !isEpisodeCreation && emergencyCareTypeId === this.EMERGENCY_CARE_TYPES.NOT_DEFINED;
+	}
+
 	dateChanged(date: Date) {
 		this.form.controls.callDate.setValue(date);
 	}
 
-	continue(): void {
+	continue() {
 		const formValue: AdministrativeAdmission = this.form.getRawValue();
 
 		if (!formValue.patientId && !formValue.patientDescription) {
@@ -120,7 +127,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onChange(): void {
+	onChange() {
 		if (!this.form.controls.hasPoliceIntervention.value) {
 			this.form.controls.callDate.setValue(null);
 			this.form.controls.callTime.setValue(null);
@@ -130,18 +137,18 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	goBack(): void {
+	goBack() {
 		this.cancel.emit();
 	}
 
-	setAmbulanceCompanyIdStatus(): void {
+	setAmbulanceCompanyIdStatus() {
 		if (this.form.value.emergencyCareEntranceTypeId !== EmergencyCareEntranceType.AMBULANCIA_CON_MEDICO
 			|| this.form.value.emergencyCareEntranceTypeId !== EmergencyCareEntranceType.AMBULANCIA_SIN_MEDICO) {
 			this.form.controls.ambulanceCompanyId.setValue(null);
 		}
 	}
 
-	private setExistingInfo(): void {
+	private setExistingInfo() {
 		if (this.initData) {
 			this.setInitDataInForm();
 			const { patientId, patientMedicalCoverageId, patientDescription, patientTypeId } = this.initData;
@@ -149,7 +156,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	clear(control: AbstractControl): void {
+	clear(control: AbstractControl) {
 		control.reset();
 	}
 

@@ -17,6 +17,7 @@ export enum Triages {
 }
 
 export enum EmergencyCareTypes {
+	NOT_DEFINED = -1,
 	ADULTO = 1,
 	PEDIATRIA = 2,
 	GINECOLOGIA = 3
