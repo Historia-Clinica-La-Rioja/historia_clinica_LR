@@ -96,7 +96,7 @@
                     <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.QUANTITY' | translate}}</mat-label>
                     <input type="number" matInput autocomplete="off" formControlName="quantity">
                     <span class="comp" matSuffix *ngIf="quantitySelectorOptions.length === 1 && HABILITAR_RELACIONES_SNOMED">
-                        {{ medicationPresentations[0] | medicationPresentation}}
+                        {{ currentPresentation | medicationPresentation}}
                     </span>
                     <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'quantity')" translate="forms.REQUIRED"></mat-error>
                     <mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'quantity')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
@@ -141,8 +141,8 @@
             <mat-form-field appearance="outline">
                 <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.TOTAL_QUANTITY' | translate}}</mat-label>
                 <input type="text" matInput autocomplete="off" formControlName="totalQuantity">
-                <span class="comp" matSuffix *ngIf="quantitySelectorOptions.length === 1">
-                    {{ medicationPresentations[0] | medicationPresentation}}
+                <span class="comp" matSuffix *ngIf="quantitySelectorOptions.length === 1 && HABILITAR_RELACIONES_SNOMED">
+                    {{ currentPresentation | medicationPresentation}}
                 </span>
                 <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'totalQuantity')" translate="forms.REQUIRED"></mat-error>
                 <mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'totalQuantity')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_QUANTITY}"></mat-error>
@@ -195,19 +195,6 @@
 		</mat-form-field>
 
     </form>
-
-    <!-- <ng-template #multiplePresentations>
-
-        <mat-form-field appearance="fill">
-            <mat-label>Choose one</mat-label>
-            <mat-select>
-                <mat-option *ngFor="let presentation of medicationPresentations">
-                    {{presentation | medicationPresentation}}
-                </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-    </ng-template> -->
 
 </mat-dialog-content>
 

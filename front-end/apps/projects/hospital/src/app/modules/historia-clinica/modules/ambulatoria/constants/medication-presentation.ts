@@ -139,3 +139,10 @@ export const mappings: { [key in AugmentativeMedicationPresentation]?: Diminutiv
     [AugmentativeMedicationPresentation.SISTEMA]: [DiminutiveMedicationPresentation.APLICACION],
     [AugmentativeMedicationPresentation.TAMPON]: [DiminutiveMedicationPresentation.APLICACION],
 };
+
+export const basicPresentations: string[] = ["óvulo", "cápsula", "comprimido", "supositorio"];
+
+export const getBasicPresentation = (concept: string): string => {
+    const foundPresentation = basicPresentations.find(presentation => concept.includes(presentation));
+    return foundPresentation || null;
+}

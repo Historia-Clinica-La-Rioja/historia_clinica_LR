@@ -572,7 +572,11 @@
                 "add_digital_prescription_item_dialog": {
                     "QUANTITY": "Cantidad por vez",
                     "TOTAL_QUANTITY": "Cantidad total",
-                    "FREQUENCY": "Frecuencia"
+                    "FREQUENCY": "Frecuencia",
+                    "frequency_type": {
+                        "DAY": "día/s",
+                        "HS": "hs."
+                    }
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
@@ -612,7 +616,7 @@
                     "DAY_DOSE": "Dosis / Día: {{dayDose}}",
                     "QUANTITY": "Cantidad: {{quantity}}",
                     "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
-                    "INTERVAL": "Cada {{interval}} hs.",
+                    "INTERVAL": "cada {{frequency}} {{frequencyType}}",
                     "USUAL": "Habitual",
                     "DAILY": "Diario",
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",

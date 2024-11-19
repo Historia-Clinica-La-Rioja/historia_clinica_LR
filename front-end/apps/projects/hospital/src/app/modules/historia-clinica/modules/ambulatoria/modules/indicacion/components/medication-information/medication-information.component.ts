@@ -12,6 +12,7 @@ import { PharmacoDetail } from '@hsi-components/pharmaco-detail/pharmaco-detail.
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { AddDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/add-digital-prescription-item/add-digital-prescription-item.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-medication-information',
@@ -41,7 +42,8 @@ export class MedicationInformationComponent implements OnInit {
         private readonly medicationRequestService: MedicationRequestService,
 		private statePrescripcionService: StatePrescripcionService,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly dialogService: DialogService<AddDigitalPrescriptionItemComponent>
+		private readonly dialogService: DialogService<AddDigitalPrescriptionItemComponent>,
+		private readonly translate: TranslateService,
     ) { }
 
     ngOnInit(): void {
@@ -74,7 +76,6 @@ export class MedicationInformationComponent implements OnInit {
 			},
 			width: '35%',
 		});
-
 		newPrescriptionItemDialog.afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => this.addPrescriptionItem(prescriptionItem))
 	}
 
@@ -154,8 +155,8 @@ export class MedicationInformationComponent implements OnInit {
 		return {
 			id: prescriptionItem.id,
 			pt: prescriptionItem.snomed.pt,
-			dayDose: prescriptionItem.dayDose && prescriptionItem.frequencyType ? `cada ${prescriptionItem.dayDose} ${prescriptionItem.frequencyType}`: null,
-			quantity: prescriptionItem.quantity?.value ? `${prescriptionItem.quantity.value} ${prescriptionItem.quantity.unit}`: '',
+			dayDose: this.buildDayDose(prescriptionItem),
+			quantity: prescriptionItem.quantity?.value ? `${prescriptionItem.quantity.value} ${prescriptionItem.quantity.unit ? prescriptionItem.quantity.unit: ''}`: '',
 			treatmentDays: prescriptionItem.administrationTimeDays,
 			unitDose: prescriptionItem.unitDose,
 			commercialMedicationPrescription: prescriptionItem.commercialMedicationPrescription,
@@ -164,6 +165,16 @@ export class MedicationInformationComponent implements OnInit {
 			observations: prescriptionItem.observations,
 			healthProblem: prescriptionItem.healthProblem.description
 		}
+	}
+
+	private buildDayDose = (prescriptionItem: NewPrescriptionItem) => {
+		if (prescriptionItem.dayDose && prescriptionItem.frequencyType) {
+			return this.translate.instant('ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.INTERVAL', {
+				frequency: prescriptionItem.dayDose,
+				frequencyType: prescriptionItem.frequencyType
+			});
+		}
+		return null;
 	}
 
 	private buildInterval = (prescriptionItem: NewPrescriptionItem): string | null => {

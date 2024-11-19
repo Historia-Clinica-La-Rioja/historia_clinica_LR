@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AppFeature, CommercialMedicationPrescriptionDto, CreateOutpatientDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, ServiceRequestCategoryDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
@@ -12,7 +12,7 @@ import { RequestMasterDataService } from '@api-rest/services/request-masterdata.
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { anyMatch } from '@core/utils/array.utils';
+import { anyMatch, getElementAtPosition } from '@core/utils/array.utils';
 import { hasError, NUMBER_PATTERN, scrollIntoError } from '@core/utils/form.utils';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
@@ -22,15 +22,19 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { intervalValidation } from '../ordenes-prescripciones/utils/ordenesyprescrip.utils';
 import { SnomedFinancedAuditRequired } from '../../components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
-import { AugmentativeMedicationPresentation, getPresentationGroup, PresentationGroup } from '../../constants/medication-presentation';
+import { AugmentativeMedicationPresentation, getBasicPresentation, getPresentationGroup, PresentationGroup } from '../../constants/medication-presentation';
 import { combineLatest, startWith, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { DigitalPrescriptionMapperService } from '../../services/digital-prescription-mapper.service';
+
+const DAY_HS = 24;
 
 @Component({
 	selector: 'app-add-digital-prescription-item',
 	templateUrl: './add-digital-prescription-item.component.html',
 	styleUrls: ['./add-digital-prescription-item.component.scss']
 })
-export class AddDigitalPrescriptionItemComponent implements OnInit {
+export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 
 	prescriptionItemForm: FormGroup<PrescriptionItemForm>;
 	hasError = hasError;
@@ -50,17 +54,17 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	markFormAsTouched = false;
 	studyCategoryOptions = [];
 	MAX_VALUE = 99;
-	MIN_VALUE = 0;
+	MIN_VALUE = 1;
 	MAX_QUANTITY: number = this.MAX_VALUE * this.MAX_VALUE;
 	TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	auditRequiredInput: string[];
 	medicationPresentations: string[] = [];
-
+	currentPresentation: string;
 	showMedicationPackQuantity = false;
 	showPresentationQuantity = false;
 	quantitySelectorOptions: string[] = [];
 	canDoMultiplicationFields = false;
-	frequencySelectorOptions: string[] = [Frequency.HS, Frequency.DAY];
+	frequencySelectorOptions: string[] = [];
 	quantityFrequencyChanges: Subscription;
 
 	HABILITAR_RELACIONES_SNOMED = false
@@ -86,6 +90,8 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 				private readonly dialogRef: MatDialogRef<AddDigitalPrescriptionItemComponent>,
 				private changeDetector: ChangeDetectorRef,
 				private readonly el: ElementRef,
+				private readonly translate: TranslateService,
+				private readonly digitalPrescriptionMapper: DigitalPrescriptionMapperService,
 				private readonly snomed: SnomedService) {
 					this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(new FormBuilder, this.snomed, this.snackBar, this.snvsMasterData, this.dialog);
 					this.setSeverityTypes();
@@ -98,8 +104,13 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		this.setHasPrescriptorRole();
 		this.setProblems();
 		this.pharmacoSearchTypeValueChanges();
+		this.setFrequencySelectorOptions();
 
 		if (this.data.item) this.setItemData(this.data.item);
+	}
+
+	ngOnDestroy(): void {
+		this.quantityFrequencyChanges?.unsubscribe();
 	}
 
 	ngAfterContentChecked(): void {
@@ -140,7 +151,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		if (selectedConcept) {
 			this.setPresentationUnits(selectedConcept?.sctid);
 			this.setSuggestedCommercialMedicationOptions(commercialPt);
-			this.setMedicationPresentationByGenericSctid(selectedConcept.sctid);
+			this.setMedicationPresentations(selectedConcept.sctid);
 		}
 
 		this.clearCommercialMedication();
@@ -175,7 +186,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		this.presentationUnits.getMedicationPresentationUnits(medicationSctid).subscribe({
 			next: (result: number[]) => {
 				this.presentationUnitsOptions = result;
-				const presentationUnit = this.prescriptionItemForm.controls.presentationUnit.value;
+				const presentationUnit = this.prescriptionItemForm.value.presentationUnit;
 				if (!this.presentationUnitsOptions.includes(presentationUnit))
 					this.prescriptionItemForm.controls.presentationUnit.reset();
 			}
@@ -188,76 +199,69 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		const {item, showStudyCategory} = this.data;
 		const commercialMedicationPrescription = !(this.HABILITAR_RELACIONES_SNOMED && this.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO) ? null :
 			{
-				medicationPackQuantity: this.prescriptionItemForm.controls.medicationPackQuantity.value,
-				presentationUnitQuantity: this.prescriptionItemForm.controls.presentationUnit.value
+				medicationPackQuantity: this.prescriptionItemForm.value.medicationPackQuantity,
+				presentationUnitQuantity: this.prescriptionItemForm.value.presentationUnit
 			};
-		const newItem: NewPrescriptionItem = {
-			id: item ? item.id : null,
-			snomed: this.snomedConcept,
-			healthProblem: {
-				id: this.healthProblems.find(hpo => hpo.snomed.sctid === this.prescriptionItemForm.controls.healthProblem.value).id,
-				description: this.healthProblems.find(hpo => hpo.snomed.sctid === this.prescriptionItemForm.controls.healthProblem.value).snomed.pt,
-				sctId: this.prescriptionItemForm.controls.healthProblem.value
-			},
-			administrationTimeDays: this.prescriptionItemForm.controls.administrationTimeDays.value,
-			studyCategory: {
-				id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
-				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
-			},
-			observations: this.prescriptionItemForm.controls.observations.value,
-			unitDose: this.prescriptionItemForm.controls.quantity.value,
-			dayDose: this.prescriptionItemForm.controls.frequency.value,
-			quantity: {
-				value: this.prescriptionItemForm.controls.totalQuantity.value || 0,
-				unit: this.prescriptionItemForm.controls.unit.value
-			},
-			isDailyInterval: this.prescriptionItemForm.controls.frequencyType.value === Frequency.DAY,
-			frequencyType: this.prescriptionItemForm.controls.frequencyType.value,
-			commercialMedicationPrescription: commercialMedicationPrescription,
-			suggestedCommercialMedication: this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.value ? this.prescriptionItemForm.controls.suggestedCommercialMedication.value : null
-		};
+		const formValues = this.prescriptionItemForm.value;
+		const isDailyInterval = formValues.frequencyType === this.getFrequencyDayTranslate();
+		const newItem: NewPrescriptionItem = this.digitalPrescriptionMapper.toNewPrescriptionItem(
+			item,
+			showStudyCategory,
+			this.snomedConcept,
+			this.healthProblems,
+			formValues,
+			commercialMedicationPrescription,
+			this.studyCategoryOptions,
+			isDailyInterval
+		);
 		this.dialogRef.close(newItem);
 	}
 
 	setTotalQuantityAvailability = (value: string[]) => {
 		this.prescriptionItemForm.controls.totalQuantity.enable();
 
-		if (!this.HABILITAR_RELACIONES_SNOMED)
-			return this.prescriptionItemForm.controls.totalQuantity.enable();
+		const presentation = getElementAtPosition(value, 0);
 
-		const presentation = value[0];
-		if ((PresentationGroup.GROUP_THREE === getPresentationGroup(presentation))
-			|| (PresentationGroup.GROUP_TWO === getPresentationGroup(presentation) && this.prescriptionItemForm.controls.unit.value === AugmentativeMedicationPresentation.GOTAS)) {
+		const isPresentationGroupOne = PresentationGroup.GROUP_ONE === getPresentationGroup(presentation);
+		const isPresentationGroupTwo = PresentationGroup.GROUP_TWO === getPresentationGroup(presentation);
+		const isPresentationGroupThree = PresentationGroup.GROUP_THREE === getPresentationGroup(presentation);
+		const isUnitGotas = this.prescriptionItemForm.value.unit === AugmentativeMedicationPresentation.GOTAS;
+
+		if (isPresentationGroupThree || isPresentationGroupTwo && isUnitGotas) {
 			this.canDoMultiplicationFields = false;
 			this.prescriptionItemForm.controls.totalQuantity.setValue(null);
 			return this.prescriptionItemForm.controls.totalQuantity.disable();
-		}
-		if (PresentationGroup.GROUP_ONE === getPresentationGroup(presentation)
-			|| PresentationGroup.GROUP_TWO === getPresentationGroup(presentation)) {
+		} else if (isPresentationGroupOne || isPresentationGroupTwo) {
 			this.canDoMultiplicationFields = true;
 			this.detectFieldChanges();
 		}
 	}
 
 	get isSuggestCommercialMedicationChecked(): boolean {
-		return this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.value;
+		return this.prescriptionItemForm.value.isSuggestCommercialMedicationChecked;
 	}
 
 	get healthProblem(): string {
-		return this.prescriptionItemForm.controls.healthProblem.value;
+		return this.prescriptionItemForm.value.healthProblem;
 	}
 
-	private setTotalQuantityMultiplication = (quantity: number, administrationTimeDays: string, frequency: number) => {
+	private setTotalQuantityMultiplication = (quantity: number, administrationTimeDays: string, frequency: number, frequencyType: string) => {
 		if (!this.canDoMultiplicationFields) return;
 		if (!frequency || !quantity || !administrationTimeDays) return;
 
-		const multiplication = frequency * quantity * Number(administrationTimeDays);
+		const multiplication = Math.floor(this.calculateFrequency(frequency, quantity, Number(administrationTimeDays), frequencyType));
 		this.prescriptionItemForm.controls.totalQuantity.setValue(multiplication);
+	}
+
+	private calculateFrequency = (frequency: number, quantity: number, administrationTimeDays: number, frequencyType: string): number => {
+		if (frequencyType === this.getFrequencyDayTranslate())
+			return (quantity * administrationTimeDays) / frequency;
+		return (DAY_HS/frequency) * quantity * administrationTimeDays
 	}
 
 	private reset = () => {
 		this.canDoMultiplicationFields = false;
-		this.prescriptionItemForm.controls.totalQuantity.setValidators(this.setTotalQuantityValidators());
+		this.prescriptionItemForm.controls.totalQuantity.setValidators(this.getTotalQuantityValidators());
 		this.quantitySelectorOptions = [];
 		this.showMedicationPackQuantity = false;
 		this.showPresentationQuantity = false;
@@ -275,16 +279,17 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			),
 			this.prescriptionItemForm.controls.frequency.valueChanges.pipe(
 				startWith(this.prescriptionItemForm.controls.frequency.value)
+			),
+			this.prescriptionItemForm.controls.frequencyType.valueChanges.pipe(
+				startWith(this.prescriptionItemForm.controls.frequencyType.value)
 			)
-		]).subscribe(([quantity, administrationTimeDays, frequency]) => this.setTotalQuantityMultiplication(quantity, administrationTimeDays, frequency));
+		]).subscribe(([quantity, administrationTimeDays, frequency, frequencyType]) => this.setTotalQuantityMultiplication(quantity, administrationTimeDays, frequency, frequencyType));
 	};
 
 	private enableTotalQuantity = (value: string[]) => {
-		if (this.HABILITAR_RELACIONES_SNOMED) return;
-
-		const presentation = value[0];
+		const presentation = getElementAtPosition(value, 0);
 		if (PresentationGroup.GROUP_ONE === getPresentationGroup(presentation)) {
-			this.canDoMultiplicationFields= true;
+			this.canDoMultiplicationFields = true;
 			this.detectFieldChanges();
 		} else {
 			this.prescriptionItemForm.controls.totalQuantity.enable();
@@ -292,14 +297,22 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		}
 	}
 
-	private setTotalQuantityValidators = (): ValidatorFn[] => {
+	private getTotalQuantityValidators = (): ValidatorFn[] => {
 		return [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)];
+	}
+
+	private setMedicationPresentations = (sctid: string) => {
+		(this.HABILITAR_RELACIONES_SNOMED)
+			? this.setMedicationPresentationByGenericSctid(sctid)
+			: this.setBasicMedicationPresentation();
+
 	}
 
 	private setMedicationPresentationByGenericSctid = (sctid: string) => {
 		this.presentationUnits.getMedicationPresentationByGenericSctid(sctid).subscribe({
 			next: (value: string[]) => {
-				this.medicationPresentations = value
+				this.medicationPresentations = value;
+				this.currentPresentation = getElementAtPosition(this.medicationPresentations, 0);
 				this.setShowMedicationPackQuantity(value);
 				this.setShowPresentationQuantity();
 				this.setQuantitySelector(value);
@@ -309,12 +322,22 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		});
 	}
 
-	private setQuantitySelector = (value: string[]) => {
-		let presentation = value[1] || value[0];
-		if (value.includes(AugmentativeMedicationPresentation.GOTAS))
-			presentation = value[0] || value[1];
+	private setBasicMedicationPresentation = () => {
+		const presentation = [getBasicPresentation(this.snomedConcept.pt)];
+		if (presentation) {
+			this.currentPresentation = getElementAtPosition(presentation, 0);
+			this.setQuantitySelector(presentation);
+			this.enableTotalQuantity(presentation);
+			this.setTotalQuantityAvailability(presentation);
+		}
+	}
 
-		if (value.includes(this.data.item.quantity?.unit))
+	private setQuantitySelector = (value: string[]) => {
+		let presentation = getElementAtPosition(value, 1) || getElementAtPosition(value, 0);
+		if (value.includes(AugmentativeMedicationPresentation.GOTAS))
+			presentation = getElementAtPosition(value, 0) || getElementAtPosition(value, 1);
+
+		if (this.data.item && value.includes(this.data.item.quantity?.unit))
 			presentation = this.data.item.quantity?.unit;
 
 		this.quantitySelectorOptions = value;
@@ -322,7 +345,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	}
 
 	private setShowMedicationPackQuantity = (value: string[]) => {
-		const presentation = value[0];
+		const presentation = getElementAtPosition(value, 0);
 		this.showMedicationPackQuantity =
 			this.canShowPackQuantityAndPresentationQuantity()
 			|| PresentationGroup.GROUP_ONE !== getPresentationGroup(presentation);
@@ -423,7 +446,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 		this.prescriptionItemForm.controls.totalQuantity.setValue(prescriptionItem.quantity?.value);
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem?.sctId);
 		this.prescriptionItemForm.controls.unit.setValue(prescriptionItem.quantity?.unit);
-		this.prescriptionItemForm.controls.frequencyType.setValue(prescriptionItem.frequencyType || Frequency.HS);
+		this.prescriptionItemForm.controls.frequencyType.setValue(prescriptionItem.frequencyType || this.getFrequencyHsTranslate());
 
 		if (prescriptionItem.studyCategory?.id)
 			this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id);
@@ -501,10 +524,22 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			studyCategory: new FormControl(null),
 			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
-			totalQuantity: new FormControl(null, this.setTotalQuantityValidators()),
-			frequencyType: new FormControl(Frequency.HS)
+			totalQuantity: new FormControl(null, this.getTotalQuantityValidators()),
+			frequencyType: new FormControl(this.getFrequencyHsTranslate())
 		});
 		this.setInitialValidators();
+	}
+
+	private setFrequencySelectorOptions = () => {
+		this.frequencySelectorOptions = [this.getFrequencyHsTranslate(), this.getFrequencyDayTranslate()];
+	}
+
+	private getFrequencyDayTranslate = (): string => {
+		return this.translate.instant('ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.frequency_type.DAY');
+	}
+
+	private getFrequencyHsTranslate = (): string => {
+		return this.translate.instant('ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.frequency_type.HS');
 	}
 
 	private setInitialValidators = () => {
@@ -555,7 +590,7 @@ interface PrescriptionItemForm {
 	frequencyType: FormControl<string>
 }
 
-interface NewPrescriptionItem {
+export interface NewPrescriptionItem {
 	id: number;
 	snomed: SnomedDto;
 	healthProblem: {
