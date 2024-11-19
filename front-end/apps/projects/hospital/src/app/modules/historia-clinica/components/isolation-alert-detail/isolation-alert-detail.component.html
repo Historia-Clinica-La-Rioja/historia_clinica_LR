@@ -11,4 +11,10 @@
         <span [ngClass]="{ 'grey': endDateColor}">{{ isolationAlertDetail.endDate | dateFormat: 'date'}}</span>
     </div>
     <span id="observations" *ngIf="isolationAlertDetail.observations">{{'historia-clinica.general.OBSERVATIONS' | translate }}: {{ isolationAlertDetail.observations }}</span>
+
+    <div id="editor" *ngIf="isolationAlertDetail.editor" fxLayout="row" fxLayoutGap="5px">
+        <span>{{'historia-clinica.general.EDITED' | translate}}:</span>
+        <app-register-editor-info class="register-editor-info" [registerEditor]="isolationAlertDetail.editor" [registerEditorCase]="REGISTER_EDITOR_CASES"></app-register-editor-info>
+    </div>
+
 </div>

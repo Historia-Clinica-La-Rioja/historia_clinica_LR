@@ -7,7 +7,8 @@
 			"ENTER_OBSERVATIONS": "Ingrese observaciones",
 			"TYPE": "Tipo",
 			"VIEW_DETAIL": "Ver detalle",
-			"START": "Inicio"
+			"START": "Inicio",
+			"EDITED": "Editado"
 		},
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",

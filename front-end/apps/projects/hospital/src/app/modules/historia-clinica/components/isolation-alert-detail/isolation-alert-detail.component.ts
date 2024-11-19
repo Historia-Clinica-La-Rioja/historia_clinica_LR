@@ -21,8 +21,9 @@ export interface IsolationAlertDetail {
 	types: string[],
 	criticality: string,
 	endDate: Date,
-	observations: string,
+	observations?: string,
 	creator?: RegisterEditor,
+	editor?: RegisterEditor,
 }
 
 export enum EndDateColor {
