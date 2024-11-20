@@ -55,13 +55,17 @@ export class DiagnosisFormByNurseComponent extends AbstractCustomForm implements
 		});
 	}
 
-	private addIsolationAlertDiagnosis(isolationAlertDiagnoses: DiagnosisDto[]) {
-		this.resetIsolationAlertDiagnoses();
-		this.form.controls.otrosDiagnosticos.setValue(isolationAlertDiagnoses);
-	}
+	private addIsolationAlertDiagnosis(newIsolationAlertDiagnosis: DiagnosisDto[]) {
+		const oldDiagnoses = this.form.value.otrosDiagnosticos;
+		const result = oldDiagnoses.reduce<DiagnosisDto[]>((accumulatedDiagnoses, oldDiagnosis) => {
+			const existDiagnosis = newIsolationAlertDiagnosis.some(diagnosis => diagnosis.snomed.sctid === oldDiagnosis.snomed.sctid);
+			existDiagnosis && accumulatedDiagnoses.push(oldDiagnosis);
+			return accumulatedDiagnoses;
+		}, []);
 
-	private resetIsolationAlertDiagnoses() {
-		this.form.controls.otrosDiagnosticos.setValue([]);
+		const newDiagnoses = newIsolationAlertDiagnosis.filter(newDiagnosis => !oldDiagnoses.some(oldDiagnosis => oldDiagnosis.snomed.sctid === newDiagnosis.snomed.sctid));
+		const allDiagnoses = [...result, ...newDiagnoses];
+		this.form.controls.otrosDiagnosticos.setValue(allDiagnoses);
 	}
 
 	private subscribeToIsolationAlertDiagnoses() {
