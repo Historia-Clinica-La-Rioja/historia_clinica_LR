@@ -64,7 +64,7 @@ export enum IDENTIFIER_CASES {
 	ROOM_V2 = 'Habitación',
 	ERROR = 'Tipo de estudio',
 	PIN_DROP = 'Requiere translado',
-	LOCAL_HOSPITAL = 'Sector',
+	LOCAL_HOSPITAL = 'Sector ordenes',
 }
 
 const institution: IconLegend = {
