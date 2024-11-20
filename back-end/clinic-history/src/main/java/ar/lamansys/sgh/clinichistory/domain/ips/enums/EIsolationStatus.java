@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 public enum EIsolationStatus {
-	ONGOING((short) 1, "Vigente"),
+	ONGOING((short) 1, "Activa"),
 	EXPIRED((short) 2, "Finalizada"),
 	CANCELLED((short) 3, "Finalizada");
 	//Please keep db table isolation_status up to date

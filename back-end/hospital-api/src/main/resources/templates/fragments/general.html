@@ -1290,12 +1290,14 @@
             <div>
                 <dl th:each="alert,iter: ${isolationAlerts}" class="section-data">
                     <dl>
-                        <dd><strong>Diagnóstico: </strong> <label th:text="${alert.healthConditionPt}"></label></dd>
-                        <dd><strong>Nivel: </strong> <label th:text="${alert.criticality.description}"></label></dd>
-                        <dd><strong>Fecha de fin: </strong> <label th:text="${alert.endDate}"></label></dd>
-                        <dd><strong>Tipos: </strong> <label th:text="${#strings.listJoin(alert.types.![description], ', ')}"></label></dd>
-                        <dd><strong>Observaciones: </strong><label th:text="${alert.observations}"></label></dd>
+                        <dd><strong>Diagnóstico asociado: </strong> <label th:text="${alert.healthConditionPt}"></label></dd>
+                        <dd><strong>Tipo de aislamiento: </strong> <label th:text="${#strings.listJoin(alert.types.![description], ', ')}"></label></dd>
+                        <dd><strong>Criticidad: </strong> <label th:text="${alert.criticality.description}"></label></dd>
+                        <dd><strong>Fin de alerta: </strong> <label th:text="${#temporals.format(alert.endDate, 'dd/MM/yyyy')}"></label></dd>
                         <dd><strong>Estado: </strong><label th:text="${alert.status.description}"></label></dd>
+                        <dd th:if="${not #strings.isEmpty(alert.observations)}">
+                            <strong>Observaciones: </strong><p th:text="${alert.observations}" class="center-padding wide_wrapped_text"></p>
+                        </dd>
                     </dl>
                 </dl>
             </div>
