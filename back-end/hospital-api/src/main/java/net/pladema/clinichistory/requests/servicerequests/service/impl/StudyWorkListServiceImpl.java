@@ -92,7 +92,8 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				.bedNumber((String) row[20])
 				.roomNumber((String) row[21])
 				.sector((String) row[22])
-				.location((String) row[23])
+				.doctorsOffice((String) row[23])
+				.shockroom((String) row[24])
 				.build();
 
 		return new StudyOrderWorkListBo(

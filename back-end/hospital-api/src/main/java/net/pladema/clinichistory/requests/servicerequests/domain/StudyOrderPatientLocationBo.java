@@ -14,6 +14,7 @@ public class StudyOrderPatientLocationBo {
 	private String bedNumber;
 	private String roomNumber;
 	private String sector;
-	private String location;
+	private String doctorsOffice;
+	private String shockroom;
 
 }

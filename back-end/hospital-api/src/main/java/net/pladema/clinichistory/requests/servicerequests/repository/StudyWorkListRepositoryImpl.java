@@ -60,17 +60,24 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"        ELSE ec_bed.bed_number" +
 					"    END AS bedNumber, " +
 					"    CASE " +
-					"        WHEN sr.source_type_id = 0 THEN ie_room.room_number " +
-					"        ELSE ec_room.room_number " +
+					"        WHEN sr.source_type_id = 0 THEN ie_room.description " +
+					"        ELSE ec_room.description " +
 					"    END AS roomNumber, " +
 					"    CASE " +
-					"        WHEN sr.source_type_id = 0 THEN ie_sector.description " +
-					"        ELSE ec_sector.description " +
+					"        WHEN sr.source_type_id = 0 THEN ie_sector_room.description " +
+					"        ELSE CASE " +
+					"			 WHEN ec_sector_room.description is not null THEN ec_sector_room.description" +
+					"			 ELSE COALESCE(ec_sector_doctorsOffice.description, ec_sector_shockroom.description) " +
+					"        END       " +
 					"    END AS sector, " +
 					"    CASE " +
-					"        WHEN sr.source_type_id = 4 AND ec_bed.bed_number is null THEN COALESCE (ec_office.description, ec_shockroom.description) " +
+					"        WHEN sr.source_type_id = 4 AND ec_bed.bed_number is null THEN ec_office.description " +
 					"        ELSE null " +
-					"    END AS location " +
+					"    END AS doctorsOffice, " +
+					"    CASE " +
+					"        WHEN sr.source_type_id = 4 AND ec_bed.bed_number is null THEN ec_shockroom.description " +
+					"        ELSE null " +
+					"    END AS shockroom " +
 					"FROM service_request sr " +
 					"JOIN document d ON sr.id = d.source_id " +
 					"JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
@@ -106,10 +113,12 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"LEFT JOIN bed ie_bed ON ie.bed_id = ie_bed.id " +
 					"LEFT JOIN room ec_room ON ec_bed.room_id = ec_room.id " +
 					"LEFT JOIN room ie_room ON ie_bed.room_id = ie_room.id " +
-					"LEFT JOIN sector ec_sector ON ec_room.sector_id = ec_sector.id " +
-					"LEFT JOIN sector ie_sector ON ie_room.sector_id = ie_sector.id " +
+					"LEFT JOIN sector ec_sector_room ON ec_room.sector_id = ec_sector_room.id " +
+					"LEFT JOIN sector ie_sector_room ON ie_room.sector_id = ie_sector_room.id " +
 					"LEFT JOIN doctors_office ec_office ON ec.doctors_office_id = ec_office.id " +
 					"LEFT JOIN shockroom ec_shockroom ON ec.shockroom_id = ec_shockroom.id  " +
+					"LEFT JOIN sector ec_sector_doctorsOffice ON ec_office.sector_id = ec_sector_doctorsOffice.id " +
+					"LEFT JOIN sector ec_sector_shockroom ON ec_shockroom.sector_id = ec_sector_shockroom.id " +
 					"WHERE sr.institution_id = :institutionId " +
 					"AND dr.status_id = :statusId " +
 					"AND sr.category_id IN (:categories) " +
