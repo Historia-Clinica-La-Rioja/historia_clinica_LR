@@ -3045,6 +3045,11 @@ export interface InternmentSummaryDto {
     totalInternmentDays: number;
 }
 
+export interface IsolationAlertAuthorDto {
+    fullName: string;
+    id: number;
+}
+
 export interface IsolationAlertDto {
     criticality: MasterDataDto;
     endDate: DateDto;
@@ -3052,8 +3057,12 @@ export interface IsolationAlertDto {
     healthConditionPt: string;
     healthConditionSctid: string;
     id: number;
+    isModified?: boolean;
     observations?: string;
+    statusId: number;
     types: MasterDataDto[];
+    updatedBy?: IsolationAlertAuthorDto;
+    updatedOn?: DateTimeDto;
 }
 
 export interface IsolationStatusMasterDataDto {
@@ -3936,16 +3945,19 @@ export interface PatientBedRelocationDto extends Serializable {
 }
 
 export interface PatientCurrentIsolationAlertDto {
-    author: ProfessionalInfoDto;
+    author: IsolationAlertAuthorDto;
     criticality: MasterDataDto;
     endDate: DateDto;
     healthConditionPt: string;
     healthConditionSctid: string;
+    isModified: boolean;
     isolationAlertId: number;
     observations?: string;
     startDate: DateTimeDto;
     status: MasterDataDto;
     types: MasterDataDto[];
+    updatedBy: IsolationAlertAuthorDto;
+    updatedOn: DateTimeDto;
 }
 
 export interface PatientDischargeDto {

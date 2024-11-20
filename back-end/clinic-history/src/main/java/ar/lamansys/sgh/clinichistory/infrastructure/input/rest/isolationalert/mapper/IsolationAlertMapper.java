@@ -5,6 +5,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationType;
 
 import ar.lamansys.sgh.clinichistory.domain.isolation.FetchPatientIsolationAlertBo;
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertAuthorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.isolationalert.dto.IsolationAlertAuthorDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.isolationalert.dto.PatientCurrentIsolationAlertDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
@@ -26,6 +28,7 @@ public interface IsolationAlertMapper {
 	IsolationAlertBo map(IsolationAlertDto isolationAlert);
 	PatientCurrentIsolationAlertDto map(FetchPatientIsolationAlertBo bo);
 	List<PatientCurrentIsolationAlertDto> map(List<FetchPatientIsolationAlertBo> bo);
+	IsolationAlertAuthorDto map(IsolationAlertAuthorBo author);
 
 	 @AfterMapping
 	 default void afterMapping(@MappingTarget IsolationAlertDto target, IsolationAlertBo source) {

@@ -1,9 +1,13 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.isolationalert.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertAuthorBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.IsolationAlertDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
@@ -23,7 +27,9 @@ public class PatientCurrentIsolationAlertDto {
 	private DateDto endDate;
 	@Nullable
 	private String observations;
-	private ProfessionalInfoDto author;
+	private IsolationAlertAuthorDto author;
 	private MasterDataDto status;
-
+	private IsolationAlertAuthorDto updatedBy;
+	private DateTimeDto updatedOn;
+	private Boolean isModified;
 }

@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.isolation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
@@ -25,4 +26,10 @@ public class IsolationAlertBo {
 	private String observations;
 	private Short statusId;
 
+	private Integer updatedById;
+	private IsolationAlertAuthorBo updatedBy;
+	private LocalDateTime updatedOn;
+	//If true, the alert was updated after the evolution note that it's attached
+	//to was created.
+	private Boolean isModified;
 }

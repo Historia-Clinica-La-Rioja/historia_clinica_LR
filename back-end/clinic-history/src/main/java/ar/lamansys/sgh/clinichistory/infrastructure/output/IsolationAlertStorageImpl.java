@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -19,6 +20,9 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationType;
 
 import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertForPdfDocumentBo;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import org.springframework.stereotype.Service;
 
@@ -46,8 +50,16 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 	private final DocumentRepository documentRepository;
 	private final EntityManager entityManager;
 
+	@Getter
+	@AllArgsConstructor
+	private class CreationData {
+		Integer createdById;
+		LocalDateTime createdOn;
+	}
+
 	/**
-	 * When an evolution note is modified, its alerts, sent in the alerts array, can be in one of these states:
+	 * When an evolution note is modified, its alerts, sent in the alerts array by the frontend, can be in one of
+	 * these states:
 	 * 1. The alert is missing from the array. This means that the alert was deleted. There's nothing to be done.
 	 * The old evolution note will be marked as deleted and all of its alerts will be considered deleted as well.
 	 * 2. The alert is present in the array and has a null id. This alert is new and was added during the evolution
@@ -62,22 +74,40 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 	public void save(Long documentId, List<IsolationAlertBo> isolationAlerts) {
 		if (!documentRepository.existsById(documentId)) throw documentNotFound(documentId);
 		isolationAlerts.forEach(alertBo -> {
-			saveOne(documentId, alertBo);
-		});
-	}
-
-	private IsolationAlert saveOne(Long documentId, IsolationAlertBo alertBo) {
-		var newAlert = isolationAlertRepository.save(
-			IsolationAlert.withoutId(
+			saveOne(
+				documentId,
+				alertBo.getId(),
 				alertBo.getHealthConditionId(),
+				alertBo.getTypeIds(),
 				alertBo.getCriticalityId(),
 				alertBo.getEndDate(),
 				alertBo.getObservations(),
-				alertBo.getStatusId(),
-				alertBo.getId()
+				alertBo.getStatusId()
+			);
+		});
+	}
+
+	private IsolationAlert saveOne(
+		Long documentId,
+		Integer id,
+		Integer healthConditionId,
+		List<Short> typeIds,
+		Short criticalityId,
+		LocalDate endDate,
+		String observations,
+		Short statusId
+	) {
+		var newAlert = isolationAlertRepository.save(
+			IsolationAlert.withoutId(
+				healthConditionId,
+				criticalityId,
+				endDate,
+				observations,
+				statusId,
+				id
 			)
 		);
-		alertBo.getTypeIds().forEach(
+		typeIds.forEach(
 			typeId -> isolationAlertIsolationTypeRepository.save(
 				new IsolationAlertIsolationType(newAlert.getId(), typeId)
 			));
@@ -87,22 +117,36 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		return newAlert;
 	}
 
+	/**
+	 * How isModified is computed:
+	 * When true it means that the the alert, that was created in an evolution note, was modified outside the evolution
+	 * note. The frontend, when showing the alert, uses isModified to show that the alert is not as it was originally
+	 * created.
+	 * If the parent alert belongs to the same document (via document_isolation_alert)
+	 * and is marked as deleted it means that the alert was modified outside the evolution note.
+	 * This happens because when an alert is edited (in the problems tab > patient alerts > finalize) a
+	 * new row is created with the new values and the original one is marked as deleted.
+	 */
 	@Override
 	public List<IsolationAlertBo> findByDocumentId(Long documentId) {
 		String sqlString = "" +
 		"SELECT " +
-		"	isolation_alert.id, " +
-		"	isolation_alert.health_condition_id, " +
-		"	snomed.sctid, " +
-		"	snomed.pt, " +
+		"	isolation_alert.id, " + //0
+		"	isolation_alert.health_condition_id, " + //1
+		"	snomed.sctid, " + //2
+		"	snomed.pt, " + //3
 		"	(SELECT array_agg(isolation_alert_isolation_type.isolation_type_id) " +
 		"		FROM isolation_alert_isolation_type " +
 		"		WHERE (isolation_alert_isolation_type.isolation_alert_id = isolation_alert.id) " +
-		"	), " +
-		"	isolation_alert.isolation_criticality_id, " +
-		"	isolation_alert.end_date, " +
-		"	isolation_alert.observations, " +
-		"	isolation_alert.isolation_status_id " +
+		"	), " + //4
+		"	isolation_alert.isolation_criticality_id, " + //5
+		"	isolation_alert.end_date, " + //6
+		"	isolation_alert.observations, " + //7
+		"	isolation_alert.created_by, " + //8
+		"	isolation_alert.created_on, " +//9
+		"	isolation_alert.isolation_status_id, " +//10
+		"	isolation_alert.parent_id, " +//11
+		"	parent_document_isolation_alert.document_id " +//12
 		" " +
 		"FROM " +
 		"	isolation_alert " +
@@ -112,6 +156,8 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		"		ON (health_condition.id = isolation_alert.health_condition_id) " +
 		"	JOIN snomed " +
 		"		ON (health_condition.snomed_id = snomed.id) " +
+		"	LEFT JOIN document_isolation_alert parent_document_isolation_alert " +
+		"		ON (parent_document_isolation_alert.isolation_alert_id = isolation_alert.parent_id) " +
 		"WHERE  "  +
 		"	document_isolation_alert.document_id = :documentId" +
 		"	AND isolation_alert.deleted = false"
@@ -121,7 +167,7 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 			.createNativeQuery(sqlString)
 			.setParameter("documentId", documentId)
 			.getResultList();
-		return mapToIsolationAlertBo(rows);
+		return rows.stream().map(row -> mapToIsolationAlertBo(documentId, row)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -140,8 +186,9 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		"	isolation_alert.end_date, " + //6
 		"	isolation_alert.observations, " + //7
 		"	isolation_alert.created_by, " + //8
-		"	isolation_alert.created_on, " +//9
-		"	isolation_alert.isolation_status_id " +//10
+		"	isolation_alert.created_on, " + //9
+		"	isolation_alert.isolation_status_id, " + //10
+		"	isolation_alert.parent_id " + //11
 		" " +
 		"FROM " +
 		"	isolation_alert " +
@@ -164,10 +211,14 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 				.createNativeQuery(sqlString)
 				.setParameter("patientId", patientId)
 				.getResultList();
-		return mapToFetchPatientIsolationAlertBo(rows);
+
+		var patientAlerts = rows.stream()
+			.map(row ->  toFetchPatientIsolationAlertBo(row))
+			.collect(Collectors.toList());
+
+		return patientAlerts;
 		
 	}
-
 	@Override
 	public Optional<FetchPatientIsolationAlertBo> findByAlertId(Integer alertId) {
 		String sqlString = "" +
@@ -184,8 +235,9 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 				"	isolation_alert.end_date, " + //6
 				"	isolation_alert.observations, " + //7
 				"	isolation_alert.created_by, " + //8
-				"	isolation_alert.created_on, " +//9
-				"	isolation_alert.isolation_status_id " +//10
+				"	isolation_alert.created_on, " + //9
+				"	isolation_alert.isolation_status_id, " + //10
+				"	isolation_alert.parent_id " + //11
 				" " +
 				"FROM " +
 				"	isolation_alert " +
@@ -209,8 +261,7 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		return rows
 			.stream()
 			.findFirst()
-			.map(xx -> toFetchPatientIsolationAlertBo(xx));
-
+			.map(alert -> toFetchPatientIsolationAlertBo(alert));
 	}
 
 	@Override
@@ -233,18 +284,16 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 			.getPk().getDocumentId();
 
 		//Create a new alert with status cancelled and endDate=now
-		var newCancelledAlert = new IsolationAlertBo(
+		var savedFinalizedAlert = this.saveOne(
+			documentId,
 			alertId, //The new one will have this as the parentId
 			fullSourceAlert.getHealthConditionId(),
-			fullSourceAlert.getHealthConditionSctid(),
-			fullSourceAlert.getHealthConditionPt(),
 			fullSourceAlert.getTypeIds(),
 			fullSourceAlert.getCriticalityId(),
 			LocalDate.now(),
 			fullSourceAlert.getObservations(),
 			EIsolationStatus.CANCELLED.getId()
 		);
-		var savedFinalizedAlert = this.saveOne(documentId, newCancelledAlert);
 
 		//Mark the old one as deleted
 		var sourceAlert = isolationAlertRepository.findById(alertId).orElseThrow(() -> alertNotFound(alertId));
@@ -256,31 +305,26 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		return Optional.of(savedFinalizedAlert.getId());
 	}
 
-	private List<IsolationAlertBo> mapToIsolationAlertBo(List<Object[]> rows) {
-		List<IsolationAlertBo> result = new ArrayList<>();
-		for (var row : rows) {
-			IsolationAlertBo newAlert = new IsolationAlertBo();
-			newAlert.setId((Integer)row[0]);
-			newAlert.setHealthConditionId((Integer)row[1]);
-			newAlert.setHealthConditionSctid((String)row[2]);
-			newAlert.setHealthConditionPt((String)row[3]);
-			newAlert.setTypeIds(toShortList((Object[]) row[4]));
-			newAlert.setCriticalityId((Short)row[5]);
-			newAlert.setEndDate(((Date) row[6]).toLocalDate());
-			newAlert.setObservations(row[7] == null ? null : (String) row[7]);
-			newAlert.setStatusId((Short) row[8]);
-			result.add(newAlert);
-		}
-		return result;
-	}
+	private IsolationAlertBo mapToIsolationAlertBo(Long documentId, Object[] row) {
+		IsolationAlertBo newAlert = new IsolationAlertBo();
+		newAlert.setId((Integer)row[0]);
+		newAlert.setHealthConditionId((Integer)row[1]);
+		newAlert.setHealthConditionSctid((String)row[2]);
+		newAlert.setHealthConditionPt((String)row[3]);
+		newAlert.setTypeIds(toShortList((Object[]) row[4]));
+		newAlert.setCriticalityId((Short)row[5]);
+		newAlert.setEndDate(((Date) row[6]).toLocalDate());
+		newAlert.setObservations(row[7] == null ? null : (String) row[7]);
+		newAlert.setUpdatedById((Integer) row[8]);
+		newAlert.setUpdatedOn(row[9] != null ? ((Timestamp) row[9]).toLocalDateTime() : null);
+		newAlert.setStatusId((Short) row[10]);
+		newAlert.setIsModified(
+			row[11] != null && //parent_id
+			row[12] != null && //parent_id -> document_id
+			documentId.equals(((BigInteger)row[12]).longValue())
+		);
 
-	private List<FetchPatientIsolationAlertBo> mapToFetchPatientIsolationAlertBo(List<Object[]> rows) {
-		List<FetchPatientIsolationAlertBo> result = new ArrayList<>();
-		for (var row : rows) {
-			FetchPatientIsolationAlertBo newAlert = toFetchPatientIsolationAlertBo(row);
-			result.add(newAlert);
-		}
-		return result;
+		return newAlert;
 	}
 
 	private FetchPatientIsolationAlertBo toFetchPatientIsolationAlertBo(Object[] row) {
@@ -294,10 +338,58 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		newAlert.setCriticality(EIsolationCriticality.map((Short) row[5]));
 		newAlert.setEndDate(((Date) row[6]).toLocalDate());
 		newAlert.setObservations(row[7] == null ? null : (String) row[7]);
-		newAlert.setCreatedBy((Integer) row[8]);
-		newAlert.setStartDate(row[9] != null ? ((Timestamp) row[9]).toLocalDateTime() : null);
 		newAlert.setStatus(EIsolationStatus.map((Short) row[10]));
+		newAlert.setIsModified(row[11] != null);
+
+		/**
+		 * Audit data
+		 * Alerts are never modified. A new one is created on each edit.
+		 * Author and start date must be computed. The createdBy/On of its oldest parent is the
+		 * actual creation data of the alert.
+		 * UpdatedBy/On is equal to createdBy/On
+		 */
+		CreationData creationData = findAlertCreationData((Integer) row[0]);
+		newAlert.setCreatedById(creationData.getCreatedById());
+		newAlert.setStartDate(creationData.getCreatedOn());
+		newAlert.setUpdatedById((Integer) row[8]);
+		newAlert.setUpdatedOn(row[9] != null ? ((Timestamp) row[9]).toLocalDateTime() : null);
+
 		return newAlert;
+	}
+
+	/**
+	 * Traverses the parent_id chain to get to the original/root alert
+	 */
+	private CreationData findAlertCreationData(Integer alertId) {
+		String sqlString = "" +
+				"WITH RECURSIVE children AS ( " +
+				"  SELECT " +
+				"    id, parent_id, created_by, created_on " +
+				"  FROM " +
+				"    isolation_alert " +
+				"  WHERE " +
+				"    id = :alertId " +
+				"  UNION " +
+				"  SELECT " +
+				"    ia.id, ia.parent_id, ia.created_by, ia.created_on " +
+				"  FROM " +
+				"    isolation_alert ia " +
+				"    INNER JOIN children c ON ia.id = c.parent_id " +
+				") " +
+				"SELECT id, created_by, created_on " +
+				"FROM children " +
+				"WHERE children.parent_id is NULL;";
+
+		List<Object[]> rows = entityManager
+				.createNativeQuery(sqlString)
+				.setParameter("alertId", alertId)
+				.getResultList();
+		if (rows.isEmpty()) return null;
+		Object[] row = rows.get(0);
+		return new CreationData(
+				(Integer) row[1],
+				((Timestamp) row[2]).toLocalDateTime()
+		);
 	}
 
 	private List<Short> toShortList(Object[] array) {

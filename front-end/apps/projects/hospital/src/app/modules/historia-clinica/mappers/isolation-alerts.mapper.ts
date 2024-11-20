@@ -1,4 +1,4 @@
-import { DateTimeDto, MasterDataDto, PatientCurrentIsolationAlertDto, ProfessionalInfoDto } from "@api-rest/api-model"
+import { DateTimeDto, IsolationAlertAuthorDto, MasterDataDto, PatientCurrentIsolationAlertDto } from "@api-rest/api-model"
 import { convertDateTimeDtoToDate, dateDtoToDate, } from "@api-rest/mapper/date-dto.mapper"
 import { IsolationAlertDetail } from "@historia-clinica/components/isolation-alert-detail/isolation-alert-detail.component"
 import { IsolationAlert } from "@historia-clinica/components/isolation-alert-form/isolation-alert-form.component"
@@ -24,7 +24,7 @@ export const mapPatientCurrentIsolationAlertsDtoToIsolationAlertsSummary = (pati
     return patientCurrentIsolationAlerts.map(mapPatientCurrentIsolationAlertDtoToIsolationAlertSummary);
 }
 
-export const toRegisterEditorInfo = (professional: ProfessionalInfoDto, createdOn: DateTimeDto): RegisterEditor => {
+export const toRegisterEditorInfo = (professional: IsolationAlertAuthorDto, createdOn: DateTimeDto): RegisterEditor => {
     const date = convertDateTimeDtoToDate(createdOn);
     return {
         createdBy: professional.fullName,

@@ -1,13 +1,14 @@
 package ar.lamansys.sgh.clinichistory.application.isolationalerts;
 
 import ar.lamansys.sgh.clinichistory.application.isolationalerts.exceptions.IsolationAlertException;
+import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertAuthorBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.ports.IsolationAlertStorage;
 import ar.lamansys.sgh.clinichistory.domain.isolation.FetchPatientIsolationAlertBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 
 import java.util.List;
@@ -18,12 +19,15 @@ import java.util.stream.Collectors;
 public class FetchPatientIsolationAlerts {
 
 	private final IsolationAlertStorage isolationAlertStorage;
-	private final SharedStaffPort sharedStaffPort;
+	private final SharedPersonPort sharedPersonPort;
 
 	public List<FetchPatientIsolationAlertBo> findByPatientId(Integer patientId) {
 		var alerts = isolationAlertStorage.findByPatientId(patientId);
 		alerts.stream().forEach(
-			alert -> alert.setAuthor(getAuthor(alert.getCreatedBy()))
+			alert -> {
+				alert.setAuthor(getAuthor(alert.getCreatedById()));
+				alert.setUpdatedBy(getAuthor(alert.getUpdatedById()));
+			}
 		);
 		return alerts.stream().sorted(this::expiredLast).collect(Collectors.toList());
 	}
@@ -44,12 +48,14 @@ public class FetchPatientIsolationAlerts {
 
 	public FetchPatientIsolationAlertBo findByAlertId(Integer alertId) {
 		var alert = isolationAlertStorage.findByAlertId(alertId).orElseThrow(() -> alertNotFound(alertId));
-		alert.setAuthor(getAuthor(alert.getCreatedBy()));
+		alert.setAuthor(getAuthor(alert.getCreatedById()));
+		alert.setUpdatedBy(getAuthor(alert.getUpdatedById()));
 		return alert;
 	}
 
-	private ProfessionalInfoDto getAuthor(Integer createdBy) {
-		return sharedStaffPort.getProfessionalCompleteInfo(createdBy);
+	private IsolationAlertAuthorBo getAuthor(Integer authorId) {
+		var fullName = sharedPersonPort.getCompletePersonNameByUserId(authorId);
+		return new IsolationAlertAuthorBo(authorId, fullName);
 	}
 
 	private IsolationAlertException alertNotFound(Integer alertId) {

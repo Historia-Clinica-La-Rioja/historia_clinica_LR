@@ -2,7 +2,9 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.isolationalert.dto.IsolationAlertAuthorDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,4 +27,13 @@ public class IsolationAlertDto {
 	private DateDto endDate;
 	@Nullable
  	private String observations;
+ 	private Short statusId;
+ 	@Nullable
+ 	private IsolationAlertAuthorDto updatedBy;
+ 	@Nullable
+ 	private DateTimeDto updatedOn;
+	//If true, the alert was updated after the evolution note that it's attached
+	//to was created.
+	@Nullable
+ 	private Boolean isModified;
 }
