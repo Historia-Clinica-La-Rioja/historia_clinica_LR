@@ -1,0 +1,36 @@
+<div id="patient-location" fxLayout="column" fxLayoutGap="8px"
+	*ngIf="(patientLocation?.sector || patientLocation?.roomNumber || patientLocation?.bedNumber || patientLocation?.doctorsOffice || patientLocation?.shockroom ) else noData">
+
+	<app-identifier-cases id="sector" *ngIf="patientLocation?.sector" [identifierCase]="identiferCases.SECTOR"
+		[description]="patientLocation?.sector">
+	</app-identifier-cases>
+
+	<app-identifier-cases id="room" *ngIf="patientLocation?.roomNumber" [identifierCase]="identiferCases.ROOM_V2"
+		[description]="patientLocation.roomNumber" [showLegend]="true">
+	</app-identifier-cases>
+
+	<app-identifier-cases id="bed" *ngIf="patientLocation?.bedNumber" [identifierCase]="identiferCases.BED"
+		[description]="patientLocation.bedNumber" [showLegend]="true">
+	</app-identifier-cases>
+
+	<app-identifier-cases id="doctor-office" *ngIf="patientLocation?.doctorsOffice" [identifierCase]="identiferCases.DOCTOR_OFFICE"
+		[description]="patientLocation.doctorsOffice" [showLegend]="true">
+	</app-identifier-cases>
+
+	<app-identifier-cases id="shockroom" *ngIf="patientLocation?.shockroom" [identifierCase]="identiferCases.SHOCKROOM"
+		[description]="patientLocation.shockroom" [showLegend]="true">
+	</app-identifier-cases>
+
+	<div id="professional-name" *ngIf="professionalFullName">
+		<span class="gray">
+			{{professionalFullName}}
+		</span>
+	</div>
+</div>
+
+<ng-template #noData>
+	<div fxLayoutAlign="start center">
+		<app-colored-icon-text [coloredIconText]="coloredIconText">
+		</app-colored-icon-text>
+	</div>
+</ng-template>

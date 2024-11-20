@@ -24,5 +24,8 @@
 		"MEDICATION_PACK": "Envases",
 		"INTERVAL": "Intervalo",
 		"OBSERVATIONS": "Observaciones"
+	},
+	"patientLocationComponent": {
+		"NO_DATA": "Sin ubicación definida"
 	}
 }
