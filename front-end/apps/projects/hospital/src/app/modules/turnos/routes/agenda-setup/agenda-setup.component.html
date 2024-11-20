@@ -15,7 +15,7 @@
 								placeholder="{{'pacientes.form.SELECT' | translate}}"
 								(selectionChange)="getProfessionalSpecialties()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-									<span class="uppercase">{{professional.fullName}}</span>
+									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
