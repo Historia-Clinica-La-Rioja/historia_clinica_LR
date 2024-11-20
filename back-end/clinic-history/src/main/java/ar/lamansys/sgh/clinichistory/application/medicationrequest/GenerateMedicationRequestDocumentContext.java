@@ -1,7 +1,12 @@
 package ar.lamansys.sgh.clinichistory.application.medicationrequest;
 
 import ar.lamansys.sgh.clinichistory.application.document.CommonContextBuilder;
+import ar.lamansys.sgh.clinichistory.application.ports.output.MedicationStatementPort;
+import ar.lamansys.sgh.clinichistory.domain.CommercialPrescriptionDataBo;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.CommercialMedicationPrescriptionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
@@ -35,8 +40,10 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -53,6 +60,8 @@ public class GenerateMedicationRequestDocumentContext implements GenerateDocumen
 	private final SharedAddressPort sharedAddressPort;
 
 	private final SharedPersonPort sharedPersonPort;
+
+	private final MedicationStatementPort medicationStatementPort;
 
 	@Override
 	public Map<String, Object> run(MedicationRequestBo data) {
@@ -107,7 +116,7 @@ public class GenerateMedicationRequestDocumentContext implements GenerateDocumen
 				.findFirst();
 
 		ctx.put("professional", professionalInformation); //Is "author" which was already loaded. Must change old templates to remove
-		ctx.put("medications", document.getMedications());
+		setMedications(ctx, document);
 		ctx.put("professionalProfession", professionalRelatedProfession.<Object>map(ProfessionCompleteDto::getDescription).orElse(null));
 
 		professionalRelatedProfession.ifPresent(professionCompleteDto -> addProfessionalProfessionData(ctx, document, professionCompleteDto));
@@ -121,6 +130,79 @@ public class GenerateMedicationRequestDocumentContext implements GenerateDocumen
 
 		String patientIdentificationNumberBarCode = generateDigitalRecipeBarCode(((BasicPatientDto)ctx.get(("patient"))).getIdentificationNumber());
 		ctx.put("patientIdentificationNumberBarCode", patientIdentificationNumberBarCode);
+	}
+
+	private void setMedications(Map<String, Object> ctx, MedicationRequestBo document) {
+		List<MedicationBo> medications = document.getMedications();
+		List<Integer> medicationRequestIds = medications.stream()
+				.peek(this::adaptMedicationUnit)
+				.map(MedicationBo::getId)
+				.collect(Collectors.toList());
+		medicationStatementPort.getCommercialPrescriptionDataByIds(medicationRequestIds)
+				.forEach(digitalPrescriptionData -> handleDigitalPrescriptionData(digitalPrescriptionData, medications));
+		ctx.put("medications", medications);
+	}
+
+	private void adaptMedicationUnit(MedicationBo medication) {
+		switch (medication.getDosage().getQuantity().getUnit()) {
+			case "comprimido":
+				medication.getDosage().getQuantity().setUnit("comprimido/s");
+				break;
+			case "cápsula":
+				medication.getDosage().getQuantity().setUnit("cápsula/s");
+				break;
+			case "ampolla":
+				medication.getDosage().getQuantity().setUnit("ampolla/s");
+				break;
+			case "goma de mascar":
+				medication.getDosage().getQuantity().setUnit("goma/s de mascar");
+				break;
+			case "apósito":
+				medication.getDosage().getQuantity().setUnit("apósito/s");
+				break;
+			case "óvulo vaginal":
+				medication.getDosage().getQuantity().setUnit("óvulo/s vaginal/es");
+				break;
+			case "pastilla":
+				medication.getDosage().getQuantity().setUnit("pastilla/s");
+				break;
+			case "supositorio":
+				medication.getDosage().getQuantity().setUnit("supositorio/s");
+				break;
+			case "parche":
+				medication.getDosage().getQuantity().setUnit("parche/s");
+				break;
+			case "implante":
+				medication.getDosage().getQuantity().setUnit("implante/s");
+				break;
+			case "aplicador":
+				medication.getDosage().getQuantity().setUnit("aplicador/es");
+				break;
+			case "comprimido de disolución oral":
+				medication.getDosage().getQuantity().setUnit("comprimido/s de disolución oral");
+				break;
+			case "píldora pequeña":
+				medication.getDosage().getQuantity().setUnit("píldora/s pequeña/s");
+				break;
+			case "aplicación":
+				medication.getDosage().getQuantity().setUnit("aplicación/es");
+				break;
+		}
+	}
+
+	private void handleDigitalPrescriptionData(CommercialPrescriptionDataBo digitalPrescriptionData, List<MedicationBo> medications) {
+		medications.stream()
+				.filter(medication -> medication.getId().equals(digitalPrescriptionData.getMedicationStatementId()))
+				.findFirst()
+				.ifPresent(medication -> addDigitalPrescriptionData(digitalPrescriptionData, medication));
+	}
+
+	private void addDigitalPrescriptionData(CommercialPrescriptionDataBo digitalPrescriptionData, MedicationBo medication) {
+		medication.setCommercialMedicationPrescription(CommercialMedicationPrescriptionBo.builder()
+				.medicationPackQuantity(digitalPrescriptionData.getMedicationPackQuantity())
+				.presentationUnitQuantity(digitalPrescriptionData.getPresentationUnitQuantity())
+				.build());
+		medication.setSuggestedCommercialMedication(new SnomedBo(null, digitalPrescriptionData.getSuggestedCommercialMedicationPt()));
 	}
 
 	private void addProfessionalProfessionData(Map<String, Object> ctx, MedicationRequestBo document, ProfessionCompleteDto professionalRelatedProfession) {
