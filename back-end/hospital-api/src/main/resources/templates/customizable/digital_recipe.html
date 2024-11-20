@@ -4,143 +4,208 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Digital Recipe</title>
 
+    <style>
+        .container {
+          display: table;
+          width: 100%;
+        }
+
+        .column {
+          display: table-cell;
+          vertical-align: top;
+        }
+
+        .medication-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 20px auto;
+        }
+
+        .medication-container h3 {
+            text-align: left;
+            margin: 0 0 10px 0;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .label {
+            font-weight: bold;
+            background-color: #f6f6f6;
+        }
+
+        .value {
+            text-align: left;
+        }
+
+        .half td {
+            width: 50%;
+        }
+    </style>
 </head>
 <body>
-    <div >
+    <div>
         <div th:replace="fragments/digital_recipe_header.html :: header"></div>
     </div>
     <div>
-        <div th:classappend="white-color">
-            <strong class="text">FECHA DE PRESCRIPCIÓN</strong><br/>
-            <span class="text" th:text="${requestDate}"></span><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong class="text">FECHA DE VENCIMIENTO</strong><br/>
-            <span class="text" th:text="${dateUntil}"></span><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong class="text">CÓDIGO DE RECETA</strong><br/>
-            <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeNumberBarCode}" alt=""></img><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong class="text">NÚMERO DE RECETA</strong><br/>
-            <span th:text="${recipeNumber}"></span><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong class="text">CÓDIGO UUID DE RECETA</strong><br/>
-            <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeUuidBarCode}" alt=""></img><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong class="text">UUID DE RECETA</strong><br/>
-            <span th:text="${recipeUuid}"></span><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong class="text">NÚMERO DE DNI</strong><br/>
-            <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + patientIdentificationNumberBarCode}" alt=""></img><br/>
-        </div>
-        <div  th:classappend="white-color">
-            <strong >DNI</strong><br/>
-            <span  th:text="${patient.person.identificationNumber}"></span><br/>
-        </div>
-        <div th:classappend="white-color">
-            <strong >APELLIDO Y NOMBRE</strong><br/>
-            <span  th:text="${patient.person.completeName(selfPerceivedFF)}"></span><br/>
-        </div>
-        <div >
-            <div  th:classappend="white-color">
+        <div class="container">
+            <div class="column">
                 <div>
-                    <strong >COBERTURA DE SALUD</strong><br/>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Código de Receta</strong><br/>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeNumberBarCode}" alt=""></img><br/>
+                    </div>
+                    <strong>N° de Receta:</strong>
+                    <span th:text="${recipeNumber}"></span><br/>
+                </div>
+            </div>
+            <div class="column">
+                <div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Código UUID de Receta</strong><br/>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeUuidBarCode}" alt=""></img><br/>
+                    </div>
+                    <strong>UUID de Receta:</strong>
+                    <span th:text="${recipeUuid}"></span><br/>
+                </div>
+            </div>
+        </div>
+        <hr style="border-top: thin solid #bebebe;"></hr>
+        <div class="container">
+            <div class="column">
+                <div style="margin-bottom: 10px;">
+                    <strong >Fecha de emisión:</strong><br/>
+                    <span th:text="${requestDate}"></span><br/>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Apellido y nombre:</strong><br/>
+                    <span th:text="${patient.person.completeName(selfPerceivedFF)}"></span><br/>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Cobertura de salud:</strong><br/>
                     <span th:text="${patientCoverage?.medicalCoverage?.name} ?: 'Sin información'"></span><br/>
                 </div>
-                <div >
-                    <strong >PLAN</strong><br/>
-                    <span th:text="${patientCoverage?.planName} ?: 'Sin información'"></span><br/>
+            </div>
+            <div class="column">
+                <div style="margin-bottom: 10px;">
+                    <strong>Fecha de vencimiento:</strong><br/>
+                    <span th:text="${dateUntil}"></span><br/>
+                </div>
+                <div class="container">
+                    <div class="column">
+                        <div style="margin-bottom: 10px;">
+                            <strong>DNI:</strong><br/>
+                            <span th:text="${patient.person.identificationNumber}"></span><br/>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Nro afiliado:</strong><br/>
+                            <span th:text="${patientCoverage?.affiliateNumber} ?: 'Sin información'"></span><br/>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div style="margin-bottom: 10px;">
+                            <strong>Edad:</strong><br/>
+                            <span th:text="${patient.person.age}"></span><br/>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Plan:</strong><br/>
+                            <span th:text="${patientCoverage?.planName} ?: 'Sin información'"></span><br/>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div>
-            <div  th:classappend="white-color">
-                <div>
-                    <strong >NÚMERO DE AFILIADO</strong><br/>
-                    <span  th:text="${patientCoverage?.affiliateNumber} ?: 'Sin información'"></span><br/>
+            <div class="column">
+                <div style="margin-bottom: 10px;">
+                    <strong>Código DNI:</strong><br/>
                 </div>
-                <div>
-                    <strong >EDAD</strong><br/>
-                    <span th:text="${patient.person.age}"></span><br/>
-                </div>
-            </div>
-        </div>
-        <div >
-            <strong >FIRMADO ELECTRÓNICAMENTE por:</strong><br/>
-        </div>
-        <div th:classappend="pink-color">
-            <strong >APELLIDO Y NOMBRE</strong><br/>
-            <span th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></span><br/>
-        </div>
-        <div >
-            <div  th:classappend="pink-color">
-                <div>
-                    <strong>MATRÍCULA NACIONAL N°</strong><br/>
-                    <span th:text="${nationalLicense} ?: 'Sin información'">?</span><br/>
-                </div>
-                <div >
-                    <strong>MATRÍCULA PROVINCIAL N°</strong><br/>
-                    <span th:text="${stateLicense} ?: 'Sin información'">?</span><br/>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div th:classappend="pink-color">
-                <div >
-                    <strong >PROFESIÓN</strong><br/>
-                    <span  th:text="${professionalProfession}">?</span><br/>
-                </div>
-                <div >
-                    <strong >ESPECIALIDAD</strong><br/>
-                    <span th:text="${clinicalSpecialty}">?</span><br/>
-                </div>
+                <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + patientIdentificationNumberBarCode}" alt=""></img><br/>
             </div>
         </div>
         <div>
             <div th:each="medication : ${medications}">
-                <div  th:classappend="${medication.prescriptionLineNumber % 2 == 0} ? light-pink-color : light-blue-color">
-                    <div >
-                        <strong >Rp.</strong><strong class="white-text text" th:text="${medication.prescriptionLineNumber}"></strong><br/>
-                    </div>
-                    <div  th:classappend="white-color">
-                        <strong >GENÉRICO</strong><br/>
-                        <span  th:text="${medication.snomed.pt}"></span><br/>
-                    </div>
-                    <div  th:classappend="white-color" th:if="${medication.dosage.quantity != null}">
-                        <strong >CANTIDAD</strong><br/>
-                        <span th:text="${medication.dosage.quantity.value}"></span><br/>
-                    </div>
-                    <div  th:if="${medication.dosage.dosesByUnit != null}">
-                        <div  th:classappend="white-color">
-                            <div>
-                                <strong>DOSIS/UNIDAD</strong><br/>
-                                <span th:text="${medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit}"></span><br/>
-                            </div>
-                            <div th:if="${ medication.dosage.dosesByDay != null }">
-                                <strong>DOSIS/DIA</strong><br/>
-                                <span th:text="${medication.dosage.dosesByDay % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByDay,0,0) : medication.dosage.dosesByDay}"></span><br/>
-                            </div>
-                        </div>
-                    </div>
-                    <div th:classappend="white-color">
-                        <strong>DURACIÓN DE TRATAMIENTO EN DÍAS</strong><br/>
-                        <span th:text="${medication.dosage.duration % 1 == 0 ? #numbers.formatDecimal(medication.dosage.duration,0,0) : medication.dosage.duration}"></span><br/>
-                    </div>
-                    <div th:classappend="white-color">
-                        <strong>DIAGNÓSTICO</strong><br/>
-                        <span th:text="${medication.healthCondition.snomed.pt}"></span><br/>
-                    </div>
-                    <div th:classappend="${medication.prescriptionLineNumber % 2 == 0} ? lighter-pink-color : lighter-blue-color">
-                        <strong>OBSERVACIONES:</strong><br/>
-                        <div>
-                            <span th:text="${medication.note}  ?: 'Sin información'"></span><br/>
-                        </div>
-                    </div>
+                <div class="medication-container">
+                    <h3 th:text="${'Rp. ' + medication.prescriptionLineNumber}"></h3>
+                    <table>
+                        <tr>
+                            <td colspan="2" class="label">GENÉRICO</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="value" th:text="${medication.snomed.pt}"></td>
+                        </tr>
+                        <tr th:if="${medication.dosage.quantity != null}">
+                            <td colspan="2" class="label">CANTIDAD</td>
+                        </tr>
+                        <tr th:if="${medication.dosage.quantity != null}">
+                            <td colspan="2" class="value" th:text="${medication.dosage.quantity.value}"></td>
+                        </tr>
+                        <tr class="half">
+                            <td class="label" th:if="${medication.dosage.dosesByUnit != null}">DOSIS/UNIDAD</td>
+                            <td class="label" th:if="${ medication.dosage.dosesByDay != null }">DOSIS/DIA</td>
+                        </tr>
+                        <tr class="half">
+                            <td class="value" th:if="${medication.dosage.dosesByUnit != null}" th:text="${medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit}"></td>
+                            <td class="value" th:if="${ medication.dosage.dosesByDay != null }" th:text="${medication.dosage.dosesByDay % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByDay,0,0) : medication.dosage.dosesByDay}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="label">DURACIÓN DE TRATAMIENTO EN DÍAS</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="value" th:text="${medication.dosage.duration % 1 == 0 ? #numbers.formatDecimal(medication.dosage.duration,0,0) : medication.dosage.duration}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="label">DIAGNÓSTICO</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="value" th:text="${medication.healthCondition.snomed.pt}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="label">OBSERVACIONES:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="value" th:text="${medication.note}  ?: 'Sin información'"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <strong>Firmado electrónicamente por:</strong><br/>
+        </div>
+        <div class="container">
+            <div class="column">
+                <div style="margin-bottom: 10px;">
+                    <strong>Apellido y nombre:</strong><br/>
+                    <span th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></span><br/>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Profesión:</strong><br/>
+                    <span  th:text="${professionalProfession}">?</span><br/>
+                </div>
+            </div>
+            <div class="column">
+                <div style="margin-bottom: 10px;">
+                    <strong>Matrículo Nacional:</strong><br/>
+                    <span th:text="${nationalLicense} ?: 'Sin información'">?</span><br/>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Especialidad:</strong><br/>
+                    <span th:text="${clinicalSpecialty}">?</span><br/>
+                </div>
+            </div>
+            <div class="column">
+                <div style="margin-bottom: 10px;">
+                    <strong>Matrícula Provincial:</strong><br/>
+                    <span th:text="${stateLicense} ?: 'Sin información'">?</span><br/>
                 </div>
             </div>
         </div>
