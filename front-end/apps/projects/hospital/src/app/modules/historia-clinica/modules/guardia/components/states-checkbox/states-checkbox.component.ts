@@ -54,7 +54,7 @@ export class StatesCheckboxComponent extends AbstractCustomForm implements OnIni
 
 		const form = new FormGroup(controls);
 		this.form.setControl(STATES, form, { emitEvent: false});
-		this.formControlsKeys = Object.keys(this.form.value.states);
+		this.formControlsKeys = states.map(state => state.id.toString());
 	}
 
 	writeValue(obj: any): void {
