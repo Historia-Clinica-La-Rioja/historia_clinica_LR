@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.application.createreferenceobservation.CreateRe
 import ar.lamansys.refcounterref.application.referenceforwarding.ReferenceForwarding;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getreferencesbymanagerrole.GetReferencesByManagerRole;
+import ar.lamansys.refcounterref.application.updatereferenceadministrativestate.UpdateReferenceAdministrativeState;
 import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
 import ar.lamansys.refcounterref.application.updatereferenceforwarding.UpdateReferenceForwarding;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
@@ -54,6 +55,8 @@ public class InstitutionalNetworkReferenceReportController {
 	private final ObjectMapper objectMapper;
 
 	private final UpdateReferenceRegulationState updateReferenceRegulationState;
+
+	private final UpdateReferenceAdministrativeState updateReferenceAdministrativeState;
 
 	@GetMapping("/manager")
 	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
@@ -112,6 +115,16 @@ public class InstitutionalNetworkReferenceReportController {
 		log.debug("Input parameters -> forwardingId {}, observation {} ", forwardingId, observation);
 		updateReferenceForwarding.run(forwardingId, observation);
 		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	@PutMapping("/{referenceId}/change-administrative-state")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_REGIONAL')")
+	public Boolean changeReferenceAdministrativeState(@PathVariable(name = "referenceId") Integer referenceId,
+												  @RequestParam(name = "stateId") Short stateId,
+												  @RequestParam(name = "reason", required = false) String reason) {
+		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
+		this.updateReferenceAdministrativeState.run(referenceId, stateId, reason);
+		return Boolean.TRUE;
 	}
 
 }
