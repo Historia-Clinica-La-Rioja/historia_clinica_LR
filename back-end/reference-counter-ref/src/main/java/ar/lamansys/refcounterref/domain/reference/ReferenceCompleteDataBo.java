@@ -28,15 +28,18 @@ public class ReferenceCompleteDataBo {
 
 	private CounterReferenceSummaryBo closure;
 
+	private ReferenceAdministrativeStateBo administrativeState;
+
 	public ReferenceCompleteDataBo(ReferenceDataBo reference, ReferencePatientBo patient,
 								   ReferenceAppointmentBo appointment, ReferenceRegulationBo regulation,
-								   ReferenceObservationBo observation, CounterReferenceSummaryBo closure) {
+								   ReferenceObservationBo observation, CounterReferenceSummaryBo closure, ReferenceAdministrativeStateBo administrativeState) {
 		this.reference = reference;
 		this.patient = patient;
 		this.appointment = appointment;
 		this.regulation = regulation;
 		this.observation = observation;
 		this.closure = closure;
+		this.administrativeState = administrativeState;
 	}
 
 }

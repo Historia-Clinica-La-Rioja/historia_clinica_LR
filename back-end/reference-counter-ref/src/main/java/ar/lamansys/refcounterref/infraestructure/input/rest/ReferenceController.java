@@ -70,7 +70,7 @@ public class ReferenceController {
 	}
 
 	@PutMapping("/{referenceId}/update-by-manager")
-	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'GESTOR_DE_ACCESO_INSTITUCIONAL') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public boolean updateReferenceByManagerRole(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "referenceId") Integer referenceId,
 												@RequestParam(name = "destinationInstitutionId", required = false) Integer destinationInstitutionId,

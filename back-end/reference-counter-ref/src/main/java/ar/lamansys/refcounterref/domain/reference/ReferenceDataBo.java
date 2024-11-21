@@ -101,7 +101,7 @@ public class ReferenceDataBo {
 						   Integer institutionDestinationId, String institutionDestinationName, Short departmentDestinationId, String departmentDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Short closureType,
 						   String phonePrefix, String phoneNumber, Integer serviceRequestId,
-						   Integer createdBy, Short statusId, Short regulationStateId) {
+						   Integer createdBy, Short statusId, Short regulationStateId, Short administrativeStateId) {
 		this.id = id;
 		this.patientId = patientId;
 		this.patientMedicalCoverageId = patientMedicalCoverageId;
@@ -122,6 +122,7 @@ public class ReferenceDataBo {
 		this.createdBy = createdBy;
 		this.status = EReferenceStatus.map(statusId);
 		this.regulationState = EReferenceRegulationState.getById(regulationStateId);
+		this.administrativeState = EReferenceAdministrativeState.map(administrativeStateId);
 	}
 
 	public ReferenceDataBo(String phonePrefix, String phoneNumber) {

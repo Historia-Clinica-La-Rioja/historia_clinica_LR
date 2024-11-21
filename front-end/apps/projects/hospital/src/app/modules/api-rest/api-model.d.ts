@@ -4621,6 +4621,15 @@ export interface ReferenceAdministrativeClosureDto {
     referenceId: number;
 }
 
+export interface ReferenceAdministrativeStateDto {
+    createdOn: DateTimeDto;
+    id: number;
+    professionalName: string;
+    reason: string;
+    referenceId: number;
+    state: EReferenceAdministrativeState;
+}
+
 export interface ReferenceAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;
@@ -4654,6 +4663,7 @@ export interface ReferenceClosureSummaryDto {
 }
 
 export interface ReferenceCompleteDataDto {
+    administrativeState: ReferenceAdministrativeStateDto;
     appointment: ReferenceAppointmentDto;
     closure: ReferenceClosureSummaryDto;
     forwarding: ReferenceForwardingDto;
@@ -4759,6 +4769,7 @@ export interface ReferenceRegulationDto {
 }
 
 export interface ReferenceReportDto {
+    administrativeState: EReferenceAdministrativeState;
     attentionState: EReferenceAttentionState;
     careLine: string;
     clinicalSpecialtyOrigin: string;
@@ -6454,6 +6465,12 @@ export const enum EProvincialGovernmentDevice {
     PAROLE_BOARD = "PAROLE_BOARD",
     JUVENILE_JUSTICE_INSTITUTION = "JUVENILE_JUSTICE_INSTITUTION",
     JUSTICE_MINISTRY = "JUSTICE_MINISTRY",
+}
+
+export const enum EReferenceAdministrativeState {
+    WAITING_APPROVAL = "WAITING_APPROVAL",
+    APPROVED = "APPROVED",
+    SUGGESTED_REVISION = "SUGGESTED_REVISION",
 }
 
 export const enum EReferenceAttentionState {

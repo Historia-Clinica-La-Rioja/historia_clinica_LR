@@ -409,7 +409,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"cl.id, cl.description, cs.id, cs.name, " +
 			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId," +
-			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId, r.administrativeStateId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
@@ -435,7 +435,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"cl.id, cl.description, cs.id, cs.name," +
 			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, " +
-			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId, r.administrativeStateId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +

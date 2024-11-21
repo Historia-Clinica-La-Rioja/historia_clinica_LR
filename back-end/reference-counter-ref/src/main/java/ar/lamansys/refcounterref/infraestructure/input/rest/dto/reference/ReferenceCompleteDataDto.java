@@ -23,5 +23,7 @@ public class ReferenceCompleteDataDto {
 	private ReferenceForwardingDto forwarding;
 
 	private ReferenceClosureSummaryDto closure;
-	
+
+	private ReferenceAdministrativeStateDto administrativeState;
+
 }

@@ -48,7 +48,7 @@ public class DiaryAvailableAppointmentsSearchController {
 	private final ObjectMapper jackson;
 
 	@GetMapping("/protected")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') ||" +
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') ||" +
 			" hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<List<DiaryAvailableAppointmentsDto>> getAvailableProtectedAppointments(@PathVariable(name = "institutionId") Integer institutionId,
 																										  @RequestParam String diaryProtectedAppointmentsSearch) {
@@ -73,7 +73,7 @@ public class DiaryAvailableAppointmentsSearchController {
 	}
 
 	@GetMapping("/protected-quantity")
-	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
 			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Integer> getAvailableProtectedAppointmentsQuantity(@PathVariable(name = "institutionId") Integer institutionId,
 																			 @RequestParam Integer careLineId,
@@ -92,7 +92,7 @@ public class DiaryAvailableAppointmentsSearchController {
 	}
 
 	@GetMapping("/quantity/by-reference-filter")
-	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
 			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Integer> getAvailableAppointmentsQuantity(@PathVariable(name = "institutionId") Integer institutionId,
 																	@RequestParam Integer institutionDestinationId,
@@ -109,7 +109,7 @@ public class DiaryAvailableAppointmentsSearchController {
 	}
 
 	@GetMapping("/quantity/by-careline-diaries")
-	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
 			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Integer> getAvailableAppointmentsQuantityByCareLineDiaries(@PathVariable(name = "institutionId") Integer institutionId,
 																					@RequestParam Integer institutionDestinationId,

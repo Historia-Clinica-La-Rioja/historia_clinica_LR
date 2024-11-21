@@ -57,7 +57,7 @@ public class CareLineController {
 	}
 
 	@GetMapping("/attached")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, VIRTUAL_CONSULTATION_PROFESSIONAL, VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, VIRTUAL_CONSULTATION_PROFESSIONAL, VIRTUAL_CONSULTATION_RESPONSIBLE, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		Integer loggedUserId = UserInfo.getCurrentAuditor();

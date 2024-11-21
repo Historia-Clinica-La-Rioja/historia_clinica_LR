@@ -3,12 +3,14 @@ package ar.lamansys.refcounterref.application.getreferencecompletedata;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataException;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataExceptionEnum;
 import ar.lamansys.refcounterref.application.port.CounterReferenceStorage;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceAdministrativeStateStorage;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentInfoStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceObservationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceForwardingStorage;
 import ar.lamansys.refcounterref.application.port.ReferencePatientStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
+import ar.lamansys.refcounterref.domain.reference.ReferenceAdministrativeStateBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePatientBo;
@@ -46,6 +48,8 @@ public class GetReferenceCompleteData {
 
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 
+	private final HistoricReferenceAdministrativeStateStorage historicReferenceAdministrativeStateStorage;
+
 	public ReferenceCompleteDataBo run(Integer referenceId) {
 		log.debug("Input parameter -> referenceId {}", referenceId);
 		assertInfo(referenceId);
@@ -56,12 +60,13 @@ public class GetReferenceCompleteData {
 		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentInfoStorage.getAppointmentData(referenceData.getId());
 		setContactInformation(patientData, referenceData, appointmentData);
 		Optional<ReferenceRegulationBo> referenceRegulation = historicReferenceRegulationStorage.getByReferenceId(referenceId);
+		Optional<ReferenceAdministrativeStateBo> administrativeState = historicReferenceAdministrativeStateStorage.getByReferenceId(referenceId);
 
 		var closure = counterReferenceStorage.getCounterReference(referenceId);
 		var observation = referenceObservationStorage.getReferenceObservation(referenceId).orElse(null);
 
 		var result = new ReferenceCompleteDataBo(referenceData, patientData, appointmentData.orElse(null),
-				referenceRegulation.orElse(null), observation, closure.orElse(null));
+				referenceRegulation.orElse(null), observation, closure.orElse(null), administrativeState.orElse(null));
 
 		if (sharedLoggedUserPort.hasManagerRole(UserInfo.getCurrentAuditor()))
 			result.setForwarding(referenceForwardingStorage.getForwardingByReferenceId(referenceId));

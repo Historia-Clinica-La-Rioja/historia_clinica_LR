@@ -49,7 +49,7 @@ public class PracticesController {
 	}
 
 	@GetMapping("/institution/{institutionId}/by-active-diaries")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<SharedSnomedDto>> getByActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		List<SharedSnomedDto> activeDiariesPractices = getPracticesByActiveDiaries.run(institutionId);

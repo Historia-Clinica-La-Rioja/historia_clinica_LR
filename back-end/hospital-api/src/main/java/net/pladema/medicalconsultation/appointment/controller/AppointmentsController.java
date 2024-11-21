@@ -228,7 +228,7 @@ public class AppointmentsController {
 	private Long PAST_DAYS;
 
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	@ValidAppointment
 	public ResponseEntity<Integer> create(
 			@PathVariable(name = "institutionId") Integer institutionId,
@@ -245,7 +245,7 @@ public class AppointmentsController {
 	}
 
 	@PostMapping("/expired")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	@ValidAppointment
 	public ResponseEntity<Integer> createExpiredAppointment(@PathVariable(name = "institutionId") Integer institutionId,
 															@RequestBody @Valid CreateAppointmentDto createAppointmentDto) {
@@ -292,7 +292,7 @@ public class AppointmentsController {
 
 
 	@PostMapping(value = "/update")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<Integer> update(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestBody UpdateAppointmentDto appointmentDto) {
@@ -833,7 +833,7 @@ public class AppointmentsController {
 	}
 
 	@GetMapping("/patient/{patientId}/verify-existing-appointments")
-	@PreAuthorize("hasAnyAuthority('ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO', 'GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	@PreAuthorize("hasAnyAuthority('ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO', 'GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<AppointmentShortSummaryDto> getAppointmentFromDeterminatedDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId,
