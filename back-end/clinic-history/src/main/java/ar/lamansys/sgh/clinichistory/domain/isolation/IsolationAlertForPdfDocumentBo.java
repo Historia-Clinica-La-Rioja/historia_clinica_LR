@@ -6,13 +6,16 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class IsolationAlertForPdfDocumentBo {
 	private Integer id;
 	private String healthConditionPt;
@@ -21,6 +24,10 @@ public class IsolationAlertForPdfDocumentBo {
 	private LocalDate endDate;
 	private String observations;
 	private EIsolationStatus status;
+	private Integer updatedById;
+	private IsolationAlertAuthorBo updatedBy;
+	private LocalDateTime updatedOn;
+	private Boolean isModified;
 
 	public IsolationAlertForPdfDocumentBo(IsolationAlertBo alert) {
 		this.id = alert.getId();
@@ -30,5 +37,9 @@ public class IsolationAlertForPdfDocumentBo {
 		this.endDate = alert.getEndDate();
 		this.observations = alert.getObservations();
 		this.status = EIsolationStatus.map(alert.getStatusId());
+		this.updatedBy = alert.getUpdatedBy();
+		this.updatedById = alert.getUpdatedById();
+		this.updatedOn = alert.getUpdatedOn();
+		this.isModified = alert.getIsModified();
 	}
 }

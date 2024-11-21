@@ -30,11 +30,11 @@ public class FetchPatientIsolationAlertBo {
 	private Integer createdById;
 	private EIsolationStatus status;
 	private IsolationAlertAuthorBo author;
-
 	private Integer updatedById;
 	private IsolationAlertAuthorBo updatedBy;
 	private LocalDateTime updatedOn;
 	private Boolean isModified;
+	private Long documentId;
 
 	public EIsolationStatus getStatus() {
 		var expired = LocalDate.now().isAfter(this.getEndDate());

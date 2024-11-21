@@ -188,7 +188,8 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		"	isolation_alert.created_by, " + //8
 		"	isolation_alert.created_on, " + //9
 		"	isolation_alert.isolation_status_id, " + //10
-		"	isolation_alert.parent_id " + //11
+		"	isolation_alert.parent_id, " + //11
+		"	document_isolation_alert.document_id " + //12
 		" " +
 		"FROM " +
 		"	isolation_alert " +
@@ -237,7 +238,8 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 				"	isolation_alert.created_by, " + //8
 				"	isolation_alert.created_on, " + //9
 				"	isolation_alert.isolation_status_id, " + //10
-				"	isolation_alert.parent_id " + //11
+				"	isolation_alert.parent_id, " + //11
+				"	document_isolation_alert.document_id " + //12
 				" " +
 				"FROM " +
 				"	isolation_alert " +
@@ -340,6 +342,7 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		newAlert.setObservations(row[7] == null ? null : (String) row[7]);
 		newAlert.setStatus(EIsolationStatus.map((Short) row[10]));
 		newAlert.setIsModified(row[11] != null);
+		newAlert.setDocumentId(((BigInteger)row[12]).longValue());
 
 		/**
 		 * Audit data

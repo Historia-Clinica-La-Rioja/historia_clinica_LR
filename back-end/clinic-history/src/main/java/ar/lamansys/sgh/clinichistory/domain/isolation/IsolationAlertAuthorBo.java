@@ -10,4 +10,7 @@ import lombok.Setter;
 public class IsolationAlertAuthorBo {
 	Integer id;
 	String fullName;
+	public String toString() {
+		return getFullName();
+	}
 }
