@@ -17,7 +17,10 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 
+import net.pladema.establishment.application.port.BlockAttentionPlaceStorage;
 import net.pladema.establishment.controller.service.BedExternalService;
+
+import net.pladema.establishment.domain.AttentionPlaceBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,7 @@ public class ChangeEmergencyCareAttentionPlace {
 	private final EmergencyCareEpisodeStateStorage emergencyCareEpisodeStateStorage;
 	private final BedExternalService bedExternalService;
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
+	private final BlockAttentionPlaceStorage blockAttentionPlaceStorage;
 
 	@Transactional
 	public Boolean run(ChangeEmergencyCareEpisodeAttentionPlaceBo ceceap){
@@ -69,7 +73,7 @@ public class ChangeEmergencyCareAttentionPlace {
 	private void updateEpisode(Integer episodeId, Integer institutionId, Integer doctorsOfficeId, Integer shockroomId,
 							   Integer bedId, Short emergencyCareStateId){
 		if (doctorsOfficeId != null || shockroomId != null)
-			validateDoctorsOfficeOrShockRoomAvailable(doctorsOfficeId, shockroomId);
+			validateDoctorsOfficeOrShockRoomAvailable(doctorsOfficeId, shockroomId, institutionId);
 		if (bedId != null) {
 			validateBedStatus(bedId);
 			emergencyCareEpisodeStateStorage.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, bedId);
@@ -81,7 +85,7 @@ public class ChangeEmergencyCareAttentionPlace {
 			emergencyCareEpisodeStateStorage.updateStateWithDoctorsOffice(episodeId, institutionId, emergencyCareStateId, doctorsOfficeId);
 	}
 
-	private void validateDoctorsOfficeOrShockRoomAvailable(Integer doctorsOfficeId, Integer shockroomId) {
+	private void validateDoctorsOfficeOrShockRoomAvailable(Integer doctorsOfficeId, Integer shockroomId, Integer institutionId) {
 		log.debug("Input parameters validateAttentionPlace -> doctorsOfficeId {}, shockroomId {}", doctorsOfficeId, shockroomId);
 		if (emergencyCareEpisodeStorage.existsEpisodeInOffice(doctorsOfficeId, shockroomId)) {
 			if (doctorsOfficeId != null)
@@ -90,6 +94,10 @@ public class ChangeEmergencyCareAttentionPlace {
 			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.SHOCKROOM_NOT_AVAILABLE,
 					"El shockroom elegido se encuentra ocupado.");
 		}
+		if (doctorsOfficeId != null && blockAttentionPlaceStorage.findDoctorsOfficeByIdAndInstitutionId(doctorsOfficeId, institutionId).map(AttentionPlaceBo::isBlocked).orElse(false))
+			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.DOCTORS_OFFICE_NOT_AVAILABLE, "El consultorio elegido se encuentra ocupado.");
+		if (shockroomId != null && blockAttentionPlaceStorage.findShockRoomByIdAndInstitutionId(shockroomId, institutionId).map(AttentionPlaceBo::isBlocked).orElse(false))
+			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.SHOCKROOM_NOT_AVAILABLE, "El shockroom elegido se encuentra ocupado.");
 	}
 
 	private void validateBedStatus(Integer bedId) {

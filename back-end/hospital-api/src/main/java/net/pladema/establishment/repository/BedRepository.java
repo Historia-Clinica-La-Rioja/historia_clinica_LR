@@ -111,7 +111,7 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 	@Transactional(readOnly = true)
 	@Query("SELECT CASE WHEN count(*) > 0 THEN TRUE ELSE FALSE END " +
 			"FROM Bed b " +
-			"WHERE b.id = :bedId AND b.free IS TRUE AND b.available IS TRUE ")
+			"WHERE b.id = :bedId AND b.free IS TRUE AND b.available IS TRUE AND b.statusId IS NULL")
 	boolean isBedFreeAndAvailable(@Param("bedId") Integer bedId);
 
 	@Transactional(readOnly = true)

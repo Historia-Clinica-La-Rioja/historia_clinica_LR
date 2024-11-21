@@ -1,6 +1,7 @@
 package net.pladema.establishment.application.attentionplaces;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeStorage;
 import net.pladema.establishment.application.attentionplaces.exceptions.BlockAttentionPlaceException;
 import net.pladema.establishment.application.port.BlockAttentionPlaceStorage;
 import net.pladema.establishment.domain.EBlockAttentionPlaceReason;
@@ -16,6 +17,7 @@ public class BlockAttentionPlace {
 
 	private final UserSessionStorage userSessionStorage;
 	private final BlockAttentionPlaceStorage blockAttentionPlaceStoragePort;
+	private final EmergencyCareEpisodeStorage emergencyCareEpisodeStorage;
 
 	@Transactional
 	public void blockBed(Integer institutionId, Integer bedId, EBlockAttentionPlaceReason reasonEnum, String reason) {
@@ -33,6 +35,8 @@ public class BlockAttentionPlace {
 
 	@Transactional
 	public void blockShockRoom(Integer institutionId, Integer shockroomId, EBlockAttentionPlaceReason reasonEnum, String reason) {
+		if (emergencyCareEpisodeStorage.existsEpisodeInOffice(null, shockroomId))
+			throw shockRoomIsNotFree(institutionId, shockroomId);
 		var shockRoom = blockAttentionPlaceStoragePort
 				.findShockRoomByIdAndInstitutionId(shockroomId, institutionId).orElseThrow(() -> shockRoomNotFound(institutionId, shockroomId));
 		if (shockRoom.isBlocked()) throw shockRoomAlreadyBlocked(institutionId, shockroomId);
@@ -47,8 +51,10 @@ public class BlockAttentionPlace {
 
 	@Transactional
 	public void blockdoctorsOffice(Integer institutionId, Integer doctorsOfficeId, EBlockAttentionPlaceReason reasonEnum, String reason) {
+		if (emergencyCareEpisodeStorage.existsEpisodeInOffice(doctorsOfficeId, null))
+			throw doctorsOfficeIsNotFree(institutionId, doctorsOfficeId);
 		var doctorsOffice = blockAttentionPlaceStoragePort
-				.findDoctorsOfficeByIdAndInstitutionId(doctorsOfficeId, institutionId).orElseThrow(() -> doctorsOfficeNotFound(institutionId, doctorsOfficeId));
+			.findDoctorsOfficeByIdAndInstitutionId(doctorsOfficeId, institutionId).orElseThrow(() -> doctorsOfficeNotFound(institutionId, doctorsOfficeId));
 		if (doctorsOffice.isBlocked()) throw doctorsOfficeAlreadyBlocked(institutionId, doctorsOfficeId);
 		if (!doctorsOffice.getIsFree()) throw doctorsOfficeIsNotFree(institutionId, doctorsOfficeId);
 		Integer newStatusId = blockAttentionPlaceStoragePort.newBlockedStatus(
