@@ -214,7 +214,8 @@
 			},
 			"CARD_TITLE": "Alertas de aislamiento",
 			"ALERT_STATE": "Estado de alerta",
-			"ISOLATION_ALERT_DETAILS": "Detalle de alerta de aislamiento"
+			"ISOLATION_ALERT_DETAILS": "Detalle de alerta de aislamiento",
+			"UPDATED_ISOLATION_ALERT": "Se han realizado modificaciones sobre la alerta de aislamiento posteriores a la última versión del documento"
 		},
 		"isolation-alert-action": {
 			"finish-alert": {

@@ -1,6 +1,7 @@
 import { DescriptionItemData } from "@presentation/components/description-item/description-item.component";
 import { IDENTIFIER_CASES } from "../../hsi-components/identifier-cases/identifier-cases.component";
 import { DescriptionItemDataSummary } from "@historia-clinica/components/description-item-data-summary/description-item-data-summary.component";
+import { RegisterEditor } from "@presentation/components/register-editor-info/register-editor-info.component";
 
 export interface IdentifierData {
     value: string,
@@ -217,4 +218,5 @@ export interface IsolationAlertDescriptionItemData {
     criticality: DescriptionItemData[];
     endAlert: DescriptionItemData[];
     observations?: DescriptionItemData[];
+    editor?: RegisterEditor;
 }

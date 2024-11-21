@@ -6,10 +6,11 @@ import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/compo
 import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, IsolationAlertDescriptionItemData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, TitleDescriptionListItem, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { convertDateTimeDtoToDate, dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
 import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM, CRITICITY_DESCRIPTION, PROPOSED_SURGERIES_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
+import { toRegisterEditorInfo } from '@historia-clinica/mappers/isolation-alerts.mapper';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
@@ -549,7 +550,8 @@ ${medication.note}`
             types: isolationAlert.types.map(type => this.toDescriptionItemData(type.description)),
             criticality: [this.toDescriptionItemData(isolationAlert.criticality.description)],
             endAlert: [this.toDescriptionItemData(endDate)],
-            ...(isolationAlert.observations && { observations: [this.toDescriptionItemData(isolationAlert.observations)] })
+            ...(isolationAlert.observations && { observations: [this.toDescriptionItemData(isolationAlert.observations)] }),
+            ...(isolationAlert.isModified && { editor: toRegisterEditorInfo(isolationAlert.updatedBy.fullName, convertDateTimeDtoToDate(isolationAlert.updatedOn)) })
         }
     }
 

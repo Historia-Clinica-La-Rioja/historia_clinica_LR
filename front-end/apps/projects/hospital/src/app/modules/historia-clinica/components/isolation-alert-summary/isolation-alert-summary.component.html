@@ -3,7 +3,17 @@
         [title]="'historia-clinica.isolation-alert.ISOLATION_ALERT'">
     </app-iconed-titled-section>
 
-    <div id="isolation-alert-list" class="isolation-alerts" *ngFor="let isolationAlert of isolationAlerts" fxLayout="column" fxLayoutGap="8px">
+    <div id="isolation-alert-list" class="isolation-alerts" *ngFor="let isolationAlert of isolationAlerts"
+        fxLayout="column" fxLayoutGap="8px">
+
+        <ng-container *ngIf="isolationAlert.editor">
+            <span>{{'historia-clinica.isolation-alert.UPDATED_ISOLATION_ALERT' | translate}}</span>
+            <div fxLayout="row" fxLayoutGap="5px">
+                <span>{{'historia-clinica.general.EDITED' | translate}}:</span>
+                <app-register-editor-info class="register-editor-info" [registerEditor]="isolationAlert.editor" [registerEditorCase]="REGISTER_EDITOR_CASES"></app-register-editor-info>
+            </div>
+        </ng-container>
+
         <app-title-description-list id="diagnosis" [title]="'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS'"
             [descriptionData]="isolationAlert.diagnosis"></app-title-description-list>
         <app-title-description-list id="types" [title]="'historia-clinica.isolation-alert.ISOLATION_TYPE'"
