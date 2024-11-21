@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.AllArgsConstructor;
@@ -46,9 +47,18 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 		Short documentType = EDocumentType.ORDER.getId();
 		Short emergencyCareState = EEmergencyCareState.ATENCION.getId();
 		Short internmentEpisodeState = 1;
-
+		List<Short> patientType = List.of(
+				EPatientType.PERMANENT.getId(),
+				EPatientType.VALIDATED.getId(),
+				EPatientType.TEMPORARY.getId(),
+				EPatientType.HISTORIC.getId(),
+				EPatientType.TELEPHONIC.getId(),
+				EPatientType.REJECTED.getId(),
+				EPatientType.NOT_VALIDATED_PERMANENT.getId(),
+				EPatientType.EMERGENCY_CARE_TEMPORARY.getId()
+				);
 		var rawGroupedResults =
-				studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState)
+				studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState, patientType)
 				.stream()
 				.collect(Collectors.groupingBy(x -> (Integer) x[0]));
 

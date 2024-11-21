@@ -22,9 +22,9 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Object[]> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType, Short emergencyCareState, Short internmentEpisodeState) {
+	public List<Object[]> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType, Short emergencyCareState, Short internmentEpisodeState, List<Short> patientTypes) {
 
-		log.debug("Input parameters -> institutionId: {}, categories: {}, sourceTypeIds: {}, statusId: {}, documentType: {}, emergencyCareState: {}, internmentEpisodeState: {}", institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState);
+		log.debug("Input parameters -> institutionId: {}, categories: {}, sourceTypeIds: {}, statusId: {}, documentType: {}, emergencyCareState: {}, internmentEpisodeState: {}, patientTypes: {}", institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState, patientTypes);
 
 		String sqlString =
 			"WITH diagnostic_report_last_modification AS (SELECT DISTINCT ON " +
@@ -84,8 +84,9 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"JOIN diagnostic_report dr ON ddr.diagnostic_report_id = dr.id " +
 					"JOIN snomed s ON dr.snomed_id = s.id " +
 					"JOIN patient p ON sr.patient_id = p.id " +
-					"JOIN person pe ON p.person_id = pe.id " +
-					"JOIN person_extended pex ON pe.id = pex.person_id " +
+					"JOIN patient_type pty ON p.type_id = pty.id  " +
+					"LEFT JOIN person pe ON p.person_id = pe.id " +
+					"LEFT JOIN person_extended pex ON pe.id = pex.person_id " +
 					"LEFT JOIN gender g ON pe.gender_id = g.id " +
 					"JOIN diagnostic_report_last_modification drlm ON drlm.id = dr.id " +
 					"LEFT JOIN ( " +
@@ -123,6 +124,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"AND dr.status_id = :statusId " +
 					"AND sr.category_id IN (:categories) " +
 					"AND sr.source_type_id IN (:sourceTypeIds) " +
+					"AND pty.id IN (:patientTypes)  " +
 					"AND d.type_id = :documentType ";
 
 		Query query = entityManager.createNativeQuery(sqlString);
@@ -132,6 +134,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 				.setParameter("statusId", statusId)
 				.setParameter("documentType", documentType)
 				.setParameter("emergencyCareState", emergencyCareState)
+				.setParameter("patientTypes", patientTypes)
 				.setParameter("internmentEpisodeState", internmentEpisodeState);
 
 		return (List<Object[]>) query.getResultList();
