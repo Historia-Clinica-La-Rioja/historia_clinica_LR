@@ -10,11 +10,11 @@ import { ButtonType } from '@presentation/components/button/button.component';
 import { ReferenceCompleteDataDto } from '@api-rest/api-model';
 
 @Component({
-	selector: 'app-approval-actions',
-	templateUrl: './approval-actions.component.html',
-	styleUrls: ['./approval-actions.component.scss']
+	selector: 'app-reference-state-actions',
+	templateUrl: './reference-state-actions.component.html',
+	styleUrls: ['./reference-state-actions.component.scss']
 })
-export class ApprovalActionsComponent {
+export class ReferenceStateActionsComponent {
 
 	ButtonType = ButtonType;
 	@Input() referenceCompleteDataDto: ReferenceCompleteDataDto;

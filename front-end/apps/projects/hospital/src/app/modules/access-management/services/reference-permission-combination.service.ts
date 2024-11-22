@@ -33,7 +33,8 @@ export class ReferencePermissionCombinationService {
         readonly dashboardService: DashboardService,
     ) {
         this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
-		this.permissionService.hasContextAssignments$([GESTOR_INSTITUCIONAL]).subscribe(hasRole => this.isRoleGestorInstitucional = hasRole);    
+		this.permissionService.hasContextAssignments$([GESTOR_INSTITUCIONAL]).subscribe(hasRole => this.isRoleGestorInstitucional = hasRole);
+		
     }
 
     setReferenceAndReportDataAndVisualPermissions(reference: ReferenceCompleteDataDto, report: ReportCompleteData) {
@@ -45,7 +46,7 @@ export class ReferencePermissionCombinationService {
             showDeriveRequestButton: this.showDeriveRequestButton(),
             showAdministativeClosureButton: this.showAdministativeClosureButton(),
             showAuditDropdown: this.showAuditDropdown(),
-            canEditApproval: this.canEditApproval()
+            canEditApproval: this.canEditApproval(),
         }
     }
 

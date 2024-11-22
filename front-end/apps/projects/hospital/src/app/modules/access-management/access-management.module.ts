@@ -15,7 +15,6 @@ import { ToAvailableAppointmentDataPipe } from '@turnos/standalone/pipes/to-avai
 //components
 import { AdministrativeReferenceClosureComponent } from './components/administrative-reference-closure/administrative-reference-closure.component';
 import { ApprovalComponent } from './components/approval/approval.component';
-import { ApprovalActionsComponent } from './components/approval-actions/approval-actions.component';
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
 import { AvailableAppointmentCountInformationComponent } from './components/available-appointment-count-information/available-appointment-count-information.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
@@ -34,6 +33,8 @@ import { PriorizationCriteriaSelectComponent } from './components/priorization-c
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
 import { ReferenceClosureComponent } from './components/reference-closure/reference-closure.component';
 import { ReferenceFilesComponent } from './components/reference-files/reference-files.component';
+import { ReferenceStateActionsComponent } from './components/reference-state-actions/reference-state-actions.component';
+import { ReferenceStateComponent } from './components/reference-state/reference-state.component';
 import { ReferenceOriginStateComponent } from './components/reference-origin-state/reference-origin-state.component';
 import { ReferenceMedicalConceptsInformationComponent } from './components/reference-medical-concepts-information/reference-medical-concepts-information.component';
 import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
@@ -47,15 +48,11 @@ import { ReferenceEditionPopUpComponent } from './dialogs/reference-edition-pop-
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 //services
 import { TabsService } from './services/tabs.service';
-import { ReferenceStateComponent } from './components/reference-state/reference-state.component';
-
-
 @NgModule({
 	declarations: [
 		//components
 		AdministrativeReferenceClosureComponent,
 		ApprovalComponent,
-		ApprovalActionsComponent,
 		AppointmentSummaryComponent,
 		AvailableAppointmentCountInformationComponent,
 		ContactDetailsComponent,
@@ -75,6 +72,8 @@ import { ReferenceStateComponent } from './components/reference-state/reference-
 		ReferenceClosureComponent,
 		ReferenceFilesComponent,
 		ReferenceMedicalConceptsInformationComponent,
+		ReferenceStateActionsComponent,
+		ReferenceStateComponent,
 		ReferenceOriginStateComponent,
 		RegulationAppointmentResultViewComponent,
 		RegulationSearchCriteriaComponent,
@@ -85,7 +84,6 @@ import { ReferenceStateComponent } from './components/reference-state/reference-
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
 		ReportCompleteDataPopupComponent,
-  ReferenceStateComponent,
 	],
 	providers: [
 		TabsService

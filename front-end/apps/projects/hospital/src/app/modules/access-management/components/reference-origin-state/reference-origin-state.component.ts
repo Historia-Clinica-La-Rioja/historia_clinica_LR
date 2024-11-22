@@ -5,6 +5,7 @@ import { EReferenceRegulationState, ReferenceCompleteDataDto, ReferenceRegulatio
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
+import { AccountService } from '@api-rest/services/account.service';
 
 @Component({
     selector: 'app-reference-origin-state',
@@ -25,6 +26,7 @@ export class ReferenceOriginStateComponent implements OnInit {
 
     referenceId: number;
     hideReason = false;
+	loggedUserCanDoActions = false;
 
     @Input() set referenceCompleteData (reference: ReferenceCompleteDataDto) {
         this.referenceRegulationData = reference.regulation;
@@ -36,9 +38,14 @@ export class ReferenceOriginStateComponent implements OnInit {
         public permissionService: ReferencePermissionCombinationService,
         private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
         private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
+		private readonly accountService: AccountService,
     ) { }
 
     ngOnInit(): void {
+		const hasSuggestedState = this.referenceRegulationData.state === this.permissionService.referenceOriginStates.suggestedRevision;
+		this.accountService.getInfo().subscribe(loggedUserInfo => 
+			this.loggedUserCanDoActions = loggedUserInfo.id === this.permissionService.referenceCompleteData.reference.createdBy && hasSuggestedState
+		);
         this.regulationState = getIconState[this.referenceRegulationData.state];
     }
 
