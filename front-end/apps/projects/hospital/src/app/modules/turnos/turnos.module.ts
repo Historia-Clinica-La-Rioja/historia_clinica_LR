@@ -66,6 +66,7 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 import { TranscribedStudyComponent } from './dialogs/transcribed-study/transcribed-study.component';
 import { StudyListTranscribedComponent } from './components/study-list-transcribed/study-list-transcribed.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
+import { DiaryConfigurationComponent } from './components/diary-configaration/diary-configuration.component';
 
 @NgModule({
 	declarations: [
@@ -99,6 +100,9 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		SelectAgendaComponent,
 		CalendarEventViewComponent,
 		NoAppointmentAvailableComponent,
+		TranscribedStudyComponent,
+		StudyListTranscribedComponent,
+		DiaryConfigurationComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,
@@ -115,8 +119,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		PracticesPipe,
 		ShowAppointmentOverTurnPipe,
 		ShowTimeSlotDetailsPipe,
-  TranscribedStudyComponent,
-  StudyListTranscribedComponent,
 	],
 	imports: [
 		CommonModule,

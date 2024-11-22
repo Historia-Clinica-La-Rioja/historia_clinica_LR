@@ -256,6 +256,7 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 				</div>
+				<app-diary-configuration *ngIf="isHabilitarConfiguracionAgendasOn" formControlName="configurationDiary"></app-diary-configuration>
 				<app-diary-labels [diaryId]="editingDiaryId" (labelsArray)="setLabelsArray($event)"></app-diary-labels>
 			</section>
 			<section *ngIf="form.valid" fxLayout="column"
