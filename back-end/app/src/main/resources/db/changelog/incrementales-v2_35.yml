@@ -31,3 +31,17 @@ databaseChangeLog:
                   AND isolation_alert.isolation_criticality_id = alert_parent.isolation_criticality_id
                   AND isolation_alert.observations = alert_parent.observations
                   AND isolation_alert.end_date = alert_parent.end_date;
+
+    - changeSet:
+        id: add-indexes-v_attention
+        author: lmanterola
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_updated_on" ON document (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_document_source_type_id" ON document (source_type_id);
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_updated_on" ON outpatient_consultation (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_internment_episode_updated_on" ON internment_episode (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_odontology_consultation_updated_on" ON odontology_consultation (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_vaccine_consultation_updated_on" ON vaccine_consultation (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_emergency_care_evolution_note_updated_on" ON emergency_care_evolution_note (CAST(updated_on AS DATE));
