@@ -1,4 +1,4 @@
-import { PENDING_ATTENTION_STATE, REFERENCE_ORIGIN_STATES, REFERENCE_STATES } from '@access-management/constants/reference';
+import { PENDING_ATTENTION_STATE, REFERENCE_DESTINATION_STATES, REFERENCE_ORIGIN_STATES, REFERENCE_STATES } from '@access-management/constants/reference';
 import { ReportCompleteData } from '@access-management/dialogs/report-complete-data-popup/report-complete-data-popup.component';
 import { Injectable } from '@angular/core';
 import { ERole, ReferenceCompleteDataDto } from '@api-rest/api-model';
@@ -27,6 +27,7 @@ export class ReferencePermissionCombinationService {
     pendingAttentionState = PENDING_ATTENTION_STATE;
     registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
     referenceOriginStates = REFERENCE_ORIGIN_STATES;
+    referenceDestinationState = REFERENCE_DESTINATION_STATES;
 
     constructor(
         private readonly permissionService: PermissionsService,
@@ -46,7 +47,8 @@ export class ReferencePermissionCombinationService {
             showDeriveRequestButton: this.showDeriveRequestButton(),
             showAdministativeClosureButton: this.showAdministativeClosureButton(),
             showAuditDropdown: this.showAuditDropdown(),
-            canEditApproval: this.canEditApproval(),
+            showApprovalDropdown: this.showApprovalDropdown(),
+            canEditApproval: this.canEditApproval()
         }
     }
 
@@ -80,6 +82,10 @@ export class ReferencePermissionCombinationService {
         this.referenceCompleteData.regulation.state === this.referenceOriginStates.waitingAudit && !this.reportHasAppointment();
     }
 
+    showApprovalDropdown(): boolean {
+        return this.isRoleGestor || (this.isRoleGestorInstitucional && this.dashboardService.dashboardView == DashboardView.REQUESTED);
+    }
+
     canEditApproval(): boolean {
         return !this.referenceCompleteData.reference?.closureType && !this.reportHasAppointment();
     }
@@ -95,5 +101,6 @@ interface ReferenceVisualPermissions {
     showDeriveRequestButton: boolean,
     showAdministativeClosureButton: boolean,
     showAuditDropdown: boolean,
+    showApprovalDropdown: boolean,
     canEditApproval: boolean
 }

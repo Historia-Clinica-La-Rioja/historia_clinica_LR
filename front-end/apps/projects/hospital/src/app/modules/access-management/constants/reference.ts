@@ -2,7 +2,7 @@ import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.c
 import { DescriptionPriority } from "@presentation/components/priority-select/priority-select.component";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 import { ReferenceApprovalState, ReferenceOriginState } from "./approval";
-import { EReferenceRegulationState } from '@api-rest/api-model';
+import { EReferenceRegulationState, EReferenceAdministrativeState } from '@api-rest/api-model';
 
 const NO_CLOSURE = -1;
 const NO_APPOINTMENT = -1;
@@ -155,4 +155,11 @@ export const REFERENCE_ORIGIN_STATES = {
     rejected: EReferenceRegulationState.REJECTED,
     suggestedRevision: EReferenceRegulationState.SUGGESTED_REVISION,
     noAuditRequired: EReferenceRegulationState.DONT_REQUIRES_AUDIT
+}
+
+export const REFERENCE_DESTINATION_STATES = {
+    waitingApproval: EReferenceAdministrativeState.WAITING_APPROVAL,
+    approval: EReferenceAdministrativeState.APPROVED,
+    rejected: EReferenceRegulationState.REJECTED,
+    suggestedRevision: EReferenceAdministrativeState.SUGGESTED_REVISION
 }

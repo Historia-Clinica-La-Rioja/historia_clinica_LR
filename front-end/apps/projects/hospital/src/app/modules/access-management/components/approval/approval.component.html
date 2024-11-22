@@ -1,8 +1,4 @@
-<span class="grey" *ngIf="referenceRegulationDto?.ruleLevel"
-	[translate]="'access-management.search_references.reference.approval.ENTERED_BY'"
-	[translateParams]="{rule: referenceRegulationDto.ruleLevel}"></span>
-
-<div *ngIf="hasGestorRole && referenceRegulationDto.state === referenceApprovalState.pending; else showRegulationState">
+<div *ngIf="referencePermissionService.visualPermissions.showApprovalDropdown else showRegulationState">
 	<app-institutional-network-actions-dropdown
 		*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
 		[isOrigin]="false" (newState)="onNewState($event)" (editing)="onEditingState($event)">
@@ -15,11 +11,11 @@
 	</app-colored-label>
 </ng-template>
 
-<div *ngIf="referenceRegulationDto?.reason && !hideReason" fxLayout="column" fxLayoutGap="10px">
-	<span class="reason">{{referenceRegulationDto.reason}}</span>
+<div *ngIf="referenceAdministrativeDto?.reason && !hideReason" fxLayout="column" fxLayoutGap="10px">
+	<span class="reason">{{referenceAdministrativeDto.reason}}</span>
 	<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
-		<span>{{referenceRegulationDto.professionalName}}</span>
-		<span>{{referenceRegulationDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
+		<span>{{referenceAdministrativeDto.professionalName}}</span>
+		<span>{{referenceAdministrativeDto.createdOn | dateFormat: 'datetime'}}</span>
 	</div>
 </div>
 
