@@ -5324,6 +5324,7 @@ export interface StudyOrderBasicPatientDto {
     lastName: string;
     middleNames: string;
     otherLastNames: string;
+    patientTypeId: number;
 }
 
 export interface StudyOrderPatientLocationDto {
@@ -5359,6 +5360,7 @@ export interface StudyOrderReportInfoDto {
 export interface StudyOrderWorkListDto {
     createdDate: DateTimeDto;
     deferredDate?: DateTimeDto;
+    emergencyCareReason: string;
     patientDto: StudyOrderBasicPatientDto;
     patientLocation: StudyOrderPatientLocationDto;
     requiresTransfer: boolean;

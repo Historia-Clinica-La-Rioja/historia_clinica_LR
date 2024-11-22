@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.GenderDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 
@@ -39,5 +40,7 @@ public class StudyOrderBasicPatientDto {
 	private GenderDto gender;
 
 	private DateDto birthDate;
+
+	private Short patientTypeId;
 
 }

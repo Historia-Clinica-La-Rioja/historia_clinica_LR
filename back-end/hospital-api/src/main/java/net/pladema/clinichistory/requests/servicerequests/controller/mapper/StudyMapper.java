@@ -76,6 +76,7 @@ public interface StudyMapper {
 	@Mapping(target = "patientDto", source = "patientBo")
 	@Mapping(target = "createdDate", source = "createdDate")
 	@Mapping(target = "patientLocation", source = "patientLocation")
+	@Mapping(target = "emergencyCareReason", source = "emergencyCareReason")
 	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }

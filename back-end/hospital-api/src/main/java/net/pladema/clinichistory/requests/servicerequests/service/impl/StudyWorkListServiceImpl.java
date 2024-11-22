@@ -96,6 +96,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				.genderId((Short) row[9])
 				.genderDescription((String) row[10])
 				.birthDate(row[11] != null ? ((java.sql.Date) row[11]).toLocalDate() : null)
+				.patientTypeId((Short) row[25])
 				.build();
 
 		StudyOrderPatientLocationBo locationBo = StudyOrderPatientLocationBo.builder()
@@ -116,7 +117,8 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 				row[17] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[17]).toLocalDateTime() : null,
 				(String) row[19],
 				row[18] instanceof java.sql.Timestamp ? ((java.sql.Timestamp) row[18]).toLocalDateTime() : null,
-				locationBo
+				locationBo,
+				(String) row[26]
 		);
 	}
 

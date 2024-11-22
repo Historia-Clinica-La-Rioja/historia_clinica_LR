@@ -20,6 +20,7 @@ public interface StudyOrderPatientMapper {
 	@Mapping(target = "identificationTypeId", source = "identificationTypeId")
 	@Mapping(target = "gender", source = ".")
 	@Mapping(target = "birthDate", source = "birthDate")
+	@Mapping(target = "patientTypeId", source = "patientTypeId")
 	StudyOrderBasicPatientDto toPatientDto(StudyOrderBasicPatientBo patientBo);
 
 	@Mapping(target = "gender", source = "patientBo")

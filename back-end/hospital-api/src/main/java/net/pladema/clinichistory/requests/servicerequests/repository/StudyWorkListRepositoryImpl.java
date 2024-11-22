@@ -77,7 +77,9 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"    CASE " +
 					"        WHEN sr.source_type_id = 4 AND ec_bed.bed_number is null THEN ec_shockroom.description " +
 					"        ELSE null " +
-					"    END AS shockroom " +
+					"    END AS shockroom, " +
+					"    p.type_id AS patientType, " +
+					"    ec.reason AS emergencyCareReason " +
 					"FROM service_request sr " +
 					"JOIN document d ON sr.id = d.source_id " +
 					"JOIN document_diagnostic_report ddr ON d.id = ddr.document_id " +
@@ -104,7 +106,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					") ie ON ie.patient_id = sr.patient_id " +
 					"LEFT JOIN ( " +
 					"    SELECT DISTINCT ON (ec.patient_id) " +
-					"        ec.patient_id, ec.bed_id, ec.created_on, ec.doctors_office_id, ec.shockroom_id " +
+					"        ec.patient_id, ec.bed_id, ec.created_on, ec.doctors_office_id, ec.shockroom_id, ec.reason " +
 					"    FROM emergency_care_episode ec " +
 					"    WHERE ec.institution_id = :institutionId AND ec.deleted = FALSE " +
 					"	 AND ec.emergency_care_state_id IN (:emergencyCareState) " +

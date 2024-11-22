@@ -38,4 +38,6 @@ public class StudyOrderWorkListBo {
 
 	private StudyOrderPatientLocationBo patientLocation;
 
+	private String emergencyCareReason;
+
 }

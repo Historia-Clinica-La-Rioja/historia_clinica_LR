@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 
 @Slf4j
-@Value
 @Builder
-@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -41,5 +39,7 @@ public class StudyOrderBasicPatientBo {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
+
+	private Short patientTypeId;
 
 }
