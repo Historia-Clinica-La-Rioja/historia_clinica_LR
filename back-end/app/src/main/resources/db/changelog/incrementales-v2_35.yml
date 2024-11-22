@@ -45,3 +45,30 @@ databaseChangeLog:
                 CREATE INDEX IF NOT EXISTS "IDX_odontology_consultation_updated_on" ON odontology_consultation (CAST(updated_on AS DATE));
                 CREATE INDEX IF NOT EXISTS "IDX_vaccine_consultation_updated_on" ON vaccine_consultation (CAST(updated_on AS DATE));
                 CREATE INDEX IF NOT EXISTS "IDX_emergency_care_evolution_note_updated_on" ON emergency_care_evolution_note (CAST(updated_on AS DATE));
+
+    -   changeSet:
+          id: create-table-diary_booking_restriction
+          comment: Create table to save the booking restriction info asociated to a diary
+          author: fzudaire
+          changes:
+              -   createTable:
+                      tableName: diary_booking_restriction
+                      columns:
+                          -   column:
+                                  name: diary_id
+                                  type: int
+                                  constraints:
+                                      primaryKey: true
+                                      primaryKeyName: PK_diary_booking_restriction
+                                      references: diary(id)
+                                      foreignKeyName: FK__diary_booking_restriction__diary
+                          -   column:
+                                  name: restriction_type
+                                  type: smallint
+                                  constraints:
+                                      nullable: false
+                          -   column:
+                                  name: days
+                                  type: int
+                                  constraints:
+                                      nullable: true

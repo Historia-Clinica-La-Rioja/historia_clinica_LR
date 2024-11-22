@@ -267,7 +267,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_SOBRETURNOS_API_PUBLICA,
 	
 	@Label("Indica si se encuentra habilitada la actualizacion del esquema de medicacion comercial")
-	HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS
+	HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS,
+
+	@Label("Indica si se encuentra habilitada la restricción de asignación de turnos en agendas")
+	HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS
 	;
 
 	public boolean isActive() {

@@ -1306,6 +1306,7 @@ export interface DiaryADto {
     alias?: string;
     appointmentDuration: number;
     automaticRenewal?: boolean;
+    bookingRestriction?: DiaryBookingRestrictionDto;
     careLines?: number[];
     clinicalSpecialtyId?: number;
     diaryAssociatedProfessionalsId: number[];
@@ -1342,6 +1343,11 @@ export interface DiaryAvailableAppointmentsDto {
     overturnMode: boolean;
     practice: SnomedDto;
     professionalFullName: string;
+}
+
+export interface DiaryBookingRestrictionDto {
+    days: number;
+    restrictionType: EDiaryBookingRestrictionType;
 }
 
 export interface DiaryDto extends DiaryADto {
@@ -6108,6 +6114,7 @@ export const enum AppFeature {
     HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO = "HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO",
     HABILITAR_SOBRETURNOS_API_PUBLICA = "HABILITAR_SOBRETURNOS_API_PUBLICA",
     HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS = "HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS",
+    HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS = "HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS",
 }
 
 export const enum CreationStatus {
@@ -6196,6 +6203,12 @@ export const enum ECriminalRecordStatus {
     WITH_OTHER_PEOPLE = "WITH_OTHER_PEOPLE",
     NO = "NO",
     NO_INFORMATION = "NO_INFORMATION",
+}
+
+export const enum EDiaryBookingRestrictionType {
+    UNRESTRICTED = "UNRESTRICTED",
+    RESTRICTED_BY_DAYS_AMOUNT = "RESTRICTED_BY_DAYS_AMOUNT",
+    RESTRICTED_BY_CURRENT_MONTH = "RESTRICTED_BY_CURRENT_MONTH",
 }
 
 export const enum EDisabilityCertificateStatus {
