@@ -1,23 +1,15 @@
 package ar.lamansys.sgh.publicapi.activities.application.fetchactivitiesbyfilter;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-
-import ar.lamansys.sgh.publicapi.activities.application.fetchactivitiesbyfilter.exception.ActivityByFilterAccessDeniedException;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import lombok.AllArgsConstructor;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import ar.lamansys.sgh.publicapi.activities.application.fetchactivitiesbyfilter.exception.ActivityByFilterAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.activities.application.port.out.AttentionReadStorage;
 import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.output.AttentionReads;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.output.AttentionReadsPK;
-import ar.lamansys.sgx.shared.security.UserInfo;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @Slf4j
@@ -25,8 +17,6 @@ import ar.lamansys.sgx.shared.security.UserInfo;
 public class FetchActivitiesByFilter {
 
 	private final ActivityStorage activityStorage;
-
-	private final AttentionReadStorage attentionReadStorage;
 
 	private final ActivitiesPublicApiPermissions activitiesPublicApiPermissions;
 
@@ -42,6 +32,7 @@ public class FetchActivitiesByFilter {
 	}
 
 	private List<AttentionInfoBo> getFromStorage(ActivitySearchFilter filter) {
+		
 		List<AttentionInfoBo> activities;
 		if (filter.getIdentificationNumber() != null && !filter.getIdentificationNumber().isBlank()) {
 			activities = activityStorage.getActivitiesByInstitutionAndPatient(filter.getRefsetCode(), filter.getIdentificationNumber(), filter.getFrom(), filter.getTo(), filter.getReprocessing());
@@ -49,14 +40,6 @@ public class FetchActivitiesByFilter {
 			activities = activityStorage.getActivitiesByInstitutionAndCoverage(filter.getRefsetCode(), filter.getCoverageCuit(), filter.getFrom(), filter.getTo(), filter.getReprocessing());
 		} else activities = activityStorage.getActivitiesByInstitution(
 				filter.getRefsetCode(), filter.getFrom(), filter.getTo(), filter.getReprocessing());
-
-		activities.forEach(act -> attentionReadStorage.saveAttention(
-				new AttentionReads(
-						new AttentionReadsPK(act.getId(), UserInfo.getCurrentAuditor().toString()),
-						Boolean.FALSE,
-						act.getAttentionDate() != null ? LocalDateTime.of(act.getAttentionDate(), LocalTime.now()) : LocalDateTime.now()
-				)
-		));
 
 		return activities;
 	}

@@ -56,7 +56,7 @@ public class FetchActivityByFilterTest {
 
 	@BeforeEach
 	void setup() {
-		fetchActivitiesByFilter = new FetchActivitiesByFilter(activityStorage, attentionReadStorage,activitiesPublicApiPermissions);
+		fetchActivitiesByFilter = new FetchActivitiesByFilter(activityStorage, activitiesPublicApiPermissions);
 	}
 
 	@Test
