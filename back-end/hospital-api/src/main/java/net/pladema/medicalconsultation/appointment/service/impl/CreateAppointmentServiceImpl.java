@@ -12,6 +12,7 @@ import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmen
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 
+import net.pladema.medicalconsultation.diary.application.ValidateBookingRestriction;
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
 
 import net.pladema.medicalconsultation.diary.service.DiaryService;
@@ -55,6 +56,8 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 	private final DiaryService diaryService;
 
 	private final AppointmentReferenceStorage appointmentReferenceStorage;
+
+	private final ValidateBookingRestriction validateBookingRestriction;
 
 	@Override
 	@Transactional
@@ -103,6 +106,9 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 	}
 
 	private void validateAppointment(AppointmentBo appointment) {
+		if (appointment.isBookingRestictionEnabled()){
+			validateBookingRestriction.run(appointment.getDiaryId(),appointment.getDate());
+		}
 		Boolean isPatientVirtualConsultationAllowed = diaryOpeningHoursRepository.isPatientVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
 		Boolean isSecondOpinionVirtualConsultationAllowed = diaryOpeningHoursRepository.isSecondOpinionVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
 		if (isPatientVirtualConsultationAllowed != null && isPatientVirtualConsultationAllowed && appointment.getModalityId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId())) {

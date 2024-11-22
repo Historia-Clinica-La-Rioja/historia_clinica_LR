@@ -109,6 +109,9 @@ public class AppointmentBo {
 
 	private Short patientIdentityAccreditationStatusId;
 
+	//Temporary flag, it is set to true only when the AppointmentsController#create method is called to avoid unexpected behaviors
+	private boolean bookingRestictionEnabled = false;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
 						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;

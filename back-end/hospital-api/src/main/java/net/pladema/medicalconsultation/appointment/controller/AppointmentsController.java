@@ -236,6 +236,7 @@ public class AppointmentsController {
 		log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
 		newAppointmentBo.setRecurringTypeBo(new RecurringTypeBo(RecurringAppointmentType.NO_REPEAT.getId(), RecurringAppointmentType.NO_REPEAT.getValue()));
+		newAppointmentBo.setBookingRestictionEnabled(true);
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer result = newAppointmentBo.getId();
 		log.debug(OUTPUT, result);
