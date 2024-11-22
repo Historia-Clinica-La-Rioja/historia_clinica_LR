@@ -80,3 +80,26 @@ databaseChangeLog:
                     name: deleted_on
                     type: datetime
 
+    - changeSet:
+        id: reference-updateAdministrativeState
+        comment: Set values of administrative state in reference
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE reference SET administrative_state_id = 1 WHERE regulation_state_id IN (1, 4) and destination_institution_id IS NOT NULL;
+
+    - changeSet:
+        id: load-historic_reference_administrative_state
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO historic_reference_administrative_state (reference_id, state_id)
+                SELECT id, 1
+                FROM reference
+                WHERE administrative_state_id IS NOT NULL
+                AND destination_institution_id IS NOT NULL;
+
