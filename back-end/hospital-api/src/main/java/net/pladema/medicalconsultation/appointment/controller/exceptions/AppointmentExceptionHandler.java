@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.NotifyPatientException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
+import net.pladema.medicalconsultation.diary.application.exceptions.DiaryBookingRestrictionException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
@@ -65,6 +66,13 @@ public class AppointmentExceptionHandler {
 	protected ApiErrorMessageDto handleRecurringAppointmentOverturnException(RecurringAppointmentException ex, Locale locale) {
 		log.debug("RecurringAppointmentOverturnException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(null, ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ DiaryBookingRestrictionException.class })
+	protected ApiErrorMessageDto handleDiaryBookingRestrictionException(DiaryBookingRestrictionException ex) {
+		log.debug("DiaryBookingRestrictionException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 }
 

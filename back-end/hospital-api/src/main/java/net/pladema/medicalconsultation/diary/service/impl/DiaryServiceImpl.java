@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
+import net.pladema.medicalconsultation.diary.application.GetDiaryBookingRestriction;
 import net.pladema.medicalconsultation.diary.application.PersistBookingRestriction;
 import net.pladema.medicalconsultation.diary.service.domain.ActiveDiaryAliasBo;
 
@@ -102,6 +103,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final FeatureFlagsService featureFlagsService;
 
     private final PersistBookingRestriction persistBookingRestriction;
+    private final GetDiaryBookingRestriction getDiaryBookingRestriction;
 
     @Override
 	@Transactional
@@ -292,6 +294,7 @@ public class DiaryServiceImpl implements DiaryService {
             completeDiaryBo.setAssociatedProfessionalsInfo(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionalsInfo(diaryId));
             completeDiaryBo.setCareLinesInfo(diaryCareLineService.getAllCareLinesByDiaryId(diaryId, completeDiaryBo.getHealthcareProfessionalId()));
             completeDiaryBo.setPracticesInfo(diaryPracticeService.getAllByDiaryId(diaryId));
+            completeDiaryBo.setBookingRestriction(getDiaryBookingRestriction.run(diaryId).orElse(null));
         });
         log.debug(OUTPUT, result);
         return result;

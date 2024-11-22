@@ -41,11 +41,5 @@ public class DiaryExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ DiaryBookingRestrictionException.class })
-	protected ApiErrorMessageDto handleDiaryBookingRestrictionException(DiaryBookingRestrictionException ex) {
-		log.debug("DiaryBookingRestrictionException exception -> {}", ex.getMessage());
-		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
-	}
 }
 
