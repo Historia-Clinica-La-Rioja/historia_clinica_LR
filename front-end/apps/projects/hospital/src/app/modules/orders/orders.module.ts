@@ -12,6 +12,7 @@ import { StudyOrderWorkListDtoToOrderDetailsPipe } from './pipe/study-order-work
 //Standalone Component
 import { IdentifierCasesComponent } from '@hsi-components/identifier-cases/identifier-cases.component';
 import { PatientLocationComponent } from '@hsi-components/patient-location/patient-location.component';
+import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/temporary-patient.component';
 
 @NgModule({
 	declarations: [
@@ -29,6 +30,7 @@ import { PatientLocationComponent } from '@hsi-components/patient-location/patie
 		//Standalone Component
 		IdentifierCasesComponent,
 		PatientLocationComponent,
+		TemporaryPatientComponent,
 	]
 })
 export class OrdersModule { }

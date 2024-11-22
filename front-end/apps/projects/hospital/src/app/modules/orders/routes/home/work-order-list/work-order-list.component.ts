@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { AppFeature, PageDto, StudyOrderWorkListDto } from '@api-rest/api-model';
 import { ServiceRequestWorkListControllerService } from '@api-rest/services/service-request-work-list-controller.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { PatientType } from '@historia-clinica/constants/summaries';
 import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 
 
@@ -13,6 +14,8 @@ const PAGE_MIN_SIZE = 5;
 const LABORATORIO = "108252007";
 const DIAGNOSTICO_POR_IMAGEN = "363679005";
 
+const EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
+
 @Component({
 	selector: 'app-work-order-list',
 	templateUrl: './work-order-list.component.html',
@@ -20,6 +23,7 @@ const DIAGNOSTICO_POR_IMAGEN = "363679005";
 })
 
 export class WorkOrderListComponent {
+	EMERGENCY_CARE_TEMPORARY = EMERGENCY_CARE_TEMPORARY;
 	pageSizeOptions = PAGE_SIZE_OPTIONS;
 	pageSize: Observable<number>;
 	allOrders = [];

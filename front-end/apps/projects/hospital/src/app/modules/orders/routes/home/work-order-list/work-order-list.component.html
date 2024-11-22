@@ -5,8 +5,16 @@
 			<div *ngFor="let order of orders.content; last as isLast">
 				<app-row-content>
 
-					<app-patient-summary class="patient-summary" [person]="order.patientDto | patientSummary">
-					</app-patient-summary>
+
+					<ng-container
+						*ngIf="order.patientDto?.patientTypeId === EMERGENCY_CARE_TEMPORARY else patientSummary">
+						<app-temporary-patient class="temporary-patient" [patientDescription]="order.patientDto?.emergencyCareReason"></app-temporary-patient>
+					</ng-container>
+
+					<ng-template #patientSummary>
+						<app-patient-summary class="patient-summary" [person]="order.patientDto | patientSummary">
+						</app-patient-summary>
+					</ng-template>
 
 					<app-order-detail class="order-detail" [orderDetails]="order | studyOrderWorkListDtoToOrderDetails">
 					</app-order-detail>
