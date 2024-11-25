@@ -16,6 +16,7 @@ import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceR
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
@@ -223,6 +224,10 @@ public class AppointmentBo {
 
 	public boolean isExpiredRegister() {
 		return LocalDateTime.of(this.date, this.hour).isBefore(this.createdOn.minusHours(3));
+	}
+
+	public boolean isBlocked() {
+		return this.getAppointmentStateId() == AppointmentState.BLOCKED;
 	}
 
 }
