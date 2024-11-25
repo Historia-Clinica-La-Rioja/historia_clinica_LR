@@ -85,7 +85,8 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 		const isolationAlertForm = this.form.getRawValue();
 		return { 
 			...isolationAlertForm,
-			id: null, 
+			id: null,
+			statusId: null,
 			observations: isolationAlertForm.observations.observations, 
 			criticality: isolationAlertForm.criticality.criticality }
 	}
@@ -102,6 +103,7 @@ interface IsolationAlertForm {
 
 export interface IsolationAlert {
 	id: number,
+	statusId?: number,
 	diagnosis: DiagnosisDto,
 	types: MasterDataDto[],
 	criticality: MasterDataDto,

@@ -122,6 +122,7 @@ const toIsolationAlert = (isolationAlert: IsolationAlertDto): IsolationAlert => 
 	const { healthConditionId, healthConditionPt, healthConditionSctid } = isolationAlert;
 	return {
 		id: isolationAlert.id,
+		statusId: isolationAlert.statusId,
 		diagnosis: toClinicalTermDto(healthConditionId, healthConditionPt, healthConditionSctid),
 		types: isolationAlert.types,
 		criticality: isolationAlert.criticality,
@@ -219,7 +220,7 @@ const toIsolationAlertDto = (isolationAlert: IsolationAlert): IsolationAlertDto 
 		types: isolationAlert.types,
 		...(isolationAlert.observations && { observations: isolationAlert.observations }),
 		id: isolationAlert.id || null,
-		statusId: null
+		statusId: isolationAlert.statusId || null,
 	}
 }
 
