@@ -1,7 +1,11 @@
 package ar.lamansys.sgx.shared.dates.utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
@@ -41,4 +45,14 @@ public class DateUtils {
 		return calendar;
 	}
 
+	public static ZoneId getAppTimezone() {
+		return ZoneId.of(JacksonDateFormatConfig.ZONE_ID);
+	}
+
+	public static LocalDateTime fromUTCToZone(LocalDateTime from, ZoneId toZone){
+		ZonedDateTime zonedDateTime = from.atZone(ZoneOffset.UTC);
+		return zonedDateTime
+				.withZoneSameInstant(toZone)
+				.toLocalDateTime();
+	}
 }

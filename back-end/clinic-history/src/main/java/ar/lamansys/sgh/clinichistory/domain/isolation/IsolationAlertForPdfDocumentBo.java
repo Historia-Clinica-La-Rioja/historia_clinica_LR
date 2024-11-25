@@ -4,6 +4,7 @@ package ar.lamansys.sgh.clinichistory.domain.isolation;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationCriticality;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIsolationType;
+import ar.lamansys.sgx.shared.dates.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,5 +42,9 @@ public class IsolationAlertForPdfDocumentBo {
 		this.updatedById = alert.getUpdatedById();
 		this.updatedOn = alert.getUpdatedOn();
 		this.isModified = alert.getIsModified();
+	}
+
+	public LocalDateTime getUpdatedOnAtExpectedTimezone() {
+		return DateUtils.fromUTCToZone(this.getUpdatedOn(), DateUtils.getAppTimezone());
 	}
 }

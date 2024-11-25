@@ -1292,7 +1292,9 @@
                     <dl>
                         <dd th:if="${alert.isModified}" style="max-width: 70%; word-wrap: break-word;">
                             <span>Se han realizado modificaciones sobre la alerta de aislamiento posteriores a la última versión del documento</span>
-                            <label th:text="${alert.updatedBy + ' ' + #temporals.format(alert.updatedOn, 'dd/MM/yyyy - HH:mm') + 'hs'}"></label>
+                        </dd>
+                        <dd th:if="${alert.isModified}" style="max-width: 70%; word-wrap: break-word;">
+                            <strong>Editado: </strong> <label th:text="${alert.updatedBy + ' ' + #temporals.format(alert.getUpdatedOnAtExpectedTimezone(), 'dd/MM/yyyy - HH:mm') + 'hs'}"></label>
                         </dd>
                         <dd><strong>Diagnóstico asociado: </strong> <label th:text="${alert.healthConditionPt}"></label></dd>
                         <dd><strong>Tipo de aislamiento: </strong> <label th:text="${#strings.listJoin(alert.types.![description], ', ')}"></label></dd>
