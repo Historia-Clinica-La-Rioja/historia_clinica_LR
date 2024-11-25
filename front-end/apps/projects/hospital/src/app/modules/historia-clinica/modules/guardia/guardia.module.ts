@@ -86,7 +86,6 @@ import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialo
 // services
 import { AttentionPlaceUpdateService } from './services/attention-place-update.service';
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from './services/emergency-care-attention-place-availability-button-selection.service';
-import { EpisodeFilterService } from './services/episode-filter.service';
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 import { SpecialtySectorFormValidityService } from './services/specialty-sector-form-validity.service';
@@ -181,7 +180,7 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		//pipes
 		ShowTriageCategoryDescriptionPipe,
 		ShowTypeDescriptionPipe,
-		ShowStateDescriptionPipe, 
+		ShowStateDescriptionPipe,
 	],
 	imports: [
 		CommonModule,
@@ -210,7 +209,6 @@ import { ShowStateDescriptionPipe } from './pipes/show-state-description.pipe';
 		// services
 		AttentionPlaceUpdateService,
 		EmergencyCareAttentionPlaceAvailabilityButtonSelectionService,
-		EpisodeFilterService,
 		EpisodeStateService,
 		NewEpisodeService,
 		SpecialtySectorFormValidityService,

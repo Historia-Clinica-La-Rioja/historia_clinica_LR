@@ -26,6 +26,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.buildForm();
+		this.loadSavedValues();
 		this.subscribeToFormChanges();
 	}
 
@@ -33,8 +34,6 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 		this.formControlsSubscription.forEach(subscription =>
 			subscription.unsubscribe()
 		);
-
-		this.filterService.resetFilters();
 	}
 
 	filter() {
@@ -52,6 +51,7 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	resetFilters() {
+		this.filterService.resetFilters();
 		this.isCleanFilters = true;
 		this.form.reset();
 		this.filter();
@@ -70,6 +70,26 @@ export class EmergencyCareEpisodeFiltersComponent implements OnInit, OnDestroy {
 			emergencyCareTemporary: new FormControl(null),
 			administrativeDischarge: new FormControl(null),
 		});
+	}
+
+	private loadSavedValues() {
+		const filterToFormFieldMap = {
+			identificationNumber: "identificationNumber",
+			patientFirstName: "firstName",
+			patientLastName: "lastName",
+			patientId: "patientId",
+			mustBeEmergencyCareTemporal: "emergencyCareTemporary"
+		};
+
+		const formValuesToPatch = Object.entries(filterToFormFieldMap)
+			.reduce((formValues, [filterKey, formField]) => {
+				const savedValue = this.filterService.getFilterValue(filterKey);
+				if (savedValue)
+					formValues[formField] = savedValue;
+				return formValues;
+			}, {});
+
+		this.form.patchValue(formValuesToPatch);
 	}
 
 	private subscribeToFormChanges() {

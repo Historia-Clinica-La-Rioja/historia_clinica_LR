@@ -4,7 +4,7 @@ import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
 import { FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
 import { EmergencyCareClinicalSpecialtySectorDto } from '@api-rest/api-model';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 
 @Component({
 	selector: 'app-service-chips-autocomplete',
@@ -27,6 +27,7 @@ export class ServiceChipsAutocompleteComponent extends AbstractCustomForm implem
 
 	form: FormGroup;
 	services$: Observable<ChipsOption<EmergencyCareClinicalSpecialtySectorDto>[]>;
+	servicesSelected: ChipsOption<EmergencyCareClinicalSpecialtySectorDto>[] = [];
 
 	constructor(
 		private readonly episodeFilterService: EpisodeFilterService,
@@ -34,15 +35,38 @@ export class ServiceChipsAutocompleteComponent extends AbstractCustomForm implem
 		super();
 	}
 
-	ngOnInit(): void {
+	ngOnInit() {
 		this.createForm();
-		this.services$ = this.episodeFilterService.getServices().pipe(map(services => services.map(service => this.toChipsOptions(service))));
+		this.loadServices();
+		this.loadSavedValues();
 	}
 
 	createForm() {
 		this.form = new FormGroup({
 			clinicalSpecialtySectorIds: new FormControl(null)
 		});
+	}
+
+	loadServices() {
+		this.services$ = this.episodeFilterService.getServices().pipe(
+			map(services => services.map(service => this.toChipsOptions(service)))
+		);
+	}
+
+	loadSavedValues() {
+		const preloadedServices = this.episodeFilterService.getFilterValue('clinicalSpecialtySectorIds') || [];
+
+		if (preloadedServices.length) {
+			this.services$.pipe(
+				take(1),
+				map(services =>
+					services.filter(service => preloadedServices.includes(service.identifier))
+				)
+			).subscribe(selectedServices => {
+				this.servicesSelected = selectedServices;
+				this.setSelectedServices(selectedServices);
+			});
+		}
 	}
 
 	setSelectedServices(services: ChipsOption<EmergencyCareClinicalSpecialtySectorDto>[]) {
@@ -56,7 +80,8 @@ export class ServiceChipsAutocompleteComponent extends AbstractCustomForm implem
 	}
 
 	resetForm() {
-		this.form.controls.clinicalSpecialtySectorIds.setValue(null);		
+		this.form.controls.clinicalSpecialtySectorIds.setValue(null);
+		this.servicesSelected = [];
 	}
 
 

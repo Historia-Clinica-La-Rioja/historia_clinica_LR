@@ -11,7 +11,9 @@ const TRIAGE_CATEGORIES_FORM = 'triageCategories';
 const EMERGENCY_CARE_TYPES_FORM = 'emergencyCareTypes';
 const STATES_FORM = 'states';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class EpisodeFilterService {
 
 	filters: EmergencyCareEpisodeFilterDto;
@@ -29,6 +31,10 @@ export class EpisodeFilterService {
 		return this.triageMasterDataService.getCategories();
 	}
 
+	getFilterValue(filterKey: string): any {
+		return this.filters?.[filterKey] || null;
+	}
+
 	getEmergencyCareTypes(): Observable<MasterDataInterface<number>[]> {
 		return this.emergencyCareMasterDataService.getType();
 	}
@@ -43,16 +49,18 @@ export class EpisodeFilterService {
 
 	setFilters(filters: EpisodeFilters) {
 		this.filters = {
-			clinicalSpecialtySectorIds: this.getClinicalSpecialtySectorIds(filters.clinicalSpecialtySectorIds),
+			...this.filters,
+			clinicalSpecialtySectorIds: filters.clinicalSpecialtySectorIds ? this.getClinicalSpecialtySectorIds(filters.clinicalSpecialtySectorIds) : this.filters.clinicalSpecialtySectorIds,
 			identificationNumber: filters.identificationNumber,
 			mustBeEmergencyCareTemporal: filters.emergencyCareTemporary,
 			patientFirstName: filters.firstName,
 			patientId: filters.patientId,
 			patientLastName: filters.lastName,
-			stateIds: this.getCheckboxFilterValue(filters.states, STATES_FORM),
-			triageCategoryIds: this.getCheckboxFilterValue(filters.triageCategories, TRIAGE_CATEGORIES_FORM),
-			typeIds: this.getCheckboxFilterValue(filters.emergencyCareTypes, EMERGENCY_CARE_TYPES_FORM),
-		}
+			stateIds: filters.states ? this.getCheckboxFilterValue(filters.states, STATES_FORM) : this.filters.stateIds,
+			triageCategoryIds: filters.triageCategories ? this.getCheckboxFilterValue(filters.triageCategories, TRIAGE_CATEGORIES_FORM) : this.filters.triageCategoryIds,
+			typeIds: filters.emergencyCareTypes ? this.getCheckboxFilterValue(filters.emergencyCareTypes, EMERGENCY_CARE_TYPES_FORM) : this.filters.typeIds,
+		};
+
 		this.calculateSelectedFilters();
 	}
 
@@ -81,7 +89,6 @@ export class EpisodeFilterService {
 	private getClinicalSpecialtySectorIds(formValue: FormChips): number[] {
 		return formValue?.clinicalSpecialtySectorIds ? formValue.clinicalSpecialtySectorIds : [];
 	}
-
 
 	private initializeFilters() {
 		this.filters = {

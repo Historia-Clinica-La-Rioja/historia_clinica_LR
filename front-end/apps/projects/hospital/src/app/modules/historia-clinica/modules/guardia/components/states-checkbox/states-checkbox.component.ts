@@ -35,12 +35,32 @@ export class StatesCheckboxComponent extends AbstractCustomForm implements OnIni
 		super();
 	}
 
+
 	ngOnInit(): void {
 		this.createForm();
+		this.loadStates();
+	}
+
+	private loadStates(){
 		this.filterService.getStates().subscribe(states => {
 			this.states = states;
 			this.addFormControls(states);
+			const savedValues = this.filterService.getFilterValue("stateIds");
+			if (savedValues) {
+				this.setSavedValues(savedValues);
+			}
 		})
+	}
+
+	private setSavedValues(savedValues: number[]) {
+		const statesForm = this.form.controls.states as FormGroup;
+
+		savedValues.forEach(value => {
+			const controlKey = value.toString();
+			if (statesForm.controls[controlKey]) {
+				statesForm.controls[controlKey].setValue(true, { emitEvent: false });
+			}
+		});
 	}
 
 	createForm() {

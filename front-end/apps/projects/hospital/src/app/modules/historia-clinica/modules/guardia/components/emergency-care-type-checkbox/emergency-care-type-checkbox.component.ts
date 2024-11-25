@@ -37,9 +37,29 @@ export class EmergencyCareTypeCheckboxComponent extends AbstractCustomForm imple
 
 	ngOnInit() {
 		this.createForm();
+		this.loadEmergencyCareTypes();
+	}
+
+	private loadEmergencyCareTypes() {
 		this.episodeFilterService.getEmergencyCareTypes().subscribe(types => {
 			this.types = types;
 			this.addFormControls(types)
+			this.addFormControls(types);
+			const savedValues = this.episodeFilterService.getFilterValue("typeIds");
+			if (savedValues) {
+				this.setSavedValues(savedValues);
+			}
+		});
+	}
+
+	private setSavedValues(savedValues: number[]) {
+		const emergencyCareTypesForm = this.form.controls.emergencyCareTypes as FormGroup;
+
+		savedValues.forEach(value => {
+			const controlKey = value.toString();
+			if (emergencyCareTypesForm.controls[controlKey]) {
+				emergencyCareTypesForm.controls[controlKey].setValue(true, { emitEvent: false });
+			}
 		});
 	}
 

@@ -38,9 +38,28 @@ export class TriageCategoryCheckboxComponent extends AbstractCustomForm implemen
 
 	ngOnInit() {
 		this.createForm();
+		this.loadTriageCategories();
+	}
+
+	private loadTriageCategories(){
 		this.episodeFilterService.getCategories().subscribe(triageCategories => {
 			this.triageCategories = triageCategories;
 			this.addFormControls(triageCategories);
+			const savedValues = this.episodeFilterService.getFilterValue("triageCategoryIds");
+			if (savedValues) {
+				this.setSavedValues(savedValues);
+			}
+		});
+	}
+
+	private setSavedValues(savedValues: number[]) {
+		const triageCategoriesForm = this.form.controls.triageCategories as FormGroup;
+
+		savedValues.forEach(value => {
+			const controlKey = value.toString();
+			if (triageCategoriesForm.controls[controlKey]) {
+				triageCategoriesForm.controls[controlKey].setValue(true, { emitEvent: false });
+			}
 		});
 	}
 
