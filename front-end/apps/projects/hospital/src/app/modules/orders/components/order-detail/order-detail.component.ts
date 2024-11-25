@@ -9,7 +9,8 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 	styleUrls: ['./order-detail.component.scss']
 })
 export class OrderDetailComponent {
-	colorRED = Color.RED;
+	colorRed = Color.RED;
+	colorGrey = Color.GREY;
 	identiferCases = IDENTIFIER_CASES;
 	@Input() orderDetails: OrderDetails;
 }

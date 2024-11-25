@@ -2,9 +2,8 @@
 	<app-show-more-concepts [concepts]="orderDetails.snomed">
 	</app-show-more-concepts>
 
-	<app-identifier-cases *ngIf="orderDetails?.EStudyType" [identifierCase]="identiferCases.ERROR" [color]="colorRED"
-		[description]="orderDetails.EStudyType">
-	</app-identifier-cases>
+	<app-colored-icon-text fxLayoutAlign="start center"  *ngIf="orderDetails?.EStudyType" [coloredIconText]="{icon: 'error', color: colorRed, text: 'orders.orders-detail.URGENT' | translate }">
+	</app-colored-icon-text>
 
 	<app-identifier-cases *ngIf="orderDetails.requiresTransfer" [identifierCase]="identiferCases.PIN_DROP"
 		[description]="'orders.orders-detail.REQUIRES_TRANSFER' | translate">
