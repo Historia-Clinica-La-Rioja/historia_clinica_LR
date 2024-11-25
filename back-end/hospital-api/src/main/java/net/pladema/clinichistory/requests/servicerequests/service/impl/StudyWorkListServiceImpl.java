@@ -11,6 +11,7 @@ import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderPatientLocationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
@@ -22,8 +23,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,7 +73,18 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 			var snomedList = groupedValues.stream().map(StudyWorkListServiceImpl::mapSnomed).collect(Collectors.toList());
 			studyOrderWorkListBo.setSnomed(snomedList);
 			return studyOrderWorkListBo;
-		}).collect(Collectors.toList());
+		}) .sorted(Comparator.comparing((StudyOrderWorkListBo o) -> o.getStatus())
+						.thenComparing(o -> {
+							LocalDateTime effectiveDate =
+									(o.getDeferredDate() != null) ? o.getDeferredDate() : o.getCreatedDate();
+							return effectiveDate.isBefore(LocalDateTime.now()) ? 0 : 1;
+						})
+						.thenComparing(o ->
+								Objects.equals(o.getStudyTypeId(), EStudyType.URGENT.getId()) ? 0 : 1
+						)
+						.thenComparing(o -> (o.getDeferredDate() != null) ? o.getDeferredDate() : o.getCreatedDate()) //fecha efectiva
+						.thenComparing(StudyOrderWorkListBo::getCreatedDate))
+				.collect(Collectors.toList());
 
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), result.size());
