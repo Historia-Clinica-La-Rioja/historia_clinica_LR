@@ -3,7 +3,7 @@ import { FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } 
 import { DiaryBookingRestrictionDto, EDiaryBookingRestrictionType } from '@api-rest/api-model';
 import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
 import { getError, hasError } from '@core/utils/form.utils';
-import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { PATTERN_ONLY_NUMBER } from '@core/utils/pattern.utils';
 
 @Component({
 	selector: 'app-diary-configuration',
@@ -33,7 +33,7 @@ export class DiaryConfigurationComponent extends AbstractCustomForm  implements 
 
 		this.form = new FormGroup<ConfigurationTypeCustomForm>({
 			configurationType: new FormControl(CONFIGARATION_TYPES.at(0).id),
-			daysRange: new FormControl(null,[Validators.min(RANGOS.MIN.range), Validators.max(RANGOS.MAX.range), Validators.pattern(PATTERN_INTEGER_NUMBER)])
+			daysRange: new FormControl(null,[Validators.min(RANGOS.MIN.range), Validators.max(RANGOS.MAX.range), Validators.pattern(PATTERN_ONLY_NUMBER)])
 		});
 	}
 

@@ -15,7 +15,7 @@
             <div  class="column-layout">
                 <span [translate]="'turnos.agenda-setup.DAY_RANGE'"></span>
                 <mat-form-field appearance="outline">
-                    <input matInput type="number" id="daysRange" name="daysRange" formControlName="daysRange">
+                    <input matInput type="text" id="daysRange" name="daysRange" formControlName="daysRange">
                     <mat-error
                     *ngIf="hasError(this.form, 'min', 'daysRange')"
                     [translate]="'forms.MIN_ERROR'"
