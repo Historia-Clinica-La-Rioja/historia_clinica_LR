@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Color } from '@presentation/colored-label/colored-label.component';
 import { IconLegend, Identifier, Position } from '@presentation/components/identifier/identifier.component';
 import { PresentationModule } from '@presentation/presentation.module';
 
@@ -33,7 +32,6 @@ export class IdentifierCasesComponent {
 			iconLegend
 		}
 	};
-	@Input() color: Color;
 
 	constructor() { }
 }
@@ -62,8 +60,7 @@ export enum IDENTIFIER_CASES {
 	EMERGENCY_CARE_TYPE = 'Tipo de guardia',
 	SHOCKROOM = 'Shockroom',
 	ROOM_V2 = 'Habitación',
-	ERROR = 'Tipo de estudio',
-	PIN_DROP = 'Requiere translado',
+	PIN_DROP = 'Requiere traslado',
 	LOCAL_HOSPITAL = 'Sector ordenes',
 }
 
@@ -182,14 +179,9 @@ const room_v2: IconLegend = {
 	legend: 'Habitación',
 }
 
-const error: IconLegend = {
-	icon: 'error',
-	legend: 'Tipo de estudio',
-}
-
 const pin_drop: IconLegend = {
 	icon: 'pin_drop',
-	legend: 'Requiere translado',
+	legend: 'Requiere traslado',
 }
 
 const local_hospital: IconLegend = {
@@ -221,7 +213,6 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.EMERGENCY_CARE_TYPE]: emergencyCareType,
 	[IDENTIFIER_CASES.SHOCKROOM]: shockroom,
 	[IDENTIFIER_CASES.ROOM_V2]: room_v2,
-	[IDENTIFIER_CASES.ERROR]: error,
 	[IDENTIFIER_CASES.PIN_DROP]: pin_drop,
 	[IDENTIFIER_CASES.LOCAL_HOSPITAL]: local_hospital,
 }
