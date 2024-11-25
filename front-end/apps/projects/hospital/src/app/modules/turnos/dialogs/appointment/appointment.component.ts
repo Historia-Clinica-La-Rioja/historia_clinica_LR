@@ -660,7 +660,7 @@ export class AppointmentComponent implements OnInit {
 		let timeSelected = this.formDate.controls.hour.value;
 		let openingHoursId = null;
 		this.diaryOpeningHoursFreeTimes.forEach(times => {
-			if (times.freeTimes.find(t => t = timeSelected)) {
+			if (times.freeTimes.find(t => t.hours == timeSelected.hours && t.minutes == timeSelected.minutes)) {
 				openingHoursId = times.openingHoursId
 			}
 		})
