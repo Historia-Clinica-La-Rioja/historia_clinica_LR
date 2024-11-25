@@ -1,7 +1,8 @@
 {
     "orders": {
         "orders-detail": {
-			"REQUIRES_TRANSFER": "Requiere translado"
+			"REQUIRES_TRANSFER": "Requiere traslado",
+			"URGENT": "Urgente"
 		}
 	}
 }
