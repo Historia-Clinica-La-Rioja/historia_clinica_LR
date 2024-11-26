@@ -25,6 +25,7 @@ import {
 	DiaryDto,
 	DiaryLabelDto,
 	DoctorsOfficeDto,
+	EDiaryBookingRestrictionType,
 	HierarchicalUnitDto,
 	OccupationDto,
 	ProfessionalDto, SectorDto,
@@ -553,9 +554,14 @@ export class AgendaSetupComponent implements OnInit {
 			institutionId : this.contextService.institutionId,
 			diaryLabelDto: diaryLabels,
 		};
-		const configurationDiary: DiaryBookingRestrictionDto = this.isHabilitarConfiguracionAgendasOn ? {days: this.form.controls.configurationDiary.value.daysRange, restrictionType: this.form.controls.configurationDiary.value.configurationType} 
-		: null
+		const configurationDiary: DiaryBookingRestrictionDto = this.isHabilitarConfiguracionAgendasOn ? this.handleConfigurationDiaryValues() : null
 		return {bookingRestriction: configurationDiary, ...resultDto}
+	}
+
+	private handleConfigurationDiaryValues(): DiaryBookingRestrictionDto {
+		if (this.form.controls.configurationDiary.value)
+			return {days: this.form.controls.configurationDiary.value?.daysRange, restrictionType: this.form.controls.configurationDiary.value?.configurationType}
+		else return {days: null, restrictionType: EDiaryBookingRestrictionType.UNRESTRICTED }
 	}
 
 	scrollToDefaultStartingHour(): void {
