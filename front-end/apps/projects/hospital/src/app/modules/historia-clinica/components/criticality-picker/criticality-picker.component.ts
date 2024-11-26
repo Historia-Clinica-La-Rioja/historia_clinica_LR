@@ -1,5 +1,4 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { AbstractCustomForm } from '@core/abstract-class/AbstractCustomForm';
 import { MasterDataDto } from '@api-rest/api-model';
@@ -25,7 +24,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 export class CriticalityPickerComponent extends AbstractCustomForm implements OnInit {
 
 	form: FormGroup<CriticalityForm>;
-	criticalities$: Observable<MasterDataDto[]>;
+	criticalities: MasterDataDto[] = [];
 
 	@Input()
 	set isRequired(isRequired: boolean) {
@@ -46,13 +45,20 @@ export class CriticalityPickerComponent extends AbstractCustomForm implements On
 	}
 
 	ngOnInit(): void {
-		this.criticalities$ = this.emergencyCareMasterDataService.getCriticalities();
+		this.emergencyCareMasterDataService.getCriticalities().subscribe(criticalities => this.criticalities = criticalities);
 	}
 
 	createForm() {
 		this.form = new FormGroup<CriticalityForm>({
 			criticality: new FormControl<MasterDataDto>(null)
 		});
+	}
+
+	writeValue(value: { criticality: MasterDataDto }) {
+		if (value) {
+			const preloadCriticalityId = value.criticality.id;
+			this.form.controls.criticality.setValue(this.criticalities.find(criticality => criticality.id === preloadCriticalityId))
+		}
 	}
 
 	private addRequiredValidator() {

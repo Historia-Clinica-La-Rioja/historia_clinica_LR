@@ -20,8 +20,8 @@ export class EpisodeDiagnosesService {
 	}
 
 	getEpisodeDiagnoses(): DiagnosisDto[] {
-		const main = this.episodeDiagnoses.main;
-		const allEpisodeDiagnosis = deepClone(this.episodeDiagnoses.others);
+		const main = this.episodeDiagnoses?.main;
+		const allEpisodeDiagnosis = this.episodeDiagnoses?.others ? deepClone(this.episodeDiagnoses.others) : [];
 		main && allEpisodeDiagnosis.push(main);
 		return allEpisodeDiagnosis;
 	}

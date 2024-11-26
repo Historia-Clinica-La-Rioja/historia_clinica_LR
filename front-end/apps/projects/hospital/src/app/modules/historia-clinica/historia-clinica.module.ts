@@ -116,6 +116,7 @@ import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/au
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
+import { EditIsolationAlertPopupComponent } from './dialogs/edit-isolation-alert-popup/edit-isolation-alert-popup.component';
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
 import { IsolationAlertPopupComponent } from './dialogs/isolation-alert-popup/isolation-alert-popup.component';
 import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
@@ -308,6 +309,7 @@ import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typea
 		AddProcedureComponent,
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
+		EditIsolationAlertPopupComponent,
 		EffectiveTimeDialogComponent,
 		IsolationAlertPopupComponent,
 		RemoveDiagnosisComponent,

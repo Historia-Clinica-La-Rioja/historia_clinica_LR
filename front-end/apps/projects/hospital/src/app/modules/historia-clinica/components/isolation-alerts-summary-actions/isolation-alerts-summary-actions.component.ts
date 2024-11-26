@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IsolationAlertActionPopup, IsolationAlertActionPopupComponent } from '@historia-clinica/dialogs/isolation-alert-action-popup/isolation-alert-action-popup.component';
 import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { IsolationAlertActionType } from '@historia-clinica/services/isolation-alert-actions.service';
+import { EditIsolationAlertPopup, EditIsolationAlertPopupComponent } from '@historia-clinica/dialogs/edit-isolation-alert-popup/edit-isolation-alert-popup.component';
 
 @Component({
 	selector: 'app-isolation-alerts-summary-actions',
@@ -17,7 +18,7 @@ export class IsolationAlertsSummaryActionsComponent {
 	@Output() updateIsolationAlerts = new EventEmitter<boolean>();
 
 	constructor(
-		private readonly dialogService: DialogService<IsolationAlertActionPopupComponent>
+		private readonly dialogService: DialogService<IsolationAlertActionPopupComponent | EditIsolationAlertPopupComponent>
 	) { }
 
 	openViewDetail() {
@@ -27,6 +28,12 @@ export class IsolationAlertsSummaryActionsComponent {
 			isolationAlertId: this.isolationAlertId,
 		};
 		this.dialogService.open(IsolationAlertActionPopupComponent, this.dialogConfiguration, popupData);
+	}
+
+	openEditAlert() {
+		const popupData: EditIsolationAlertPopup = { isolationAlertId: this.isolationAlertId, };
+		this.dialogService.open(EditIsolationAlertPopupComponent, this.dialogConfiguration, popupData)
+			.afterClosed().subscribe(action => action && this.updateIsolationAlerts.emit(true));
 	}
 
 	openEndAlert() {

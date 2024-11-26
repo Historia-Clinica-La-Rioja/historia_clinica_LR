@@ -112,7 +112,7 @@ export const toAllergies = (allergies: ReferableItemDto<OutpatientAllergyConditi
 	return allergies.content?.map(allergy => toAllergy(allergy));
 }
 
-const toClinicalTermDto = (id: number, pt: string, sctid: string): ClinicalTermDto => {
+export const toClinicalTermDto = (id: number, pt: string, sctid: string): ClinicalTermDto => {
 	return {
 		id, snomed: { pt, sctid }
 	}

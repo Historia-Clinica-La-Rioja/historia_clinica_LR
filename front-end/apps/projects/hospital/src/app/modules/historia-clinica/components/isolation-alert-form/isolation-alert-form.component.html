@@ -16,7 +16,7 @@
         <mat-form-field appearance="outline">
             <mat-select id="isolationTypes" formControlName="types" multiple
                 [placeholder]="'historia-clinica.general.SELECT' | translate" (selectionChange)="verifyValidations()">
-                <mat-option *ngFor="let type of isolationTypes$ | async" [value]="type">
+                <mat-option *ngFor="let type of isolationTypes" [value]="type">
                     <span>{{type.description}}</span>
                 </mat-option>
             </mat-select>
@@ -25,7 +25,8 @@
     </div>
     <app-criticality-picker formControlName="criticality" [submitParentFormEvent]="submitFormEvent"
         [isRequired]="true"></app-criticality-picker>
-    <app-datepicker [title]="'historia-clinica.isolation-alert.END_OF_ALERT'" requiredText="forms.REQUIRED" [minDate]="today" [markAsTouched]="markAsTouched"
+    <app-datepicker [title]="'historia-clinica.isolation-alert.END_OF_ALERT'" requiredText="forms.REQUIRED" [dateToSetInDatepicker]="form.value.endDate" 
+        [minDate]="today" [markAsTouched]="markAsTouched"
         (selectDate)="form.controls.endDate.setValue($event)"></app-datepicker>
     <app-observations-custom-form formControlName="observations" [isRequired]="form.controls.observations.hasValidator(Validators.required)"
         [submitParentFormEvent]="submitFormEvent"></app-observations-custom-form>

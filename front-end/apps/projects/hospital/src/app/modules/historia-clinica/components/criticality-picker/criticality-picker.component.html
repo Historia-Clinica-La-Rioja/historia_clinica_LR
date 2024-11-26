@@ -3,7 +3,7 @@
 	<mat-form-field appearance="outline">
 		<mat-select id="criticality-select" formControlName="criticality"
 			[placeholder]="'historia-clinica.general.SELECT' | translate">
-			<mat-option *ngFor="let criticality of criticalities$ | async" [value]="criticality">
+			<mat-option *ngFor="let criticality of criticalities" [value]="criticality">
 				<span>{{ criticality.description }}</span>
 			</mat-option>
 		</mat-select>

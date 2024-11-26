@@ -1,6 +1,6 @@
-import { DateDto, DateTimeDto, MasterDataDto, PatientCurrentIsolationAlertDto, IsolationAlertAuthorDto, TimeDto } from "@api-rest/api-model";
+import { DateDto, DateTimeDto, MasterDataDto, PatientCurrentIsolationAlertDto, IsolationAlertAuthorDto, TimeDto, UpdateIsolationAlertDto } from "@api-rest/api-model";
 import { IsolationAlertsSummary, IsolationAlertStatus } from "@historia-clinica/components/isolation-alerts-summary-card/isolation-alerts-summary-card.component";
-import { mapIsolationAlertsToIsolationAlertsDetails, mapIsolationAlertToIsolationAlertDetail, mapPatientCurrentIsolationAlertDtoToIsolationAlertDetail, mapPatientCurrentIsolationAlertDtoToIsolationAlertSummary, mapPatientCurrentIsolationAlertsDtoToIsolationAlertsDetail, mapPatientCurrentIsolationAlertsDtoToIsolationAlertsSummary, toIsolationAlertStatus, toRegisterEditorInfo } from "./isolation-alerts.mapper";
+import { mapIsolationAlertsToIsolationAlertsDetails, mapIsolationAlertToIsolationAlertDetail, mapPatientCurrentIsolationAlertDtoToIsolationAlertDetail, mapPatientCurrentIsolationAlertDtoToIsolationAlertSummary, mapPatientCurrentIsolationAlertsDtoToIsolationAlertsDetail, mapPatientCurrentIsolationAlertsDtoToIsolationAlertsSummary, toIsolationAlert, toIsolationAlertStatus, toRegisterEditorInfo, toUpdateIsolationAlertDto } from "./isolation-alerts.mapper";
 import { IsolationAlertDetail } from "@historia-clinica/components/isolation-alert-detail/isolation-alert-detail.component";
 import { RegisterEditor } from "@presentation/components/register-editor-info/register-editor-info.component";
 import { IsolationAlert } from "@historia-clinica/components/isolation-alert-form/isolation-alert-form.component";
@@ -67,6 +67,7 @@ describe('isolation-alerts.mapper', () => {
 
 	const isolationAlert: IsolationAlert = {
 		id: 1,
+		statusId: 1,
 		diagnosis: {
 			snomed: {
 				pt: "fiebre",
@@ -252,6 +253,36 @@ describe('isolation-alerts.mapper', () => {
 		}];
 		const mappedIsolationAlertDetailsList = mapIsolationAlertsToIsolationAlertsDetails(isolationAlertList);
 		expect(mappedIsolationAlertDetailsList).toEqual(expectedIsolationAlertDetailList);
+	});
+
+	it('it should return true if PatientCurrentIsolationAlertDto is correctly mapped to IsolationAlert', () => {
+		const expectedIsolationAlert: IsolationAlert = {
+			id: 1,
+			statusId: 1,
+			diagnosis: {
+				id: null,
+				snomed: {
+					pt: "fiebre",
+					sctid: "12",
+				}
+			},
+			types,
+			criticality,
+			endDate: new Date(2024, 10, 8),
+			observations: 'Agrego observaciones',
+		};
+		const mappedIsolationAlert = toIsolationAlert(patientIsolationAlertDto);
+		expect(mappedIsolationAlert).toEqual(expectedIsolationAlert);
+	});
+
+	it('it should return true if IsolationAlert is correctly mapped to UpdateIsolationAlertDto', () => {
+		const expectedIsolationAlertDto: UpdateIsolationAlertDto = {
+			criticalityId: 1,
+			endDate: { day: 8, month: 11, year: 2024 },
+			observations: 'Agrego observaciones',
+		};
+		const mappedIsolationAlertDto = toUpdateIsolationAlertDto(isolationAlert);
+		expect(mappedIsolationAlertDto).toEqual(expectedIsolationAlertDto);
 	});
 
 });

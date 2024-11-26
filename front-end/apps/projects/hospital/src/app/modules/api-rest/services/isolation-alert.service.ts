@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PatientCurrentIsolationAlertDto } from '@api-rest/api-model';
+import { PatientCurrentIsolationAlertDto, UpdateIsolationAlertDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -26,10 +26,15 @@ export class IsolationAlertService {
 	getAlertDetail(id: number): Observable<PatientCurrentIsolationAlertDto> {
 		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/${id}`;
 		return this.http.get<PatientCurrentIsolationAlertDto>(url);
-	} 
+	}
 
 	cancel(id: number): Observable<PatientCurrentIsolationAlertDto> {
 		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/${id}/cancel`;
 		return this.http.put<PatientCurrentIsolationAlertDto>(url, {});
+	}
+
+	update(id: number, updateIsolationAlertDto: UpdateIsolationAlertDto): Observable<PatientCurrentIsolationAlertDto> {
+		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/${id}`;
+		return this.http.put<PatientCurrentIsolationAlertDto>(url, updateIsolationAlertDto);
 	}
 }

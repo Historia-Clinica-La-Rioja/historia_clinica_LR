@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClinicalTermDto, DiagnosisDto, MasterDataDto } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { EpisodeDiagnosesService } from '@historia-clinica/services/episode-diagnoses.service';
 import { SaveIsolationAlertService } from '@historia-clinica/services/save-isolation-alert.service';
 
@@ -20,10 +20,14 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 	readonly today = new Date();
 	form: FormGroup<IsolationAlertForm>;
 	diagnoses: ClinicalTermDto[] = [];
-	isolationTypes$: Observable<MasterDataDto[]>;
+	isolationTypes: MasterDataDto[] = [];
 	markAsTouched = false;
 	submitFormEvent = new EventEmitter<void>();
 	submitSubscription: Subscription;
+
+	@Input() set preloadedIsolationAlert(isolationAlert: IsolationAlert) {
+		isolationAlert && this.preloadedIsolationAlertForm(isolationAlert);
+	}
 
 	constructor(
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
@@ -33,7 +37,7 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.createForm();
-		this.isolationTypes$ = this.emergencyCareMasterDataService.getIsolationTypes();
+		this.emergencyCareMasterDataService.getIsolationTypes().subscribe(isolationTypes => this.isolationTypes = isolationTypes);
 		this.diagnoses = this.episodeDiagnosesService.getEpisodeDiagnoses();
 		this.submitSubscription = this.saveIsolationAlertService.submit$.subscribe(submit => this.submitForm());
 	}
@@ -44,6 +48,8 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 
 	createForm() {
 		this.form = new FormGroup<IsolationAlertForm>({
+			id: new FormControl(null),
+			statusId: new FormControl(null),
 			diagnosis: new FormControl(null, Validators.required),
 			types: new FormControl(null, Validators.required),
 			criticality: new FormControl(null, Validators.required),
@@ -83,17 +89,35 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 
 	private buildIsolationAlert(): IsolationAlert {
 		const isolationAlertForm = this.form.getRawValue();
-		return { 
+		return {
 			...isolationAlertForm,
-			id: null,
-			statusId: null,
-			observations: isolationAlertForm.observations.observations, 
-			criticality: isolationAlertForm.criticality.criticality }
+			observations: isolationAlertForm.observations.observations,
+			criticality: isolationAlertForm.criticality.criticality
+		}
+	}
+
+	private preloadedIsolationAlertForm(isolationAlert: IsolationAlert) {
+		this.diagnoses = [isolationAlert.diagnosis];
+		const isolationAlertForm = {
+			...isolationAlert,
+			types: this.isolationTypes.filter(type => isolationAlert.types.some(selectedType => type.id === selectedType.id)),
+			criticality: { criticality: isolationAlert.criticality },
+			observations: { observations: isolationAlert.observations ? isolationAlert.observations : null },
+		}
+		this.form.setValue(isolationAlertForm);
+		this.disableFormControls();
+	}
+
+	private disableFormControls() {
+		this.form.controls.diagnosis.disable();
+		this.form.controls.types.disable();
 	}
 
 }
 
 interface IsolationAlertForm {
+	id: FormControl<number>,
+	statusId: FormControl<number>,
 	diagnosis: FormControl<DiagnosisDto>,
 	types: FormControl<MasterDataDto[]>,
 	criticality: FormControl<{ criticality: MasterDataDto }>,
@@ -103,7 +127,7 @@ interface IsolationAlertForm {
 
 export interface IsolationAlert {
 	id: number,
-	statusId?: number,
+	statusId: number,
 	diagnosis: DiagnosisDto,
 	types: MasterDataDto[],
 	criticality: MasterDataDto,

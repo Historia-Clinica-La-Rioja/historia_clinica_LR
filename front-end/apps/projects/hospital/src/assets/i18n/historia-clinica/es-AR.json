@@ -8,7 +8,8 @@
 			"TYPE": "Tipo",
 			"VIEW_DETAIL": "Ver detalle",
 			"START": "Inicio",
-			"EDITED": "Editado"
+			"EDITED": "Editado",
+			"SAVE_CHANGES": "Guardar cambios"
 		},
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
@@ -224,6 +225,12 @@
 				"CONFIRM_END_ALERT": "Si, finalizar la alerta",
 				"SNACKBAR_SUCCESS": "Alerta finalizada correctamente",
 				"SNACKBAR_ERROR": "Hubo un error al finalizar la alerta"
+			},
+			"edit-alert": {
+				"BUTTON_EDIT_ALERT": "Editar alerta",
+				"EDIT_ALERT_TITLE": "Editar alerta de aislamiento",
+				"SNACKBAR_SUCCESS": "La alerta se editó con éxito",
+				"SNACKBAR_ERROR": "Hubo un error al editar la alerta"
 			}
 		}
 	}
