@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.clinichistory.application.isolationalerts.FetchPatientIsolationAlerts;
@@ -48,10 +49,11 @@ public class IsolationAlertController {
 	@GetMapping("/patient/{patientId}")
 	public List<PatientCurrentIsolationAlertDto> getPatientCurrentAlerts(
 		@PathVariable(name = "institutionId") Integer institutionId,
-		@PathVariable(name = "patientId") Integer patientId
+		@PathVariable(name = "patientId") Integer patientId,
+		@RequestParam(name = "filterOngoing", required = false, defaultValue = "false") Boolean filterOngoing
 	) {
 		log.debug("Parameters -> institutionId {} patientId {}", institutionId, patientId);
-		var bo = fetchPatientIsolationAlerts.findByPatientId(patientId);
+		var bo = fetchPatientIsolationAlerts.findByPatientId(patientId, filterOngoing);
 		var result = isolationAlertMapper.map(bo);
 		log.debug("Output -> result {}", result);
 		return result;

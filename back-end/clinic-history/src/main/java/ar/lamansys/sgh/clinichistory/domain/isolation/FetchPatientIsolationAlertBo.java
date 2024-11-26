@@ -59,6 +59,10 @@ public class FetchPatientIsolationAlertBo {
 		return this.getStatus() != null && (this.getStatus().isCancelled() || this.getStatus().isExpired());
 	}
 
+	public boolean isOngoing() {
+		return this.getStatus().isOngoing();
+	}
+
 	public boolean hasTypeOther() {
 		return this.getTypes() != null
 		&& this.getTypes().contains(EIsolationType.OTHER);

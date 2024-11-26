@@ -21,8 +21,12 @@ public class FetchPatientIsolationAlerts {
 	private final IsolationAlertStorage isolationAlertStorage;
 	private final SharedPersonPort sharedPersonPort;
 
-	public List<FetchPatientIsolationAlertBo> findByPatientId(Integer patientId) {
-		var alerts = isolationAlertStorage.findByPatientId(patientId);
+	public List<FetchPatientIsolationAlertBo> findByPatientId(Integer patientId, Boolean filterOngoing) {
+		var alerts = isolationAlertStorage
+			.findByPatientId(patientId)
+			.stream()
+			.filter(alert -> !filterOngoing || alert.isOngoing())
+			.collect(Collectors.toList());
 		alerts.stream().forEach(
 			alert -> {
 				alert.setAuthor(getAuthor(alert.getCreatedById()));
