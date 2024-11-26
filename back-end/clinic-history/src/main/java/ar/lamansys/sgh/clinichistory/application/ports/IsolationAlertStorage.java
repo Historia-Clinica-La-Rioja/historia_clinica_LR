@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.isolation.FetchPatientIsolationAlert
 import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertBo;
 import ar.lamansys.sgh.clinichistory.domain.isolation.IsolationAlertForPdfDocumentBo;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +21,6 @@ public interface IsolationAlertStorage {
 	List<IsolationAlertForPdfDocumentBo> findByDocumentIdForDocumentPdf(Long documentId);
 
 	Optional<Integer> cancel(Integer alert);
+
+    Optional<Integer> update(Integer alertId, Short criticalityId, LocalDate endDate, String observations);
 }

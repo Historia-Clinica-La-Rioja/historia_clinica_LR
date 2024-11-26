@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.application.ports.IsolationAlertStorage;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.RebuildFile;
 import ar.lamansys.sgh.clinichistory.domain.isolation.FetchPatientIsolationAlertBo;
 
+import ar.lamansys.sgh.clinichistory.domain.isolation.UpdateIsolationAlertBo;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -27,7 +28,20 @@ public class EditIsolationAlert {
 		//Rebuild the PDF so that it shows the updated alert status
 		rebuildFile.run(ret.getDocumentId());
 		return ret;
+	}
 
+	@Transactional
+	public FetchPatientIsolationAlertBo update(Integer alertId, UpdateIsolationAlertBo update) {
+		var alert = isolationAlertStorage.findByAlertId(alertId).orElseThrow(() -> alertNotFound(alertId));
+		if (alert.isFinalized())
+			throw IsolationAlertException.alreadyFinalized(alertId);
+		var updatedAlertId = isolationAlertStorage
+			.update(alertId, update.getCriticalityId(), update.getEndDate(), update.getObservations())
+			.orElseThrow(() -> finalizedError(alertId));
+		var ret = fetchPatientIsolationAlerts.findByAlertId(updatedAlertId);
+		//Rebuild the PDF so that it shows the updated alert values
+		rebuildFile.run(ret.getDocumentId());
+		return ret;
 	}
 
 	private IsolationAlertException finalizedError(Integer alertId) {

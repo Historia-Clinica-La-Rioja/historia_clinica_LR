@@ -5657,6 +5657,12 @@ export interface UpdateAppointmentStateDto {
     reason: string;
 }
 
+export interface UpdateIsolationAlertDto {
+    criticalityId: number;
+    endDate: DateDto;
+    observations?: string;
+}
+
 export interface UsageReportStatusDto {
     domainId: string;
     isAllowedToSend: boolean;

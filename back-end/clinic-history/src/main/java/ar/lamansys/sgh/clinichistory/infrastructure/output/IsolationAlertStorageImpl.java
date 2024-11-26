@@ -298,13 +298,45 @@ public class IsolationAlertStorageImpl implements IsolationAlertStorage {
 		);
 
 		//Mark the old one as deleted
+		markDeleted(alertId);
+
+		return Optional.of(savedFinalizedAlert.getId());
+	}
+
+	/**
+	 * Same procedure as cancel but update criticalityId, endDate and observations fields
+	 */
+	@Override
+	public Optional<Integer> update(Integer alertId, Short criticalityId, LocalDate endDate, String observations) {
+		var fullSourceAlert = findByAlertId(alertId).orElseThrow(() -> alertNotFound(alertId));
+		var documentId = documentIsolationAlertRepository.findByPk_isolationAlertId(alertId)
+				.orElseThrow(() -> alertNotFound(alertId))
+				.getPk().getDocumentId();
+
+		//Create a new alert with the updatedValues
+		var savedFinalizedAlert = this.saveOne(
+				documentId,
+				alertId, //The new one will have this as the parentId
+				fullSourceAlert.getHealthConditionId(),
+				fullSourceAlert.getTypeIds(),
+				criticalityId,
+				endDate,
+				observations,
+				fullSourceAlert.getStatusId()
+		);
+
+		//Mark the old one as deleted
+		markDeleted(alertId);
+
+		return Optional.of(savedFinalizedAlert.getId());
+	}
+
+	private void markDeleted(Integer alertId) {
 		var sourceAlert = isolationAlertRepository.findById(alertId).orElseThrow(() -> alertNotFound(alertId));
 		sourceAlert.setDeleted(true);
 		sourceAlert.setDeletedBy(getCurrentAuditor());
 		sourceAlert.setDeletedOn(LocalDateTime.now());
 		isolationAlertRepository.save(sourceAlert);
-
-		return Optional.of(savedFinalizedAlert.getId());
 	}
 
 	private IsolationAlertBo mapToIsolationAlertBo(Long documentId, Object[] row) {

@@ -15,8 +15,8 @@ public enum EIsolationType {
 	CONTACT((short) 1, "Contacto"),
 	RESPIRATORY_SECRETION((short) 2, "Gotas"),
 	AIRBORNE((short) 3, "Aéreo (respiratorio)"),
-	PREVENTIVE((short) 4, "Aislamiento protector"),
-	ENTOMOLOGICAL((short) 5, "Aislamiento entomológico"),
+	PREVENTIVE((short) 4, "Protector"),
+	ENTOMOLOGICAL((short) 5, "Entomológico"),
 	OTHER((short) 6, "Otros");
 
 
