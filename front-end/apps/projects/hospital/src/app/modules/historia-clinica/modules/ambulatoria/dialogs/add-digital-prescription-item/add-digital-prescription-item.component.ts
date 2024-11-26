@@ -38,7 +38,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 
 	PRESCRIPTOR: ERole = ERole.PRESCRIPTOR;
 	hasPrescriptorRole = false;
-	
+
 	healthProblems: HCEHealthConditionDto[] = [];
 	DEFAULT_RADIO_OPTION = 1;
 	OTHER_RADIO_OPTION = 0;
@@ -119,12 +119,12 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	setCommercialMedicationConcept = (selectedConcept) => {
 		this.setConcept(selectedConcept.genericMedication, selectedConcept.commercialPt);
 	}
-	
+
 	setConceptFinancedPharmaco = (selectedConcept: SnomedFinancedAuditRequired, commercialPt?: string) => {
 		this.auditRequiredInput = selectedConcept && selectedConcept.auditRequiredText
 		this.setConcept(selectedConcept?.snomed,commercialPt)
 	}
-	
+
 	clearSnomedGenericConcept = () => {
 		this.snomedConcept = null;
 		this.clearCommercialMedication();
@@ -144,8 +144,8 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			} else {
 				this.disableUnitDoseAndDayDose();
 			}
-		} 
-		
+		}
+
 		this.clearCommercialMedication();
 	}
 
@@ -174,7 +174,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	}
 
 	setPresentationUnits = (medicationSctid?: string) => {
-		if (!this.HABILITAR_RELACIONES_SNOMED && !this.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO && !medicationSctid) return;
+		if (!this.HABILITAR_RELACIONES_SNOMED || !medicationSctid) return;
 		this.presentationUnits.getMedicationPresentationUnits(medicationSctid).subscribe({
 			next: (result: number[]) => {
 				this.presentationUnitsOptions = result;
@@ -245,11 +245,11 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	}
 
 	private isAddPrescriptionValid = (): boolean => {
-		if (!this.prescriptionItemForm.valid 
-			|| !this.snomedConcept 
+		if (!this.prescriptionItemForm.valid
+			|| !this.snomedConcept
 			|| this.snomedConcept.pt === ''
 			|| intervalValidation(this.prescriptionItemForm, 'intervalHours', 'interval')
-			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays', 'administrationTime')) 
+			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays', 'administrationTime'))
 			{
 				scrollIntoError(this.prescriptionItemForm, this.el);
 				this.markFormAsTouched = true;
@@ -358,7 +358,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			}
 		}
 
-		if (prescriptionItem.studyCategory?.id) 
+		if (prescriptionItem.studyCategory?.id)
 			this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id);
 
 		if (prescriptionItem.suggestedCommercialMedication) {
@@ -373,7 +373,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 			this.prescriptionItemForm.controls.medicationPackQuantity.setValue(prescriptionItem.commercialMedicationPrescription.medicationPackQuantity);
 			this.prescriptionItemForm.controls.presentationUnit.setValue(prescriptionItem.commercialMedicationPrescription.presentationUnitQuantity);
 		}
-		
+
 		this.snomedConcept = prescriptionItem.snomed;
 		this.prescriptionItemForm.controls.snomed.setValue(this.snomedConcept);
 	}
@@ -459,10 +459,10 @@ export class AddDigitalPrescriptionItemComponent implements OnInit {
 	}
 
 	private setInitialValidators = () => {
-		if (this.data.showDosage) 
+		if (this.data.showDosage)
 			this.prescriptionItemForm.controls.interval.setValidators([Validators.required]);
-		
-		if (this.data.showStudyCategory) 
+
+		if (this.data.showStudyCategory)
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 
 		if (this.HABILITAR_RELACIONES_SNOMED && this.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO) {
