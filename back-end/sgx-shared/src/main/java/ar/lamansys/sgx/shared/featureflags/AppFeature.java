@@ -270,7 +270,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS,
 	
 	@Label("Habilita el formulario y pdf de receta digital actualizado")
-	HABILITAR_RECETA_DIGITAL_ACTUALIZADA
+	HABILITAR_RECETA_DIGITAL_ACTUALIZADA,
+
+	@Label("Habilita la validación de la receta digital a través de api integradora")
+	HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR
 	;
 
 	public boolean isActive() {

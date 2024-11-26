@@ -101,6 +101,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS, false);
 		map.put(AppFeature.HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS,false);
 		map.put(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA, false);
+		map.put(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR, false);
 	}
 
 	@Override
