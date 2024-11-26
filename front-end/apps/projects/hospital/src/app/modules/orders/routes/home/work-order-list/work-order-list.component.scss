@@ -7,12 +7,15 @@
 }
 
 .patient-summary {
-	min-width:  23.75rem;
+    width: 23.75rem;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .order-detail{
-	 min-width: 15rem;
-	 max-width: 15rem;
+    width: 15rem;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .temporary-patient{
