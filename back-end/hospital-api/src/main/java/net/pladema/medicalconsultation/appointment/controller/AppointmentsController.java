@@ -736,7 +736,8 @@ public class AppointmentsController {
 											  @RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
 		log.debug("Input parameters -> institutionId {}, appointmentId {}, updateAppointmentDate {}", institutionId, appointmentId, updateAppointmentDate);
 		UpdateAppointmentDateBo updateAppointmentData = appointmentMapper.fromUpdateAppointmentDateDto(updateAppointmentDate);
-		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, updateAppointmentData.getDate(), updateAppointmentData.getTime());
+		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, updateAppointmentData.getDate(),
+				updateAppointmentData.getTime(), updateAppointmentData.getRecurringAppointmentTypeId());
 		boolean result = reassignAppointment.run(updateAppointmentData);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
