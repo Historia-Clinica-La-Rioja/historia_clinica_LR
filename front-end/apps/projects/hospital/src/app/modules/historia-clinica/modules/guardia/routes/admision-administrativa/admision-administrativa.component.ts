@@ -80,7 +80,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
 		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
 
-		this.isEmergencyCareTypeEditable = this.checkEmergencyCareTypeEditability(this.isEpisodeCreation,this.initData.emergencyCareTypeId)
+		this.isEmergencyCareTypeEditable = this.checkEmergencyCareTypeEditability(this.isEpisodeCreation,this.initData?.emergencyCareTypeId)
 
 		this.form = this.formBuilder.group({
 			patientMedicalCoverageId: [null],
@@ -102,8 +102,10 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		this.setExistingInfo();
 	}
 
-	private checkEmergencyCareTypeEditability(isEpisodeCreation: boolean, emergencyCareTypeId: number): boolean {
-		return !isEpisodeCreation && emergencyCareTypeId === this.EMERGENCY_CARE_TYPES.NOT_DEFINED;
+	private checkEmergencyCareTypeEditability(isEpisodeCreation: boolean, emergencyCareTypeId?: number): boolean {
+		return emergencyCareTypeId == null
+			? true
+			: !isEpisodeCreation && emergencyCareTypeId === this.EMERGENCY_CARE_TYPES.NOT_DEFINED;
 	}
 
 	dateChanged(date: Date) {
