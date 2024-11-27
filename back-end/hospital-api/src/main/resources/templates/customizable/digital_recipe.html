@@ -153,7 +153,7 @@
                             <td class="label" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }">Cantidad de envases</td>
                         </tr>
                         <tr th:if="${ medication.commercialMedicationPrescription != null }" class="half">
-                            <td class="value" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' ' + medication.dosage.quantity.unit }"></td>
+                            <td class="value" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es' }"></td>
                             <td class="value" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }" th:text="${ medication.commercialMedicationPrescription.medicationPackQuantity }"></td>
                         </tr>
                         <tr th:if="${ medication.suggestedCommercialMedication != null }">
@@ -164,11 +164,11 @@
                         </tr>
                         <tr class="half">
                             <td class="label">Días de tratamiento</td>
-                            <td class="label" th:if="${medication.dosage.quantity != null}">Cantidad total</td>
+                            <td class="label" th:if="${medication.dosage.quantity != null && medication.dosage.quantity.value != 0}">Cantidad total</td>
                         </tr>
                         <tr class="half">
                             <td class="value" th:text="${ (medication.dosage.duration % 1 == 0 ? #numbers.formatDecimal(medication.dosage.duration,0,0) : medication.dosage.duration)  + ' día/s' }"></td>
-                            <td class="value" th:if="${medication.dosage.quantity != null}" th:text="${ medication.dosage.quantity.value + ' ' + medication.dosage.quantity.unit }"></td>
+                            <td class="value" th:if="${medication.dosage.quantity != null && medication.dosage.quantity.value != 0}" th:text="${ medication.dosage.quantity.value + ' ' + medication.dosage.quantity.unit }"></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="label">Diagnóstico</td>
@@ -363,7 +363,7 @@
                                 <td class="label" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }">Cantidad de envases</td>
                             </tr>
                             <tr th:if="${ medication.commercialMedicationPrescription != null }" class="half">
-                                <td class="value" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' ' + medication.dosage.quantity.unit }"></td>
+                                <td class="value" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es' }"></td>
                                 <td class="value" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }" th:text="${ medication.commercialMedicationPrescription.medicationPackQuantity }"></td>
                             </tr>
                             <tr th:if="${ medication.suggestedCommercialMedication != null }">
@@ -374,11 +374,11 @@
                             </tr>
                             <tr class="half">
                                 <td class="label">Días de tratamiento</td>
-                                <td class="label" th:if="${medication.dosage.quantity != null}">Cantidad total</td>
+                                <td class="label" th:if="${medication.dosage.quantity != null && medication.dosage.quantity.value != 0}">Cantidad total</td>
                             </tr>
                             <tr class="half">
                                 <td class="value" th:text="${ (medication.dosage.duration % 1 == 0 ? #numbers.formatDecimal(medication.dosage.duration,0,0) : medication.dosage.duration)  + ' día/s' }"></td>
-                                <td class="value" th:if="${medication.dosage.quantity != null}" th:text="${ medication.dosage.quantity.value + ' ' + medication.dosage.quantity.unit }"></td>
+                                <td class="value" th:if="${medication.dosage.quantity != null && medication.dosage.quantity.value != 0}" th:text="${ medication.dosage.quantity.value + ' ' + medication.dosage.quantity.unit }"></td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="label">Diagnóstico</td>
