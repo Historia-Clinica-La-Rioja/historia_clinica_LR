@@ -16,9 +16,9 @@ export const complete: Story = {
 			id: 1,
 			pt: 'paracetamol 32 mg/ml, solución oral',
 			unitDose: 1,
-			dayDose: 1,
+			dayDose: '1',
 			treatmentDays: '31',
-			quantity: 2
+			quantity: '2'
 		}
 	}
 };
