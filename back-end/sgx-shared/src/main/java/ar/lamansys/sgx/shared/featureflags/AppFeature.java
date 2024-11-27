@@ -98,9 +98,6 @@ public enum AppFeature implements Feature {
 
 	@Label("Oculta el listado de profesiones asociado a un paciente en la webapp")
 	OCULTAR_LISTADO_PROFESIONES_WEBAPP,
-	
-	@Label("Muestra en HC la seccion de Enfermeria")
-	HABILITAR_MODULO_ENF_EN_DESARROLLO,
 
 	@Label("Indica si está habilitado el doble factor de autenticación")
 	HABILITAR_2FA,

@@ -443,12 +443,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	}
 
 	private showNursingTab(userRoles: ERole[]) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
-			.subscribe(show => {
-				if (anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PERSONAL_DE_FARMACIA])
-					&& show) 
-					this.showNursingSection = show
-			});
+		if (anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PERSONAL_DE_FARMACIA])) {
+			this.showNursingSection = true
+		};
 	}
 
 	private mapToSummaryCoverage(patientCoverage: ExternalPatientCoverageDto): SummaryCoverageInformation {
