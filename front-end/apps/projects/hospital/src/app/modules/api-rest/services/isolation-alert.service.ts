@@ -18,9 +18,9 @@ export class IsolationAlertService {
 		private readonly contextService: ContextService,
 	) { }
 
-	getIsolationAlerts(patientId: number): Observable<PatientCurrentIsolationAlertDto[]> {
+	getIsolationAlerts(patientId: number, filterOngoing: boolean): Observable<PatientCurrentIsolationAlertDto[]> {
 		const url = `${this.BASIC_URL}/${this.contextService.institutionId}/${this.URL_SUFFIX}/patient/${patientId}`;
-		return this.http.get<PatientCurrentIsolationAlertDto[]>(url);
+		return this.http.get<PatientCurrentIsolationAlertDto[]>(url, { params: { filterOngoing } });
 	}
 
 	getAlertDetail(id: number): Observable<PatientCurrentIsolationAlertDto> {

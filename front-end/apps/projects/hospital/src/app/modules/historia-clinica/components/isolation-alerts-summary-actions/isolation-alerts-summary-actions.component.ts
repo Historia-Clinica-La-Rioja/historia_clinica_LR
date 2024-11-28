@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IsolationAlertActionPopup, IsolationAlertActionPopupComponent } from '@historia-clinica/dialogs/isolation-alert-action-popup/isolation-alert-action-popup.component';
 import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { IsolationAlertActionType } from '@historia-clinica/services/isolation-alert-actions.service';
 import { EditIsolationAlertPopup, EditIsolationAlertPopupComponent } from '@historia-clinica/dialogs/edit-isolation-alert-popup/edit-isolation-alert-popup.component';
+import { PatientIsolationAlertsService } from '@historia-clinica/services/patient-isolation-alerts.service';
 
 @Component({
 	selector: 'app-isolation-alerts-summary-actions',
@@ -15,10 +16,10 @@ export class IsolationAlertsSummaryActionsComponent {
 
 	@Input() isolationAlertId: number;
 	@Input() isIsolationAlertActive: boolean;
-	@Output() updateIsolationAlerts = new EventEmitter<boolean>();
 
 	constructor(
-		private readonly dialogService: DialogService<IsolationAlertActionPopupComponent | EditIsolationAlertPopupComponent>
+		private readonly dialogService: DialogService<IsolationAlertActionPopupComponent | EditIsolationAlertPopupComponent>,
+		private readonly patientIsolationAlertService: PatientIsolationAlertsService,
 	) { }
 
 	openViewDetail() {
@@ -33,7 +34,7 @@ export class IsolationAlertsSummaryActionsComponent {
 	openEditAlert() {
 		const popupData: EditIsolationAlertPopup = { isolationAlertId: this.isolationAlertId, };
 		this.dialogService.open(EditIsolationAlertPopupComponent, this.dialogConfiguration, popupData)
-			.afterClosed().subscribe(action => action && this.updateIsolationAlerts.emit(true));
+			.afterClosed().subscribe(action => action && this.patientIsolationAlertService.updatedIsolationAlertsSubject.next(true));
 	}
 
 	openEndAlert() {
@@ -46,7 +47,7 @@ export class IsolationAlertsSummaryActionsComponent {
 		};
 
 		this.dialogService.open(IsolationAlertActionPopupComponent, this.dialogConfiguration, popupData)
-			.afterClosed().subscribe(action => action && this.updateIsolationAlerts.emit(true));
+			.afterClosed().subscribe(action => action && this.patientIsolationAlertService.updatedIsolationAlertsSubject.next(true));
 	}
 
 }

@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutAlign="center start" *ngIf="isolationAlertsDetails.length as isolationAlertLength">
+	<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+		<mat-icon color="warn" fontIcon="warning_amber"></mat-icon>
+		<span>{{ 'historia-clinica.isolation-alert.CARD_TITLE' | translate}}</span>
+	</div>
+	<mat-list>
+		<mat-list-item class="mat-list-item"
+			*ngFor="let isolationAlert of isolationAlertsDetails | slice: 0:MAX_ISOLATION_ALERT_TO_SHOW">
+			<span matLine>{{ isolationAlert.types | stringSeparator }}</span>
+			<span class="grey" matLine>({{ isolationAlert.diagnosis }})</span>
+		</mat-list-item>
+	</mat-list>
+	<app-button *ngIf="isolationAlertLength > MAX_ISOLATION_ALERT_TO_SHOW" buttonType="{{BASIC_BUTTON}}"
+		[text]="isolationAlertLength - MAX_ISOLATION_ALERT_TO_SHOW | showMissingAlerts$ | async"
+		>
+	</app-button>
+</div>

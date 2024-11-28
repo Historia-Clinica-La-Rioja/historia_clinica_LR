@@ -4,6 +4,7 @@ import { ISOLATION_ALERT_HEADER } from '@historia-clinica/constants/summaries';
 import { PatientIsolationAlertsService } from '@historia-clinica/services/patient-isolation-alerts.service';
 
 const ISOLATION_ALERT_COLUMNS = ['diagnosis', 'types', 'criticality', 'endAlert', 'actions'];
+const ALL_STATUS = false;
 
 @Component({
 	selector: 'app-isolation-alerts-summary-card',
@@ -29,10 +30,12 @@ export class IsolationAlertsSummaryCardComponent implements OnInit {
 	ngOnInit(): void {
 		this.isolationAlertMasterDataService.getStatus().subscribe(isolationAlertStatus =>
 			this.activeStatusId = isolationAlertStatus.find(state => state.isActive).id);
+
+		this.patientIsolationAlertService.updatedIsolationAlerts$.subscribe(updatedIsolationAlert => updatedIsolationAlert && this.loadPatientIsolationAlerts());
 	}
 
 	loadPatientIsolationAlerts() {
-		this.patientIsolationAlertService.loadPatientIsolationAlerts(this._patientId);
+		this.patientIsolationAlertService.loadPatientIsolationAlertsSummary(this._patientId, ALL_STATUS);
 	}
 
 }

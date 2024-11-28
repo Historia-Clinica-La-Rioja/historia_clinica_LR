@@ -201,6 +201,10 @@
 			}
 		},
 		"isolation-alert": {
+			"add_alerts": {
+				"SINGULAR": "+ {{cant}} alerta",
+				"PLURAL":  "+ {{cant}} alertas"
+			},
 			"ISOLATION_ALERT": "Alerta de aislamiento",
 			"ADD_ISOLATION_ALERT": "Agregar alerta de aislamiento",
 			"ASSOCIATED_DIAGNOSIS": "Diagnóstico asociado",

@@ -29,9 +29,9 @@
 					</mat-card-header>
 					<div fxLayout="row" fxLayout.xs="column" *ngIf="!canOnlyViewSelfAddedProblems" fxLayoutAlign="center center">
 						<div fxLayout="row">
-							<mat-divider class="header-divider first-divider" [vertical]="true"></mat-divider>
-							<div class="sided_spaced_content" *ngIf="bloodType?.length" fxLayout="column"
-								fxLayoutAlign="center center" fxLayoutGap="3px">
+							<mat-divider class="first-divider" [vertical]="true"></mat-divider>
+							<div class="header-section" *ngIf="bloodType?.length" fxLayout="column"
+								fxLayoutGap="3px">
 								<span class="group-and-factor-properties">
 									{{ 'ambulatoria.paciente.card.GROUP_AND_FACTOR' | translate }}
 								</span>
@@ -40,14 +40,14 @@
 								</span>
 								<h1 class="color-primary bold top_padded_content" id="blood-type">{{ bloodType }}</h1>
 							</div>
-							<div *ngIf="!bloodType" fxLayout="column" fxLayoutAlign="center center">
+							<div *ngIf="!bloodType" class="header-section" fxLayout="column">
 								<span class="color-disabled no-blood-data">
 									{{ 'ambulatoria.paciente.card.WITHOUT_BLOOD_DATA' | translate }}
 								</span>
 								<h1 class="color-disabled bold top_padded_content">-</h1>
 							</div>
-							<mat-divider class="header-divider" [vertical]="true"></mat-divider>
-							<div id="allergy-container" fxLayout="row" fxLayoutAlign="center center">
+							<mat-divider [vertical]="true"></mat-divider>
+							<div id="allergy-container" fxLayout="row" class="header-section">
 								<div *ngIf="patientAllergies.criticalAllergies?.length>0">
 									<div fxLayout="row"
 										*ngFor="let allergy of patientAllergies.criticalAllergies.slice(0,patientAllergies.limitAllergies)">
@@ -90,10 +90,15 @@
 									</div>
 								</div>
 							</div>
-							<mat-divider class="header-divider" [vertical]="true"></mat-divider>
+							<mat-divider [vertical]="true"></mat-divider>
+
+							<div class="header-section" fxLayout="column" fxLayoutGap="10px" *ngIf="isolationAlertDetails.length">
+								<app-isolation-alert-header id="isolation-alert-container" [isolationAlertsDetails]="isolationAlertDetails"></app-isolation-alert-header>
+								<mat-divider class="isolation-alert-divider" [vertical]="true"></mat-divider>
+							</div>
 
 							<ng-container *ngIf="thereIsAppointmentCovarageInformation() else internmentCovarage">
-								<app-medical-coverage-summary-view
+								<app-medical-coverage-summary-view class="header-section"
 									[title]="'ambulatoria.paciente.card.APPOINTMENT_COVERAGE_TITLE'"
 									[coverageInfo]="getSummaryCoverageInfo()">
 								</app-medical-coverage-summary-view>
@@ -101,6 +106,7 @@
 							<ng-template #internmentCovarage>
 								<app-medical-coverage-summary-view
 									*ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress"
+									class="header-section"
 									[title]="'ambulatoria.paciente.card.INTERNMENT_COVERAGE_TITLE'"
 									[coverageInfo]="getSummaryCoverageInfo()">
 								</app-medical-coverage-summary-view>

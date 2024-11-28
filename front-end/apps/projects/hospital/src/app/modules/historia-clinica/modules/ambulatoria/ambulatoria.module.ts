@@ -45,6 +45,7 @@ import { GenericFinancedPharmacoSearchComponent } from './components/generic-fin
 import { GenericPharmacoItemComponent } from './components/generic-pharmaco-item/generic-pharmaco-item.component';
 import { GuardiaComponent } from './components/guardia/guardia.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
+import { IsolationAlertHeaderComponent } from './components/isolation-alert-header/isolation-alert-header.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { NewViolenceEpisodeSectionComponent } from './components/new-violence-episode-section/new-violence-episode-section.component';
@@ -74,6 +75,7 @@ import { ViolenceSituationsComponent } from './components/violence-situations/vi
 import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
 import { AuditRequiredMedicationComponent } from './dialogs/ordenes-prescripciones/audit-required-medication/audit-required-medicine.component';
 //pipes
+import { ShowMissingAlertsPipe } from './pipes/show-missing-alerts.pipe';
 import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
@@ -170,6 +172,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		HomeComponent,
 		InternacionPacienteComponent,
 		InternmentSummaryComponent,
+		IsolationAlertHeaderComponent,
 		MainDiagnosisSummaryComponent,
 		MedicalCoverageSummaryViewComponent,
 		NewConsultationFamilyHistoryFormComponent,
@@ -222,6 +225,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		ViolenceSituationsComponent,
 		//pipe
 		TranslateDeviceTextPipe,
+		ShowMissingAlertsPipe,
 	],
 	imports: [
 		CommonModule,
