@@ -73,6 +73,8 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO = false;
 	HABILITAR_REPORTE_EPIDEMIOLOGICO = false;
 
+	showTotalQuantity = true;
+
 	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
@@ -322,12 +324,19 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 	}
 
 	private setBasicMedicationPresentation = () => {
-		const presentation = [getBasicPresentation(this.snomedConcept.pt)];
+		const presentation = getBasicPresentation(this.snomedConcept.pt);
 		if (presentation) {
-			this.currentPresentation = getElementAtPosition(presentation, 0);
-			this.setQuantitySelector(presentation);
-			this.enableTotalQuantity(presentation);
-			this.setTotalQuantityAvailability(presentation);
+			this.showTotalQuantity = true;
+			this.prescriptionItemForm.controls.totalQuantity.setValidators(this.getTotalQuantityValidators());
+			this.currentPresentation = getElementAtPosition([presentation], 0);
+			this.setQuantitySelector([presentation]);
+			this.enableTotalQuantity([presentation]);
+			this.setTotalQuantityAvailability([presentation]);
+		} else {
+			this.prescriptionItemForm.controls.totalQuantity.clearValidators();
+			this.prescriptionItemForm.controls.totalQuantity.setValue(null);
+			this.prescriptionItemForm.controls.unit.setValue(null);
+			this.showTotalQuantity = false;
 		}
 	}
 
