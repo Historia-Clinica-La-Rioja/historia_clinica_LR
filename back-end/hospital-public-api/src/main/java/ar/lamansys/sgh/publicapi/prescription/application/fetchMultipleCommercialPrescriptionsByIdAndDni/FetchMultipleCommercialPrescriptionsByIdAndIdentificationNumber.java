@@ -44,8 +44,8 @@ public class FetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber {
 	}
 
 	private void correctQuantityValue(PrescriptionDosageBo lineDosage) {
-		if (!GroupOneCommercialMedication.UNITS.contains(lineDosage.getQuantityUnit()))
-			lineDosage.setQuantity(Double.valueOf(lineDosage.getPresentationPackageQuantity()));
+		if (!GroupOneCommercialMedication.UNITS.contains(lineDosage.getQuantityUnit()) && lineDosage.getPresentationQuantity() != null)
+			lineDosage.setQuantity(Double.valueOf(lineDosage.getPresentationQuantity()));
 	}
 
 	private void assertDomainNumber(String domain) {
