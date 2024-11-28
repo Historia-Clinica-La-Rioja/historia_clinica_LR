@@ -48,13 +48,13 @@
 		[text]="pharmacoDetail.interval | translate">
 	</app-title-description>
 
-	<div class="grouped-info" *ngIf="pharmacoDetail.commercialMedicationPrescription">
-        <app-title-description
+	<div class="grouped-info">
+        <app-title-description *ngIf="pharmacoDetail.commercialMedicationPrescription?.presentationUnitQuantity > 0"
             [title]="'pharmaco-detail.PRESENTATION'"
             [text]="pharmacoDetail.commercialMedicationPrescription.presentationUnitQuantity + ' unidades'">
         </app-title-description>
 
-        <app-title-description
+        <app-title-description *ngIf="pharmacoDetail.commercialMedicationPrescription?.medicationPackQuantity > 0"
             [title]="'pharmaco-detail.MEDICATION_PACK'"
             [text]="pharmacoDetail.commercialMedicationPrescription.medicationPackQuantity">
         </app-title-description>

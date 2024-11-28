@@ -197,11 +197,10 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 		if (!this.isAddPrescriptionValid()) return;
 
 		const {item, showStudyCategory} = this.data;
-		const commercialMedicationPrescription = !(this.HABILITAR_RELACIONES_SNOMED && this.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO) ? null :
-			{
-				medicationPackQuantity: this.prescriptionItemForm.value.medicationPackQuantity,
-				presentationUnitQuantity: this.prescriptionItemForm.value.presentationUnit
-			};
+		const commercialMedicationPrescription = this.showMedicationPackQuantity || this.showPresentationQuantity ? {
+			medicationPackQuantity: this.showMedicationPackQuantity ? this.prescriptionItemForm.value.medicationPackQuantity : 0,
+			presentationUnitQuantity: this.showPresentationQuantity ? this.prescriptionItemForm.value.presentationUnit : 0
+		}: null;
 		const formValues = this.prescriptionItemForm.value;
 		const isDailyInterval = formValues.frequencyType === this.getFrequencyDayTranslate();
 		const newItem: NewPrescriptionItem = this.digitalPrescriptionMapper.toNewPrescriptionItem(
@@ -520,7 +519,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 			frequency: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			quantity: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			unit: new FormControl(null),
-			medicationPackQuantity: new FormControl(null),
+			medicationPackQuantity: new FormControl(null, Validators.pattern(NUMBER_PATTERN)),
 			studyCategory: new FormControl(null),
 			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
@@ -548,8 +547,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 
 		if (this.HABILITAR_RELACIONES_SNOMED && this.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO) {
 			this.prescriptionItemForm.controls.presentationUnit.setValidators([Validators.required]);
-			this.prescriptionItemForm.controls.medicationPackQuantity.setValue(this.MIN_VALUE);
-			this.prescriptionItemForm.controls.medicationPackQuantity.setValidators([Validators.min(this.MIN_VALUE), Validators.pattern(NUMBER_PATTERN), Validators.required]);
 		}
 	}
 
