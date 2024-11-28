@@ -38,10 +38,11 @@
 				
 			</div>
 	
-			<div fxLayout="column" fxLayoutGap="10px" class="columns" *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
+			<div fxLayout="column" fxLayoutGap="10px" class="columns"
+				*ngIf="{referenceRegulationDto: referenceRegulationDto$ | async, referenceAdministrativeDto: referenceAdministrativeStateDto$ | async }as referenceDtos; else loading">
 				<div>
-					<app-reference-state [referenceRegulation]="referenceRegulationDto" [appointment]="reportCompleteData.appointment"
-						(closeDialog)="closeDialog()">
+					<app-reference-state [referenceRegulation]="referenceDtos.referenceRegulationDto" [appointment]="reportCompleteData.appointment"
+						[referenceAdministrativeStateDto]="referenceDtos.referenceAdministrativeDto" (closeDialog)="closeDialog()">
 					</app-reference-state>
 				</div>
 

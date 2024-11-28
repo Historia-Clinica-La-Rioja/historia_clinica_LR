@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
-import { EReferenceRegulationState, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto, ReferenceAdministrativeStateDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
@@ -29,6 +29,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	reportCompleteData: ReportCompleteData;
 
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
+	referenceAdministrativeStateDto$: Observable <ReferenceAdministrativeStateDto>;
 	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
 	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
 
@@ -72,6 +73,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setDerivation(referenceDetails);
 				this.referenceCompleteData = referenceDetails;
 				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
+				this.referenceAdministrativeStateDto$ = of(this.referenceCompleteData.administrativeState);
 				this.setReportData(this.referenceCompleteData);
 				this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.reportCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
@@ -136,10 +138,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			else
 				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
 		})
-	}
-
-	newRegulationState(newState: EReferenceRegulationState) {
-		this.referenceCompleteData.regulation.state = newState;
 	}
 
 	private updateDerivation() {

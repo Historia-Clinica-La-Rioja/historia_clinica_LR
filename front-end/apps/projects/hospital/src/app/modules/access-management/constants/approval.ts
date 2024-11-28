@@ -55,7 +55,7 @@ export const getIconState = {
 }
 
 export enum ReferenceApprovalState {
-    WAITING_APPROVAL, APPROVED, REJECTED, SUGGESTED_REVISION
+    WAITING_APPROVAL, APPROVED, SUGGESTED_REVISION
 }
 
 export enum ReferenceOriginState {

@@ -11,7 +11,7 @@
 
         <mat-step [completed]="destinationApproved">
             <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.DESTINATION' | translate}}</ng-template>
-            <app-approval [approval]="referenceRegulation" [referenceCompleteDataDto]="permissionService.referenceCompleteData"
+            <app-approval [referenceCompleteDataDto]="permissionService.referenceCompleteData"
 				[canEditApprovalState]="permissionService.visualPermissions.canEditApproval" (regulationStateEmmiter)="newDestinationState($event)"
 			></app-approval>
         </mat-step>

@@ -117,10 +117,6 @@ export const REFERENCE_APPROVAL_OPTIONS = [
         description: "Solicitud aprobada"
     },
     {
-        id: ReferenceApprovalState.REJECTED,
-        description: "Solicitud rechazada"
-    },
-    {
         id: ReferenceApprovalState.SUGGESTED_REVISION,
         description: "Revisión sugerida"
     }
@@ -160,6 +156,5 @@ export const REFERENCE_ORIGIN_STATES = {
 export const REFERENCE_DESTINATION_STATES = {
     waitingApproval: EReferenceAdministrativeState.WAITING_APPROVAL,
     approval: EReferenceAdministrativeState.APPROVED,
-    rejected: EReferenceRegulationState.REJECTED,
     suggestedRevision: EReferenceAdministrativeState.SUGGESTED_REVISION
 }

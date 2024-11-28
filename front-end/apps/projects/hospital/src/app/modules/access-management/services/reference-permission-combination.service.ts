@@ -57,7 +57,7 @@ export class ReferencePermissionCombinationService {
     }
 
     showAssignAppointmentButton(): boolean {
-		return this.referenceCompleteData.regulation.state
+		return this.referenceCompleteData.administrativeState?.state
 			&& this.isRoleGestor && !this.referenceCompleteData.reference.closureType && !this.reportHasAppointment();
 	}
 
@@ -78,12 +78,15 @@ export class ReferencePermissionCombinationService {
     }
 
     showAuditDropdown(): boolean {
-        return (this.isRoleGestor || this.isRoleGestorInstitucional) && !this.referenceCompleteData.reference.closureType &&
-        this.referenceCompleteData.regulation.state === this.referenceOriginStates.waitingAudit && !this.reportHasAppointment();
+        return (this.isRoleGestor || (this.isRoleGestorInstitucional && this.dashboardService.dashboardView == DashboardView.REQUESTED))
+        && !this.referenceCompleteData.reference.closureType && this.referenceCompleteData.regulation.state === this.referenceOriginStates.waitingAudit
+        && !this.reportHasAppointment();
     }
 
     showApprovalDropdown(): boolean {
-        return this.isRoleGestor || (this.isRoleGestorInstitucional && this.dashboardService.dashboardView == DashboardView.REQUESTED);
+        return this.isRoleGestorInstitucional && this.dashboardService.dashboardView == DashboardView.RECEIVED
+        && this.referenceCompleteData.administrativeState?.state === this.referenceDestinationState.waitingApproval
+        && !this.referenceCompleteData.reference.closureType;
     }
 
     canEditApproval(): boolean {

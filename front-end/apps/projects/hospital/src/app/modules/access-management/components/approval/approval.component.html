@@ -1,7 +1,8 @@
-<div *ngIf="referencePermissionService.visualPermissions.showApprovalDropdown else showRegulationState">
+<div *ngIf="permissionService.visualPermissions.showApprovalDropdown else showRegulationState">
 	<app-institutional-network-actions-dropdown
-		*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
-		[isOrigin]="false" (newState)="onNewState($event)" (editing)="onEditingState($event)">
+		*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_INSTITUCIONAL']"
+		[isOrigin]="false" [regulationStates]="regulationDestinationStates"
+		(newState)="onNewState($event)" (editing)="onEditingState($event)">
 	</app-institutional-network-actions-dropdown>
 </div>
 
@@ -15,11 +16,6 @@
 	<span class="reason">{{referenceAdministrativeDto.reason}}</span>
 	<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
 		<span>{{referenceAdministrativeDto.professionalName}}</span>
-		<span>{{referenceAdministrativeDto.createdOn | dateFormat: 'datetime'}}</span>
+		<span>{{referenceAdministrativeDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
 	</div>
-</div>
-
-<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-	<app-reference-state-actions *ngIf="loggedUserCanDoActions && !referenceCompleteDataDto.reference?.closureType"
-		[referenceCompleteDataDto]="referenceCompleteDataDto"></app-reference-state-actions>
 </div>

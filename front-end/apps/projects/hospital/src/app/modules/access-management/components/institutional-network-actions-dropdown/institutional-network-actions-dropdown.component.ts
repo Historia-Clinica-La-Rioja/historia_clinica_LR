@@ -1,13 +1,16 @@
-import { ReferenceOriginState, getIconState } from '@access-management/constants/approval';
+import { ReferenceOriginState, ReferenceApprovalState, getIconState } from '@access-management/constants/approval';
 import { ReferencePermissionCombinationService } from '@access-management/services/reference-permission-combination.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EReferenceRegulationState } from '@api-rest/api-model';
+import { EReferenceAdministrativeState, EReferenceRegulationState } from '@api-rest/api-model';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { NON_WHITESPACE_REGEX } from '@core/utils/form.utils';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
 import { Observable } from 'rxjs';
+
+const WAITING_AUDIT = "WAITING_AUDIT";
+const WAITING_APPROVAL = "WAITING_APPROVAL";
 
 @Component({
 	selector: 'app-institutional-network-actions-dropdown',
@@ -16,16 +19,18 @@ import { Observable } from 'rxjs';
 })
 export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 
-	waitingAudit =  EReferenceRegulationState.WAITING_AUDIT;
-	selectedOption: EReferenceRegulationState = this.waitingAudit;
-	initialOption: EReferenceRegulationState;
+	selectedOption: EReferenceRegulationState | EReferenceAdministrativeState;
+	selectedOptionColoredLabel: ColoredLabel;
 	selectedOptionData: ReasonData;
-	private selectedOptionId: number;
-	showReasonArea: boolean = false;
-	private readonly translatePrefixRoute = 'access-management.search_references.reference.discard_popup';
 	reason: FormGroup;
 
-	@Input() regulationOriginStates: EReferenceRegulationState[];
+	private selectedOptionId: number;
+	private readonly translatePrefixRoute = 'access-management.search_references.reference.discard_popup';
+	showReasonArea: boolean = false;
+	isWaitingAudit = WAITING_AUDIT;
+	isWaitingAproval = WAITING_APPROVAL;
+	
+	@Input() regulationStates: EReferenceAdministrativeState[] | EReferenceRegulationState[];
 	@Input() isOrigin: boolean;
 	@Output() newState = new EventEmitter<boolean>();
 	@Output() editing = new EventEmitter<boolean>();
@@ -33,35 +38,46 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	constructor(
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
-		private readonly permissionService: ReferencePermissionCombinationService,
+		public permissionService: ReferencePermissionCombinationService,
 	) { }
 
 	ngOnInit(): void {
-		if (this.permissionService.referenceCompleteData.regulation?.state) 
-			this.setSelectedOption(this.permissionService.referenceCompleteData.regulation.state);
+		if (this.isOrigin) {
+			if (this.permissionService.referenceCompleteData.regulation?.state) 
+				this.setSelectedOption(this.permissionService.referenceCompleteData.regulation.state);
+			else 
+				this.selectedOption = this.permissionService.referenceOriginStates.waitingAudit;
+		}
+		else {
+			if (this.permissionService.referenceCompleteData.administrativeState?.state)
+				this.setSelectedOption(this.permissionService.referenceCompleteData.administrativeState.state)
+			else
+				this.selectedOption = this.permissionService.referenceDestinationState.waitingApproval;
+		}
+		this.selectedOptionColoredLabel = this.getSelectedOption();
 		this.reason = new FormGroup<ReasonForm>({
 			reason: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]),
 		});
-	}
-
-	get selectedStateOption() {
-		return this.getSelectedOption();
 	}
 
 	private getSelectedOption(): ColoredLabel {
 		return this.getOptionIconState(this.selectedOption);
 	}
 
-	getOptionIconState(state: EReferenceRegulationState): ColoredLabel {
+	getOptionIconState(state: EReferenceRegulationState | EReferenceAdministrativeState): ColoredLabel {
 		return getIconState[state];
 	}
 
-	setSelectedOption(option: EReferenceRegulationState) {
+	setSelectedOption(option: EReferenceRegulationState | EReferenceAdministrativeState) {
 		this.selectedOption = option;
-		this.setValuesInOptions[option]();
+		this.selectedOptionColoredLabel = this.getSelectedOption();
+		if (this.isOrigin)
+			this.setOriginValuesInOptions[option]();
+		else
+			this.setDestinationValuesInOptions[option]();
 	}
 
-	private setValuesInOptions = {
+	private setOriginValuesInOptions = {
 		WAITING_AUDIT: () => {
 			this.showReasonArea = false;
 			this.selectedOptionId = ReferenceOriginState.PENDING_AUDIT;
@@ -78,13 +94,29 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 		},
 		AUDITED: () => {
 			this.showReasonArea = false;
-			this.selectedOptionData = this.toReasonData('approved.TITLE', '');
+			this.selectedOptionData = this.toReasonData('audit.TITLE', '');
 			this.selectedOptionId = ReferenceOriginState.AUDIT;
 		}
 	}
 
+	private setDestinationValuesInOptions = {
+		WAITING_APPROVAL: () => {
+			this.showReasonArea = false;
+			this.selectedOptionId = ReferenceApprovalState.WAITING_APPROVAL;
+		},
+		SUGGESTED_REVISION: () => {
+			this.showReasonArea = true;
+			this.selectedOptionData = this.toReasonData('suggested-review.TITLE', 'suggested-review.PLACEHOLDER');
+			this.selectedOptionId = ReferenceApprovalState.SUGGESTED_REVISION;
+		},
+		APPROVED: () => {
+			this.showReasonArea = false;
+			this.selectedOptionData = this.toReasonData('approved.TITLE', '');
+			this.selectedOptionId = ReferenceApprovalState.APPROVED;
+		}
+	}
+
 	confirm() {
-		console.log('ID', this.selectedOption)
 		if (this.showReasonArea) {
 			if (this.reason.valid)
 				this.updateStateAndEmit(this.selectedOptionId);
@@ -96,6 +128,8 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	}
 
 	cancel() {
+		this.selectedOption = this.permissionService.referenceDestinationState.waitingApproval;
+		this.selectedOptionColoredLabel = this.getSelectedOption();
 		this.showReasonArea = false;
 		this.editing.next(false);
 	}
@@ -103,14 +137,21 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 	private updateStateAndEmit(stateId: number) {
 		const reason = this.reason.controls.reason.value;
 		let updateState$: Observable<boolean>;
-		if (this.permissionService.isRoleGestorInstitucional)
-			updateState$ = this.institutionalReferenceReportService.changeReferenceRegulationStateAsGestorInstitucional(
+		if (this.isOrigin) {
+			if (this.permissionService.isRoleGestorInstitucional) 
+				updateState$ = this.institutionalReferenceReportService.changeReferenceRegulationStateAsGestorInstitucional(
+					this.permissionService.referenceCompleteData.reference.id, stateId, reason || null);
+			else
+				updateState$ = this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(
+					this.permissionService.referenceCompleteData.reference.id, stateId, reason || null);
+		}
+		else {
+			updateState$ = this.institutionalReferenceReportService.changeReferenceApprovalStateAsGestorInstitucional(
 				this.permissionService.referenceCompleteData.reference.id, stateId, reason || null);
-		else 
-			updateState$ = this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(
-				this.permissionService.referenceCompleteData.reference.id, stateId, reason || null);
-		
-		updateState$.subscribe(_ => this.newState.next(true));
+		}
+		updateState$.subscribe(_ => {
+			this.newState.next(true)
+		});
 	}
 
 	private toReasonData(titleKey: string, placeholderKey: string): ReasonData {

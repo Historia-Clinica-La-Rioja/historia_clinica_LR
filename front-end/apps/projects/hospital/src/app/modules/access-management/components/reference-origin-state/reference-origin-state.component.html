@@ -2,7 +2,7 @@
     <div *ngIf="permissionService.visualPermissions.showAuditDropdown; else showRegulationState">
         <app-institutional-network-actions-dropdown
             *appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
-            [isOrigin]="true" [regulationOriginStates]="regulationOriginStates"
+            [isOrigin]="true" [regulationStates]="regulationOriginStates"
             (newState)="onNewState($event)" (editing)="onEditingState($event)">
         </app-institutional-network-actions-dropdown>
     </div>

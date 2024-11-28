@@ -1,6 +1,6 @@
 import { ReferencePermissionCombinationService } from '@access-management/services/reference-permission-combination.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EReferenceRegulationState, EReferenceAdministrativeState, ReferenceRegulationDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, EReferenceAdministrativeState, ReferenceRegulationDto, ReferenceAdministrativeStateDto } from '@api-rest/api-model';
 import { AppointmentSummary } from '../appointment-summary/appointment-summary.component';
 import { TabsService } from '@access-management/services/tabs.service';
 import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
@@ -15,9 +15,10 @@ const TAB_OFERTA_POR_REGULACION = 1;
 export class ReferenceStateComponent implements OnInit {
 
     originAudited: boolean;
-    destinationApproved = false;
+    destinationApproved: boolean;
 
     @Input() referenceRegulation: ReferenceRegulationDto;
+    @Input() referenceAdministrativeStateDto: ReferenceAdministrativeStateDto;
     @Input() appointment: AppointmentSummary;
     @Output() closeDialog: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -28,7 +29,11 @@ export class ReferenceStateComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.originAudited = this.isAudited(this.referenceRegulation.state);
+        if (this.permissionService.referenceCompleteData.reference.institutionDestination.id)
+            this.originAudited = this.isAudited(this.referenceRegulation?.state);
+        else
+            this.originAudited = false;
+        this.destinationApproved = this.isApproved(this.referenceAdministrativeStateDto?.state);
     }
 
     newOriginState(state: EReferenceRegulationState) {
@@ -50,7 +55,7 @@ export class ReferenceStateComponent implements OnInit {
     }
 
     private isApproved(state: EReferenceAdministrativeState) {
-        return true;
+        return state === this.permissionService.referenceDestinationState.approval;
     }
 
 }

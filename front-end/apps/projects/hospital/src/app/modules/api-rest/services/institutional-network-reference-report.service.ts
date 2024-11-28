@@ -41,6 +41,17 @@ export class InstitutionalNetworkReferenceReportService {
 		return this.http.post<boolean>(url, null, { params });
 	}
 
+	changeReferenceApprovalState(referenceId: number, stateId: number, reason?: string): Observable<boolean> {
+		const url = `${this.BASE_URL}/${referenceId}/change-administrative-state`;
+		let params: HttpParams = new HttpParams();
+		params = params.append('stateId', stateId);
+		if (!reason)
+			return this.http.post<boolean>(url, null, { params });
+
+		params = params.append('reason', reason);
+		return this.http.post<boolean>(url, null, { params });
+	}
+
 	addObservation(referenceId: number, observation: string): Observable<Object> {
 		const url = `${this.BASE_URL}/${referenceId}/add-observation`;
 		let queryParams: HttpParams = new HttpParams();
