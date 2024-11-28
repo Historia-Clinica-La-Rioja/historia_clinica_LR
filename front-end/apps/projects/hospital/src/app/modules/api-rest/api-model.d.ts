@@ -3261,6 +3261,45 @@ export interface MedicationInteroperabilityDto {
     unitTime: string;
 }
 
+export interface MedicationRequestValidationDispatcherInstitutionDto {
+    address: string;
+    cuit: string;
+    name: string;
+}
+
+export interface MedicationRequestValidationDispatcherMedicalCoverageDto {
+    dispatcherNumber: number;
+    plan: number;
+}
+
+export interface MedicationRequestValidationDispatcherMedicationDto {
+    articleCode: number;
+    quantity: number;
+}
+
+export interface MedicationRequestValidationDispatcherPatientDto {
+    identificationNumber: string;
+    identificationType: string;
+    lastName: string;
+    medicalCoverage: MedicationRequestValidationDispatcherMedicalCoverageDto;
+    name: string;
+}
+
+export interface MedicationRequestValidationDispatcherProfessionalDto {
+    identificationNumber: string;
+    identificationType: string;
+    lastName: string;
+    name: string;
+}
+
+export interface MedicationRequestValidationDispatcherSenderDto {
+    healthcareProfessional: MedicationRequestValidationDispatcherProfessionalDto;
+    institution: MedicationRequestValidationDispatcherInstitutionDto;
+    medications: MedicationRequestValidationDispatcherMedicationDto[];
+    patient: MedicationRequestValidationDispatcherPatientDto;
+    postdatedDates: Date[];
+}
+
 export interface MedicineDoctorCompleteDto {
     firstName: string;
     identificationNumber: string;
