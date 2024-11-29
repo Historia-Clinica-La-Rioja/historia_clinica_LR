@@ -135,16 +135,15 @@ const ELEMENT_DATA: RutasPeriodic[] = [
 
 const ELEMENT_DATA_PREV: RutasPeriodic[] = [
   {
-    //ITEMS RUTAS PREVENTIVAS
-    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature1: IMAGE_ITEM + "DR-AM.png", // Ruta de la miniatura
     Miniature2: IMAGE_ITEM + "DT1.jpg",
     IconDR: ICON + "DR-active-icon.png",
     IconDT: ICON + "DT-active-icon.png",
     Orden: 1,
     Nombre: "Adulto mayor",
-    pdfDR: null,        // Ruta al DR
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/AdultoMayor-RutaPreventiva.pdf", // Ruta al documento
     routerLink: '../../../assets/rutas-lr/', 
-    pdfDT: null,                                                                          
+    pdfDT: null,    
   },
 
 ];
@@ -174,22 +173,26 @@ export class RutasComponent implements OnInit {
     return IMAGE_ITEM + fileName;
   }
 
-  handleClickDR(index: number) {
-    const element = this.data[index];
-
-    if (element.pdfDR) { 
+  handleClickDR(index: number, isPreventiva: boolean = false) {
+    const element = isPreventiva ? this.dataP[index] : this.data[index];
+  
+    if (element && element.pdfDR) { 
+      console.log('Abriendo PDF:', element.pdfDR); // Log para depuración
       window.open(element.pdfDR, '_blank'); 
-    } else if (element.routerLink) {
+    } else if (element && element.routerLink) {
+      console.log('Navegando a:', element.routerLink);
       this.router.navigate([element.routerLink]); 
     } 
   }
 
-  handleClickDT(index: number) {
-    const element = this.data[index];
-
-    if (element.pdfDT) { 
+  handleClickDT(index: number, isPreventiva: boolean = false) {
+    const element = isPreventiva ? this.dataP[index] : this.data[index];
+  
+    if (element && element.pdfDT) { 
+      console.log('Abriendo PDF:', element.pdfDT); // Log para depuración
       window.open(element.pdfDT, '_blank'); 
-    } else if (element.routerLink) {
+    } else if (element && element.routerLink) {
+      console.log('Navegando a:', element.routerLink);
       this.router.navigate([element.routerLink]); 
     } 
   }
