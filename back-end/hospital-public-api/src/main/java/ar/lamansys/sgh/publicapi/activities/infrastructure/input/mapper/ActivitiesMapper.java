@@ -85,6 +85,7 @@ public class ActivitiesMapper {
 				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
 				.personExtendedInfo(mapToPersonExtendedInfoDto(attentionInfoBo.getPersonInfoExtended()))
 				.emergencyCareAdministrativeDischargeDateTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getEmergencyCareAdministrativeDischargeDateTime()))
+				.billable(attentionInfoBo.getBillable())
 				.build();
 	}
 
@@ -102,6 +103,7 @@ public class ActivitiesMapper {
 				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
 				.personExtendedInfo(mapToPersonExtendedInfoDto(attentionInfoBo.getPersonInfoExtended()))
 				.emergencyCareAdministrativeDischargeDateTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getEmergencyCareAdministrativeDischargeDateTime()))
+				.billable(attentionInfoBo.getBillable())
 				.build();
 	}
 
@@ -348,6 +350,7 @@ public class ActivitiesMapper {
 				.attentionDateWithTime(attentionSource.getAttentionDateWithTime())
 				.personExtendedInfo(attentionSource.getPersonExtendedInfo())
 				.emergencyCareAdministrativeDischargeDateTime(attentionSource.getEmergencyCareAdministrativeDischargeDateTime())
+				.billable(attentionSource.getBillable())
 				.build();
 	}
 }

@@ -70,7 +70,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
 					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
 					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
-					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP) " +
+					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP), " +
+					"          true as billable " +
 					"   FROM v_attention_filtered va " +
 					"   JOIN patient pat ON (pat.id = va.patient_id) " +
 					"   JOIN person ppat ON ppat.id = pat.person_id " +
@@ -102,7 +103,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
 					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
 					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
-					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP) " +
+					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP), " +
+					"          event.billable as billable " +
 					"   FROM v_attention_filtered va " +
 					"   JOIN patient pat ON (pat.id = va.patient_id) " +
 					"   JOIN person ppat ON ppat.id = pat.person_id " +
@@ -133,7 +135,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
 					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
 					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
-					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP) " +
+					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP), " +
+					"		   event.billable as billable " +
 					"   FROM v_attention_filtered va " +
 					"   JOIN patient pat ON (pat.id = va.patient_id) " +
 					"   JOIN person ppat ON ppat.id = pat.person_id " +
@@ -166,7 +169,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
 					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
 					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
-					"          pepat.gender_self_determination, ecd.administrative_discharge_on " +
+					"          pepat.gender_self_determination, ecd.administrative_discharge_on, " +
+					"          true as billable " +
 					"   FROM v_attention_filtered va " +
 					"   JOIN patient pat ON (pat.id = va.patient_id) " +
 					"   JOIN person ppat ON ppat.id = pat.person_id " +
@@ -297,7 +301,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 				buildDiagnoses(rawAttention),
 				buildDateTimeBo(rawAttention, 27),
 				buildPersonExtendedInfoBo(rawAttention),
-				buildDateTimeBo(rawAttention, 33)
+				buildDateTimeBo(rawAttention, 33),
+				(boolean)rawAttention[34]
 		);
 	}
 
