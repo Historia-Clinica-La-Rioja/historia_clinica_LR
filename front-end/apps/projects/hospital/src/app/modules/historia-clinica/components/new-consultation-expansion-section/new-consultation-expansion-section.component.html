@@ -1,9 +1,9 @@
-<div fxLayout="column" fxLayoutGap="20px">
+<div fxLayout="column" fxLayoutGap="20px" id="new-consultation-expansion-section" [ngClass]="collapsed ? 'expansion-section-closed-panel-' : 'expansion-section-expanded-panel'">
 	<div fxLayout="column" fxLayoutGap="20px" (click)="isToAddSnomedConcepts ? toggleToAddSnomedConcepts() : toggle()"
 		[ngClass]="{'pointer' : !fixedExpanded}">
 		<mat-divider *ngIf="!hideBorder"></mat-divider>
 
-		<div fxLayout="row" fxLayoutAlign="space-between center"
+		<div fxLayout="row" fxLayoutAlign="space-between center" id="header-expansion-section"
 			[ngClass]="isToAddSnomedConcepts ? (isEmpty && !fixedExpanded ? 'closed-panel' : '') : (isEmpty && !fixedExpanded && collapsed ? 'closed-panel' : '')">
 
 			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
@@ -38,6 +38,8 @@
 		</div>
 	</div>
 	<ng-container *ngIf="!collapsed || fixedExpanded">
-		<ng-content></ng-content>
+		<div id="new-consultation-expansion-section-content">
+			<ng-content></ng-content>
+		</div>
 	</ng-container>
 </div>
