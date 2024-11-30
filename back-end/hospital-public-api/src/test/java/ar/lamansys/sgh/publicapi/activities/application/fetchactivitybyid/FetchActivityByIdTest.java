@@ -67,7 +67,8 @@ public class FetchActivityByIdTest {
 						new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
 						new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45)),
 						new PersonInfoExtendedBo("Pedro", "Perez", "jp@gmail.com", "Juan", (short)1),
-						null
+						null,
+						true
 				)));
 
 		setUserCanAccess(refsetCode, 10);

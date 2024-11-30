@@ -10,7 +10,7 @@ import lombok.Getter;
 public enum ScopeEnum {
     AMBULATORIA((short) 1, (short) 6),
     INTERNACION((short) 0),
-    ENFERMERIA((short) 5),
+    ENFERMERIA((short) 7),
 	GUARDIA((short) 4);
 
     private List<Short> ids;

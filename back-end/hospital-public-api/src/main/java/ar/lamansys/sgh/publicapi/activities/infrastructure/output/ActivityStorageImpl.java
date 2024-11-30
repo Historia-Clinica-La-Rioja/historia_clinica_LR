@@ -187,6 +187,39 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"   LEFT JOIN snomed s3 ON s3.id = hc.snomed_id " +
 					"   LEFT JOIN emergency_care_discharge ecd ON (ecd.emergency_care_episode_id = va.encounter_id) " +
 					"   WHERE va.scope_id = 4 %2$s " +
+					" ) " +
+
+					" UNION ALL " +
+
+					" ( " +
+					"   SELECT va.id AS attention_id, va.performed_date AS attention_date, snm.name, snm.sctid_code, " +
+					"          ppat.first_name AS person_name, ppat.last_name AS person_last_name, " +
+					"          ppat.identification_number AS person_identification_number, " +
+					"          ppat.gender_id AS person_gender_id, ppat.birth_date AS person_birth_date, " +
+					"          pmc.affiliate_number, va.scope_id, CAST(NULL AS TIMESTAMP), hp.id, " +
+					"          pprof.first_name AS doctor_name, pprof.last_name AS doctor_last_name, hp.license_number, " +
+					"          pprof.identification_number AS doctor_identification_number, mc.cuit, " +
+					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
+					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
+					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
+					"          pepat.gender_self_determination, ecd.administrative_discharge_on, " +
+					"          true as billable " +
+					"   FROM v_attention_filtered va " +
+					"   JOIN patient pat ON (pat.id = va.patient_id) " +
+					"   JOIN person ppat ON ppat.id = pat.person_id " +
+					"   JOIN person_extended pepat ON pepat.person_id = ppat.id " +
+					"   JOIN healthcare_professional hp ON (hp.id = va.doctor_id) " +
+					"   JOIN person pprof ON hp.person_id = pprof.id " +
+					"   LEFT JOIN clinical_specialty snm ON (va.clinical_speciality_id = snm.id) " +
+					"   LEFT JOIN nursing_consultation event ON event.id = va.encounter_id " +
+					"   LEFT JOIN patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"   LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"   LEFT JOIN medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
+					"   LEFT JOIN document_health_condition dhc ON dhc.document_id = va.id " +
+					"   LEFT JOIN health_condition hc ON hc.id = dhc.health_condition_id " +
+					"   LEFT JOIN snomed s3 ON s3.id = hc.snomed_id " +
+					"   LEFT JOIN emergency_care_discharge ecd ON (ecd.emergency_care_episode_id = va.encounter_id) " +
+					"   WHERE va.scope_id = 7 %2$s " +
 					" ) ";
 
 	private final String WHERE_CLAUSE = " WHERE CAST(va.updated_on AS DATE) BETWEEN :fromDate AND :toDate " +
