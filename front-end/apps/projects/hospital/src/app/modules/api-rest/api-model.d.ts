@@ -5396,6 +5396,15 @@ export interface StudyOrderWorkListDto {
     studyTypeId: EStudyType;
 }
 
+export interface StudyOrderWorkListFilterDto {
+    categories: string[];
+    notRequiresTransfer: boolean;
+    patientTypeId: number[];
+    requiresTransfer: boolean;
+    sourceTypeIds: number[];
+    studyTypeIds: number[];
+}
+
 export interface StudyTranscribedOrderReportInfoDto {
     appointmentDate?: DateDto;
     appointmentHour?: TimeDto;
