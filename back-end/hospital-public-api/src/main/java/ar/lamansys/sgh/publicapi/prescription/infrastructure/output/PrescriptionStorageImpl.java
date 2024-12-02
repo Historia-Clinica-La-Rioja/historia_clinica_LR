@@ -274,75 +274,11 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	}
 
 	@Override
-	public Optional<MultipleCommercialPrescriptionBo> getMultipleCommercialPrescriptionByIdAndIdentificationNumber(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
-		String stringQuery = "SELECT mr.id AS mrid, ms.prescription_date, ms.due_date, " +
-				"p2.first_name AS p2fn, p2.last_name AS p2ln, pe.name_self_determination, g.description AS gd, spg.description AS spgd, p2.birth_date, it.description AS itd, p2.identification_number, " +
-				"mc.name AS mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
-				"CONCAT(a.street, ' ', a.number, ' ', CASE WHEN a.floor IS NOT NULL THEN CONCAT('Piso ', a.floor) ELSE '' END)," +
-				"p3.first_name AS p3fn, p3.last_name, it2.description AS it2d, p3.identification_number AS p3d, pe2.phone_number, pe2.email AS EMAIL, ps.description AS psd, " +
-				"ps.sctid_code AS psc, " +
-				"pln.license_number, CASE WHEN pln.type_license_number = 1 THEN 'NACIONAL' ELSE 'PROVINCIAL' END, ms.prescription_line_number AS msid, msls.description AS mssd, s.pt AS spt, s.sctid AS sid, " +
-				"pt.description AS ptd, s2.pt AS s2pt, s2.sctid AS s2id, " +
-				"d2.doses_by_unit AS unit_dose, d2.doses_by_day, d2.duration, '' AS presentation, mscp.medication_pack_quantity AS presentation_quantity, d.id, mr.is_archived, " +
-				"CASE WHEN d2.dose_quantity_id IS NULL THEN NULL ELSE q.value END, " +
-				"msls.id AS status_id, ms.id as medication_statement_id, " +
-				"co.description AS country, " +
-				"pr.description AS province, " +
-				"de.description AS department, " +
-				"ci.description AS city, " +
-				"pa.street AS person_street, " +
-				"pa.number AS person_street_number, " +
-				"n.description AS observation, " +
-				"d2.frequency AS frequency, " +
-				"d2.period_unit AS frequency_unit, " +
-				"cs.name AS specialty, " +
-				"cs.sctid_code AS snomed_id, " +
-				"s3.sctid, s3.pt, mscp.presentation_unit_quantity, q.unit " +
-				"FROM {h-schema}medication_statement ms " +
-				"JOIN {h-schema}document_medicamention_statement dms ON (ms.id = dms.medication_statement_id) " +
-				"JOIN {h-schema}document d ON (d.id = dms.document_id) " +
-				"JOIN {h-schema}medication_request mr ON (mr.id = d.source_id) " +
-				"LEFT JOIN {h-schema}clinical_specialty cs ON (mr.clinical_specialty_id = cs.id) " +
-				"JOIN {h-schema}patient p ON (p.id = ms.patient_id) " +
-				"JOIN {h-schema}person p2 ON (p2.id = p.person_id) " +
-				"LEFT JOIN {h-schema}person_extended pe ON (pe.person_id = p2.id) " +
-				"JOIN {h-schema}gender g ON (g.id = p2.gender_id) " +
-				"LEFT JOIN {h-schema}self_perceived_gender spg ON (spg.id = pe.gender_self_determination) " +
-				"JOIN {h-schema}identification_type it ON (it.id = p2.identification_type_id) " +
-				"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (mr.medical_coverage_id = pmc.id) "+
-				"LEFT JOIN {h-schema}medical_coverage mc ON (mc.id = pmc.medical_coverage_id) " +
-				"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mcp.medical_coverage_id = pmc.medical_coverage_id) " +
-				"LEFT JOIN {h-schema}institution i ON (i.id = d.institution_id) " +
-				"LEFT JOIN {h-schema}address a ON (a.id = i.address_id) " +
-				"LEFT JOIN {h-schema}address pa ON (pa.id = pe.address_id)" +
-				"LEFT JOIN {h-schema}country co ON (pa.country_id = co.id) " +
-				"LEFT JOIN {h-schema}province pr ON (pa.province_id = pr.id) " +
-				"LEFT JOIN {h-schema}department de ON (pa.department_id = de.id) " +
-				"LEFT JOIN {h-schema}city ci ON (pa.city_id = ci.id) " +
-				"JOIN {h-schema}healthcare_professional hp ON (hp.id = mr.doctor_id) " +
-				"JOIN {h-schema}person p3 ON (p3.id = hp.person_id) " +
-				"JOIN {h-schema}identification_type it2 ON (it2.id = p3.identification_type_id) " +
-				"LEFT JOIN {h-schema}person_extended pe2 ON (pe2.person_id = p3.id) " +
-				"JOIN {h-schema}professional_professions pp ON (pp.healthcare_professional_id = hp.id) " +
-				"JOIN {h-schema}healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id) " +
-				"JOIN {h-schema}professional_specialty ps ON (ps.id = pp.professional_specialty_id) " +
-				"JOIN {h-schema}professional_license_numbers pln ON (pln.professional_profession_id = pp.id OR pln.healthcare_professional_specialty_id = hps.id)" +
-				"JOIN {h-schema}health_condition hc ON (hc.id = ms.health_condition_id) " +
-				"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
-				"JOIN {h-schema}problem_type pt ON (pt.id = hc.problem_id) " +
-				"JOIN {h-schema}snomed s2 ON (ms.snomed_id = s2.id) " +
-				"LEFT JOIN {h-schema}dosage d2 ON (d2.id = ms.dosage_id) " +
-				"LEFT JOIN {h-schema}quantity q ON (d2.dose_quantity_id = q.id) " +
-				"LEFT JOIN {h-schema}medication_statement_line_state msls ON (msls.id = ms.prescription_line_state) " +
-				"LEFT JOIN {h-schema}note n ON (ms.note_id = n.id) " +
-				"LEFT JOIN {h-schema}snomed s3 ON (s3.id = ms.suggested_commercial_medication_snomed_id) " +
-				"LEFT JOIN {h-schema}medication_statement_commercial_prescription mscp ON (mscp.medication_statement_id = ms.id) " +
-				"WHERE p2.identification_number = :identificationNumber " +
-				"AND mr.id = :numericPrescriptionId " +
-				"AND (d.type_id = " + RECETA + " OR d.type_id = " + RECETA_DIGITAL + ") " +
-				"AND hc.verification_status_id = '" + CONFIRMADO + "' " +
-				"AND (ms.status_id = '" + COMPLETO + "' OR ms.status_id = '" + ACTIVO + "') " +
-				"ORDER BY mr.id DESC";
+	public Optional<PrescriptionV2Bo> getPrescriptionByIdAndDniV2(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
+		String stringQuery = "SELECT * " +
+				"FROM v_prescription_request_v2 " +
+				"WHERE patient_identification_number = :identificationNumber " +
+				"AND medication_request_id = :numericPrescriptionId ";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
 				.setParameter("identificationNumber", identificationNumber)
