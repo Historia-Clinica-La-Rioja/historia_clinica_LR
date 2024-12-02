@@ -138,6 +138,7 @@ export const mappings: { [key in AugmentativeMedicationPresentation]?: Diminutiv
     [AugmentativeMedicationPresentation.INHALADOR]: [DiminutiveMedicationPresentation.APLICACION],
     [AugmentativeMedicationPresentation.SISTEMA]: [DiminutiveMedicationPresentation.APLICACION],
     [AugmentativeMedicationPresentation.TAMPON]: [DiminutiveMedicationPresentation.APLICACION],
+    [AugmentativeMedicationPresentation.APLICACION]: [DiminutiveMedicationPresentation.APLICACION],
 };
 
 export const basicPresentations: string[] = ["óvulo", "cápsula", "comprimido", "supositorio"];
