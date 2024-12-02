@@ -397,8 +397,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private InternmentBo buildInternmentBo(Object[] rawAttention) {
 		return ScopeEnum.map((Short) rawAttention[10]).equals(ScopeEnum.INTERNACION) ?
 				new InternmentBo(rawAttention[0].toString(),
-						rawAttention[1] != null ? ((Timestamp) rawAttention[1]).toLocalDateTime() : null,
-						rawAttention[11] != null ? ((Timestamp) rawAttention[11]).toLocalDateTime() : null) :
+						rawAttention[1] != null ? localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[1])
+								.toLocalDateTime()).toLocalDateTime() : null,
+						rawAttention[11] != null ? localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[11])
+								.toLocalDateTime()).toLocalDateTime() : null
+				) :
 				new InternmentBo();
 	}
 
