@@ -21,7 +21,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class, StudyOrderPatientMapper.class})
+@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class})
 public interface StudyMapper {
     @Named("parseToList")
     @IterableMapping(qualifiedByName = "parseTo")
@@ -66,17 +66,9 @@ public interface StudyMapper {
 	ExtendedServiceRequestBo toExtendedServiceRequestBo(BasicPatientDto patientDto, Integer doctorId, String categoryId, PrescriptionDto serviceRequestDto, List<PrescriptionItemDto> studies);
 
 	@Named("toStudyOrderWorkListDto")
-	@Mapping(target = "studyId", source = "studyId")
-	@Mapping(target = "snomed", source = "snomed")
 	@Mapping(target = "studyTypeId", expression = "java(EStudyType.map(studyOrderWorkListBo.getStudyTypeId()))")
-	@Mapping(target = "requiresTransfer", source = "requiresTransfer")
 	@Mapping(target = "sourceTypeId", expression = "java(ESourceType.map(studyOrderWorkListBo.getSourceTypeId()))")
-	@Mapping(target = "deferredDate", source = "deferredDate")
 	@Mapping(target = "status", expression = "java(EDiagnosticReportStatus.map(studyOrderWorkListBo.getStatus()))")
-	@Mapping(target = "patientDto", source = "patientBo")
-	@Mapping(target = "createdDate", source = "createdDate")
-	@Mapping(target = "patientLocation", source = "patientLocation")
-	@Mapping(target = "emergencyCareReason", source = "emergencyCareReason")
 	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }
