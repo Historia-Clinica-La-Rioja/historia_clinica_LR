@@ -58,4 +58,13 @@ public class FetchPatientIsolationAlertBo {
 	public boolean isFinalized() {
 		return this.getStatus() != null && (this.getStatus().isCancelled() || this.getStatus().isExpired());
 	}
+
+	public boolean hasTypeOther() {
+		return this.getTypes() != null
+		&& this.getTypes().contains(EIsolationType.OTHER);
+	}
+
+	public boolean hasObservations() {
+		return this.observations != null && !this.observations.isEmpty();
+	}
 }

@@ -35,6 +35,7 @@ public class EditIsolationAlert {
 		var alert = isolationAlertStorage.findByAlertId(alertId).orElseThrow(() -> alertNotFound(alertId));
 		if (alert.isFinalized())
 			throw IsolationAlertException.alreadyFinalized(alertId);
+		checkFields(alertId, update, alert);
 		var updatedAlertId = isolationAlertStorage
 			.update(alertId, update.getCriticalityId(), update.getEndDate(), update.getObservations())
 			.orElseThrow(() -> finalizedError(alertId));
@@ -44,6 +45,10 @@ public class EditIsolationAlert {
 		return ret;
 	}
 
+	private void checkFields(Integer alertId, UpdateIsolationAlertBo update, FetchPatientIsolationAlertBo alert) {
+		if (alert.hasTypeOther() && !update.hasObservations())
+			throw IsolationAlertException.requiredObservations(alertId);
+	}
 	private IsolationAlertException finalizedError(Integer alertId) {
 		return IsolationAlertException.finalizedError(alertId);
 	}

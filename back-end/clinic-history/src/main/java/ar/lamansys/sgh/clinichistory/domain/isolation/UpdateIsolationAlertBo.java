@@ -11,4 +11,8 @@ public class UpdateIsolationAlertBo {
 	String observations;
 	Short criticalityId;
 	LocalDate endDate;
+
+    public boolean hasObservations() {
+    	return this.observations != null && !this.observations.isEmpty();
+    }
 }

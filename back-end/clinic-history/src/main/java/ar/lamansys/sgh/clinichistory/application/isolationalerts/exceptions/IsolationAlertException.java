@@ -10,6 +10,7 @@ public class IsolationAlertException extends RuntimeException {
 	public static final String ALERT_NOT_FOUND = String.format("%s.%s", PREFIX, "alert-not-found");
 	public static final String FINALIZED_ERROR = String.format("%s.%s", PREFIX, "finalized");
 	public static final String ALREADY_FINALIZED_ERROR = String.format("%s.%s", PREFIX, "already-finalized");
+	public static final String REQUIRED_OBSERVATIONS = String.format("%s.%s", PREFIX, "required-observations");
 
 	private String code;
 
@@ -52,4 +53,11 @@ public class IsolationAlertException extends RuntimeException {
 				FINALIZED_ERROR
 		);
 	}
+
+    public static IsolationAlertException requiredObservations(Integer alertId) {
+		return new IsolationAlertException(
+				String.format("Las observaciones son obligatorias cuando el tipo es 'Otros'"),
+				REQUIRED_OBSERVATIONS
+		);
+    }
 }
