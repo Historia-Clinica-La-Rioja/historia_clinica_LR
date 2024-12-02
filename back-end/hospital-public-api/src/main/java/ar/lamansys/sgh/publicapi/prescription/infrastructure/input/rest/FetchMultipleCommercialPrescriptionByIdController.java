@@ -1,8 +1,8 @@
 package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest;
 
 import ar.lamansys.sgh.publicapi.prescription.application.fetchMultipleCommercialPrescriptionsByIdAndDni.FetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber;
-import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
-import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionDto;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV2Dto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.mapper.PrescriptionMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +26,10 @@ public class FetchMultipleCommercialPrescriptionByIdController {
 	private final PrescriptionMapper prescriptionMapper;
 
 	@GetMapping
-	public @ResponseBody MultipleCommercialPrescriptionDto run(@PathVariable("prescriptionId") String prescriptionId, @PathVariable("identificationNumber") String identificationNumber) {
+	public @ResponseBody PrescriptionV2Dto run(@PathVariable("prescriptionId") String prescriptionId, @PathVariable("identificationNumber") String identificationNumber) {
 		log.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
-		MultipleCommercialPrescriptionBo resultBo = fetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber.run(prescriptionId, identificationNumber);
-		MultipleCommercialPrescriptionDto result = prescriptionMapper.toMultipleCommercialPrescriptionDto(resultBo);
+		PrescriptionV2Bo resultBo = fetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber.run(prescriptionId, identificationNumber);
+		PrescriptionV2Dto result = prescriptionMapper.toMultipleCommercialPrescriptionDto(resultBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}

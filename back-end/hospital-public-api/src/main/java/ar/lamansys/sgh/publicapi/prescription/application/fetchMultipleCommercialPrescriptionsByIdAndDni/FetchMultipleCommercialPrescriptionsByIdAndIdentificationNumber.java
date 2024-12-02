@@ -2,7 +2,7 @@ package ar.lamansys.sgh.publicapi.prescription.application.fetchMultipleCommerci
 
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
-import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionRequestException;
@@ -27,25 +27,25 @@ public class FetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber {
 
 	private final PrescriptionStorage prescriptionStorage;
 
-	public MultipleCommercialPrescriptionBo run(String prescriptionId, String identificationNumber) {
+	public PrescriptionV2Bo run(String prescriptionId, String identificationNumber) {
 		log.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
 		assertUserPermissions();
 		PrescriptionIdentifier prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
 		assertDomainNumber(prescriptionIdentifier.domain);
-		MultipleCommercialPrescriptionBo result = prescriptionStorage.getMultipleCommercialPrescriptionByIdAndIdentificationNumber(prescriptionIdentifier, identificationNumber)
+		PrescriptionV2Bo result = prescriptionStorage.getPrescriptionByIdAndDniV2(prescriptionIdentifier, identificationNumber)
 				.orElseThrow(() -> new PrescriptionRequestException("Message", new Throwable()));
 		correctQuantityValues(result);
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private void correctQuantityValues(MultipleCommercialPrescriptionBo prescription) {
+	private void correctQuantityValues(PrescriptionV2Bo prescription) {
 		prescription.getPrescriptionLines().forEach(line -> correctQuantityValue(line.getPrescriptionDosage()));
 	}
 
 	private void correctQuantityValue(PrescriptionDosageBo lineDosage) {
-		if (!GroupOneCommercialMedication.UNITS.contains(lineDosage.getQuantityUnit()) && lineDosage.getPresentationQuantity() != null)
-			lineDosage.setQuantity(Double.valueOf(lineDosage.getPresentationQuantity()));
+		if (!GroupOneCommercialMedication.UNITS.contains(lineDosage.getQuantityUnit()) && lineDosage.getPackageQuantity() != null)
+			lineDosage.setQuantity(Double.valueOf(lineDosage.getPackageQuantity()));
 	}
 
 	private void assertDomainNumber(String domain) {

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class MultipleCommercialPrescriptionDto {
+public class PrescriptionV2Dto {
 
 	private String domain;
 
@@ -28,7 +28,7 @@ public class MultipleCommercialPrescriptionDto {
 
 	private ProfessionalPrescriptionDto professionalPrescription;
 
-	private List<MultipleCommercialPrescriptionLineDto> prescriptionLines;
+	private List<PrescriptionLineV2Dto> prescriptionLines;
 
 	private PrescriptionSpecialtyDto prescriptionSpecialty;
 

@@ -38,8 +38,8 @@ public class FetchPrescriptionsByIdAndDni {
 	}
 
 	private void correctQuantityValue(PrescriptionLineBo line) {
-		if (!GroupOneCommercialMedication.UNITS.contains(line.getQuantityUnit()) && line.getPresentationQuantity() != null)
-			line.setQuantity(Double.valueOf(line.getPresentationQuantity()));
+		if (!GroupOneCommercialMedication.UNITS.contains(line.getQuantityUnit()) && line.getPackageQuantity() != null)
+			line.setQuantity(Double.valueOf(line.getPackageQuantity()));
 	}
 
 }

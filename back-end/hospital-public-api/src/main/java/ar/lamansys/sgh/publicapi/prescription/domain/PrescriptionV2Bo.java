@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MultipleCommercialPrescriptionBo {
+public class PrescriptionV2Bo {
 
 	private String domain;
 
@@ -32,7 +32,7 @@ public class MultipleCommercialPrescriptionBo {
 
 	private ProfessionalPrescriptionBo professionalPrescription;
 
-	private List<MultipleCommercialPrescriptionLineBo> prescriptionLines;
+	private List<PrescriptionLineV2Bo> prescriptionLines;
 
 	private PrescriptionSpecialtyBo prescriptionSpecialty;
 

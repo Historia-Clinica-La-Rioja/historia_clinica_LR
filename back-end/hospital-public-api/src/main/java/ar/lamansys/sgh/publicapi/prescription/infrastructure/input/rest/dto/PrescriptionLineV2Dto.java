@@ -7,7 +7,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class MultipleCommercialPrescriptionLineDto {
+public class PrescriptionLineV2Dto {
 
 	private Integer prescriptionLineNumber;
 

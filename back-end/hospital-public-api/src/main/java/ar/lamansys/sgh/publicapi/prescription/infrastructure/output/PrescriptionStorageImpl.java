@@ -16,9 +16,9 @@ import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
 import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
-import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
 
-import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionLineV2Bo;
 
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 
@@ -349,12 +349,12 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.setParameter("numericPrescriptionId", prescriptionIdentifier.prescriptionId);
 
 		List<Object[]> queryResult = query.getResultList();
-		List<MultipleCommercialPrescriptionBo> result = queryResult.stream()
-				.map(this::processMultipleCommercialPrescription)
+		List<PrescriptionV2Bo> result = queryResult.stream()
+				.map(this::processPrescriptionV2)
 				.collect(Collectors.toList());
 		if (result.isEmpty())
 			return Optional.empty();
-		MultipleCommercialPrescriptionBo mergedResult = multipleCommercialsMergeResults(result);
+		PrescriptionV2Bo mergedResult = mergeResultsV2(result);
 		if (mergedResult.getPrescriptionId() != null)
 			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
 		mergedResult.setDomain(prescriptionIdentifier.domain);
@@ -362,10 +362,10 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		return Optional.of(mergedResult);
 	}
 
-	private MultipleCommercialPrescriptionBo processMultipleCommercialPrescription(Object[] queryResult) {
+	private PrescriptionV2Bo processPrescriptionV2(Object[] queryResult) {
 		LocalDate dueDate = queryResult[2] != null ? ((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
 		String accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
-		return new MultipleCommercialPrescriptionBo(
+		return new PrescriptionV2Bo(
 				domainNumber.toString(),
 				((Integer) queryResult[0]).toString(),
 				((Date) queryResult[1]).toLocalDate().atStartOfDay(),
@@ -414,7 +414,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String) queryResult[28]
 						))
 				),
-				List.of(new MultipleCommercialPrescriptionLineBo(
+				List.of(new PrescriptionLineV2Bo(
 						(Integer) queryResult[29],
 						queryResult[44].equals(RECETA_CANCELADA) || dueDate.isAfter(LocalDate.now()) ? (String)queryResult[30] : "VENCIDO",
 						new PrescriptionProblemBo(
@@ -681,8 +681,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		return result;
 	}
 
-	private MultipleCommercialPrescriptionBo multipleCommercialsMergeResults(List<MultipleCommercialPrescriptionBo> unmergedResults) {
-		MultipleCommercialPrescriptionBo result = new MultipleCommercialPrescriptionBo();
+	private PrescriptionV2Bo mergeResultsV2(List<PrescriptionV2Bo> unmergedResults) {
+		PrescriptionV2Bo result = new PrescriptionV2Bo();
 		if (unmergedResults.isEmpty())
 			return result;
 		result.setDomain(unmergedResults.get(0).getDomain());
@@ -698,7 +698,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		ProfessionalPrescriptionBo professionalPrescriptionBo = unmergedResults.get(0).getProfessionalPrescription();
 		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>(professionalPrescriptionBo.getProfessions());
 		List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBos = new ArrayList<>(professionalPrescriptionBo.getRegistrations());
-		List<MultipleCommercialPrescriptionLineBo> prescriptionLineBoList = new ArrayList<>(result.getPrescriptionLines());
+		List<PrescriptionLineV2Bo> prescriptionLineBoList = new ArrayList<>(result.getPrescriptionLines());
 		for (int i = 1; i < unmergedResults.size(); i++) {
 			PrescriptionProfessionBo specialty = unmergedResults.get(i).getProfessionalPrescription().getProfessions().get(0);
 			PrescriptionProfessionalRegistrationBo prescriptionRegistration = unmergedResults.get(i).getProfessionalPrescription().getRegistrations().get(0);

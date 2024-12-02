@@ -20,7 +20,7 @@ public class PrescriptionLineBo {
 	private Double dayDosis;
 	private Double duration;
 	private String presentation;
-	private Short presentationQuantity;
+	private Short packageQuantity;
 	private Short presentationPackageQuantity;
 	private Double quantity;
 	private String quantityUnit;
@@ -28,7 +28,7 @@ public class PrescriptionLineBo {
 	public PrescriptionLineBo(Integer prescriptionLineNumber, String prescriptionLineStatus, PrescriptionProblemBo prescriptionProblemBo,
 							  GenericMedicationBo genericMedicationBo, SuggestedCommercialMedicationBo suggestedCommercialMedicationBo,
 							  CommercialMedicationBo commercialMedicationBo, Double unitDosis, Double dayDosis, Double duration,
-							  String presentation, Short presentationQuantity, Short presentationPackageQuantity, Double quantity) {
+							  String presentation, Short packageQuantity, Short presentationPackageQuantity, Double quantity) {
 		this.prescriptionLineNumber = prescriptionLineNumber;
 		this.prescriptionLineStatus = prescriptionLineStatus;
 		this.prescriptionProblemBo = prescriptionProblemBo;
@@ -39,7 +39,7 @@ public class PrescriptionLineBo {
 		this.dayDosis = dayDosis;
 		this.duration = duration;
 		this.presentation = presentation;
-		this.presentationQuantity = presentationQuantity;
+		this.packageQuantity = packageQuantity;
 		this.presentationPackageQuantity = presentationPackageQuantity;
 		this.quantity = quantity;
 	}
@@ -59,13 +59,13 @@ public class PrescriptionLineBo {
 				Objects.equals(duration, that.duration) &&
 				Objects.equals(presentation, that.presentation) &&
 				Objects.equals(presentationPackageQuantity, that.presentationPackageQuantity) &&
-				Objects.equals(presentationQuantity, that.presentationQuantity) &&
+				Objects.equals(packageQuantity, that.packageQuantity) &&
 				Objects.equals(suggestedCommercialMedicationBo, that.suggestedCommercialMedicationBo);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(prescriptionLineNumber, prescriptionLineStatus, prescriptionProblemBo, genericMedicationBo, suggestedCommercialMedicationBo, commercialMedicationBo, unitDosis, dayDosis, duration, presentation, presentationQuantity, presentationPackageQuantity, quantity);
+		return Objects.hash(prescriptionLineNumber, prescriptionLineStatus, prescriptionProblemBo, genericMedicationBo, suggestedCommercialMedicationBo, commercialMedicationBo, unitDosis, dayDosis, duration, presentation, packageQuantity, presentationPackageQuantity, quantity);
 	}
 
 }

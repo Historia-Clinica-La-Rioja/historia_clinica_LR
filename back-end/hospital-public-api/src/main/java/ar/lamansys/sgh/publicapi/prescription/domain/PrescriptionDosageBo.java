@@ -21,7 +21,7 @@ public class PrescriptionDosageBo {
 
 	private String presentation;
 
-	private Short presentationQuantity;
+	private Short packageQuantity;
 
 	private Double quantity;
 
@@ -42,7 +42,7 @@ public class PrescriptionDosageBo {
 				Objects.equals(dayDosis, that.dayDosis) &&
 				Objects.equals(duration, that.duration) &&
 				Objects.equals(presentation, that.presentation) &&
-				Objects.equals(presentationQuantity, that.presentationQuantity) &&
+				Objects.equals(packageQuantity, that.packageQuantity) &&
 				Objects.equals(quantity, that.quantity) &&
 				Objects.equals(frequency, that.frequency) &&
 				Objects.equals(frequencyUnit, that.frequencyUnit) &&
@@ -51,7 +51,7 @@ public class PrescriptionDosageBo {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(unitDosis, dayDosis, duration, presentation, presentationQuantity, quantity, frequency, frequencyUnit, presentationPackageQuantity);
+		return Objects.hash(unitDosis, dayDosis, duration, presentation, packageQuantity, quantity, frequency, frequencyUnit, presentationPackageQuantity);
 	}
 
 }

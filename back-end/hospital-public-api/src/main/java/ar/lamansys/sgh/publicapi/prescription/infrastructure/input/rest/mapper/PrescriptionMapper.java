@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.dto.PatientPrescriptionAddressDto;
-import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
-import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionLineV2Bo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
-import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionDto;
-import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionLineDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV2Dto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionLineV2Dto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionDosageDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionsDataDto;
@@ -168,7 +168,7 @@ public class PrescriptionMapper {
 				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : prescriptionLineBo.getPrescriptionLineStatus())
 				.dayDosis(prescriptionLineBo.getDayDosis())
 				.presentation(prescriptionLineBo.getPresentation())
-				.presentationQuantity(prescriptionLineBo.getPresentationQuantity())
+				.presentationQuantity(prescriptionLineBo.getPackageQuantity())
 				.duration(prescriptionLineBo.getDuration())
 				.unitDosis(prescriptionLineBo.getUnitDosis())
 				.prescriptionProblemDto(mapTo(prescriptionLineBo.getPrescriptionProblemBo()))
@@ -335,25 +335,25 @@ public class PrescriptionMapper {
 				.build();
 	}
 
-	public MultipleCommercialPrescriptionDto toMultipleCommercialPrescriptionDto(MultipleCommercialPrescriptionBo multipleCommercialPrescriptionBo) {
-		if (multipleCommercialPrescriptionBo.getPrescriptionId() == null)
+	public PrescriptionV2Dto toMultipleCommercialPrescriptionDto(PrescriptionV2Bo prescriptionV2Bo) {
+		if (prescriptionV2Bo.getPrescriptionId() == null)
 			throw new PrescriptionNotFoundException("La receta no existe");
-		return MultipleCommercialPrescriptionDto.builder()
-				.domain(multipleCommercialPrescriptionBo.getDomain())
-				.prescriptionId(multipleCommercialPrescriptionBo.getPrescriptionId())
-				.dueDate(multipleCommercialPrescriptionBo.getDueDate())
-				.link(multipleCommercialPrescriptionBo.getLink())
-				.isArchived(multipleCommercialPrescriptionBo.getIsArchived())
-				.institutionPrescription(mapTo(multipleCommercialPrescriptionBo.getInstitutionPrescription()))
-				.prescriptionDate(multipleCommercialPrescriptionBo.getPrescriptionDate())
-				.patientPrescription(mapTo(multipleCommercialPrescriptionBo.getPatientPrescription()))
-				.professionalPrescription(mapTo(multipleCommercialPrescriptionBo.getProfessionalPrescription()))
-				.prescriptionLines(toMultipleCommercialPrescriptionLineDtoList(multipleCommercialPrescriptionBo.getPrescriptionLines(), multipleCommercialPrescriptionBo.getDueDate()))
-				.prescriptionSpecialty(mapTo(multipleCommercialPrescriptionBo.getPrescriptionSpecialty()))
+		return PrescriptionV2Dto.builder()
+				.domain(prescriptionV2Bo.getDomain())
+				.prescriptionId(prescriptionV2Bo.getPrescriptionId())
+				.dueDate(prescriptionV2Bo.getDueDate())
+				.link(prescriptionV2Bo.getLink())
+				.isArchived(prescriptionV2Bo.getIsArchived())
+				.institutionPrescription(mapTo(prescriptionV2Bo.getInstitutionPrescription()))
+				.prescriptionDate(prescriptionV2Bo.getPrescriptionDate())
+				.patientPrescription(mapTo(prescriptionV2Bo.getPatientPrescription()))
+				.professionalPrescription(mapTo(prescriptionV2Bo.getProfessionalPrescription()))
+				.prescriptionLines(toMultipleCommercialPrescriptionLineDtoList(prescriptionV2Bo.getPrescriptionLines(), prescriptionV2Bo.getDueDate()))
+				.prescriptionSpecialty(mapTo(prescriptionV2Bo.getPrescriptionSpecialty()))
 				.build();
 	}
 
-	private List<MultipleCommercialPrescriptionLineDto> toMultipleCommercialPrescriptionLineDtoList(List<MultipleCommercialPrescriptionLineBo> prescriptionLines, LocalDateTime dueDate) {
+	private List<PrescriptionLineV2Dto> toMultipleCommercialPrescriptionLineDtoList(List<PrescriptionLineV2Bo> prescriptionLines, LocalDateTime dueDate) {
 		if (prescriptionLines == null)
 			return new ArrayList<>();
 		return prescriptionLines.stream().map(line -> toMultipleCommercialPrescriptionLine(line, dueDate)).collect(Collectors.toList());
@@ -365,7 +365,7 @@ public class PrescriptionMapper {
 				.dayDosis(prescriptionDosageBo.getDayDosis())
 				.duration(prescriptionDosageBo.getDuration())
 				.presentation(prescriptionDosageBo.getPresentation())
-				.presentationQuantity(prescriptionDosageBo.getPresentationQuantity())
+				.packageQuantity(prescriptionDosageBo.getPackageQuantity())
 				.quantity(prescriptionDosageBo.getQuantity())
 				.frequency(prescriptionDosageBo.getFrequency())
 				.frequencyUnit(prescriptionDosageBo.getFrequencyUnit())
@@ -373,9 +373,9 @@ public class PrescriptionMapper {
 				.build();
 	}
 
-	private MultipleCommercialPrescriptionLineDto toMultipleCommercialPrescriptionLine(MultipleCommercialPrescriptionLineBo line, LocalDateTime dueDate) {
+	private PrescriptionLineV2Dto toMultipleCommercialPrescriptionLine(PrescriptionLineV2Bo line, LocalDateTime dueDate) {
 		boolean due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
-		return MultipleCommercialPrescriptionLineDto.builder()
+		return PrescriptionLineV2Dto.builder()
 				.prescriptionLineNumber(line.getPrescriptionLineNumber())
 				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : line.getPrescriptionLineStatus())
 				.prescriptionProblem(mapTo(line.getPrescriptionProblem()))

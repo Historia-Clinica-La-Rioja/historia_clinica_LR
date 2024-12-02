@@ -11,7 +11,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MultipleCommercialPrescriptionLineBo {
+public class PrescriptionLineV2Bo {
 
 	private Integer prescriptionLineNumber;
 
@@ -35,7 +35,7 @@ public class MultipleCommercialPrescriptionLineBo {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MultipleCommercialPrescriptionLineBo that = (MultipleCommercialPrescriptionLineBo) o;
+		PrescriptionLineV2Bo that = (PrescriptionLineV2Bo) o;
 		return Objects.equals(prescriptionLineNumber, that.prescriptionLineNumber) &&
 				Objects.equals(prescriptionLineStatus, that.prescriptionLineStatus) &&
 				Objects.equals(prescriptionProblem, that.prescriptionProblem) &&
