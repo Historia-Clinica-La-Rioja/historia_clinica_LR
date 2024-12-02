@@ -46,10 +46,10 @@ export class InstitutionalNetworkReferenceReportService {
 		let params: HttpParams = new HttpParams();
 		params = params.append('stateId', stateId);
 		if (!reason)
-			return this.http.post<boolean>(url, null, { params });
+			return this.http.put<boolean>(url, null, { params });
 
 		params = params.append('reason', reason);
-		return this.http.post<boolean>(url, null, { params });
+		return this.http.put<boolean>(url, null, { params });
 	}
 
 	addObservation(referenceId: number, observation: string): Observable<Object> {

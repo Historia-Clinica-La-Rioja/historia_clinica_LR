@@ -60,7 +60,8 @@
 						"ORIGIN": "Origen",
 						"DESTINATION": "Destino",
 						"APPOINTMENT": "Turno"
-					}
+					},
+					"EDIT_REFERENCE_BUTTON": "Editar referencia / institución destino"
 				},
 				"institutional_network_actions": {
 					"REJECT": "rechazar",

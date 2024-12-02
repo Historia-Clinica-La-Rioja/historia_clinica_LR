@@ -16,19 +16,20 @@ export class ReferenceOriginStateComponent implements OnInit {
 
     regulationState: ColoredLabel;
     referenceRegulationData: ReferenceRegulationDto;
+	referenceCompleteData: ReferenceCompleteDataDto;
 
     regulationOriginStates: EReferenceRegulationState[] = [
 		EReferenceRegulationState.WAITING_AUDIT,
 		EReferenceRegulationState.SUGGESTED_REVISION,
 		EReferenceRegulationState.REJECTED,
-		EReferenceRegulationState.AUDITED,
 	];
 
     referenceId: number;
     hideReason = false;
 	loggedUserCanDoActions = false;
 
-    @Input() set referenceCompleteData (reference: ReferenceCompleteDataDto) {
+    @Input() set referenceCompleteDataDto (reference: ReferenceCompleteDataDto) {
+		this.referenceCompleteData = reference;
         this.referenceRegulationData = reference.regulation;
         this.referenceId = reference.reference.id;
     };
@@ -39,14 +40,20 @@ export class ReferenceOriginStateComponent implements OnInit {
         private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
         private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly accountService: AccountService,
-    ) { }
+    ) {	}
 
     ngOnInit(): void {
 		const hasSuggestedState = this.referenceRegulationData.state === this.permissionService.referenceOriginStates.suggestedRevision;
 		this.accountService.getInfo().subscribe(loggedUserInfo => 
-			this.loggedUserCanDoActions = loggedUserInfo.id === this.permissionService.referenceCompleteData.reference.createdBy && hasSuggestedState
+			this.loggedUserCanDoActions = loggedUserInfo.id === this.referenceCompleteData.reference.createdBy && hasSuggestedState
 		);
         this.regulationState = getIconState[this.referenceRegulationData.state];
+
+		this.permissionService.getReferenceCompleteData().subscribe(newReference => {
+			this.referenceCompleteData = newReference;
+			this.referenceRegulationData = newReference.regulation;
+			this.regulationState = getIconState[newReference.regulation.state];
+		})
     }
 
     onNewState(hasChange : boolean){

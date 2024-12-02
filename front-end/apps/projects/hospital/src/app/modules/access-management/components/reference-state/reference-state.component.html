@@ -3,13 +3,13 @@
 	<p class="grey">{{'access-management.search_references.reference.approval.SUBTITLE' | translate}}</p>
 
     <mat-stepper id="state-stepper" orientation="vertical" [linear]="true">
-        <mat-step [completed]="originAudited">
+        <mat-step [completed]="canShowApproval">
             <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.ORIGIN' | translate}}</ng-template>
-            <app-reference-origin-state [referenceCompleteData]="permissionService.referenceCompleteData" (regulationStateEmmiter)="newOriginState($event)"
+            <app-reference-origin-state [referenceCompleteDataDto]="permissionService.referenceCompleteData" (regulationStateEmmiter)="newOriginState($event)"
             ></app-reference-origin-state>
         </mat-step>
 
-        <mat-step [completed]="destinationApproved">
+        <mat-step [completed]="canShowAppointment">
             <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.DESTINATION' | translate}}</ng-template>
             <app-approval [referenceCompleteDataDto]="permissionService.referenceCompleteData"
 				[canEditApprovalState]="permissionService.visualPermissions.canEditApproval" (regulationStateEmmiter)="newDestinationState($event)"

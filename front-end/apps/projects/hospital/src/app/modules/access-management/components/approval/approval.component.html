@@ -18,4 +18,6 @@
 		<span>{{referenceAdministrativeDto.professionalName}}</span>
 		<span>{{referenceAdministrativeDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
 	</div>
+	<app-edit-reference [isButton]="true" [referenceCompleteData]="permissionService.referenceCompleteData"
+		(newReferenceDetail)="updateReferenceInfomation($event)"></app-edit-reference>
 </div>

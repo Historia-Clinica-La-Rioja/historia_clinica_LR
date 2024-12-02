@@ -14,8 +14,8 @@ const TAB_OFERTA_POR_REGULACION = 1;
 })
 export class ReferenceStateComponent implements OnInit {
 
-    originAudited: boolean;
-    destinationApproved: boolean;
+    canShowApproval: boolean;
+    canShowAppointment: boolean;
 
     @Input() referenceRegulation: ReferenceRegulationDto;
     @Input() referenceAdministrativeStateDto: ReferenceAdministrativeStateDto;
@@ -30,18 +30,18 @@ export class ReferenceStateComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.permissionService.referenceCompleteData.reference.institutionDestination.id)
-            this.originAudited = this.isAudited(this.referenceRegulation?.state);
+            this.canShowApproval = this.isAudited(this.referenceRegulation?.state);
         else
-            this.originAudited = false;
-        this.destinationApproved = this.isApproved(this.referenceAdministrativeStateDto?.state);
+            this.canShowApproval = false;
+        this.canShowAppointment = this.isApproved(this.referenceAdministrativeStateDto?.state);
     }
 
     newOriginState(state: EReferenceRegulationState) {
-        this.originAudited = this.isAudited(state);
+        this.canShowApproval = this.isAudited(state);
     }
 
     newDestinationState(state: EReferenceAdministrativeState) {
-        this.destinationApproved = this.isApproved(state);
+        this.canShowAppointment = this.isApproved(state);
     }
 
     redirectToOfferByRegulation(): void {
@@ -51,7 +51,8 @@ export class ReferenceStateComponent implements OnInit {
 	}
 
     private isAudited(state: EReferenceRegulationState): boolean {
-        return state === this.permissionService.referenceOriginStates.audited || state === this.permissionService.referenceOriginStates.noAuditRequired;
+        return state === this.permissionService.referenceOriginStates.audited || state === this.permissionService.referenceOriginStates.noAuditRequired
+            || this.permissionService.referenceCompleteData.administrativeState?.state === this.permissionService.referenceDestinationState.suggestedRevision;
     }
 
     private isApproved(state: EReferenceAdministrativeState) {

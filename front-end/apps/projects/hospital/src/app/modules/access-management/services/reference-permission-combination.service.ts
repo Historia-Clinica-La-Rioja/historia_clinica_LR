@@ -1,11 +1,12 @@
 import { PENDING_ATTENTION_STATE, REFERENCE_DESTINATION_STATES, REFERENCE_ORIGIN_STATES, REFERENCE_STATES } from '@access-management/constants/reference';
 import { ReportCompleteData } from '@access-management/dialogs/report-complete-data-popup/report-complete-data-popup.component';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ERole, ReferenceCompleteDataDto } from '@api-rest/api-model';
 import { PermissionsService } from '@core/services/permissions.service';
 import { DashboardView } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { DashboardService } from './dashboard.service';
 import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { Observable, Subject } from 'rxjs';
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 const GESTOR_INSTITUCIONAL = ERole.GESTOR_DE_ACCESO_INSTITUCIONAL;
@@ -14,10 +15,11 @@ const APPOINTMENT_STATES = REFERENCE_STATES;
 @Injectable({
     providedIn: 'root'
 })
-export class ReferencePermissionCombinationService {
+export class ReferencePermissionCombinationService implements OnDestroy {
 
     visualPermissions: ReferenceVisualPermissions;
 
+    referenceCompleteData$: Subject<ReferenceCompleteDataDto> = new Subject<ReferenceCompleteDataDto>();
     referenceCompleteData: ReferenceCompleteDataDto;
 	reportCompleteData: ReportCompleteData;
 
@@ -35,10 +37,15 @@ export class ReferencePermissionCombinationService {
     ) {
         this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 		this.permissionService.hasContextAssignments$([GESTOR_INSTITUCIONAL]).subscribe(hasRole => this.isRoleGestorInstitucional = hasRole);
-		
+    }
+
+    ngOnDestroy(): void {
+        this.isRoleGestor = null;
+        this.isRoleGestorInstitucional = null;
     }
 
     setReferenceAndReportDataAndVisualPermissions(reference: ReferenceCompleteDataDto, report: ReportCompleteData) {
+        this.referenceCompleteData$.next(reference);
         this.referenceCompleteData = reference;
         this.reportCompleteData = report;
         this.visualPermissions = {
@@ -54,6 +61,10 @@ export class ReferencePermissionCombinationService {
 
     setEditorAppointment(authorFullName: string, createdOn: Date) {
         this.registerEditorAppointment = {createdBy: authorFullName, date: createdOn}
+    }
+
+    getReferenceCompleteData(): Observable<ReferenceCompleteDataDto>{
+        return this.referenceCompleteData$;
     }
 
     showAssignAppointmentButton(): boolean {

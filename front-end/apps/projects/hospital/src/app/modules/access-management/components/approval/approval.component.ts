@@ -1,15 +1,23 @@
 import { getIconState } from '@access-management/constants/approval';
-import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { EReferenceAdministrativeState, ReferenceAdministrativeStateDto, ReferenceCompleteDataDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ColoredLabel } from '@presentation/colored-label/colored-label.component';
 import { ReferencePermissionCombinationService } from '@access-management/services/reference-permission-combination.service';
+import { Observable } from 'rxjs';
+
 @Component({
 	selector: 'app-approval',
 	templateUrl: './approval.component.html',
 	styleUrls: ['./approval.component.scss']
 })
-export class ApprovalComponent implements OnInit {
+export class ApprovalComponent {
+
+	regulationDestinationStates: EReferenceAdministrativeState[] = [
+		EReferenceAdministrativeState.WAITING_APPROVAL,
+		EReferenceAdministrativeState.SUGGESTED_REVISION,
+		EReferenceAdministrativeState.APPROVED,
+	]
 
 	regulationState: ColoredLabel;
 	referenceAdministrativeDto: ReferenceAdministrativeStateDto;
@@ -17,12 +25,6 @@ export class ApprovalComponent implements OnInit {
 	referenceId: number;
 	hideReason = false;
 	loggedUserCanDoActions = false;
-
-	regulationDestinationStates: EReferenceAdministrativeState[] = [
-		EReferenceAdministrativeState.WAITING_APPROVAL,
-		EReferenceAdministrativeState.SUGGESTED_REVISION,
-		EReferenceAdministrativeState.APPROVED,
-	]
 
 	@Input() set referenceCompleteDataDto(reference: ReferenceCompleteDataDto) {
 		this.referenceAdministrativeDto = reference.administrativeState;
@@ -40,19 +42,26 @@ export class ApprovalComponent implements OnInit {
 		public permissionService: ReferencePermissionCombinationService
 	) { }
 
-	ngOnInit(): void {
+	updateReferenceInfomation(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
+		referenceDetails$.subscribe(reference => 
+			this.setReferenceInformation(reference)
+		)
 	}
 
 	onNewState(hasChange : boolean){
 		if (hasChange){
 			this.institutionalReferenceReportService.getReferenceDetail(this.referenceId).subscribe(
-				(result) => {
-					this.permissionService.setReferenceAndReportDataAndVisualPermissions(result, this.permissionService.reportCompleteData);
-					this.referenceAdministrativeDto = result.administrativeState;
-					this.regulationState = getIconState[result.administrativeState.state];
-					this.regulationStateEmmiter.next(result.administrativeState.state);
-				});
+				(reference) => 
+					this.setReferenceInformation(reference)
+				);
 		}
+	}
+
+	setReferenceInformation(reference: ReferenceCompleteDataDto) {
+		this.permissionService.setReferenceAndReportDataAndVisualPermissions(reference, this.permissionService.reportCompleteData);
+		this.referenceAdministrativeDto = reference.administrativeState;
+		this.regulationState = getIconState[reference.administrativeState.state];
+		this.regulationStateEmmiter.next(reference.administrativeState.state);
 	}
 
 	onEditingState(editing: boolean){

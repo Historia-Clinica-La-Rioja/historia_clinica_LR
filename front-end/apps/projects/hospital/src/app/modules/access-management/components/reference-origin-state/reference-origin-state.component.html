@@ -24,7 +24,7 @@
     </div>
 
     <div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-        <app-reference-state-actions *ngIf="loggedUserCanDoActions && !permissionService.referenceCompleteData.reference?.closureType"
-            [referenceCompleteDataDto]="permissionService.referenceCompleteData"></app-reference-state-actions>
+        <app-reference-state-actions *ngIf="loggedUserCanDoActions && !referenceCompleteData.reference?.closureType"
+            [referenceCompleteDataDto]="referenceCompleteData"></app-reference-state-actions>
     </div>
 </div>
