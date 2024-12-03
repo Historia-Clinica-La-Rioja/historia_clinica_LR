@@ -66,7 +66,6 @@ export class OldDigitalPrescriptionItemComponent implements OnInit {
 	intervalValidation = intervalValidation;
 
 	@ViewChild('intervalHoursInput') intervalHoursInput: ElementRef;
-	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
 				private readonly permission: PermissionsService,
@@ -201,8 +200,7 @@ export class OldDigitalPrescriptionItemComponent implements OnInit {
 				description: this.healthProblems.find(hpo => hpo.snomed.sctid === this.prescriptionItemForm.controls.healthProblem.value).snomed.pt,
 				sctId: this.prescriptionItemForm.controls.healthProblem.value
 			},
-			administrationTimeDays: showDosage ? this.prescriptionItemForm.controls.administrationTime.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.administrationTimeDays.value : null : null,
-			isChronicAdministrationTime: showDosage ? this.prescriptionItemForm.controls.administrationTime.value === this.DEFAULT_RADIO_OPTION : null,
+			administrationTimeDays: showDosage ? this.prescriptionItemForm.controls.administrationTimeDays.value : null,
 			studyCategory: {
 				id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
 				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
@@ -247,8 +245,7 @@ export class OldDigitalPrescriptionItemComponent implements OnInit {
 		if (!this.prescriptionItemForm.valid 
 			|| !this.snomedConcept 
 			|| this.snomedConcept.pt === ''
-			|| intervalValidation(this.prescriptionItemForm, 'intervalHours', 'interval')
-			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays', 'administrationTime')) 
+			|| intervalValidation(this.prescriptionItemForm, 'intervalHours', 'interval')) 
 			{
 				scrollIntoError(this.prescriptionItemForm, this.el);
 				this.markFormAsTouched = true;
@@ -346,15 +343,6 @@ export class OldDigitalPrescriptionItemComponent implements OnInit {
 				this.prescriptionItemForm.controls.intervalHours.setValidators([Validators.required]);
 				this.prescriptionItemForm.controls.intervalHours.updateValueAndValidity();
 			}
-
-			if (prescriptionItem.isChronicAdministrationTime) {
-				this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
-			} else {
-				this.prescriptionItemForm.controls.administrationTime.setValue(this.OTHER_RADIO_OPTION);
-				this.prescriptionItemForm.controls.administrationTimeDays.setValue(prescriptionItem.administrationTimeDays);
-				this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required]);
-				this.prescriptionItemForm.controls.administrationTimeDays.updateValueAndValidity();
-			}
 		}
 
 		if (prescriptionItem.studyCategory?.id) 
@@ -448,7 +436,6 @@ export class OldDigitalPrescriptionItemComponent implements OnInit {
 			unit: new FormControl(null),
 			medicationPackQuantity: new FormControl(null),
 			studyCategory: new FormControl(null),
-			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			quantity: new FormControl(null, [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]),
 			interval: new FormControl(this.DEFAULT_RADIO_OPTION),
@@ -505,7 +492,6 @@ interface PrescriptionItemForm {
 	unit: FormControl<string>,
 	medicationPackQuantity: FormControl<number>,
 	studyCategory: FormControl<string>,
-	administrationTime: FormControl<number>
 	administrationTimeDays: FormControl<string>
 	quantity: FormControl<number>,
 	interval: FormControl<number>,

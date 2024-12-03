@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AppFeature, CommercialMedicationPrescriptionDto, CreateOutpatientDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, ServiceRequestCategoryDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
@@ -20,7 +20,6 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
-import { intervalValidation } from '../ordenes-prescripciones/utils/ordenesyprescrip.utils';
 import { SnomedFinancedAuditRequired } from '../../components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
 import { AugmentativeMedicationPresentation, getBasicPresentation, getPresentationGroup, PresentationGroup } from '../../constants/medication-presentation';
 import { combineLatest, startWith, Subscription } from 'rxjs';
@@ -74,8 +73,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 	HABILITAR_REPORTE_EPIDEMIOLOGICO = false;
 
 	showTotalQuantity = true;
-
-	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
 				private readonly permission: PermissionsService,
@@ -370,8 +367,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 	private isAddPrescriptionValid = (): boolean => {
 		if (!this.prescriptionItemForm.valid
 			|| !this.snomedConcept
-			|| this.snomedConcept.pt === ''
-			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays', 'administrationTime'))
+			|| this.snomedConcept.pt === '')
 			{
 				scrollIntoError(this.prescriptionItemForm, this.el);
 				this.markFormAsTouched = true;
@@ -530,7 +526,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 			unit: new FormControl(null),
 			medicationPackQuantity: new FormControl(null, Validators.pattern(NUMBER_PATTERN)),
 			studyCategory: new FormControl(null),
-			administrationTime: new FormControl(this.DEFAULT_RADIO_OPTION),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			totalQuantity: new FormControl(null, this.getTotalQuantityValidators()),
 			frequencyType: new FormControl(this.getFrequencyHsTranslate())
@@ -590,7 +585,6 @@ interface PrescriptionItemForm {
 	unit: FormControl<string>,
 	medicationPackQuantity: FormControl<number>,
 	studyCategory: FormControl<string>,
-	administrationTime: FormControl<number>
 	administrationTimeDays: FormControl<string>
 	totalQuantity: FormControl<number>,
 	frequencyType: FormControl<string>
