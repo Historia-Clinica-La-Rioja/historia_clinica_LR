@@ -2,13 +2,20 @@ package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderWorkListDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderWorkListFilterDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyOrderWorkListFilterMapper;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
 
 import org.springframework.data.domain.Page;
@@ -35,21 +42,26 @@ public class ServiceRequestWorkListController {
 
 	private StudyWorkListService studyWorkListService;
 	private StudyMapper studyMapper;
+	private StudyOrderWorkListFilterMapper filterMapper;
+	private ObjectMapper objectMapper;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
 	public ResponseEntity<PageDto<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
-																		@RequestParam(name = "pageNumber") Integer pageNumber,
-																		@RequestParam(name = "pageSize") Integer pageSize,
-																	    @RequestParam(value = "categories") List<String> categories){
+																  @RequestParam(name = "pageNumber") Integer pageNumber,
+																  @RequestParam(name = "pageSize") Integer pageSize,
+																  @RequestParam(name = "filter") String filterData) throws JsonProcessingException {
 
 		log.debug("Input parameters -> institutionId {}, pageNumber {}, pageSize {}", institutionId, pageNumber, pageSize);
 
 		if (!AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO.isActive()) {
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
 		}
+
+		StudyOrderWorkListFilterBo filter = filterMapper.fromStudyOrderWorkListFilterDto(objectMapper.readValue(filterData, StudyOrderWorkListFilterDto.class));
+
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, categories, pageable);
+		Page<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, null, pageable);
 		Page<StudyOrderWorkListDto> result = resultService.map(studyOrderWorkListBo -> studyMapper.toStudyOrderWorkListDto(studyOrderWorkListBo));
 
 		log.debug("Output -> {}", result);
