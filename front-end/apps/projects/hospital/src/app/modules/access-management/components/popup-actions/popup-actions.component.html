@@ -1,8 +1,8 @@
 <div class="button" fxLayoutAlign="end end">
 	<div *ngIf="contextService.institutionId != NO_INSTITUTION">
-		<div *ngIf="reportCompleteData.regulation.state == referenceApprovalState.audited">
+		<div *ngIf="reportCompleteData.administrativeState?.state == referenceApprovalState">
 			<app-institutional-actions
-				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+				*appHasRole="['ADMINISTRATIVO', 'GESTOR_DE_ACCESO_INSTITUCIONAL', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 				[reportCompleteData]="reportCompleteData">
 			</app-institutional-actions>
 		</div>

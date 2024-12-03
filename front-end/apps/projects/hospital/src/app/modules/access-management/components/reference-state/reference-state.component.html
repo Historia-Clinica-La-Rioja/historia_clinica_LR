@@ -20,7 +20,8 @@
             <ng-template matStepLabel>{{'access-management.search_references.reference.approval.stepper-labels.APPOINTMENT' | translate}}</ng-template>
             <app-appointment-summary [appointmentSummary]="appointment"></app-appointment-summary>
 
-            <div *ngIf="(this.permissionService.registerEditorAppointment !== permissionService.pendingAttentionState)" class="grey">
+            <div *ngIf="(canShowAppointment && appointment?.state !== permissionService.pendingAttentionState
+                && permissionService.registerEditorAppointment)" class="grey">
                 <span>{{'access-management.search_references.reference.ASSIGNED_BY' | translate }}</span>
                 <app-register-editor-info
                     [registerEditor]="this.permissionService.registerEditorAppointment"
@@ -34,6 +35,9 @@
                     {{'access-management.appointment_result_view.ASSIGN_APPOINTMENT' | translate | uppercase}}
                 </button>
             </div>
+            <mat-dialog-actions fxLayoutAlign="end">
+                <app-popup-actions actions [reportCompleteData]="permissionService.referenceCompleteData"></app-popup-actions>
+            </mat-dialog-actions>
         </mat-step>
     </mat-stepper>
 
