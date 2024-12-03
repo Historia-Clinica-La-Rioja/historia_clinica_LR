@@ -24,6 +24,11 @@ export class ReferenceOriginStateComponent implements OnInit {
 		EReferenceRegulationState.REJECTED,
 	];
 
+	regulationOriginStatesWithAudit: EReferenceRegulationState[] = [
+		... this.regulationOriginStates,
+		EReferenceRegulationState.AUDITED
+	]
+
     referenceId: number;
     hideReason = false;
 	loggedUserCanDoActions = false;

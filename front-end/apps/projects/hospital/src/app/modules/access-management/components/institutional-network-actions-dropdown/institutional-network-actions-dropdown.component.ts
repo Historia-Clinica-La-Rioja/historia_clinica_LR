@@ -43,8 +43,6 @@ export class InstitutionalNetworkActionsDropdownComponent implements OnInit {
 
 	ngOnInit(): void {
 		if (this.isOrigin) {
-			if (this.permissionService.referenceCompleteData.administrativeState?.state === this.permissionService.referenceDestinationState.suggestedRevision) 
-				this.regulationStates.push[EReferenceRegulationState.AUDITED];
 			if (this.permissionService.referenceCompleteData.regulation?.state) 
 				this.setSelectedOption(this.permissionService.referenceCompleteData.regulation.state);
 			else 
