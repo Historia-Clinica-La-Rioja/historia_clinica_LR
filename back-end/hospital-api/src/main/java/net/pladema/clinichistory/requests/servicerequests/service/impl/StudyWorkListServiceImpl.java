@@ -49,7 +49,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 		Short emergencyCareState = EEmergencyCareState.ATENCION.getId();
 
 		var rawGroupedResults =
-				studyWorkListRepository.execute(institutionId, null, null, null, null, emergencyCareState, INTERNMENT_EPISODE_STATE, null)
+				studyWorkListRepository.execute(institutionId, filterBo, statusId, documentType, emergencyCareState, INTERNMENT_EPISODE_STATE)
 				.stream()
 				.collect(Collectors.groupingBy(x -> (Integer) x[0]));
 

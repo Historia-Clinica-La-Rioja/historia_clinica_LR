@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListFilterBo;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +24,9 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Object[]> execute(Integer institutionId, List<String> categories, List<Short> sourceTypeIds, String statusId, Short documentType, Short emergencyCareState, Short internmentEpisodeState, List<Short> patientTypes) {
+	public List<Object[]> execute(Integer institutionId, StudyOrderWorkListFilterBo filter, String statusId, Short documentType, Short emergencyCareState, Short internmentEpisodeState) {
 
-		log.debug("Input parameters -> institutionId: {}, categories: {}, sourceTypeIds: {}, statusId: {}, documentType: {}, emergencyCareState: {}, internmentEpisodeState: {}, patientTypes: {}", institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState, patientTypes);
+		log.debug("Input parameters -> institutionId: {}, statusId: {}, documentType: {}, emergencyCareState: {}, internmentEpisodeState: {}", institutionId, statusId, documentType, emergencyCareState, internmentEpisodeState);
 
 		String sqlString =
 			"WITH diagnostic_report_last_modification AS (SELECT DISTINCT ON " +
@@ -124,20 +126,38 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"LEFT JOIN sector ec_sector_shockroom ON ec_shockroom.sector_id = ec_sector_shockroom.id " +
 					"WHERE sr.institution_id = :institutionId " +
 					"AND dr.status_id = :statusId " +
-					"AND sr.category_id IN (:categories) " +
-					"AND sr.source_type_id IN (:sourceTypeIds) " +
-					"AND pty.id IN (:patientTypes)  " +
-					"AND d.type_id = :documentType ";
+					(filter.getCategories() != null && !filter.getCategories().isEmpty() ? " AND sr.category_id IN (:categories)" : "") +
+					(filter.getSourceTypeIds() != null && !filter.getSourceTypeIds().isEmpty() ? " AND sr.source_type_id IN (:sourceTypeIds)" : " AND sr.source_type_id != 1") +
+					(filter.getPatientTypeId() != null && !filter.getPatientTypeId().isEmpty() ? " AND pty.id IN (:patientTypes)" : "") +
+					(filter.getStudyTypeIds() != null && !filter.getStudyTypeIds().isEmpty() ? " AND COALESCE(sr.study_type_id, 1) IN (:studyTypeIds)" : "") +
+					(
+							filter.getRequiresTransfer() && !filter.getNotRequiresTransfer()
+									? " AND sr.requires_transfer = true"
+									:
+									(!filter.getRequiresTransfer() && filter.getNotRequiresTransfer()
+											? " AND COALESCE(sr.requires_transfer, false) = false"
+											: "")
+					) +
+					" AND d.type_id = :documentType ";
 
 		Query query = entityManager.createNativeQuery(sqlString);
-		query.setParameter("institutionId", institutionId)
-				.setParameter("categories", categories)
-				.setParameter("sourceTypeIds", sourceTypeIds)
-				.setParameter("statusId", statusId)
+		query.setParameter("institutionId", institutionId);
+		if (filter.getCategories()!= null && !filter.getCategories().isEmpty()) {
+				query.setParameter("categories", filter.getCategories());
+		}
+		if (filter.getSourceTypeIds() != null && !filter.getSourceTypeIds().isEmpty()) {
+				query.setParameter("sourceTypeIds", filter.getSourceTypeIds());
+		}
+		query.setParameter("statusId", statusId)
 				.setParameter("documentType", documentType)
 				.setParameter("emergencyCareState", emergencyCareState)
-				.setParameter("patientTypes", patientTypes)
 				.setParameter("internmentEpisodeState", internmentEpisodeState);
+		if (filter.getPatientTypeId()!= null && !filter.getPatientTypeId().isEmpty()) {
+				query.setParameter("patientTypes", filter.getPatientTypeId());
+		}
+		if(filter.getStudyTypeIds() != null && !filter.getStudyTypeIds().isEmpty()) {
+			query.setParameter("studyTypeIds", filter.getStudyTypeIds());
+		}
 
 		return (List<Object[]>) query.getResultList();
 
