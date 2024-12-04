@@ -21,6 +21,8 @@ public class MedicationRequestValidationDispatcherProfessionalDto {
 
 	private String identificationNumber;
 
-	//TODO: Matricula
+	private String licenseNumber;
+
+	private String licenseType;
 
 }

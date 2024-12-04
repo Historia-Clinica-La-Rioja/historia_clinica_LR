@@ -46,6 +46,8 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setLastName(healthcareProfessional.getLastName());
 		result.setIdentificationType(healthcareProfessional.getIdentificationType());
 		result.setIdentificationNumber(healthcareProfessional.getIdentificationNumber());
+		result.setLicenseType(healthcareProfessional.getLicenseType());
+		result.setLicenseNumber(healthcareProfessional.getLicenseNumber());
 		return result;
 	}
 
@@ -55,7 +57,7 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setLastName(patient.getLastName());
 		result.setIdentificationType(patient.getIdentificationType());
 		result.setIdentificationNumber(patient.getIdentificationNumber());
-		result.setMedicalCoverage(new MedicationRequestValidationDispatcherMedicalCoverageBo(patient.getMedicalCoverage().getDispatcherNumber(), patient.getMedicalCoverage().getPlan()));
+		result.setMedicalCoverage(new MedicationRequestValidationDispatcherMedicalCoverageBo(patient.getMedicalCoverage().getFunderNumber(), patient.getMedicalCoverage().getAffiliateNumber()));
 		return result;
 	}
 
@@ -93,6 +95,8 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setLastName(healthcareProfessional.getLastName());
 		result.setIdentificationType(healthcareProfessional.getIdentificationType());
 		result.setIdentificationNumber(healthcareProfessional.getIdentificationNumber());
+		result.setLicenseType(healthcareProfessional.getLicenseType());
+		result.setLicenseNumber(healthcareProfessional.getLicenseNumber());
 		return result;
 	}
 
@@ -102,7 +106,7 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setLastName(patient.getLastName());
 		result.setIdentificationType(patient.getIdentificationType());
 		result.setIdentificationNumber(patient.getIdentificationNumber());
-		result.setMedicalCoverage(new MedicationRequestValidationDispatcherMedicalCoverageDto(patient.getMedicalCoverage().getDispatcherNumber(), patient.getMedicalCoverage().getPlan()));
+		result.setMedicalCoverage(new MedicationRequestValidationDispatcherMedicalCoverageDto(patient.getMedicalCoverage().getFunderNumber(), patient.getMedicalCoverage().getAffiliateNumber()));
 		return result;
 	}
 
@@ -113,7 +117,7 @@ public class MedicationRequestValidationDispatcherMapper {
 	}
 
 	private MedicationRequestValidationDispatcherMedicationDto mapToMedicationRequestValidationDispatcherMedicationDto(MedicationRequestValidationDispatcherMedicationBo medication) {
-		return new MedicationRequestValidationDispatcherMedicationDto(medication.getArticleCode(), medication.getQuantity());
+		return new MedicationRequestValidationDispatcherMedicationDto(medication.getArticleCode(), medication.getPackageQuantity());
 	}
 
 }

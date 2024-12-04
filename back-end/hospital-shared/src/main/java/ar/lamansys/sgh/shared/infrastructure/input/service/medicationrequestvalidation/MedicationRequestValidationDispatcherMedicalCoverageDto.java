@@ -13,8 +13,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class MedicationRequestValidationDispatcherMedicalCoverageDto {
 
-	private Integer dispatcherNumber;
+	private Short funderNumber;
 
-	private Integer plan;
+	private String affiliateNumber;
 
 }

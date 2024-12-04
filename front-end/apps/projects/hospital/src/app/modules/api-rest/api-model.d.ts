@@ -3268,8 +3268,8 @@ export interface MedicationRequestValidationDispatcherInstitutionDto {
 }
 
 export interface MedicationRequestValidationDispatcherMedicalCoverageDto {
-    dispatcherNumber: number;
-    plan: number;
+    affiliateNumber: string;
+    funderNumber: number;
 }
 
 export interface MedicationRequestValidationDispatcherMedicationDto {
@@ -3289,6 +3289,8 @@ export interface MedicationRequestValidationDispatcherProfessionalDto {
     identificationNumber: string;
     identificationType: string;
     lastName: string;
+    licenseNumber: string;
+    licenseType: string;
     name: string;
 }
 

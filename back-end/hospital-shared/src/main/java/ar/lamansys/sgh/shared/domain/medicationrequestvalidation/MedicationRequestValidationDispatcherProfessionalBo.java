@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.domain.medicationrequestvalidation;
 
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class MedicationRequestValidationDispatcherProfessionalBo {
 
-	private Integer id;
-
 	private String name;
 
 	private String lastName;
@@ -23,6 +22,17 @@ public class MedicationRequestValidationDispatcherProfessionalBo {
 
 	private String identificationNumber;
 
-	//TODO: Matricula
+	private String licenseNumber;
 
+	private String licenseType;
+
+	public MedicationRequestValidationDispatcherProfessionalBo(String name, String lastName, String identificationType,
+															   String identificationNumber, String licenseNumber, ELicenseNumberTypeBo licenseType) {
+		this.name = name;
+		this.lastName = lastName;
+		this.identificationType = identificationType;
+		this.identificationNumber = identificationNumber;
+		this.licenseNumber = licenseNumber;
+		this.licenseType = licenseType != null ? licenseType.getAcronym() : null;
+	}
 }

@@ -13,8 +13,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class MedicationRequestValidationDispatcherPatientBo {
 
-	private Integer id;
-
 	private String name;
 
 	private String lastName;
@@ -24,5 +22,12 @@ public class MedicationRequestValidationDispatcherPatientBo {
 	private String identificationNumber;
 
 	private MedicationRequestValidationDispatcherMedicalCoverageBo medicalCoverage;
+
+	public MedicationRequestValidationDispatcherPatientBo(String name, String lastName, String identificationType, String identificationNumber) {
+		this.name = name;
+		this.lastName = lastName;
+		this.identificationType = identificationType;
+		this.identificationNumber = identificationNumber;
+	}
 
 }

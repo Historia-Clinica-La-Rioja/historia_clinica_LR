@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.pladema.staff.repository.entity.ProfessionalLicenseNumber;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 
 @Repository
 public interface ProfessionalLicenseNumberRepository extends JpaRepository<ProfessionalLicenseNumber, Integer> {

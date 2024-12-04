@@ -1,5 +1,6 @@
 package net.pladema.establishment.repository;
 
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherInstitutionBo;
 import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -225,5 +226,15 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE ur.userId = :userId " +
 			"AND ur.deleteable.deleted IS FALSE")
 	List<Integer> getInstitutionsByUser(@Param("userId") Integer userId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherInstitutionBo(i.name, i.cuit, a.street, a.number, c.description, p.description) " +
+			"FROM Institution i " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (c.id = a.cityId) " +
+			"JOIN Department d ON (d.id = c.departmentId) " +
+			"JOIN Province p ON (p.id = d.provinceId) " +
+			"WHERE i.id = :institutionId")
+    MedicationRequestValidationDispatcherInstitutionBo fetchInstitutionDataNeededForMedicationRequestValidation(@Param("institutionId") Integer institutionId);
 
 }

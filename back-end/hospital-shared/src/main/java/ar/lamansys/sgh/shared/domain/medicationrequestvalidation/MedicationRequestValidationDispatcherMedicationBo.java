@@ -13,17 +13,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class MedicationRequestValidationDispatcherMedicationBo {
 
-	private Integer snomedId;
-
 	private Integer articleCode;
 
-	private Short quantity;
+	private Short packageQuantity;
 
-	private Boolean isCommercialMedication;
-
-	public MedicationRequestValidationDispatcherMedicationBo(Integer articleCode, Short quantity) {
-		this.articleCode = articleCode;
-		this.quantity = quantity;
+	public MedicationRequestValidationDispatcherMedicationBo(Short packageQuantity) {
+		this.packageQuantity = packageQuantity;
 	}
-
 }

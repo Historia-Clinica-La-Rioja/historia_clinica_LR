@@ -13,12 +13,17 @@ import lombok.ToString;
 @NoArgsConstructor
 public class MedicationRequestValidationDispatcherInstitutionBo {
 
-	private Integer id;
-
 	private String name;
 
 	private String address;
 
 	private String cuit;
+
+	public MedicationRequestValidationDispatcherInstitutionBo(String name, String cuit, String streetName, String homeNumber,
+															  String cityName, String stateName) {
+		this.name = name;
+		this.cuit = cuit;
+		this.address = String.join(" ", streetName, homeNumber, cityName, stateName);
+	}
 
 }

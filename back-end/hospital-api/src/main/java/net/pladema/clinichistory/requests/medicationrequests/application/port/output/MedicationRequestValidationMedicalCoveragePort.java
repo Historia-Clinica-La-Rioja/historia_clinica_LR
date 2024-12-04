@@ -1,0 +1,9 @@
+package net.pladema.clinichistory.requests.medicationrequests.application.port.output;
+
+import net.pladema.patient.domain.GetMedicalCoverageHealthInsuranceValidationDataBo;
+
+public interface MedicationRequestValidationMedicalCoveragePort {
+
+	Short getFunderNumberByMedicalCoverageNameCuitAndAcronym(GetMedicalCoverageHealthInsuranceValidationDataBo medicalCoverage);
+
+}

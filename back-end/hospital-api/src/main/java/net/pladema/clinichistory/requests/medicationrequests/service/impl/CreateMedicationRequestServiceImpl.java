@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
+import net.pladema.clinichistory.requests.medicationrequests.application.SendMedicationRequestValidation;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
@@ -45,6 +46,8 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 	private final FeatureFlagsService featureFlagsService;
 
 	private final int MONTH_DAY_DURATION = 30;
+
+	private final SendMedicationRequestValidation sendMedicationRequestValidation;
 
     @Override
     public List<DocumentRequestBo> execute(MedicationRequestBo medicationRequest) {
@@ -80,6 +83,8 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 			Long documentId = documentFactory.run(newMedicationRequest, true);
 			result.add(new DocumentRequestBo(key,documentId));
 		});
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR))
+			sendMedicationRequestValidation.run(medicationRequest);
 		return result;
 	}
 

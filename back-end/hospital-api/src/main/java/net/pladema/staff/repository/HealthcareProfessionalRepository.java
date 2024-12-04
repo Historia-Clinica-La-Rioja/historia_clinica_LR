@@ -2,6 +2,9 @@ package net.pladema.staff.repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -148,4 +151,16 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			"AND ur.deleteable.deleted = false ")
 	List<HealthcareProfessionalVo> getAllProfessionalsByDepartment(@Param("departmentId") Short departmentId,
 																   @Param("professionalERoleIds") List<Short> professionalERoleIds);
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo(p.firstName, p.lastName, it.description, p.identificationNumber, pln.licenseNumber, pln.type) " +
+			"FROM HealthcareProfessional hp " +
+			"JOIN Person p ON (p.id = hp.personId) " +
+			"JOIN IdentificationType it ON (it.id = p.identificationTypeId) " +
+			"LEFT JOIN ProfessionalProfessions pp ON (pp.healthcareProfessionalId = hp.id) " +
+			"LEFT JOIN ProfessionalLicenseNumber pln ON (pln.professionalProfessionId = pp.id) " +
+			"WHERE hp.id = :healthcareProfessionalId " +
+			"AND pp.deleteable.deleted = FALSE " +
+			"ORDER BY pln.type DESC")
+	List<MedicationRequestValidationDispatcherProfessionalBo> fetchProfessionalDataNeededForMedicationRequestValidation(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

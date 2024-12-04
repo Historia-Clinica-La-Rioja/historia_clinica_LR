@@ -1,4 +1,4 @@
-package net.pladema.staff.service.domain;
+package ar.lamansys.sgh.shared.domain;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.Getter;
