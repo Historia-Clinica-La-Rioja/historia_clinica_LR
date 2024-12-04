@@ -61,7 +61,7 @@ public class ServiceRequestWorkListController {
 		StudyOrderWorkListFilterBo filter = filterMapper.fromStudyOrderWorkListFilterDto(objectMapper.readValue(filterData, StudyOrderWorkListFilterDto.class));
 
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, null, pageable);
+		Page<StudyOrderWorkListBo> resultService = studyWorkListService.execute(institutionId, filter, pageable);
 		Page<StudyOrderWorkListDto> result = resultService.map(studyOrderWorkListBo -> studyMapper.toStudyOrderWorkListDto(studyOrderWorkListBo));
 
 		log.debug("Output -> {}", result);

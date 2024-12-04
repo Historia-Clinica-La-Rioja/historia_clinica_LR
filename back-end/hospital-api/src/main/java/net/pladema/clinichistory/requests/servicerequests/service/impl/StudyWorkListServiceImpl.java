@@ -1,8 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
-import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.AllArgsConstructor;
@@ -11,6 +9,7 @@ import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderBasicPatientBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderPatientLocationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 import net.pladema.clinichistory.requests.servicerequests.repository.StudyWorkListRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.StudyWorkListService;
@@ -35,34 +34,22 @@ import java.util.stream.Collectors;
 @Service
 public class StudyWorkListServiceImpl implements StudyWorkListService {
 
+	private static final Short INTERNMENT_EPISODE_STATE = 1;
+
 	private final StudyWorkListRepository studyWorkListRepository;
 	private final FeatureFlagsService featureFlagsService;
 
 	@Override
-	public Page<StudyOrderWorkListBo> execute(Integer institutionId, List<String> categories, Pageable pageable){
+	public Page<StudyOrderWorkListBo> execute(Integer institutionId, StudyOrderWorkListFilterBo filterBo, Pageable pageable){
 
-		log.debug("Input parameters -> institutionId: {}, categories: {}, pageable: {}", institutionId, categories, pageable);
+		log.debug("Input parameters -> institutionId: {}, pageable: {}", institutionId, pageable);
 
 		String statusId = EDiagnosticReportStatus.REGISTERED.getId();
-		List<Short> sourceTypeIds = List.of(
-				ESourceType.HOSPITALIZATION.getId(),
-				ESourceType.EMERGENCY_CARE.getId()
-		);
 		Short documentType = EDocumentType.ORDER.getId();
 		Short emergencyCareState = EEmergencyCareState.ATENCION.getId();
-		Short internmentEpisodeState = 1;
-		List<Short> patientType = List.of(
-				EPatientType.PERMANENT.getId(),
-				EPatientType.VALIDATED.getId(),
-				EPatientType.TEMPORARY.getId(),
-				EPatientType.HISTORIC.getId(),
-				EPatientType.TELEPHONIC.getId(),
-				EPatientType.REJECTED.getId(),
-				EPatientType.NOT_VALIDATED_PERMANENT.getId(),
-				EPatientType.EMERGENCY_CARE_TEMPORARY.getId()
-				);
+
 		var rawGroupedResults =
-				studyWorkListRepository.execute(institutionId, categories, sourceTypeIds, statusId, documentType, emergencyCareState, internmentEpisodeState, patientType)
+				studyWorkListRepository.execute(institutionId, null, null, null, null, emergencyCareState, INTERNMENT_EPISODE_STATE, null)
 				.stream()
 				.collect(Collectors.groupingBy(x -> (Integer) x[0]));
 
@@ -73,6 +60,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 			var snomedList = groupedValues.stream().map(StudyWorkListServiceImpl::mapSnomed).collect(Collectors.toList());
 			studyOrderWorkListBo.setSnomed(snomedList);
 			return studyOrderWorkListBo;
+
 		}) .sorted(Comparator.comparing((StudyOrderWorkListBo o) -> o.getStatus())
 						.thenComparing(o -> {
 							LocalDateTime effectiveDate =
@@ -98,6 +86,7 @@ public class StudyWorkListServiceImpl implements StudyWorkListService {
 	}
 
 	private StudyOrderWorkListBo createStudyOrderWorkListBo(Object[] row) {
+
 		boolean featureFlagEnabled = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 
 		StudyOrderBasicPatientBo patientBo = StudyOrderBasicPatientBo.builder()
