@@ -106,7 +106,7 @@ public interface VClinicHistoryRepository extends JpaRepository<VClinicHistory, 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.id as documentId, nc.patient_id, nc.created_on as startDate, nc.created_on as endDate, p.id as personId, i.name, d.type_id, d.source_type_id as sourceTypeId, d.source_type_id as dSourceTypeId" +
 			" FROM nursing_consultation nc" +
-			" JOIN document d ON d.source_id = nc.id" +
+			" JOIN document d ON (d.source_id = nc.id AND d.source_type_id = " + SourceType.NURSING + ") " +
 			" JOIN institution i ON nc.institution_id = i.id " +
 			" JOIN user_person up ON d.created_by = up.user_id" +
 			" JOIN person p ON up.person_id = p.id" +
