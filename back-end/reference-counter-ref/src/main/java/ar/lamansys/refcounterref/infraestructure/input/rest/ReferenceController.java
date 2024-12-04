@@ -53,7 +53,7 @@ public class ReferenceController {
     }
 
 	@GetMapping("/patient/{patientId}/requested")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_REGIONAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_REGIONAL')")
 	public ResponseEntity<List<ReferenceSummaryDto>> getReferencesSummary(@PathVariable(name = "institutionId") Integer institutionId,
 																		  @PathVariable(name = "patientId") Integer patientId,
 																		  @RequestParam(value="clinicalSpecialtyId" , required = false) Integer clinicalSpecialtyId,

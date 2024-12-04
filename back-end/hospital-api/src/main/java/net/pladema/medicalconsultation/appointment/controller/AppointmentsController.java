@@ -566,7 +566,7 @@ public class AppointmentsController {
 	}
 
 	@PutMapping(value = "/{appointmentId}/change-state")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<Boolean> changeState(@PathVariable(name = "institutionId") Integer institutionId,
 											   @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
 											   @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
