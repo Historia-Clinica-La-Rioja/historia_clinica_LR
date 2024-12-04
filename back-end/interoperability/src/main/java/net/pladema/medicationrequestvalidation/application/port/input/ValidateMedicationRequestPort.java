@@ -1,0 +1,9 @@
+package net.pladema.medicationrequestvalidation.application.port.input;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.medicationrequestvalidation.MedicationRequestValidationDispatcherSenderDto;
+
+public interface ValidateMedicationRequestPort {
+
+	String validateMedicationRequest(MedicationRequestValidationDispatcherSenderDto medicationRequestValidationDispatcherSenderDto);
+
+}

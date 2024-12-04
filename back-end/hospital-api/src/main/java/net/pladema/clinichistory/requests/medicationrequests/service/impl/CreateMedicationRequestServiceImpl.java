@@ -76,6 +76,8 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     }
 
 	private List<DocumentRequestBo> saveDigitalMedicationRequests(MedicationRequestBo medicationRequest) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR) && medicationRequest.getMedicalCoverageId() != null)
+			sendMedicationRequestValidation.run(medicationRequest);
 		Map<Integer, LocalDate> newMRIds = createDigitalMedicationRequests(medicationRequest);
 		List<DocumentRequestBo> result = new ArrayList<>();
 		newMRIds.forEach((key, value) -> {
@@ -83,8 +85,6 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 			Long documentId = documentFactory.run(newMedicationRequest, true);
 			result.add(new DocumentRequestBo(key,documentId));
 		});
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR))
-			sendMedicationRequestValidation.run(medicationRequest);
 		return result;
 	}
 

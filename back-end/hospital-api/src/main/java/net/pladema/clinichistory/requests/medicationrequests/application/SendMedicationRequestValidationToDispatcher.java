@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.requests.medicationrequests.application.port.output.MedicationRequestValidationMedicalCoveragePort;
+import net.pladema.clinichistory.requests.medicationrequests.application.port.output.SendMedicationRequestValidationToDispatcherPort;
 import net.pladema.establishment.application.port.InstitutionPort;
 import net.pladema.patient.application.port.output.PatientMedicalCoveragePort;
 import net.pladema.patient.application.port.output.PatientPort;
@@ -45,9 +46,11 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 
 	private final MedicationRequestValidationMedicalCoveragePort medicationRequestValidationMedicalCoveragePort;
 
+	private final SendMedicationRequestValidationToDispatcherPort sendMedicationRequestValidationToDispatcherPort;
+
 	public void run(MedicationRequestBo medicationRequest) {
 		log.debug("Input parameter -> medicationRequest {}", medicationRequest);
-		MedicationRequestValidationDispatcherSenderBo request = getValidationNeededData(medicationRequest);
+		sendMedicationRequestValidationToDispatcherPort.sendMedicationRequestToValidate(getValidationNeededData(medicationRequest));
 	}
 
 	private MedicationRequestValidationDispatcherSenderBo getValidationNeededData(MedicationRequestBo medicationRequest) {
@@ -61,7 +64,7 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 	}
 
 	private List<LocalDate> getPrescriptionPostdatedDates(MedicationRequestBo medicationRequest) {
-		if (!medicationRequest.getIsPostDated())
+		if (medicationRequest.getIsPostDated() == null || !medicationRequest.getIsPostDated())
 			return null;
 		List<LocalDate> result = new ArrayList<>();
 		result.add(medicationRequest.getRequestDate().plusDays(30));
@@ -72,7 +75,7 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 
 	private MedicationRequestValidationDispatcherPatientBo getPatientData(MedicationRequestBo medicationRequest) {
 		GetMedicalCoverageHealthInsuranceValidationDataBo medicalCoverage = patientMedicalCoveragePort.getMedicalCoverageHealthInsuranceValidationDataById(medicationRequest.getMedicalCoverageId());
-		if (medicalCoverage.getPatientAffiliateNumber() == null)
+		if (medicalCoverage == null || medicalCoverage.getPatientAffiliateNumber() == null)
 			throw new RuntimeException("El paciente necesita tener nro de afiliado para validar la receta");
 		MedicationRequestValidationDispatcherPatientBo result = patientPort.getPatientDataNeededForMedicationRequestValidation(medicationRequest.getPatientId());
 		Short medicalCoverageFunderNumber = medicationRequestValidationMedicalCoveragePort.getFunderNumberByMedicalCoverageNameCuitAndAcronym(medicalCoverage);
