@@ -59,7 +59,8 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 	}
 
 	verifyValidations() {
-		const selectedTypeWithRequiredObservations = this.form.value.types.some(type => type.id === TYPE_REQUIRED_OBSERVATION);
+		const types = this.form.getRawValue().types;
+		const selectedTypeWithRequiredObservations = types.some(type => type.id === TYPE_REQUIRED_OBSERVATION);
 		const observationsControl = this.form.controls.observations;
 		selectedTypeWithRequiredObservations ? this.addRequiredValidator(observationsControl) : this.removeRequiredValidator(observationsControl);
 
@@ -106,6 +107,7 @@ export class IsolationAlertFormComponent implements OnInit, OnDestroy {
 		}
 		this.form.setValue(isolationAlertForm);
 		this.disableFormControls();
+		this.verifyValidations();
 	}
 
 	private disableFormControls() {
