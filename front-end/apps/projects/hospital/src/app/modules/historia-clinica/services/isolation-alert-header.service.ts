@@ -4,7 +4,7 @@ import { IsolationAlertDetail } from '@historia-clinica/components/isolation-ale
 import { Subject } from 'rxjs';
 import { mapPatientCurrentIsolationAlertsDtoToIsolationAlertsDetail } from '@historia-clinica/mappers/isolation-alerts.mapper';
 
-const ONLY_ACTIVE = true;
+const FILTER_ONGOING = true;
 
 @Injectable()
 export class IsolationAlertHeaderService {
@@ -20,7 +20,7 @@ export class IsolationAlertHeaderService {
 	}
 
 	loadPatientIsolationAlertHeader() {
-		this.patientId && this.patientIsolationAlertService.getPatientIsolationAlerts(this.patientId, ONLY_ACTIVE).subscribe(isolationAlerts => {
+		this.patientId && this.patientIsolationAlertService.getPatientIsolationAlerts(this.patientId, FILTER_ONGOING).subscribe(isolationAlerts => {
 			const isolationAlertsDetail = mapPatientCurrentIsolationAlertsDtoToIsolationAlertsDetail(isolationAlerts);
 			this.patientIsolationAlertsDetailsSubject.next(isolationAlertsDetail);
 		});

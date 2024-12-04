@@ -25,6 +25,7 @@ import { CustomFormComponent } from './components/custom-form/custom-form.compon
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
+import { DetailsOfPatientIsolationAlertsComponent } from './dialogs/details-of-patient-isolation-alerts/details-of-patient-isolation-alerts.component';
 import { DiagnosisFormByNurseComponent } from './components/diagnosis-form-by-nurse/diagnosis-form-by-nurse.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
@@ -309,6 +310,7 @@ import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typea
 		AddProcedureComponent,
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
+		DetailsOfPatientIsolationAlertsComponent,
 		EditIsolationAlertPopupComponent,
 		EffectiveTimeDialogComponent,
 		IsolationAlertPopupComponent,

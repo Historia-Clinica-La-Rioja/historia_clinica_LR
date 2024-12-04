@@ -12,6 +12,6 @@
 	</mat-list>
 	<app-button *ngIf="isolationAlertLength > MAX_ISOLATION_ALERT_TO_SHOW" buttonType="{{BASIC_BUTTON}}"
 		[text]="isolationAlertLength - MAX_ISOLATION_ALERT_TO_SHOW | showMissingAlerts$ | async"
-		>
+		(clicked)="openIsolationAlertDetails()">
 	</app-button>
 </div>

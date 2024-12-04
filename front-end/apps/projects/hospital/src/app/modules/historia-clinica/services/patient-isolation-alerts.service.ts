@@ -22,15 +22,15 @@ export class PatientIsolationAlertsService {
 		private readonly isolationAlertService: IsolationAlertService,
 	) { }
 
-	loadPatientIsolationAlertsSummary(patientId: number, onlyActive: boolean) {
-		this.getPatientIsolationAlerts(patientId, onlyActive).subscribe(isolationAlerts => {
+	loadPatientIsolationAlertsSummary(patientId: number, filterOngoing: boolean) {
+		this.getPatientIsolationAlerts(patientId, filterOngoing).subscribe(isolationAlerts => {
 			const isolationAlertsSummary = mapPatientCurrentIsolationAlertsDtoToIsolationAlertsSummary(isolationAlerts);
 			this.patientIsolationAlertsSubject.next(isolationAlertsSummary);
 		});
 	}
 
-	getPatientIsolationAlerts(patientId: number, onlyActive: boolean): Observable<PatientCurrentIsolationAlertDto[]> {
-		return this.isolationAlertService.getIsolationAlerts(patientId, onlyActive);
+	getPatientIsolationAlerts(patientId: number, filterOngoing: boolean): Observable<PatientCurrentIsolationAlertDto[]> {
+		return this.isolationAlertService.getIsolationAlerts(patientId, filterOngoing);
 	}
 
 }
