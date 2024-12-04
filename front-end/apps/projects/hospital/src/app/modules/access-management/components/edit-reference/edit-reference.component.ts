@@ -26,7 +26,7 @@ export class EditReferenceComponent {
         private dialogService: DialogService<ReferenceEditionPopUpComponent>,
         private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
         private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
-        private readonly permissionService: ReferencePermissionCombinationService
+        public permissionService: ReferencePermissionCombinationService
     ) { }
 
     openEditDialog() {

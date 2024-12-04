@@ -1,5 +1,5 @@
 <ng-container *ngIf="isButton else textButton">
-    <app-button [text]="'access-management.search_references.reference.approval.EDIT_REFERENCE_BUTTON' | translate"
+    <app-button *ngIf="permissionService.visualPermissions.showEditReferenceInDestinationState" [text]="'access-management.search_references.reference.approval.EDIT_REFERENCE_BUTTON' | translate"
 		[buttonType]="ButtonType.RAISED" (clicked)="openEditDialog()"></app-button>
 </ng-container>
 

@@ -51,6 +51,7 @@ export class ReferencePermissionCombinationService implements OnDestroy {
         this.visualPermissions = {
             showAssignAppointmentButton: this.showAssignAppointmentButton(),
             showEditReferenceButton: this.showEditReferenceButton(),
+            showEditReferenceInDestinationState: this.showEditReferenceInDestinationState(),
             showDeriveRequestButton: this.showDeriveRequestButton(),
             showAdministativeClosureButton: this.showAdministativeClosureButton(),
             showAuditDropdown: this.showAuditDropdown(),
@@ -75,6 +76,11 @@ export class ReferencePermissionCombinationService implements OnDestroy {
     showEditReferenceButton(): boolean {
         return this.isRoleGestor && !this.reportHasAppointment() && !this.referenceCompleteData.reference.closureType && 
         this.referenceCompleteData.regulation.state !== this.referenceOriginStates.rejected;
+    }
+
+    showEditReferenceInDestinationState(): boolean {
+        return (this.isRoleGestor || (this.isRoleGestorInstitucional && this.dashboardService.dashboardView == DashboardView.REQUESTED))
+            && this.referenceCompleteData.regulation.state === this.referenceOriginStates.waitingAudit;
     }
 
     showDeriveRequestButton(): boolean {
@@ -112,6 +118,7 @@ export class ReferencePermissionCombinationService implements OnDestroy {
 interface ReferenceVisualPermissions {
     showAssignAppointmentButton: boolean,
     showEditReferenceButton: boolean,
+    showEditReferenceInDestinationState: boolean,
     showDeriveRequestButton: boolean,
     showAdministativeClosureButton: boolean,
     showAuditDropdown: boolean,
