@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.publicapi.prescription.application.fetchprescriptionbyidanddniv3.FetchPrescriptionsByIdAndDniV3;
 import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.SuggestedCommercialMedicationDto;
 
@@ -70,7 +71,8 @@ public class FetchPrescriptionByIdControllerTest {
 	public void setup() {
 		PrescriptionMapper prescriptionMapper = new PrescriptionMapper(localDateMapper);
 		FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni = new FetchPrescriptionsByIdAndDni(prescriptionStorage);
-		this.fetchPrescriptionByIdController = new FetchPrescriptionByIdController(fetchPrescriptionsByIdAndDni, prescriptionMapper, prescriptionPublicApiPermissions);
+		FetchPrescriptionsByIdAndDniV3 fetchPrescriptionsByIdAndDniV3 = new FetchPrescriptionsByIdAndDniV3(prescriptionStorage);
+		this.fetchPrescriptionByIdController = new FetchPrescriptionByIdController(fetchPrescriptionsByIdAndDni, fetchPrescriptionsByIdAndDniV3, prescriptionMapper, prescriptionPublicApiPermissions);
 	}
 
 	@Test
@@ -187,6 +189,27 @@ public class FetchPrescriptionByIdControllerTest {
 		allowAccessPermission(false);
 		TestUtils.shouldThrow(PrescriptionRequestAccessDeniedException.class,
 				() -> fetchPrescriptionByIdController.prescriptionRequest("0-100", "1"));
+	}
+
+	@Test
+	void failDomainNumberParsingV3(){
+		allowAccessPermission(true);
+		TestUtils.shouldThrow(BadPrescriptionIdFormatException.class,
+				() -> fetchPrescriptionByIdController.prescriptionRequestV3("2-0-100", "1"));
+	}
+
+	@Test
+	void failDomainNumberNotMatchingV3(){
+		allowAccessPermission(true);
+		TestUtils.shouldThrow(PrescriptionNotFoundException.class,
+				() -> fetchPrescriptionByIdController.prescriptionRequestV3("89562-100", "1"));
+	}
+
+	@Test
+	void failAccessDeniedExceptionV3() {
+		allowAccessPermission(false);
+		TestUtils.shouldThrow(PrescriptionRequestAccessDeniedException.class,
+				() -> fetchPrescriptionByIdController.prescriptionRequestV3("0-100", "1"));
 	}
 
 	private void allowAccessPermission(boolean canAccess) {

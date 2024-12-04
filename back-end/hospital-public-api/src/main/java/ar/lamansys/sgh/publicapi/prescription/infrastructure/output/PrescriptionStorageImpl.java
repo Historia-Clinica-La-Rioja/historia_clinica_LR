@@ -301,6 +301,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	private PrescriptionV2Bo processPrescriptionV2(Object[] queryResult) {
 		LocalDate dueDate = queryResult[2] != null ? ((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
 		String accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
+		String prescriptionLineStatus = getPrescriptionLineStatus(queryResult, dueDate);
 		return new PrescriptionV2Bo(
 				domainNumber.toString(),
 				((Integer) queryResult[0]).toString(),
@@ -352,7 +353,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				),
 				List.of(new PrescriptionLineV2Bo(
 						(Integer) queryResult[29],
-						queryResult[44].equals(RECETA_CANCELADA) || dueDate.isAfter(LocalDate.now()) ? (String)queryResult[30] : "VENCIDO",
+						prescriptionLineStatus,
 						new PrescriptionProblemBo(
 								(String) queryResult[31],
 								(String) queryResult[32],
@@ -766,7 +767,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						(Short) queryResult[40],
 						queryResult[53] != null ? (Short) queryResult[53] : null,
 						queryResult[43] != null ? (Double)queryResult[43] : null,
-						(String) queryResult[54]
+						queryResult[54] != null ? (String) queryResult[54] : null
 				))
 		);
 	}

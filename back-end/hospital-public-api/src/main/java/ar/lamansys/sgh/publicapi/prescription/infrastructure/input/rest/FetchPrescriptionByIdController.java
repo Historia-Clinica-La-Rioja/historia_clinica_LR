@@ -1,5 +1,9 @@
 package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest;
 
+import ar.lamansys.sgh.publicapi.prescription.application.fetchprescriptionbyidanddniv3.FetchPrescriptionsByIdAndDniV3;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV2Dto;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +35,8 @@ public class FetchPrescriptionByIdController {
 
 	private final FetchPrescriptionsByIdAndDni fetchPrescriptionsByIdAndDni;
 
+	private final FetchPrescriptionsByIdAndDniV3 fetchPrescriptionsByIdAndDniV3;
+
 	private final PrescriptionMapper prescriptionMapper;
 
 	private final PrescriptionPublicApiPermissions prescriptionPublicApiPermissions;
@@ -39,16 +45,10 @@ public class FetchPrescriptionByIdController {
 	private int domainNumber;
 
 	@GetMapping
-	public @ResponseBody PrescriptionDto prescriptionRequest(
-			@PathVariable("prescriptionId") String prescriptionId,
-			@PathVariable("identificationNumber") String identificationNumber) {
-
-		if (!prescriptionPublicApiPermissions.canAccess()) {
-			throw new PrescriptionRequestAccessDeniedException();
-		}
-
+	public @ResponseBody PrescriptionDto prescriptionRequest(@PathVariable("prescriptionId") String prescriptionId,
+															 @PathVariable("identificationNumber") String identificationNumber) {
 		log.debug(INPUT + "prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
-
+		assertUserPermissions();
 		var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
 		assertDomainNumber(prescriptionIdentifier.domain);
 		try {
@@ -63,10 +63,27 @@ public class FetchPrescriptionByIdController {
 		}
 	}
 
+	@GetMapping("/v3")
+	public @ResponseBody PrescriptionV2Dto prescriptionRequestV3(@PathVariable("prescriptionId") String prescriptionId,
+																 @PathVariable("identificationNumber") String identificationNumber) {
+		log.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
+		assertUserPermissions();
+		var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
+		assertDomainNumber(prescriptionIdentifier.domain);
+		PrescriptionV2Bo resultBo = fetchPrescriptionsByIdAndDniV3.run(prescriptionIdentifier, identificationNumber);
+		PrescriptionV2Dto result = prescriptionMapper.toMultipleCommercialPrescriptionDto(resultBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void assertDomainNumber(String part) throws PrescriptionNotFoundException {
 		if(Integer.parseInt(part) != domainNumber) {
 			throw new PrescriptionNotFoundException("No se encontró la receta.");
 		}
 	}
 
+	private void assertUserPermissions() {
+		if (!prescriptionPublicApiPermissions.canAccess())
+			throw new PrescriptionRequestAccessDeniedException();
+	}
 }
