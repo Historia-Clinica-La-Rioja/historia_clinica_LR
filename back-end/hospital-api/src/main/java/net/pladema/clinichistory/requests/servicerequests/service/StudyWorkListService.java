@@ -7,8 +7,6 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkL
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface StudyWorkListService {
 	Page<StudyOrderWorkListBo> execute(Integer institutionId, StudyOrderWorkListFilterBo filterBo, Pageable pageable);
 }

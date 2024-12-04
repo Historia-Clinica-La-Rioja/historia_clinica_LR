@@ -46,7 +46,7 @@ public class ServiceRequestWorkListController {
 	private ObjectMapper objectMapper;
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO')")
+	@PreAuthorize("hasPermission(#institutionId, 'PERSONAL_DE_LABORATORIO')")
 	public ResponseEntity<PageDto<StudyOrderWorkListDto>> getList(@PathVariable(name = "institutionId") Integer institutionId,
 																  @RequestParam(name = "pageNumber") Integer pageNumber,
 																  @RequestParam(name = "pageSize") Integer pageSize,

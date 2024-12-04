@@ -21,7 +21,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class})
+@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class, StudyOrderWorkListPatientMapper.class})
 public interface StudyMapper {
     @Named("parseToList")
     @IterableMapping(qualifiedByName = "parseTo")
@@ -69,6 +69,7 @@ public interface StudyMapper {
 	@Mapping(target = "studyTypeId", expression = "java(EStudyType.map(studyOrderWorkListBo.getStudyTypeId()))")
 	@Mapping(target = "sourceTypeId", expression = "java(ESourceType.map(studyOrderWorkListBo.getSourceTypeId()))")
 	@Mapping(target = "status", expression = "java(EDiagnosticReportStatus.map(studyOrderWorkListBo.getStatus()))")
+	@Mapping(target = "patientDto", source = "patientBo")
 	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }
