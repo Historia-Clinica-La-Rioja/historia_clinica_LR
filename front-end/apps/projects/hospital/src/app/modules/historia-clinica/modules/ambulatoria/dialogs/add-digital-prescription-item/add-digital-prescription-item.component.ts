@@ -197,7 +197,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 
 		const {item, showStudyCategory} = this.data;
 		const commercialMedicationPrescription = this.showMedicationPackQuantity || this.showPresentationQuantity ? {
-			medicationPackQuantity: this.showMedicationPackQuantity ? this.prescriptionItemForm.value.medicationPackQuantity : 0,
+			medicationPackQuantity: this.showMedicationPackQuantity ? this.prescriptionItemForm.value.medicationPackQuantity : this.MIN_VALUE,
 			presentationUnitQuantity: this.showPresentationQuantity ? this.prescriptionItemForm.value.presentationUnit : 0
 		}: null;
 		const formValues = this.prescriptionItemForm.value;
@@ -297,6 +297,10 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 
 	private getTotalQuantityValidators = (): ValidatorFn[] => {
 		return [Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)];
+	}
+
+	private getMedicationPackQuantityValidators = (): ValidatorFn[] => {
+		return [Validators.min(this.MIN_VALUE), Validators.pattern(NUMBER_PATTERN), Validators.required];
 	}
 
 	private setMedicationPresentations = (sctid: string) => {
@@ -524,7 +528,7 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 			frequency: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			quantity: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			unit: new FormControl(null),
-			medicationPackQuantity: new FormControl(null, Validators.pattern(NUMBER_PATTERN)),
+			medicationPackQuantity: new FormControl(this.MIN_VALUE, this.getMedicationPackQuantityValidators()),
 			studyCategory: new FormControl(null),
 			administrationTimeDays: new FormControl(null, [Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]),
 			totalQuantity: new FormControl(null, this.getTotalQuantityValidators()),
@@ -549,9 +553,8 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 		if (this.data.showStudyCategory)
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
 
-		if (this.HABILITAR_RELACIONES_SNOMED && this.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO) {
+		if (this.canShowPackQuantityAndPresentationQuantity()) 
 			this.prescriptionItemForm.controls.presentationUnit.setValidators([Validators.required]);
-		}
 	}
 
 	private setHasPrescriptorRole = () => {
