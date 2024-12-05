@@ -16,6 +16,7 @@ export class ReferenceStateComponent implements OnInit {
 
     canShowApproval: boolean;
     canShowAppointment: boolean;
+    selectedStepperIndex = 0;
 
     @Input() referenceRegulation: ReferenceRegulationDto;
     @Input() referenceAdministrativeStateDto: ReferenceAdministrativeStateDto;
@@ -34,6 +35,7 @@ export class ReferenceStateComponent implements OnInit {
         else
             this.canShowApproval = false;
         this.canShowAppointment = this.isApproved(this.referenceAdministrativeStateDto?.state);
+        this.setStepperIndex();
     }
 
     newOriginState(state: EReferenceRegulationState) {
@@ -50,12 +52,17 @@ export class ReferenceStateComponent implements OnInit {
 		this.closeDialog.emit();
 	}
 
+    private setStepperIndex() {
+        if (this.canShowApproval) this.selectedStepperIndex = 1;
+        if (this.canShowAppointment) this.selectedStepperIndex = 2;
+    }
+
     private isAudited(state: EReferenceRegulationState): boolean {
         return state === this.permissionService.referenceOriginStates.audited || state === this.permissionService.referenceOriginStates.noAuditRequired
             || this.permissionService.referenceCompleteData.administrativeState?.state === this.permissionService.referenceDestinationState.suggestedRevision;
     }
 
-    private isApproved(state: EReferenceAdministrativeState) {
+    private isApproved(state: EReferenceAdministrativeState): boolean {
         return state === this.permissionService.referenceDestinationState.approval;
     }
 
