@@ -168,6 +168,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			const {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName} = referenceDetails;
 			this.referenceAppointment = {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName};
 			this.permissionService.setEditorAppointment(authorFullName, convertDateTimeDtoToDate(createdOn));
+		} else {
+			this.permissionService.resetEditorAppontment();
 		}
 	}
 

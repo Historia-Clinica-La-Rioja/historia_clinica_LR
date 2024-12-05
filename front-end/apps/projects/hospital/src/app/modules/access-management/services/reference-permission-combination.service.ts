@@ -60,6 +60,10 @@ export class ReferencePermissionCombinationService implements OnDestroy {
         }
     }
 
+    resetEditorAppontment() {
+        this.registerEditorAppointment = null;
+    }
+
     setEditorAppointment(authorFullName: string, createdOn: Date) {
         this.registerEditorAppointment = {createdBy: authorFullName, date: createdOn}
     }
