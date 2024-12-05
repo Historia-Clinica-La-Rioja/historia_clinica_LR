@@ -76,7 +76,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
     }
 
 	private List<DocumentRequestBo> saveDigitalMedicationRequests(MedicationRequestBo medicationRequest) {
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR) && medicationRequest.getMedicalCoverageId() != null)
+		if (mustValidateDigitalPrescription(medicationRequest))
 			sendMedicationRequestValidation.run(medicationRequest);
 		Map<Integer, LocalDate> newMRIds = createDigitalMedicationRequests(medicationRequest);
 		List<DocumentRequestBo> result = new ArrayList<>();
@@ -86,6 +86,12 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 			result.add(new DocumentRequestBo(key,documentId));
 		});
 		return result;
+	}
+
+	private boolean mustValidateDigitalPrescription(MedicationRequestBo medicationRequest) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR) &&
+				featureFlagsService.isOn(AppFeature.HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS) &&
+				medicationRequest.getMedicalCoverageId() != null;
 	}
 
 	private DocumentRequestBo saveNonDigitalMedicationRequest(MedicationRequestBo medicationRequest) {

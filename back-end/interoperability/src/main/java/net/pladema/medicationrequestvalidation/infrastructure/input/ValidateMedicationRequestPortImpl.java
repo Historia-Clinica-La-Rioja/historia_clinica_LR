@@ -10,6 +10,8 @@ import net.pladema.medicationrequestvalidation.application.port.input.ValidateMe
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -20,10 +22,10 @@ public class ValidateMedicationRequestPortImpl implements ValidateMedicationRequ
 	private final ValidateMedicationRequest validateMedicationRequest;
 
 	@Override
-	public String validateMedicationRequest(MedicationRequestValidationDispatcherSenderDto request) {
+	public List<String> validateMedicationRequest(MedicationRequestValidationDispatcherSenderDto request) {
 		log.debug("Input parameters -> request {}", request);
 		MedicationRequestValidationDispatcherSenderBo requestBo = medicationRequestValidationDispatcherMapper.fromMedicationRequestValidationDispatcherSenderDto(request);
-		String result = validateMedicationRequest.run(requestBo);
+		List<String> result = validateMedicationRequest.run(requestBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}

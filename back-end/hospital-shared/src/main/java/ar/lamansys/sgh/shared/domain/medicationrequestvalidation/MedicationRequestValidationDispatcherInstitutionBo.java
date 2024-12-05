@@ -23,7 +23,11 @@ public class MedicationRequestValidationDispatcherInstitutionBo {
 															  String cityName, String stateName) {
 		this.name = name;
 		this.cuit = cuit;
-		this.address = String.join(" ", streetName, homeNumber, cityName, stateName);
+		this.address = String.join(" ",
+				streetName != null ? streetName : "",
+				homeNumber != null ? homeNumber : "",
+				cityName != null ? cityName : "",
+				stateName != null ? stateName : "");
 	}
 
 }

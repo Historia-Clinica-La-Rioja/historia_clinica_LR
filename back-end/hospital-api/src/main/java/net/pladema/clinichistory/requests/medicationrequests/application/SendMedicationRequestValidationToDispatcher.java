@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.clinichistory.requests.medicationrequests.application.port.output.MedicationRequestValidationMedicalCoveragePort;
 import net.pladema.clinichistory.requests.medicationrequests.application.port.output.SendMedicationRequestValidationToDispatcherPort;
+import ar.lamansys.sgh.shared.infrastructure.output.rest.medicationrequestvalidation.EMedicationRequestValidationException;
+import ar.lamansys.sgh.shared.infrastructure.output.rest.medicationrequestvalidation.MedicationRequestValidationException;
 import net.pladema.establishment.application.port.InstitutionPort;
 import net.pladema.patient.application.port.output.PatientMedicalCoveragePort;
 import net.pladema.patient.application.port.output.PatientPort;
@@ -75,10 +77,12 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 
 	private MedicationRequestValidationDispatcherPatientBo getPatientData(MedicationRequestBo medicationRequest) {
 		GetMedicalCoverageHealthInsuranceValidationDataBo medicalCoverage = patientMedicalCoveragePort.getMedicalCoverageHealthInsuranceValidationDataById(medicationRequest.getMedicalCoverageId());
-		if (medicalCoverage == null || medicalCoverage.getPatientAffiliateNumber() == null)
-			throw new RuntimeException("El paciente necesita tener nro de afiliado para validar la receta");
+		if (medicalCoverage.getPatientAffiliateNumber() == null)
+			throw new MedicationRequestValidationException("El paciente necesita tener número de afiliado para validar la receta", EMedicationRequestValidationException.NO_COVERAGE_AFFILIATE_NUMBER);
 		MedicationRequestValidationDispatcherPatientBo result = patientPort.getPatientDataNeededForMedicationRequestValidation(medicationRequest.getPatientId());
 		Short medicalCoverageFunderNumber = medicationRequestValidationMedicalCoveragePort.getFunderNumberByMedicalCoverageNameCuitAndAcronym(medicalCoverage);
+		if (medicalCoverageFunderNumber == null)
+			throw new MedicationRequestValidationException("La cobertura médica ingresada no es soportada por el sistema de validación de receta digital", EMedicationRequestValidationException.MEDICAL_COVERAGE_NOT_SUPPORTED);
 		result.setMedicalCoverage(new MedicationRequestValidationDispatcherMedicalCoverageBo(medicalCoverageFunderNumber, medicalCoverage.getPatientAffiliateNumber()));
 		return result;
 	}
@@ -94,7 +98,10 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 		String commercialWithPresentationSctid = medication.getSuggestedCommercialMedication() != null ?
 				getSnomedSctidWithPresentationFromCommercialMedicationSctid.run(medication.getSuggestedCommercialMedication().getSctid(), medication.getCommercialMedicationPrescription().getPresentationUnitQuantity()) :
 				getSnomedSctidWithPresentationFromGenericMedicationSctid.run(medication.getSnomedSctid(), medication.getCommercialMedicationPrescription().getPresentationUnitQuantity());
-		result.setArticleCode(getExternalProviderMedicationIdFromSnomedSctid.run(commercialWithPresentationSctid));
+		Integer medicationExternalId = getExternalProviderMedicationIdFromSnomedSctid.run(commercialWithPresentationSctid);
+		if (medicationExternalId == null)
+			throw new MedicationRequestValidationException("El medicamento recetado no puede ser validado por el sistema de validación de receta digital", EMedicationRequestValidationException.COULD_NOT_VALIDATE_MEDICATION);
+		result.setArticleCode(medicationExternalId);
 		return result;
 	}
 

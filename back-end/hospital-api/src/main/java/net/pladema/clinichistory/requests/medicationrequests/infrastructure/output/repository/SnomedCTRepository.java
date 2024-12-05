@@ -16,13 +16,15 @@ public class SnomedCTRepository {
 		String queryString = "SELECT cpt.id " +
 				"FROM snomedct.relationship r " +
 				"JOIN snomedct.concept_term cpt ON (r.sourceid = cpt.id) " +
+				"JOIN snomedct.relationship_concrete_value rcv ON (rcv.sourceid = cpt.id) " +
 				"WHERE r.destinationid = :commercialSctid " +
 				"AND r.active = '1' " +
 				"AND cpt.type = 'fsn' " +
-				"AND cpt.term LIKE '%" + presentationQuantity + " UNIDADES%'";
+				"AND rcv.value = '#' || :presentationQuantity ";
 		try {
 			return  (String) entityManager.createNativeQuery(queryString)
 					.setParameter("commercialSctid", commercialSctid)
+					.setParameter("presentationQuantity", presentationQuantity)
 					.getSingleResult();
 		}
 		catch (Exception e) {
@@ -34,6 +36,7 @@ public class SnomedCTRepository {
 		String queryString = "SELECT cpt.id " +
 				"FROM snomedct.relationship r " +
 				"JOIN snomedct.concept_term cpt ON (r.sourceid = cpt.id) " +
+				"JOIN snomedct.relationship_concrete_value rcv ON (rcv.sourceid = cpt.id) " +
 				"WHERE r.destinationid IN ( " +
 				"SELECT ct.id " +
 				"FROM snomedct.relationship rf " +
@@ -48,11 +51,12 @@ public class SnomedCTRepository {
 				") " +
 				"AND r.active = '1' " +
 				"AND cpt.type = 'fsn' " +
-				"AND cpt.term LIKE '%" + presentationQuantity +" UNIDADES%' " +
+				"AND rcv.value = '#' || :presentationQuantity " +
 				"LIMIT 1";
 		try {
 			return (String) entityManager.createNativeQuery(queryString)
 					.setParameter("genericSctid", genericSctid)
+					.setParameter("presentationQuantity", presentationQuantity)
 					.getSingleResult();
 		}
 		catch (Exception e) {

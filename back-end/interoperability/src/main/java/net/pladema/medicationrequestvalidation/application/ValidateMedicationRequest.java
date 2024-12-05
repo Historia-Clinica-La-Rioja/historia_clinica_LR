@@ -8,6 +8,8 @@ import net.pladema.medicationrequestvalidation.application.port.output.Medicatio
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -15,10 +17,10 @@ public class ValidateMedicationRequest {
 
 	private final MedicationRequestValidationPort medicationRequestValidationPort;
 
-	public String run(MedicationRequestValidationDispatcherSenderBo request) {
+	public List<String> run(MedicationRequestValidationDispatcherSenderBo request) {
 		log.debug("Input parameters -> request {}", request);
-		String result = medicationRequestValidationPort.validateMedicationRequest(request);
-		log.debug("Output -> {}", result);
+		List<String> result = medicationRequestValidationPort.validateMedicationRequest(request);
+		log.debug("Output ->{}", result);
 		return result;
 	}
 

@@ -11,6 +11,8 @@ import net.pladema.medicationrequestvalidation.application.port.input.ValidateMe
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class SendMedicationRequestValidationToDispatcherPortImpl implements SendMedicationRequestValidationToDispatcherPort {
@@ -20,9 +22,9 @@ public class SendMedicationRequestValidationToDispatcherPortImpl implements Send
 	private final ValidateMedicationRequestPort validateMedicationRequestPort;
 
 	@Override
-	public void sendMedicationRequestToValidate(MedicationRequestValidationDispatcherSenderBo request) {
+	public List<String> sendMedicationRequestToValidate(MedicationRequestValidationDispatcherSenderBo request) {
 		MedicationRequestValidationDispatcherSenderDto requestDto = medicationRequestValidationDispatcherMapper.toMedicationRequestValidationDispatcherSenderDto(request);
-		validateMedicationRequestPort.validateMedicationRequest(requestDto);
+		return validateMedicationRequestPort.validateMedicationRequest(requestDto);
 	}
 
 }
