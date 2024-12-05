@@ -12,7 +12,8 @@
 	</app-colored-label>
 </ng-template>
 
-<ng-container *ngIf="permissionService.referenceCompleteData.administrativeState.state !== permissionService.referenceDestinationState.waitingApproval">
+<ng-container *ngIf="permissionService.referenceCompleteData.administrativeState &&
+	permissionService.referenceCompleteData.administrativeState?.state !== permissionService.referenceDestinationState.waitingApproval">
 	<div *ngIf="referenceAdministrativeDto?.reason && !hideReason else stateCreatorInfo" fxLayout="column" fxLayoutGap="10px">
 		<span class="reason">{{referenceAdministrativeDto.reason}}</span>
 		<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
