@@ -85,6 +85,7 @@ public class ModifyReference {
 		result.setStudy(referenceStudy.orElse(null));
 		result.setRegulationState(referenceData.getRegulationState());
 		result.setAdministrativeState(referenceData.getAdministrativeState());
+		result.setOldReferenceId(oldReferenceId);
 
 		return result;
 	}

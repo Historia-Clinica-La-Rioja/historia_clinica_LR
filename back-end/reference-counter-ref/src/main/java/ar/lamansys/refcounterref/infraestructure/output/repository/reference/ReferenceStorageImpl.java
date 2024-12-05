@@ -13,6 +13,7 @@ import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceAdministrativeStateBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
@@ -99,19 +100,25 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	}
 
 	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {
-		Short regulationStateId;
-		if (referenceBo.getRegulationState() != null && referenceBo.getRegulationState().equals(EReferenceRegulationState.SUGGESTED_REVISION))
-			regulationStateId = EReferenceRegulationState.AUDITED.getId();
-		else
-			regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
-		reference.setRegulationStateId(regulationStateId);
-		if ((regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()) || regulationStateId.equals(EReferenceRegulationState.AUDITED.getId()))
-			&& reference.getDestinationInstitutionId() != null )
-		{
-			reference.setAdministrativeStateId(EReferenceAdministrativeState.WAITING_APPROVAL.getId());
-			historicReferenceAdministrativeStateStorage.save(reference.getId(), reference.getAdministrativeStateId(), null);
+		Short regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
+		/* if referenceBo has oldReferenceId, it means that we are modifying an old reference */
+		if (referenceBo.getOldReferenceId() != null){
+			if (referenceBo.getRegulationState() != null && referenceBo.getRegulationState().equals(EReferenceRegulationState.SUGGESTED_REVISION)) {
+				regulationStateId = EReferenceRegulationState.WAITING_AUDIT.getId();
+				historicReferenceRegulationStorage.updateReferenceRegulationState(reference.getId(), regulationStateId, null);
+			}
+			if (referenceBo.getAdministrativeState() != null && referenceBo.getAdministrativeState().equals(EReferenceAdministrativeState.SUGGESTED_REVISION)){
+				var reason = historicReferenceAdministrativeStateStorage.getByReferenceId(referenceBo.getOldReferenceId()).map(ReferenceAdministrativeStateBo::getReason).orElse(null);
+				historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(reference.getId(), EReferenceAdministrativeState.SUGGESTED_REVISION.getId(), reason);
+			}
+		} else {
+			reference.setRegulationStateId(regulationStateId);
+			if ((regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()) || regulationStateId.equals(EReferenceRegulationState.AUDITED.getId())) && reference.getDestinationInstitutionId() != null) {
+				reference.setAdministrativeStateId(EReferenceAdministrativeState.WAITING_APPROVAL.getId());
+				historicReferenceAdministrativeStateStorage.save(reference.getId(), reference.getAdministrativeStateId(), null);
+			}
+			referenceRepository.save(reference);
 		}
-		referenceRepository.save(reference);
 	}
 
 	private void saveReferenceOrder(CompleteReferenceBo referenceBo, List<Integer> orderIds, Reference reference, Integer referenceId) {

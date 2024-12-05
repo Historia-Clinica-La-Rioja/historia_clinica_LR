@@ -75,12 +75,11 @@ public class ModifyReferenceByManagerRole {
 
 	private void updateReferenceAdministrativeState(Integer referenceId){
 		referenceStorage.findById(referenceId).map(Reference::getAdministrativeStateId)
-				.ifPresent(administrativeStateId -> {
-					if (administrativeStateId.equals(EReferenceAdministrativeState.SUGGESTED_REVISION.getId())){
-						historicReferenceRegulationStorage.updateReferenceRegulationState(referenceId, EReferenceRegulationState.AUDITED.getId(), null);
-						historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
-					}
+			.ifPresent(administrativeStateId -> {
+				if (administrativeStateId.equals(EReferenceAdministrativeState.SUGGESTED_REVISION.getId())){
+					historicReferenceRegulationStorage.updateReferenceRegulationState(referenceId, EReferenceRegulationState.AUDITED.getId(), null);
 					historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
+				}
 			});
 	}
 
