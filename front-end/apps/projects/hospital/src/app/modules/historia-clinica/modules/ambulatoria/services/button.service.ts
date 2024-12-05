@@ -6,11 +6,13 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 export class ButtonService {
 
 	private formDisabled = new BehaviorSubject<boolean>(true);
+	private formDisabledPartialSave = new BehaviorSubject<boolean>(true);
 	private submitForm = new BehaviorSubject<boolean>(false);
 	private _submitPartialSave = new BehaviorSubject<boolean>(false);
 	private activatePartialSave = new BehaviorSubject<boolean>(false);
 
 	formDisabled$ = this.formDisabled.asObservable();
+	formDisabledPartialSave$ = this.formDisabledPartialSave.asObservable();
 	submit$ = this.submitForm.asObservable();
 	submitPartialSave$ = this._submitPartialSave.asObservable();
 	isLoading$ = this.submitForm.asObservable();
@@ -19,6 +21,10 @@ export class ButtonService {
 
 	updateFormStatus(isValid: boolean) {
 		this.formDisabled.next(isValid);
+	}
+
+	updateFormPartialSaveStatus(isValid: boolean) {
+		this.formDisabledPartialSave.next(isValid);
 	}
 
 	submit() {

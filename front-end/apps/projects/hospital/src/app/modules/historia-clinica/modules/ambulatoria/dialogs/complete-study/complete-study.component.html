@@ -23,7 +23,7 @@
 
 	<app-button *ngIf="buttonService.activatePartialSaveButton$ | async" [buttonType]='buttonTypeFlat'
 		text='ambulatoria.reference-study-close.COMPLETE_PARTIAL_BUTTON'
-		[isLoading]="buttonService.isLoadingPartialSave$ | async" (clicked)="completePartialStudy()">
+		[isLoading]="buttonService.isLoadingPartialSave$ | async" [disabled]="(buttonService.formDisabledPartialSave$ | async)" (clicked)="completePartialStudy()">
 	</app-button>
 
 	<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
