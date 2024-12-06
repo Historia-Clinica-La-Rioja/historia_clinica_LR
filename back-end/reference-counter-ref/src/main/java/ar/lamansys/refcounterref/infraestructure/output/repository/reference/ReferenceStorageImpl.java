@@ -107,10 +107,6 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 				regulationStateId = EReferenceRegulationState.WAITING_AUDIT.getId();
 				historicReferenceRegulationStorage.updateReferenceRegulationState(reference.getId(), regulationStateId, null);
 			}
-			if (referenceBo.getAdministrativeState() != null && referenceBo.getAdministrativeState().equals(EReferenceAdministrativeState.SUGGESTED_REVISION)){
-				var reason = historicReferenceAdministrativeStateStorage.getByReferenceId(referenceBo.getOldReferenceId()).map(ReferenceAdministrativeStateBo::getReason).orElse(null);
-				historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(reference.getId(), EReferenceAdministrativeState.SUGGESTED_REVISION.getId(), reason);
-			}
 		} else {
 			reference.setRegulationStateId(regulationStateId);
 			if ((regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()) || regulationStateId.equals(EReferenceRegulationState.AUDITED.getId())) && reference.getDestinationInstitutionId() != null) {
