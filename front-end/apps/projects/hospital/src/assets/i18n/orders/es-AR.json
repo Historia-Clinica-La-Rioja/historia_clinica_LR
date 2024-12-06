@@ -1,8 +1,17 @@
 {
     "orders": {
         "orders-detail": {
-			"REQUIRES_TRANSFER": "Requiere traslado",
-			"URGENT": "Urgente"
-		}
-	}
+            "REQUIRES_TRANSFER": "Requiere traslado",
+            "URGENT": "Urgente"
+        },
+        "filter-by-patient-component": {
+            "FILTER_BY_PATIENT": "Filtrar por paciente",
+            "TEMPORARY_ON-GUARD_PATIENT": "Paciente temporal de guardia"
+        },
+        "filter-section": {
+            "SCOPE": "Ámbito",
+            "STUDY_TYPE": "Tipo de estudio",
+            "TRANSFER": "Traslado"
+        }
+    }
 }
