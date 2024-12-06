@@ -46,19 +46,20 @@ public class ModifyReferenceByManagerRole {
 	public void run(Integer referenceId, Integer destinationInstitutionId, List<Integer> fileIds) {
 		log.debug("Input parameter -> referenceId {},  destinationInstitutionId {}, fileIds {} ", referenceId, destinationInstitutionId, fileIds);
 		assertValid(referenceId, destinationInstitutionId);
-		updateDestinationInstitution(referenceId, destinationInstitutionId);
-		updateReferenceAdministrativeState(referenceId);
+		var destinationInstitutionUpdated = updateDestinationInstitution(referenceId, destinationInstitutionId);
+		updateReferenceAdministrativeState(referenceId, destinationInstitutionId, destinationInstitutionUpdated);
 		if (fileIds != null && !fileIds.isEmpty())
 			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, fileIds);
 		log.debug("reference successfully modified");
 	}
 
-	private void updateDestinationInstitution(Integer referenceId, Integer destinationInstitutionId) {
+	private boolean updateDestinationInstitution(Integer referenceId, Integer destinationInstitutionId) {
 		var isDestinationInstitutionUpdated  = referenceStorage.updateDestinationInstitution(referenceId, destinationInstitutionId);
 		if (isDestinationInstitutionUpdated) {
 			Optional<Integer> absentAppointmentId = referenceAppointmentStorage.getAbsentAppointmentIdByReferenceId(referenceId);
 			absentAppointmentId.ifPresent(aptId -> referenceCounterReferenceAppointmentStorage.cancelAbsentAppointment(aptId, "Turno cancelado por cambio de institución destino en solicitud de referencia"));
 		}
+		return isDestinationInstitutionUpdated;
 	}
 
 	private void assertValid(Integer referenceId, Integer institutionId) {
@@ -73,14 +74,19 @@ public class ModifyReferenceByManagerRole {
 		}
 	}
 
-	private void updateReferenceAdministrativeState(Integer referenceId){
-		referenceStorage.findById(referenceId).map(Reference::getAdministrativeStateId)
-			.ifPresent(administrativeStateId -> {
-				if (administrativeStateId.equals(EReferenceAdministrativeState.SUGGESTED_REVISION.getId())){
-					historicReferenceRegulationStorage.updateReferenceRegulationState(referenceId, EReferenceRegulationState.AUDITED.getId(), null);
-					historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
-				}
-			});
+	private void updateReferenceAdministrativeState(Integer referenceId, Integer destinationInstitutionId, boolean destinationInstitutionUpdated){
+		var reference = referenceStorage.findById(referenceId).orElse(	null);
+		Short administrativeStateId = reference != null ? reference.getAdministrativeStateId() : null;
+		Short regulationStateId = reference != null ? reference.getRegulationStateId() : null;
+		if (administrativeStateId != null && administrativeStateId.equals(EReferenceAdministrativeState.SUGGESTED_REVISION.getId())){
+			historicReferenceRegulationStorage.updateReferenceRegulationState(referenceId, EReferenceRegulationState.AUDITED.getId(), null);
+			if (destinationInstitutionId != null)
+				historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
+		}
+		else if (destinationInstitutionId != null && regulationStateId != null && destinationInstitutionUpdated &&
+				(regulationStateId.equals(EReferenceRegulationState.AUDITED.getId()) || regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()))){
+			historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
+		}
 	}
 
 }
