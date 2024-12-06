@@ -911,3 +911,25 @@ databaseChangeLog:
                   (20539, '30710681623', 'SALUD PLUS - SIRIO LIBANES'),
                   (20540, '30571720775', 'Programa de Salud SA'),
                   (20543, '30717216586', 'ART SAN FRANCISCO MUTUAL');
+
+    - changeSet:
+        id: createTable-validated_medication_request
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: validated_medication_request
+              columns:
+                - column:
+                    constraints:
+                      references: medication_request(id)
+                      foreignKeyName: FK_validated_medication_request_medication_request_id
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_validated_medication_request
+                    name: medication_request_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: external_medication_request_id
+                    type: varchar(50)

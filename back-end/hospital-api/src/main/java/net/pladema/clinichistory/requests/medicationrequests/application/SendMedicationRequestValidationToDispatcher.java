@@ -50,9 +50,11 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 
 	private final SendMedicationRequestValidationToDispatcherPort sendMedicationRequestValidationToDispatcherPort;
 
-	public void run(MedicationRequestBo medicationRequest) {
+	public List<String> run(MedicationRequestBo medicationRequest) {
 		log.debug("Input parameter -> medicationRequest {}", medicationRequest);
-		sendMedicationRequestValidationToDispatcherPort.sendMedicationRequestToValidate(getValidationNeededData(medicationRequest));
+		List<String> result = sendMedicationRequestValidationToDispatcherPort.sendMedicationRequestToValidate(getValidationNeededData(medicationRequest));
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 	private MedicationRequestValidationDispatcherSenderBo getValidationNeededData(MedicationRequestBo medicationRequest) {

@@ -18,6 +18,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,10 +32,12 @@ public class MedicationRequestValidationPortImpl implements MedicationRequestVal
 	@Override
 	public List<String> validateMedicationRequest(MedicationRequestValidationDispatcherSenderBo request) {
 		try {
-			ResponseEntity<Map> result = restClient.exchangePost(MedicationRequestValidationWSConfig.VALIDATE_PATH, request.parseToMap(medicationRequestValidationWSConfig.getClientId()), Map.class);
-			if (result != null && result.hasBody())
-				log.info("Validation successful: {}", result.getBody().get("recetas").toString());
-			return List.of();
+			ResponseEntity<Map> requestResult = restClient.exchangePost(MedicationRequestValidationWSConfig.VALIDATE_PATH, request.parseToMap(medicationRequestValidationWSConfig.getClientId()), Map.class);
+			List<Map<String, String>> validatedPrescriptions = (List<Map<String, String>>) requestResult.getBody().get("recetas");
+			log.info("Request response -> {}", validatedPrescriptions);
+			return validatedPrescriptions.stream()
+					.map(validatedPrescription -> validatedPrescription.get("idReceta"))
+					.collect(Collectors.toList());
 		}
 		catch (HttpClientErrorException e) {
 			log.warn("Error: {}", e.getMessage());

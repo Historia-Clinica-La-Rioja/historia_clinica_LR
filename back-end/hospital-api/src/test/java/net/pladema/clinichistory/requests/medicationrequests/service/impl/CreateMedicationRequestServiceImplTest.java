@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.medicationrequests.application.SendMedicationRequestValidation;
+import net.pladema.clinichistory.requests.medicationrequests.application.port.output.ValidatedMedicationRequestPort;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.DocumentRequestBo;
@@ -56,9 +57,11 @@ class CreateMedicationRequestServiceImplTest extends UnitRepository {
 
 	private SendMedicationRequestValidation sendMedicationRequestValidation;
 
+	private ValidatedMedicationRequestPort validatedMedicationRequestPort;
+
 	@BeforeEach
 	void setUp() {
-		createMedicationRequestService = new CreateMedicationRequestServiceImpl(medicationRequestRepository, documentFactory, healthConditionService, featureFlagsService, sendMedicationRequestValidation);
+		createMedicationRequestService = new CreateMedicationRequestServiceImpl(medicationRequestRepository, documentFactory, healthConditionService, featureFlagsService, sendMedicationRequestValidation, validatedMedicationRequestPort);
 	}
 
 	@Test

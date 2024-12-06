@@ -2,8 +2,10 @@ package net.pladema.clinichistory.requests.medicationrequests.application;
 
 import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 
+import java.util.List;
+
 public interface SendMedicationRequestValidation {
 
-	void run(MedicationRequestBo medicationRequest);
+	List<String> run(MedicationRequestBo medicationRequest);
 
 }
