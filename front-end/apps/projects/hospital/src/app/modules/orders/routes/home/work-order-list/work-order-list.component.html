@@ -1,4 +1,6 @@
-<app-content width="full">
+<app-content>
+		<app-filter-combo fxFlex="25%">
+		</app-filter-combo>
 	<mat-card *ngIf="(allOrders$ | async) as orders">
 
 		<div *ngIf="totalElementsAmount > 0 else noInfo">
@@ -10,7 +12,7 @@
 					</ng-container>
 
 					<ng-template #patientSummary>
-						<app-patient-summary class="patient-summary text" [person]="order.patientDto | patientSummary">
+						<app-patient-summary class="patient-summary text" [person]="order?.patientDto | patientSummary">
 						</app-patient-summary>
 					</ng-template>
 
