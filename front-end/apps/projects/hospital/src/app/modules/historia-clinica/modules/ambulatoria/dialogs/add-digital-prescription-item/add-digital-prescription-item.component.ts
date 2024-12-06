@@ -203,7 +203,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 			presentationUnitQuantity: this.showPresentationQuantity ? this.prescriptionItemForm.value.presentationUnit : 0
 		}: null;
 		const formValues = this.prescriptionItemForm.value;
-		const isDailyInterval = formValues.frequencyType === this.getFrequencyDayTranslate();
 		const newItem: NewPrescriptionItem = this.digitalPrescriptionMapper.toNewPrescriptionItem(
 			item,
 			showStudyCategory,
@@ -212,7 +211,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 			formValues,
 			commercialMedicationPrescription,
 			this.studyCategoryOptions,
-			isDailyInterval
 		);
 		this.dialogRef.close(newItem);
 	}
@@ -605,7 +603,6 @@ export interface NewPrescriptionItem {
 		id: string;
 		description: string;
 	};
-	isDailyInterval: boolean;
 	isChronicAdministrationTime?: boolean;
 	observations: string;
 	administrationTimeDays?: string;

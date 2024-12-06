@@ -15,7 +15,6 @@ export class DigitalPrescriptionMapperService {
 		formValues, 
 		commercialMedicationPrescription,
 		studyCategoryOptions,
-		isDailyInterval: boolean
 	) => NewPrescriptionItem = DigitalPrescriptionMapperService._toNewPrescriptionItem;
 
     private static _toNewPrescriptionItem(item: NewPrescriptionItem, 
@@ -25,7 +24,6 @@ export class DigitalPrescriptionMapperService {
 		formValues, 
 		commercialMedicationPrescription,
 		studyCategoryOptions,
-		isDailyInterval: boolean
 	): NewPrescriptionItem {
 		return {
 			id: item ? item.id : null,
@@ -47,7 +45,6 @@ export class DigitalPrescriptionMapperService {
 				value: formValues.totalQuantity || 0,
 				unit: formValues.unit || null
 			},
-			isDailyInterval,
 			frequencyType: formValues.frequencyType,
 			commercialMedicationPrescription: commercialMedicationPrescription,
 			suggestedCommercialMedication: formValues.isSuggestCommercialMedicationChecked ? formValues.suggestedCommercialMedication : null
