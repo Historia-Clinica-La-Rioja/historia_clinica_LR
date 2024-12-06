@@ -104,6 +104,8 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 		this.setProblems();
 		this.pharmacoSearchTypeValueChanges();
 		this.setFrequencySelectorOptions();
+		this.setShowMedicationPackQuantity([]);
+		this.setShowPresentationQuantity();
 
 		if (this.data.item) this.setItemData(this.data.item);
 	}
@@ -261,8 +263,6 @@ export class AddDigitalPrescriptionItemComponent implements OnInit, OnDestroy {
 		this.canDoMultiplicationFields = false;
 		this.prescriptionItemForm.controls.totalQuantity.setValidators(this.getTotalQuantityValidators());
 		this.quantitySelectorOptions = [];
-		this.showMedicationPackQuantity = false;
-		this.showPresentationQuantity = false;
 		this.prescriptionItemForm.controls.totalQuantity.setValue(null);
 		this.prescriptionItemForm.controls.totalQuantity.enable();
 	}
