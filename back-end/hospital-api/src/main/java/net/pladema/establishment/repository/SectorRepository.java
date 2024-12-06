@@ -69,14 +69,19 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 	List<Sector> getChildSectorsBySectorId(@Param("sectorId") Integer sectorId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.establishment.service.domain.AttentionPlacesQuantityBo(COUNT(DISTINCT CASE WHEN s.deleteable.deleted = false THEN 1 END), COUNT(DISTINCT CASE WHEN do.deleteable.deleted = false THEN 1 END), COUNT(DISTINCT b.id)) " +
+	@Query("SELECT new net.pladema.establishment.service.domain.AttentionPlacesQuantityBo(" +
+	 "		COUNT(DISTINCT CASE WHEN s.deleteable.deleted = false THEN 1 END), " +
+	 "		COUNT(DISTINCT CASE WHEN do.deleteable.deleted = false THEN 1 END)," +
+	 "		COUNT(DISTINCT b.id)) " +
 			"FROM Sector AS se " +
 			"LEFT JOIN DoctorsOffice AS do ON do.sectorId = se.id " +
 			"LEFT JOIN Shockroom AS s ON s.sectorId = se.id " +
 			"LEFT JOIN Room AS r ON r.sectorId = se.id " +
 			"LEFT JOIN Bed AS b ON b.roomId = r.id " +
 			"WHERE se.institutionId = :institutionId " +
-			"AND se.sectorTypeId = :sectorTypeId ")
+			"AND se.sectorTypeId = :sectorTypeId " +
+			"AND se.deleteable.deleted = false"
+			)
 	AttentionPlacesQuantityBo quantityAttentionPlacesBySectorType(@Param("institutionId") Integer institutionId,
 															@Param("sectorTypeId") Short sectorTypeId);
 

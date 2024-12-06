@@ -152,6 +152,8 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 	@Query(value = " SELECT b FROM Bed b "
 			+ " JOIN Room r ON b.roomId = r.id"
 			+ " JOIN Sector s ON r.sectorId = s.id "
-			+ " WHERE b.id = :bedId AND s.institutionId =:institutionId")
+			+ " WHERE b.id = :bedId "
+			+ " AND s.institutionId = :institutionId "
+			+ " AND s.deleteable.deleted = false ")
 	Optional<Bed> findByIdAndInstitutionId(@Param("bedId") Integer bedId, @Param("institutionId") Integer institutionId);
 }

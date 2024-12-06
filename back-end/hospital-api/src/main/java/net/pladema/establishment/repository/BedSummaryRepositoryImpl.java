@@ -51,6 +51,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
 				+ " LEFT JOIN AttentionPlaceStatus status ON b.statusId = status.id "
                 + " WHERE s.institutionId = :institutionId "
 				+ " AND s.sectorTypeId IN (:sectorsType) "
+				+ " AND s.deleteable.deleted = false "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
                 + " GROUP BY b, s, cs, so, ct, ag, st, hu, status.isBlocked "
                 + " ORDER BY s.id, cs.id, hu.id ";

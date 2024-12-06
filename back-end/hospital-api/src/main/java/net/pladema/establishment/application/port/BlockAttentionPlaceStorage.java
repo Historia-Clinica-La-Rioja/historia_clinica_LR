@@ -28,4 +28,8 @@ public interface BlockAttentionPlaceStorage {
 	Optional<FetchAttentionPlaceBlockStatusBo> fetchBedDetailedStatus(Integer institutionId, Integer id);
 	Optional<FetchAttentionPlaceBlockStatusBo> fetchShockRoomDetailedStatus(Integer institutionId, Integer id);
 	Optional<FetchAttentionPlaceBlockStatusBo> fetchDoctorsOfficeDetailedStatus(Integer institutionId, Integer id);
+
+	boolean bedExists(Integer institutionId, Integer bedId);
+	boolean shockRoomExists(Integer institutionId, Integer shockRoomId);
+	boolean doctorsOfficeExists(Integer institutionId, Integer doctorsOfficeId);
 }

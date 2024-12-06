@@ -24,6 +24,18 @@ public class FetchAttentionPlaceBlockStatus {
 		return blockAttentionPlaceStorage.fetchDoctorsOfficeDetailedStatus(institutionId, doctorsOfficeId);
 	}
 
+	public boolean bedExists(Integer institutionId, Integer bedId) {
+		return blockAttentionPlaceStorage.bedExists(institutionId, bedId);
+	}
+
+	public boolean shockRoomExists(Integer institutionId, Integer shockRoomId) {
+		return blockAttentionPlaceStorage.shockRoomExists(institutionId, shockRoomId);
+	}
+
+	public boolean doctorsOfficeExists(Integer institutionId, Integer doctorsOfficeId) {
+		return blockAttentionPlaceStorage.doctorsOfficeExists(institutionId, doctorsOfficeId);
+	}
+
 	public Boolean isBedBlocked(Integer institutionId, Integer bedId) {
 		return blockAttentionPlaceStorage
 		.findBedByIdAndInstitutionId(bedId, institutionId)

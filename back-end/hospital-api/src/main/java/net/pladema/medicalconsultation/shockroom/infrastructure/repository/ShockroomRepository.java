@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.shockroom.infrastructure.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.access.domain.enums.EClinicHistoryAccessReason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;
 import net.pladema.medicalconsultation.shockroom.infrastructure.repository.entity.Shockroom;
@@ -31,7 +32,9 @@ public interface ShockroomRepository extends SGXAuditableEntityJPARepository<Sho
 			"FROM Shockroom s " +
 			"LEFT JOIN Sector se ON s.sectorId = se.id " +
 			"LEFT JOIN AttentionPlaceStatus status ON status.id = s.statusId " +
-			"WHERE s.institutionId = :institutionId AND s.deleteable.deleted = false "
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.deleteable.deleted = false " +
+			"AND se.deleteable.deleted = false "
 	)
 	List<ShockRoomBo> getShockroomsByInstitutionId(@Param("institutionId") Integer institutionId);
 
@@ -81,5 +84,12 @@ public interface ShockroomRepository extends SGXAuditableEntityJPARepository<Sho
 
 	@Modifying
 	@Query("UPDATE Shockroom s SET s.statusId = :newStatusId WHERE s.id = :shockRoomId")
-	void updateStatus(@Param("shockRoomId")Integer shockRoomId, @Param("newStatusId") Integer newStatusId);
+	void updateStatus(@Param("shockRoomId") Integer shockRoomId, @Param("newStatusId") Integer newStatusId);
+
+	@Query(value = "SELECT sr FROM Shockroom sr"
+			+ " JOIN Sector s ON sr.sectorId = s.id "
+			+ " WHERE sr.id = :shockRoomId "
+			+ " AND sr.deleteable.deleted = false "
+			+ " AND s.deleteable.deleted = false ")
+    Optional<Shockroom> findByIdAndInstitution(@Param("shockRoomId") Integer shockroomId);
 }

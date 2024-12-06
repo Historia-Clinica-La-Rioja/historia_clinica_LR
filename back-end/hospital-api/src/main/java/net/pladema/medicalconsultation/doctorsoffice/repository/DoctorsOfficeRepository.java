@@ -46,6 +46,7 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 			"LEFT JOIN AttentionPlaceStatus status ON status.id = do.statusId " +
             "WHERE do.institutionId = :institutionId " +
             "AND s.sectorTypeId = :sectorTypeId " +
+			"AND s.deleteable.deleted = false " +
 			"AND do.deleteable.deleted IS FALSE " +
             "ORDER BY do.description ASC ")
     List<DoctorsOfficeVo> findAllBySectorType(@Param("institutionId") Integer institutionId,
@@ -126,4 +127,11 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 	@Modifying
 	@Query("UPDATE DoctorsOffice d SET d.statusId = :newStatusId WHERE d.id = :doctorsOfficeId")
 	void updateStatus(@Param("doctorsOfficeId") Integer doctorsOfficeId, @Param("newStatusId") Integer newStatusId);
+
+	@Query(value = "SELECT do FROM DoctorsOffice do "
+			+ " JOIN Sector s ON do.sectorId = s.id "
+			+ " WHERE do.id = :doctorsOfficeId "
+			+ " AND do.deleteable.deleted = false "
+			+ " AND s.deleteable.deleted = false ")
+	Optional<DoctorsOffice> findByIdAndInstitution(@Param("doctorsOfficeId") Integer doctorsOfficeId);
 }

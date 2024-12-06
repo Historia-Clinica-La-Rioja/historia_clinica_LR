@@ -42,8 +42,7 @@ public class BlockAttentionPlaceStorageImpl implements BlockAttentionPlaceStorag
 	@Override
 	public Optional<AttentionPlaceBo> findShockRoomByIdAndInstitutionId(Integer shockroomId, Integer institutionId) {
 		return shockroomRepository
-			.findById(shockroomId)
-			.filter(shockroom -> institutionId.equals(shockroom.getInstitutionId()))
+			.findByIdAndInstitution(shockroomId)
 			.map(shockroom -> new AttentionPlaceBo(
 					shockroom.getId(),
 					Optional.ofNullable(shockroom.getStatusId()),
@@ -53,10 +52,8 @@ public class BlockAttentionPlaceStorageImpl implements BlockAttentionPlaceStorag
 
 	@Override
 	public Optional<AttentionPlaceBo> findDoctorsOfficeByIdAndInstitutionId(Integer doctorsOfficeId, Integer institutionId) {
-		return doctorsOfficeRepository
-			.findById(doctorsOfficeId)
-			.filter(doctorsOffice -> institutionId.equals(doctorsOffice.getInstitutionId()))
-			.map(doctorsOffice -> new AttentionPlaceBo(
+		var found = doctorsOfficeRepository.findByIdAndInstitution(doctorsOfficeId);
+		return found.map(doctorsOffice -> new AttentionPlaceBo(
 					doctorsOffice.getId(),
 					Optional.ofNullable(doctorsOffice.getStatusId()),
 					true
@@ -67,7 +64,8 @@ public class BlockAttentionPlaceStorageImpl implements BlockAttentionPlaceStorag
 	public Optional<FetchAttentionPlaceBlockStatusBo> fetchBedDetailedStatus(Integer institutionId, Integer bedId) {
 		return findBedByIdAndInstitutionId(bedId, institutionId)
 				.flatMap(sr -> sr.getStatusId())
-				.flatMap(statusId -> fetchStatus(statusId));
+				.flatMap(statusId -> fetchStatus(statusId))
+				;
 	}
 
 	@Override
@@ -82,6 +80,21 @@ public class BlockAttentionPlaceStorageImpl implements BlockAttentionPlaceStorag
 		return findDoctorsOfficeByIdAndInstitutionId(id, institutionId)
 				.flatMap(office -> office.getStatusId())
 				.flatMap(statusId -> fetchStatus(statusId));
+	}
+
+	@Override
+	public boolean bedExists(Integer institutionId, Integer bedId) {
+		return findBedByIdAndInstitutionId(bedId, institutionId).isPresent();
+	}
+
+	@Override
+	public boolean shockRoomExists(Integer institutionId, Integer shockRoomId) {
+		return findShockRoomByIdAndInstitutionId(shockRoomId, institutionId).isPresent();
+	}
+
+	@Override
+	public boolean doctorsOfficeExists(Integer institutionId, Integer doctorsOfficeId) {
+		return findDoctorsOfficeByIdAndInstitutionId(doctorsOfficeId, institutionId).isPresent();
 	}
 
 	private Optional<FetchAttentionPlaceBlockStatusBo> fetchStatus(Integer statusId) {
