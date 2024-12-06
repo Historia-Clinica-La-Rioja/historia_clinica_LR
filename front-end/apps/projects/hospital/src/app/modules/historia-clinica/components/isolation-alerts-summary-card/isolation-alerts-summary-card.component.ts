@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { IsolationAlertMasterDataService } from '@api-rest/services/isolation-alert-master-data.service';
 import { ISOLATION_ALERT_HEADER } from '@historia-clinica/constants/summaries';
 import { PatientIsolationAlertsService } from '@historia-clinica/services/patient-isolation-alerts.service';
+import { Subscription } from 'rxjs';
 
 const ISOLATION_ALERT_COLUMNS = ['diagnosis', 'types', 'criticality', 'endAlert', 'actions'];
 const FILTER_ONGOING = false;
@@ -11,12 +12,13 @@ const FILTER_ONGOING = false;
 	templateUrl: './isolation-alerts-summary-card.component.html',
 	styleUrls: ['./isolation-alerts-summary-card.component.scss']
 })
-export class IsolationAlertsSummaryCardComponent implements OnInit {
+export class IsolationAlertsSummaryCardComponent implements OnInit, OnDestroy {
 
 	readonly ISOLATION_ALERT_HEADER = ISOLATION_ALERT_HEADER;
 	readonly displayedColumns = ISOLATION_ALERT_COLUMNS;
 	activeStatusId: number;
 	_patientId: number;
+	updatedIsolationAlertSubscription: Subscription;
 	@Input() set patientId(patientId: number) {
 		this._patientId = patientId;
 		this.loadPatientIsolationAlerts();
@@ -31,7 +33,11 @@ export class IsolationAlertsSummaryCardComponent implements OnInit {
 		this.isolationAlertMasterDataService.getStatus().subscribe(isolationAlertStatus =>
 			this.activeStatusId = isolationAlertStatus.find(state => state.isActive).id);
 
-		this.patientIsolationAlertService.updatedIsolationAlerts$.subscribe(updatedIsolationAlert => updatedIsolationAlert && this.loadPatientIsolationAlerts());
+		this.updatedIsolationAlertSubscription = this.patientIsolationAlertService.updatedIsolationAlerts$.subscribe(updatedIsolationAlert => updatedIsolationAlert && this.loadPatientIsolationAlerts());
+	}
+
+	ngOnDestroy(): void {
+		this.updatedIsolationAlertSubscription.unsubscribe();
 	}
 
 	loadPatientIsolationAlerts() {

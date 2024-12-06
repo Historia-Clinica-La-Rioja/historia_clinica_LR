@@ -323,6 +323,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 
 	ngOnDestroy() {
 		this.medicalCoverageInfo.clearAll();
+		this.isolationAlertHeaderService.unsubcribeUpdateIsolationAlert();
 	}
 
 	private setPermissions(): void {
