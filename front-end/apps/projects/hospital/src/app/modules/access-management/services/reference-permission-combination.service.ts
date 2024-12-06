@@ -117,7 +117,8 @@ export class ReferencePermissionCombinationService implements OnDestroy {
     }
 
     private reportHasAppointment(): boolean {
-		return this.reportCompleteData.appointment.state.description === (APPOINTMENT_STATES.ASSIGNED || APPOINTMENT_STATES.SERVED);
+		return this.reportCompleteData.appointment.state.description === APPOINTMENT_STATES.ASSIGNED
+            || this.reportCompleteData.appointment.state.description === APPOINTMENT_STATES.SERVED;
 	}
 }
 
