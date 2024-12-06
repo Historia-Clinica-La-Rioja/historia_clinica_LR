@@ -39,8 +39,8 @@ export class EditReferenceComponent {
 			{ dialogWidth: DialogWidth.MEDIUM },
             referenceEditionData
 		)
-		editDialogRef.afterClosed().subscribe(edited => {
-			if (edited) {
+		editDialogRef.afterClosed().subscribe(editedAndDestinationInstitutionChanged => {
+			if (editedAndDestinationInstitutionChanged[0]) {
                 if (this.isButton) {
                     if (this.permissionService.isRoleGestor)
                         this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(this.referenceCompleteData.reference.id, AUDIT)
@@ -61,8 +61,32 @@ export class EditReferenceComponent {
                                 this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
                         });
                 }
-                else 
-                    this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+                else if (!this.isButton && editedAndDestinationInstitutionChanged[1]) {
+                    if (this.permissionService.isRoleGestor)
+                        this.institutionalNetworkReferenceReportService.changeReferenceApprovalState(this.referenceCompleteData.reference.id, WAITING_APPROVAL)
+                        .subscribe(updated => {
+                            if (updated) {
+                                this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.permissionService.reportCompleteData);
+                                this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+                            }
+                        });
+                    else {
+                        this.institutionalReferenceReportService.changeReferenceApprovalStateAsGestorInstitucional(this.referenceCompleteData.reference.id, WAITING_APPROVAL)
+                        .subscribe(updated => {
+                            if (updated) {
+                                this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.permissionService.reportCompleteData);
+                                this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+                            }
+                        });
+                    }
+                }
+                else {
+                    if (this.permissionService.isRoleGestor)
+                        this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+
+                    else 
+                        this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+                }
             }
 		});
     }

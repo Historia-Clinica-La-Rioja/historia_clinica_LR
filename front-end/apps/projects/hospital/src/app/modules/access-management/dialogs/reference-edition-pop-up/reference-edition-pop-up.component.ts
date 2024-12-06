@@ -19,6 +19,7 @@ import { switchMap, take, tap } from 'rxjs';
 })
 export class ReferenceEditionPopUpComponent implements OnInit {
 
+	destinationInstitutionChanged = false;
 	submitForm = false;
 	newReferenceInfo: ReferenceDto;
 	referenceFiles: ReferenceFiles;
@@ -76,6 +77,10 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	}
 
 	setDestinationInstitutionId(destinationInstitutionId: number) {
+		if (this.data.referenceDataDto.institutionDestination.id !== destinationInstitutionId)
+			this.destinationInstitutionChanged = true;
+		else
+			this.destinationInstitutionChanged = false;
 		this.submitForm = false;
 		this.newReferenceInfo = { ...this.newReferenceInfo, destinationInstitutionId };
 	}
@@ -180,7 +185,7 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	private referenceEditionSuccess() {
 		this.snackBarService.showSuccess("access-management.reference-edition.snack_bar_description.FILES_SUCCESS");
 		this.snackBarService.showSuccess("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_SUCCESS");
-		this.dialogRef.close(true);
+		this.dialogRef.close([true, this.destinationInstitutionChanged]);
 	}
 
 	private referenceEditionError(filesId: number[]) {

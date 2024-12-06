@@ -78,7 +78,8 @@ export class ReferencePermissionCombinationService implements OnDestroy {
 	}
 
     showEditReferenceButton(): boolean {
-        return this.isRoleGestor && !this.reportHasAppointment() && !this.referenceCompleteData.reference.closureType
+        return (this.isRoleGestor || (this.isRoleGestorInstitucional && this.dashboardService.dashboardView == DashboardView.REQUESTED))
+            && !this.reportHasAppointment() && !this.referenceCompleteData.reference.closureType
             && this.referenceCompleteData.regulation.state !== this.referenceOriginStates.rejected
             && this.referenceCompleteData.administrativeState?.state !== this.referenceDestinationState.suggestedRevision;
     }
