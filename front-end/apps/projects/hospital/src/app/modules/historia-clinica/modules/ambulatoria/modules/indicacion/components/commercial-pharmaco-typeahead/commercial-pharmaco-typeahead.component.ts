@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { GetCommercialMedicationSnomedDto, SnomedECL } from '@api-rest/api-model';
 import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
-import { distinctUntilChanged, mergeMap, Observable, of, startWith, tap } from 'rxjs';
+import { catchError, distinctUntilChanged, mergeMap, Observable, of, startWith, tap } from 'rxjs';
 
 @Component({
 	selector: 'app-commercial-pharmaco-typeahead',
@@ -38,7 +38,13 @@ export class CommercialPharmacoTypeaheadComponent {
 			tap(_ => this.loading = true),
 			distinctUntilChanged(),
 			mergeMap(searchValue => {
-				return this.filter(searchValue || '').pipe(tap(_ => this.loading = false))
+				return this.filter(searchValue || '').pipe(
+					tap(_ => this.loading = false),
+					catchError(_ => {
+						this.loading = false;
+						return of([]);
+					})
+				)
 			})
 		)
 

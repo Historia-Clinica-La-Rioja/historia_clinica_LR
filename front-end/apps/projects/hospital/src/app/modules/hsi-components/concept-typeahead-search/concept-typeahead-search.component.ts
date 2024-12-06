@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { Observable, of } from "rxjs";
-import { debounceTime, distinctUntilChanged, mergeMap, startWith, tap } from "rxjs/operators";
+import { catchError, debounceTime, distinctUntilChanged, mergeMap, startWith, tap } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { SnomedECL, SnomedDto, SnomedSearchItemDto } from "@api-rest/api-model";
 import { PresentationModule } from '@presentation/presentation.module';
@@ -45,7 +45,13 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 			tap(_ => this.loading = true),
 			distinctUntilChanged(),
 			mergeMap(searchValue => {
-				return this.filter(searchValue || '').pipe(tap(_ => this.loading = false))
+				return this.filter(searchValue || '').pipe(
+					tap(_ => this.loading = false),
+					catchError(_ => {
+						this.loading = false;
+						return of([]);
+					})
+				)
 			})
 		);
 
