@@ -12,7 +12,7 @@
 				fxLayout.lt-lg="column">
 				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-md="20px"
 				fxLayout.lt-md="column">
-					<mat-card-header>
+					<mat-card-header class="patient-header">
 						<div *ngIf="!isEmergencyCareTemporalPatient else temporalGuardPatient">
 							<app-patient-card-header *ngIf="personPhoto" [patient]="patient" [personPhoto]="personPhoto"
 								[showAdditionalInformation]="true" [internmentEpisodeProcess]="internmentEpisodeProcess"
