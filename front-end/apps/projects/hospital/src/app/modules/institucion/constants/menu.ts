@@ -110,11 +110,11 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: [AppFeature.HABILITAR_REPORTES]
 	},
 	{
-		text: 'app.menu.LISTA_DE_TRABAJO',
+		text: 'app.menu.LISTA_DE_TRABAJO_DE_LABORATORIO',
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './ordenes/lista-trabajos',
-		permissions: [ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_IMAGENES],
+		permissions: [ERole.PERSONAL_DE_LABORATORIO],
 		featureFlag: [AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO]
 	},
 	{
