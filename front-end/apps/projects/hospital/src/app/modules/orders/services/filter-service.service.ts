@@ -10,8 +10,8 @@ export class FilterServiceService {
 		notRequiresTransfer: false,
 		patientTypeId: [1, 2, 3, 4, 5, 6, 7, 8],
 		requiresTransfer: false,
-		sourceTypeIds: [],
-		studyTypeIds: [],
+		sourceTypeIds: [0, 4],
+		studyTypeIds: [1, 2],
 	});
 
 	readonly filters$ = this.filterSubject.asObservable();

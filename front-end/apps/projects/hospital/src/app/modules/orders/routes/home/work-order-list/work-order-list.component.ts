@@ -31,20 +31,12 @@ export class WorkOrderListComponent implements OnInit {
 	pageIndex = PAGE_INIT;
 	pageSizeCurrent = PAGE_MIN_SIZE;
 	private references = new BehaviorSubject<PageDto<StudyOrderWorkListDto[]>>(null);
-	private studyOrderWorkListFilterDto: StudyOrderWorkListFilterDto = {
-		"categories": ["108252007"],
-		"sourceTypeIds": [0, 4],
-		"studyTypeIds": [1, 2],
-		"requiresTransfer": false,
-		"notRequiresTransfer": true,
-		"patientTypeId": [1, 2, 3, 4, 5, 6, 7, 8]
-	};
+	private studyOrderWorkListFilterDto: StudyOrderWorkListFilterDto;
 	readonly allOrders$ = this.references.asObservable();
 	constructor(
 		private serviceRequestWorkListControllerService: ServiceRequestWorkListControllerService,
 		private readonly filterServiceService: FilterServiceService,
 	) {
-		this.getOrders(PAGE_INIT, PAGE_MIN_SIZE, this.studyOrderWorkListFilterDto);
 	}
 	ngOnInit() {
 		this.filterServiceService.filters$.subscribe((filter: StudyOrderWorkListFilterDto) => {
