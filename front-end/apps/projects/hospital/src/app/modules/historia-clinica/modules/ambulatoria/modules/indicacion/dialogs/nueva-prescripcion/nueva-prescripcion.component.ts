@@ -12,6 +12,7 @@ import {
 	BMPersonDto,
 	BasicPatientDto,
 	DocumentRequestDto,
+	NewDosageDto,
 	PrescriptionDto,
 } from '@api-rest/api-model.d';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -43,6 +44,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	submitted: boolean = false;
 	showAddMedicationError: boolean = false;
 	isFinishPrescripcionLoading = false;
+	isHabilitarRecetaDigitalActualizada = false;
 
 	constructor(
 		private readonly snackBarService: SnackBarService,
@@ -53,8 +55,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		private readonly el: ElementRef,
 		private statePrescripcionService: StatePrescripcionService,
 		@Inject(MAT_DIALOG_DATA) public prescriptionData: NewPrescriptionData) {
-			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
-				.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
+			this.setFeatureFlags();
 		}
 
 	ngOnInit(): void {
@@ -110,14 +111,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 					observations: pi.observations,
 					snomed: pi.snomed,
 					categoryId: pi.studyCategory?.id,
-					dosage: {
-						chronic: pi.isChronicAdministrationTime,
-						diary: pi.isDailyInterval,
-						duration: Number(pi.administrationTimeDays),
-						frequency: pi.dayDose || Number(pi.intervalHours),
-						dosesByUnit: pi.unitDose,
-						quantity: pi.quantity
-					},
+					dosage: this.buildDosage(pi),
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
 					commercialMedicationPrescription: pi.commercialMedicationPrescription,
 				    suggestedCommercialMedication: pi.suggestedCommercialMedication
@@ -157,6 +151,40 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	clear(control: AbstractControl) {
 		control.reset();
+	}
+
+	private buildDosage = (pi: NewPrescriptionItem) => {
+		if (this.isHabilitarRecetaDigitalActualizada) 
+			return this.buildNewDosage(pi)
+		return this.buildOldDosage(pi)
+	}
+
+	private buildNewDosage = (pi: NewPrescriptionItem): NewDosageDto => {
+		return {
+			chronic: pi.isChronicAdministrationTime,
+			diary: pi.isDailyInterval,
+			duration: Number(pi.administrationTimeDays),
+			frequency: pi.dayDose || Number(pi.intervalHours),
+			dosesByUnit: pi.unitDose,
+			quantity: pi.quantity
+		}
+	}
+
+	private buildOldDosage = (pi: NewPrescriptionItem): NewDosageDto => {
+		return {
+			chronic: pi.isChronicAdministrationTime,
+			diary: pi.isDailyInterval,
+			duration: Number(pi.administrationTimeDays),
+			frequency: Number(pi.intervalHours),
+			dosesByDay: pi.dayDose,
+			dosesByUnit: pi.unitDose,
+			quantity: pi.quantity
+		}
+	}
+
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL).subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA).subscribe((result: boolean) => this.isHabilitarRecetaDigitalActualizada = result);
 	}
 
 }

@@ -230,11 +230,11 @@
                         </tr>
                         <tr class="half">
                             <td class="label" th:if="${medication.dosage.dosesByUnit != null}">Cantidad por vez</td>
-                            <td class="label">Frecuencia</td>
+                            <td class="label" th:if="${medication.dosage.frequency != null && medication.dosage.frequency != 0}">Frecuencia</td>
                         </tr>
                         <tr class="half">
                             <td class="value" th:if="${medication.dosage.dosesByUnit != null}" th:text="${ (medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit) + ' ' + medication.dosage.quantity.unit }"></td>
-                            <td class="value" th:text="${ 'Cada ' + medication.dosage.frequency + (medication.dosage.periodUnit == 'd' ? ' día/s' : ' hora/s') }"></td>
+                            <td class="value" th:if="${medication.dosage.frequency != null && medication.dosage.frequency != 0}" th:text="${ 'Cada ' + medication.dosage.frequency + (medication.dosage.periodUnit == 'd' ? ' día/s' : ' hora/s') }"></td>
                         </tr>
                         <tr class="half">
                             <td class="label" th:if="${ medication.dosage.dosesByDay != null }">Dosis/Día</td>
@@ -440,11 +440,11 @@
                             </tr>
                             <tr class="half">
                                 <td class="label" th:if="${medication.dosage.dosesByUnit != null}">Cantidad por vez</td>
-                                <td class="label">Frecuencia</td>
+                                <td class="label" th:if="${medication.dosage.frequency != null && medication.dosage.frequency != 0}">Frecuencia</td>
                             </tr>
                             <tr class="half">
                                 <td class="value" th:if="${medication.dosage.dosesByUnit != null}" th:text="${ (medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit) + ' ' + medication.dosage.quantity.unit }"></td>
-                                <td class="value" th:text="${ 'Cada ' + medication.dosage.frequency + (medication.dosage.periodUnit == 'd' ? ' día/s' : ' hora/s') }"></td>
+                                <td class="value" th:if="${medication.dosage.frequency != null && medication.dosage.frequency != 0}" th:text="${ 'Cada ' + medication.dosage.frequency + (medication.dosage.periodUnit == 'd' ? ' día/s' : ' hora/s') }"></td>
                             </tr>
                             <tr class="half">
                                 <td class="label" th:if="${ medication.dosage.dosesByDay != null }">Dosis/Día</td>
