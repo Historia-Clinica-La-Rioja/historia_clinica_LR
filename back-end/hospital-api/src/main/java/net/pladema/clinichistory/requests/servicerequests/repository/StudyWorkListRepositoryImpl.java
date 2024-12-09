@@ -13,7 +13,9 @@ import javax.persistence.EntityManager;
 
 import javax.persistence.Query;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -127,7 +129,7 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 					"WHERE sr.institution_id = :institutionId " +
 					"AND dr.status_id = :statusId " +
 					(filter.getCategories() != null && !filter.getCategories().isEmpty() ? " AND sr.category_id IN (:categories)" : "") +
-					(filter.getSourceTypeIds() != null && !filter.getSourceTypeIds().isEmpty() ? " AND sr.source_type_id IN (:sourceTypeIds)" : " AND sr.source_type_id != 1") +
+					"AND sr.source_type_id IN (:sourceTypeIdsDefault) " +
 					(filter.getPatientTypeId() != null && !filter.getPatientTypeId().isEmpty() ? " AND pty.id IN (:patientTypes)" : "") +
 					(filter.getStudyTypeIds() != null && !filter.getStudyTypeIds().isEmpty() ? " AND COALESCE(sr.study_type_id, 1) IN (:studyTypeIds)" : "") +
 					(
@@ -145,9 +147,12 @@ public class StudyWorkListRepositoryImpl implements StudyWorkListRepository {
 		if (filter.getCategories()!= null && !filter.getCategories().isEmpty()) {
 				query.setParameter("categories", filter.getCategories());
 		}
-		if (filter.getSourceTypeIds() != null && !filter.getSourceTypeIds().isEmpty()) {
-				query.setParameter("sourceTypeIds", filter.getSourceTypeIds());
-		}
+		List<Integer> sourceTypeIds = (filter.getSourceTypeIds() == null || filter.getSourceTypeIds().isEmpty())
+				? Arrays.asList(0, 4)
+				: filter.getSourceTypeIds().stream()
+				.map(Short::intValue)
+				.collect(Collectors.toList());
+		query.setParameter("sourceTypeIdsDefault", sourceTypeIds);
 		query.setParameter("statusId", statusId)
 				.setParameter("documentType", documentType)
 				.setParameter("emergencyCareState", emergencyCareState)
