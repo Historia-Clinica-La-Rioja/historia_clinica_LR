@@ -6,10 +6,7 @@ import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/i
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
-import { Observable, switchMap } from 'rxjs';
-
-const AUDIT = 4;
-const WAITING_APPROVAL = 0;
+import { Observable } from 'rxjs';
 @Component({
     selector: 'app-edit-reference',
     templateUrl: './edit-reference.component.html',
@@ -39,54 +36,13 @@ export class EditReferenceComponent {
 			{ dialogWidth: DialogWidth.MEDIUM },
             referenceEditionData
 		)
-		editDialogRef.afterClosed().subscribe(editedAndDestinationInstitutionChanged => {
-			if (editedAndDestinationInstitutionChanged[0]) {
-                if (this.isButton) {
-                    if (this.permissionService.isRoleGestor)
-                        this.institutionalNetworkReferenceReportService.changeReferenceRegulationState(this.referenceCompleteData.reference.id, AUDIT)
-                        .pipe(switchMap(changed => {
-                            if (changed)
-                                return this.institutionalNetworkReferenceReportService.changeReferenceApprovalState(this.referenceCompleteData.reference.id, WAITING_APPROVAL)
-                        })).subscribe(updated => {
-                            if (updated)
-                                this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
-                        });
-                    else
-                        this.institutionalReferenceReportService.changeReferenceRegulationStateAsGestorInstitucional(this.referenceCompleteData.reference.id, AUDIT)
-                        .pipe(switchMap(changed => {
-                            if (changed)
-                                return this.institutionalReferenceReportService.changeReferenceApprovalStateAsGestorInstitucional(this.referenceCompleteData.reference.id, WAITING_APPROVAL)
-                        })).subscribe(updated => {
-                            if (updated)
-                                this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
-                        });
-                }
-                else if (!this.isButton && editedAndDestinationInstitutionChanged[1]) {
-                    if (this.permissionService.isRoleGestor)
-                        this.institutionalNetworkReferenceReportService.changeReferenceApprovalState(this.referenceCompleteData.reference.id, WAITING_APPROVAL)
-                        .subscribe(updated => {
-                            if (updated) {
-                                this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.permissionService.reportCompleteData);
-                                this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
-                            }
-                        });
-                    else {
-                        this.institutionalReferenceReportService.changeReferenceApprovalStateAsGestorInstitucional(this.referenceCompleteData.reference.id, WAITING_APPROVAL)
-                        .subscribe(updated => {
-                            if (updated) {
-                                this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.permissionService.reportCompleteData);
-                                this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
-                            }
-                        });
-                    }
-                }
-                else {
-                    if (this.permissionService.isRoleGestor)
-                        this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
+		editDialogRef.afterClosed().subscribe(edited => {
+			if (edited) {
+                if (this.permissionService.isRoleGestor)
+                    this.newReferenceDetail.emit(this.institutionalNetworkReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
 
-                    else 
-                        this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
-                }
+                else 
+                    this.newReferenceDetail.emit(this.institutionalReferenceReportService.getReferenceDetail(this.referenceCompleteData.reference.id));
             }
 		});
     }

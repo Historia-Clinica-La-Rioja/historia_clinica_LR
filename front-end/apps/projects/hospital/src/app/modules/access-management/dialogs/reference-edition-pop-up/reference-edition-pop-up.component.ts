@@ -185,7 +185,7 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	private referenceEditionSuccess() {
 		this.snackBarService.showSuccess("access-management.reference-edition.snack_bar_description.FILES_SUCCESS");
 		this.snackBarService.showSuccess("access-management.reference-edition.snack_bar_description.REFERENCE_EDITION_SUCCESS");
-		this.dialogRef.close([true, this.destinationInstitutionChanged]);
+		this.dialogRef.close(true);
 	}
 
 	private referenceEditionError(filesId: number[]) {
