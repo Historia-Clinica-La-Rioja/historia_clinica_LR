@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
-import { AppFeature, SnomedDto } from '@api-rest/api-model';
+import { ApiErrorDto, AppFeature, SnomedDto } from '@api-rest/api-model';
 import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
@@ -14,6 +14,8 @@ import { DialogService, DialogWidth } from '@presentation/services/dialog.servic
 import { AddDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/add-digital-prescription-item/add-digital-prescription-item.component';
 import { TranslateService } from '@ngx-translate/core';
 import { OldDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/old-digital-prescription-item/old-digital-prescription-item.component';
+import { processErrors } from '@core/utils/form.utils';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
     selector: 'app-medication-information',
@@ -46,7 +48,8 @@ export class MedicationInformationComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly translate: TranslateService,
 		private readonly oldDigital: DialogService<OldDigitalPrescriptionItemComponent>,
-		private readonly newDigital: DialogService<AddDigitalPrescriptionItemComponent>
+		private readonly newDigital: DialogService<AddDigitalPrescriptionItemComponent>,
+		private readonly snackBar: SnackBarService
     ) { }
 
     ngOnInit(): void {
@@ -104,17 +107,27 @@ export class MedicationInformationComponent implements OnInit {
 			return;
 		}
 
-		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.prescriptionData.patientId).subscribe((pharmacos: SnomedDto[]) => {
-			this.isAddMedicationLoading = false;
-			this.dialog.open(PharmacosFrequentComponent, {
-				width: '50%',
-				data: { pharmacos }
-			}).afterClosed().subscribe(result => {
-				if (!result || !result.openFormPharmaco) return;
-				if (!result.pharmaco && result.openFormPharmaco) return this.openPrescriptionItemDialog();
-				this.openPrescriptionItemDialog(mapToNewPrescriptionItem(result.pharmaco));
-			});
+		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.prescriptionData.patientId).subscribe({
+			next: (pharmacos: SnomedDto[]) => {
+				this.isAddMedicationLoading = false;
+				this.openPharmacosFrequent(pharmacos);
+			},
+			error: (error: ApiErrorDto) => {
+				processErrors(error, (msg) => this.snackBar.showError(msg));
+				this.isAddMedicationLoading = false;
+			}
 		})
+	}
+
+	private openPharmacosFrequent = (pharmacos: SnomedDto[]) => {
+		this.dialog.open(PharmacosFrequentComponent, {
+			width: '50%',
+			data: { pharmacos }
+		}).afterClosed().subscribe(result => {
+			if (!result || !result.openFormPharmaco) return;
+			if (!result.pharmaco && result.openFormPharmaco) return this.openPrescriptionItemDialog();
+			this.openPrescriptionItemDialog(mapToNewPrescriptionItem(result.pharmaco));
+		});
 	}
 
 	private setFeatureFlags = () => {

@@ -367,6 +367,13 @@ public class MedicationRequestController {
         return new ApiErrorDto("Constraint violation", ex.getMessage());
     }
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(SnowstormPortException.class)
+	public ApiErrorDto heandleSnowstormPortException(SnowstormPortException ex) {
+		LOG.error("Constraint violation -> {}", ex.getMessage());
+		return new ApiErrorDto(ex.getCode().name(), ex.getMessage());
+	}
+
 	private NewMedicationRequestNotificationArgs mapToMedicationRequestNotificationBo(
 			Integer recipeId, BasicPatientDto patientDto, StoredFileBo resource) {
 		LOG.debug("Input parameters -> recipeId {}, patientDto {}, resource {}", recipeId, patientDto, resource);
