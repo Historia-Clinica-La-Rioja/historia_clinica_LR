@@ -1,59 +1,53 @@
 package ar.lamansys.sgh.publicapi.activities.infrastructure.input.mapper;
 
+import static java.util.stream.Collectors.groupingBy;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitiesbyfilter.exception.DiagnosticNotFoundException;
+import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.CoverageActivityInfoBo;
 import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.InternmentBo;
+import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoExtendedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProfessionalBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SingleDiagnosticBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedCIE10Bo;
 import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
 import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.AttentionInfoDto;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DiagnosesDto;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DocumentInfoDto;
-import ar.lamansys.sgh.publicapi.activities.domain.SingleDiagnosticBo;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.PersonExtendedInfoDto;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SingleAttentionInfoDto;
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SingleDiagnosticDto;
-
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SnomedCIE10Dto;
-
-import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SupplyInformationDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
-
-import lombok.AllArgsConstructor;
-
-import lombok.EqualsAndHashCode;
-
-import org.springframework.stereotype.Component;
-
-import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
-import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
-import ar.lamansys.sgh.publicapi.activities.domain.CoverageActivityInfoBo;
-import ar.lamansys.sgh.publicapi.activities.domain.InternmentBo;
-import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoBo;
-import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
-import ar.lamansys.sgh.publicapi.activities.domain.ProfessionalBo;
-import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.BedRelocationInfoDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.ClinicalSpecialityDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.CoverageActivityInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DiagnosesDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DocumentInfoDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.InternmentDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.PersonExtendedInfoDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.PersonInfoDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.ProcedureInformationDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.ProfessionalDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SingleAttentionInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SingleDiagnosticDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SnomedCIE10Dto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SnomedDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SupplyInformationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
-
-import static java.util.stream.Collectors.groupingBy;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Component
 public class ActivitiesMapper {
@@ -288,7 +282,16 @@ public class ActivitiesMapper {
 						.max(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn()))
 						.orElseThrow(this::noDiagnosticFound);
 
+				//this is necessary so the date is that of the first attention
+				var firstDate = attentions
+						.stream()
+						.filter(a -> a.getSingleDiagnosticDto().getUpdatedOn() != null)
+						.min(Comparator.comparing(a -> a.getSingleDiagnosticDto().getUpdatedOn()))
+						.map(SingleAttentionInfoDto::getAttentionDateWithTime)
+						.orElseThrow(this::noDiagnosticFound);
+
 				DiagnosesDto diagnoses = buildDiagnosis(attentions, lastMainDiagnosis);
+				lastMainDiagnosis.setAttentionDateWithTime(firstDate);
 				newAttention = mapToAttention(lastMainDiagnosis, diagnoses);
 
 			}
