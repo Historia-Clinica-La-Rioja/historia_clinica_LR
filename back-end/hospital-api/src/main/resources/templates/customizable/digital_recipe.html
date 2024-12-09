@@ -139,7 +139,7 @@
         </div>
         <div>
             <div th:each="medication : ${medications}">
-                <div class="medication-container">
+                <div style="page-break-inside: avoid;" class="medication-container">
                     <h3 th:text="${'Rp. ' + medication.prescriptionLineNumber}"></h3>
                     <table>
                         <tr>
@@ -189,7 +189,7 @@
         <div style="margin-bottom: 10px;">
             <strong>Firmado electrónicamente por:</strong><br/>
         </div>
-        <div style="page-break-after: always;" class="container">
+        <div style="page-break-after: always; page-break-inside: avoid;" class="container">
             <div class="column">
                 <div style="margin-bottom: 10px;">
                     <strong>Apellido y nombre:</strong><br/>
@@ -202,7 +202,7 @@
             </div>
             <div class="column">
                 <div style="margin-bottom: 10px;">
-                    <strong>Matrículo Nacional:</strong><br/>
+                    <strong>Matrícula Nacional:</strong><br/>
                     <span th:text="${nationalLicense} ?: 'Sin información'">?</span><br/>
                 </div>
                 <div style="margin-bottom: 10px;">
@@ -219,7 +219,7 @@
         </div>
         <div>
             <div th:each="medication : ${medications}">
-                <div class="medication-container">
+                <div style="page-break-inside: avoid;" class="medication-container">
                     <h3>Indicaciones para el paciente</h3>
                     <table>
                         <tr>
@@ -262,7 +262,7 @@
         </div>
     </div>
     <div th:replace="fragments/digital_recipe_footer.html :: footer"></div>
-    <div style="page-break-after: always;" th:if="${isArchived}">
+    <div style="page-break-before: always;" th:if="${isArchived}">
         <div style="margin-bottom: 60px;">
             <div th:replace="fragments/digital_recipe_header.html :: header"></div>
             <div style="text-align: right; margin-right: 20px;">
@@ -349,7 +349,7 @@
             </div>
             <div>
                 <div th:each="medication : ${medications}">
-                    <div class="medication-container">
+                    <div style="page-break-inside: avoid;" class="medication-container">
                         <h3 th:text="${'Rp. ' + medication.prescriptionLineNumber}"></h3>
                         <table>
                             <tr>
@@ -399,7 +399,7 @@
             <div style="margin-bottom: 10px;">
                 <strong>Firmado electrónicamente por:</strong><br/>
             </div>
-            <div style="page-break-after: always;" class="container">
+            <div style="page-break-after: always; page-break-inside: avoid;" class="container">
                 <div class="column">
                     <div style="margin-bottom: 10px;">
                         <strong>Apellido y nombre:</strong><br/>
@@ -412,7 +412,7 @@
                 </div>
                 <div class="column">
                     <div style="margin-bottom: 10px;">
-                        <strong>Matrículo Nacional:</strong><br/>
+                        <strong>Matrícula Nacional:</strong><br/>
                         <span th:text="${nationalLicense} ?: 'Sin información'">?</span><br/>
                     </div>
                     <div style="margin-bottom: 10px;">
@@ -424,49 +424,6 @@
                     <div style="margin-bottom: 10px;">
                         <strong>Matrícula Provincial:</strong><br/>
                         <span th:text="${stateLicense} ?: 'Sin información'">?</span><br/>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div th:each="medication : ${medications}">
-                    <div class="medication-container">
-                        <h3>Indicaciones para el paciente</h3>
-                        <table>
-                            <tr>
-                                <td colspan="2" class="label">Medicamento genérico</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="value" th:text="${medication.snomed.pt}"></td>
-                            </tr>
-                            <tr class="half">
-                                <td class="label" th:if="${medication.dosage.dosesByUnit != null}">Cantidad por vez</td>
-                                <td class="label" th:if="${medication.dosage.frequency != null && medication.dosage.frequency != 0}">Frecuencia</td>
-                            </tr>
-                            <tr class="half">
-                                <td class="value" th:if="${medication.dosage.dosesByUnit != null}" th:text="${ (medication.dosage.dosesByUnit % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByUnit,0,0) : medication.dosage.dosesByUnit) + ' ' + medication.dosage.quantity.unit }"></td>
-                                <td class="value" th:if="${medication.dosage.frequency != null && medication.dosage.frequency != 0}" th:text="${ 'Cada ' + medication.dosage.frequency + (medication.dosage.periodUnit == 'd' ? ' día/s' : ' hora/s') }"></td>
-                            </tr>
-                            <tr class="half">
-                                <td class="label" th:if="${ medication.dosage.dosesByDay != null }">Dosis/Día</td>
-                                <td class="label">Días de tratamiento</td>
-                            </tr>
-                            <tr class="half">
-                                <td class="value" th:if="${ medication.dosage.dosesByDay != null }" th:text="${ (medication.dosage.dosesByDay % 1 == 0 ? #numbers.formatDecimal(medication.dosage.dosesByDay,0,0) : medication.dosage.dosesByDay) + ' ' + medication.dosage.quantity.unit }"></td>
-                                <td class="value" th:text="${ (medication.dosage.duration % 1 == 0 ? #numbers.formatDecimal(medication.dosage.duration,0,0) : medication.dosage.duration) + ' día/s' }"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="label">Diagnóstico</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="value" th:text="${medication.healthCondition.snomed.pt}"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="label">Observaciones</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="value" th:text="${medication.note}  ?: 'Sin información'"></td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
             </div>
