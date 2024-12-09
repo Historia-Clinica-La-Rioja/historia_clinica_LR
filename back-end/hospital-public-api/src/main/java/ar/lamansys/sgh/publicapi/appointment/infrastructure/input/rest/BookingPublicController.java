@@ -5,6 +5,7 @@ import java.util.List;
 
 import ar.lamansys.sgh.publicapi.appointment.application.checkmailexists.CheckMailExists;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchBookingPracticesBySpecialtyAndHealthInsurance.FetchBookingPracticesBySpecialtyAndHealthInsurance;
+import ar.lamansys.sgh.publicapi.appointment.application.fetchBookingSpecialtiesByProfessionals.FetchBookingSpecialtiesByProfessionals;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchallbookinginstitutions.FetchAllBookingInstitutions;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchallbookinginstitutionsextended.FetchAllBookingInstitutionsExtended;
 import ar.lamansys.sgh.publicapi.appointment.application.fetchbookingpracticesbyprofessionalandhealthinsurance.FetchBookingPracticesByProfessionalAndHealthInsurance;
@@ -45,6 +46,7 @@ public class BookingPublicController {
 	private final FetchBookingPracticesByProfessionalAndHealthInsurance fetchBookingPracticesByProfessionalAndHealthInsurance;
 	private final FetchBookingSpecialtiesByProfessional fetchBookingSpecialtiesByProfessional;
 	private final CheckMailExists checkIfMailExists;
+	private final FetchBookingSpecialtiesByProfessionals fetchBookingSpecialtiesByProfessionals;
 
 	@GetMapping("/institution")
 	public List<BookingInstitutionDto> getAllBookingInstitutions() {
@@ -109,5 +111,12 @@ public class BookingPublicController {
 		boolean exists = checkIfMailExists.run(email);
 		log.debug("Email {} exists : {}", email, exists);
 		return ResponseEntity.ok(exists);
+	}
+
+	@GetMapping("/specialties-by-professionals")
+	public ResponseEntity<List<BookingSpecialtyDto>> getSpecialtiesByProfessionals() {
+		List<BookingSpecialtyDto> result = fetchBookingSpecialtiesByProfessionals.run();
+		log.debug("Get specialties => {}", result);
+		return ResponseEntity.ok(result);
 	}
 }

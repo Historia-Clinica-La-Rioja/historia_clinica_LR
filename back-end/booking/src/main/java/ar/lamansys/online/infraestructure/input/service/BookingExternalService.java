@@ -10,6 +10,7 @@ import ar.lamansys.online.application.FetchIfAppointmentWereAlreadyAssigned;
 import ar.lamansys.online.application.FetchIfOpeningHoursAllowsWebAppointments;
 import ar.lamansys.online.application.booking.CheckIfMailExists;
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
+import ar.lamansys.online.application.specialty.FetchSpecialtiesByProfessionals;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
@@ -81,6 +82,7 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchIfAppointmentWereAlreadyAssigned fetchIfAppointmentWereAlreadyAssigned;
 	private final FetchIfAppointmentCanBeAssignedAsOverturn fetchIfAppointmentCanBeAssignedAsOverturn;
 	private final CheckIfMailExists checkIfMailExists;
+	private final FetchSpecialtiesByProfessionals fetchSpecialtiesByProfessionals;
 
 	private final FeatureFlagsService featureFlagsService;
 
@@ -183,6 +185,16 @@ public class BookingExternalService implements SharedBookingPort {
 				.map(b -> new BookingSpecialtyDto(b.getId(), b.getDescription()))
 				.collect(Collectors.toList());
 		log.debug("Get all practices => {}", result);
+		return result;
+	}
+
+	@Override
+	public List<BookingSpecialtyDto> fetchBookingSpecialtiesByProfessionals() {
+		List<BookingSpecialtyBo> specialties = fetchSpecialtiesByProfessionals.run();
+		List<BookingSpecialtyDto> result = specialties.stream()
+				.map(b -> new BookingSpecialtyDto(b.getId(), b.getDescription()))
+				.collect(Collectors.toList());
+		log.debug("Get all specialties => {}", result);
 		return result;
 	}
 

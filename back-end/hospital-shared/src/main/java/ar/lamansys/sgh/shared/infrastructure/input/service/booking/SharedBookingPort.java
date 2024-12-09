@@ -50,4 +50,6 @@ public interface SharedBookingPort {
 
 
 	boolean checkMailExists(String email);
+
+	List<BookingSpecialtyDto> fetchBookingSpecialtiesByProfessionals();
 }
