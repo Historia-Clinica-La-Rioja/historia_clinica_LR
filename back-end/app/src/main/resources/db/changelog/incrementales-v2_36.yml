@@ -933,3 +933,23 @@ databaseChangeLog:
                       nullable: false
                     name: external_medication_request_id
                     type: varchar(50)
+
+    - changeSet:
+        id: update_medication_request_validation_medical_coverage_data_1
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 5 WHERE funder_number = 20056;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 7 WHERE funder_number = 20048;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 75 WHERE funder_number = 20058;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 160 WHERE funder_number = 20182;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 16 WHERE funder_number = 20224;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 21 WHERE funder_number = 20315;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 240 WHERE funder_number = 20359;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 22 WHERE funder_number = 20399;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 26 WHERE funder_number = 20364;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 24 WHERE funder_number = 20457;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 30 WHERE funder_number = 20067;
+                UPDATE medication_request_validation_medical_coverage SET funder_number = 290 WHERE funder_number = 20210;
