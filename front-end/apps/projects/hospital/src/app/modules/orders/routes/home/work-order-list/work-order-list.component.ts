@@ -6,7 +6,6 @@ import { PatientType } from '@historia-clinica/constants/summaries';
 import { BehaviorSubject, Observable, } from 'rxjs';
 import { FilterServiceService } from '../../../services/filter-service.service';
 
-
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_INIT = 0;
 const PAGE_MIN_SIZE = 5;
@@ -18,7 +17,6 @@ const EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
 	selector: 'app-work-order-list',
 	templateUrl: './work-order-list.component.html',
 	styleUrls: ['./work-order-list.component.scss'],
-
 })
 
 export class WorkOrderListComponent implements OnInit {
@@ -36,8 +34,8 @@ export class WorkOrderListComponent implements OnInit {
 	constructor(
 		private serviceRequestWorkListControllerService: ServiceRequestWorkListControllerService,
 		private readonly filterServiceService: FilterServiceService,
-	) {
-	}
+	) {	}
+
 	ngOnInit() {
 		this.filterServiceService.filters$.subscribe((filter: StudyOrderWorkListFilterDto) => {
 			this.studyOrderWorkListFilterDto = filter;
@@ -51,8 +49,8 @@ export class WorkOrderListComponent implements OnInit {
 		this.getOrders($event.pageIndex, $event.pageSize, this.studyOrderWorkListFilterDto);
 	}
 
-	private getOrders(pageNumber: number, pageSize: number, studyOrderWorkListFilterDto) {
-		this.serviceRequestWorkListControllerService.getList([LABORATORIO], pageNumber, pageSize, this.studyOrderWorkListFilterDto)
+	private getOrders(pageNumber: number, pageSize: number, studyOrderWorkListFilterDto: StudyOrderWorkListFilterDto ) {
+		this.serviceRequestWorkListControllerService.getList([LABORATORIO], pageNumber, pageSize, studyOrderWorkListFilterDto)
 			.subscribe((allOrders: PageDto<StudyOrderWorkListDto[]>) => {
 				this.references.next(allOrders);
 				this.totalElementsAmount = allOrders.totalElementsAmount;
