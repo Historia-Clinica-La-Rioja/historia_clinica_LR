@@ -89,7 +89,7 @@ export class EvolutionNoteDockPopupByNurseComponent implements OnInit, OnDestroy
 				this.snackBarService.showSuccess('guardia.nursing_evolution_note.SAVE_SUCCESS');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
 				emergencyCareEvolutionNoteDto.riskFactors && this.newRiskFactorsService.newRiskFactors();
-				const hasPatientUpdatedIsolationAlerts = emergencyCareEvolutionNoteDto.isolationAlerts.length || this.data.emergencyCareEvolutionNote.isolationAlerts.length;
+				const hasPatientUpdatedIsolationAlerts = emergencyCareEvolutionNoteDto.isolationAlerts.length || this.data.emergencyCareEvolutionNote?.isolationAlerts.length;
 				hasPatientUpdatedIsolationAlerts && this.patientIsolationAlertService.updatedIsolationAlertsSubject.next(true);
 				this.dockPopupRef.close(true);
 			},

@@ -119,7 +119,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit, OnDestroy {
 				this.snackBarService.showSuccess('Nota de evolución guardada correctamente');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
 				emergencyCareEvolutionNoteDto.riskFactors && this.newRiskFactorsService.newRiskFactors();
-				const hasPatientUpdatedIsolationAlerts = emergencyCareEvolutionNoteDto.isolationAlerts.length || this.data.emergencyCareEvolutionNote.isolationAlerts.length;
+				const hasPatientUpdatedIsolationAlerts = emergencyCareEvolutionNoteDto.isolationAlerts.length || this.data.emergencyCareEvolutionNote?.isolationAlerts.length;
 				hasPatientUpdatedIsolationAlerts && this.patientIsolationAlertService.updatedIsolationAlertsSubject.next(true);
 				this.dockPopupRef.close(true)
 			},
