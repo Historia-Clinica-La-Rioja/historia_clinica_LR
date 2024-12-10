@@ -149,11 +149,11 @@
                             <td colspan="2" class="value" th:text="${medication.snomed.pt}"></td>
                         </tr>
                         <tr th:if="${ medication.commercialMedicationPrescription != null }" class="half">
-                            <td class="label">Presentación comercial</td>
+                            <td class="label" th:if="${ medication.commercialMedicationPrescription.presentationUnitQuantity != 0 }">Presentación comercial</td>
                             <td class="label" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }">Cantidad de envases</td>
                         </tr>
                         <tr th:if="${ medication.commercialMedicationPrescription != null }" class="half">
-                            <td class="value" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es' }"></td>
+                            <td class="value" th:if="${ medication.commercialMedicationPrescription.presentationUnitQuantity != 0 }" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es' }"></td>
                             <td class="value" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }" th:text="${ medication.commercialMedicationPrescription.medicationPackQuantity }"></td>
                         </tr>
                         <tr th:if="${ medication.suggestedCommercialMedication != null }">
@@ -359,11 +359,11 @@
                                 <td colspan="2" class="value" th:text="${medication.snomed.pt}"></td>
                             </tr>
                             <tr th:if="${ medication.commercialMedicationPrescription != null }" class="half">
-                                <td class="label">Presentación comercial</td>
+                                <td class="label" th:if="${ medication.commercialMedicationPrescription.presentationUnitQuantity != 0 }">Presentación comercial</td>
                                 <td class="label" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }">Cantidad de envases</td>
                             </tr>
                             <tr th:if="${ medication.commercialMedicationPrescription != null }" class="half">
-                                <td class="value" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es' }"></td>
+                                <td class="value" th:if="${ medication.commercialMedicationPrescription.presentationUnitQuantity != 0 }" th:text="${ medication.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es' }"></td>
                                 <td class="value" th:if="${ medication.commercialMedicationPrescription.medicationPackQuantity != 0 }" th:text="${ medication.commercialMedicationPrescription.medicationPackQuantity }"></td>
                             </tr>
                             <tr th:if="${ medication.suggestedCommercialMedication != null }">
