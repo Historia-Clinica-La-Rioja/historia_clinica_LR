@@ -3286,6 +3286,7 @@ export interface MedicationRequestValidationDispatcherPatientDto {
 }
 
 export interface MedicationRequestValidationDispatcherProfessionalDto {
+    email: string;
     identificationNumber: string;
     identificationType: string;
     lastName: string;

@@ -25,4 +25,6 @@ public class MedicationRequestValidationDispatcherProfessionalDto {
 
 	private String licenseType;
 
+	private String email;
+
 }

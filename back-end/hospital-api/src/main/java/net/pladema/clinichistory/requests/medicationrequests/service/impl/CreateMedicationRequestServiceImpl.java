@@ -110,6 +110,7 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
 	private boolean mustValidateDigitalPrescription(MedicationRequestBo medicationRequest) {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR) &&
 				featureFlagsService.isOn(AppFeature.HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS) &&
+				featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA) &&
 				medicationRequest.getMedicalCoverageId() != null;
 	}
 

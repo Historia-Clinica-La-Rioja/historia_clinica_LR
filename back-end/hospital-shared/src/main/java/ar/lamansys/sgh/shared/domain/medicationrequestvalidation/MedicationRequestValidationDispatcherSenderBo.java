@@ -103,6 +103,7 @@ public class MedicationRequestValidationDispatcherSenderBo {
 		healthcareProfessionalData.put("nombre", healthcareProfessional.getName());
 		healthcareProfessionalData.put("tipoDoc", healthcareProfessional.getIdentificationType());
 		healthcareProfessionalData.put("nroDoc", healthcareProfessional.getIdentificationNumber());
+		healthcareProfessionalData.put("email", healthcareProfessional.getEmail());
 		return healthcareProfessionalData;
 	}
 

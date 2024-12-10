@@ -48,6 +48,7 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setIdentificationNumber(healthcareProfessional.getIdentificationNumber());
 		result.setLicenseType(healthcareProfessional.getLicenseType());
 		result.setLicenseNumber(healthcareProfessional.getLicenseNumber());
+		result.setEmail(healthcareProfessional.getEmail());
 		return result;
 	}
 
@@ -97,6 +98,7 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setIdentificationNumber(healthcareProfessional.getIdentificationNumber());
 		result.setLicenseType(healthcareProfessional.getLicenseType());
 		result.setLicenseNumber(healthcareProfessional.getLicenseNumber());
+		result.setEmail(healthcareProfessional.getEmail());
 		return result;
 	}
 

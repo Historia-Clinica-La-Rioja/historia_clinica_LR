@@ -42,7 +42,7 @@ public class MedicationRequestValidationPortImpl implements MedicationRequestVal
 		catch (HttpClientErrorException e) {
 			log.warn("Error: {}", e.getMessage());
 			JsonObject error = JsonParser.parseString(e.getResponseBodyAsString()).getAsJsonObject();
-			String message = String.format("Ha habido un error en el validador de la receta digital. Código %s", error.get("error"));
+			String message = String.format("Ha habido un error en el validador de la receta digital. Código %s: %s", error.get("error"), error.get("mensaje"));
 			throw new MedicationRequestValidationException(message, EMedicationRequestValidationException.EXTERNAL_ERROR);
 		}
 	}

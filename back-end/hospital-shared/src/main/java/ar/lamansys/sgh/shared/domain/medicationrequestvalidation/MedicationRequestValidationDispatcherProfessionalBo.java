@@ -26,13 +26,17 @@ public class MedicationRequestValidationDispatcherProfessionalBo {
 
 	private String licenseType;
 
+	private String email;
+
 	public MedicationRequestValidationDispatcherProfessionalBo(String name, String lastName, String identificationType,
-															   String identificationNumber, String licenseNumber, ELicenseNumberTypeBo licenseType) {
+															   String identificationNumber, String licenseNumber, ELicenseNumberTypeBo licenseType,
+															   String email) {
 		this.name = name;
 		this.lastName = lastName;
 		this.identificationType = identificationType;
 		this.identificationNumber = identificationNumber;
 		this.licenseNumber = licenseNumber;
 		this.licenseType = licenseType != null ? licenseType.getAcronym() : null;
+		this.email = email;
 	}
 }

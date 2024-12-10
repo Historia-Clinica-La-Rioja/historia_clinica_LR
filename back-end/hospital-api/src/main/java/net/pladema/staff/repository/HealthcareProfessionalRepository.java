@@ -152,9 +152,10 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	List<HealthcareProfessionalVo> getAllProfessionalsByDepartment(@Param("departmentId") Short departmentId,
 																   @Param("professionalERoleIds") List<Short> professionalERoleIds);
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo(p.firstName, p.lastName, it.description, p.identificationNumber, pln.licenseNumber, pln.type) " +
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo(p.firstName, p.lastName, it.description, p.identificationNumber, pln.licenseNumber, pln.type, pe.email) " +
 			"FROM HealthcareProfessional hp " +
 			"JOIN Person p ON (p.id = hp.personId) " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
 			"JOIN IdentificationType it ON (it.id = p.identificationTypeId) " +
 			"LEFT JOIN ProfessionalProfessions pp ON (pp.healthcareProfessionalId = hp.id) " +
 			"LEFT JOIN ProfessionalLicenseNumber pln ON (pln.professionalProfessionId = pp.id) " +
