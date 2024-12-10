@@ -16,6 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { OldDigitalPrescriptionItemComponent } from '@historia-clinica/modules/ambulatoria/dialogs/old-digital-prescription-item/old-digital-prescription-item.component';
 import { processErrors } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DigitalPrescriptionUnitPluralizeService } from '@historia-clinica/modules/ambulatoria/services/digital-prescription-unit-pluralize.service';
 
 @Component({
     selector: 'app-medication-information',
@@ -49,7 +50,8 @@ export class MedicationInformationComponent implements OnInit {
 		private readonly translate: TranslateService,
 		private readonly oldDigital: DialogService<OldDigitalPrescriptionItemComponent>,
 		private readonly newDigital: DialogService<AddDigitalPrescriptionItemComponent>,
-		private readonly snackBar: SnackBarService
+		private readonly snackBar: SnackBarService,
+		private readonly digitalPrescriptionUnitPluralize: DigitalPrescriptionUnitPluralizeService
     ) { }
 
     ngOnInit(): void {
@@ -186,7 +188,7 @@ export class MedicationInformationComponent implements OnInit {
 			id: prescriptionItem.id,
 			pt: prescriptionItem.snomed.pt,
 			dayDose: this.buildDayDose(prescriptionItem),
-			quantity: prescriptionItem.quantity?.value ? `${prescriptionItem.quantity.value} ${prescriptionItem.quantity.unit ? prescriptionItem.quantity.unit: ''}`: '',
+			quantity: this.buildQuantity(prescriptionItem),
 			treatmentDays: prescriptionItem.administrationTimeDays,
 			unitDose: prescriptionItem.unitDose,
 			commercialMedicationPrescription: prescriptionItem.commercialMedicationPrescription,
@@ -196,6 +198,13 @@ export class MedicationInformationComponent implements OnInit {
 			healthProblem: prescriptionItem.healthProblem.description,
 			titles: this.buildTitles()
 		}
+	}
+
+	private buildQuantity = (prescriptionItem: NewPrescriptionItem): string => {
+		let unit = prescriptionItem.quantity?.unit || '';
+		unit = this.digitalPrescriptionUnitPluralize.run(unit);
+
+		return prescriptionItem.quantity?.value ? `${prescriptionItem.quantity.value} ${unit}`: '';
 	}
 
 	private buildTitles = (): PharmacoDetailTitle => {
