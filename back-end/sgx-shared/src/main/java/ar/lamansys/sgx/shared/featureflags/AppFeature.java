@@ -269,7 +269,7 @@ public enum AppFeature implements Feature {
 	@Label("Indica si se encuentra habilitada la restricción de asignación de turnos en agendas")
 	HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS,
 	
-	@Label("Habilita el formulario y pdf de receta digital actualizado")
+	@Label("Habilita el formulario de receta digital actualizado")
 	HABILITAR_RECETA_DIGITAL_ACTUALIZADA,
 
 	@Label("Habilita la validación de la receta digital a través de api integradora")

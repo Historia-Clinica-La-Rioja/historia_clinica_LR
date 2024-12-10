@@ -128,21 +128,23 @@ export class NuevaPrescripcionComponent implements OnInit {
 			const patientDto: APatientDto = mapToAPatientDto(this.patientData, this.person, this.prescriptionForm);
 			this.patientService.editPatient(patientDto, this.prescriptionData.patientId).subscribe();
 		}
-		this.statePrescripcionService.resetForm();
 	}
 
 	savePrescription(prescriptionDto: PrescriptionDto) {
-		if (prescriptionDto) {
-			this.prescripcionesService.createPrescription(this.prescriptionData.prescriptionType, prescriptionDto, this.prescriptionData.patientId)
-			.subscribe(prescriptionRequestResponse => {
+		if (!prescriptionDto) return;
+
+		this.prescripcionesService.createPrescription(this.prescriptionData.prescriptionType, prescriptionDto, this.prescriptionData.patientId).subscribe({
+			next: (prescriptionRequestResponse: DocumentRequestDto[] | number[]) => {
 				this.isFinishPrescripcionLoading = false;
 				this.closeModal({prescriptionDto, prescriptionRequestResponse, identificationNumber: this.person?.identificationNumber});
 			},
-			(err: ApiErrorDto) => {
+			error: (err: ApiErrorDto) => {
 				this.snackBarService.showError(err.errors[0]);
 				this.submitted = false;
-			});
-		}
+				this.isFinishPrescripcionLoading = false;
+			},
+			complete: () => this.statePrescripcionService.resetForm()
+		});
 	}
 
 	isMedication(): boolean {
