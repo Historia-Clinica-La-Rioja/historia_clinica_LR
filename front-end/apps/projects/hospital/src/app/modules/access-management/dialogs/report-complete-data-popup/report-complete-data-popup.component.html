@@ -26,7 +26,7 @@
 				<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'" [collapsed]="referenceCompleteData.closure?.closureType? true : false">
 					<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
 					<div fxLayout="column" fxLayoutAlign="start start" *ngIf="permissionService.visualPermissions.showEditReferenceButton">
-						<app-edit-reference [referenceCompleteData]="referenceCompleteData" [isButton]="false" (newReferenceDetail)="setReferenceDetails($event)"></app-edit-reference>
+						<app-edit-reference [referenceCompleteData]="referenceCompleteData" [isButton]="false" (newReferenceDetail)="updateReference($event)"></app-edit-reference>
 					</div>
 				</app-expansion-section>
 

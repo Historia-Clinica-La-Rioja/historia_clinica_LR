@@ -59,36 +59,45 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	ngOnInit(): void {
 		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
 		this.updateReference();
+
+		if (this.permissionService.referenceCompleteData)
+			this.permissionService.getReferenceCompleteData().subscribe(newReference => {
+				if (this.referenceCompleteData.reference.institutionDestination?.id !== newReference.reference.institutionDestination?.id)
+					this.setReferenceDetails(newReference)
+			});
 	}
 
 	closeDialog() {
 		this.dialogRef.close();
 	}
 
-	setReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
-		referenceDetails$.subscribe(
-			referenceDetails => {
-				this.setAppointment(referenceDetails.appointment);
-				this.setObservation(referenceDetails);
-				this.setDerivation(referenceDetails);
-				this.referenceCompleteData = referenceDetails;
-				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
-				this.referenceAdministrativeStateDto$ = of(this.referenceCompleteData.administrativeState);
-				this.setReportData(this.referenceCompleteData);
-				this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.reportCompleteData);
-				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
-			});
+	setReferenceDetails(referenceDetails: ReferenceCompleteDataDto) {
+		this.setAppointment(referenceDetails.appointment);
+		this.setObservation(referenceDetails);
+		this.setDerivation(referenceDetails);
+		this.referenceCompleteData = referenceDetails;
+		this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
+		this.referenceAdministrativeStateDto$ = of(this.referenceCompleteData.administrativeState);
+		this.setReportData(this.referenceCompleteData);
+		this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.reportCompleteData);
+		this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 	}
 
-	private getObservable(): Observable<ReferenceCompleteDataDto> {
+	private getReferenceObservable(): Observable<ReferenceCompleteDataDto> {
 		return this.domainRole ?
 			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :
 			this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
 	}
 
-	updateReference() {
-		const referenceDetails$ = this.getObservable();
-		this.setReferenceDetails(referenceDetails$);
+	updateReference(observable?: Observable<ReferenceCompleteDataDto>) {
+		if (observable)
+			observable.subscribe(referenceCompleteData =>
+				this.setReferenceDetails(referenceCompleteData)
+		)
+		else
+			this.getReferenceObservable().subscribe(referenceCompleteData => 
+				this.setReferenceDetails(referenceCompleteData)
+			);
 	}
 
 	addObservation(observation: string) {
@@ -147,7 +156,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	}
 
 	private updateObservations() {
-		const referenceDetails$ = this.getObservable();
+		const referenceDetails$ = this.getReferenceObservable();
 
 		referenceDetails$.subscribe(
 			referenceDetails => {
