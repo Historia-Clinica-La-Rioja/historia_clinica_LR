@@ -60,8 +60,12 @@ export class ApprovalComponent {
 	setReferenceInformation(reference: ReferenceCompleteDataDto) {
 		this.permissionService.setReferenceAndReportDataAndVisualPermissions(reference, this.permissionService.reportCompleteData);
 		this.referenceAdministrativeDto = reference.administrativeState;
-		this.regulationState = getIconState[reference.administrativeState.state];
-		this.regulationStateEmmiter.next(reference.administrativeState.state);
+		if (reference.administrativeState){
+			this.regulationState = getIconState[reference.administrativeState.state];
+			this.regulationStateEmmiter.next(reference.administrativeState.state);
+		} else {
+			this.regulationStateEmmiter.next(null);
+		}
 	}
 
 	onEditingState(editing: boolean){

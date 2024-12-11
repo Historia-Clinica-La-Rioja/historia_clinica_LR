@@ -43,7 +43,12 @@ export class ReferenceStateComponent implements OnInit {
     }
 
     newDestinationState(state: EReferenceAdministrativeState) {
-        this.canShowAppointment = this.isApproved(state);
+        if (!state){
+            this.canShowApproval = false;
+            this.selectedStepperIndex = 0;
+        }
+        else
+            this.canShowAppointment = this.isApproved(state);
     }
 
     redirectToOfferByRegulation(): void {

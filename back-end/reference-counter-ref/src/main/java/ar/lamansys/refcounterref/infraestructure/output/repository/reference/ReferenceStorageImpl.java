@@ -362,4 +362,13 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		return this.referenceRepository.getServiceRequestId(referenceId);
 	}
 
+	@Override
+	public void setAdministrativeStateNull(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		var reference = this.referenceRepository.findById(referenceId).orElseThrow(() ->
+				new ReferenceException(ReferenceExceptionEnum.INVALID_REFERENCE_ID,  String.format("La referencia con id %s no existe", referenceId)));
+		reference.setAdministrativeStateId(null);
+		referenceRepository.save(reference);
+	}
+
 }

@@ -60,7 +60,8 @@ public class GetReferenceCompleteData {
 		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentInfoStorage.getAppointmentData(referenceData.getId());
 		setContactInformation(patientData, referenceData, appointmentData);
 		Optional<ReferenceRegulationBo> referenceRegulation = historicReferenceRegulationStorage.getByReferenceId(referenceId);
-		Optional<ReferenceAdministrativeStateBo> administrativeState = historicReferenceAdministrativeStateStorage.getByReferenceId(referenceId);
+		Optional<ReferenceAdministrativeStateBo> administrativeState =
+				referenceData.getAdministrativeState() != null ? historicReferenceAdministrativeStateStorage.getByReferenceId(referenceId) : Optional.empty();
 
 		var closure = counterReferenceStorage.getCounterReference(referenceId);
 		var observation = referenceObservationStorage.getReferenceObservation(referenceId).orElse(null);

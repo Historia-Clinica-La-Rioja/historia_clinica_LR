@@ -47,4 +47,6 @@ public interface ReferenceStorage {
 
 	Optional<Integer> getServiceRequestId(Integer referenceId);
 
+	void setAdministrativeStateNull(Integer referenceId);
+
 }

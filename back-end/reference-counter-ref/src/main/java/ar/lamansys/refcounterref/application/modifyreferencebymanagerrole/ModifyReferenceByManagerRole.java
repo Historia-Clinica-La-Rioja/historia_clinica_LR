@@ -82,6 +82,8 @@ public class ModifyReferenceByManagerRole {
 			historicReferenceRegulationStorage.updateReferenceRegulationState(referenceId, EReferenceRegulationState.AUDITED.getId(), null);
 			if (destinationInstitutionId != null)
 				historicReferenceAdministrativeStateStorage.updateReferenceAdministrativeState(referenceId, EReferenceAdministrativeState.WAITING_APPROVAL.getId(), null);
+			else
+				referenceStorage.setAdministrativeStateNull(referenceId);
 		}
 		else if (destinationInstitutionId != null && regulationStateId != null && destinationInstitutionUpdated &&
 				(regulationStateId.equals(EReferenceRegulationState.AUDITED.getId()) || regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()))){
