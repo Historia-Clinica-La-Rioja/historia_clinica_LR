@@ -27,7 +27,7 @@
 				<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
 			</div>
 
-			<mat-divider></mat-divider>
+			<mat-divider class="divider"></mat-divider>
 
 			<mat-paginator [length]="totalElementsAmount" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
 				(page)="onPageChange($event)">

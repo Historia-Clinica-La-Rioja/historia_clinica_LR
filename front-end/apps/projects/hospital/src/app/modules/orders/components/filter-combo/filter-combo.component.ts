@@ -9,7 +9,7 @@ const SCOPE_OPTIONS = Object.freeze([
 
 const STUDY_TYPE_OPTIONS = Object.freeze([
 	{ id: 1, name: 'Rutina' },
-	{ id: 2, name: 'Urgentes' },
+	{ id: 2, name: 'Urgente' },
   ]);
 
 const TRANSFER_OPTIONS = Object.freeze([
