@@ -3265,6 +3265,7 @@ export interface MedicationRequestValidationDispatcherInstitutionDto {
     address: string;
     cuit: string;
     name: string;
+    stateName: string;
 }
 
 export interface MedicationRequestValidationDispatcherMedicalCoverageDto {
@@ -3274,6 +3275,7 @@ export interface MedicationRequestValidationDispatcherMedicalCoverageDto {
 
 export interface MedicationRequestValidationDispatcherMedicationDto {
     articleCode: number;
+    diagnose: string;
     quantity: number;
 }
 

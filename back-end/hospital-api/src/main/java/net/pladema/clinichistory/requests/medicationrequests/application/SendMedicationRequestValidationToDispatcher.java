@@ -96,7 +96,7 @@ public class SendMedicationRequestValidationToDispatcher implements SendMedicati
 	}
 
 	private MedicationRequestValidationDispatcherMedicationBo getMedicationCode(MedicationBo medication) {
-		MedicationRequestValidationDispatcherMedicationBo result = new MedicationRequestValidationDispatcherMedicationBo(medication.getCommercialMedicationPrescription().getMedicationPackQuantity());
+		MedicationRequestValidationDispatcherMedicationBo result = new MedicationRequestValidationDispatcherMedicationBo(medication.getCommercialMedicationPrescription().getMedicationPackQuantity(), medication.getHealthCondition().getSnomedPt());
 		String commercialWithPresentationSctid = medication.getSuggestedCommercialMedication() != null ?
 				getSnomedSctidWithPresentationFromCommercialMedicationSctid.run(medication.getSuggestedCommercialMedication().getSctid(), medication.getCommercialMedicationPrescription().getPresentationUnitQuantity()) :
 				getSnomedSctidWithPresentationFromGenericMedicationSctid.run(medication.getSnomedSctid(), medication.getCommercialMedicationPrescription().getPresentationUnitQuantity());

@@ -17,7 +17,10 @@ public class MedicationRequestValidationDispatcherMedicationBo {
 
 	private Short packageQuantity;
 
-	public MedicationRequestValidationDispatcherMedicationBo(Short packageQuantity) {
+	private String diagnose;
+
+	public MedicationRequestValidationDispatcherMedicationBo(Short packageQuantity, String diagnose) {
 		this.packageQuantity = packageQuantity;
+		this.diagnose = diagnose;
 	}
 }

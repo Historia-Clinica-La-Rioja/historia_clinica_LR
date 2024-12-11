@@ -37,6 +37,7 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setName(institution.getName());
 		result.setAddress(institution.getAddress());
 		result.setCuit(institution.getCuit());
+		result.setStateName(institution.getStateName());
 		return result;
 	}
 
@@ -69,7 +70,7 @@ public class MedicationRequestValidationDispatcherMapper {
 	}
 
 	private MedicationRequestValidationDispatcherMedicationBo mapToMedicationRequestValidationDispatcherMedicationBo(MedicationRequestValidationDispatcherMedicationDto medication) {
-		return new MedicationRequestValidationDispatcherMedicationBo(medication.getArticleCode(), medication.getQuantity());
+		return new MedicationRequestValidationDispatcherMedicationBo(medication.getArticleCode(), medication.getQuantity(), medication.getDiagnose());
 	}
 
 	public MedicationRequestValidationDispatcherSenderDto toMedicationRequestValidationDispatcherSenderDto(MedicationRequestValidationDispatcherSenderBo request) {
@@ -87,6 +88,7 @@ public class MedicationRequestValidationDispatcherMapper {
 		result.setName(institution.getName());
 		result.setAddress(institution.getAddress());
 		result.setCuit(institution.getCuit());
+		result.setStateName(institution.getStateName());
 		return result;
 	}
 
@@ -119,7 +121,7 @@ public class MedicationRequestValidationDispatcherMapper {
 	}
 
 	private MedicationRequestValidationDispatcherMedicationDto mapToMedicationRequestValidationDispatcherMedicationDto(MedicationRequestValidationDispatcherMedicationBo medication) {
-		return new MedicationRequestValidationDispatcherMedicationDto(medication.getArticleCode(), medication.getPackageQuantity());
+		return new MedicationRequestValidationDispatcherMedicationDto(medication.getArticleCode(), medication.getPackageQuantity(), medication.getDiagnose());
 	}
 
 }

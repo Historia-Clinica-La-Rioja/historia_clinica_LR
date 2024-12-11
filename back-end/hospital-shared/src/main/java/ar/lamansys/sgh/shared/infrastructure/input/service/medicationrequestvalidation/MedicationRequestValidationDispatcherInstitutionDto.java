@@ -19,4 +19,6 @@ public class MedicationRequestValidationDispatcherInstitutionDto {
 
 	private String cuit;
 
+	private String stateName;
+
 }

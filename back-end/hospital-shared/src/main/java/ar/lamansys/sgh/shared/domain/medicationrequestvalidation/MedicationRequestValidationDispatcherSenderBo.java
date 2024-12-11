@@ -40,7 +40,7 @@ public class MedicationRequestValidationDispatcherSenderBo {
 		result.put("paciente", patientData);
 
 		Map<String, Object> healthcareProfessionalData = getHealthcareProfessionalDataMap(healthcareProfessional);
-		Map<String, Object> healthcareProfessionalLicense = getHealthcareProfessionalLicenseMap(healthcareProfessional);
+		Map<String, Object> healthcareProfessionalLicense = getHealthcareProfessionalLicenseMap(healthcareProfessional, institution);
 		healthcareProfessionalData.put("matricula", healthcareProfessionalLicense);
 		result.put("medico", healthcareProfessionalData);
 
@@ -86,14 +86,15 @@ public class MedicationRequestValidationDispatcherSenderBo {
 		Map<String, Object> medicationMap = new HashMap<>();
 		medicationMap.put("regNo", medication.getArticleCode());
 		medicationMap.put("cantidad", medication.getPackageQuantity());
+		medicationMap.put("diagnostico", medication.getDiagnose());
 		return medicationMap;
 	}
 
-	private Map<String, Object> getHealthcareProfessionalLicenseMap(MedicationRequestValidationDispatcherProfessionalBo healthcareProfessional) {
+	private Map<String, Object> getHealthcareProfessionalLicenseMap(MedicationRequestValidationDispatcherProfessionalBo healthcareProfessional, MedicationRequestValidationDispatcherInstitutionBo institution) {
 		Map<String, Object> healthcareProfessionalLicense = new HashMap<>();
 		healthcareProfessionalLicense.put("tipo", healthcareProfessional.getLicenseType());
 		healthcareProfessionalLicense.put("numero", healthcareProfessional.getLicenseNumber());
-		healthcareProfessionalLicense.put("provincia", "Sin especificar");
+		healthcareProfessionalLicense.put("provincia", healthcareProfessional.getLicenseType().equals("MP") ? institution.getStateName() : "Sin especificar");
 		return healthcareProfessionalLicense;
 	}
 

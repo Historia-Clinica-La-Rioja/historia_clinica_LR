@@ -17,4 +17,6 @@ public class MedicationRequestValidationDispatcherMedicationDto {
 
 	private Short quantity;
 
+	private String diagnose;
+
 }
