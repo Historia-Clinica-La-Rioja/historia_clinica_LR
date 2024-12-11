@@ -12,6 +12,8 @@ import { BoxMessageInformation } from '@presentation/components/box-message/box-
 import { ResultPractice } from '../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { StudyInfo } from '../../services/study-results.service';
 
+const COMPLETED = 'Completado'
+
 @Component({
 	selector: 'app-reference-complete-study',
 	templateUrl: './reference-complete-study.component.html',
@@ -25,6 +27,7 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 	boxMessageInfo: BoxMessageInformation;
 	destinationState: EReferenceAdministrativeState;
 	APPROVED = EReferenceAdministrativeState.APPROVED;
+	COMPLETED = COMPLETED;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {

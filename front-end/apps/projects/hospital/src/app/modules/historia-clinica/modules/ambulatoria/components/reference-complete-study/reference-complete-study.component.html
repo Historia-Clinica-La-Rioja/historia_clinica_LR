@@ -19,7 +19,7 @@
 			<mat-divider></mat-divider>
 			<mat-divider [vertical]="true"></mat-divider>
 
-			<ng-container *ngIf="destinationState === APPROVED  else warningMessage ">
+			<ng-container *ngIf="destinationState === APPROVED || data.status.description === COMPLETED  else warningMessage ">
 				<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
 					[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference"
 					[studies]="data.studies" [resultsPractices]="data.resultsPractices">
