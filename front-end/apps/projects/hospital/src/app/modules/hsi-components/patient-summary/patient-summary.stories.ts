@@ -57,3 +57,18 @@ export const small_name_gender: Story = {
 	}
 };
 
+
+export const months_of_life: Story = {
+	args: {
+		person: {
+			fullName: 'Lionel Andrés Messi Cuccittini',
+			monthsOfLife: "10 meses y 3 dias",
+			gender: 'Masculino',
+			id: 10,
+			identification: {
+				number: '123456',
+				type: 'DNI'
+			},
+		}
+	}
+};

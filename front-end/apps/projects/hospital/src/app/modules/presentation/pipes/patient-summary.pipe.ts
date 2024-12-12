@@ -16,8 +16,9 @@ export class PatientSummaryPipe implements PipeTransform {
 			},
 			id: patient.id,
 			gender: this.getGender(patient.gender?.id),
-			age: patient?.birthDate ? this.calculateAge(convertDateDtoToDate(patient.birthDate)) : null,
-		};
+			age: patient?.birthDate ? this.getAge(convertDateDtoToDate(patient.birthDate)) : null,
+			monthsOfLife: patient?.birthDate ? this.calculateMonthsAndDaysOfLife(convertDateDtoToDate(patient.birthDate)) : null,
+		}
 	}
 
 	private getFullName(patient: StudyOrderBasicPatientDto): string {
@@ -38,7 +39,40 @@ export class PatientSummaryPipe implements PipeTransform {
 		}
 	}
 
-	private calculateAge(birthDate: Date): number {
+	calculateMonthsAndDaysOfLife(birthDate: Date): string | null {
+		const currentDate = new Date();
+
+		let years = currentDate.getFullYear() - birthDate.getFullYear();
+		let months = currentDate.getMonth() - birthDate.getMonth();
+		let days = currentDate.getDate() - birthDate.getDate();
+
+		if (days < 0) {
+			months -= 1;
+			const lastMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+			days += lastMonthDate.getDate();
+		}
+
+		if (months < 0) {
+			years -= 1;
+			months += 12;
+		}
+
+		if (years >= 1) {
+			return null;
+		}
+
+		if (months === 0 && days > 0) {
+			return days === 1 ? `${days} día` : `${days} días`;
+		} else if (months > 0 && days === 0) {
+			return months === 1 ? `${months} mes` : `${months} meses`;
+		} else {
+			const monthText = months === 1 ? `${months} mes` : `${months} meses`;
+			const dayText = days === 1 ? `${days} día` : `${days} días`;
+			return `${monthText} y ${dayText}`;
+		}
+	}
+
+	private getAge(birthDate: Date): number {
 		const today = new Date();
 		const birthDateObj = birthDate;
 		let age = today.getFullYear() - birthDateObj.getFullYear();
@@ -47,7 +81,6 @@ export class PatientSummaryPipe implements PipeTransform {
 		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
 			age--;
 		}
-
 		return age;
 	}
 }
