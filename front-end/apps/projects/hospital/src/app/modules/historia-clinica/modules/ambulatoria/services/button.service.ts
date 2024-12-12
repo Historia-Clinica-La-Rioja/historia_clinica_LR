@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 export class ButtonService {
 
 	private formDisabled = new BehaviorSubject<boolean>(true);
-	private formDisabledPartialSave = new BehaviorSubject<boolean>(true);
+	private formDisabledPartialSave = new BehaviorSubject<boolean | null>(null);
 	private submitForm = new BehaviorSubject<boolean>(false);
 	private _submitPartialSave = new BehaviorSubject<boolean>(false);
 	private activatePartialSave = new BehaviorSubject<boolean>(false);

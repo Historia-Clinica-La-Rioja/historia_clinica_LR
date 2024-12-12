@@ -46,7 +46,7 @@ export class CompleteInfoComponent implements OnInit {
 			switchMap(() =>
 				this.buttonService.formDisabledPartialSave$
 			)
-		).subscribe((disabled: boolean) => {
+		).subscribe(disabled => {
 			const isFormValid = this.formStudyClosure.valid;
 			this.buttonService.updateFormStatus(!isFormValid || disabled);
 		});
