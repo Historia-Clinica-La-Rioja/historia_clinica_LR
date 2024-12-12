@@ -28,12 +28,10 @@ public class MedicationRequestValidationPortImpl implements MedicationRequestVal
 
 	private final MedicationRequestValidationRestClient restClient;
 
-	private final MedicationRequestValidationWSConfig medicationRequestValidationWSConfig;
-
 	@Override
 	public List<String> validateMedicationRequest(MedicationRequestValidationDispatcherSenderBo request) {
 		try {
-			ResponseEntity<MedicationRequestValidationResponseDto> requestResult = restClient.exchangePost(MedicationRequestValidationWSConfig.VALIDATE_PATH, request.parseToMap(medicationRequestValidationWSConfig.getClientId()), MedicationRequestValidationResponseDto.class);
+			ResponseEntity<MedicationRequestValidationResponseDto> requestResult = restClient.exchangePost(MedicationRequestValidationWSConfig.VALIDATE_PATH, request.parseToMap(), MedicationRequestValidationResponseDto.class);
 			log.info("Request response -> {}", requestResult);
 			return requestResult.getBody().getPrescriptions().stream()
 					.map(ValidatedMedicationRequestResponseDto::getPrescriptionId)

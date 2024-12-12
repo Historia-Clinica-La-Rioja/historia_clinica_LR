@@ -31,7 +31,7 @@ public class MedicationRequestValidationDispatcherSenderBo {
 
 	private List<LocalDate> postdatedDates;
 
-	public Map<String, Object> parseToMap(String clientId) {
+	public Map<String, Object> parseToMap() {
 		Map<String, Object> result = new HashMap<>();
 
 		Map<String, Object> patientData = getPatientDataMap(patient);
@@ -51,8 +51,6 @@ public class MedicationRequestValidationDispatcherSenderBo {
 
 		if (postdatedDates != null)
 			addPostdatedDatesToMap(result);
-
-		result.put("clienteAppId", clientId);
 
 		Map<String, Object> institutionData = getInstitutionMap(institution);
 		result.put("subemisor", institutionData);
