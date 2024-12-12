@@ -16,10 +16,11 @@ import {
 	PrescriptionDto,
 } from '@api-rest/api-model.d';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import {hasError, scrollIntoError} from '@core/utils/form.utils';
+import {hasError, processErrors, scrollIntoError} from '@core/utils/form.utils';
 import { NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { mapToAPatientDto } from '../../utils/prescripcion-mapper';
+import { finalize } from 'rxjs';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -133,17 +134,17 @@ export class NuevaPrescripcionComponent implements OnInit {
 	savePrescription(prescriptionDto: PrescriptionDto) {
 		if (!prescriptionDto) return;
 
-		this.prescripcionesService.createPrescription(this.prescriptionData.prescriptionType, prescriptionDto, this.prescriptionData.patientId).subscribe({
+		this.prescripcionesService.createPrescription(this.prescriptionData.prescriptionType, prescriptionDto, this.prescriptionData.patientId)
+		.pipe(finalize(() => this.isFinishPrescripcionLoading = false))
+		.subscribe({
 			next: (prescriptionRequestResponse: DocumentRequestDto[] | number[]) => {
-				this.isFinishPrescripcionLoading = false;
 				this.closeModal({prescriptionDto, prescriptionRequestResponse, identificationNumber: this.person?.identificationNumber});
+				this.statePrescripcionService.resetForm();
 			},
 			error: (err: ApiErrorDto) => {
-				this.snackBarService.showError(err.errors[0]);
 				this.submitted = false;
-				this.isFinishPrescripcionLoading = false;
-			},
-			complete: () => this.statePrescripcionService.resetForm()
+				processErrors(err, (msg) => this.snackBarService.showError(msg));
+			}
 		});
 	}
 
