@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 
 const IMAGE_ITEM = "../../../assets/rutas-lr/miniatures/";
 const ICON = "../../../assets/icons/";
-const PDF_BASE_PATH = '../../../assets/rutas-lr/'; 
+const PDF_BASE_PATH = '../../../assets/rutas-lr/';
 
 export interface RutasPeriodic {
   routerLink?: string | null;
@@ -15,7 +15,7 @@ export interface RutasPeriodic {
   Nombre: string;
   pdfDR?: string | null;
   pdfDT?: string | null;
-  PanelAbierto?: boolean; // Propiedad para controlar el estado del panel
+  PanelAbierto?: boolean;
 }
 
 const ELEMENT_DATA: RutasPeriodic[] = [
@@ -27,9 +27,9 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     IconDT: ICON + "DT-active-icon.png",
     Orden: 1,
     Nombre: "Hipertensión arterial",
-    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Hipertension-RutaAsistencial.pdf",     
-    routerLink: '../../../assets/rutas-lr/', 
-    pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/Hipertension-RutaAsistencial-DocumentoTecnico.pdf",                                                                           // Ruta al DT
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Hipertension-RutaAsistencial.pdf",
+    routerLink: '../../../assets/rutas-lr/',
+    pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/Hipertension-RutaAsistencial-DocumentoTecnico.pdf",
   },
   {
     Miniature1: IMAGE_ITEM + "DR2.jpg",
@@ -39,7 +39,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 2,
     Nombre: " EPOC",
     pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/EPOC-RutaAsistencial.pdf",
-    routerLink: '../../../assets/rutas-lr/', 
+    routerLink: '../../../assets/rutas-lr/',
     pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/EPOC-RutaAsistencial-DocumentoTecnico.pdf",
   },
   {
@@ -50,7 +50,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 3,
     Nombre: " Diabetes",
     pdfDR: null,
-    routerLink: '../../../assets/rutas-lr/', 
+    routerLink: '../../../assets/rutas-lr/',
     pdfDT: null,
   },
   {
@@ -61,8 +61,8 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 4,
     Nombre: " IAM",
     pdfDR: null,
-    routerLink: '../../../assets/rutas-lr/', 
-    pdfDT: null, 
+    routerLink: '../../../assets/rutas-lr/',
+    pdfDT: null,
   },
   {
     Miniature1: IMAGE_ITEM + "DR-CC.png",
@@ -94,7 +94,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 7,
     Nombre: " Sonríe",
     pdfDR: null,
-    routerLink: '../../../assets/rutas-lr/', 
+    routerLink: '../../../assets/rutas-lr/',
     pdfDT: null,
   },
   {
@@ -105,7 +105,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 8,
     Nombre: " Celiaquía",
     pdfDR: null,
-    routerLink: '../../../assets/rutas-lr/', 
+    routerLink: '../../../assets/rutas-lr/',
     pdfDT: null,
   },
   {
@@ -116,7 +116,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 9,
     Nombre: " Persona gestante",
     pdfDR: null,
-    routerLink: '../../../assets/rutas-lr/', 
+    routerLink: '../../../assets/rutas-lr/',
     pdfDT: null,
   },
   {
@@ -127,23 +127,34 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     Orden: 10,
     Nombre: " Odontología",
     pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Odontologia-RutaAsistencial.pdf",
-    routerLink: '../../../assets/rutas-lr/', 
+    routerLink: '../../../assets/rutas-lr/',
     pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/Odontología-RutaAsistencial-DocumentoTecnico.pdf",
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR-N.png",
+    Miniature2: IMAGE_ITEM + "DT-O.png",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 11,
+    Nombre: " Nutrición",
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Nutricion-RutaAsistencial.pdf",
+    routerLink: '../../../assets/rutas-lr/',
+    pdfDT: null,
   }
 
 ];
 
 const ELEMENT_DATA_PREV: RutasPeriodic[] = [
   {
-    Miniature1: IMAGE_ITEM + "DR-AM.png", // Ruta de la miniatura
+    Miniature1: IMAGE_ITEM + "DR-AM.png",
     Miniature2: IMAGE_ITEM + "DT1.jpg",
     IconDR: ICON + "DR-active-icon.png",
     IconDT: ICON + "DT-active-icon.png",
     Orden: 1,
     Nombre: "Adulto mayor",
-    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/AdultoMayor-RutaPreventiva.pdf", // Ruta al documento
-    routerLink: '../../../assets/rutas-lr/', 
-    pdfDT: null,    
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/AdultoMayor-RutaPreventiva.pdf",
+    routerLink: '../../../assets/rutas-lr/',
+    pdfDT: null,
   },
 
 ];
@@ -162,7 +173,7 @@ export class RutasComponent implements OnInit {
   columnsToDisplay: string[] = this.displayedColumns.slice();
   panelOpenState: number | null = null;
 
-  constructor(private router: Router) {} 
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -178,10 +189,10 @@ export class RutasComponent implements OnInit {
   
     if (element && element.pdfDR) { 
       console.log('Abriendo PDF:', element.pdfDR); // Log para depuración
-      window.open(element.pdfDR, '_blank'); 
+      window.open(element.pdfDR, '_blank');
     } else if (element && element.routerLink) {
       console.log('Navegando a:', element.routerLink);
-      this.router.navigate([element.routerLink]); 
+      this.router.navigate([element.routerLink]);
     } 
   }
 
@@ -190,13 +201,11 @@ export class RutasComponent implements OnInit {
   
     if (element && element.pdfDT) { 
       console.log('Abriendo PDF:', element.pdfDT); // Log para depuración
-      window.open(element.pdfDT, '_blank'); 
+      window.open(element.pdfDT, '_blank');
     } else if (element && element.routerLink) {
       console.log('Navegando a:', element.routerLink);
-      this.router.navigate([element.routerLink]); 
-    } 
+      this.router.navigate([element.routerLink]);
+    }
   }
-    
-
 
 }
