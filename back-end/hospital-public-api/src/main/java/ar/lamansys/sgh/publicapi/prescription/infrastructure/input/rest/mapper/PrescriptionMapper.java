@@ -12,10 +12,12 @@ import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionLineV2Bo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionLineV3Dto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV2Dto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionLineV2Dto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionDosageDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV3Dto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionsDataDto;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
 
@@ -335,7 +337,7 @@ public class PrescriptionMapper {
 				.build();
 	}
 
-	public PrescriptionV2Dto toMultipleCommercialPrescriptionDto(PrescriptionV2Bo prescriptionV2Bo) {
+	public PrescriptionV2Dto toPrescriptionV2Dto(PrescriptionV2Bo prescriptionV2Bo) {
 		if (prescriptionV2Bo.getPrescriptionId() == null)
 			throw new PrescriptionNotFoundException("La receta no existe");
 		return PrescriptionV2Dto.builder()
@@ -348,15 +350,39 @@ public class PrescriptionMapper {
 				.prescriptionDate(prescriptionV2Bo.getPrescriptionDate())
 				.patientPrescription(mapTo(prescriptionV2Bo.getPatientPrescription()))
 				.professionalPrescription(mapTo(prescriptionV2Bo.getProfessionalPrescription()))
-				.prescriptionLines(toMultipleCommercialPrescriptionLineDtoList(prescriptionV2Bo.getPrescriptionLines(), prescriptionV2Bo.getDueDate()))
+				.prescriptionLines(toPrescriptionLineV2DtoList(prescriptionV2Bo.getPrescriptionLines(), prescriptionV2Bo.getDueDate()))
 				.prescriptionSpecialty(mapTo(prescriptionV2Bo.getPrescriptionSpecialty()))
 				.build();
 	}
 
-	private List<PrescriptionLineV2Dto> toMultipleCommercialPrescriptionLineDtoList(List<PrescriptionLineV2Bo> prescriptionLines, LocalDateTime dueDate) {
+	public PrescriptionV3Dto toPrescriptionV3Dto(PrescriptionV2Bo prescriptionV2Bo) {
+		if (prescriptionV2Bo.getPrescriptionId() == null)
+			throw new PrescriptionNotFoundException("La receta no existe");
+		return PrescriptionV3Dto.builder()
+				.domain(prescriptionV2Bo.getDomain())
+				.prescriptionId(prescriptionV2Bo.getPrescriptionId())
+				.dueDate(prescriptionV2Bo.getDueDate())
+				.link(prescriptionV2Bo.getLink())
+				.isArchived(prescriptionV2Bo.getIsArchived())
+				.institutionPrescriptionDto(mapTo(prescriptionV2Bo.getInstitutionPrescription()))
+				.prescriptionDate(prescriptionV2Bo.getPrescriptionDate())
+				.patientPrescriptionDto(mapTo(prescriptionV2Bo.getPatientPrescription()))
+				.professionalPrescriptionDto(mapTo(prescriptionV2Bo.getProfessionalPrescription()))
+				.prescriptionsLineDto(toPrescriptionLineV3DtoList(prescriptionV2Bo.getPrescriptionLines(), prescriptionV2Bo.getDueDate()))
+				.prescriptionSpecialtyDto(mapTo(prescriptionV2Bo.getPrescriptionSpecialty()))
+				.build();
+	}
+
+	private List<PrescriptionLineV2Dto> toPrescriptionLineV2DtoList(List<PrescriptionLineV2Bo> prescriptionLines, LocalDateTime dueDate) {
 		if (prescriptionLines == null)
 			return new ArrayList<>();
-		return prescriptionLines.stream().map(line -> toMultipleCommercialPrescriptionLine(line, dueDate)).collect(Collectors.toList());
+		return prescriptionLines.stream().map(line -> toPrescriptionLineV2Dto(line, dueDate)).collect(Collectors.toList());
+	}
+
+	private List<PrescriptionLineV3Dto> toPrescriptionLineV3DtoList(List<PrescriptionLineV2Bo> prescriptionLines, LocalDateTime dueDate) {
+		if (prescriptionLines == null)
+			return new ArrayList<>();
+		return prescriptionLines.stream().map(line -> toPrescriptionLineV3Dto(line, dueDate)).collect(Collectors.toList());
 	}
 
 	private PrescriptionDosageDto mapTo(PrescriptionDosageBo prescriptionDosageBo) {
@@ -373,7 +399,7 @@ public class PrescriptionMapper {
 				.build();
 	}
 
-	private PrescriptionLineV2Dto toMultipleCommercialPrescriptionLine(PrescriptionLineV2Bo line, LocalDateTime dueDate) {
+	private PrescriptionLineV2Dto toPrescriptionLineV2Dto(PrescriptionLineV2Bo line, LocalDateTime dueDate) {
 		boolean due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
 		return PrescriptionLineV2Dto.builder()
 				.prescriptionLineNumber(line.getPrescriptionLineNumber())
@@ -387,6 +413,19 @@ public class PrescriptionMapper {
 				.build();
 	}
 
+	private PrescriptionLineV3Dto toPrescriptionLineV3Dto(PrescriptionLineV2Bo line, LocalDateTime dueDate) {
+		boolean due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
+		return PrescriptionLineV3Dto.builder()
+				.prescriptionLineNumber(line.getPrescriptionLineNumber())
+				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : line.getPrescriptionLineStatus())
+				.prescriptionProblemDto(mapTo(line.getPrescriptionProblem()))
+				.genericMedicationDto(mapTo(line.getGenericMedication()))
+				.commercialMedicationsDto(mapToCommercialMedicationDtoList(line.getCommercialMedications()))
+				.prescriptionDosageDto(mapTo(line.getPrescriptionDosage()))
+				.observation(line.getObservation())
+				.suggestedCommercialMedicationDto(toSuggestedCommercialMedicationDto(line.getSuggestedCommercialMedication()))
+				.build();
+	}
 	private List<CommercialMedicationDto> mapToCommercialMedicationDtoList(List<CommercialMedicationBo> commercialMedications) {
 		return commercialMedications.stream().map(commercialMedication -> CommercialMedicationDto.builder().name(commercialMedication.getName()).snomedId(commercialMedication.getSnomedId()).build()).collect(Collectors.toList());
 	}

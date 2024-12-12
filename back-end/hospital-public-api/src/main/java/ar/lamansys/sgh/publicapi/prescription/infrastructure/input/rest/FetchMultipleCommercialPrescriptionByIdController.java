@@ -29,7 +29,7 @@ public class FetchMultipleCommercialPrescriptionByIdController {
 	public @ResponseBody PrescriptionV2Dto run(@PathVariable("prescriptionId") String prescriptionId, @PathVariable("identificationNumber") String identificationNumber) {
 		log.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
 		PrescriptionV2Bo resultBo = fetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber.run(prescriptionId, identificationNumber);
-		PrescriptionV2Dto result = prescriptionMapper.toMultipleCommercialPrescriptionDto(resultBo);
+		PrescriptionV2Dto result = prescriptionMapper.toPrescriptionV2Dto(resultBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}

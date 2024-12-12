@@ -2,7 +2,8 @@ package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest;
 
 import ar.lamansys.sgh.publicapi.prescription.application.fetchprescriptionbyidanddniv3.FetchPrescriptionsByIdAndDniV3;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
-import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV2Dto;
+
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionV3Dto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,14 +65,14 @@ public class FetchPrescriptionByIdController {
 	}
 
 	@GetMapping("/v3")
-	public @ResponseBody PrescriptionV2Dto prescriptionRequestV3(@PathVariable("prescriptionId") String prescriptionId,
+	public @ResponseBody PrescriptionV3Dto prescriptionRequestV3(@PathVariable("prescriptionId") String prescriptionId,
 																 @PathVariable("identificationNumber") String identificationNumber) {
 		log.debug("Input parameters -> prescriptionId {}, identificationNumber {}", prescriptionId, identificationNumber);
 		assertUserPermissions();
 		var prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
 		assertDomainNumber(prescriptionIdentifier.domain);
 		PrescriptionV2Bo resultBo = fetchPrescriptionsByIdAndDniV3.run(prescriptionIdentifier, identificationNumber);
-		PrescriptionV2Dto result = prescriptionMapper.toMultipleCommercialPrescriptionDto(resultBo);
+		PrescriptionV3Dto result = prescriptionMapper.toPrescriptionV3Dto(resultBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}
