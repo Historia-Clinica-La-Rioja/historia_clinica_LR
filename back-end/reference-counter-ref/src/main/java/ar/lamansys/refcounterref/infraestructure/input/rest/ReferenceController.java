@@ -62,7 +62,7 @@ public class ReferenceController {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
 		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(institutionId, patientId, clinicalSpecialtyId, careLineId, practiceId);
 		referenceSummaryBoList = referenceSummaryBoList.stream()
-				.filter(r -> r.getAdministrativeState().equals(EReferenceAdministrativeState.APPROVED))
+				.filter(r -> r.getAdministrativeState() != null && r.getAdministrativeState().equals(EReferenceAdministrativeState.APPROVED))
 				.collect(Collectors.toList());
 		List<ReferenceSummaryDto> result = getReferenceMapper.toReferenceSummaryDtoList(referenceSummaryBoList);
 		log.debug("Output -> result {}", result);

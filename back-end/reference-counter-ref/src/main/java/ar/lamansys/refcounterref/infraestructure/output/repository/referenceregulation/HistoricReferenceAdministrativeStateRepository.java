@@ -11,8 +11,10 @@ import java.util.List;
 public interface HistoricReferenceAdministrativeStateRepository extends SGXAuditableEntityJPARepository<HistoricReferenceAdministrativeState, Integer> {
 
 	@Query("SELECT hras " +
-			"FROM HistoricReferenceAdministrativeState hras " +
-			"WHERE hras.referenceId = :referenceId " +
+			"FROM Reference r " +
+			"JOIN HistoricReferenceAdministrativeState hras ON (hras.referenceId = r.id) " +
+			"WHERE r.id = :referenceId " +
+			"AND r.administrativeStateId IS NOT NULL " +
 			"ORDER BY hras.creationable.createdOn DESC")
 	List<HistoricReferenceAdministrativeState> getByReferenceId(@Param("referenceId")Integer referenceId);
 
