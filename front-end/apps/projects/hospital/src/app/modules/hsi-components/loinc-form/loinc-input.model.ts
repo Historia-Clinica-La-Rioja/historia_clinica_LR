@@ -73,5 +73,6 @@ export interface LoincObservationValue {
 	snomedPt?: string;
     snomedSctid?: string;
 	valueNumeric: number;
+	isValid?: boolean
 }
 

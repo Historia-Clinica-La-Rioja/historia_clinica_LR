@@ -38,10 +38,9 @@ export class LoincInputNumberComponent implements OnInit {
 		this.numberControl.valueChanges.subscribe(value => {
 			this.numberControl.markAsTouched()
 			this.disablePartialStudyButton(this.numberControl.valid)
-			if (this.numberControl.valid) {
-				this.value = value;
-				this.emitValueSelected();
-			}
+			this.value = value;
+			this.emitValueSelected();
+
 		});
 
 		this.setPreloadUnited();
@@ -68,7 +67,6 @@ export class LoincInputNumberComponent implements OnInit {
 	}
 
 	private emitValuesPreload() {
-
 		this.synchronizePreloadedValues();
 		this.emitValueSelected();
 	}
@@ -79,12 +77,11 @@ export class LoincInputNumberComponent implements OnInit {
 	}
 
 	private emitValueSelected() {
-		if (!this.numberControl.valid) return;
-
 		const value: NumberWithUnit = {
 			value: this.value,
 			unitOfMeasureId: this.unitOfMeasureId,
 			valueNumeric: parseFloat(this.value?.replace(',', '.')),
+			isValid: this.numberControl.valid ? true : false
 		};
 		this.valueSelected.emit(value);
 	}
@@ -104,5 +101,6 @@ export class LoincInputNumberComponent implements OnInit {
 export interface NumberWithUnit {
 	value: string,
 	unitOfMeasureId: number,
-	valueNumeric: number
+	valueNumeric: number,
+	isValid: boolean
 }

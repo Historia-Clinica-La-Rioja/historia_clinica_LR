@@ -47,7 +47,8 @@ export class ObservationInputComponent implements OnInit {
 			procedureParameterId: procedureParameter.id,
 			value: $event.value,
 			unitOfMeasureId: $event.unitOfMeasureId,
-			valueNumeric: $event.valueNumeric
+			valueNumeric: $event.valueNumeric,
+			isValid: $event.isValid
 		});
 	}
 
