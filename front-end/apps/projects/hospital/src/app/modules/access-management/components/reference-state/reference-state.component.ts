@@ -30,6 +30,18 @@ export class ReferenceStateComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.permissionService.getReferenceCompleteData().subscribe(newReference => {
+			if (!newReference.administrativeState) {
+                this.canShowApproval = false;
+                this.canShowAppointment = false;
+                this.setStepperIndex();
+            }
+            if (newReference.administrativeState) {
+                this.canShowApproval = true;
+                this.canShowAppointment = false;
+                this.setStepperIndex();
+            }
+		})
         if (this.permissionService.referenceCompleteData.reference.institutionDestination.id)
             this.canShowApproval = this.isAudited(this.referenceRegulation?.state);
         else
@@ -45,7 +57,8 @@ export class ReferenceStateComponent implements OnInit {
     newDestinationState(state: EReferenceAdministrativeState) {
         if (!state){
             this.canShowApproval = false;
-            this.selectedStepperIndex = 0;
+            this.canShowAppointment = false;
+            this.setStepperIndex();
         }
         else
             this.canShowAppointment = this.isApproved(state);
@@ -60,6 +73,7 @@ export class ReferenceStateComponent implements OnInit {
     private setStepperIndex() {
         if (this.canShowApproval) this.selectedStepperIndex = 1;
         if (this.canShowAppointment) this.selectedStepperIndex = 2;
+        if (!this.canShowApproval && !this.canShowAppointment) this.selectedStepperIndex = 0;
     }
 
     private isAudited(state: EReferenceRegulationState): boolean {
