@@ -17,6 +17,7 @@ import net.pladema.medicationrequestvalidation.infrastructure.output.config.Medi
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,10 +40,18 @@ public class MedicationRequestValidationPortImpl implements MedicationRequestVal
 		}
 		catch (HttpClientErrorException e) {
 			log.warn("Error: {}", e.getMessage());
-			JsonObject error = JsonParser.parseString(e.getResponseBodyAsString()).getAsJsonObject();
-			String message = String.format("Ha habido un error en el validador de la receta digital. Código %s: %s", error.get("error"), error.get("mensaje"));
+			String message = mapJSONError(e.getResponseBodyAsString());
 			throw new MedicationRequestValidationException(message, EMedicationRequestValidationException.EXTERNAL_ERROR);
 		}
+		catch (HttpServerErrorException e) {
+			String message = String.format("Error en la comunicación con el servidor. Código %s", e.getRawStatusCode());
+			throw new MedicationRequestValidationException(message, EMedicationRequestValidationException.EXTERNAL_ERROR);
+		}
+	}
+
+	private String mapJSONError(String responseBody) {
+		JsonObject error = JsonParser.parseString(responseBody).getAsJsonObject();
+		return String.format("Ha habido un error en el validador de la receta digital. Código %s: %s", error.get("error"), error.get("mensaje"));
 	}
 
 }
