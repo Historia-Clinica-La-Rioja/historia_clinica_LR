@@ -1,8 +1,5 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +8,9 @@ import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
+
+import java.time.LocalDate;
+import java.util.List;
 
 
 @Getter
@@ -68,6 +68,8 @@ public class DiaryBo extends SelfValidating<DiaryBo> {
 	protected Integer protectedAppointmentsPercentage;
 
 	protected List<DiaryLabelBo> diaryLabelBo;
+
+	protected DiaryBookingRestrictionBo bookingRestriction;
     
 	public DiaryBo(LocalDate endDate, Short appointmentDuration) {
 		this.endDate = endDate;

@@ -30,6 +30,15 @@ public class SharedHealthConditionPortImpl implements SharedHealthConditionPort 
 	}
 
 	@Override
+	public Optional<Integer> getHealthConditionIdByDocumentIdAndSnomedConcept(Long documentId, Integer sourceTypeId, String sctid, String pt) {
+		log.debug("Input parameters -> documentId {}, sourceTypeId {}, sctid {}, pt {} ", documentId, sctid, sctid, pt);
+		return healthConditionStorage
+			.getHealthConditionIdByDocumentIdAndSnomedConcept(documentId, sctid, pt)
+			.stream()
+			.findFirst();
+	}
+
+	@Override
 	public Optional<Integer> getLatestHealthConditionByPatientIdAndInstitutionIdAndSnomedConcept(Integer institutionId, Integer patientId, String sctid, String pt) {
 
 		/**

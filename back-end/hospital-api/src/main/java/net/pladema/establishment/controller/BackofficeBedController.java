@@ -2,6 +2,7 @@ package net.pladema.establishment.controller;
 
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
 import net.pladema.establishment.controller.constraints.validator.entities.BackofficeBedEntityValidator;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeBedValidator;
 import net.pladema.establishment.repository.BedRepository;
@@ -58,11 +59,21 @@ public class BackofficeBedController extends AbstractBackofficeController<Bed, I
 	public BackofficeBedController(BedRepository repository,
 								   InternmentEpisodeExternalService internmentEpisodeExternalService,
 								   BackofficeBedValidator backofficeBedValidator,
-								   EmergencyCareEpisodeService emergencyCareEpisodeService) {
-		super(new BackofficeRepository<Bed, Integer>(
-						repository,
-						new SingleAttributeBackofficeQueryAdapter<Bed>("bedNumber")
-				), backofficeBedValidator, new BackofficeBedEntityValidator(internmentEpisodeExternalService, emergencyCareEpisodeService));
+								   EmergencyCareEpisodeService emergencyCareEpisodeService,
+								   FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus) {
+		super(
+			new BackofficeRepository<Bed, Integer>(
+				repository,
+				new SingleAttributeBackofficeQueryAdapter<Bed>("bedNumber")
+			),
+			backofficeBedValidator,
+			new BackofficeBedEntityValidator(
+				internmentEpisodeExternalService,
+				emergencyCareEpisodeService,
+				fetchAttentionPlaceBlockStatus,
+				repository
+			)
+		);
 	}
 
 	@Override

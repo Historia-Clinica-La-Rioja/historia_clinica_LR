@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
+import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto, ReferenceInstitutionDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
@@ -104,7 +104,16 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	ngOnInit(): void {
 		this.initForm();
 
-		this.institutionService.getInstitutionAddress(this.contextService.institutionId).subscribe(
+		this.route.queryParams.subscribe(qp => {
+			this.patientId = Number(qp.idPaciente);
+		});
+
+		this.setInformationToSearchAppointments();
+		this.setSearchCriteriaAppointment();
+		const referenceinstitutionDestination: ReferenceInstitutionDto = this.externalInformation != null ? this.externalInformation.referenceCompleteData.institutionDestination : null;
+		const institutionIdToLoaded = referenceinstitutionDestination?.id ? referenceinstitutionDestination.id : this.contextService.institutionId;
+
+		this.institutionService.getInstitutionAddress(institutionIdToLoaded).subscribe(
 			(institutionAddres: AddressDto) => {
 
 				this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).subscribe(
@@ -129,7 +138,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 											this.institutions = institutions;
 											this.loadInstitutionTypeaheadOptions();
 
-											const foundInstitution = this.institutions.find((institution: InstitutionBasicInfoDto) => { return (institution.id === this.contextService.institutionId) });
+											const foundInstitution = this.institutions.find((institution: InstitutionBasicInfoDto) => { return (institution.id === institutionIdToLoaded) });
 											this.initialInstitutionTypeaheadOptionSelected = institutionToTypeaheadOption(foundInstitution)
 										}
 									);
@@ -141,14 +150,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
 			}
 		);
-
-		this.route.queryParams.subscribe(qp => {
-			this.patientId = Number(qp.idPaciente);
-		});
-
-		this.setInformationToSearchAppointments();
-		this.setSearchCriteriaAppointment();
-
 	}
 
 	setCareLine(careLine: CareLineDto) {
@@ -276,7 +277,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 				this.showSpecialtyError = true;
 			}
 
-			if (!this.searchForm.value.praticeId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
+			if (!this.searchForm.value.practiceId && this.searchForm.controls.practiceId.hasValidator(Validators.required)) {
 				this.showPracticeError = true;
 			}
 

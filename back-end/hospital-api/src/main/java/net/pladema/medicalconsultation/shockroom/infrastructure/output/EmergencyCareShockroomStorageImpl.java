@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,5 +26,11 @@ public class EmergencyCareShockroomStorageImpl implements EmergencyCareShockroom
 	@Override
 	public Optional<ShockRoomBo> getById(Integer id) {
 		return shockroomRepository.findEmergencyCareShockRoomById(id, EEmergencyCareState.ATENCION.getId());
+	}
+
+	@Override
+	public List<ShockRoomBo> getAllAvailableBySectorId(Integer sectorId) {
+		return shockroomRepository.findAllBySectorId(sectorId, EEmergencyCareState.ATENCION.getId())
+				.stream().filter(ShockRoomBo::isAvailable).collect(Collectors.toList());
 	}
 }

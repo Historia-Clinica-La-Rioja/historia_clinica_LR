@@ -47,18 +47,18 @@ import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confir
 import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
-import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '@historia-clinica/components/concepts-list/concepts-list.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
-// import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { DialogWidth } from '@presentation/services/dialog.service';
 import { getElementAtPosition, pushIfNotExists } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '../search-snomed-concept/search-snomed-concept.component';
 import { Concept, ConceptDateFormComponent } from '../../modules/internacion/dialogs/concept-date-form/concept-date-form.component';
+import { AddStudyComponent } from '@historia-clinica/dialogs/add-study/add-study.component';
 
 const TIME_OUT = 5000;
 const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO]}];
@@ -100,7 +100,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	collapsedReferenceRequest = true;
 	isEnablePopUpConfirm: boolean = true;
 	boxMessageInfo: BoxMessageInformation;
-
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
@@ -150,6 +149,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	ButtonType = ButtonType;
 	isSaving = false;
 	isEnabledParameterizedFormFF = false;
+	isEnabledStudiesFF = false;
+	isHabilitarSolicitudReferenciaOn = false
 	completeFormsData: CompleteParameterizedFormDto[] = []
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
@@ -188,6 +189,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO).subscribe(isEnabled => this.isEnabledStudiesFF = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isEnabled => this.isHabilitarSolicitudReferenciaOn = isEnabled);
 		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 	}
 
@@ -435,12 +438,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
 		const problemsToUpdate = (!nuevaConsulta.references.length) ? nuevaConsulta.problems : this.problemsToUpdate(nuevaConsulta);
+		const selectedFiles = this.createOrderService.getSelectedFiles();
 
 		if (nuevaConsulta.references.length) {
 			nuevaConsulta.problems = problemsToUpdate;
 		}
 
-		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente).subscribe(
+		this.outpatientConsultationService.createOutpatientConsultation(nuevaConsulta, this.data.idPaciente, selectedFiles).subscribe(
 			res => {
 				res.orderIds.forEach((orderId) => {
 					this.openNewEmergencyCareStudyConfirmationDialog([orderId]);
@@ -506,6 +510,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
 					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
 					prescriptionType: PrescriptionTypes.STUDY,
+					timeout: TIME_OUT,
 					patientId: this.data.idPaciente,
 					prescriptionRequest: order,
 				},
@@ -594,6 +599,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				}
 			),
 			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(procedimiento => this.mapProcedimientoToNursingProcedure(procedimiento)),
+			serviceRequests: this.createOrderService.getStudies(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
@@ -772,6 +778,22 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe((snomedConcept: SnomedDto) => this.openConceptDateFormComponent(snomedConcept));
+	}
+
+	openStudiesComponent(): void {
+			const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
+			const medicalCoverageId = this.episodeData.medicalCoverageId;
+			this.dialog.open(AddStudyComponent, {
+				data: {
+					patientId: this.data.idPaciente,
+					createOrderService: this.createOrderService,
+					problems: problems,
+					medicalCoverageId: medicalCoverageId
+				},
+				autoFocus: false,
+				width: DialogWidth.MEDIUM,
+				disableClose: true,
+			});
 	}
 
 	private openConceptDateFormComponent = (snomedConcept: SnomedDto) => {

@@ -34,7 +34,7 @@ public class ReferenceFileController {
 
     @PostMapping(value = "/patient/{patientId}/uploadFiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || " +
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
 			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
     public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
                               @PathVariable(name = "patientId") Integer patientId,
@@ -46,7 +46,7 @@ public class ReferenceFileController {
     }
 
     @DeleteMapping("/delete")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || " +
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
 			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
     public boolean delete(@PathVariable(name = "institutionId") Integer institutionId,
                           @RequestParam(name = "fileIds") List<Integer> fileIds) {

@@ -37,7 +37,8 @@ public class CareLineController {
     }
 
 	@GetMapping("/all")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ABORDAJE_VIOLENCIAS') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, " +
+			"ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<List<CareLineDto>> getAllCareLines(@PathVariable(name = "institutionId") Integer institutionId) {
 		List<CareLineBo> careLinesBo = careLineService.getAllCareLines();
 		log.debug("Get all domain care lines including confidential  => {}", careLinesBo);
@@ -56,7 +57,7 @@ public class CareLineController {
 	}
 
 	@GetMapping("/attached")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, VIRTUAL_CONSULTATION_PROFESSIONAL, VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, VIRTUAL_CONSULTATION_PROFESSIONAL, VIRTUAL_CONSULTATION_RESPONSIBLE, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<CareLineDto>> getCareLinesAttachedToInstitutions(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		Integer loggedUserId = UserInfo.getCurrentAuditor();

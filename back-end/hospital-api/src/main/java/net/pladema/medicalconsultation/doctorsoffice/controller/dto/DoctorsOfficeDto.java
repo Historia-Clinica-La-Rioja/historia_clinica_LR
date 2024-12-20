@@ -25,4 +25,6 @@ public class DoctorsOfficeDto {
     private String closingTime;
 
 	private boolean isAvailable;
+
+	private Boolean isBlocked;
 }

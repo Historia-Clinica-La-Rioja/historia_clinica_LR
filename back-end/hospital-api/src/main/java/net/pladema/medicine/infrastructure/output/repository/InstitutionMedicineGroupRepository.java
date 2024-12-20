@@ -1,5 +1,7 @@
 package net.pladema.medicine.infrastructure.output.repository;
 
+
+import ar.lamansys.sgh.shared.domain.medicineGroup.MedicineGroupAuditBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import net.pladema.medicine.domain.InstitutionMedicineGroupBo;
@@ -54,7 +56,8 @@ public interface InstitutionMedicineGroupRepository extends SGXAuditableEntityJP
 	void setDeletedFalse(@Param("id")Integer id);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT s.sctid " +
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicineGroup.MedicineGroupAuditBo(" +
+			"s.sctid, mg.requiredDocumentation) " +
 			"FROM InstitutionMedicineGroup img " +
 			"JOIN MedicineGroup mg ON (mg.id = img.medicineGroupId) " +
 			"JOIN MedicineGroupMedicine mgm ON (mg.id = mgm.medicineGroupId) " +
@@ -71,7 +74,9 @@ public interface InstitutionMedicineGroupRepository extends SGXAuditableEntityJP
 			"AND mgm.deleteable.deleted IS FALSE " +
 			"AND img.deleteable.deleted IS FALSE " +
 			"AND mg.deleteable.deleted IS FALSE")
-	List<String> validateFinancingByInstitutionAndProblem(@Param("institutionId") Integer institutionId,
-														  @Param("medicineSctids") List<String> medicineIds,
-														  @Param("problemSctid") String problemSctid);
+	List<MedicineGroupAuditBo> validateFinancingByInstitutionAndProblem(@Param("institutionId") Integer institutionId,
+																		@Param("medicineSctids") List<String> medicineIds,
+																		@Param("problemSctid") String problemSctid);
+
+	void deleteByInstitutionId(Integer institutionId);
 }

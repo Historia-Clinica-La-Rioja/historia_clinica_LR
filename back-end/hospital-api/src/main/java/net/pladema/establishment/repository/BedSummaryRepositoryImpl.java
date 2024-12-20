@@ -29,11 +29,13 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
         this.entityManager = entityManager;
     }
 
-    @Override
+	@Override
     @Transactional(readOnly = true)
     public List<BedSummaryVo> execute(Integer institutionId, Short[] sectorsType) {
         String sqlQuery =
-                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description, st, hu "
+                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, "
+                + " so.description, ag.description, st, hu, "
+                + " COALESCE(status.isBlocked, false) "
                 + " FROM Bed b "
                 + " JOIN Room r ON b.roomId = r.id "
                 + " JOIN Sector s ON r.sectorId = s.id "
@@ -46,10 +48,12 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                 + " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
 				+ " LEFT JOIN HierarchicalUnitSector hus ON (hus.sectorId = s.id) "
 				+ " LEFT JOIN HierarchicalUnit hu ON (hus.hierarchicalUnitId = hu.id) "
+				+ " LEFT JOIN AttentionPlaceStatus status ON b.statusId = status.id "
                 + " WHERE s.institutionId = :institutionId "
 				+ " AND s.sectorTypeId IN (:sectorsType) "
+				+ " AND s.deleteable.deleted = false "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
-                + " GROUP BY b, s, cs, so, ct, ag, st, hu "
+                + " GROUP BY b, s, cs, so, ct, ag, st, hu, status.isBlocked "
                 + " ORDER BY s.id, cs.id, hu.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
@@ -64,6 +68,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                     Bed bed = ((Bed) r[0]);
 					ClinicalSpecialty clinicalSpecialty = (ClinicalSpecialty) r[3];
 					HierarchicalUnit hierarchicalUnit = ((HierarchicalUnit) r[8]);
+					Boolean isBlocked = (Boolean) r[9];
 					if (bedSummaries.containsKey(bed)) {
 						if (hierarchicalUnit != null)
 							bedSummaries.get(bed).addHierarchicalUnit(new HierarchicalUnitVo(hierarchicalUnit));
@@ -74,7 +79,7 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                         String sectorOrganization = (String) r[5];
                         String ageGroup = (String) r[6];
                         BedSummaryVo bedSummary = new BedSummaryVo(bed, (Sector) r[1], (LocalDateTime) r[2],
-                                careType, sectorOrganization, ageGroup, (SectorType) r[7]);
+                                careType, sectorOrganization, ageGroup, (SectorType) r[7], isBlocked);
                         if (clinicalSpecialty != null)
                             bedSummary.addSpecialty(new ClinicalSpecialtyVo(clinicalSpecialty));
 						if (hierarchicalUnit != null)

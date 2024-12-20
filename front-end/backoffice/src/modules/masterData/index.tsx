@@ -64,7 +64,8 @@ const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="medicinegroupproblems" {...medicineGroupProblems(permissions)} />,
     <Resource name="institutions-prescription" {...institutionsPrescription(permissions)} />,
     <Resource name="institutionmedicinegroups" {...institutionMedicineGroups(permissions)} />,
-    <Resource name="institutionmedicinesfinancingstatus" {...institutionMedicineFinancingStatus(permissions)} />
+    <Resource name="institutionmedicinesfinancingstatus" {...institutionMedicineFinancingStatus(permissions)} />,
+    <Resource name="parameters-autocomplete" />
 ];
 
 export default resourcesMasterData;

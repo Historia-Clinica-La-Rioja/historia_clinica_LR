@@ -1,0 +1,6 @@
+<div class="checkbox-group" fxLayout="column" >
+	<h4>{{ title }}</h4>
+	<mat-checkbox *ngFor="let option of options" [(ngModel)]="option.checked" (change)="emitSelectionChange()">
+	  {{ option.name }}
+	</mat-checkbox>
+</div>

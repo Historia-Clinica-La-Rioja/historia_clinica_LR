@@ -15,6 +15,7 @@ public class ShockroomDto {
 	private String description;
 	private boolean isAvailable;
 	private String sectorDescription;
+	private Boolean isBlocked;
 
 	public ShockroomDto(Integer id, String description) {
 		this.id = id;

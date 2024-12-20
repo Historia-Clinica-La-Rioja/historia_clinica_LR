@@ -81,7 +81,7 @@ export class SearchComponent implements OnInit {
 			this.identificationTypeId = this.paramsInformation.identificationTypeId;
 			this.identificationNumber = this.paramsInformation.identificationNumber;
 			this.genderId = this.paramsInformation.genderId;
-			this.noIdentity = this.paramsInformation.noIdentity;
+			this.noIdentity = this.isNoIdentity(this.paramsInformation.noIdentity);
 			if (!this.noIdentity) {
 				this.buildFormSearchWithValidations(params);
 				this.isLoading = false;
@@ -135,6 +135,10 @@ export class SearchComponent implements OnInit {
 			const result = differenceInYears(today, birth)
 			return result;
 		}
+	}
+
+	private isNoIdentity = (noIdentity: boolean): boolean => {
+		return (String(noIdentity) === 'true');
 	}
 
 	private buildFormSearchWithValidations(params) {

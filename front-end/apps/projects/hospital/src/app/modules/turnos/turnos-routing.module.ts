@@ -24,7 +24,8 @@ const routes: Routes = [
 						ERole.PROFESIONAL_DE_SALUD,
 						ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 						ERole.ADMINISTRATIVO_RED_DE_IMAGENES,
-						ERole.ABORDAJE_VIOLENCIAS
+						ERole.ABORDAJE_VIOLENCIAS,
+						ERole.GESTOR_DE_ACCESO_INSTITUCIONAL
 					]
 				},
 				children: [

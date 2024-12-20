@@ -3,7 +3,7 @@ package ar.lamansys.refcounterref.infraestructure.input.rest;
 import ar.lamansys.refcounterref.application.getreferencesummary.GetReferenceSummary;
 import ar.lamansys.refcounterref.application.getreference.GetReference;
 import ar.lamansys.refcounterref.application.modifyreferencebymanagerrole.ModifyReferenceByManagerRole;
-import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceSummaryDto;
@@ -53,7 +53,7 @@ public class ReferenceController {
     }
 
 	@GetMapping("/patient/{patientId}/requested")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_REGIONAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, GESTOR_DE_ACCESO_INSTITUCIONAL') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_REGIONAL')")
 	public ResponseEntity<List<ReferenceSummaryDto>> getReferencesSummary(@PathVariable(name = "institutionId") Integer institutionId,
 																		  @PathVariable(name = "patientId") Integer patientId,
 																		  @RequestParam(value="clinicalSpecialtyId" , required = false) Integer clinicalSpecialtyId,
@@ -62,7 +62,7 @@ public class ReferenceController {
 		log.debug("Input parameters -> institutionId {}, patientId {}, clinicalSpecialtyId {}, careLineId {}", institutionId, patientId, clinicalSpecialtyId, careLineId);
 		List<ReferenceSummaryBo> referenceSummaryBoList = getReferenceSummary.run(institutionId, patientId, clinicalSpecialtyId, careLineId, practiceId);
 		referenceSummaryBoList = referenceSummaryBoList.stream()
-				.filter(r -> r.getRegulationState().equals(EReferenceRegulationState.APPROVED))
+				.filter(r -> r.getAdministrativeState() != null && r.getAdministrativeState().equals(EReferenceAdministrativeState.APPROVED))
 				.collect(Collectors.toList());
 		List<ReferenceSummaryDto> result = getReferenceMapper.toReferenceSummaryDtoList(referenceSummaryBoList);
 		log.debug("Output -> result {}", result);
@@ -70,7 +70,7 @@ public class ReferenceController {
 	}
 
 	@PutMapping("/{referenceId}/update-by-manager")
-	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	@PreAuthorize("hasPermission(#institutionId, 'GESTOR_DE_ACCESO_INSTITUCIONAL') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public boolean updateReferenceByManagerRole(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "referenceId") Integer referenceId,
 												@RequestParam(name = "destinationInstitutionId", required = false) Integer destinationInstitutionId,

@@ -1,0 +1,37 @@
+@import '../../../../../../../assets/styles/variables.scss';
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+input[type=number] { -moz-appearance:textfield; }
+
+mat-option button {
+    width: 100%;
+    text-align: left;
+}
+
+.field-container {
+    display: flex;
+    justify-content: space-between;
+    width: 25%;
+}
+
+.field {
+    width: 60%;
+}
+
+.selector {
+    width: 30%;
+}
+
+.frequency-quantity-days {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.comp {
+    color: $grey;
+}

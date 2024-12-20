@@ -23,8 +23,9 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE, true);
 		map.put(AppFeature.HABILITAR_BUS_INTEROPERABILIDAD, false);
 		map.put(AppFeature.HABILITAR_ODONTOLOGY, false);
-		map.put(AppFeature.HABILITAR_REPORTES, false);
+		map.put(AppFeature.HABILITAR_REPORTES, true);
 		map.put(AppFeature.HABILITAR_REPORTES_INSTANTANEOS, false);
+		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, true);
 		map.put(AppFeature.HABILITAR_INFORMES, false);
 		map.put(AppFeature.HABILITAR_LLAMADO, false);
 		map.put(AppFeature.HABILITAR_HISTORIA_CLINICA_EXTERNA, false);
@@ -43,12 +44,10 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.LIBERAR_API_RESERVA_TURNOS, true);
 		map.put(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS, true);
 		map.put(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP, true);
-		map.put(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_2FA, false);
 		map.put(AppFeature.HABILITAR_EXTENSIONES_WEB_COMPONENTS, true);
 		map.put(AppFeature.HABILITAR_NOTIFICACIONES_TURNOS, false);
 		map.put(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA, true);
-		map.put(AppFeature.HABILITAR_REPORTES_ESTADISTICOS, false);
 		map.put(AppFeature.HABILITAR_RECUPERAR_PASSWORD, true);
 		map.put(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES, false);
 		map.put(AppFeature.HABILITAR_SIP_PLUS, false);
@@ -77,7 +76,6 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_ANEXO_II_MENDOZA, false);
 		map.put(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS, false);
 		map.put(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL, false);
-		map.put(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,false);
 		map.put(AppFeature.HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO, false);
 		map.put(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL, false);
 		map.put(AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO, false);
@@ -91,6 +89,19 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_DISPENSA, false);
 		map.put(AppFeature.HABILITAR_EDICION_DOCUMENTOS_DE_GUARDIA, true);
 		map.put(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS, false);
+		map.put(AppFeature.HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS, false);
+		map.put(AppFeature.HABILITAR_REPORTES_NACION_CUBE, false);
+		map.put(AppFeature.HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_MODULO_INTERNACION, true);
+		map.put(AppFeature.HABILITAR_SOLICITUD_REFERENCIA, true);
+		map.put(AppFeature.HABILITAR_MODULO_CAMAS, true);
+		map.put(AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_SOBRETURNOS_API_PUBLICA, true);
+		map.put(AppFeature.HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS, false);
+		map.put(AppFeature.HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS,false);
+		map.put(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA, false);
+		map.put(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR, false);
 		map.put(AppFeature.HABILITAR_CUESTIONARIOS, false);
 		map.put(AppFeature.HABILITAR_ANTECEDENTES_FAMILIARES, false);
 	}

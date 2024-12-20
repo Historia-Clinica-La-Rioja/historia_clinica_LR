@@ -1,0 +1,10 @@
+<div>
+    <span class="font-weight">{{ "guardia.home.episodes.filters.EMERGENCY_CARE_SERVICE"| translate}}</span>
+    <app-chips-autocomplete
+		[options]="services$ | async"
+		[externalSetValues]="servicesSelected"
+		placeholder="{{ 'guardia.home.episodes.filters.EMERGENCY_CARE_SERVICE_PLACEHOLDER' | translate}}"
+		[clearOptionsSelected]="!form.value.clinicalSpecialtySectorIds"
+		(selectionChange)="setSelectedServices($event)">
+	</app-chips-autocomplete>
+</div>

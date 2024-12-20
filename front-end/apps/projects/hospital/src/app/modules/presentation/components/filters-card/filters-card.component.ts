@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class FiltersCardComponent {
 
 	@Input() filtering = false;
-	@Input() cardTitle: string;
+	@Input() filterTitle: string;
 
 	constructor() {
 	}

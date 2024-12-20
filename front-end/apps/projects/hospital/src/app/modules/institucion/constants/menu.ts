@@ -45,6 +45,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ENFERMERO,
 			ERole.ESPECIALISTA_EN_ODONTOLOGIA
 		],
+		featureFlag: [AppFeature.HABILITAR_MODULO_INTERNACION]
 	},
 	{
 		text: 'app.menu.TURNOS',
@@ -59,7 +60,8 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ENFERMERO,
 			ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 			ERole.ADMINISTRATIVO_RED_DE_IMAGENES,
-			ERole.ABORDAJE_VIOLENCIAS
+			ERole.ABORDAJE_VIOLENCIAS,
+			ERole.GESTOR_DE_ACCESO_INSTITUCIONAL
 		],
 		featureFlag: [AppFeature.HABILITAR_GESTION_DE_TURNOS]
 	},
@@ -74,6 +76,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ADMINISTRADOR_DE_CAMAS,
 			ERole.ADMINISTRATIVO_RED_DE_IMAGENES
 		],
+		featureFlag: [AppFeature.HABILITAR_MODULO_CAMAS]
 	},
 	{
 		text: 'app.menu.GUARDIA',
@@ -107,17 +110,15 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		featureFlag: [AppFeature.HABILITAR_REPORTES]
 	},
 	{
-		text: 'app.menu.REPORTES_PROVINCIALES',
-		icon: 'description',
-		id: 'reportes-larioja',
-		url: './reportes-larioja',
-		permissions: [
-			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
-			ERole.PERSONAL_DE_ESTADISTICA,
-		],
+		text: 'app.menu.LISTA_DE_TRABAJO_DE_LABORATORIO',
+		icon: 'assignment_ind',
+		id: 'listadoTrabajo',
+		url: './ordenes/lista-trabajos',
+		permissions: [ERole.PERSONAL_DE_LABORATORIO],
+		featureFlag: [AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO]
 	},
 	{
-		text: 'app.menu.LISTADO_DE_TRABAJO',
+		text: AppFeature.HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO ? 'app.menu.LISTADO_DE_TRABAJO_DE_IMAGENES' : 'app.menu.LISTADO_DE_TRABAJO',
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './imagenes/lista-trabajos',
@@ -156,6 +157,16 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
 		],
 		featureFlag: [AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA]
+	},
+	{
+		text: 'app.menu.REPORTES_PROVINCIALES',
+		icon: 'description',
+		id: 'reportes-larioja',
+		url: './reportes-larioja',
+		permissions: [
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+			ERole.PERSONAL_DE_ESTADISTICA,
+		],
 	},
 	{
 		text: 'app.menu.RUTAS_PROVINCIALES',

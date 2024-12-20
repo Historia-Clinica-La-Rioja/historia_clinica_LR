@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +26,12 @@ public class EmergencyCareDoctorsOfficeStorageImpl implements EmergencyCareDocto
 	@Override
 	public Optional<DoctorsOfficeBo> getById(Integer id) {
 		return doctorsOfficeRepository.findEmergencyCareDoctorOfficeById(id, EEmergencyCareState.ATENCION.getId());
+	}
+
+	@Override
+	public List<DoctorsOfficeBo> getAllAvailableBySectorId(Integer sectorId) {
+		return doctorsOfficeRepository.getAllBySectorId(sectorId, EEmergencyCareState.ATENCION.getId())
+				.stream().filter(DoctorsOfficeBo::isAvailable).collect(Collectors.toList());
 	}
 
 }

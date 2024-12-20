@@ -54,7 +54,7 @@ public class AnamnesisController {
     private final SetPatientFromInternmentEpisode setPatientFromInternmentEpisode;
 
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Boolean> createAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -90,7 +90,7 @@ public class AnamnesisController {
     }
 
     @DeleteMapping("/{anamnesisId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Boolean> deleteAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
@@ -105,7 +105,7 @@ public class AnamnesisController {
     }
 
     @PutMapping("/{anamnesisId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO_ADULTO_MAYOR, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Long> updateAnamnesis(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,

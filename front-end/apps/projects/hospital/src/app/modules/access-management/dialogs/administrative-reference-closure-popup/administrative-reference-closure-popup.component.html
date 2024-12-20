@@ -1,0 +1,51 @@
+<div mat-dialog-title fxLayoutAlign="space-between">
+    <div fxLayoutAlign="space-between center">
+        <mat-icon class="title-icon" color="warn">error_outline</mat-icon>
+        <h1>{{"access-management.administrative_reference_closure.DIALOG_TITLE" | translate}}</h1>
+    </div>
+    <button id="close" mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+    <form [formGroup]="closureForm" (ngSubmit)="confirmClosure()" fxLayout="column">
+        <p>{{"access-management.administrative_reference_closure.DIALOG_DESCRIPTION" | translate}}</p>
+        <mat-label>{{"access-management.administrative_reference_closure.DIALOG_INPUT_LABEL" | translate}}</mat-label>
+        <mat-form-field appearance="outline">
+            <textarea formControlName="closureNote" matInput type="text" rows="4"
+                placeholder="{{'access-management.administrative_reference_closure.DIALOG_INPUT_PLACEHOLDER' | translate}}">
+            </textarea>
+            <mat-error *ngIf="closureForm.hasError('required', 'closureNote')" [translate]="'forms.REQUIRED'"></mat-error>
+        </mat-form-field>
+        <div id="attach_files" fxLayout="column">
+            <div class="span-clickable primary" fxLayout="row">
+                <mat-icon>attachment_icon</mat-icon>
+                <span [translate]="'access-management.reference-edition.UPLOAD_FILES'"
+                    (click)="fileInput.click()">
+                </span>
+                <span [hidden]="true">
+                    <input type="file" #fileInput multiple (change)="addNewFile($event)"/>
+                </span>
+            </div>
+
+            <div *ngFor="let file of closureFiles; let index = index">
+                <span class="span-clickable primary">
+                    {{file.name}}
+                </span>
+                <button id="delete-old-file" mat-icon-button color="warn" (click)="removeFile(index)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="flex-end" fxLayoutGap="10px">
+    <app-button [buttonType]="ButtonType.STROKED" [color]="'warn'" mat-dialog-close
+        [text]="'access-management.administrative_reference_closure.DIALOG_CANCEL_BUTTON'">
+    </app-button>
+    <app-button [buttonType]="ButtonType.RAISED" [isLoading]="loading" [color]="'warn'" type="submit" (clicked)="confirmClosure()"
+        [text]="'access-management.administrative_reference_closure.DIALOG_CONFIRM_BUTTON'">
+    </app-button>
+</mat-dialog-actions>

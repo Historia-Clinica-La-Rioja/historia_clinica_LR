@@ -7,7 +7,7 @@
         </app-patient-summary>
     </ng-template>
     <div class="margin" fxLayout="column" fxLayoutGap="15px">
-        <app-title-description *ngIf="reason" [title]="'guardia.home.episodes.episode.patient.REASON' | translate" [text]="reason" limit="20"></app-title-description>
+        <app-title-description *ngIf="reason" [title]="'guardia.home.episodes.episode.patient.REASON' | translate" [text]="reason" [showFullText]="false"></app-title-description>
         <app-identifier-cases *ngIf="episodeTypeDescription" identifierCase={{EMERGENCY_CARE_TYPE}}
             [description]="episodeTypeDescription"></app-identifier-cases>
     </div>

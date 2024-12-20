@@ -52,6 +52,28 @@ export class InstitutionalReferenceReportService {
 		return this.http.post<boolean>(url, {}, { params: queryParams });
 	}
 
+	changeReferenceRegulationStateAsGestorInstitucional(referenceId: number, stateId: number, reason?: string): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/change-regulation-state`;
+		let params: HttpParams = new HttpParams();
+		params = params.append('stateId', stateId);
+		if (!reason)
+			return this.http.put<boolean>(url, null, { params });
+
+		params = params.append('reason', reason);
+		return this.http.put<boolean>(url, null, { params });
+	}
+
+	changeReferenceApprovalStateAsGestorInstitucional(referenceId: number, stateId: number, reason?: string): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/change-administrative-state`;
+		let params: HttpParams = new HttpParams();
+		params = params.append('stateId', stateId);
+		if (!reason)
+			return this.http.put<boolean>(url, null, { params });
+
+		params = params.append('reason', reason);
+		return this.http.put<boolean>(url, null, { params }); 
+	}
+
 	cancelReference(referenceId: number): Observable<boolean> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/cancel`;
 		return this.http.put<boolean>(url, {});
@@ -62,7 +84,16 @@ export class InstitutionalReferenceReportService {
 		return this.http.put<boolean>(url, reference);
 	}
 
-	modifyReferenceAsGestor(referenceId: number, destinationInstitutionId: number, fileIds: number[]): Observable<boolean> {
+	modifyReferenceAsGestor(referenceId: number, fileIds: number[]): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/reference/${referenceId}/update-by-manager`;
+		return this.http.put<boolean>(url, {}, { 
+			params: {
+				fileIds: fileIds
+			}
+		});
+	}
+
+	modifyReferenceWidhInstitutionAsGestor(referenceId: number, destinationInstitutionId: number, fileIds: number[]): Observable<boolean> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/reference/${referenceId}/update-by-manager`;
 		return this.http.put<boolean>(url, {}, { 
 			params: {

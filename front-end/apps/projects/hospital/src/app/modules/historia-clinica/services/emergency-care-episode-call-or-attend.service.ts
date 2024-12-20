@@ -7,7 +7,7 @@ import { AttentionPlace } from '@historia-clinica/constants/summaries';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { OperationDeniedComponent } from '@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/operation-denied.component';
 import { AttendPlace } from '@historia-clinica/modules/guardia/components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
-import { Episode } from '@historia-clinica/modules/guardia/components/emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { Episode } from '@historia-clinica/modules/guardia/components/emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { AttentionPlaceDialogComponent } from '@historia-clinica/modules/guardia/dialogs/attention-place-dialog/attention-place-dialog.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';

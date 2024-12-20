@@ -1,6 +1,7 @@
 package ar.lamansys.sgx.shared.notifications.infrastructure.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import ar.lamansys.online.infraestructure.notification.message.ConfirmarReservaNotificationArgs;
@@ -16,6 +17,8 @@ import net.pladema.medicalconsultation.appointment.infrastructure.output.notific
 import net.pladema.medicalconsultation.appointment.service.impl.SendVirtualAppointmentEmailServiceImpl;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.output.notification.VirtualConsultationAppointmentTemplateArgs;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.output.notification.VirtualConsultationAppointmentTemplateInput;
+import net.pladema.reports.domain.GenerationReportNotificationArgs;
+import net.pladema.reports.domain.notification.GenerationReportTemplateInput;
 import net.pladema.user.infrastructure.output.notification.RestorePasswordNotificationArgs;
 import net.pladema.user.infrastructure.output.notification.RestorePasswordTemplateInput;
 
@@ -27,7 +30,7 @@ public class NotificationTemplateInputUtils {
 	public static final RestorePasswordTemplateInput NEW_RESTORE_PASSWORD_MESSAGE = buildRestorePasswordMessage();
 	public static final VirtualConsultationAppointmentTemplateInput NEW_VIRTUAL_CONSULTATION_APPOINTMENT_MESSAGE = buildVirtualConsultationAppointmentMessage();
 	public static final ConfirmarReservaTemplateInput NEW_BOOKING_CONFIRM_MESSAGE = buildBookingConfirmMessage();
-
+	public static final GenerationReportTemplateInput NEW_GENERATION_REPORT_MESSAGE = buildGenerationReportMessage();
 	private static final String PROFESSIONAL_FULLNAME = "Carl Sagan";
 	private static final String CLINICAL_SPECIALTY = "Medicina General";
 
@@ -83,6 +86,13 @@ public class NotificationTemplateInputUtils {
 				.specialty("Alergia")
 				.institution("CAPS 11, Avellaneda 123")
 				.recomendation("Llegar 15 minutos antes")
+				.build());
+	}
+
+	private static GenerationReportTemplateInput buildGenerationReportMessage() {
+		return new GenerationReportTemplateInput(GenerationReportNotificationArgs.builder()
+				.reportType("Detalle nominal de turnos")
+				.createdOn(LocalDateTime.of(2024, 10, 10, 15, 30))
 				.build());
 	}
 

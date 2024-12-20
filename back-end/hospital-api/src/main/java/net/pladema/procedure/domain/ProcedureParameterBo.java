@@ -26,5 +26,8 @@ public class ProcedureParameterBo {
 	public boolean isNumeric() {
 		return ProcedureParameterTypeBo.NUMERIC.equals(this.typeId);
 	}
+	public boolean isSnomed() {
+		return ProcedureParameterTypeBo.SNOMED_ECL.equals(this.typeId);
+	}
 
 }

@@ -1,12 +1,15 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation;
 
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity.HistoricReferenceAdministrativeState;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity.HistoricReferenceRegulation;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRuleDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRulePort;
 
@@ -27,13 +30,15 @@ import java.util.Optional;
 @Service
 public class HistoricReferenceRegulationStorageImpl implements HistoricReferenceRegulationStorage {
 
+	private final static Integer NONE_USER = -1;
+
 	private final HistoricReferenceRegulationRepository historicReferenceRegulationRepository;
 
 	private final ReferenceRepository referenceRepository;
 
 	private final SharedRulePort sharedRulePort;
 
-	private final SharedStaffPort sharedStaffPort;
+	private final SharedPersonPort sharedPersonPort;
 
 	@Override
 	public Short saveReferenceRegulation(Integer referenceId, CompleteReferenceBo reference) {
@@ -46,18 +51,19 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		if (rules.isEmpty())
 			return saveEmptyRegulation(referenceId);
 		rules.forEach(rule -> saveHistoricReferenceRegulation(referenceId, rule));
-		return EReferenceRegulationState.WAITING_APPROVAL.getId();
+		return EReferenceRegulationState.WAITING_AUDIT.getId();
 	}
 
 	private Short saveEmptyRegulation(Integer referenceId) {
-		Short regulationStateId =  EReferenceRegulationState.APPROVED.getId();
+		Short regulationStateId =  EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId();
 		HistoricReferenceRegulation emptyRegulation = new HistoricReferenceRegulation(null, referenceId, null, null, regulationStateId, null);
 		historicReferenceRegulationRepository.save(emptyRegulation);
+
 		return regulationStateId;
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId, SharedRuleDto rule) {
-		HistoricReferenceRegulation historicReferenceRegulation = new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_APPROVAL.getId(), null);
+		HistoricReferenceRegulation historicReferenceRegulation = new HistoricReferenceRegulation(null, referenceId, rule.getId(), rule.getLevel(), EReferenceRegulationState.WAITING_AUDIT.getId(), null);
 		historicReferenceRegulationRepository.save(historicReferenceRegulation);
 	}
 
@@ -66,7 +72,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
     }
 
 	@Override
-	public void approveReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
+	public void auditReferencesByRuleId(Integer ruleId, List<Integer> institutionIds){
 		log.debug("Input parameters -> ruleId {}, institutionIds {}", ruleId, institutionIds);
 		List<HistoricReferenceRegulation> historicReferenceRegulations;
 		if (institutionIds.isEmpty())
@@ -79,13 +85,13 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 				referencesMap.put(hrr.getReferenceId(), hrr.getStateId());
 		});
 		referencesMap.forEach((referenceId, stateId) -> {
-			if (stateId.equals(EReferenceRegulationState.WAITING_APPROVAL.getId()))
+			if (stateId.equals(EReferenceRegulationState.WAITING_AUDIT.getId()))
 				saveHistoricReferenceRegulation(referenceId);
 		});
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId) {
-		Short approvedStateId = EReferenceRegulationState.APPROVED.getId();
+		Short approvedStateId = EReferenceRegulationState.AUDITED.getId();
 		HistoricReferenceRegulation entity = new HistoricReferenceRegulation(referenceId, approvedStateId);
 		historicReferenceRegulationRepository.save(entity);
 		updateReferenceRegulationStateId(referenceId, approvedStateId);
@@ -106,15 +112,11 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	}
 
 	@Override
-	public Boolean updateReferenceRegulationState(Integer referenceId, Short stateId, String reason){
+	public void updateReferenceRegulationState(Integer referenceId, Short stateId, String reason){
 		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
 		Optional<HistoricReferenceRegulation> hrr = historicReferenceRegulationRepository.getByReferenceId(referenceId).stream().findFirst();
-		if(validRegulationState(hrr)){
-			historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, hrr.get().getRuleId(), hrr.get().getRuleLevel(), stateId, reason));
-			updateReferenceRegulationStateId(referenceId, stateId);
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
+		historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, hrr.get().getRuleId(), hrr.get().getRuleLevel(), stateId, reason));
+		updateReferenceRegulationStateId(referenceId, stateId);
 	}
 
 	private void updateReferenceRegulationStateId(Integer referenceId, Short stateId) {
@@ -122,10 +124,6 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		Reference reference = referenceRepository.getById(referenceId);
 		reference.setRegulationStateId(stateId);
 		referenceRepository.saveAndFlush(reference);
-	}
-
-	private boolean validRegulationState(Optional<HistoricReferenceRegulation> hrr){
-		return hrr.isPresent() && hrr.get().getStateId().equals(EReferenceRegulationState.WAITING_APPROVAL.getId());
 	}
 
 	ReferenceRegulationBo mapToBo(HistoricReferenceRegulation entity){
@@ -137,7 +135,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		result.setState(EReferenceRegulationState.getById(entity.getStateId()));
 		result.setReason(entity.getReason());
 		result.setCreatedOn(entity.getCreatedOn());
-		result.setProfessionalName(entity.getRuleId() != null ? sharedStaffPort.getProfessionalCompleteNameByUserId(entity.getCreatedBy()).orElse(null) : null);
+		result.setProfessionalName(!entity.getCreatedBy().equals(NONE_USER) ? sharedPersonPort.getCompletePersonNameByUserId(entity.getCreatedBy()) : null);
 		return result;
 	}
 

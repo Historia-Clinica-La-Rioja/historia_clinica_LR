@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SpaceItem, SpaceType } from '../emergency-care-attention-place-sector/emergency-care-attention-place-sector.component';
 import { AvailableButtonType, AvailableButtonWidth } from '@presentation/components/button-availability/button-availability.component';
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from '../../services/emergency-care-attention-place-availability-button-selection.service';
+import { SpaceState, SpaceTypeDetails } from '../emergency-care-attention-place-details/emergency-care-attention-place-details.component';
 
 @Component({
 	selector: 'app-emergency-care-attention-place-space',
@@ -10,6 +11,11 @@ import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from '.
 })
 export class EmergencyCareAttentionPlaceSpaceComponent implements OnInit{
 
+	readonly AVAILABLE_BUTTON_BY_SPACE_STATE = {
+		[SpaceState.AVAILABLE]: AvailableButtonType.AVAILABLE,
+		[SpaceState.NOT_AVAILABLE]: AvailableButtonType.NOT_AVAILABLE,
+		[SpaceState.BLOCKED]: AvailableButtonType.BLOCKED,
+	}
 	itemsInfo: itemAvailabilityButton[];
 
 	@Input() space: SpaceItem;
@@ -24,11 +30,11 @@ export class EmergencyCareAttentionPlaceSpaceComponent implements OnInit{
 	}
 
 	mapToAvailabilityButton() {
-		this.itemsInfo = this.space.items.map(space => ({
+		this.itemsInfo = this.space.items.map((space: SpaceTypeDetails) => ({
 			id: space.id,
 			spaceType: this.space.type,
 			description: space.description,
-			type: space.available ? AvailableButtonType.AVAILABLE : AvailableButtonType.NOT_AVAILABLE,
+			type: this.getAvailabilityButton(space.state),
 			size: AvailableButtonWidth.LARGE,
 			isSelected: false
 		}));
@@ -54,6 +60,10 @@ export class EmergencyCareAttentionPlaceSpaceComponent implements OnInit{
 
 	diselectAll() {
 		this.itemsInfo.forEach(item => item.isSelected = false);
+	}
+
+	private getAvailabilityButton(state: SpaceState): AvailableButtonType {
+		return this.AVAILABLE_BUTTON_BY_SPACE_STATE[state];
 	}
 }
 

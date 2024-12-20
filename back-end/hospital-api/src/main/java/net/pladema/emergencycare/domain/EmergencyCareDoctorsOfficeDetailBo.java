@@ -6,7 +6,7 @@ import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOffic
 
 @Getter
 @Setter
-public class EmergencyCareDoctorsOfficeDetailBo extends EmergencyCareAttentionPlaceDetailBo{
+public class EmergencyCareDoctorsOfficeDetailBo extends EmergencyCareAttentionPlaceDetailBo {
 
 	private DoctorsOfficeBo doctorsOffice;
 

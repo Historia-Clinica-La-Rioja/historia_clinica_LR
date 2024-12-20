@@ -3,6 +3,7 @@ package net.pladema.emergencycare.triage.repository.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.emergencycare.repository.domain.ProfessionalPersonVo;
 import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
 
@@ -48,6 +49,8 @@ public class TriageVo {
 
 	private String clinicalSpecialtySectorDescription;
 
+	private ProfessionalPersonVo creator;
+
     public TriageVo(Triage triage, TriageDetails triageDetails, Short emergencyCareTypeId, List<Integer> riskFactorIds, String specialtySectorDescription) {
         this.id = triage.getId();
         this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
@@ -70,4 +73,17 @@ public class TriageVo {
 		this.clinicalSpecialtySectorDescription = specialtySectorDescription;
     }
 
+	public TriageVo(Triage triage, Short emergencyCareTypeId, String specialtySectorDescription, ProfessionalPersonVo creator) {
+		this.id = triage.getId();
+		this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
+		this.emergencyCareTypeId = emergencyCareTypeId;
+		this.categoryId = triage.getTriageCategoryId();
+		this.createdBy = triage.getCreatedBy();
+		this.doctorsOfficeId = triage.getDoctorsOfficeId();
+		this.notes = triage.getNotes();
+		this.createdOn = triage.getCreatedOn();
+		this.clinicalSpecialtySectorId = triage.getClinicalSpecialtySectorId();
+		this.clinicalSpecialtySectorDescription = specialtySectorDescription;
+		this.creator = creator;
+	}
 }

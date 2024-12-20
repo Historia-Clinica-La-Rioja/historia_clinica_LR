@@ -7,15 +7,19 @@
 		<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
 		</app-register-editor-info>
 		<div fxLayout="row" fxLayoutGap="8px">
-			<app-title-description fxFlex="50%"
+			<app-title-description fxFlex="40%"
 				[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
-				[text]="problemDescriptionText | stringSeparator">
+				[text]="problemDescriptionText | stringSeparator"
+				[showFullText]="false"
+			>
 			</app-title-description>
-			<app-title-description fxFlex="50%"
+			<app-title-description fxFlex="40%"
 				[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"
-				[text]="dischargeTypeDescriptionText">
+				[text]="dischargeTypeDescriptionText"
+				[showFullText]="false"
+			>
 			</app-title-description>
-			<app-title-description fxFlex="50%" [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADMINISTRATIVE_DISCHARGE' | translate"
+			<app-title-description fxFlex="20%" [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADMINISTRATIVE_DISCHARGE' | translate"
 				[text]="episodeState !== STATES.CON_ALTA_ADMINISTRATIVA ? 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PENDING' : 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PERFORMED'">
 			</app-title-description>
 		</div>

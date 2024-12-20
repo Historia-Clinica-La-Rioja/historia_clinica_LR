@@ -139,4 +139,11 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 			"WHERE hp.id = :healthcareProfessionalId")
 	CompletePersonNameBo findByHealthcareProfessionalId(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo(p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination) " +
+			"FROM Person p " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
+			"JOIN UserPerson up ON (p.id = up.pk.personId) " +
+			"WHERE up.pk.userId = :userId ")
+	CompletePersonNameVo getCompletePersonNameByUserId(@Param("userId") Integer userId);
 }

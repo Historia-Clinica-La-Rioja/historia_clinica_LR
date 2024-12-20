@@ -1,18 +1,18 @@
 import React from 'react';
 import {
-    DateField,
     Show,
     SimpleShowLayout,
     TextField,
     ReferenceField,
 } from 'react-admin';
+import SgxDateField from '../../../dateComponents/sgxDateField';
 
 const ReportQueueShow = (props) => {
     return (
         <Show {...props}>
             <SimpleShowLayout>
-                <DateField source="createdOn" showTime />
-                <DateField source="generatedOn" showTime />
+                <SgxDateField source="createdOn" showTime />
+                <SgxDateField source="generatedOn" showTime />
                 <TextField source="generatedError" sortable={false}/>
                 <ReferenceField source="fileId"  link="show"  reference="files" sortable={false}>
                     <TextField source="name" />

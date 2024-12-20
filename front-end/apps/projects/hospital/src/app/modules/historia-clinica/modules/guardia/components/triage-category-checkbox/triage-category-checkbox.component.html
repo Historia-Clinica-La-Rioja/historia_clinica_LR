@@ -1,0 +1,6 @@
+<form [formGroup]="form.controls.triageCategories">
+    <span class="font-weight">{{ 'guardia.home.episodes.filters.URGENCY' | translate }}</span>
+    <div *ngFor="let key of formControlsKeys" fxLayout="row" fxLayoutGap="10px">
+        <mat-checkbox [formControlName]="key">{{ key | showTriageCategoryDescription:triageCategories }}</mat-checkbox>
+    </div>
+</form>

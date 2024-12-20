@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "bed")
 @Getter
@@ -47,5 +49,29 @@ public class Bed {
 
 	@Column(name = "incharge_nurse_id")
 	private Integer inchargeNurseId;
-	
+
+	@Column(name = "status_id", nullable = true)
+	private Integer statusId;
+
+	public void block(Integer newStatusId) {
+		this.setStatusId(newStatusId);
+		this.setEnabled(false);
+		this.setAvailable(false);
+		this.setFree(false);
+	}
+
+	public void unBlock() {
+		this.setStatusId(null);
+		this.setEnabled(true);
+		this.setAvailable(true);
+		this.setFree(true);
+	}
+
+	public Boolean statusChanged(Bed update) {
+		return !(
+			Objects.equals(update.getEnabled(), this.getEnabled()) &&
+			Objects.equals(update.getAvailable(), this.getAvailable()) &&
+			Objects.equals(update.getFree(), this.getFree())
+		);
+	}
 }

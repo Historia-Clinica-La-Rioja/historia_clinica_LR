@@ -385,7 +385,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 				"   LEFT JOIN {h-schema}emergency_care_discharge ecd ON ecd.emergency_care_episode_id = ece.id " +
 				"   WHERE d.status_id IN (:docStatusId) " +
 				"   AND d.source_type_id = :sourceType " +
-				"   AND d.type_id = :documentType "+
+				"   AND d.type_id IN (:documentTypes) "+
 				"   AND hc.patient_id = :patientId " +
 				"   AND hc.problem_id = :problemType " +
 				"	AND ecd.medical_discharge_on IS NOT NULL" +
@@ -404,7 +404,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 				.setParameter("sourceType", SourceType.EMERGENCY_CARE)
 				.setParameter("patientId", patientId)
 				.setParameter("problemType", ProblemType.DIAGNOSIS)
-				.setParameter("documentType", DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE)
+				.setParameter("documentTypes", List.of(DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE, DocumentType.NURSING_EMERGENCY_CARE_EVOLUTION))
 				.getResultList();
 
 		List<HCEHospitalizationVo> result = new ArrayList<>();

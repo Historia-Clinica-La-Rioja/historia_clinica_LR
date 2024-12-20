@@ -63,6 +63,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	showWarning: boolean = false;
 	isDraft = false;
 	isDisableConfirmButton = false;
+	isConfirmed: boolean = false;
 	medications: MedicationDto[] = [];
 	canConfirmedDocument = false;
 	ECL = SnomedECL.DIAGNOSIS;
@@ -83,6 +84,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	diagnosis: DiagnosisDto[] = [];
 	waitToResponse = false;
 	procedures: SnomedConcept<HospitalizationProcedureDto>[] = [];
+
 
 	@ViewChild(ObstetricComponent) formulario!: ObstetricComponent;
 
@@ -107,7 +109,6 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-
 		this.isDraft = this.data.patientInfo.isDraft;
 		this.canConfirmedDocument = this.data.patientInfo.isDraft;
 		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
@@ -190,6 +191,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning: boolean) => this.showWarning = showWarning);
 
 		this.externalCause$ = this.externalCauseServise.getValue().subscribe();
+		this.verifyConfirmed()
 
 		this.form.get('observations').valueChanges.pipe(
 			map(formData => Object.values(formData)),
@@ -197,6 +199,16 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		).subscribe(allFormValuesAreNull => {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
+	}
+
+	private verifyConfirmed() {
+		if (this.data.patientInfo.epicrisisId) {
+			this.epicrisisService.getEpicrisis(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId).subscribe(response => {
+				if (response && response.confirmed) {
+					this.isConfirmed = true
+				}
+			})
+		}
 	}
 
 	private setValues(e: ResponseEpicrisisDto, response: EpicrisisGeneralStateDto): void {

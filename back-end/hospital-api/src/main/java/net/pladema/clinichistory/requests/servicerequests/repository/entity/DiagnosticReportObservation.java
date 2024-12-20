@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Entity
@@ -48,13 +49,21 @@ public class DiagnosticReportObservation extends SGXAuditableEntity<Integer> {
 	@Column(name = "unit_of_measure_id", nullable = true)
 	private Short unitOfMeasureId;
 
-	public static DiagnosticReportObservation newNumericObservation(Integer diagnosticReportGroupId, Integer procedureParameterId, Optional<String> value, Short unitOfMeasureId) {
+	@Column(name = "value_numeric", nullable = true)
+	private BigDecimal valueNumeric;
+
+	public static DiagnosticReportObservation newNumericObservation(
+		Integer diagnosticReportGroupId,
+		Integer procedureParameterId,
+		Optional<String> value,
+		Short unitOfMeasureId, Optional<BigDecimal> valueNumeric) {
 		return new DiagnosticReportObservation(
 			null,
 			diagnosticReportGroupId,
 			procedureParameterId,
 			value.orElse(""),
-			unitOfMeasureId
+			unitOfMeasureId,
+			valueNumeric.orElse(null)
 		);
 	}
 
@@ -64,6 +73,7 @@ public class DiagnosticReportObservation extends SGXAuditableEntity<Integer> {
 			diagnosticReportGroupId,
 			procedureParameterId,
 			value.orElse(""),
+			null,
 			null
 		);
 	}

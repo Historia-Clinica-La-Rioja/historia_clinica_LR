@@ -2,22 +2,25 @@ import { FormControl, FormGroup, UntypedFormGroup, Validators } from "@angular/f
 import { BehaviorSubject, forkJoin, map, merge, Subject, switchMap } from "rxjs";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { pushIfNotExists, removeFrom } from "@core/utils/array.utils";
-import { AddDiagnosticReportObservationsCommandDto, CreateOutpatientProcedureDto, OdontologyProcedureDto, ProcedureTemplateFullSummaryDto, SnomedDto } from "@api-rest/api-model";
+import { AddDiagnosticReportObservationsCommandDto, CreateOutpatientProcedureDto, CreateOutpatientServiceRequestDto, CreationStatus, OdontologyProcedureDto, ProcedureTemplateFullSummaryDto, SnomedDto } from "@api-rest/api-model";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { Templates } from "@historia-clinica/modules/ambulatoria/components/control-select-template/control-select-template.component";
 import { ProcedureTemplatesService } from "@api-rest/services/procedure-templates.service";
 import { STUDY_STATUS_ENUM } from "@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata";
 
-export const COMLETE_NOW = "COMLETE_NOW";
+export const COMPLETE_NOW = "COMPLETE_NOW";
 
 export class CreateOrderService {
+
+	study_status = STUDY_STATUS_ENUM;
+	completeNow = COMPLETE_NOW;
 	emitter = new Subject();
 	customForms$ = new Subject<Templates[] | []>();
-	study_status = STUDY_STATUS_ENUM;
 	firstPartAreCompleted = false;
 	templates = [];
+	selectedFiles: File[] = [];
 	private form: FormGroup<ProcedureForm>;
-	private data: Procedure[] = [];
+	private data: CreateOutpatientServiceRequestDto[] = [];
 	private snomedConcept = null;
 	private orders = [];
 	private hasProcedure = new BehaviorSubject<boolean>(true);
@@ -37,14 +40,15 @@ export class CreateOrderService {
 			serviceRequest: new FormGroup<OrderForm>({
 				healthConditionPt: new FormControl<string | null>(null, [Validators.required]),
 				healthConditionSctid: new FormControl<string | null>(null, [Validators.required]),
-				categoryId: new FormControl<number | null>(null, [Validators.required]),
-				creationStatus: new FormControl<string | null>(null, [Validators.required]),
+				categoryId: new FormControl<string | null>(null, [Validators.required]),
+				creationStatus: new FormControl<CreationStatus | null>(CreationStatus.REGISTERED, [Validators.required]),
 				observations: new FormControl<AddDiagnosticReportObservationsCommandDto | null>(null, [Validators.required]),
+				fileNames: new FormControl<string[] | null>(null),
+				observation: new FormControl<string | null>(null)
 			})
 		});
 
 		this.subscribeFirstPartTheForm();
-
 	}
 
 	setConcept(selectedConcept: SnomedDto) {
@@ -76,7 +80,7 @@ export class CreateOrderService {
 		})
 	}
 
-	setStudyCategory(studyCategoryId: number | string) {
+	setStudyCategory(studyCategoryId: string) {
 		this.form.patchValue({
 			serviceRequest: {
 				categoryId: studyCategoryId
@@ -84,10 +88,28 @@ export class CreateOrderService {
 		})
 	}
 
-	setCreationStatus(CreationStatus: string) {
+	setCreationStatus(creationStatusValue: string) {
+		this.form.patchValue({
+		   serviceRequest: {
+			  creationStatus: (creationStatusValue === COMPLETE_NOW || creationStatusValue === STUDY_STATUS_ENUM.FINAL)
+				 ? CreationStatus.FINAL
+				 : CreationStatus.REGISTERED
+		   }
+		});
+	}
+
+	setFileNames(fileNames: string[]) {
 		this.form.patchValue({
 			serviceRequest: {
-				creationStatus: ((CreationStatus === COMLETE_NOW) || (CreationStatus === STUDY_STATUS_ENUM.FINAL)) ? "FINAL" : "REGISTERED"
+				fileNames: fileNames
+			}
+		})
+	}
+
+	setObservation(observation: string) {
+		this.form.patchValue({
+			serviceRequest: {
+				observation: observation
 			}
 		})
 	}
@@ -97,19 +119,26 @@ export class CreateOrderService {
 	}
 
 	addToList() {
-		const newProcedure: Procedure = {
-			snomed: this.snomedConcept,
-			performedDate: this.form.value.performedDate || undefined
+		const newStudy: CreateOutpatientServiceRequestDto = {
+			categoryId: this.form.value.serviceRequest.categoryId,
+			creationStatus: this.form.value.serviceRequest.creationStatus,
+			healthConditionPt: this.form.value.serviceRequest.healthConditionPt,
+			healthConditionSctid: this.form.value.serviceRequest.healthConditionSctid,
+			snomedPt: this.form.value.snomed.pt,
+			snomedSctid: this.form.value.snomed.sctid,
+			fileNames: this.form.value.serviceRequest.fileNames,
+			observation: this.form.value.serviceRequest.observation,
+			observations: this.form.value.serviceRequest.observations
 		};
-		this.addControl(newProcedure);
+		this.addControl(newStudy);
 		this.resetForm();
 		this.templates = [];
 		this.hasTemplate.next(false);
 	}
 
-	addControl(procedimiento: Procedure) {
-		if (this.add(procedimiento)) {
-			this.snackBarService.showError("Procedimiento duplicado");
+	addControl(study: CreateOutpatientServiceRequestDto) {
+		if (this.add(study)) {
+			this.snackBarService.showError("Estudio duplicado");
 		} else {
 			this.orders.push(this.form.value);
 		}
@@ -129,6 +158,10 @@ export class CreateOrderService {
 		return this.form.valid;
 	}
 
+	getStudies(): CreateOutpatientServiceRequestDto[] {
+		return this.data;
+	}
+
 	getOrderForNewConsultation(): CreateOutpatientProcedureDto[] {
 		return this.orders;
 	}
@@ -138,14 +171,25 @@ export class CreateOrderService {
 	}
 
 	getProcedimientos(): Procedure[] {
-		return this.data;
+		return this.data.map(p => {
+			return {
+				snomed: {
+					pt: p.snomedPt,
+					sctid: p.snomedSctid
+				}
+			}}
+		);
+	}
+
+	getSelectedFiles(): File[] {
+		return this.selectedFiles;
 	}
 
 	remove(index: number) {
 		this.hasTemplate.next(false);
 		this.customForms$.next(null);
 		this.orders = removeFrom<CreateOutpatientProcedureDto>(this.orders, index);
-		this.data = removeFrom<Procedure>(this.data, index);
+		this.data = removeFrom<CreateOutpatientServiceRequestDto>(this.data, index);
 		this.emitter.next(this.data)
 	}
 
@@ -186,6 +230,10 @@ export class CreateOrderService {
 			this.customForms$.next(templates);
 			this.templates = templates;
 		});
+	}
+
+	addSelectedFiles(files: File[]): void {
+		this.selectedFiles = [...this.selectedFiles, ...files];
 	}
 
 	getTemplates() {
@@ -229,15 +277,15 @@ export class CreateOrderService {
 		);
 	}
 
-	private add(procedimiento: Procedure): boolean {
+	private add(study: CreateOutpatientServiceRequestDto): boolean {
 		const currentItems = this.data.length;
-		this.data = pushIfNotExists<Procedure>(this.data, procedimiento, this.compareSpeciality);
+		this.data = pushIfNotExists<CreateOutpatientServiceRequestDto>(this.data, study, this.compareSpeciality);
 		this.emitter.next(this.data);
 		return currentItems === this.data.length;
 	}
 
-	private compareSpeciality(data: Procedure, data1: Procedure): boolean {
-		return data.snomed.sctid === data1.snomed.sctid;
+	private compareSpeciality(data: CreateOutpatientServiceRequestDto, data1: CreateOutpatientServiceRequestDto): boolean {
+		return data.snomedSctid === data1.snomedSctid;
 	}
 
 }
@@ -252,9 +300,11 @@ interface ProcedureForm {
 interface OrderForm {
 	healthConditionPt: FormControl<string | null>;
 	healthConditionSctid: FormControl<string | null>;
-	categoryId: FormControl<number | string | null>;
-	creationStatus: FormControl<string | null>;
+	categoryId: FormControl<string | null>;
+	creationStatus: FormControl<CreationStatus | null>;
 	observations: FormControl<AddDiagnosticReportObservationsCommandDto | null>;
+	fileNames: FormControl<string[] | null>;
+	observation: FormControl<string | null>;
 }
 
 interface Procedure {

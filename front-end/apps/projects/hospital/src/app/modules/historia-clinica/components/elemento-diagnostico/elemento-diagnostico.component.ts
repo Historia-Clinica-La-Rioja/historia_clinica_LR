@@ -17,6 +17,8 @@ export class ElementoDiagnosticoComponent {
 	@Input()
 	isMain: boolean;
 
+	@Input() disabled = false;
+
 	@Output() removeDiagnosis = new EventEmitter();
 	@Output() editedDiagnosis = new EventEmitter<DiagnosisDto>();
 	@Output() checkDiagnosis = new EventEmitter();

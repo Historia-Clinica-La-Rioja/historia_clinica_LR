@@ -23,4 +23,9 @@ export class EmergencyCareStateService {
 		return this.http.get<DiagnosesGeneralStateDto[]>(url);
 	}
 
+	getEmergencyCareEpisodeDiagnosesWithoutNursingAttentionDiagnostic(episodeId: number): Observable<DiagnosesGeneralStateDto[]> {
+		const url = `${this.URL_PREFIX}${episodeId}/diagnoses-without-nursing-attention-diagnostic`;
+		return this.http.get<DiagnosesGeneralStateDto[]>(url);
+	}
+
 }

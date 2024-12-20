@@ -53,6 +53,8 @@ public class TranscribedDiagnosticReportInfoMapper {
         result.setAppointmentDate(localDateMapper.toDateDto(studyTranscribedOrderReportInfoBo.getAppointmentDate()));
         result.setAppointmentHour(localDateMapper.toTimeDto(studyTranscribedOrderReportInfoBo.getAppointmentHour()));
         result.setLocalViewerUrl(studyTranscribedOrderReportInfoBo.getLocalViewerUrl());
+		result.setReportStatus(studyTranscribedOrderReportInfoBo.getReportStatusId());
+		result.setDeriveTo(studyTranscribedOrderReportInfoBo.getDeriveToInstitution());
 
         log.trace("Output -> {}", result);
         return result;

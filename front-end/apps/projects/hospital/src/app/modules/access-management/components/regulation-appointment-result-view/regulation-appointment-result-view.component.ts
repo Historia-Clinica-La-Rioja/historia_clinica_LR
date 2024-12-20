@@ -2,8 +2,9 @@ import { RegulationNewAppointmentData, RegulationNewAppointmentPopUpComponent } 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EAppointmentModality, DiaryAvailableAppointmentsDto, ReferenceSummaryDto } from '@api-rest/api-model';
-import { dateDtoToDate, stringToDate, timeDtotoFullTimeString } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, mapDateWithHypenToDateWithSlash, timeDtotoFullTimeString } from '@api-rest/mapper/date-dto.mapper';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { fromStringToDate } from '@core/utils/date.utils';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
@@ -57,7 +58,7 @@ export class RegulationAppointmentResultViewComponent {
 						if (result !== -1) {
 							this.resetInformation.emit();
 
-							var fullAppointmentDate = this.dateFormatPipe.transform(stringToDate(appointmentDate), 'fulldate');
+							var fullAppointmentDate = this.dateFormatPipe.transform(fromStringToDate(mapDateWithHypenToDateWithSlash(appointmentDate)), 'fulldate');
 							fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 							const timeData = appointmentHour.split(":");
 

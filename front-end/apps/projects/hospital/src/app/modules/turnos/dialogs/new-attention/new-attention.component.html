@@ -103,7 +103,7 @@
 				<div mat-dialog-title>
 					{{'turnos.agenda-setup.dialog.TAKE_SHIFTS_TITLE' | translate}}
 				</div>
-				<div>
+				<div *ngIf="isHabilitarSolicitudReferenciaOn">
 					<mat-checkbox (change)="changeAvailbleForCareLine()" [disabled]="!data.hasSelectedLinesOfCare"
 						[checked]="form.value.protectedAppointmentsAllowed">
 						<span>
@@ -111,7 +111,7 @@
 						</span>
 					</mat-checkbox>
 				</div>
-				<div *ngIf="isEnableReportReference">
+				<div *ngIf="isHabilitarSolicitudReferenciaOn">
 					<mat-checkbox (change)="changeAvailbleProtectedByRegulation()" [checked]="form.value.regulationProtectedAppointmentsAllowed">
 						<span>
 							{{'turnos.agenda-setup.dialog.SERVES_SHIFTS_PROTECTED_BY_REGULATION' | translate}}

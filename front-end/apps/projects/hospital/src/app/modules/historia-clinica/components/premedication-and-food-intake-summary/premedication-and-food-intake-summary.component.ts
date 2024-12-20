@@ -9,7 +9,8 @@ import { DescriptionItemData } from '@presentation/components/description-item/d
 export class PremedicationAndFoodIntakeSummaryComponent {
 
     @Input() premedicationList: DescriptionItemData[];
-    @Input() lastFoodIntake: Date;
+    @Input() lastFoodIntakeTime: Date;
+	@Input() lastFoodIntakeDate: Date;
 
     constructor() { }
 }

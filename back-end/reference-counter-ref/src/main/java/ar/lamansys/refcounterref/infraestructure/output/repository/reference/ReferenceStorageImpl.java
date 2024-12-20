@@ -2,15 +2,18 @@ package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceExceptionEnum;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceAdministrativeStateStorage;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceAdministrativeStateBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +50,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	private static final Integer OUTPATIENT_SOURCE_TYPE_ID = 1;
 
-	private static final Short APPROVED_REGULATION_STATE = 1;
+	private static final Short APPROVED_ADMINISTRATIVE_STATE = EReferenceAdministrativeState.APPROVED.getId();
 
     private final ReferenceRepository referenceRepository;
 
@@ -67,6 +71,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
 	
 	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
+
+	private final HistoricReferenceAdministrativeStateStorage historicReferenceAdministrativeStateStorage;
 
     @Override
 	@Transactional
@@ -94,9 +100,21 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	}
 
 	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {
-		var regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
-		reference.setRegulationStateId(regulationStateId);
-		referenceRepository.save(reference);
+		Short regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
+		/* if referenceBo has oldReferenceId, it means that we are modifying an old reference */
+		if (referenceBo.getOldReferenceId() != null){
+			if (referenceBo.getRegulationState() != null && referenceBo.getRegulationState().equals(EReferenceRegulationState.SUGGESTED_REVISION)) {
+				regulationStateId = EReferenceRegulationState.WAITING_AUDIT.getId();
+				historicReferenceRegulationStorage.updateReferenceRegulationState(reference.getId(), regulationStateId, null);
+			}
+		} else {
+			reference.setRegulationStateId(regulationStateId);
+			if ((regulationStateId.equals(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()) || regulationStateId.equals(EReferenceRegulationState.AUDITED.getId())) && reference.getDestinationInstitutionId() != null) {
+				reference.setAdministrativeStateId(EReferenceAdministrativeState.WAITING_APPROVAL.getId());
+				historicReferenceAdministrativeStateStorage.save(reference.getId(), reference.getAdministrativeStateId(), null);
+			}
+			referenceRepository.save(reference);
+		}
 	}
 
 	private void saveReferenceOrder(CompleteReferenceBo referenceBo, List<Integer> orderIds, Reference reference, Integer referenceId) {
@@ -125,8 +143,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	@Override
     public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds) {
 		log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}, loggedUserRoleIds {}", patientId, clinicalSpecialtyIds, loggedUserRoleIds);
-		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE);
-       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE));
+		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_ADMINISTRATIVE_STATE);
+       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_ADMINISTRATIVE_STATE));
 		return setReferenceDetails(queryResult);
     }
 
@@ -224,7 +242,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId){
-		log.debug("Input parameters -> serviceRequestId {} ", serviceRequestId);
+		log.debug("Input parameter -> serviceRequestId {} ", serviceRequestId);
 		Optional<ReferenceRequestBo> ref =  referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
 		ref.ifPresent(r ->
 				r.setClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(r.getId())
@@ -234,13 +252,13 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<Reference> findById(Integer referenceId) {
-		log.debug("Input parameters -> referenceId {} ", referenceId);
+		log.debug("Input parameter -> referenceId {} ", referenceId);
 		return referenceRepository.findById(referenceId);
 	}
 
 	@Override
 	public Short getReferenceRegulationStateId(Integer referenceId) {
-		log.debug("Input parameters -> referenceId {} ", referenceId);
+		log.debug("Input parameter -> referenceId {} ", referenceId);
 		return referenceRepository.getReferenceRegulationStateId(referenceId).get(0);
 	}
 
@@ -294,7 +312,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<Integer> getReferenceEncounterTypeId(Integer referenceId){
-		log.debug("Input parameters -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		Optional<Integer> result = Optional.ofNullable(referenceRepository.getReferenceEncounterTypeId(referenceId));
 		log.debug("Output -> {}", result);
 		return result;
@@ -302,19 +320,55 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	@Override
 	public Optional<ReferenceStudyBo> getReferenceStudy (Integer referenceId){
-		log.debug("Input parameteres -> referenceId {}", referenceId);
+		log.debug("Input parameter -> referenceId {}", referenceId);
 		Optional<ReferenceStudyBo> result = referenceRepository.getReferenceStudy(referenceId);
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
 	@Override
-	public void updateDestinationInstitution(Integer referenceId, Integer institutionId) {
+	public boolean updateDestinationInstitution(Integer referenceId, Integer institutionId) {
 		log.debug("Input parameteres -> referenceId {}, institutionId {}", referenceId, institutionId);
 		var reference = this.referenceRepository.findById(referenceId).orElseThrow(() ->
 				new ReferenceException(ReferenceExceptionEnum.INVALID_REFERENCE_ID,  String.format("La referencia con id %s no existe", referenceId)));
-		reference.setDestinationInstitutionId(institutionId);
-		this.referenceRepository.save(reference);
+		if (!Objects.equals(reference.getDestinationInstitutionId(), institutionId)) {
+			reference.setDestinationInstitutionId(institutionId);
+			this.referenceRepository.save(reference);
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	@Override
+	public Integer getDestinationInstitutionId(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {}", referenceId);
+		return this.referenceRepository.getDestinationInstitutionId(referenceId);
+	}
+
+	@Override
+	public Integer getPatientId(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {}", referenceId);
+		return this.referenceRepository.getPatientId(referenceId);
+	}
+	
+	public Integer getOriginInstitutionId(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {}", referenceId);
+		return this.referenceRepository.getOriginInstitutionId(referenceId);
+	}
+
+	@Override
+	public Optional<Integer> getServiceRequestId(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		return this.referenceRepository.getServiceRequestId(referenceId);
+	}
+
+	@Override
+	public void setAdministrativeStateNull(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		var reference = this.referenceRepository.findById(referenceId).orElseThrow(() ->
+				new ReferenceException(ReferenceExceptionEnum.INVALID_REFERENCE_ID,  String.format("La referencia con id %s no existe", referenceId)));
+		reference.setAdministrativeStateId(null);
+		referenceRepository.save(reference);
 	}
 
 }

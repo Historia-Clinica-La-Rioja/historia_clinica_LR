@@ -44,7 +44,7 @@ public class ObservationResource extends IResourceFhir {
 		if (resource.hasValueBooleanType())
 			data.setValueBoolean(resource.getValueBooleanType().getValue());
 		if (resource.hasValueQuantity()) {
-			data.setQuantityValue(resource.getValueQuantity().getValue().floatValue());
+			data.setQuantityValue(resource.getValueQuantity().getValue());
 			data.setQuantityUnit(resource.getValueQuantity().getUnit());
 		}
 

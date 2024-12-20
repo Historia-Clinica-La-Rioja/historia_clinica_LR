@@ -121,6 +121,12 @@ public class SharedPersonImpl implements SharedPersonPort {
 		return personService.parseFormalPersonName(firstName,middleNames,lastName,otherLastNames,selfDeterminateName);
 	}
 
+	@Override
+	public String getCompletePersonNameByUserId(Integer userId) {
+		log.debug("Input parameter -> userId {}", userId);
+		return personService.getCompletePersonNameByUserId(userId);
+	}
+
 	public CompletePersonDto getCompletePersonData(Integer personId) {
 		return personService.getCompletePerson(personId)
 				.map(this::mapToCompletePersonData)

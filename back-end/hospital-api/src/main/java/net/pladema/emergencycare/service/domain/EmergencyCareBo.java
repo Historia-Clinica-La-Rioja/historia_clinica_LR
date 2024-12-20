@@ -96,13 +96,14 @@ public class EmergencyCareBo {
             this.policeInterventionDetails = new PoliceInterventionDetailsBo(emergencyCareVo.getPoliceInterventionDetails());
         this.createdOn = emergencyCareVo.getCreatedOn();
         this.hasPoliceIntervention = emergencyCareVo.getHasPoliceIntervention();
-		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription()) : null;
+		this.shockroom = emergencyCareVo.getShockroom() != null ? new ShockRoomBo(emergencyCareVo.getShockroom().getId(), emergencyCareVo.getShockroom().getDescription(), false) : null;
 		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), emergencyCareVo.getRoom() != null ? new RoomBo(emergencyCareVo.getRoom()) : null) : null;
 		this.endDate = emergencyCareVo.getEndDate();
 		this.institutionName = emergencyCareVo.getInstitutionName();
 		this.reason = emergencyCareVo.getReason();
 		this.stateUpdatedOn = emergencyCareVo.getStateUpdatedOn();
 		this.sector = emergencyCareVo.getSector() != null ? new SectorBo(emergencyCareVo.getSector()) : null;
+		this.triage = emergencyCareVo.getTriage() != null ? new TriageBo(emergencyCareVo.getTriage()) : null;
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {
@@ -124,6 +125,10 @@ public class EmergencyCareBo {
         this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 		this.reason = emergencyCareEpisode.getReason();
 		this.createdOn = emergencyCareEpisode.getCreatedOn();
+		Integer shockroomId = emergencyCareEpisode.getShockroomId();
+		this.shockroom = shockroomId != null ? ShockRoomBo.builder().id(shockroomId).build() : null;
+		Integer bedId = emergencyCareEpisode.getBedId();
+		this.bed = bedId != null ? BedBo.builder().id(bedId).build() : null;
     }
 
     public void setTriageRiskFactorIds(List<Integer> riskFactorIds) {
@@ -141,6 +146,14 @@ public class EmergencyCareBo {
 
 	public String getBedNumber() {
 		return bed != null ? bed.getBedNumber(): null;
+	}
+
+	public Integer getShockRoomId() {
+		return (this.getShockroom() != null) ? this.getShockroom().getId() : null;
+	}
+
+	public Integer getBedId() {
+		return (this.getBed() != null) ? this.getBed().getId() : null;
 	}
 
 }

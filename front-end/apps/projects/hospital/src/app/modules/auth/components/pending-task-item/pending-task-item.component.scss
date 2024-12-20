@@ -1,0 +1,25 @@
+.list-content{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.description{
+    flex: 1;
+    margin-left: 8px;
+
+}
+
+.information-message{
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.link-right{
+    margin-left: auto;
+    white-space: normal;
+    text-align: right;
+}

@@ -396,11 +396,12 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.domain.UpdateDiaryAppointmentBo(a.id, a.dateTypeId, a.hour, " +
-			"a.appointmentStateId, doh.medicalAttentionTypeId, a.isOverturn, doh.pk.openingHoursId, a.patientId, doh.pk.openingHoursId) " +
+			"a.appointmentStateId, doh.medicalAttentionTypeId, a.isOverturn, doh.pk.openingHoursId, a.patientId, doh.pk.openingHoursId, op.dayWeekId) " +
 			"FROM Diary d " +
 			"JOIN AppointmentAssn aa ON (aa.pk.diaryId = d.id) " +
 			"JOIN Appointment a ON (a.id = aa.pk.appointmentId) " +
 			"JOIN DiaryOpeningHours doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
+			"JOIN OpeningHours op ON op.id = doh.pk.openingHoursId " +
 			"WHERE d.id = :diaryId " +
 			"AND a.appointmentStateId != :appointmentStateId " +
 			"AND a.deleteable.deleted = FALSE " +

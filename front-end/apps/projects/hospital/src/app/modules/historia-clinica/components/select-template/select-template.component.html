@@ -1,5 +1,5 @@
 <div class="template-values" fxLayout="column">
-	<span mat-line class="mat-h3 capitalize-first-letter">
+	<span mat-line class="mat-h3 capitalize-first-letter" *ngIf="!hideName">
 		{{template.name}}
 	</span>
 
@@ -7,6 +7,7 @@
 
 	<mat-form-field appearance="outline" id="procedure-templates">
 		<mat-select [disabled]="template.preloadValues" [(value)]="template.preloadedSelectedTemplate"
+			placeholder="{{'ambulatoria.paciente.studies.select_template.PLACEHOLDER' | translate}}"
 			(selectionChange)="onSelect($event.value, template.id)">
 			<mat-option *ngFor="let t of template.form" [value]="t">
 				{{ t.description }}

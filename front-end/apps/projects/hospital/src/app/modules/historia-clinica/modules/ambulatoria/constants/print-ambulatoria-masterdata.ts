@@ -54,5 +54,5 @@ export const DocumentTypes = [
 	},
 ]
 
-export const TableColumns = ['select', 'startDate', 'endDate', 'encounterType', 'documentType', 'problem', 'institution', 'professional', 'download'];
+export const TableColumns = ['select', 'startDate', 'endDate', 'encounterType', 'documentType', 'problem', 'institution', 'professional'];
 

@@ -1,20 +1,4 @@
-const sectorMessages = {
-    name: 'Sector |||| Sectores',
-    fields: {
-        institutionId: 'Institución',
-        description: 'Nombre',
-        clinicalspecialtysectors: 'Especialidad | Sector',
-        childSectors: 'Sectores Hijos',
-        ageGroupId: 'Grupo de edad',
-        sectorTypeId: 'Tipo de sector',
-        sectorOrganizationId: 'Organización',
-        careTypeId: 'Tipo de cuidado',
-        hospitalizationTypeId: 'Permanencia',
-        sectorId: 'Sector padre',
-        informer: 'Realiza informes para todo el dominio.'
-    },
-    createRelated: 'Crear Sector'
-}
+import resources from '../../modules/resources.es';
 
 const messages = {
     app: {
@@ -112,6 +96,7 @@ const messages = {
         dialog_title: 'Unificar coberturas médicas',
     },
     resources: {
+        ...resources,
         wcDefinitionPath: {
             name: 'Extension |||| Extensiones',
             fields: {
@@ -133,21 +118,6 @@ const messages = {
             },
             createRelated: 'Crear Cama'
         },
-        rooms: {
-            name: 'Habitación |||| Habitaciones',
-            fields: {
-                description: 'Nombre',
-                type: 'Tipo',
-                specialityId: 'Especialidad',
-                dischargeDate: 'Fecha de alta',
-                sectorId: 'Sector',
-                clinicalSpecialtySectorId: 'Especialidad | Sector',
-                roomNumber: 'Nro. habitación',
-                beds: 'Camas',
-                topic: 'Tópico'
-            },
-            createRelated: 'Crear Habitación'
-        },
         cities: {
             name: 'Ciudad |||| Ciudades',
             fields: {
@@ -160,26 +130,6 @@ const messages = {
             fields: {
                 description: 'Nombre',
             },
-        },
-        doctorsoffices: {
-            name: 'Consultorio |||| Consultorios',
-            fields: {
-                description: 'Nombre',
-                openingTime: 'Horario de apertura',
-                closingTime: 'Horario de cierre',
-                sectorId: 'Sector',
-                institutionId: 'Institución',
-                topic: 'Tópico'
-            },
-            createRelated: 'Crear Consultorio',
-        },
-        shockroom: {
-            name: "Shockrooms",
-            createRelated: 'Crear Shockroom',
-            fields: {
-                description: 'Nombre',
-                topic: 'Tópico'
-            }
         },
         addresses: {
             name: 'Dirección |||| Direcciones',
@@ -239,8 +189,6 @@ const messages = {
             patient: 'Nombre y apellido Paciente',
             professional: 'Nombre y apellido Profesional'
         },
-        sectors: sectorMessages,
-        rootsectors: sectorMessages,
 
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',
@@ -396,18 +344,6 @@ const messages = {
                 addHierarchicalUnit: 'Asociar unidad jerárquica'
             }
         },
-        admin: {
-            name: 'Admin |||| Admins',
-            fields: {
-                username: 'Nombre de usuario',
-                enable: 'Habilitado',
-                lastLogin: 'Último ingreso',
-                institutionId: 'Institución',
-                roleId: 'Rol',
-                email: "E-mail"
-            },
-            noEmail: "Sin información",
-        },
         userroles: {
             name: 'Roles de usuario |||| Roles de usuario',
             fields: {
@@ -420,26 +356,6 @@ const messages = {
             name: 'Episodio de internación |||| Episodios de internación',
             fields: {
                 entryDate: 'Fecha de entrada'
-            }
-        },
-        person: {
-            name: 'Persona |||| Personas',
-            fields: {
-                firstName: 'Nombre',
-                middleNames: 'Segundo nombre',
-                lastName: 'Apellido',
-                otherLastNames: 'Segundo apellido',
-                genderId: 'Género',
-                identificationTypeId: 'Tipo de documento',
-                identificationNumber: 'Nº de documento',
-                birthDate: 'Fecha de nacimiento'
-            },
-            tabs: {
-                details: 'Datos personales',
-                users: 'Usuario'
-            },
-            buttons: {
-                linkProfession: 'Asociar profesión'
             }
         },
         carelines: {

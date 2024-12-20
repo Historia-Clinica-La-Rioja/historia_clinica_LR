@@ -16,8 +16,6 @@ import { UserInfo } from '@presentation/components/user-badge/user-badge.compone
 import { mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
 import { mapToLocation } from '@api-presentation/mappers/institution-dto.mapper';
 
-import { MenuService } from '@extensions/services/menu.service';
-
 import { HomeRoutes } from '../home/constants/menu';
 import { AppRoutes } from '../../app-routing.module';
 import { SIDEBAR_MENU } from './constants/menu';
@@ -41,7 +39,6 @@ export class InstitucionComponent implements OnInit {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private contextService: ContextService,
-		private extensionMenuService: MenuService,
 		private permissionsService: PermissionsService,
 		private institutionService: InstitutionService,
 		private accountService: AccountService,
@@ -64,9 +61,6 @@ export class InstitucionComponent implements OnInit {
 				.pipe(
 					switchMap(menu => this.permissionsService.filterItems$(menu)),
 					map(menuItems => menuItems.map(defToMenuItem)),
-					switchMap(items => this.extensionMenuService.getInstitutionMenu(institutionId).pipe(
-						map(extesionItems => [...items, ...extesionItems]),
-					)),
 					switchMap(items => this.wcExtensionsService.getInstitutionMenu().pipe(map(extensiones => [...items, ...extensiones])))
 				);
 

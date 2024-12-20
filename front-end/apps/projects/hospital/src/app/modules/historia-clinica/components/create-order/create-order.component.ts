@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ServiceRequestCategoryDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { MIN_DATE } from '@core/utils/date.utils';
-import { CreateOrder } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+import { CreateOrder } from '@historia-clinica/dialogs/add-study/add-study.component';
+import { TemplateOrConceptOption } from '../template-concept-typeahead-search/template-concept-typeahead-search.component';
+import { OrderTemplateService } from '@historia-clinica/services/order-template.service';
 
 const DEFAULT_STUDY = {
 	id: "71388002",
@@ -11,7 +13,8 @@ const DEFAULT_STUDY = {
 @Component({
 	selector: 'app-create-order',
 	templateUrl: './create-order.component.html',
-	styleUrls: ['./create-order.component.scss']
+	styleUrls: ['./create-order.component.scss'],
+	providers: [OrderTemplateService]
 })
 export class CreateOrderComponent implements OnInit {
 
@@ -27,21 +30,18 @@ export class CreateOrderComponent implements OnInit {
 		this.setStudyCategory(DEFAULT_STUDY.id);
 	}
 
-	dateChanged(date: Date) {
-		this.data.createOrderService.setDate(date);
-	}
-
-	setConcept(conceptProblem: SnomedDto) {
-		this.data.createOrderService.setConcept(conceptProblem);
-	}
-
-	setProblem(healthProblem: SnomedDto) {
-		this.data.createOrderService.setProblem(healthProblem);
-	}
-
-	setStudyCategory(studyCategoryId: number | string) {
+	setStudyCategory(studyCategoryId: string) {
 		this.data.createOrderService.setStudyCategory(studyCategoryId);
 	}
 
+	handleStudySelected(study: TemplateOrConceptOption) {
+		let concept: SnomedDto;
+		if (study)
+			concept = {
+				pt: study.data.pt.term,
+				sctid: study.data.conceptId,
+			}
+		this.data.createOrderService.setConcept(concept);
+	}
 }
 

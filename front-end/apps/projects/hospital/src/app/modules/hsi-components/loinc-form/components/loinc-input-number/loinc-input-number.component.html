@@ -2,8 +2,11 @@
 
 <div fxLayoutGap="8px" fxLayout="row" fxLayoutAlign="none center">
 	<mat-form-field appearance="outline">
-		<input matInput type="number" [(value)]="preloadValue" (change)="emitValueChange($event)">
-
+		<input [formControl]="numberControl" matInput type="text" [pattern]="numberPattern" [(value)]="preloadValue"
+			(change)="emitValueChange($event)">
+		<mat-error *ngIf="numberControl.invalid">
+			{{'ambulatoria.reference-study-close.form.INVALID_FORMAT' | translate }}
+		</mat-error>
 	</mat-form-field>
 	<div>
 		<mat-form-field appearance="outline">

@@ -18,7 +18,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	private snomedConcept: SnomedDto;
 	private readonly ECL = SnomedECL.FAMILY_RECORD;
 
-	dataEmitter = new Subject()
+	dataEmitter = new Subject<AntecedenteFamiliar[]>()
 	data$ = this.dataEmitter.asObservable();
 
 	constructor(

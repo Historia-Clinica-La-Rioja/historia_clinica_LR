@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.booking;
 
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface SharedBookingPort {
 
-	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException;
+	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException;
 
 	void cancelBooking(String uuid);
 
@@ -47,4 +48,8 @@ public interface SharedBookingPort {
 
 	List<ProfessionalAvailabilityDto> fetchAvailabilityByPractice(Integer institutionId,  Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId);
 
+
+	boolean checkMailExists(String email);
+
+	List<BookingSpecialtyDto> fetchBookingSpecialtiesByProfessionals();
 }

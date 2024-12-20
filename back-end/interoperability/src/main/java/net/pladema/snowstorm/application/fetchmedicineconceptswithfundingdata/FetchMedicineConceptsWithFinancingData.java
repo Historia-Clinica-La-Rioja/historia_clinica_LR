@@ -1,5 +1,6 @@
 package net.pladema.snowstorm.application.fetchmedicineconceptswithfundingdata;
 
+import ar.lamansys.sgh.shared.domain.medicineGroup.MedicineGroupAuditFinancedBo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snowstorm.application.fetchconcepts.FetchConcepts;
@@ -35,9 +36,9 @@ public class FetchMedicineConceptsWithFinancingData {
 		return result;
 	}
 
-	private List<SnomedFinancedMedicineBo> processData(List<SnomedSearchItemBo> medicines, Map<String, Boolean> medicinesWithCoveredInfo) {
+	private List<SnomedFinancedMedicineBo> processData(List<SnomedSearchItemBo> medicines, Map<String, MedicineGroupAuditFinancedBo> medicinesWithCoveredInfo) {
 		return medicines.stream()
-				.map(m -> new SnomedFinancedMedicineBo(m.getConceptId(), m.getId(), m.getFsn(), m.getPt(), medicinesWithCoveredInfo.get(m.getConceptId())))
+				.map(m -> new SnomedFinancedMedicineBo(m.getConceptId(), m.getId(), m.getFsn(), m.getPt(), medicinesWithCoveredInfo.get(m.getConceptId()).getFinanced(), medicinesWithCoveredInfo.get(m.getConceptId()).getAuditRequiredDescription()))
 				.sorted(Comparator.comparing(SnomedFinancedMedicineBo::isFinanced)
 						.reversed()
 						.thenComparing(medicine -> medicine.getPt().getTerm()))

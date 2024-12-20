@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.odontology.application.modifyOdontogramAndIndices.ModifyOdontogramAndIndicesImpl;
+import ar.lamansys.odontology.application.odontogram.UpdateLastOdontogramDrawingFromHistoricImpl;
+
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.odontology.application.modifyOdontogramAndIndices.ModifyOdontogramAndIndices;
-import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyConsultationStorage;
+import ar.lamansys.odontology.application.odontogram.ports.ToothIndicesStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyConsultationInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyDiagnosticProcedureInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
@@ -22,7 +24,8 @@ public class SharedOdontologyConsultationPortImpl implements SharedOdontologyCon
 	private final OdontologyConsultationStorage odontologyConsultationStorage;
 	private final OdontogramDrawingStorage odontogramDrawingStorage;
 	private final ToothIndicesStorage toothIndicesStorage;
-	private final ModifyOdontogramAndIndices modifyOdontogramAndIndices;
+	private final ModifyOdontogramAndIndicesImpl modifyOdontogramAndIndices;
+	private final UpdateLastOdontogramDrawingFromHistoricImpl updateLastOdontogramDrawingFromHistoric;
 
 	@Override
 	public List<Integer> getOdontologyConsultationIdsFromPatients(List<Integer> patients) {
@@ -60,6 +63,16 @@ public class SharedOdontologyConsultationPortImpl implements SharedOdontologyCon
 	@Override
 	public Optional<Integer> getPatientMedicalCoverageId(Integer id){
 		return odontologyConsultationStorage.getPatientMedicalCoverageId(id);
+	}
+
+	@Override
+	public void updateOdontogramDrawingFromHistoric(Integer patientId, Integer healthConditionId) {
+		updateLastOdontogramDrawingFromHistoric.run(patientId, healthConditionId);
+	}
+
+	@Override
+	public Optional<Long> getOdontologyDocumentId(Integer healthConditionId) {
+		return odontologyConsultationStorage.getOdontologyDocumentId(healthConditionId);
 	}
 
 }

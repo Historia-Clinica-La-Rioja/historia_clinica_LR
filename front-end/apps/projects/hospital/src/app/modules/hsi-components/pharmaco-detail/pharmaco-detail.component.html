@@ -1,9 +1,9 @@
 <div class="container">
 
 	<div class="pharmaco-container">
-		<app-title-description *ngIf="pharmaco.pt"
+		<app-title-description *ngIf="pharmacoDetail.pt"
 			[title]="'pharmaco-detail.PHARMACO'"
-			[text]="pharmaco.pt">
+			[text]="pharmacoDetail.pt">
 		</app-title-description>
 
 		<div class="buttons" *ngIf="showButtons">
@@ -16,57 +16,57 @@
 		</div>
 	</div>
 
-	<app-title-description *ngIf="pharmaco.commercialPt"
+	<app-title-description *ngIf="pharmacoDetail.commercialPt"
 		[title]="'pharmaco-detail.SUGGESTED_COMMERCIAL'"
-		[text]="pharmaco.commercialPt">
+		[text]="pharmacoDetail.commercialPt">
 	</app-title-description>
 
     <div class="grouped-info">
-        <app-title-description *ngIf="pharmaco.unitDose"
-            [title]="'pharmaco-detail.UNIT_DOSE'"
-            [text]="pharmaco.unitDose">
+        <app-title-description *ngIf="pharmacoDetail.unitDose"
+            [title]="pharmacoDetail.titles.unitDose"
+            [text]="pharmacoDetail.unitDose">
         </app-title-description>
 
-        <app-title-description *ngIf="pharmaco.dayDose"
-            [title]="'pharmaco-detail.DAY_DOSE'"
-            [text]="pharmaco.dayDose">
+        <app-title-description *ngIf="pharmacoDetail.dayDose"
+            [title]="pharmacoDetail.titles.dayDose"
+            [text]="pharmacoDetail.dayDose">
         </app-title-description>
 
-        <app-title-description *ngIf="pharmaco.treatmentDays"
+        <app-title-description *ngIf="pharmacoDetail.treatmentDays"
             [title]="'pharmaco-detail.TREATMENT_DAYS'"
-            [text]="pharmaco.treatmentDays">
+            [text]="pharmacoDetail.treatmentDays">
         </app-title-description>
 
-        <app-title-description *ngIf="pharmaco.quantity"
-            [title]="'pharmaco-detail.QUANTITY'"
-            [text]="pharmaco.quantity">
+        <app-title-description *ngIf="pharmacoDetail.quantity"
+            [title]="pharmacoDetail.titles.quantity"
+            [text]="pharmacoDetail.quantity">
         </app-title-description>
     </div>
 
-	<app-title-description *ngIf="pharmaco.interval"
+	<app-title-description *ngIf="pharmacoDetail.interval"
 		[title]="'pharmaco-detail.INTERVAL'"
-		[text]="pharmaco.interval">
+		[text]="pharmacoDetail.interval | translate">
 	</app-title-description>
 
-	<div class="grouped-info" *ngIf="pharmaco.commercialMedicationPrescription">
-        <app-title-description
+	<div class="grouped-info">
+        <app-title-description *ngIf="pharmacoDetail.commercialMedicationPrescription?.presentationUnitQuantity > 0"
             [title]="'pharmaco-detail.PRESENTATION'"
-            [text]="pharmaco.commercialMedicationPrescription.presentationUnitQuantity + ' unidades'">
+            [text]="pharmacoDetail.commercialMedicationPrescription.presentationUnitQuantity + ' unidad/es'">
         </app-title-description>
 
-        <app-title-description
+        <app-title-description *ngIf="pharmacoDetail.commercialMedicationPrescription?.medicationPackQuantity > 0"
             [title]="'pharmaco-detail.MEDICATION_PACK'"
-            [text]="pharmaco.commercialMedicationPrescription.medicationPackQuantity">
+            [text]="pharmacoDetail.commercialMedicationPrescription.medicationPackQuantity">
         </app-title-description>
     </div>
 
-	<app-identifier-cases *ngIf="pharmaco.healthProblem"
+	<app-identifier-cases *ngIf="pharmacoDetail.healthProblem"
 		[identifierCase]="identiferCases.PROBLEM"
-        [description]="pharmaco.healthProblem">
+        [description]="pharmacoDetail.healthProblem">
     </app-identifier-cases>
 
-	<app-title-description *ngIf="pharmaco.observations"
+	<app-title-description *ngIf="pharmacoDetail.observations"
 		[title]="'pharmaco-detail.OBSERVATIONS'"
-		[text]="pharmaco.observations">
+		[text]="pharmacoDetail.observations">
 	</app-title-description>
 </div>

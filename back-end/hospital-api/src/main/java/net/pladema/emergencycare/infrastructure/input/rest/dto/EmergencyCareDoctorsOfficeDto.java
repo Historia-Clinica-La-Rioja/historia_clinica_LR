@@ -13,4 +13,5 @@ public class EmergencyCareDoctorsOfficeDto {
 	private String description;
 	private boolean isAvailable;
 	private String sectorDescription;
+	private Boolean isBlocked;
 }

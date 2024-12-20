@@ -208,7 +208,7 @@
         <div>
             <div class="section-title">Episodio/Encuentro</div>
             <div style="margin-bottom: 10px;">
-                <div class="row-content">
+                <div class="row-content" style="width: 20%;">
                     <div class="data-title">Institucion</div>
                     <div class="data-text" th:text="${institution.name}"></div>
                 </div>
@@ -697,7 +697,7 @@
 
     <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories.content) || familyHistories.isReferred != null}">
         <p class="section-title">Antecedentes familiares</p>
-        <div th:if="${personalHistories.isReferred != null && familyHistories.isReferred == false}">
+        <div th:if="${familyHistories.isReferred != null && familyHistories.isReferred == false}">
             <p class="section-data">No refiere</p>
         </div>
         <div th:if="${(familyHistories.isReferred == null && not #lists.isEmpty(familyHistories.content)) || familyHistories.isReferred == true}">
@@ -1069,7 +1069,7 @@
                         <dd><strong>Unidad: </strong><span th:text="${substance.dosage.quantity.unit}"></span></dd>
                         <dd th:if="${substance.viaDescription}">
                             <strong>Fecha de administración: </strong>
-                            <span th:text="${substance.performedTime} ? ${#temporals.format(substance.performedTime, 'HH:mm') + ' hs.'} : _"></span>
+                            <span th:text="${substance.performedTime} ? ${#temporals.format(substance.performedTime, 'dd/MM/yyyy') + ' - ' + #temporals.format(substance.performedTime, 'HH:mm') + ' hs.'} : _"></span>
                         </dd>
                     </dl>
                 </dd>
@@ -1078,10 +1078,12 @@
     </div>
 
     <!-- Última hora ingesta alimentaria -->
-    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${procedureDescription != null && procedureDescription.foodIntakeClockTime != null}">
+    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${procedureDescription != null && (procedureDescription.foodIntakeClockDate != null || procedureDescription.foodIntakeClockTime != null)}" th:with="pd=${procedureDescription}">
         <p class="section-title" th:text="${preMedications == null || #lists.isEmpty(preMedications)} ? ${message} : _"></p>
         <strong>Última ingesta de comida: </strong>
-        <span th:text="${#temporals.format(procedureDescription.foodIntakeClockTime, 'HH:mm') + ' hs.'}"></span>
+        <span th:text="${pd.foodIntakeClockDate} ? ${#temporals.format(pd.foodIntakeClockDate, 'dd/MM/yyyy')} : _"> </span>
+        <span th:text="${pd.foodIntakeClockDate != null && pd.foodIntakeClockTime != null} ? ' - ' : _"> </span>
+        <span th:text="${pd.foodIntakeClockTime} ? ${#temporals.format(pd.foodIntakeClockTime, 'HH:mm') + ' hs.'} : _"> </span>
     </div>
 
     <!-- Antecedentes (histories) -->
@@ -1281,6 +1283,30 @@
                     </dd>
                 </dl>
             </dl>
+        </div>
+
+        <div th:fragment="isolationAlerts" th:if="${isolationAlerts != null && not #lists.isEmpty(isolationAlerts)}">
+            <p class="section-title">Alertas de aislamiento</p>
+            <div>
+                <dl th:each="alert,iter: ${isolationAlerts}" class="section-data">
+                    <dl>
+                        <dd th:if="${alert.isModified}" style="max-width: 70%; word-wrap: break-word;">
+                            <span>Se han realizado modificaciones sobre la alerta de aislamiento posteriores a la última versión del documento</span>
+                        </dd>
+                        <dd th:if="${alert.isModified}" style="max-width: 70%; word-wrap: break-word;">
+                            <strong>Editado: </strong> <label th:text="${alert.updatedBy + ' ' + #temporals.format(alert.getUpdatedOnAtExpectedTimezone(), 'dd/MM/yyyy - HH:mm') + 'hs'}"></label>
+                        </dd>
+                        <dd><strong>Diagnóstico asociado: </strong> <label th:text="${alert.healthConditionPt}"></label></dd>
+                        <dd><strong>Tipo de aislamiento: </strong> <label th:text="${#strings.listJoin(alert.types.![description], ', ')}"></label></dd>
+                        <dd><strong>Criticidad: </strong> <label th:text="${alert.criticality.description}"></label></dd>
+                        <dd><strong>Fin de alerta: </strong> <label th:text="${#temporals.format(alert.endDate, 'dd/MM/yyyy')}"></label></dd>
+                        <dd><strong>Estado: </strong><label th:text="${alert.status.description}"></label></dd>
+                        <dd th:if="${not #strings.isEmpty(alert.observations)}">
+                            <strong>Observaciones: </strong><p th:text="${alert.observations}" class="center-padding wide_wrapped_text"></p>
+                        </dd>
+                    </dl>
+                </dl>
+            </div>
         </div>
 
     </div>

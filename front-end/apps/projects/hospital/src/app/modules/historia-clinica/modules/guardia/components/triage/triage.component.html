@@ -8,7 +8,7 @@
 			<label class="formLabel" [translate]="'guardia.triage.LEVEL'"></label>
 			<mat-form-field class="simple-form-field" appearance="outline">
 				<mat-select formControlName="triageCategoryId" (selectionChange)="changeTriageLevel($event)">
-					<mat-select-trigger *ngIf="triageLevel">
+					<mat-select-trigger *ngIf="triageLevel" class="triage-options">
 						<app-triage-chip [category]="triageLevel" [isFilled]="true"></app-triage-chip>
 					</mat-select-trigger>
 					<mat-option id="triageCategoryId" class="triage-options"

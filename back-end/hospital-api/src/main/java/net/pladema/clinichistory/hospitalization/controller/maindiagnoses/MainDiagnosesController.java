@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 @RestController
 public class MainDiagnosesController {
 

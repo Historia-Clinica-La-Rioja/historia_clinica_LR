@@ -2,10 +2,10 @@ package ar.lamansys.refcounterref.application.getreferencesummary;
 
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceExceptionEnum;
+import ar.lamansys.refcounterref.application.port.HistoricReferenceAdministrativeStateStorage;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
-import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institutionalgroup.SharedInstitutionalGroupPort;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,6 +26,7 @@ public class GetReferenceSummary {
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 	private final SharedInstitutionalGroupPort sharedInstitutionalGroupPort;
+	private final HistoricReferenceAdministrativeStateStorage historicReferenceAdministrativeStateStorage;
 
 	public List<ReferenceSummaryBo> run(Integer institutionId, Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
 		assertContextValid(patientId, clinicalSpecialtyId, practiceId);
@@ -58,8 +58,8 @@ public class GetReferenceSummary {
 
 	private void addRegulationStateToReferences(List<ReferenceSummaryBo> references){
 		references.forEach(r -> {
-			Optional<ReferenceRegulationBo> referenceRegulation = historicReferenceRegulationStorage.getByReferenceId(r.getId());
-			referenceRegulation.ifPresent(regulation -> r.setRegulationState(regulation.getState()));
+			historicReferenceRegulationStorage.getByReferenceId(r.getId()).ifPresent(regulation -> r.setRegulationState(regulation.getState()));
+			historicReferenceAdministrativeStateStorage.getByReferenceId(r.getId()).ifPresent(administrativeState -> r.setAdministrativeState(administrativeState.getState()));
 		});
 	}
 

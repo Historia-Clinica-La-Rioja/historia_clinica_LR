@@ -24,7 +24,7 @@ public interface InstitutionService {
 	
 	List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId, List<Integer> clinicalSpecialtyIds, Integer careLineId);
 
-	List<InstitutionBasicInfoBo> getInstitutionsByManagerUser(Integer userId);
+	List<InstitutionBasicInfoBo> getInstitutionsByManagerUser();
 
 	List<InstitutionBo> getAll();
 	

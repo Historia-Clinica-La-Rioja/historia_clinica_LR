@@ -18,15 +18,15 @@ public class DigitalSignatureDocumentBo {
 	private DocumentTypeBo documentTypeBo;
 	private String patientFullName;
 	private List<SnomedConceptBo> snomedConceptBo;
+	private Integer patientPersonId;
+	private Integer professionalPersonId;
 
-	public DigitalSignatureDocumentBo(Long documentId, SourceType sourceType, LocalDateTime createdOn, String professionalName,
-									  String professionalLastname, String professionalOtherLastName, Short documentTypeId, String documentTypeDescription,
-									  String patientName, String patientLastname, String patientOtherLastName) {
+	public DigitalSignatureDocumentBo(Long documentId, SourceType sourceType, LocalDateTime createdOn, Short documentTypeId, String documentTypeDescription, Integer patientPersonId, Integer professionalPersonId) {
 		this.documentId = documentId;
 		this.sourceTypeBo = new SourceTypeBo(sourceType.getId(), sourceType.getDescription());
 		this.createdOn = createdOn;
-		this.professionalFullName = professionalName + " " + professionalLastname + " " + (professionalOtherLastName != null ? professionalLastname : "");
 		this.documentTypeBo = new DocumentTypeBo(documentTypeId, documentTypeDescription);
-		this.patientFullName = patientName + " " + patientLastname + " " + (patientOtherLastName != null ? patientOtherLastName : "");
+		this.patientPersonId = patientPersonId;
+		this.professionalPersonId = professionalPersonId;
 	}
 }

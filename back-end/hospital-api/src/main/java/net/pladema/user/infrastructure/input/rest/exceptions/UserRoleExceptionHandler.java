@@ -1,5 +1,6 @@
 package net.pladema.user.infrastructure.input.rest.exceptions;
 
+import ar.lamansys.sgx.auth.user.domain.passwordreset.exceptions.PasswordResetTokenStorageException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.user.application.port.exceptions.UserPersonStorageException;
@@ -30,6 +31,13 @@ public class UserRoleExceptionHandler {
 		log.debug("RegisterUserException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
+
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    @ExceptionHandler({ PasswordResetTokenStorageException.class })
+    protected ApiErrorMessageDto handlePasswordResetTokenStorageException(PasswordResetTokenStorageException ex) {
+        log.debug("PasswordResetTokenStorageException exception -> {}", ex.getMessage());
+        return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+    }
 }
 
 

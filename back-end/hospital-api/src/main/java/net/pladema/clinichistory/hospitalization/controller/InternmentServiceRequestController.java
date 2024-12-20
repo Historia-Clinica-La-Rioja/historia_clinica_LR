@@ -86,7 +86,8 @@ public class InternmentServiceRequestController {
 					serviceRequestListDto.getObservations(),
 					serviceRequestListDto.getStudyType().getId(),
 					serviceRequestListDto.getRequiresTransfer(),
-					serviceRequestListDto.getDeferredDate());
+					serviceRequestListDto.getDeferredDate(),
+					serviceRequestListDto.getTemplateIds());
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createInternmentServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId) );
@@ -105,7 +106,7 @@ public class InternmentServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTransfer, DateTimeDto deferredDate){
+	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTransfer, DateTimeDto deferredDate, List<Integer> templateIds){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
 		GenericServiceRequestBo result = new GenericServiceRequestBo();
 		result.setCategoryId(categoryId);
@@ -115,6 +116,7 @@ public class InternmentServiceRequestController {
 		result.setObservations(observations);
 		result.setStudyTypeId(studyType);
 		result.setRequiresTransfer(requiresTransfer);
+		result.setTemplateIds(templateIds);
 		if (deferredDate != null) {
 			result.setDeferredDate(result.validateDeferredDate(
 					localDateMapper.fromDateDto(deferredDate.getDate())

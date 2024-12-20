@@ -143,6 +143,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
+	public void cancelAbsentAppointment(Integer appointmentId, String reason) {
+		log.debug("CancelAppointment ->  appointmentId {}, reason {}",  appointmentId, reason);
+		appointmentValidatorService.validateReason(AppointmentState.CANCELLED, reason);
+		appointmentService.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), reason);
+	}
+
+	@Override
 	public SavedBookingAppointmentDto saveBooking(
 			BookingAppointmentDto bookingAppointmentDto,
 			BookingPersonDto bookingPersonDto,

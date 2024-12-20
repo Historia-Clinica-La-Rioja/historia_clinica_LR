@@ -2,7 +2,7 @@ package ar.lamansys.odontology.infrastructure.repository.consultation;
 
 import ar.lamansys.odontology.domain.consultation.ClinicalSpecialtyBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyDoctorStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.security.UserInfo;

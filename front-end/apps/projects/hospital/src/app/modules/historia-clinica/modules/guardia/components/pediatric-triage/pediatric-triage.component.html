@@ -1,4 +1,4 @@
-<div class="page" fxLayout="column">
+<div fxLayout="column">
 	<form [formGroup]="pediatricForm">
 
 		<section id="triage">
@@ -30,7 +30,7 @@
 								{{bodyTemperature.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_body_temperature" type="button" 
+						<button id="clear_body_temperature" type="button"
 							*ngIf="pediatricForm.value.appearance.bodyTemperatureId" matSuffix color="warn"
 							mat-icon-button
 							(click)="clear(pediatricForm.controls.appearance, 'bodyTemperatureId'); $event.stopPropagation()">
@@ -60,7 +60,7 @@
 								{{muscleHypertonya.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_body_temperature" type="button" 
+						<button id="clear_body_temperature" type="button"
 							*ngIf="pediatricForm.value.appearance.muscleHypertoniaId" matSuffix color="warn"
 							mat-icon-button
 							(click)="clear(pediatricForm.controls.appearance, 'muscleHypertoniaId'); $event.stopPropagation()">
@@ -99,7 +99,7 @@
 								{{respiratoryRetraction.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_respiratory_retraction" type="button" 
+						<button id="clear_respiratory_retraction" type="button"
 							*ngIf="pediatricForm.value.breathing.respiratoryRetractionId" matSuffix color="warn"
 							mat-icon-button
 							(click)="clear(pediatricForm.controls.breathing, 'respiratoryRetractionId'); $event.stopPropagation()">
@@ -148,7 +148,7 @@
 								{{perfusion.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_perfusion" type="button" 
+						<button id="clear_perfusion" type="button"
 							*ngIf="pediatricForm.value.circulation.perfusionId" matSuffix color="warn" mat-icon-button
 							(click)="clear(pediatricForm.controls.circulation, 'perfusionId'); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>

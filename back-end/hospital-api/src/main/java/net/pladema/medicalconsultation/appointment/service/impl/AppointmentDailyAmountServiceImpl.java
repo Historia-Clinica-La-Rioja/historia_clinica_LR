@@ -1,7 +1,7 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.appointment.service.AppointmentDailyAmountService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -18,67 +18,55 @@ import ar.lamansys.sgx.shared.dates.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
-@Service
 @Slf4j
+@RequiredArgsConstructor
+@Service
 public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmountService {
 
     private final AppointmentService appointmentService;
-
     private final DiaryService diaryService;
-
 	private final HolidaysService holidaysService;
-
-
-    public AppointmentDailyAmountServiceImpl(AppointmentService appointmentService, DiaryService diaryService, HolidaysService holidaysService
-    ) {
-        this.appointmentService = appointmentService;
-        this.diaryService = diaryService;
-		this.holidaysService = holidaysService;
-    }
 
     @Override
     public Collection<AppointmentDailyAmountBo> getDailyAmounts(Integer diaryId, LocalDate from, LocalDate to) {
 		log.debug("Input parameter -> diaryId {}", diaryId);
 
-		if(diaryService.getDiary(diaryId).isEmpty())
-			throw new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND, "La Agenda solicitada no existe");
+        Collection<AppointmentDailyAmountBo> result = new ArrayList<>();
 
-		Collection<AppointmentDailyAmountBo> appointmentsDailyAmount = new ArrayList<>();
+        CompleteDiaryBo diary = diaryService.getDiary(diaryId)
+               .orElseThrow(() -> new DiaryNotFoundException(DiaryNotFoundEnumException.DIARY_ID_NOT_FOUND, "La agenda solicitada no existe"));
 		List<HolidayBo> holidays = holidaysService.getHolidays(from, to);
-        Optional<CompleteDiaryBo> diary = diaryService.getDiary(diaryId);
 
-        if (diary.isPresent()) {
-			if(diary.get().getEndDate().isBefore(to))
-				to = diary.get().getEndDate();
-			if(diary.get().getStartDate().isAfter(from))
-				from = diary.get().getStartDate();
-			Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Arrays.asList(diaryId), from, to);
+        if (diary.getEndDate().isBefore(to))
+            to = diary.getEndDate();
+        if (diary.getStartDate().isAfter(from))
+            from = diary.getStartDate();
 
-            for (LocalDate date = from;
-                 date.isBefore(to) || date.isEqual(to); date = date.plusDays(1)) {
+        Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(Collections.singletonList(diaryId), from, to);
 
-                Collection<DiaryOpeningHoursBo> openingHoursDate = this.getOpeningHoursFor(date, diary.get().getDiaryOpeningHours());
+        for (LocalDate date = from
+             ; date.isBefore(to) || date.isEqual(to)
+                ; date = date.plusDays(1)) {
 
-                if (!openingHoursDate.isEmpty()) {
-                    AppointmentDailyAmountBo dailyAmount = this.calculateAmountsFor(date, openingHoursDate, appointments, diary.get().getAppointmentDuration(), holidays);
-                    appointmentsDailyAmount.add(dailyAmount);
-                }
+            Collection<DiaryOpeningHoursBo> openingHoursDate = this.getOpeningHoursFor(date, diary.getDiaryOpeningHours());
+
+            if (!openingHoursDate.isEmpty()) {
+                AppointmentDailyAmountBo dailyAmount = this.calculateAmountsFor(date, openingHoursDate, appointments, diary.getAppointmentDuration(), holidays);
+                result.add(dailyAmount);
             }
         }
 
-		log.debug("Output size -> {}", appointmentsDailyAmount.size());
-		log.trace("Output -> {}", appointmentsDailyAmount);
-        return appointmentsDailyAmount;
+		log.debug("Output size -> {}", result.size());
+		log.trace("Output -> {}", result);
+        return result;
     }
 
     private Collection<DiaryOpeningHoursBo> getOpeningHoursFor(LocalDate date, Collection<DiaryOpeningHoursBo> openingHours) {
@@ -87,28 +75,47 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
                 .collect(Collectors.toList());
     }
 
-    private AppointmentDailyAmountBo calculateAmountsFor(LocalDate date, Collection<DiaryOpeningHoursBo> openingHours,
+    private AppointmentDailyAmountBo calculateAmountsFor(LocalDate date,
+                                                         Collection<DiaryOpeningHoursBo> openingHours,
                                                          Collection<AppointmentBo> appointments,
                                                          Short appointmentDuration,
 														 List<HolidayBo> holidays) {
-        AppointmentDailyAmountBo dailyAmountBo = new AppointmentDailyAmountBo(null, null, null, null, date);
-        Collection<AppointmentBo> appointmentsForDate = appointments.stream().filter(a -> a.getDate().equals(date)).collect(Collectors.toList());
+        AppointmentDailyAmountBo result = new AppointmentDailyAmountBo(null, null, null, null, date);
+        Collection<AppointmentBo> appointmentsForDate = appointments.stream()
+                .filter(a -> a.getDate().equals(date))
+                .collect(Collectors.toList());
 
         openingHours.forEach(oh -> {
+
+            var appointmentsInOH = appointmentsForDate.stream()
+                    .filter(oh::fitsAppointmentHere)
+                    .filter(a -> !a.isOverturn())
+                    .collect(Collectors.toList());
+
             if (oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS)) {
-                calculateSpontaneousAmount(dailyAmountBo, appointmentsForDate, oh);
+                calculateSpontaneousAmount(result, appointmentsInOH);
             } else {
-                calculateProgrammedAmount(appointmentDuration, dailyAmountBo, appointmentsForDate, oh);
+                calculateProgrammedAmount(appointmentDuration, result, appointmentsInOH, oh);
             }
-			List<HolidayBo> currentDayHolidays = holidays.stream().filter(holiday -> holiday.getDate().equals(date)).collect(Collectors.toList());
-			if (!currentDayHolidays.isEmpty())
-				dailyAmountBo.setHoliday(currentDayHolidays.size());
         });
 
-        return dailyAmountBo;
+        calculateHolidaysAmount(date, holidays, result);
+
+        return result;
     }
 
-    private void calculateProgrammedAmount(Short appointmentDuration, AppointmentDailyAmountBo dailyAmountBo, Collection<AppointmentBo> appointmentsForDate, DiaryOpeningHoursBo oh) {
+    private void calculateHolidaysAmount(LocalDate date, List<HolidayBo> holidays, AppointmentDailyAmountBo result) {
+        List<HolidayBo> currentDayHolidays = holidays.stream()
+                .filter(holiday -> holiday.getDate().equals(date))
+                .collect(Collectors.toList());
+        if (!currentDayHolidays.isEmpty())
+            result.setHoliday(currentDayHolidays.size());
+    }
+
+    private void calculateProgrammedAmount(Short appointmentDuration,
+                                           AppointmentDailyAmountBo dailyAmountBo,
+                                           Collection<AppointmentBo> appointmentsFromOpeningHours,
+                                           DiaryOpeningHoursBo oh) {
         Long diff = MINUTES.between(oh.getOpeningHours().getFrom(), oh.getOpeningHours().getTo());
         Long segmentsInOpeningHour = diff / appointmentDuration;
 
@@ -116,34 +123,36 @@ public class AppointmentDailyAmountServiceImpl implements AppointmentDailyAmount
             dailyAmountBo.setProgrammed(0);
             dailyAmountBo.setProgrammedAvailable(0);
         }
-        dailyAmountBo.setProgrammedAvailable(dailyAmountBo.getProgrammedAvailable() + segmentsInOpeningHour.intValue() - (int) appointmentsForDate.stream().filter(a->a.getAppointmentStateId().equals(AppointmentState.BLOCKED)).count());
-        if (!appointmentsForDate.isEmpty()) {
-            Integer amount = this.getAmountBy(oh, appointmentsForDate);
-            dailyAmountBo.setProgrammed(dailyAmountBo.getProgrammed() + amount);
-            dailyAmountBo.setProgrammedAvailable(dailyAmountBo.getProgrammedAvailable() - amount);
-        }
+
+        var blockedAppointments = (int) appointmentsFromOpeningHours.stream()
+                .filter(AppointmentBo::isBlocked)
+                .count();
+        var validAppointments = (int) appointmentsFromOpeningHours.stream()
+                .filter(a -> !a.isBlocked())
+                .count();
+
+        int dailyAccumulatedProgrammedAvailableOpeningHours = dailyAmountBo.getProgrammedAvailable();
+        int dailyAccumulatedProgrammedOpeningHours = dailyAmountBo.getProgrammed();
+
+        int segmentsAvailablesToAssign = segmentsInOpeningHour.intValue() - blockedAppointments;
+
+        int programmed = dailyAccumulatedProgrammedOpeningHours + validAppointments;
+        int programmedAvailable = dailyAccumulatedProgrammedAvailableOpeningHours + segmentsAvailablesToAssign - validAppointments;
+
+        dailyAmountBo.setProgrammed(programmed);
+        dailyAmountBo.setProgrammedAvailable(programmedAvailable);
     }
 
-    private void calculateSpontaneousAmount(AppointmentDailyAmountBo dailyAmountBo, Collection<AppointmentBo> appointmentsForDate, DiaryOpeningHoursBo oh) {
+    private void calculateSpontaneousAmount(AppointmentDailyAmountBo dailyAmountBo,
+                                            Collection<AppointmentBo> appointmentsFromOpeningHours) {
         if (dailyAmountBo.getSpontaneous() == null)
             dailyAmountBo.setSpontaneous(0);
-        if (!appointmentsForDate.isEmpty()) {
-            dailyAmountBo.setSpontaneous(dailyAmountBo.getSpontaneous() + this.getAmountBy(oh, appointmentsForDate));
-        }
-    }
 
-    private Integer getAmountBy(DiaryOpeningHoursBo oh, Collection<AppointmentBo> appointmentsForDate) {
-        LocalTime from = oh.getOpeningHours().getFrom();
-        LocalTime to = oh.getOpeningHours().getTo();
-
-        Collection<AppointmentBo> appointmentsInOH = appointmentsForDate.stream()
-                .filter(a -> (!a.isOverturn() && this.isAppointmentInOH(a, from, to) && !(a.getAppointmentStateId().equals(AppointmentState.BLOCKED))))
-                .collect(Collectors.toList());
-
-        return appointmentsInOH.size();
-    }
-
-    private boolean isAppointmentInOH(AppointmentBo a, LocalTime from, LocalTime to) {
-        return (a.getHour().isAfter(from) && a.getHour().isBefore(to)) || a.getHour().equals(from);
+        var validAppointments = (int) appointmentsFromOpeningHours.stream()
+                .filter(a -> !a.isBlocked())
+                .count();
+        var dailyAccumulatedSpontaneousAppointments = dailyAmountBo.getSpontaneous();
+        var spontaneousTotal = dailyAccumulatedSpontaneousAppointments + validAppointments;
+        dailyAmountBo.setSpontaneous(spontaneousTotal);
     }
 }

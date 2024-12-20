@@ -2,6 +2,7 @@ package ar.lamansys.sgh.publicapi.appointment.application.makeBooking;
 
 import ar.lamansys.sgh.publicapi.appointment.application.makeBooking.exception.MakeBookingAccessDeniedException;
 import ar.lamansys.sgh.publicapi.appointment.infrastructure.input.service.AppointmentPublicApiPermissions;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
@@ -18,7 +19,7 @@ public class MakeBooking {
 	private final SharedBookingPort bookAppointmentPort;
 	private final AppointmentPublicApiPermissions appointmentPublicApiPermissions;
 
-	public SavedBookingAppointmentDto run(Integer institutionId, BookingDto bookingDto) throws ProfessionalAlreadyBookedException, SaveExternalBookingException, BookingPersonMailNotExistsException {
+	public SavedBookingAppointmentDto run(Integer institutionId, BookingDto bookingDto) throws ProfessionalAlreadyBookedException, SaveExternalBookingException, BookingPersonMailNotExistsException, BookingCannotSendEmailException {
 		assertUserCanAccess(institutionId);
 		return bookAppointmentPort.makeBooking(bookingDto,true);
 	}

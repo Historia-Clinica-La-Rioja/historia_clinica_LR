@@ -1,0 +1,11 @@
+@import '../../../../../assets/styles/mixins';
+
+.display-column {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.font-bold {
+	@include font-weight-bold;
+}

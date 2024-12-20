@@ -52,8 +52,10 @@ public class GetDailyFreeAppointmentTimes {
 		Short diaryAppointmentDuration = diaryRepository.getDiaryAppointmentDuration(diaryId);
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diaryId), filter.getDate(), filter.getDate());
 		Collection<DiaryOpeningHoursBo> openingHours = diaryOpeningHoursService.getDiaryOpeningHours(diaryId);
-		List<DiaryOpeningHoursFreeTimesBo> result = openingHours.stream().filter(diaryOpeningHours -> isOpeningHoursValid(filter, diaryOpeningHours))
-				.map(diaryOpeningHours -> calculateDiaryOpeningHoursFreeTimes(filter.getDate(), diaryOpeningHours, diaryAppointmentDuration, assignedAppointments)).collect(toList());
+		List<DiaryOpeningHoursFreeTimesBo> result = openingHours.stream()
+				.filter(diaryOpeningHours -> isOpeningHoursValid(filter, diaryOpeningHours))
+				.map(diaryOpeningHours -> calculateDiaryOpeningHoursFreeTimes(filter.getDate(), diaryOpeningHours, diaryAppointmentDuration, assignedAppointments))
+				.collect(toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -68,30 +70,64 @@ public class GetDailyFreeAppointmentTimes {
 		return openingHoursDayOfWeek == filter.getDate().getDayOfWeek().getValue() && freeAppointmentsUtils.isOpeningHoursValidToReassign(filter, diaryOpeningHours);
 	}
 
-	private DiaryOpeningHoursFreeTimesBo calculateDiaryOpeningHoursFreeTimes(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours,
-																			 Short appointmentDuration, Collection<AppointmentBo> assignedAppointments) {
+	private DiaryOpeningHoursFreeTimesBo calculateDiaryOpeningHoursFreeTimes(LocalDate date,
+																			 DiaryOpeningHoursBo diaryOpeningHours,
+																			 Short appointmentDuration,
+																			 Collection<AppointmentBo> assignedAppointments) {
 		var startTime = diaryOpeningHours.getOpeningHours().getFrom();
 		var endTime = diaryOpeningHours.getOpeningHours().getTo();
-		List<LocalTime> time = new ArrayList<>();
+		List<LocalTime> timeResult = new ArrayList<>();
 		LocalTime maxTime = LocalTime.of(0,0);
-		startTime = updateTime(appointmentDuration, time, startTime);
+		startTime = updateTime(appointmentDuration, timeResult, startTime);
 		while (startTime.isBefore(endTime) && !startTime.equals(maxTime))
-			startTime = updateTime(appointmentDuration, time, startTime);
-		processTimesInSearchOfFreeAppointments(date, time, diaryOpeningHours, assignedAppointments, appointmentDuration);
-		return new DiaryOpeningHoursFreeTimesBo(diaryOpeningHours.getOpeningHours().getId(), time);
+			startTime = updateTime(appointmentDuration, timeResult, startTime);
+
+		var assignedAppointmentsDiaryOpeningHours = assignedAppointments.stream()
+				.filter(diaryOpeningHours::fitsAppointmentHere)
+				.collect(toList());
+		long possibleAppointmentsAmount = getPossibleAppointmentsAmount(diaryOpeningHours, appointmentDuration);
+
+		processTimesInSearchOfFreeAppointments(date, timeResult, diaryOpeningHours, assignedAppointmentsDiaryOpeningHours, possibleAppointmentsAmount);
+		return new DiaryOpeningHoursFreeTimesBo(diaryOpeningHours.getOpeningHours().getId(), timeResult);
 	}
 
-	private void processTimesInSearchOfFreeAppointments(LocalDate date, List<LocalTime> time, DiaryOpeningHoursBo diaryOpeningHours,
-														Collection<AppointmentBo> assignedAppointments, Short appointmentDuration) {
+	private void processTimesInSearchOfFreeAppointments(LocalDate date,
+														List<LocalTime> timeResult,
+														DiaryOpeningHoursBo diaryOpeningHours,
+														Collection<AppointmentBo> assignedDiaryOpeningHoursAppointments,
+														long possibleAppointmentsAmount) {
+
+		LocalDate iterationWeekDay = getIterationWeekDayLocalDate(date, diaryOpeningHours);
+
+		List<AppointmentBo> openingHoursAndDayAppointments = assignedDiaryOpeningHoursAppointments.stream()
+				.filter(a -> a.getDate().equals(iterationWeekDay))
+				.collect(toList());
+
+		int overturnAppointmentsQuantity = (int) openingHoursAndDayAppointments.stream()
+				.filter(AppointmentBo::isOverturn)
+				.count();
+
+		boolean exceedAvailableAppointmentsAmounts = openingHoursAndDayAppointments.size() >= possibleAppointmentsAmount;
+		
+		int overturnsCountOpeningHours = diaryOpeningHours.getOverturnCount();
+
+		boolean allowOverturns = overturnsCountOpeningHours != 0;
+
+		boolean exceedOverturns = overturnAppointmentsQuantity >= overturnsCountOpeningHours;
+
+		if (exceedAvailableAppointmentsAmounts || (allowOverturns && exceedOverturns))
+			assignedDiaryOpeningHoursAppointments.stream()
+					.map(AppointmentBo::getHour)
+					.forEach(timeResult::remove);
+	}
+
+	private LocalDate getIterationWeekDayLocalDate(LocalDate date, DiaryOpeningHoursBo diaryOpeningHours) {
 		int openingHoursDayOfWeek = freeAppointmentsUtils.parseOpeningHoursWeekOfDay(diaryOpeningHours.getOpeningHours());
-		LocalDate iterationWeekDay = date.with(TemporalAdjusters.nextOrSame(DayOfWeek.of(openingHoursDayOfWeek)));
-		long possibleAppointmentsAmount = ChronoUnit.MINUTES.between(diaryOpeningHours.getOpeningHours().getFrom(), diaryOpeningHours.getOpeningHours().getTo()) / appointmentDuration + diaryOpeningHours.getOverturnCount();
-		assignedAppointments.forEach(appointment -> {
-			List<AppointmentBo> dayAppointments = assignedAppointments.stream().filter(a -> a.getDate().equals(iterationWeekDay) && a.getOpeningHoursId().equals(diaryOpeningHours.getOpeningHours().getId())).collect(toList());
-			int overturnAppointmentsQuantity = (int) dayAppointments.stream().filter(AppointmentBo::isOverturn).count();
-			if (dayAppointments.size() >= possibleAppointmentsAmount || overturnAppointmentsQuantity == diaryOpeningHours.getOverturnCount())
-				time.remove(appointment.getHour());
-		});
+        return date.with(TemporalAdjusters.nextOrSame(DayOfWeek.of(openingHoursDayOfWeek)));
+	}
+
+	private long getPossibleAppointmentsAmount(DiaryOpeningHoursBo diaryOpeningHours, Short appointmentDuration) {
+		return ChronoUnit.MINUTES.between(diaryOpeningHours.getOpeningHours().getFrom(), diaryOpeningHours.getOpeningHours().getTo()) / appointmentDuration + diaryOpeningHours.getOverturnCount();
 	}
 
 	private LocalTime updateTime(Short appointmentDuration, List<LocalTime> time, LocalTime startTime) {

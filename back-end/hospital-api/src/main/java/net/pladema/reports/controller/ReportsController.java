@@ -9,27 +9,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
-import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
-import net.pladema.hsi.extensions.utils.JsonResourceUtils;
-
-import net.pladema.reports.application.ReportInstitutionQueryBo;
-import net.pladema.reports.application.fetchappointmentconsultationsummary.FetchAppointmentConsultationSummary;
-
-import net.pladema.reports.application.generators.GenerateEmergencyCareNominalDetailExcelReport;
-import net.pladema.reports.application.generators.GenerateInstitutionMonthlyExcelReport;
-import net.pladema.reports.application.generators.GenerateAppointmentNominalDetailExcelReport;
-import net.pladema.reports.domain.AnnexIIParametersBo;
-import net.pladema.reports.domain.FormVParametersBo;
-import net.pladema.reports.domain.ReportSearchFilterBo;
-
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -51,10 +33,20 @@ import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.reports.application.ReportInstitutionQueryBo;
+import net.pladema.reports.application.fetchappointmentconsultationsummary.FetchAppointmentConsultationSummary;
+import net.pladema.reports.application.generators.GenerateAppointmentNominalDetailExcelReport;
+import net.pladema.reports.application.generators.GenerateEmergencyCareNominalDetailExcelReport;
+import net.pladema.reports.application.generators.GenerateInstitutionMonthlyExcelReport;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.dto.ConsultationsDto;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
+import net.pladema.reports.domain.AnnexIIParametersBo;
+import net.pladema.reports.domain.FormVParametersBo;
+import net.pladema.reports.domain.ReportSearchFilterBo;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.FetchConsultations;
 import net.pladema.reports.service.FormReportService;
@@ -268,38 +260,7 @@ public class ReportsController {
         return result;
     }
 
-	@GetMapping("/institution/{institutionId}/diabetes")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<UIComponentDto> getDiabetesReport(@PathVariable(name = "institutionId") Integer institutionId){
-		log.debug("Input parameter -> institutionId {}", institutionId);
-		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/diabetesReport.json",
-				new TypeReference<>() {},
-				null
-		);
-		return ResponseEntity.ok(result);
-	}
 
-	@GetMapping("/institution/{institutionId}/hypertension")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<UIComponentDto> getHypertensionReport(@PathVariable(name = "institutionId") Integer institutionId){
-		log.debug("Input parameter -> institutionId {}", institutionId);
-		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/hypertensionReport.json",
-				new TypeReference<>() {},
-				null
-		);
-		return ResponseEntity.ok(result);
-	}
-
-	@GetMapping("/institution/{institutionId}/epidemiological_week")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public ResponseEntity<UIComponentDto> getEpidemiologicalWeekReport(@PathVariable(name = "institutionId") Integer institutionId){
-		log.debug("Input parameter -> institutionId {}", institutionId);
-		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/epidemiologicalWeekReport.json",
-				new TypeReference<>() {},
-				null
-		);
-		return ResponseEntity.ok(result);
-	}
 
 	@GetMapping(value = "/institution/{institutionId}/nominal-appointment-detail")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
@@ -380,15 +341,6 @@ public class ReportsController {
 				buildReport(wb),
 				filename,
 				wb.getContentType()
-		);
-	}
-
-	@GetMapping("/get-call-center-appointments")
-	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
-	public UIComponentDto getCallCenterAppointmentsReport() {
-		return JsonResourceUtils.readJson("extension/reports/callCenterReport.json",
-				new TypeReference<>() {},
-				null
 		);
 	}
 

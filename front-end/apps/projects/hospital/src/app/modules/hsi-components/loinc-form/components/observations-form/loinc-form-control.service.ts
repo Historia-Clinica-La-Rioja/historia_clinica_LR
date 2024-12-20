@@ -1,6 +1,7 @@
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { LoincFormValues, LoincInput, LoincObservationValue } from '../../loinc-input.model';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ButtonService } from '@historia-clinica/modules/ambulatoria/services/button.service';
 
 const isEquals = (one: LoincObservationValue, two: LoincObservationValue) => {
 	return one.unitOfMeasureId === two.unitOfMeasureId && one.value === two.value;
@@ -9,10 +10,13 @@ const isEquals = (one: LoincObservationValue, two: LoincObservationValue) => {
 export class LoincFormControlService {
 	form!: FormGroup;
 	loincInputs: LoincInput[];
+	isValidForm: boolean;
+	buttonService: ButtonService
 	private valuesSubject: BehaviorSubject<LoincFormValues>;
 	private currentValues: FormValuesService;
+	protected readonly numberPattern = '^[\\-\\+]?[0-9]*,?[0-9]+([eE][\\-\\+]?[0-9]+)?$';
 
-	constructor(loincForm: LoincInput[] = [], initialValues: LoincFormValues) {
+	constructor(loincForm: LoincInput[] = [], initialValues: LoincFormValues, buttonService: ButtonService,) {
 		this.valuesSubject = new BehaviorSubject<LoincFormValues>(undefined);
 		this.currentValues = new FormValuesService(initialValues?.values || []);
 		this.loincInputs = loincForm.map(loincInput => {
@@ -23,6 +27,7 @@ export class LoincFormControlService {
 				observationValue: inputValue,
 			};
 		});
+		this.buttonService = buttonService
 		this.form = this.toForm(this.loincInputs);
 	}
 
@@ -32,6 +37,8 @@ export class LoincFormControlService {
 			hasChanged,
 			values: this.currentValues.values(),
 		});
+		this.isValidForm = this.currentValues.hasInvalidValue()
+		this.buttonService.updateFormPartialSaveStatus(this.isValidForm)
 	}
 
 	get valueChange$(): Observable<LoincFormValues> {
@@ -55,6 +62,9 @@ export class LoincFormControlService {
 		};
 		if (loincInput.type === 'email') {
 			validators.push(Validators.email);
+		};
+		if (loincInput.type === 'numeric') {
+			validators.push(Validators.pattern(this.numberPattern));
 		};
 		return validators;
 	}
@@ -87,7 +97,9 @@ class FormValuesService {
 				value: newValue.value,
 				unitOfMeasureId: newValue.unitOfMeasureId,
 				snomedPt: newValue?.snomedPt,
-				snomedSctid: newValue?.snomedSctid
+				snomedSctid: newValue?.snomedSctid,
+				valueNumeric: newValue.valueNumeric,
+				isValid: newValue.isValid
 			});
 		}
 		return !!this.changedValues.length; // hasChange
@@ -98,5 +110,10 @@ class FormValuesService {
 			v => !this.changedValues.find(chdVal => v.procedureParameterId === chdVal.procedureParameterId)
 		)
 		return [...unchangedValues, ...this.changedValues];
+	}
+
+	hasInvalidValue(): boolean {
+		const allValues = this.values();
+		return allValues.some(value => value.isValid === false);
 	}
 }

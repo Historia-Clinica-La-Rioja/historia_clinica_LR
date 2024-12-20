@@ -1,7 +1,7 @@
 import { MedicalCoverageInfoService } from './../../services/medical-coverage-info.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AppFeature, EMedicalCoverageTypeDto, ERole, EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PatientToMergeDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
@@ -15,7 +15,6 @@ import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summ
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MenuItem } from '@presentation/components/menu/menu.component';
-import { ExtensionPatientService } from '@extensions/services/extension-patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { OdontogramService } from '@historia-clinica/modules/odontologia/services/odontogram.service';
 import { FieldsToUpdate } from "@historia-clinica/modules/odontologia/components/odontology-consultation-dock-popup/odontology-consultation-dock-popup.component";
@@ -45,6 +44,8 @@ import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 import { HomeRoutes } from 'projects/hospital/src/app/modules/home/constants/menu';
+import { IsolationAlertHeaderService } from '@historia-clinica/services/isolation-alert-header.service';
+import { IsolationAlertDetail } from '@historia-clinica/components/isolation-alert-detail/isolation-alert-detail.component';
 
 const RESUMEN_INDEX = 0;
 const VOLUNTARY_ID = 1;
@@ -57,7 +58,7 @@ const TAB_INDICACIONES = 1;
 	selector: 'app-ambulatoria-paciente',
 	templateUrl: './ambulatoria-paciente.component.html',
 	styleUrls: ['./ambulatoria-paciente.component.scss'],
-
+	providers: [IsolationAlertHeaderService]
 })
 export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, ComponentCanDeactivate {
 
@@ -118,6 +119,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	EstadosEpisodio = EstadosEpisodio;
 	private timeOut = 15000;
 	private isOpenOdontologyConsultation = false;
+	isolationAlertDetails: IsolationAlertDetail[] = [];
 
 	constructor(
 		private readonly route: ActivatedRoute,
@@ -127,7 +129,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		private readonly interoperabilityBusService: InteroperabilityBusService,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly extensionPatientService: ExtensionPatientService,
 		private readonly odontogramService: OdontogramService,
 		private readonly permissionsService: PermissionsService,
 		private readonly dialog: MatDialog,
@@ -144,7 +145,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		private readonly wcExtensionsService: WCExtensionsService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly patientToMergeService: PatientToMergeService,
-		private readonly violenceReportFacadeService: ViolenceReportFacadeService
+		private readonly violenceReportFacadeService: ViolenceReportFacadeService,
+		readonly isolationAlertHeaderService: IsolationAlertHeaderService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result)
@@ -154,6 +156,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('idPaciente'));
+				this.isolationAlertHeaderService.patientId = this.patientId;
 				this.patientService.getPatientBasicData<BasicPatientDto>(this.patientId).subscribe(
 					patient => {
 						this.personInformation.push({ description: patient.person?.identificationType, data: patient.person?.identificationNumber });
@@ -269,9 +272,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.featureFlagService.isActive(AppFeature.HABILITAR_ODONTOLOGY)
 			.subscribe(isOn => this.odontologyEnabled = isOn);
 
-		this.extensionTabs$ = this.extensionPatientService.getTabs(this.patientId);
-
-
 		this.extensionWCTabs$ = this.wcExtensionsService.getClinicHistoryComponents(this.patientId);
 
 		this.odontogramService.resetOdontogram();
@@ -283,6 +283,11 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.studyCategories$ = this.requestMasterDataService.categories();
 
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
+
+		this.isolationAlertHeaderService.loadPatientIsolationAlertHeader();
+
+		this.isolationAlertHeaderService.patientIsolationAlertsDetails$.subscribe(isolationAlertDetails => this.isolationAlertDetails = isolationAlertDetails);
+
 	}
 
 	patientSelected(patient: Patient) {
@@ -318,6 +323,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 
 	ngOnDestroy() {
 		this.medicalCoverageInfo.clearAll();
+		this.isolationAlertHeaderService.unsubcribeUpdateIsolationAlert();
 	}
 
 	private setPermissions(): void {
@@ -456,12 +462,9 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	}
 
 	private showNursingTab(userRoles: ERole[]) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
-			.subscribe(show => {
-				if (anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PERSONAL_DE_FARMACIA])
-					&& show) 
-					this.showNursingSection = show
-			});
+		if (anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PERSONAL_DE_FARMACIA])) {
+			this.showNursingSection = true
+		};
 	}
 
 	private mapToSummaryCoverage(patientCoverage: ExternalPatientCoverageDto): SummaryCoverageInformation {

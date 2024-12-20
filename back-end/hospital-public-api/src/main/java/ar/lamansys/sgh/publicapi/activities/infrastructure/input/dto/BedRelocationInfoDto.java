@@ -15,6 +15,8 @@ import java.io.Serializable;
 public class BedRelocationInfoDto implements Serializable {
 
 	private Integer bedId;
+	private String bedNumber;
+	private String bedCategory;
 	private DateTimeDto relocationDate;
 	private String careType;
 	private ClinicalSpecialityDto service;

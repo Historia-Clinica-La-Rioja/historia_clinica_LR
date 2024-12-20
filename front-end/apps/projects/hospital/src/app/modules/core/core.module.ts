@@ -21,6 +21,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 //pipes
 import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 import { VersionAvailableComponent } from './dialogs/version-available/version-available.component';
+import { CustomEventsHandlerService } from './services/custom-events-handler.service';
 
 @NgModule({
 	declarations: [
@@ -66,7 +67,7 @@ import { VersionAvailableComponent } from './dialogs/version-available/version-a
 		ContentComponent,
 		ExchangeableThemeComponent,
 		VersionAvailableComponent,
-        // directives
+		// directives
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
@@ -74,7 +75,9 @@ import { VersionAvailableComponent } from './dialogs/version-available/version-a
 		//pipes
 		StringSeparatorPipe
 	],
-	providers: []
+	providers: [
+		CustomEventsHandlerService
+	]
 })
 export class CoreModule {
 }

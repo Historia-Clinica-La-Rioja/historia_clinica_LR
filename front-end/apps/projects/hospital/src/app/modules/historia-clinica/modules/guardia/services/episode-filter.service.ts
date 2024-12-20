@@ -1,145 +1,120 @@
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Episode } from '../components/emergency-care-patients-summary/emergency-care-patients-summary.component';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
-import { Observable } from 'rxjs';
-import { MasterDataInterface } from '@api-rest/api-model';
-import { tap } from 'rxjs/operators';
-import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
-import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
-import { PatientType } from '@historia-clinica/constants/summaries';
+import { map, Observable } from 'rxjs';
+import { EmergencyCareClinicalSpecialtySectorDto, EmergencyCareEpisodeFilterDto, MasterDataDto, MasterDataInterface, TriageCategoryDto } from '@api-rest/api-model';
+import { Injectable } from '@angular/core';
+import { FormCheckbox, FormChips } from '../components/emergency-care-episode-filters/emergency-care-episode-filters.component';
 import { EstadosEpisodio } from '../constants/masterdata';
-import { TriageCategory } from '../components/triage-chip/triage-chip.component';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 
-const NO_INFO: MasterDataInterface<number> = {
-	id: -1,
-	description: 'No definido'
-};
+const TRIAGE_CATEGORIES_FORM = 'triageCategories';
+const EMERGENCY_CARE_TYPES_FORM = 'emergencyCareTypes';
+const STATES_FORM = 'states';
 
+@Injectable({
+	providedIn: 'root'
+})
 export class EpisodeFilterService {
 
+	filters: EmergencyCareEpisodeFilterDto;
+	hasSelectedFilters = false;
+
 	constructor(
-		private readonly formBuilder: UntypedFormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
-		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService
+		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 	) {
-		this.form = this.formBuilder.group({
-			triage: [null],
-			emergencyCareType: [null],
-			patientId: [null],
-			identificationNumber: [null, Validators.maxLength(PERSON.MAX_LENGTH.identificationNumber)],
-			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
-			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
-			temporal: [null],
-			emergencyCareTemporary: [null],
-			administrativeDischarge: [null]
-		});
+		this.initializeFilters();
 	}
 
-	private form: UntypedFormGroup;
-
-	static filterByTriage(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.triage ? episode.triage.emergencyCareEpisodeListTriageDto.id === filters.triage : true);
-	}
-
-	static filterByEmergencyCareType(episode: Episode, filters: EpisodeFilters): boolean {
-		if (!filters.emergencyCareType) {
-			return true;
-		}
-		if (filters.emergencyCareType === NO_INFO.id) {
-			return (!episode.type);
-		}
-		return (filters.emergencyCareType ? episode.type?.id === filters.emergencyCareType : true);
-	}
-
-	static filterByPatientId(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.patientId ? episode.patient?.id === filters.patientId : true);
-	}
-
-	static filterByIdentificationNumber(episode: Episode, filters: EpisodeFilters): boolean {
-		const identificationNumberWithoutZeros = Number(filters.identificationNumber?.replace(REMOVE_SUBSTRING_DNI, '')).toString();
-		return (filters.identificationNumber ?
-			this.filterString(episode.patient?.person?.identificationNumber, identificationNumberWithoutZeros) : true);
-	}
-
-	static filterByFirstName(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.firstName ?
-			this.filterString(episode.patient?.person?.firstName, filters.firstName) : true);
-	}
-
-	static filterByLastName(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.lastName ?
-			this.filterString(episode.patient?.person?.lastName, filters.lastName) : true);
-	}
-
-	static filterString(target: string, filterValue: string): boolean {
-		return target?.toLowerCase().includes(filterValue.toLowerCase());
-	}
-
-	static filterTemporal(episode: Episode, filters: EpisodeFilters): boolean {
-		return (filters.temporal ? episode.patient?.typeId === PatientType.TEMPORARY : true);
-	}
-
-	static filterNoPatient(episode: Episode, filters: EpisodeFilters) {
-		return (filters.emergencyCareTemporary ? episode.patient?.typeId === PatientType.EMERGENCY_CARE_TEMPORARY : true);
-	}
-
-	static filterAdministrativeDischarge(episode: Episode, filters: EpisodeFilters) {
-		const administrativeDischarge = episode.state.id === EstadosEpisodio.CON_ALTA_ADMINISTRATIVA;
-		return (filters.administrativeDischarge ?  administrativeDischarge : !administrativeDischarge);
-	}
-
-	getForm(): UntypedFormGroup {
-		return this.form;
-	}
-
-	filter(episode: Episode): boolean {
-		const filters = this.form.value as EpisodeFilters;
-		return 	EpisodeFilterService.filterByTriage(episode, filters) &&
-				EpisodeFilterService.filterByEmergencyCareType(episode, filters) &&
-				EpisodeFilterService.filterByIdentificationNumber(episode, filters) &&
-				EpisodeFilterService.filterByPatientId(episode, filters) &&
-				EpisodeFilterService.filterByFirstName(episode, filters) &&
-				EpisodeFilterService.filterByLastName(episode, filters) &&
-				EpisodeFilterService.filterTemporal(episode, filters) &&
-				EpisodeFilterService.filterNoPatient(episode, filters) &&
-				EpisodeFilterService.filterAdministrativeDischarge(episode, filters);
-	}
-
-	clear(control: string): void {
-		this.form.controls[control].reset();
-	}
-
-	markAsFiltered(): void {
-		this.form.markAllAsTouched();
-	}
-
-	hasFilters(): boolean {
-		return atLeastOneValueInFormGroup(this.form);
-	}
-
-	isValid(): boolean {
-		return this.form.valid;
-	}
-
-	getTriageCategories(): Observable<TriageCategory[]> {
+	getCategories(): Observable<TriageCategoryDto[]> {
 		return this.triageMasterDataService.getCategories();
 	}
 
+	getFilterValue(filterKey: string): any {
+		return this.filters?.[filterKey] || null;
+	}
+
 	getEmergencyCareTypes(): Observable<MasterDataInterface<number>[]> {
-		return this.emergencyCareMasterDataService.getType().pipe(tap(types => types.unshift(NO_INFO)));
+		return this.emergencyCareMasterDataService.getType();
+	}
+
+	getStates(): Observable<MasterDataDto[]> {
+		return this.emergencyCareMasterDataService.getEmergencyCareStates().pipe(map(states => states.filter(state => state.id != EstadosEpisodio.CON_ALTA_ADMINISTRATIVA)))
+	}
+
+	getServices(): Observable<EmergencyCareClinicalSpecialtySectorDto[]> {
+		return this.emergencyCareEpisodeService.getSpecialtySectors();
+	}
+
+	setFilters(filters: EpisodeFilters) {
+		this.filters = {
+			...this.filters,
+			clinicalSpecialtySectorIds: filters.clinicalSpecialtySectorIds ? this.getClinicalSpecialtySectorIds(filters.clinicalSpecialtySectorIds) : this.filters.clinicalSpecialtySectorIds,
+			identificationNumber: filters.identificationNumber,
+			mustBeEmergencyCareTemporal: filters.emergencyCareTemporary,
+			patientFirstName: filters.firstName,
+			patientId: filters.patientId,
+			patientLastName: filters.lastName,
+			stateIds: filters.states ? this.getCheckboxFilterValue(filters.states, STATES_FORM) : this.filters.stateIds,
+			triageCategoryIds: filters.triageCategories ? this.getCheckboxFilterValue(filters.triageCategories, TRIAGE_CATEGORIES_FORM) : this.filters.triageCategoryIds,
+			typeIds: filters.emergencyCareTypes ? this.getCheckboxFilterValue(filters.emergencyCareTypes, EMERGENCY_CARE_TYPES_FORM) : this.filters.typeIds,
+		};
+
+		this.calculateSelectedFilters();
+	}
+
+	resetFilters() {
+		this.initializeFilters();
+	}
+
+	private getCheckboxFilterValue(formValues: FormCheckbox, controlName: string): number[] {
+		if (!formValues) return [];
+
+		const values = formValues[controlName];
+		if (!values) return [];
+		let selectedCategories: number[] = [];
+		Object.entries(values).forEach(([key, value]) => {
+			if (value)
+				selectedCategories.push(Number(key));
+		});
+
+		return selectedCategories;
+	}
+
+	private calculateSelectedFilters() {
+		this.hasSelectedFilters = !!(this.filters.clinicalSpecialtySectorIds?.length || this.filters.identificationNumber || this.filters.mustBeEmergencyCareTemporal || this.filters.patientFirstName || this.filters.patientId || this.filters.patientLastName || this.filters.stateIds?.length || this.filters.triageCategoryIds?.length || this.filters.typeIds?.length)
+	}
+
+	private getClinicalSpecialtySectorIds(formValue: FormChips): number[] {
+		return formValue?.clinicalSpecialtySectorIds ? formValue.clinicalSpecialtySectorIds : [];
+	}
+
+	private initializeFilters() {
+		this.filters = {
+			clinicalSpecialtySectorIds: [],
+			identificationNumber: null,
+			mustBeEmergencyCareTemporal: false,
+			patientFirstName: null,
+			patientId: null,
+			patientLastName: null,
+			stateIds: [],
+			triageCategoryIds: [],
+			typeIds: []
+		}
 	}
 
 }
 
-interface EpisodeFilters {
-	triage?: number;
-	emergencyCareType?: number;
+export interface EpisodeFilters {
+	triageCategories?: FormCheckbox;
+	emergencyCareTypes?: FormCheckbox;
+	states?: FormCheckbox;
+	clinicalSpecialtySectorIds?: FormChips;
 	patientId?: number;
 	identificationNumber?: string;
 	firstName?: string;
 	lastName?: string;
-	temporal?: boolean;
 	emergencyCareTemporary?: boolean;
 	administrativeDischarge?: boolean;
 }

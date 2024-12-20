@@ -20,9 +20,13 @@ export class OutpatientConsultationService {
 	) {
 	}
 
-	createOutpatientConsultation(createOutpatientDto: CreateOutpatientDto, patientId: number): Observable<any> {
+	createOutpatientConsultation(createOutpatientDto: CreateOutpatientDto, patientId: number, selectedFiles?: File[]): Observable<any> {
+		const formData = new FormData();
+		if (selectedFiles)
+			Array.from(selectedFiles).forEach(file => formData.append('serviceRequestFiles', file));
+		formData.append('createOutpatientDto', new Blob([JSON.stringify(createOutpatientDto)], {type: 'application/json'}))
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/outpatient/consultations/billable`;
-		return this.http.post<boolean>(url, createOutpatientDto);
+		return this.http.post<boolean>(url, formData);
 	}
 
 	solveProblem(solvedProblem: HealthConditionNewConsultationDto, patientId: number): Observable<boolean> {

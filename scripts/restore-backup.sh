@@ -37,8 +37,19 @@ if [ ! -f $DOCKER_COMPOSE ]; then
     exit 1
 fi
 
+# Verificar si 'docker compose' está disponible
+if docker compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_CMD="docker compose"
+# Si no está disponible, verificar si 'docker-compose' está disponible
+elif docker-compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_CMD="docker-compose"
+else
+  echo "Neither 'docker compose' nor 'docker-compose' is available. Please install Docker."
+  exit 1
+fi
+
 echo "==> Stopping ${DATABASE_CONTAINER}"
-docker-compose stop ${DATABASE_CONTAINER}
+$DOCKER_COMPOSE_CMD stop ${DATABASE_CONTAINER}
 
 echo "==> Deleting ${DATABASE_CONTAINER}"
 docker rm ${DATABASE_CONTAINER} || true
@@ -47,11 +58,11 @@ echo "==> Deleting postgres data"
 rm -rf ${POSTGRES_DATA}
 
 echo "==> Starting empty ${DATABASE_CONTAINER}"
-docker-compose up -d ${DATABASE_CONTAINER}
+$DOCKER_COMPOSE_CMD up -d ${DATABASE_CONTAINER}
 
 echo "==> Waiting 10 seconds"
 sleep 10
 
 echo "==> Restoring $DUMP_FILE into ${DATABASE_CONTAINER}"
-docker run -itv ${DUMP_FILE}:/app/pg-task/backups/dump.bkp --env-file ${TARGET_CONFIG} registry.lamansys.ar/lamansys/community/pg-task:latest
+docker run -itv ${DUMP_FILE}:/app/pg-task/backups/dump.bkp --env-file ${TARGET_CONFIG} registry.lamansys.ar/lamansys/community/pg-task16:latest
 

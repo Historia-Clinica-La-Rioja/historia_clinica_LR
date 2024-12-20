@@ -23,7 +23,7 @@ public class HCESummaryCounterReferenceDto {
 
     private DateDto performedDate;
 
-    private ProfessionalPersonDto professional;
+    private String authorFullName;
 
     private List<ReferenceCounterReferenceFileDto> files;
 

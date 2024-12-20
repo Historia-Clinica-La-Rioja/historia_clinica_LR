@@ -14,6 +14,7 @@ import { ButtonService } from '../../services/button.service';
 import { StudyInfo } from '../../services/study-results.service';
 import { ControlTemplatesService } from '../../services/control-templates.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { CLOSURE_OPTIONS } from '@access-management/constants/reference';
 
 @Component({
 	selector: 'app-reference-study-close',
@@ -56,7 +57,8 @@ export class ReferenceStudyCloseComponent implements OnInit {
 		}) as FormGroup & ReferenceClosureForm;
 
 		this.closureTypes$ = this.referenceMasterDataService.getClosureTypes().pipe(
-			map(((closureTypes: MasterDataDto[]) => closureTypes)));
+			map(((closureTypes: MasterDataDto[]) => 
+				closureTypes.filter(closureType => closureType.description !== CLOSURE_OPTIONS[5].description))));
 
 		this.clinicalSpecialties$ = forkJoin([this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties(), of(this.reference.clinicalSpecialties)])
 			.pipe(

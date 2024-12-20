@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.imagenetwork.derivedstudies.application.exception.MoveStudiesException;
 import net.pladema.imagenetwork.imagequeue.application.imagemoveretry.exceptions.ImageQueueException;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
@@ -43,6 +44,13 @@ public class ImageNetworkExceptionHandler {
 	@ExceptionHandler({ImageQueueException.class})
 	protected ApiErrorMessageDto handleImageQueueException(ImageQueueException ex, Locale locale) {
 		log.debug("ImageQueueException message -> {}", ex.getMessage(), ex);
+		return buildErrorMessage(ex.getCode().toString(), ex.getMessage(), locale);
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({MoveStudiesException.class})
+	protected ApiErrorMessageDto handleMoveStudiesException(MoveStudiesException ex, Locale locale) {
+		log.error("MoveStudiesException message -> {}", ex.getMessage(), ex);
 		return buildErrorMessage(ex.getCode().toString(), ex.getMessage(), locale);
 	}
 

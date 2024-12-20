@@ -62,7 +62,7 @@
 
 	<div class="grid-beds-container">
 		<div *ngFor="let bed of sector.beds; let i = index" [ngClass]="{'selected-bed-border': selectedBedIndex === i && selectedBedSectorId === sector.sectorId}">
-			<button class="active-bed" mat-raised-button [ngClass]="{'free': bed.free}"
+			<button class="active-bed" mat-raised-button [ngClass]="{'free': bed.free, 'blocked': bed.isBlocked }"
 					(click)="selectBed(bed.bedId, i, sector.sectorId)">
 				{{bed.bedNumber}}
 			</button>

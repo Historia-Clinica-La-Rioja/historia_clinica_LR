@@ -23,7 +23,9 @@ export class IdentifierCasesComponent {
 	};
 	@Input()
 	set identifierCase(value: IDENTIFIER_CASES) {
-		const iconLegend = IDENTIFIER_CASES_ALTERNATIVES[value];
+		const iconLegend = {
+			...IDENTIFIER_CASES_ALTERNATIVES[value],
+		};
 
 		this.identifier = {
 			...this.identifier,
@@ -49,7 +51,8 @@ export enum IDENTIFIER_CASES {
 	SERVICE = 'Servicio',
 	SECTOR = 'Sector',
 	ROOM = 'Sala',
-	BED = 'Cama', 
+	DOCTOR_OFFICE = 'Consultorio',
+	BED = 'Cama',
 	HIERARCHICAL_UNIT = 'Unidad jerárquica',
 	SCOPE = 'Ambito',
 	PATIENT = 'Paciente',
@@ -57,6 +60,8 @@ export enum IDENTIFIER_CASES {
 	EMERGENCY_CARE_TYPE = 'Tipo de guardia',
 	SHOCKROOM = 'Shockroom',
 	ROOM_V2 = 'Habitación',
+	PIN_DROP = 'Requiere traslado',
+	LOCAL_HOSPITAL = 'Sector ordenes',
 }
 
 const institution: IconLegend = {
@@ -129,6 +134,11 @@ const room: IconLegend = {
 	legend: 'Sala',
 }
 
+const doctor_office: IconLegend = {
+	icon: 'meeting_room',
+	legend: 'Consultorio',
+}
+
 const bed: IconLegend = {
 	icon: 'hotel',
 	legend: 'Cama',
@@ -169,6 +179,15 @@ const room_v2: IconLegend = {
 	legend: 'Habitación',
 }
 
+const pin_drop: IconLegend = {
+	icon: 'pin_drop',
+	legend: 'Requiere traslado',
+}
+
+const local_hospital: IconLegend = {
+	icon: 'local_hospital',
+	legend: 'Sector',
+}
 
 const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.INSTITUTION]: institution,
@@ -185,6 +204,7 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.SERVICE]: service,
 	[IDENTIFIER_CASES.SECTOR]: sector,
 	[IDENTIFIER_CASES.ROOM]: room,
+	[IDENTIFIER_CASES.DOCTOR_OFFICE]: doctor_office,
 	[IDENTIFIER_CASES.BED]: bed,
 	[IDENTIFIER_CASES.HIERARCHICAL_UNIT]: hierarchicalUnit,
 	[IDENTIFIER_CASES.SCOPE]: scope,
@@ -192,5 +212,7 @@ const IDENTIFIER_CASES_ALTERNATIVES = {
 	[IDENTIFIER_CASES.REASON]: reason,
 	[IDENTIFIER_CASES.EMERGENCY_CARE_TYPE]: emergencyCareType,
 	[IDENTIFIER_CASES.SHOCKROOM]: shockroom,
-	[IDENTIFIER_CASES.ROOM_V2]: room_v2
+	[IDENTIFIER_CASES.ROOM_V2]: room_v2,
+	[IDENTIFIER_CASES.PIN_DROP]: pin_drop,
+	[IDENTIFIER_CASES.LOCAL_HOSPITAL]: local_hospital,
 }

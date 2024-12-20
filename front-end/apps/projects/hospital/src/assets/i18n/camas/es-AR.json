@@ -19,6 +19,7 @@
             "NO_DISCHARGE_DATE": "Sin información",
             "FREE": "Libre",
             "NOT_FREE": "Ocupada",
+            "BLOCK": "Bloqueado",
             "INCHARGE_NURSE": "Enfermero a cargo:",
             "NURSE_DNI": "DNI: {{nurseDni}}",
             "more-actions": {

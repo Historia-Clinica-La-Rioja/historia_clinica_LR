@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { SnomedMedicationSearchDto, SnomedDto } from '@api-rest/api-model';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
-import { debounceTime, distinctUntilChanged, Observable, of, startWith, switchMap } from 'rxjs';
+import { getElementAtPosition } from '@core/utils/array.utils';
+import { debounceTime, distinctUntilChanged, Observable, of, startWith, switchMap, take } from 'rxjs';
 
 const DEBOUNCE_TIME = 300;
 const MIN_SEARCH_LENGTH = 3;
@@ -28,6 +29,7 @@ export class GenericFinancedPharmacoSearchComponent implements OnInit {
 		else {
 			this.form.controls.searchControl.enable();
 			this.problem = problemSelected;
+			this.callSearchConceptsByProblem(this.problem)
 		}
 	};
 
@@ -36,14 +38,14 @@ export class GenericFinancedPharmacoSearchComponent implements OnInit {
 			this.form.markAllAsTouched();
 	}
 
-	@Input() set preloadConcept(concept: SnomedDto) {
+	@Input() set preloadConcept(concept: SnomedDto ) {
 		if (concept) {
 			this.form.controls.searchControl.setValue(concept.pt);
-			this.conceptSelected.emit(concept);
+			this.conceptSelected.emit({ snomed:concept, auditRequiredText:null});
 		}
 	}
 
-	@Output() conceptSelected = new EventEmitter<SnomedDto>;
+	@Output() conceptSelected = new EventEmitter<SnomedFinancedAuditRequired>;
 
 	constructor(
 		private readonly snowstormService: SnowstormService
@@ -62,7 +64,7 @@ export class GenericFinancedPharmacoSearchComponent implements OnInit {
 		const selectedOption: SnomedMedicationSearchDto = event.option?.value;
 		this.form.controls.searchControl.setValue(selectedOption.pt.term)
 		if (selectedOption) {
-			const snomedConcept = { sctid: selectedOption.conceptId, pt: selectedOption.pt.term };
+			const snomedConcept = { snomed: { sctid: selectedOption.conceptId, pt: selectedOption.pt.term }, auditRequiredText: selectedOption.auditRequiredText };
 			this.conceptSelected.emit(snomedConcept);
 		}
 	}
@@ -80,8 +82,26 @@ export class GenericFinancedPharmacoSearchComponent implements OnInit {
 			: of([]);
 	}
 
+	private callSearchConceptsByProblem(problem: string) {
+		if (this.form.controls.searchControl.value) {
+			this.snowstormService.getMedicationConceptsWithFinancingData(this.form.controls.searchControl.value, problem).pipe(take(1))
+			.subscribe(
+				concepts => {
+					const conceptElement: SnomedMedicationSearchDto = getElementAtPosition(concepts,0)
+					const snomedConcept = { snomed:{ sctid: conceptElement.conceptId, pt:  conceptElement.pt.term }, auditRequiredText:  conceptElement.auditRequiredText }
+                    this.conceptSelected.emit(snomedConcept)
+                }
+			)
+		}
+	}
+
 }
 
 interface GenericPharmacoSearchForm {
 	searchControl: FormControl<string>;
+}
+
+export interface SnomedFinancedAuditRequired {
+	snomed: SnomedDto;
+	auditRequiredText: string[];
 }

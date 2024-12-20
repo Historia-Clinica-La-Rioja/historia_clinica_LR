@@ -27,7 +27,7 @@ public class CareLineInstitutionPracticesController {
 	private final GetCareLineInstitutionPractices getCareLineInstitutionPractices;
 
 	@GetMapping(value = "/careLine/{careLineId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<SnomedDto>> getPracticesByCareLine(@PathVariable(name = "institutionId") Integer institutionId,
 																  @PathVariable(name = "careLineId") Integer careLineId) {
 		log.debug("Input parameters -> careLineId {}", careLineId);

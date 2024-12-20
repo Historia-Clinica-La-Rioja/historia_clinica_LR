@@ -45,4 +45,5 @@ public interface MedicalCoverageRepository extends SGXAuditableEntityJPAReposito
     @Query("DELETE FROM MedicalCoverage mc "+
             "WHERE mc.id = :id ")
     void deleteMergedCoverage(@Param("id") Integer id);
+
 }

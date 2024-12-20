@@ -1,4 +1,4 @@
-import { Component, forwardRef, EventEmitter, Output } from '@angular/core';
+import { Component, forwardRef, EventEmitter, Output, Input } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
@@ -8,7 +8,7 @@ import { AntecedentesFamiliaresNuevaConsultaService } from '@historia-clinica/mo
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subscription } from 'rxjs';
-import { ConceptsList } from '../../../hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '../concepts-list/concepts-list.component';
 
 @Component({
 	selector: 'app-antecedentes-familiares-form',
@@ -43,6 +43,11 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
 		}
 	}
+	isNotReferred: boolean;
+	isEmpty = true;
+	@Input() set isFamilyHistoryNoRefer(isFamilyHistoryNoRefer: boolean) {
+		this.isNotReferred = isFamilyHistoryNoRefer;
+	};
 	@Output() isFamilyHistoriesNoRefer = new EventEmitter<boolean>();
 
 	constructor(
@@ -56,9 +61,12 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.antecedentesFamiliaresNuevaConsultaService.data$.subscribe(antecedentesFamiliares =>
-			this.antecedentesFamiliares.controls.data.setValue(antecedentesFamiliares)
-		);
+		this.antecedentesFamiliaresNuevaConsultaService.data$.subscribe(antecedentesFamiliares => {
+			this.antecedentesFamiliares.controls.data.setValue(antecedentesFamiliares);
+			if (!antecedentesFamiliares.length)
+				this.isNotReferred = undefined;
+			this.calculateIsEmpty();
+		});
 
 	}
 
@@ -80,6 +88,7 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 		if (obj) {
 			this.antecedentesFamiliares.setValue(obj);
 			this.antecedentesFamiliaresNuevaConsultaService.setFamilyHistories(obj.data);
+			this.calculateIsEmpty();
 		}
 	}
 
@@ -107,7 +116,13 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 		if ($event.addPressed) {
 			this.addFamilyHistory();
 		}
-		this.isFamilyHistoriesNoRefer.emit(!$event.checkboxSelected);
+		this.isNotReferred = $event.checkboxSelected || undefined;
+		this.calculateIsEmpty();
+		this.isFamilyHistoriesNoRefer.emit(!this.isNotReferred);
+	}
+
+	calculateIsEmpty() {
+		this.isEmpty = !this.antecedentesFamiliares.value.data?.length && this.isNotReferred == undefined;
 	}
 
 }

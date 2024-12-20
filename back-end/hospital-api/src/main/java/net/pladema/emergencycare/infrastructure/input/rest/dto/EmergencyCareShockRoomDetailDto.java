@@ -8,7 +8,7 @@ import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.S
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmergencyCareShockRoomDetailDto extends EmergencyCareAttentionPlaceDetailDto{
+public class EmergencyCareShockRoomDetailDto extends EmergencyCareAttentionPlaceDetailDto {
 
 	private ShockroomDto shockroom;
 }

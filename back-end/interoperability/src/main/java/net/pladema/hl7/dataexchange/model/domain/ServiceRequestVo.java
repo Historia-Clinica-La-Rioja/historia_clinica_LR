@@ -34,8 +34,15 @@ public class ServiceRequestVo {
 	private String snomedPt;
 	private UUID serviceRequestUuid;
 	private UUID diagnosticReportUuid;
+	private Integer diagnosticReportParentId;
 
-	public ServiceRequestVo(Integer srId, String serviceRequestStatus, String intentId, String categoryId, Integer diagnosticReportId, Integer patientId, Integer institutionId, Date requestDate, Integer doctorId, String problemId, String problemPt, Integer medicalCoverageId, String description, String link, String diagnosticReportStatus, String snomedId, String snomedPt, UUID serviceRequestUuid, UUID diagnosticReportUuid) {
+	public ServiceRequestVo(Integer srId, String serviceRequestStatus, String intentId,
+		String categoryId, Integer diagnosticReportId, Integer patientId, Integer institutionId,
+		Date requestDate, Integer doctorId, String problemId, String problemPt, Integer medicalCoverageId,
+		String description, String link, String diagnosticReportStatus, String snomedId,
+		String snomedPt, UUID serviceRequestUuid, UUID diagnosticReportUuid,
+		Integer diagnosticReportParentId
+	) {
 		this.srId = srId;
 		this.serviceRequestStatus = serviceRequestStatus;
 		this.intentId = intentId;
@@ -55,9 +62,13 @@ public class ServiceRequestVo {
 		this.snomedPt = snomedPt;
 		this.serviceRequestUuid = serviceRequestUuid;
 		this.diagnosticReportUuid = diagnosticReportUuid;
+		this.diagnosticReportParentId = diagnosticReportParentId;
 	}
 
-	public ServiceRequestVo(Integer srId, Integer diagnosticReportId, Integer patientId, String patientIdentificationNumber, Integer institutionId, Date requestDate, Integer doctorId, Integer patientMedicalCoverageId, Integer medicalCoverageId, String coverageAffiliateNumber, String serviceRequestStatus, String diagnosticReportStatus) {
+	public ServiceRequestVo(Integer srId, Integer diagnosticReportId, Integer patientId,
+		String patientIdentificationNumber, Integer institutionId, Date requestDate, Integer doctorId,
+		Integer patientMedicalCoverageId, Integer medicalCoverageId, String coverageAffiliateNumber,
+		String serviceRequestStatus, String diagnosticReportStatus) {
 		this.srId = srId;
 		this.diagnosticReportId = diagnosticReportId;
 		this.patientId = patientId.toString();

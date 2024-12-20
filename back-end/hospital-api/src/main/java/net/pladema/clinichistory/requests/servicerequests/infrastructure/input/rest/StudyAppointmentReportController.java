@@ -119,7 +119,7 @@ public class StudyAppointmentReportController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId){
 		log.trace("Input parameters -> institutionId {}, appointmentId {}", institutionId, appointmentId);
-		DocumentDownloadDataBo downloadData = documentService.getDocumentDownloadDataByAppointmentId(appointmentId);
+		DocumentDownloadDataBo downloadData = documentService.getImageReportDownloadDataByAppointmentId(appointmentId);
 		HCEDocumentDataDto result = new HCEDocumentDataDto(downloadData.getId(), downloadData.getFileName());
 		log.trace("Output -> {}", result);
 		return ResponseEntity.ok(result);

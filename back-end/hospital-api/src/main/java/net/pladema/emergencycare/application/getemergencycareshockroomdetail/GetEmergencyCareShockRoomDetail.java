@@ -16,6 +16,8 @@ import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -29,10 +31,10 @@ public class GetEmergencyCareShockRoomDetail {
 		log.debug("Input GetEmergencyCareShockRoomDetail parameters -> shockroomId {}", shockroomId);
 		ShockRoomBo shockroom = getShockroomOrFail(shockroomId);
 		EmergencyCareShockRoomDetailBo result = new EmergencyCareShockRoomDetailBo(shockroom);
-		if (!shockroom.isAvailable()){
-			EmergencyCareBo ec = getEmergencyCareEpisodeOrFail(shockroomId);
-			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result,ec);
-		}
+		var episode = getEmergencyCareEpisodeOrFail(shockroomId);
+		episode.ifPresent(ec ->
+			getEmergencyCareEpisodeInfoForAttentionPlaceDetail.run(result, ec)
+		);
 		log.debug("Output -> result {}", result);
 		return result;
 	}
@@ -45,11 +47,7 @@ public class GetEmergencyCareShockRoomDetail {
 				);
 	}
 
-	private EmergencyCareBo getEmergencyCareEpisodeOrFail(Integer shockroomId){
-		return emergencyCareEpisodeStorage.getByShockroomIdInAttention(shockroomId)
-				.orElseThrow(() -> new EmergencyCareAttentionPlaceException(
-						EmergencyCareAttentionPlaceExceptionEnum.NO_EPISODE_ASSOCIATED_WITH_SHOCKROOM,
-						"No se encontró un episodio asociado al shockroom con id " + shockroomId)
-				);
+	private Optional<EmergencyCareBo> getEmergencyCareEpisodeOrFail(Integer shockroomId){
+		return emergencyCareEpisodeStorage.getByShockroomIdInAttention(shockroomId);
 	}
 }

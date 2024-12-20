@@ -53,6 +53,8 @@ public class ListStudyWithoutOrderReportInfoServiceImpl implements ListStudyWith
         result.setFileName((String) row[3]);
         result.setDocumentStatus((String) row[4]);
         result.setAppointmentId((Integer) row[5]);
+		result.setReportStatusId((Short) row[6]);
+		result.setDeriveToInstitution((String) row[7]);
         log.trace("Output -> {}", result);
         return result;
     }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EmergencyCarePatientDto } from '@api-rest/api-model';
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { Size } from '@presentation/components/item-summary/item-summary.component';
@@ -9,7 +9,7 @@ import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.
 	templateUrl: './emergency-care-attention-place-patient.component.html',
 	styleUrls: ['./emergency-care-attention-place-patient.component.scss']
 })
-export class EmergencyCareAttentionPlacePatientComponent implements OnInit {
+export class EmergencyCareAttentionPlacePatientComponent{
 
 	readonly EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
 	readonly SMALL = Size.SMALL;
@@ -26,8 +26,6 @@ export class EmergencyCareAttentionPlacePatientComponent implements OnInit {
 	};
 
 	constructor() { }
-
-	ngOnInit() { }
 
 	toPatientSummary(patient: EmergencyCarePatientDto): PatientSummary {
 		const { firstName, lastName } = patient.person;

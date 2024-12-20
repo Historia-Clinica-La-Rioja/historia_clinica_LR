@@ -16,9 +16,7 @@ public class AppPatientInformationPublicApiPermission implements PatientInformat
 
 	@Override
 	public boolean canAccessPersonFromIdPatient() {
-		return userSessionStorage.getRolesAssigned().anyMatch(
-				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
-		);
+		return checkApiPacientes();
 	}
 
 	@Override
@@ -65,6 +63,17 @@ public class AppPatientInformationPublicApiPermission implements PatientInformat
 		return userSessionStorage.getRolesAssigned().anyMatch(
 				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
 						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
+	@Override
+	public boolean canFetchMedicalCoverages() {
+		return checkApiPacientes();
+	}
+
+	private boolean checkApiPacientes() {
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
 		);
 	}
 }

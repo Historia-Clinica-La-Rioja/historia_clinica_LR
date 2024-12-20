@@ -1,0 +1,22 @@
+<div *ngIf="pendings.length">
+	<span mat-dialog-title [translate]="'auth.logout-dialog.TITLE'"></span>
+	<div mat-dialog-content>
+
+		<span [translate]="'auth.logout-dialog.SUBTITLE'"></span>
+		<strong [translate]="'auth.logout-dialog.QUESTION'"></strong>
+		<p [translate]="'auth.logout-dialog.ACTION-TITLE'"></p>
+		<mat-list>
+			<mat-list-item *ngFor="let pending of pendings;">
+				<app-pending-task-item class="pending-item" id="{{pending.item.extensionName}}" [item]="pending.item"
+					(clicked)="navigate(pending.absolutUrl)"></app-pending-task-item>
+			</mat-list-item>
+		</mat-list>
+
+	</div>
+	<div mat-dialog-actions align="end" class="dialog-actions">
+		<app-button color="warn" text="auth.logout-dialog.FORCE_LOGOUT" [buttonType]="forceLogoutButtonType"
+			(clicked)="forceLogout()" id="force-logout"></app-button>
+		<app-button color="primary" text="buttons.BACK" mat-dialog-close [buttonType]="backButtonType"
+			id="back"></app-button>
+	</div>
+</div>

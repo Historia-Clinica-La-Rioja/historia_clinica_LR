@@ -14,6 +14,11 @@
     width: 256px;
 }
 
+.report-adjust {
+    flex: 1 1 80%;
+	word-break: break-word;
+}
+
 @media (max-width: 1280px) {
     .view-study-btn {
         align-self: center;
@@ -24,4 +29,20 @@
     .report-label {
         margin-left: 0;
     }
+}
+
+.mid-grey {
+    color: #9A9A9A;
+}
+
+.grey {
+    color: #A4A2A2;
+}
+
+.orange {
+    color: #FFA500;
+}
+
+.green {
+    color: #27AE60;
 }

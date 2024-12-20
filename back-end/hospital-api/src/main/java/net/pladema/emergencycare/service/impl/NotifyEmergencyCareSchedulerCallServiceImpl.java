@@ -31,7 +31,7 @@ public class NotifyEmergencyCareSchedulerCallServiceImpl implements NotifyEmerge
 		log.debug("Input parameters -> emergencyCareEpisodeId {}, institutionId {}", emergencyCareEpisodeId, institutionId);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		EmergencyCareEpisodeNotificationBo notificationData = emergencyCareEpisodeRepository.getSchedulerNotificationData(emergencyCareEpisodeId);
-		if (notificationData.getTopic() != null) {
+		if (notificationData.getTvMonitor() != null) {
 			notificationData.setDoctorName(personService.findByHealthcareProfessionalId(doctorId).getPersonFullName());
 			hospitalApiPublisher.emergencyCareAppointmentCaller(new EmergencyCareEpisodeNotificationDto(notificationData), institutionId);
 		}

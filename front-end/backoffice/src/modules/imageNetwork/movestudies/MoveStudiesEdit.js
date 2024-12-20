@@ -6,15 +6,15 @@ import {
     SimpleForm,
     TextInput,
     NumberInput,
-    DateInput,
     TextField,
-    DateField,
     ReferenceManyField,
     Datagrid,
     required,
     regex
 } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
+import SgxDateField from '../../../dateComponents/sgxDateField';
+import SgxDateInput from '../../../dateComponents/sgxDateInput';
 
 const validatePriority =regex(/^[01]$/,'resources.movestudies.errorPriority');
 const MoveStudiesEdit = props => {
@@ -25,7 +25,7 @@ const MoveStudiesEdit = props => {
                 <ReferenceInput link={false} source="institutionId" reference="institutions" disabled>
                     <SelectInput optionText="name" optionValue="id" />
                 </ReferenceInput>
-                <DateInput  disabled source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
+                <SgxDateInput  disabled source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
 
                 <TextInput source="imageId"/>
                 <TextInput source="sizeImage" disabled />
@@ -40,7 +40,7 @@ const MoveStudiesEdit = props => {
                         <Datagrid>
                             <TextField source="patientId" sortable={false}/>
                             <TextField source="patientName" sortable={false}/>
-                            <DateField source="studyDate" />
+                            <SgxDateField source="studyDate" />
                             <TextField source="studyTime" sortable={false} />
                             <TextField source="studyInstanceUid" />
                             <TextField source="modality"/>

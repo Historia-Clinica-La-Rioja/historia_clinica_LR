@@ -1,7 +1,7 @@
 version: '3.6'
 services:
   hsi-db:
-    image: postgres:11
+    image: postgres:16
     container_name: hsi-db
     environment:
       POSTGRES_PASSWORD: Local123
@@ -113,6 +113,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Local123
       POSTGRES_DB: hospitalDB
+      CREATE_COMMERCIAL_MEDICATION_SCHEMA: false
     volumes:
       # Absolute Path on the host
       - ./SnomedCT_Argentina-EditionRelease:/usr/src/app/Release2405

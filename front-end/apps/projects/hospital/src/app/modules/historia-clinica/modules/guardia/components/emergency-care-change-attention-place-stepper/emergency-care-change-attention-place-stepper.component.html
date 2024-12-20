@@ -1,0 +1,109 @@
+<mat-stepper #stepper orientation="horizontal" linear labelPosition="bottom">
+	<mat-step label="{{'guardia.home.attention_places.change-attention-place.NEW_ATTENTION_PLACE' | translate}}"
+		[completed]="newPlace || selectedSpaceType === spaceType.Beds">
+
+		<div fxLayout="column" fxLayoutGap="20px">
+			<app-emergency-care-change-attention-place-patient [patient]="patient">
+			</app-emergency-care-change-attention-place-patient>
+
+			<app-emergency-care-change-attention-place-select-sector
+				class="no-margin-bottom"
+				(selectedSector)="setSector($event)">
+			</app-emergency-care-change-attention-place-select-sector>
+
+			<app-emergency-care-change-attention-place-select-place-type [sectorId]="sectorId"
+				(selectedSpaceType)="setSelectedSpaceType($event)">
+			</app-emergency-care-change-attention-place-select-place-type>
+
+			<ng-container *ngIf="selectedSpaceType === spaceType.DoctorsOffices">
+				<app-emergency-care-change-attention-place-select-doctor-office *ngIf="hasAvailableDoctorOffices" [sectorId]="sectorId"
+					(selectedDoctorOffice)="setSelectedDoctorOffice($event)"
+					(noAvailableDoctorOffices)="handleNoAvailableDoctorOffices($event)">
+				</app-emergency-care-change-attention-place-select-doctor-office>
+
+				<ng-container *ngIf="!hasAvailableDoctorOffices">
+					<app-box-message class="margin-botom-20px"
+						[boxMessageInfo]="doctorOfficeBoxMessageInfo">
+					</app-box-message>
+				</ng-container>
+			</ng-container>
+
+			<ng-container *ngIf="selectedSpaceType === spaceType.ShockRooms">
+				<app-emergency-care-change-attention-place-select-shockroom *ngIf="hasAvailableShockrooms" [sectorId]="sectorId"
+					(selectedShockroom)="setSelectedShockroom($event)"
+					(noAvailableShockrooms)="handleNoAvailableShockrooms($event)">
+				</app-emergency-care-change-attention-place-select-shockroom>
+
+				<ng-container *ngIf="!hasAvailableShockrooms">
+					<app-box-message class="margin-botom-20px"
+						[boxMessageInfo]="shockroomBoxMessageInfo">
+					</app-box-message>
+				</ng-container>
+			</ng-container>
+		</div>
+
+		<div class="actions">
+			<app-button *ngIf="selectedSpaceType !== spaceType.Beds"
+				(click)="stepper.next()"
+				[disabled]="!newPlace"
+				[text]="'guardia.home.attention_places.change-attention-place.BUTTON_CONTINUE'"
+				[buttonType]="buttonType.RAISED">
+			</app-button>
+
+			<ng-container *ngIf="selectedSpaceType === spaceType.Beds">
+				<app-button
+					(click)="stepper.selectedIndex = 1"
+					[text]="'guardia.home.attention_places.change-attention-place.ASSIGN_BED'"
+					[buttonType]="buttonType.RAISED">
+				</app-button>
+			</ng-container>
+		</div>
+	</mat-step>
+
+	<mat-step *ngIf="selectedSpaceType === spaceType.Beds"
+		label="{{'guardia.home.attention_places.change-attention-place.ASSIGN_BED' | translate}}"
+		[completed]="newPlace">
+
+		<app-emergency-care-change-attention-place-patient [patient]="patient">
+		</app-emergency-care-change-attention-place-patient>
+
+		<app-emergency-care-change-attention-place-beds
+			[sectorId]="sectorId"
+			(selectedBedInfo)="setSelectedBed($event, stepper)">
+		</app-emergency-care-change-attention-place-beds>
+
+		<div class="actions-button-on-left">
+			<app-button
+				(click)="stepper.previous()"
+				[text]="'guardia.home.attention_places.change-attention-place.BUTTON_BACK'"
+				[buttonType]="buttonType.STROKED">
+			</app-button>
+		</div>
+	</mat-step>
+
+	<mat-step label="{{'guardia.home.attention_places.change-attention-place.PREVIEW' | translate}}">
+		<div fxLayout="column" fxLayoutGap="20px">
+			<app-emergency-care-change-attention-place-patient [patient]="patient">
+			</app-emergency-care-change-attention-place-patient>
+
+			<app-emergency-care-change-attention-place-preview-change
+				[lastAttentionPlace]="lastPlacePreview"
+				[newAttentionPlace]="newPlacePreview">
+			</app-emergency-care-change-attention-place-preview-change>
+
+			<div class="actions">
+				<app-button
+					(click)="stepper.previous()"
+					[text]="'guardia.home.attention_places.change-attention-place.BUTTON_BACK'"
+					[buttonType]="buttonType.STROKED">
+				</app-button>
+
+				<app-button
+					(click)="save()"
+					[text]="'guardia.home.attention_places.change-attention-place.BUTTON_CONFIRM'"
+					[buttonType]="buttonType.RAISED">
+				</app-button>
+			</div>
+		</div>
+	</mat-step>
+</mat-stepper>

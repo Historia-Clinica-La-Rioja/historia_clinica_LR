@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.reports.application.ReportInstitutionQueryBo;
 import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.FetchNominalECEpisodeDetail;
 
+import net.pladema.reports.domain.InstitutionReportType;
 import net.pladema.reports.domain.ReportSearchFilterBo;
 
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class GenerateEmergencyCareNominalDetailExcelReport implements Institutio
 	) {
 		IWorkbook wb = generateReport(institutionMonthlyReportParams, "DNG");
 		// armo la respuesta con el workbook obtenido
-		String filename = "Reporte detalle Nominal atenciones de guardia." + wb.getExtension();
+		String filename = InstitutionReportType.EmergencyCareNominalDetail.getDescription() + "." + wb.getExtension();
 		return new StoredFileBo(
 				buildReport(wb),
 				wb.getContentType(),

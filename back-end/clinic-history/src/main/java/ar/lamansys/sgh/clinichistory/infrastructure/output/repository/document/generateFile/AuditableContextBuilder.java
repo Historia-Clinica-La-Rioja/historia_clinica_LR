@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile;
 
+import ar.lamansys.sgh.clinichistory.application.isolationalerts.FetchIsolationAlertsForPdfDocument;
 import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterBo;
 import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
@@ -17,8 +18,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
-import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.forms.SharedParameterizedFormPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.imagenetwork.SharedDiagnosticImagingOrder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.SharedImmunizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.immunization.VaccineDoseInfoDto;
@@ -39,7 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +89,7 @@ public class AuditableContextBuilder {
 	private final SharedAddressPort sharedAddressPort;
 
 	private final MapCompletedForms mapCompletedForms;
+	private final FetchIsolationAlertsForPdfDocument fetchIsolationAlertsForPdfDocument;
 
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
@@ -115,7 +114,8 @@ public class AuditableContextBuilder {
 			ShockRoomFinder shockRoomFinder,
 			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder,
 			SharedAddressPort sharedAddressPort,
-			MapCompletedForms mapCompletedForms) {
+			MapCompletedForms mapCompletedForms,
+			FetchIsolationAlertsForPdfDocument fetchIsolationAlertsForPdfDocument) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -139,6 +139,7 @@ public class AuditableContextBuilder {
 		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
 		this.sharedAddressPort = sharedAddressPort;
 		this.mapCompletedForms = mapCompletedForms;
+		this.fetchIsolationAlertsForPdfDocument = fetchIsolationAlertsForPdfDocument;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document) {
@@ -216,6 +217,7 @@ public class AuditableContextBuilder {
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
 		contextMap.put("otherRiskFactors", document.getOtherRiskFactors());
 		contextMap.put("notes", document.getNotes());
+		contextMap.put("isolationAlerts", fetchIsolationAlertsForPdfDocument.run(document.getId()));
 
 		var author = authorFromDocumentFunction.apply(document.getId());
 		contextMap.put("author", author);
@@ -344,8 +346,10 @@ public class AuditableContextBuilder {
 			stateProvinceData.ifPresent(licenseNumberDto -> ctx.put("stateLicense", licenseNumberDto.getNumber()));
 		}
 
-		ctx.put("logo", generatePdfImage("pdf/digital_recipe_logo.png"));
-		ctx.put("headerLogos", generatePdfImage("pdf/digital_recipe_header_logo.png"));
+		String logo = String.join(",","data:image/png;charset=utf-8;base64", generatePdfImage("pdf/digital_recipe_logo.png"));
+		String headerLogo = String.join(",","data:image/png;charset=utf-8;base64", generatePdfImage("pdf/digital_recipe_header_logo.png"));
+		ctx.put("logo", logo);
+		ctx.put("headerLogos", headerLogo);
 		ctx.put("isArchived", document.getIsArchived());
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 		ctx.put("patientAddress", sharedAddressPort.fetchPatientCompleteAddress(document.getPatientId()));

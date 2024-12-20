@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Observable, of } from 'rxjs';
-import { MasterDataDto } from '@api-rest/api-model';
+import { MasterDataDto, TriageCategoryDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { Triages } from '@historia-clinica/modules/guardia/constants/masterdata';
@@ -43,7 +43,7 @@ export class TriageMasterDataService {
 	constructor(private readonly http: HttpClient) {
 	}	
 
-	getCategories(): Observable<TriageCategory[]> {
+	getTriageCategories(): Observable<TriageCategory[]> {
 		return of(TRIAGE_CATEGORIES);
 	}
 
@@ -66,4 +66,11 @@ export class TriageMasterDataService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/perfusion`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
+
+	getCategories(): Observable<TriageCategoryDto[]> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/category`;
+		return this.http.get<TriageCategoryDto[]>(url);
+	}
+
+	
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,5 +15,7 @@ import lombok.ToString;
 public class SnomedMedicationSearchDto extends SnomedSearchItemDto {
 
 	private boolean financed;
+
+	private List<String> auditRequiredText;
 
 }

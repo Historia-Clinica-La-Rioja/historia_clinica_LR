@@ -17,7 +17,6 @@
     <properties>
         <packaging.type>jar</packaging.type>
         <hapifhir.version>5.1.0</hapifhir.version>
-        <jetty.version>9.4.30.v20200611</jetty.version>
         <jacoco-plugin.version>0.8.2</jacoco-plugin.version>
         <maven-surefire-version>2.22.0</maven-surefire-version>
         <maven-failsafe-version>2.22.0</maven-failsafe-version>

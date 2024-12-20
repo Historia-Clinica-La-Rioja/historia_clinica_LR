@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class CompleteDiagnosticReportRDIServiceImpl implements CompleteDiagnosti
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
 
 	@Override
+	@Transactional
 	public Integer run(Integer patientId, Integer appointmentId) {
 		log.debug("input -> patientId {}, appointmentId {}", patientId, appointmentId);
 		Optional<Integer> study = appointmentOrderImageRepository.getStudyId(appointmentId);

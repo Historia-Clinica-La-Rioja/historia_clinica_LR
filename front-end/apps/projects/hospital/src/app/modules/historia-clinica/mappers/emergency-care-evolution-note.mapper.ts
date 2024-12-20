@@ -1,7 +1,11 @@
-import { EffectiveClinicalObservationDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
+import { FormGroup } from "@angular/forms";
+import { ClinicalTermDto, DiagnosisDto, EEmergencyCareEvolutionNoteType, EffectiveClinicalObservationDto, EmergencyCareEvolutionNoteDto, HealthConditionDto, IsolationAlertDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
+import { dateDtoToDate, dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
 import { dateISOParseDate } from "@core/utils/moment.utils";
+import { EmergencyCareDiagnosis, EmergencyCareMainDiagnosis } from "@historia-clinica/components/emergency-care-diagnoses/emergency-care-diagnoses.component";
+import { IsolationAlert } from "@historia-clinica/components/isolation-alert-form/isolation-alert-form.component";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { AntecedenteFamiliar } from "@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service";
 import { AnthropometricDataValues } from "@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service";
@@ -23,6 +27,39 @@ export const toOutpatientRiskFactorDto = (riskFactors: OutpatientRiskFactorDto):
 		return result;
 	}
 	return null;
+}
+
+
+export const buildEmergencyCareEvolutionNoteDto = (form: FormGroup, isFamilyHistoriesNoRefer: boolean, isAllergyNoRefer: boolean, patientId: number, evolutionNoteType: EEmergencyCareEvolutionNoteType): EmergencyCareEvolutionNoteDto => {
+	const value = form.value;
+	const allDiagnosis = evolutionNoteType === EEmergencyCareEvolutionNoteType.DOCTOR ? toAllDiagnosis(value.diagnosis) : toAllNursingDiagnosis(value.diagnosis);
+	const medications = toOutpatientMedicationDto(value.medications?.data);
+	const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
+	const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
+	const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
+	const isolationAlerts = value.isolationAlerts?.isolationAlerts.length ? toIsolationAlertsDto(value.isolationAlerts?.isolationAlerts) : [];
+	return {
+		clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
+		reasons: value.reasons?.motivo || [],
+		diagnosis: allDiagnosis.diagnosis,
+		mainDiagnosis: allDiagnosis.mainDiagnosis,
+		evolutionNote: value.evolutionNote?.evolucion,
+		anthropometricData,
+		familyHistories: {
+			isReferred: (isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null : isFamilyHistoriesNoRefer,
+			content: familyHistories,
+		},
+		procedures: value.procedures?.data.map(p => { return { ...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null } }) || [],
+		medications,
+		riskFactors,
+		allergies: {
+			isReferred: (isAllergyNoRefer && (value.allergies?.data || []).length === 0) ? null : isAllergyNoRefer,
+			content: value.allergies?.data || []
+		},
+		patientId,
+		type: evolutionNoteType,
+		isolationAlerts,
+	}
 }
 
 export const toOutpatientFamilyHistoryDto = (familyHistories: any[]): OutpatientFamilyHistoryDto[] => {
@@ -73,6 +110,29 @@ const toAllergy = (allergy: OutpatientAllergyConditionDto): Alergia => {
 
 export const toAllergies = (allergies: ReferableItemDto<OutpatientAllergyConditionDto>): Alergia[] => {
 	return allergies.content?.map(allergy => toAllergy(allergy));
+}
+
+export const toClinicalTermDto = (id: number, pt: string, sctid: string): ClinicalTermDto => {
+	return {
+		id, snomed: { pt, sctid }
+	}
+}
+
+const toIsolationAlert = (isolationAlert: IsolationAlertDto): IsolationAlert => {
+	const { healthConditionId, healthConditionPt, healthConditionSctid } = isolationAlert;
+	return {
+		id: isolationAlert.id,
+		statusId: isolationAlert.statusId,
+		diagnosis: toClinicalTermDto(healthConditionId, healthConditionPt, healthConditionSctid),
+		types: isolationAlert.types,
+		criticality: isolationAlert.criticality,
+		endDate: dateDtoToDate(isolationAlert.endDate),
+		observations: isolationAlert.observations,
+	}
+}
+
+export const toIsolationAlerts = (isolationAlerts: IsolationAlertDto[]): IsolationAlert[] => {
+	return isolationAlerts.map(isolationAlert => toIsolationAlert(isolationAlert));
 }
 
 const toProcedure = (procedure: OutpatientProcedureDto): Procedimiento => {
@@ -132,4 +192,38 @@ export const toAnthropometricDataValues = (antropometricData: OutpatientAnthropo
 		weight: antropometricData?.weight?.value || null,
 		headCircumference: antropometricData?.headCircumference?.value || null,
 	}
+}
+
+export const toAllDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
+	const mainDiagnosis: EmergencyCareMainDiagnosis = diagnosisFormValue?.mainDiagnostico;
+	const others: EmergencyCareDiagnosis[] = diagnosisFormValue?.otrosDiagnosticos;
+	return {
+		diagnosis: others?.filter(otherDiagnosis => otherDiagnosis.diagnosis.isAdded).map(otherDiagnosis => otherDiagnosis.diagnosis) || [],
+		mainDiagnosis: mainDiagnosis?.main || null
+	}
+}
+
+export const toAllNursingDiagnosis = (diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } => {
+	return {
+		diagnosis: diagnosisFormValue.otrosDiagnosticos,
+		mainDiagnosis: diagnosisFormValue.mainDiagnostico
+	}
+}
+
+const toIsolationAlertDto = (isolationAlert: IsolationAlert): IsolationAlertDto => {
+	return {
+		criticality: isolationAlert.criticality,
+		endDate: dateToDateDto(isolationAlert.endDate),
+		healthConditionId: isolationAlert.diagnosis.id,
+		healthConditionPt: isolationAlert.diagnosis.snomed.pt,
+		healthConditionSctid: isolationAlert.diagnosis.snomed.sctid,
+		types: isolationAlert.types,
+		...(isolationAlert.observations && { observations: isolationAlert.observations }),
+		id: isolationAlert.id || null,
+		statusId: isolationAlert.statusId || null,
+	}
+}
+
+export const toIsolationAlertsDto = (isolationAlerts: IsolationAlert[]): IsolationAlertDto[] => {
+	return isolationAlerts.map(isolationAlert => toIsolationAlertDto(isolationAlert));
 }

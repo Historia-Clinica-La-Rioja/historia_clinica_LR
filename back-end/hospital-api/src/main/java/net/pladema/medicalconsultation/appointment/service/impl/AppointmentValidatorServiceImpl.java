@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.utils.DateUtils;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.clinichistory.hospitalization.service.surgicalreport.CreateSurgicalReport;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentValidatorService;
@@ -12,6 +13,7 @@ import net.pladema.medicalconsultation.appointment.service.exceptions.Appointmen
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
+import net.pladema.medicalconsultation.diary.application.ValidateBookingRestriction;
 import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessionalService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
@@ -77,15 +79,18 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 	private final InstitutionExternalService institutionExternalService;
 	private final DateTimeProvider dateTimeProvider;
 
+	private final ValidateBookingRestriction validateBookingRestriction;
 	private final LocalDateMapper localDateMapper;
 	private final FeatureFlagsService featureFlagsService;
 	private final static String APPOINTMENT_ERROR = "Este turno ya no existe";
 	private final static String OCUPPIED_APPOINTMENT = "Ya hay un turno ocupado en ese horario";
 
-    public AppointmentValidatorServiceImpl(
+	public AppointmentValidatorServiceImpl(
 			DiaryService diaryService, DiaryOpeningHoursService diaryOpeningHoursService, HealthcareProfessionalService healthcareProfessionalService,
 			AppointmentService appointmentService, DiaryAssociatedProfessionalService diaryAssociatedProfessionalService,
-			LoggedUserExternalService loggedUserExternalService, InstitutionExternalService institutionExternalService, DateTimeProvider dateTimeProvider, LocalDateMapper localDateMapper, FeatureFlagsService featureFlagsService) {
+			LoggedUserExternalService loggedUserExternalService, InstitutionExternalService institutionExternalService,
+			DateTimeProvider dateTimeProvider, LocalDateMapper localDateMapper, FeatureFlagsService featureFlagsService,
+			ValidateBookingRestriction validateBookingRestriction) {
         this.diaryService = diaryService;
 		this.diaryOpeningHoursService = diaryOpeningHoursService;
 		this.healthcareProfessionalService = healthcareProfessionalService;
@@ -104,6 +109,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
 		this.validStates = buildValidStates();
         this.statesWithReason = Arrays.asList(CANCELLED, ABSENT);
+		this.validateBookingRestriction = validateBookingRestriction;
     }
 
     @Override
@@ -115,9 +121,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		if (apmtOpt.isPresent() && !validStateTransition(appointmentStateId, apmtOpt.get())) {
 			throw new AppointmentException(AppointmentEnumException.TRANSITION_STATE_INVALID, "Nuevo estado de turno inválido");
 		}
-        if (!validReason(appointmentStateId, reason)) {
-			throw new AppointmentException(AppointmentEnumException.ABSENT_REASON_REQUIRED, "Debe especificarse el motivo");
-		}
+		validateReason(appointmentStateId, reason);
         validateRole(institutionId, apmtOpt);
         LOG.debug(OUTPUT, Boolean.TRUE);
         return Boolean.TRUE;
@@ -136,8 +140,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
         }
     }
 
-    private boolean validReason(short appointmentStateId, String reason) {
-        return !statesWithReason.contains(appointmentStateId) || reason != null;
+	@Override
+    public void validateReason(short appointmentStateId, String reason) {
+		if (statesWithReason.contains(appointmentStateId) && (reason.isBlank() || reason.isEmpty()))
+			throw new AppointmentException(AppointmentEnumException.ABSENT_REASON_REQUIRED, "Debe especificarse el motivo");
     }
 
     private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
@@ -148,13 +154,16 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		}
     }
 
-	public boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time){
+	public boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time, Short recurringAppointmentTypeId){
 		LOG.debug("Input parameters -> appointmentId {}, date {}, time {}", appointmentId, date, time);
 		Optional<DiaryBo> diary = diaryService.getDiaryByAppointment(appointmentId);
 		Optional<AppointmentBo> appointmentBo = appointmentService.getAppointmentSummary(appointmentId);
 		ZoneId institutionZoneId = institutionExternalService.getTimezone(institutionId);
 		LocalDate todayDate = dateTimeProvider.nowDate();
 		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
+		RecurringAppointmentType recurringAppointmentType = Optional.ofNullable(recurringAppointmentTypeId)
+				.map(RecurringAppointmentType::map)
+				.orElse(RecurringAppointmentType.NO_REPEAT);
 		
 		if ((date.isBefore(todayDate)) || ((date.equals(todayDate)) && (time.isBefore(todayTime)))){
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, "El horario del turno es anterior a la hora actual.");
@@ -165,6 +174,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		}
 		if (appointmentBo.get().getAppointmentStateId() != 1){
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, "El estado del turno es invalido.");
+		}
+
+		if (RecurringAppointmentType.NO_REPEAT.equals(recurringAppointmentType)) {
+			validateBookingRestriction.run(diary.get().getId(),date);
 		}
 
 		if (appointmentService.findBlockedAppointmentBy(appointmentBo.get().getDiaryId(),date,time).isPresent()) {

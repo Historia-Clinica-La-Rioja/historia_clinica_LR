@@ -40,4 +40,9 @@
 			[description]="associatedProfessionalsToShow">
 		</app-identifier-cases>
 	</div>
+
+	<div fxLayout="row" fxLayoutGap="10px" *ngIf="enableConfigurationDescription">
+		<app-colored-icon-text [coloredIconText]="{icon: 'event', color: 'grey', text: ConfigurationDescription }"></app-colored-icon-text>
+	</div>
+
 </div>

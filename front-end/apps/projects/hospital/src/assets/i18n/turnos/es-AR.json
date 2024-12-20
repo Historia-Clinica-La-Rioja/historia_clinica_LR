@@ -119,6 +119,8 @@
 			"DELETE_CONFIRMATION": "¿Eliminar etiqueta de todos modos?",
 			"OK_BUTTON_DELETE": "Sí, eliminar",
 			"CANCEL_BUTTON_DELETE": "No, cancelar",
+			"CONFIGURATION_TYPE":"Configuración de agenda",
+			"DAY_RANGE":"Rango de dias",
 			"dialog": {
 				"TITLE": "Nueva franja horaria",
 				"EDIT": "Editar franja horaria",
@@ -305,6 +307,11 @@
 				"MESSAGE_PENDING": "No se ha validado presencialidad en forma digital"
 			}
 		},
+		"calendar-configuration":{
+			"MONTH_RESTRICTION": "Agenda restrigida por mes",
+			"DAYS_RESTRICTION":"Agenda restringida por un rango de {{dia}} dias",
+			"DAY_RESTRICTION":"Agenda restringida por un rango de {{dia}} dia"
+		},
 		"report": {
 			"TITLE": "Descargar informes",
 			"ANEXO": "Anexo II",
@@ -347,6 +354,7 @@
 			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
 			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER":"Inicia tratamiento en centro de referencia",
 			"REQUIERES_COMPLEMENTARY_STUDIES":"Requiere estudios complementarios",
+			"ADMINISTRATIVE_CLOSURE": "Cierre administrativo de referencia",
 			"REFERENCE_REQUESTED": "Referencia solicitada"
 		},
 		"report-complete-data": {

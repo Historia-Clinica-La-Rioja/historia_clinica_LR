@@ -1,0 +1,205 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <h1 mat-dialog-title [translate]="data.titleLabel"></h1>
+    <button id="close-modal" mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+
+    <form [formGroup]="prescriptionItemForm" fxLayout="column" fxLayoutGap="15px">
+
+        <mat-form-field appearance="outline">
+			<mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ASSOCIATED_PROBLEM'"></mat-label>
+			<mat-select formControlName="healthProblem" name="healthProblem">
+				<mat-option *ngFor="let healthProblem of healthProblems" [value]="healthProblem.snomed.sctid">
+					{{healthProblem.snomed.pt}}
+				</mat-option>
+                <mat-option *appHasRole="[PRESCRIPTOR]" (click)="addNewProblem()">
+                    <button mat-button type="button" color="primary">
+                        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADD_NEW_PROBLEM'"></span>
+                    </button>
+                </mat-option>
+			</mat-select>
+			<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+
+        <ng-container *ngIf="HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS && HABILITAR_RELACIONES_SNOMED">
+            <mat-radio-group (change)="clearSnomedGenericConcept()" fxLayout="column" fxLayoutGap="10px" formControlName="pharmacoSearchType">
+                <mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
+                    {{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_SEARCH' | translate}}
+                </mat-radio-button>
+                <mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
+                    {{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_SEARCH' | translate}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </ng-container>
+
+        <ng-container *ngIf="HABILITAR_FINANCIACION_DE_MEDICAMENTOS && !data.hasSelectedCoverage else genericPharmaco">
+            <ng-container *ngIf="prescriptionItemForm.value.pharmacoSearchType === DEFAULT_RADIO_OPTION else commercialPharmaco">
+                <app-generic-financed-pharmaco-search
+                    [problemSelected]="prescriptionItemForm.value.healthProblem"
+                    [preloadConcept]="data.item?.snomed"
+                    (conceptSelected)="setConceptFinancedPharmaco($event)"
+                    [markFormAsTouched]="markFormAsTouched"
+                >
+                </app-generic-financed-pharmaco-search>
+            </ng-container>
+        </ng-container>
+
+		<ng-template #genericPharmaco>
+			<ng-container *ngIf="prescriptionItemForm.value.pharmacoSearchType === DEFAULT_RADIO_OPTION else commercialPharmaco">
+				<app-concept-typeahead-search
+					[ecl]="data.eclTerm"
+					[appearanceOutline]="true"
+					[showSearchIcon]="true"
+					[clearButton]="true"
+					[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH'"
+					[preload]="snomedConcept"
+					[required]="true"
+					(conceptSelected)="setConcept($event)">
+				</app-concept-typeahead-search>
+			</ng-container>
+		</ng-template>
+
+        <ng-template #commercialPharmaco>
+            <app-commercial-pharmaco-typeahead
+                *ngIf="prescriptionItemForm.value.pharmacoSearchType === OTHER_RADIO_OPTION 
+                && HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS
+                && HABILITAR_RELACIONES_SNOMED"
+                [ecl]="data.eclTerm"
+                [placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
+                [required]="true" (conceptSelected)="setCommercialMedicationConcept($event)">
+            </app-commercial-pharmaco-typeahead>
+		</ng-template>
+
+        <app-audit-required-medicine
+            *ngIf="HABILITAR_FINANCIACION_DE_MEDICAMENTOS && healthProblem && snomedConcept"
+            [auditRequiredData]="auditRequiredInput">
+        </app-audit-required-medicine>
+
+        <mat-checkbox *ngIf="HABILITAR_RELACIONES_SNOMED && HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS"
+            formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="changeCheckboxValue($event.checked)">
+            <span id="suggest-commercial-checkbox" [translate]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION'"></span>
+        </mat-checkbox>
+
+        <app-typeahead id="suggestedCommercialMedication" *ngIf="HABILITAR_RELACIONES_SNOMED && HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS && isSuggestCommercialMedicationChecked"
+            [titleInput]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGESTED_COMMERCIAL_MEDICATION' | translate"
+            [externalSetValue]="initialSuggestCommercialMedication"
+            [options]="suggestedCommercialMedicationOptions"
+            (selectionChange)="setSuggestedCommercialMedication($event)">
+        </app-typeahead>
+
+        <div class="frequency-quantity-days">
+            <div class="field-container">
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.QUANTITY' | translate}}</mat-label>
+                    <input type="number" matInput autocomplete="off" formControlName="quantity">
+                    <span class="comp" matSuffix *ngIf="quantitySelectorOptions.length === 1 && HABILITAR_RELACIONES_SNOMED">
+                        {{ currentPresentation | medicationPresentation}}
+                    </span>
+                    <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'quantity')" translate="forms.REQUIRED"></mat-error>
+                    <mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'quantity')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
+                    <mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'quantity')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
+                </mat-form-field>
+    
+                <mat-form-field class="selector" appearance="outline" *ngIf="quantitySelectorOptions.length > 1 && HABILITAR_RELACIONES_SNOMED">
+                    <mat-select formControlName="unit" (selectionChange)="setTotalQuantityAvailability([$event.value])">
+                        <mat-option *ngFor="let opt of quantitySelectorOptions" [value]="opt">
+                            {{opt}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="field-container">
+                <mat-form-field class="field" appearance="outline">
+                    <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.FREQUENCY' | translate}}</mat-label>
+                    <input type="number" matInput autocomplete="off" formControlName="frequency">
+                    <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'frequency')" translate="forms.REQUIRED"></mat-error>
+                    <mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'frequency')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
+                    <mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'frequency')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
+                </mat-form-field>
+    
+                <mat-form-field class="selector" appearance="outline">
+                    <mat-select formControlName="frequencyType">
+                        <mat-option *ngFor="let opt of frequencySelectorOptions" [value]="opt">
+                            {{opt}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.TREATMENT_DAYS' | translate}}</mat-label>
+                <input type="number" matInput autocomplete="off" formControlName="administrationTimeDays">
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')" translate="forms.REQUIRED"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'administrationTimeDays')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'administrationTimeDays')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" *ngIf="showTotalQuantity">
+                <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_digital_prescription_item_dialog.TOTAL_QUANTITY' | translate}}</mat-label>
+                <input type="text" matInput autocomplete="off" formControlName="totalQuantity">
+                <span class="comp" matSuffix *ngIf="quantitySelectorOptions.length === 1 && HABILITAR_RELACIONES_SNOMED">
+                    {{ currentPresentation | medicationPresentation}}
+                </span>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'totalQuantity')" translate="forms.REQUIRED"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'totalQuantity')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_QUANTITY}"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'totalQuantity')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'pattern', 'totalQuantity')" translate="forms.FORMAT_NUMERIC"></mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <mat-form-field *ngIf="data.showStudyCategory" appearance="outline">
+			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_CATEGORY' | translate}}</mat-label>
+			<mat-select formControlName="studyCategory" name="studyCategory">
+				<mat-option *ngFor="let studyCategory of studyCategoryOptions" [value]="studyCategory.id">
+					{{studyCategory.description | translate}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+        <div fxLayout="row" fxLayoutGap="30px">
+			<mat-form-field *ngIf="showPresentationQuantity" appearance="outline" fxFlex="50">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.PRESENTATION_UNITS' | translate}}</mat-label>
+				<mat-select formControlName="presentationUnit">
+					<mat-option *ngFor="let option of presentationUnitsOptions" [value]="option">
+						<span>{{option}}</span>
+						<span>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.UNITS' | translate}}</span>
+					</mat-option>
+				</mat-select>
+				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'presentationUnit')" translate="forms.REQUIRED"></mat-error>
+			</mat-form-field>
+
+            <mat-form-field *ngIf="showMedicationPackQuantity" appearance="outline" fxFlex="30">
+                <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_PACK_QUANTITY' | translate}}</mat-label>
+                <input matInput formControlName="medicationPackQuantity">
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'medicationPackQuantity')" translate="forms.REQUIRED"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'medicationPackQuantity')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
+                <mat-error *ngIf="hasError(prescriptionItemForm, 'pattern', 'medicationPackQuantity')" translate="forms.FORMAT_NUMERIC"></mat-error>
+            </mat-form-field>
+		</div>
+
+        <mat-form-field appearance="outline">
+			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate}}</mat-label>
+			<textarea matInput type="text" id="observations" name="observations"
+						formControlName="observations"
+						placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate }}">
+			</textarea>
+			<mat-error *ngIf="hasError(prescriptionItemForm, 'maxlength', 'observations')" translate="forms.MAX_LENGTH_ERROR"
+						[translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
+			</mat-error>
+
+		</mat-form-field>
+
+    </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+	<button (click)="addPrescriptionItem()" mat-flat-button color="primary" fxFlexFill.xs>
+		<span class="uppercase">{{'buttons.ADD' | translate}}</span>
+	</button>
+</mat-dialog-actions>

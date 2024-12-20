@@ -18,6 +18,7 @@ import {
 	toSystemHomeWCParamsList,
 	toMenuItemList,
 	toInstitutionHomeWCParams,
+	toPatientProfileWCParams,
 } from './wc-extensions.mappers';
 import { MenuItem } from '@presentation/components/menu/menu.component';
 import { ExtensionsWCService } from './storages/extensions-wc.service';
@@ -62,6 +63,12 @@ export class WCExtensionsService {
 		return this.listComponentsFromSlot(Slot.CLINIC_HISTORY_TAB)
 			.pipe(
 				map(sloted => sloted.map(toClinicHistoryWCParams(patientId)))
+			);
+	}
+	getPatientProfileComponents(patientId: number): Observable<WCParams[]> {
+		return this.listComponentsFromSlot(Slot.PATIENT_PROFILE)
+			.pipe(
+				map(sloted => sloted.map(toPatientProfileWCParams(patientId)))
 			);
 	}
 
@@ -158,6 +165,9 @@ export enum Slot {
 
 	// Una solapa mas en la historia clinica
 	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB',
+
+	// Un card mas en el perfil del paciente
+	PATIENT_PROFILE = 'PATIENT_PROFILE',
 }
 
 

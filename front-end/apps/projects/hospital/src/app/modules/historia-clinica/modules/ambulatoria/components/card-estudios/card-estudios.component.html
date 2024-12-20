@@ -23,7 +23,7 @@
 					| translate }}
 				</button>
 
-				<button *ngIf="episodeEnAtencion && notEmergencyCareTemporaryPatient" mat-menu-item
+				<button *ngIf="episodeEnAtencion" mat-menu-item
 					(click)="openNewEmergencyCareOrderDialog()">Nueva orden de Guardia</button>
 			</ng-container>
 

@@ -8,9 +8,11 @@ public interface AppointmentValidatorService {
 
     boolean validateStateUpdate(Integer institutionId, Integer appointmentId, short appointmentStateId, String reason);
 
-	boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time);
+	boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time, Short recurringType);
 
 	LocalDate checkAppointmentEveryWeek(String hour, String date, Integer diaryId, Integer appointmentId, Short recurringAppointmentOption, Integer openingHoursId);
 
 	void checkCustomAppointment(CreateCustomAppointmentBo bo);
+
+	void validateReason(short appointmentStateId, String reason);
 }

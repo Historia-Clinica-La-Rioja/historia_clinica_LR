@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.domain.counterreference;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
@@ -24,7 +25,9 @@ public class CounterReferenceSummaryBo {
 
     private LocalDate performedDate;
 
-    private ProfessionalPersonBo professional;
+	private Integer authorPersonId;
+
+    private String authorFullName;
 
     private String clinicalSpecialty;
 
@@ -36,18 +39,21 @@ public class CounterReferenceSummaryBo {
 
 	private String institution;
 
-	private String closureType;
+	private EReferenceClosureType closureType;
 
-    public CounterReferenceSummaryBo(Integer id, LocalDate performedDate, Integer professionalId,
-                                     String professionalName, String professionalNameSelfDetermination, String professionalLastName,
-                                     String clinicalSpecialty, String note, String institution, Short closureTypeId,String professionalMiddleNames, String professionalOtherLastNames ) {
+	private LocalDateTime createdOn;
+
+    public CounterReferenceSummaryBo(Integer id, LocalDate performedDate, Integer authorPersonId,
+                                     String clinicalSpecialty, String note, String institution,
+									 Short closureTypeId, LocalDateTime createdOn) {
         this.id = id;
         this.performedDate = performedDate;
         this.clinicalSpecialty = clinicalSpecialty;
         this.note = note;
-        this.professional = new ProfessionalPersonBo(professionalId, professionalName, professionalNameSelfDetermination, professionalLastName,professionalOtherLastNames,professionalMiddleNames );
+        this.authorPersonId = authorPersonId;
     	this.institution = institution;
-		this.closureType = EReferenceClosureType.getById(closureTypeId).getDescription();
+		this.closureType = EReferenceClosureType.getById(closureTypeId);
+		this.createdOn = createdOn;
 	}
 
 }

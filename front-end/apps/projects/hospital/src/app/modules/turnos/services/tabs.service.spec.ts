@@ -42,10 +42,11 @@ describe('TabsService', () => {
 	it("should set professional, institution, care network and requests tabs with administrative role", () => {
 
 		const roles: ERole[] = [ERole.ADMINISTRATIVO];
+		const ffActives = [{ featureFlag: [AppFeature.HABILITAR_SOLICITUD_REFERENCIA] }];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.INSTITUTION, TabsLabel.CARE_NETWORK, TabsLabel.REQUESTS];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
-		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
+		featureFlagServiceMock.filterItems$.and.returnValue(of(ffActives));
 
 		tabsService.getPermissionsAndSetAvailableTabs();
 
@@ -56,10 +57,11 @@ describe('TabsService', () => {
 	it("should set professional, institution, care network and requests tabs with doctor role", () => {
 
 		const roles: ERole[] = [ERole.ESPECIALISTA_MEDICO];
+		const ffActives = [{ featureFlag: [AppFeature.HABILITAR_SOLICITUD_REFERENCIA] }];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.CARE_NETWORK, TabsLabel.REQUESTS];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
-		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
+		featureFlagServiceMock.filterItems$.and.returnValue(of(ffActives));
 
 		tabsService.getPermissionsAndSetAvailableTabs();
 
@@ -70,10 +72,11 @@ describe('TabsService', () => {
 	it("should set professional, institution, care network and requests tabs with health professional role", () => {
 
 		const roles: ERole[] = [ERole.PROFESIONAL_DE_SALUD];
+		const ffActives = [{ featureFlag: [AppFeature.HABILITAR_SOLICITUD_REFERENCIA] }];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.CARE_NETWORK, TabsLabel.REQUESTS];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
-		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
+		featureFlagServiceMock.filterItems$.and.returnValue(of(ffActives));
 
 		tabsService.getPermissionsAndSetAvailableTabs();
 
@@ -84,10 +87,11 @@ describe('TabsService', () => {
 	it("should set professional, institution, care network and requests tabs with dentist role", () => {
 
 		const roles: ERole[] = [ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+		const ffActives = [{ featureFlag: [AppFeature.HABILITAR_SOLICITUD_REFERENCIA] }];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.CARE_NETWORK, TabsLabel.REQUESTS];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
-		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
+		featureFlagServiceMock.filterItems$.and.returnValue(of(ffActives));
 
 		tabsService.getPermissionsAndSetAvailableTabs();
 
@@ -156,10 +160,11 @@ describe('TabsService', () => {
 	it("should set requests tab with violence role and active reference report's feature flag", () => {
 
 		const roles: ERole[] = [ERole.ABORDAJE_VIOLENCIAS];
+		const ffActives = [{ featureFlag: [AppFeature.HABILITAR_SOLICITUD_REFERENCIA] }];
 		const result: TabsLabel[] = [TabsLabel.REQUESTS];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
-		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
+		featureFlagServiceMock.filterItems$.and.returnValue(of(ffActives));
 
 		tabsService.getPermissionsAndSetAvailableTabs();
 

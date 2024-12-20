@@ -1,26 +1,20 @@
 import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppFeature, CommercialMedicationPrescriptionDto, CreateOutpatientDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
-import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AppFeature, CommercialMedicationPrescriptionDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { PresentationUnitsService } from '@api-rest/services/presentation-units.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
-import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { hasError, NUMBER_PATTERN } from '@core/utils/form.utils';
-import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { intervalValidation } from "@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/utils/ordenesyprescrip.utils";
-import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { SnomedFinancedAuditRequired } from '@historia-clinica/modules/ambulatoria/components/generic-financed-pharmaco-search/generic-financed-pharmaco-search.component';
 
 @Component({
   selector: 'app-agregar-prescripcion-item',
@@ -30,7 +24,6 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, AfterContentChecked {
 
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
-	isHabilitarRecetaDigitalFFActive: boolean = false;
 	PRESCRIPTOR: ERole = ERole.PRESCRIPTOR;
 	severityTypes: any[];
 	reportFFIsOn: boolean;
@@ -52,8 +45,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	MAX_QUANTITY: number = this.MAX_VALUE * this.MAX_VALUE;
 	MIN_VALUE: number = 1;
 	HABILITAR_RECETA_DIGITAL: AppFeature = AppFeature.HABILITAR_RECETA_DIGITAL;
-	pharmaceuticalForm: string[] = ["óvulo", "cápsula", "comprimido", "supositorio"];
-	enableFields: boolean = false;
 	isEnabledFinancedPharmaco = false;
 	markFormAsTouched = false;
 
@@ -66,54 +57,19 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	private MIN_INPUT_LENGTH = 1;
 
+	auditRequiredInput: string[]
+
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly dialog: MatDialog,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly requestMasterDataService: RequestMasterDataService,
-		private readonly snackBarService: SnackBarService,
 		public dialogRef: MatDialogRef<AgregarPrescripcionItemComponent>,
 		private changeDetector: ChangeDetectorRef,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly internacionMasterDataService: InternacionMasterDataService,
-		private readonly snomedService: SnomedService,
-		private readonly snvsMasterDataService: SnvsMasterDataService,
-		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly permissionService: PermissionsService,
 		private readonly commercialMedicationService: CommercialMedicationService,
 		private readonly presentationUnitsService: PresentationUnitsService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) {
-			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
-				.subscribe((isFFActive: boolean) => {
-					this.isHabilitarRecetaDigitalFFActive = isFFActive;
-					if (this.isHabilitarRecetaDigitalFFActive) {
-						this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
-
-						this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
-							this.severityTypes = healthConditionSeverities;
-							this.ambulatoryConsultationProblemsService.setSeverityTypes(healthConditionSeverities);
-						});
-
-						this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
-							this.reportFFIsOn = isOn;
-							this.ambulatoryConsultationProblemsService.setReportFF(isOn);
-						});
-
-						this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-							this.searchConceptsLocallyFFIsOn = isOn;
-							this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
-						});
-
-						this.featureFlagService.isActive(AppFeature.HABILITAR_RELACIONES_SNOMED).subscribe(isOn => {
-							this.snomedRelationsFFIsOn = isOn;
-						});
-
-						this.featureFlagService.isActive(AppFeature.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO).subscribe(isOn => {
-							this.commercialPrescriptionFFIsOn = isOn;
-						});
-					}
-				});
-
 			this.featureFlagService.isActive(AppFeature.HABILITAR_FINANCIACION_DE_MEDICAMENTOS).subscribe(isOn => this.isEnabledFinancedPharmaco = isOn);
 			this.permissionService.contextAssignments$().subscribe((userRoles: ERole[]) => this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]));
 		}
@@ -136,6 +92,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.resetCommercialMedication();
 
 		});
+
 	}
 
 	resetCommercialMedication(): void {
@@ -156,76 +113,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	ngAfterContentChecked(): void {
 		this.changeDetector.detectChanges();
-	}
-
-	addNewProblem() {
-		this.dialog.open(NewConsultationAddProblemFormComponent, {
-			data: {
-				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
-				severityTypes: this.severityTypes,
-				epidemiologicalReportFF: this.reportFFIsOn,
-				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
-				isFromRecetaDigital: true
-			},
-		}).afterClosed().subscribe((data: AmbulatoryConsultationProblem[]) => {
-			if (data === undefined || data.length === 0) return;
-
-			// El ultimo que se agregó
-			const problem: AmbulatoryConsultationProblem = data[data.length - 1];
-			const createOutpatientDto: CreateOutpatientDto = this.createOutpatientDto(problem);
-			this.outpatientConsultationService.createOutpatientConsultation(createOutpatientDto, this.data.patientId)
-			.subscribe((result: boolean) => {
-				if (! result) return;
-
-					this.prescriptionItemForm.controls.healthProblem.setValue(problem.snomed.sctid);
-					this.getProblems();
-				});
-		})
-	}
-
-	resetForm(): void {
-		this.snomedConcept = undefined;
-		this.prescriptionItemForm.reset({
-			interval: this.DEFAULT_RADIO_OPTION,
-			administrationTime: this.DEFAULT_RADIO_OPTION
-		});
-	}
-
-	private createOutpatientDto(problem: AmbulatoryConsultationProblem): CreateOutpatientDto {
-		const outpatientProblemDto: OutpatientProblemDto[] = [{
-			chronic: problem.cronico,
-			severity: problem.codigoSeveridad,
-			snomed: problem.snomed,
-			startDate: problem.fechaInicio ? toApiFormat(problem.fechaInicio) : undefined,
-			endDate: problem.fechaFin ? toApiFormat(problem.fechaFin) : undefined
-		}];
-
-		const createOutpatientDto: CreateOutpatientDto = {
-			allergies: {
-				isReferred: null,
-				content: []
-			},
-			anthropometricData: null,
-			clinicalSpecialtyId: null,
-			evolutionNote: null,
-			familyHistories: {
-				isReferred: null,
-				content: [],
-			},
-			medications: [],
-			problems: outpatientProblemDto,
-			procedures: [],
-			reasons: [],
-			references: [],
-			riskFactors: null,
-			involvedHealthcareProfessionalIds: [],
-			personalHistories: {
-				isReferred: null,
-				content: []
-			},
-			completeForms: []
-		};
-		return createOutpatientDto;
 	}
 
 	ngAfterViewInit(): void {
@@ -304,15 +191,13 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				id: showStudyCategory ? this.prescriptionItemForm.controls.studyCategory.value : null,
 				description: showStudyCategory ? this.studyCategoryOptions.find(sc => sc.id === this.prescriptionItemForm.controls.studyCategory.value).description : null
 			},
-			isDailyInterval: showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
-			intervalHours: showDosage ? this.prescriptionItemForm.controls.interval.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
-			observations: this.prescriptionItemForm.controls.observations.value,
-			unitDose: this.prescriptionItemForm.controls.unitDose.value,
-			dayDose: this.prescriptionItemForm.controls.dayDose.value,
 			quantity: {
 				value: this.prescriptionItemForm.controls.quantity.value,
 				unit: this.prescriptionItemForm.controls.unit.value
 			},
+			isDailyInterval: showDosage ? this.prescriptionItemForm.controls.interval.value === this.DEFAULT_RADIO_OPTION : null,
+			intervalHours: showDosage ? this.prescriptionItemForm.controls.interval.value !== this.DEFAULT_RADIO_OPTION ? this.prescriptionItemForm.controls.intervalHours.value : null : null,
+			observations: this.prescriptionItemForm.controls.observations.value,
 			commercialMedicationPrescription: commercialMedicationPrescription,
 			suggestedCommercialMedication: this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.value ? this.prescriptionItemForm.controls.suggestedCommercialMedication.value : null
 		};
@@ -322,25 +207,20 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	setConcept(selectedConcept: SnomedDto, commercialPt?: string): void {
 		if (selectedConcept) {
 			this.snomedConcept = selectedConcept;
-			const pt = selectedConcept ? selectedConcept.pt : '';
 			this.prescriptionItemForm.controls.snomed.setValue(selectedConcept);
 			this.prescriptionItemForm.controls.snomed.disable();
 			this.setPresentationUnits(selectedConcept?.sctid);
 			this.setSuggestedCommercialMedicationOptions(commercialPt);
-
-			if (this.isHabilitarRecetaDigitalFFActive) {
-				if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
-					this.enableUnitDoseAndDayDose();
-					this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => pt.includes(value))[0]);
-				} else {
-					this.disableUnitDoseAndDayDose();
-				}
-			}
 		}
 		else {
 			this.snomedConcept = undefined
 			this.resetCommercialMedication();
 		}
+	}
+
+	setConceptFinancedPharmaco(selectedConcept: SnomedFinancedAuditRequired, commercialPt?: string): void {
+		this.auditRequiredInput = selectedConcept && selectedConcept.auditRequiredText
+		this.setConcept(selectedConcept?.snomed,commercialPt)
 	}
 
 	setCommercialMedicationConcept(selectedConcept: GetCommercialMedicationSnomedDto): void {
@@ -393,48 +273,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.setSuggestedCommercialMedication(undefined);
 	}
 
-	setQuantityMultiplication() {
-		if (this.isHabilitarRecetaDigitalFFActive) {
-			if (this.pharmaceuticalForm.some(value => this.snomedConcept?.pt.includes(value))) {
-				const dayDose = this.prescriptionItemForm.controls.dayDose.value;
-				const administrationTimeDays = this.prescriptionItemForm.controls.administrationTimeDays.value;
-				if (dayDose && administrationTimeDays)
-					this.prescriptionItemForm.controls.quantity.setValue(dayDose * administrationTimeDays)
-			}
-		}
-	}
-
-	private enableUnitDoseAndDayDose() {
-		this.prescriptionItemForm.controls.unitDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
-		this.prescriptionItemForm.controls.dayDose.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
-		this.enableFields = true;
-	}
-
-	private disableUnitDoseAndDayDose() {
-		this.prescriptionItemForm.controls.unitDose.clearValidators();
-		this.prescriptionItemForm.controls.unitDose.setValue(null);
-		this.prescriptionItemForm.controls.dayDose.clearValidators();
-		this.prescriptionItemForm.controls.dayDose.setValue(null);
-		this.enableFields = false;
-	}
-
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
-		this.snomedConcept = prescriptionItem.snomed;
-
-		if (this.isHabilitarRecetaDigitalFFActive) {
-			if (this.pharmaceuticalForm.some(value => prescriptionItem.snomed.pt?.includes(value))) {
-				this.enableUnitDoseAndDayDose();
-				this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => prescriptionItem.snomed.pt.includes(value))[0]);
-			} else {
-				this.disableUnitDoseAndDayDose();
-			}
-			this.prescriptionItemForm.controls.unitDose.setValue(prescriptionItem.unitDose);
-			this.prescriptionItemForm.controls.dayDose.setValue(prescriptionItem.dayDose);
-			this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
-			this.prescriptionItemForm.controls.quantity.setValue(prescriptionItem.quantity?.value);
-		}
-
 		this.prescriptionItemForm.controls.healthProblem.setValue(prescriptionItem.healthProblem?.sctId);
+		this.prescriptionItemForm.controls.observations.setValue(prescriptionItem.observations);
 
 		if (this.data.showDosage) {
 			if (prescriptionItem.isDailyInterval) {
@@ -498,8 +339,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			medicationPackQuantity: [null]
 		});
 
-		if (! this.isHabilitarRecetaDigitalFFActive)
-			this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
+		this.prescriptionItemForm.controls.administrationTime.setValue(this.DEFAULT_RADIO_OPTION);
 
 		if (this.data.showDosage) {
 			this.prescriptionItemForm.controls.interval.setValidators([Validators.required]);
@@ -507,11 +347,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 		if (this.data.showStudyCategory) {
 			this.prescriptionItemForm.controls.studyCategory.setValidators([Validators.required]);
-		}
-
-		if (this.isHabilitarRecetaDigitalFFActive) {
-			this.prescriptionItemForm.controls.administrationTimeDays.setValidators([Validators.required, Validators.max(this.MAX_VALUE), Validators.min(this.MIN_VALUE)]);
-			this.prescriptionItemForm.controls.quantity.setValidators([Validators.required, Validators.pattern(NUMBER_PATTERN), Validators.max(this.MAX_QUANTITY), Validators.min(this.MIN_VALUE)]);
 		}
 
 		if (this.snomedRelationsFFIsOn && this.commercialPrescriptionFFIsOn) {
@@ -554,9 +389,10 @@ export class NewPrescriptionItem {
 	intervalHours?: string;
 	administrationTimeDays?: string;
 	observations: string;
-	unitDose: number;
-	dayDose: number;
-	quantity: QuantityDto;
+	unitDose?: number;
+	dayDose?: number;
+	quantity?: QuantityDto;
 	commercialMedicationPrescription?: CommercialMedicationPrescriptionDto;
     suggestedCommercialMedication?: SnomedDto;
+	frequencyType?: string
 }

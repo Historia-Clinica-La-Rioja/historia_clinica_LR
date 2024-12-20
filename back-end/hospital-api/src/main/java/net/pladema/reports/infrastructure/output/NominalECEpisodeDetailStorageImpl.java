@@ -126,13 +126,13 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"	JOIN {h-schema}document_health_condition dhc on (dhc.document_id = doc.id) " +
 				"	JOIN {h-schema}health_condition hc on (hc.id = dhc.health_condition_id) " +
 				"	JOIN {h-schema}snomed s on (s.id = hc.snomed_id)" +
-				"	WHERE doc.type_id = 16 AND doc.status_id = '445665009' " +
+				"	WHERE doc.type_id IN (16, 21) AND doc.status_id = '445665009' " +
 				"	AND doc.source_id = ece.id), '') as diagnosis, " +
 				"ecd.medical_discharge_on as ece_medical_discharge_on, " +
 				"COALESCE ((SELECT STRING_AGG(distinct (s.pt), ', ') " +
 				"	FROM {h-schema}document doc JOIN document_procedure dp ON (doc.id = dp.document_id) JOIN procedures p ON (dp.procedure_id = p.id) " +
 				"	JOIN {h-schema}snomed s ON (p.snomed_id = s.id) " +
-				"	WHERE doc.type_id = 16 " +
+				"	WHERE doc.type_id IN (16, 21) " +
 				"	AND doc.status_id = '445665009' " +
 				"	AND doc.source_id  = ece.id " +
 				"	GROUP BY doc.source_id), '') || " +

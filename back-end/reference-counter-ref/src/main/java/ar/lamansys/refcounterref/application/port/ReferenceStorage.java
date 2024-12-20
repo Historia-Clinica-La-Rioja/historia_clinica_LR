@@ -37,6 +37,16 @@ public interface ReferenceStorage {
 
 	Optional<ReferenceStudyBo> getReferenceStudy(Integer referenceId);
 
-	void updateDestinationInstitution(Integer referenceId, Integer institutionId);
+	boolean updateDestinationInstitution(Integer referenceId, Integer institutionId);
+
+	Integer getDestinationInstitutionId(Integer referenceId);
+
+	Integer getPatientId(Integer referenceId);
+	
+	Integer getOriginInstitutionId(Integer referenceId);
+
+	Optional<Integer> getServiceRequestId(Integer referenceId);
+
+	void setAdministrativeStateNull(Integer referenceId);
 
 }

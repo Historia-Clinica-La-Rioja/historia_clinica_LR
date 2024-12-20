@@ -5,6 +5,7 @@ import java.util.List;
 
 import ar.lamansys.refcounterref.domain.careline.CareLineBo;
 import ar.lamansys.refcounterref.domain.clinicalspecialty.ClinicalSpecialtyBo;
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
@@ -72,6 +73,8 @@ public class ReferenceDataBo {
 
 	private EReferenceRegulationState regulationState;
 
+	private EReferenceAdministrativeState administrativeState;
+
 	public ReferenceDataBo(Integer id, LocalDateTime date, String note,
 						   Integer careLineId, String careLineDescription,
 						   Integer clinicalSpecialtyOriginId, String clinicalSpecialtyOriginName,
@@ -98,7 +101,7 @@ public class ReferenceDataBo {
 						   Integer institutionDestinationId, String institutionDestinationName, Short departmentDestinationId, String departmentDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Short closureType,
 						   String phonePrefix, String phoneNumber, Integer serviceRequestId,
-						   Integer createdBy, Short statusId, Short regulationStateId) {
+						   Integer createdBy, Short statusId, Short regulationStateId, Short administrativeStateId) {
 		this.id = id;
 		this.patientId = patientId;
 		this.patientMedicalCoverageId = patientMedicalCoverageId;
@@ -119,6 +122,7 @@ public class ReferenceDataBo {
 		this.createdBy = createdBy;
 		this.status = EReferenceStatus.map(statusId);
 		this.regulationState = EReferenceRegulationState.getById(regulationStateId);
+		this.administrativeState = EReferenceAdministrativeState.map(administrativeStateId);
 	}
 
 	public ReferenceDataBo(String phonePrefix, String phoneNumber) {

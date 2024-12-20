@@ -31,4 +31,6 @@ public class StudyTranscribedOrderReportInfoBo {
 	private LocalDate appointmentDate;
 	private LocalTime appointmentHour;
 	private String localViewerUrl;
+	private Short reportStatusId;
+	private String deriveToInstitution;
 }

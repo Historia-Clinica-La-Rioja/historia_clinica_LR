@@ -9,7 +9,7 @@ export class DialogService<T> {
 
     constructor( private dialog: MatDialog ) { }
 
-    open(component: ComponentType<T>, configuration: DialogConfiguration, componentData: any): MatDialogRef<T> {
+    open(component: ComponentType<T>, configuration: DialogConfiguration, componentData?: any): MatDialogRef<T> {
         return this.dialog.open(component, {
             width: configuration.dialogWidth,
             maxHeight: '90vh',

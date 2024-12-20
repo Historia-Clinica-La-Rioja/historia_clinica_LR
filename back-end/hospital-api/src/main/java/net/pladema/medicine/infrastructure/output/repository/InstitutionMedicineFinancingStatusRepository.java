@@ -54,4 +54,5 @@ public interface InstitutionMedicineFinancingStatusRepository extends SGXAuditab
 			"ORDER by s.pt ASC")
 	Optional<InstitutionMedicineFinancingStatusBo> findBoById (@Param("id") Integer id);
 
+	void deleteByInstitutionId(Integer institutionId);
 }

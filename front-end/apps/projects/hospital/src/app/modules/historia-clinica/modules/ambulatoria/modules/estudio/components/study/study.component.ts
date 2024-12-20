@@ -140,7 +140,7 @@ export class StudyComponent implements OnInit {
             diagnosticInformation: report,
             hasActiveAppointment: (report.infoOrderInstances as InfoNewStudyOrderDto)?.hasActiveAppointment?(report.infoOrderInstances as InfoNewStudyOrderDto).hasActiveAppointment: false ,
 			appointmentId: report.infoOrderInstances?.imageId ? report.infoOrderInstances.imageId : null ,
-			reportStatus: report.infoOrderInstances?.viewReport
+			reportStatus: report.infoOrderInstances?.reportStatus
         }
     }
 
@@ -360,7 +360,7 @@ export interface StudyInformation {
     diagnosticInformation: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto;
     hasActiveAppointment?: boolean;
 	appointmentId?: number | string;
-	reportStatus?: boolean
+	reportStatus?: number
 }
 
 export interface ContentStudy extends Content {

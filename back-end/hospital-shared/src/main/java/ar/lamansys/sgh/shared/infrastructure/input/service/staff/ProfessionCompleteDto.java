@@ -3,6 +3,7 @@ package ar.lamansys.sgh.shared.infrastructure.input.service.staff;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,27 @@ public class ProfessionCompleteDto {
 				.flatMap(ps -> ps.getLicenses().stream())
 				.collect(Collectors.toList()));
 		return result;
+	}
+
+	@JsonIgnore
+	public boolean hasMN() {
+		return (hasLicenses() && licenses.stream().anyMatch(LicenseNumberDto::hasMN))
+				|| (hasSpecialties() && specialties.stream().anyMatch(ProfessionSpecialtyDto::hasMN));
+	}
+
+	@JsonIgnore
+	public boolean hasMP() {
+		return (hasLicenses() && licenses.stream().anyMatch(LicenseNumberDto::hasMP))
+				|| (hasSpecialties() && specialties.stream().anyMatch(ProfessionSpecialtyDto::hasMP));
+	}
+
+	@JsonIgnore
+	public boolean hasLicenses() {
+		return licenses != null && !licenses.isEmpty();
+	}
+
+	@JsonIgnore
+	public boolean hasSpecialties() {
+		return (specialties != null && !specialties.isEmpty());
 	}
 }

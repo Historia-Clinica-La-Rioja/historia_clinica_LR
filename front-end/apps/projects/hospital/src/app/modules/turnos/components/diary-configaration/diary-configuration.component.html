@@ -1,0 +1,38 @@
+<form [formGroup]="form">
+    <div class="configuration-main-layout">
+        <div class="column-layout width-configuration-input">
+            <span [translate]="'turnos.agenda-setup.CONFIGURATION_TYPE'"></span>
+            <mat-form-field  appearance="outline">
+                <mat-select formControlName="configurationType">
+                    <mat-option id="configurationType" name="configurationType" *ngFor="let type of configurationTypeArray"
+                        [value]="type.id">
+                        {{type.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <ng-container *ngIf="enableRangeDays">
+            <div  class="column-layout">
+                <span [translate]="'turnos.agenda-setup.DAY_RANGE'"></span>
+                <mat-form-field appearance="outline">
+                    <input matInput type="text" id="daysRange" name="daysRange" formControlName="daysRange">
+                    <mat-error
+                    *ngIf="hasError(this.form, 'min', 'daysRange')"
+                    [translate]="'forms.MIN_ERROR'"
+                    [translateParams]="{min: getError(this.form, 'min', 'daysRange').min}">
+                </mat-error>
+                <mat-error
+                    *ngIf="hasError(this.form, 'max', 'daysRange')"
+                    [translate]="'forms.MAX_ERROR'"
+                    [translateParams]="{max: getError(this.form, 'max', 'daysRange').max}">
+                </mat-error>
+                <mat-error
+                    *ngIf="hasError(this.form, 'pattern', 'daysRange')"
+                    [translate]="'forms.FORMAT_NUMERIC_INTEGER'"
+                    [translateParams]="{pattern: getError(this.form, 'pattern', 'daysRange').pattern}">
+                </mat-error>
+                </mat-form-field>
+            </div>
+        </ng-container>
+    </div>
+</form>

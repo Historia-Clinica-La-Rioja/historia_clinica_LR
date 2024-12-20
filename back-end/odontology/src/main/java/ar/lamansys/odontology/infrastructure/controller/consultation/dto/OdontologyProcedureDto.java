@@ -29,7 +29,4 @@ public class OdontologyProcedureDto implements Serializable {
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     private String performedDate;
 
-	@Nullable
-	private CreateOutpatientServiceRequestDto serviceRequest;
-
 }

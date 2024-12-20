@@ -43,7 +43,7 @@ public class ReferenceForwarding {
 		var regulationStateId = referenceStorage.getReferenceRegulationStateId(referenceId);
 		if (!hasLocalManagerRoleOrRegionalManagerRole(roles))
 			throw new ReferenceForwardingException(ReferenceForwardingExceptionEnum.INVALID_ROLE, "No posee un rol que pueda derivar una solicitud de referencia");
-		if (!(regulationStateId.equals(EReferenceRegulationState.APPROVED.getId()) || regulationStateId.equals(EReferenceRegulationState.WAITING_APPROVAL.getId())))
+		if (regulationStateId.equals(EReferenceRegulationState.REJECTED.getId()))
 			throw new ReferenceForwardingException(ReferenceForwardingExceptionEnum.INVALID_REFERENCE_STATE, "Para derivar una solicitud el estado de la regulación debe ser Aprobada o Esperando aprobación");
 		if (referenceId == null)
 			throw new ReferenceForwardingException(ReferenceForwardingExceptionEnum.NULL_REFRENCE_ID, "El id de la referencia es obligatorio");

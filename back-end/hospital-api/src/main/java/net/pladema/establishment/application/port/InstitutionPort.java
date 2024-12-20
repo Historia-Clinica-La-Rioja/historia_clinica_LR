@@ -1,0 +1,9 @@
+package net.pladema.establishment.application.port;
+
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherInstitutionBo;
+
+public interface InstitutionPort {
+
+	MedicationRequestValidationDispatcherInstitutionBo getInstitutionDataNeededForMedicationRequestValidation(Integer institutionId);
+
+}

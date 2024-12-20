@@ -129,10 +129,10 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 	}
 
 	private List<AvailabilityBo> createListOfSlots(DiaryListBo diary, List<AppointmentDiaryBo> activeAppointments) {
-
+		LocalDate dayAfterEndDate = diary.getEndDate().plusDays(1L);
 		var validDates = diary.getStartDate().isBefore(LocalDate.now())  ?
-				LocalDate.now().datesUntil(diary.getEndDate()) :
-				diary.getStartDate().datesUntil(diary.getEndDate());
+				LocalDate.now().datesUntil(dayAfterEndDate) :
+				diary.getStartDate().datesUntil(dayAfterEndDate);
 
 		return validDates
 				.map(day -> constructAvailabilityBo(diary, day, activeAppointments))

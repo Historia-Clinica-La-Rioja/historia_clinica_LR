@@ -31,14 +31,15 @@ public interface UserPersonRepository extends JpaRepository<UserPerson, UserPers
 
 	@Query("SELECT DISTINCT NEW net.pladema.person.repository.domain.InstitutionUserPersonBo(ur.institutionId, up.pk.userId, p.id, p.firstName, " +
 			"p.middleNames, p.lastName, p.otherLastNames, p.identificationNumber) " +
-			"FROM UserPerson up " +
+			"FROM User u " +
+			"JOIN UserPerson up ON (up.pk.userId = u.id) " +
 			"JOIN UserRole ur ON (up.pk.userId = ur.userId) " +
 			"JOIN Person p ON (up.pk.personId = p.id) " +
 			"WHERE ur.institutionId = :institutionId " +
-			"AND ur.userId IN (:userIds) " +
-			"AND ur.deleteable.deleted IS FALSE")
-	List<InstitutionUserPersonBo> findAllByInstitutionIdAndUserIds(@Param("institutionId") Integer institutionId,
-																   @Param("userIds") List<Integer> userIds);
+			"AND ur.deleteable.deleted IS FALSE " +
+			"AND u.enable = TRUE " +
+			"AND u.deleteable.deleted = FALSE")
+	List<InstitutionUserPersonBo> findAllByInstitutionIdAndUserIds(@Param("institutionId") Integer institutionId);
 
 	@Query("SELECT DISTINCT NEW net.pladema.person.repository.domain.InstitutionUserPersonBo(up.pk.userId, p.id, p.firstName, " +
 			"p.middleNames, p.lastName, p.otherLastNames, p.identificationNumber) " +

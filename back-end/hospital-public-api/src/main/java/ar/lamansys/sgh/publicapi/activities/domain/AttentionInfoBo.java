@@ -29,5 +29,6 @@ public class AttentionInfoBo {
 	private DateTimeBo attentionDateWithTime;
 	private PersonInfoExtendedBo personInfoExtended;
 	private DateTimeBo emergencyCareAdministrativeDischargeDateTime;
+	private Boolean billable;
 
 }

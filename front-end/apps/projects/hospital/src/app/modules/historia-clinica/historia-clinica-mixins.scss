@@ -3,6 +3,7 @@
 @import "./modules/ambulatoria/modules/internacion/internacion-mixins.scss";
 @import "../presentation/components/box-message/box-message-theme.scss";
 @import "./modules/ambulatoria/modules/indicacion/indicacion-mixins.scss";
+@import "./modules/guardia/guardia-mixins.scss";
 
 @mixin historia-clinica-mixins($theme) {
     @include ambulatoria-mixins($theme);
@@ -10,4 +11,5 @@
     @include internacion-mixins($theme);
     @include background-primary($theme);
     @include indicacion-mixins($theme);
+    @include guardia-mixins($theme);
 }

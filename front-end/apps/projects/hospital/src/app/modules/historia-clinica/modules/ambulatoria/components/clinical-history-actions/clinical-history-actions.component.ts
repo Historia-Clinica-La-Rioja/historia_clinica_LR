@@ -30,6 +30,7 @@ import { PatientType } from '@historia-clinica/constants/summaries';
 import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { EmergencyCareStateChangedService } from '../../services/emergency-care-state-changed.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { EvolutionNoteDockPopupByNurseComponent } from '@historia-clinica/components/evolution-note-dock-popup-by-nurse/evolution-note-dock-popup-by-nurse.component';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -58,7 +59,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasMedicalRole = false;
 	hasAdministrativeRole = false;
 	hasRoleAbleToSeeTriage: boolean;
-	hasNurseRoleEvolutionNoteEnabled = false;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
@@ -67,9 +67,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	isEmergencyCareTemporaryPatient = false;
 	isAnestheticReportEnabledFF: boolean;
-	isEvolutionNoteEnabled: boolean;
 	isAdministrativeAndHasTriageFFInFalse: boolean;
-	hasGuardButtons: boolean;
 
 	@Input() patientId: number;
 	@Input()
@@ -128,9 +126,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
 			this.isAnestheticReportEnabledFF = isEnabled
 		);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO).subscribe(isEnabled =>
-			this.hasNurseRoleEvolutionNoteEnabled = isEnabled
-		);
 	}
 
 	ngOnInit(): void {
@@ -141,8 +136,6 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 		const refNotificationInfo = { patientId: this.patientId, consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY };
 		this.referenceNotificationService = new ReferenceNotificationService(refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
-
-		this.checkEvolutionNotePermission()
 
 		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
 			if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY)
@@ -157,19 +150,11 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.internmentActions.dialogRef$.subscribe(dialogRef => this.popUpOpen.next(dialogRef));
 
 		this.checkAdministrativeFF();
-
-		this.hasGuardButtons = this.hasGuardOptionButtons();
-	}
-
-	private hasGuardOptionButtons(): boolean {
-		return (!this.isAdministrativeAndHasTriageFFInFalse || this.isEvolutionNoteEnabled);
 	}
 
 	private checkAdministrativeFF() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.hasRoleAbleToSeeTriage
-				? this.isAdministrativeAndHasTriageFFInFalse = false
-				: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+			this.isAdministrativeAndHasTriageFFInFalse = this.hasRoleAbleToSeeTriage ? false : (!isEnabled && this.hasAdministrativeRole)
 		)
 	}
 
@@ -203,7 +188,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.currentUserIsAllowedToMakeBothConsultation = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
-			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
+			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
 			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 			this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
@@ -370,6 +355,20 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.dialog.open(this.triageComponent, { autoFocus: false, disableClose: true, data: this.episode.id })
 	}
 
+	openEvolutionNoteByNurse() {
+		if (!this.notaDeEvolucionDialogRef) {
+			this.notaDeEvolucionDialogRef = this.dockPopupService.open(EvolutionNoteDockPopupByNurseComponent, { patientId: this.patientId, episodeId: this.episode.id });
+			this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			this.notaDeEvolucionDialogRef.afterClosed().subscribe(_ => {
+				delete this.notaDeEvolucionDialogRef;
+				this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			})
+		} else {
+			if (this.notaDeEvolucionDialogRef.isMinimized())
+				this.notaDeEvolucionDialogRef.maximize();
+		}
+	}
+
 	private hasToDoInternmentAction() {
 		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
@@ -431,17 +430,5 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		});
 	}
 
-	private checkEvolutionNotePermission(): void {
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			const hasProfessionalRole = (anyMatch<ERole>(userRoles, [
-				ERole.ESPECIALISTA_MEDICO,
-				ERole.PROFESIONAL_DE_SALUD,
-				ERole.ESPECIALISTA_EN_ODONTOLOGIA]))
-			const hasNurseRole = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]))
-
-			hasProfessionalRole ? this.isEvolutionNoteEnabled = true :
-				hasNurseRole ? this.isEvolutionNoteEnabled = this.hasNurseRoleEvolutionNoteEnabled : false
-		});
-	}
 
 }

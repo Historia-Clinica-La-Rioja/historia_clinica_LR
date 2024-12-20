@@ -34,12 +34,12 @@
         <div class="margin-top-10">
             <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE'"></mat-label>
             <section class="phone-container">
-                <mat-form-field appearance="outline" class="prefix">
+                <mat-form-field appearance="outline" class="prefix" id="phone-prefix">
                     <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_PREFIX'| translate}}"
                     matInput formControlName="phonePrefix" type="text">
                     <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.phonePrefix')" [translate]="'forms.REQUIRED'"></mat-error>
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="number">
+                <mat-form-field appearance="outline" class="number" id="phone-number">
                     <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_NUMBER' | translate}}"
                     matInput formControlName="phoneNumber" type="text">
                     <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.phoneNumber')" [translate]="'forms.REQUIRED'"></mat-error>
@@ -103,13 +103,13 @@
         <section class="margin-top-10">
             <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADDRESS'"></mat-label>
             <div class="street-container">
-                <mat-form-field appearance="outline" class="street">
+                <mat-form-field appearance="outline" class="street" id="street">
                     <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET' | translate}}"
                     matInput formControlName="street" type="text">
                     <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.street')" [translate]="'forms.REQUIRED'"></mat-error>
                 </mat-form-field>
     
-                <mat-form-field appearance="outline" class="streetNumber">
+                <mat-form-field appearance="outline" class="streetNumber" id="street-number">
                     <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET_NUMBER' | translate}}"
                     matInput formControlName="streetNumber" type="text">
                     <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.streetNumber')" [translate]="'forms.REQUIRED'"></mat-error>

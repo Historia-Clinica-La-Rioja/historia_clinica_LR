@@ -12,12 +12,14 @@
 			<span class="uppercase"> {{ 'pacientes.profile.SEE_CLINICAL_HISTORY' | translate }} </span>
 		</button>
 	</div>
-	<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-		<button *ngIf="(!internmentEpisode?.patientHospitalized && !internmentEpisode?.id)" mat-raised-button
-			color="primary" (click)="goNewInternment()">
-			<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
-		</button>
-	</div>
+	<ng-container *ngIf="isHabilitarInternacionOn">
+		<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+			<button *ngIf="(!internmentEpisode?.patientHospitalized && !internmentEpisode?.id)" mat-raised-button
+				color="primary" (click)="goNewInternment()">
+				<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
+			</button>
+		</div>
+	</ng-container>
 	<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 		<div fxFlex="50" fxFlex.lt-md="100">
 			<div>
@@ -26,12 +28,11 @@
 					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
-						<ng-container>
-							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']"
-								(click)="goToEditProfile()">
-								<mat-icon>edit</mat-icon>
-							</button>
-						</ng-container>
+						<button mat-icon-button color="primary"
+							*appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']"
+							(click)="goToEditProfile()">
+							<mat-icon>edit</mat-icon>
+						</button>
 					</div>
 					<div content *ngIf="auditablePatientInfo">
 						<app-message-flagged-for-audit [auditablePatientInfo]="auditablePatientInfo"></app-message-flagged-for-audit>
@@ -202,6 +203,16 @@
 				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId"
 					(newAppointmentRequired)="newAppointment()">
 				</app-assigned-appointments>
+
+				<mat-card *ngFor="let extension of extensions$ | async">
+					<mat-card-header>
+						<mat-card-title>{{extension.title}}</mat-card-title>
+					</mat-card-header>
+					<mat-card-content>
+						<app-ui-external-component type="external_component" [params]="extension">
+						</app-ui-external-component>
+					</mat-card-content>
+				</mat-card>
 			</div>
 		</div>
 	</div>

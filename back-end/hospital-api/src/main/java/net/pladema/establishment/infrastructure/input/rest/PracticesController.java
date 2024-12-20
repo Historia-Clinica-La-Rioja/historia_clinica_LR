@@ -49,7 +49,7 @@ public class PracticesController {
 	}
 
 	@GetMapping("/institution/{institutionId}/by-active-diaries")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<SharedSnomedDto>> getByActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		List<SharedSnomedDto> activeDiariesPractices = getPracticesByActiveDiaries.run(institutionId);
@@ -66,7 +66,8 @@ public class PracticesController {
 	}
 
 	@GetMapping()
-	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO', 'ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', " +
+			"'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRATIVO', 'ABORDAJE_VIOLENCIAS', 'GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<List<SharedSnomedDto>> getAll(@RequestParam(name = "careLineId", required = false) Integer careLineId) {
 		log.debug("Input parameteres -> careLineId {}", careLineId);
 		List<SharedSnomedDto> result = getPracticesFromInstitutionsByCareLineId.run(careLineId);

@@ -1,29 +1,22 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
-import { EReferenceRegulationState, ERole, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto, ReferenceAdministrativeStateDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { BehaviorSubject, Observable, of, switchMap, take } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
-import { PENDING, PENDING_ATTENTION_STATE, REFERENCE_STATES } from '@access-management/constants/reference';
+import { PENDING } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
-import { PermissionsService } from '@core/services/permissions.service';
+import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
-import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
-import { TabsService } from '@access-management/services/tabs.service';
-
-const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
-const TAB_OFERTA_POR_REGULACION = 1;
-const PENDING_STATE = REFERENCE_STATES.PENDING;
-const ABSENT_STATE = REFERENCE_STATES.ABSENT;
+import { ReferencePermissionCombinationService } from '@access-management/services/reference-permission-combination.service';
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -35,85 +28,93 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	referenceCompleteData: ReferenceCompleteDataDto;
 	reportCompleteData: ReportCompleteData;
 
-	colapseContactDetails = false;
-	registerEditorAppointment: RegisterEditor;
-	referenceAppointment: ReferenceAppointmentDto;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
-	approvedState = EReferenceRegulationState.APPROVED;
-	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
-	waitingAppointment = PENDING_STATE;
+	referenceAdministrativeStateDto$: Observable <ReferenceAdministrativeStateDto>;
+	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
+	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
+
+	referenceAppointment: ReferenceAppointmentDto;
+	auditedState = EReferenceRegulationState.AUDITED;
+	waitingAuditedState = EReferenceRegulationState.WAITING_AUDIT;
+	registerEditor: RegisterEditor = null;
+	registerDeriveEditor: RegisterDerivationEditor = null;
+	selectedFiles: File[] = [];
+	
 	observation: string;
 	derivation: string;
-	registerEditor: RegisterEditor = null;
-	registerEditor$: BehaviorSubject<RegisterEditor> = new BehaviorSubject<RegisterEditor>(null);
+	
 	domainRole = false;
-	registerDeriveEditor: RegisterDerivationEditor = null;
-	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
-	hasObservation: boolean = false;
-	hasDerivationRequest = false;
-	isRoleGestor: boolean;
-	hasNoAppointment = false;
-	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
-	pendingAttentionState = PENDING_ATTENTION_STATE;
-	selectedFiles: File[] = [];
-
-	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
+	colapseContactDetails = false;
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly contextService: ContextService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
-		private readonly permissionService: PermissionsService,
 		private readonly snackBarService: SnackBarService,
-		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
-		private readonly tabsService: TabsService,
 		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
+		public permissionService: ReferencePermissionCombinationService,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
 	ngOnInit(): void {
 		this.domainRole = this.contextService.institutionId === NO_INSTITUTION;
-		const referenceDetails$ = this.getObservable();
-		this.getReferenceDetails(referenceDetails$);
-		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
-	}
+		this.updateReference();
 
-	getReferenceDetails(referenceDetails$: Observable<ReferenceCompleteDataDto>) {
-		referenceDetails$.subscribe(
-			referenceDetails => {
-				this.setAppointment(referenceDetails.appointment);
-				this.setObservation(referenceDetails);
-				this.setDerivation(referenceDetails);
-				this.referenceCompleteData = referenceDetails;
-				this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
-				this.setReportData(this.referenceCompleteData);
-				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
+		if (this.permissionService.referenceCompleteData)
+			this.permissionService.getReferenceCompleteData().subscribe(newReference => {
+				if (this.referenceCompleteData.reference.institutionDestination?.id !== newReference.reference.institutionDestination?.id)
+					this.setReferenceDetails(newReference)
 			});
 	}
 
-	private getObservable(): Observable<ReferenceCompleteDataDto> {
+	closeDialog() {
+		this.dialogRef.close();
+	}
+
+	setReferenceDetails(referenceDetails: ReferenceCompleteDataDto) {
+		this.setAppointment(referenceDetails.appointment);
+		this.setObservation(referenceDetails);
+		this.setDerivation(referenceDetails);
+		this.referenceCompleteData = referenceDetails;
+		this.referenceRegulationDto$ = of(this.referenceCompleteData.regulation);
+		this.referenceAdministrativeStateDto$ = of(this.referenceCompleteData.administrativeState);
+		this.setReportData(this.referenceCompleteData);
+		this.permissionService.setReferenceAndReportDataAndVisualPermissions(this.referenceCompleteData, this.reportCompleteData);
+		this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
+	}
+
+	private getReferenceObservable(): Observable<ReferenceCompleteDataDto> {
 		return this.domainRole ?
 			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :
 			this.institutionalReferenceReportService.getReferenceDetail(this.data.referenceId);
 	}
 
+	updateReference(observable?: Observable<ReferenceCompleteDataDto>) {
+		if (observable)
+			observable.subscribe(referenceCompleteData =>
+				this.setReferenceDetails(referenceCompleteData)
+		)
+		else
+			this.getReferenceObservable().subscribe(referenceCompleteData => 
+				this.setReferenceDetails(referenceCompleteData)
+			);
+	}
+
 	addObservation(observation: string) {
-		this.permissionService.hasContextAssignments$(GESTORES)
-			.pipe(
-				take(1),
-				switchMap(hasRole => hasRole
-					? this.addObservationGestores(observation)
-					: this.addObservationOtherRoles(observation))
-			)
-			.subscribe(res => {
-				if (res) {
-					this.snackBarService.showSuccess('turnos.report-complete-data.SHOW_SUCCESS_OBSERVATION');
-					this.updateObservations();
-					this.hasObservation = true;
-				}
-				else
-					this.snackBarService.showError('turnos.report-complete-data.SHOW_ERROR_OBSERVATION');
-			});
+		let observationObservable;
+		if(this.permissionService.isRoleGestor)
+			observationObservable = this.addObservationGestores(observation);
+		else 
+			observationObservable = this.addObservationOtherRoles(observation);
+
+		observationObservable.subscribe(response => {
+			if (response) {
+				this.snackBarService.showSuccess('turnos.report-complete-data.SHOW_SUCCESS_OBSERVATION');
+				this.updateObservations();
+			}
+			else
+				this.snackBarService.showError('turnos.report-complete-data.SHOW_ERROR_OBSERVATION');
+		});
 	}
 
 	performDerivationAction (derivation: DerivationEmmiter): void {
@@ -142,17 +143,10 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			if (creationSuccess) {
 				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_DERIVATION');
 				this.updateDerivation();
-				this.hasDerivationRequest = true;
 			}
 			else
 				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
 		})
-	}
-
-	redirectToOfferByRegulation(): void {
-		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
-		this.tabsService.setTabActive(TAB_OFERTA_POR_REGULACION);
-		this.dialogRef.close();
 	}
 
 	private updateDerivation() {
@@ -162,7 +156,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	}
 
 	private updateObservations() {
-		const referenceDetails$ = this.getObservable();
+		const referenceDetails$ = this.getReferenceObservable();
 
 		referenceDetails$.subscribe(
 			referenceDetails => {
@@ -182,7 +176,9 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		if(referenceDetails) {
 			const {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName} = referenceDetails;
 			this.referenceAppointment = {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName};
-			this.registerEditorAppointment = {createdBy: authorFullName, date: convertDateTimeDtoToDate(createdOn)}
+			this.permissionService.setEditorAppointment(authorFullName, convertDateTimeDtoToDate(createdOn));
+		} else {
+			this.permissionService.resetEditorAppontment();
 		}
 	}
 
@@ -213,8 +209,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			reference: referenceDetails.reference,
 			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment,
 		}
-		this.hasNoAppointment = this.reportCompleteData.appointment.state.description === (PENDING_STATE || ABSENT_STATE);
-	}
+	}	
 }
 
 export interface ReportCompleteData {

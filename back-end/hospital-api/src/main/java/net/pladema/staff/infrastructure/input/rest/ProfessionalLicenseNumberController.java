@@ -32,7 +32,7 @@ import net.pladema.staff.application.saveprofessionallicensesnumber.SaveProfessi
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberDto;
 import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 @RestController

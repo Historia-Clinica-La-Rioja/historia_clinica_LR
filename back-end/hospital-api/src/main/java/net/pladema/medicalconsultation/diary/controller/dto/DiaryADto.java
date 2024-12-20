@@ -73,4 +73,7 @@ public class DiaryADto {
 	private Integer institutionId;
     
 	private List<DiaryLabelDto> diaryLabelDto;
+
+    @Nullable
+    private DiaryBookingRestrictionDto bookingRestriction;
 }

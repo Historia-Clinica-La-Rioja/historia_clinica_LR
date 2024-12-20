@@ -13,11 +13,8 @@ public class EmergencyCareBedBo {
 	private String description;
 	private boolean isAvailable;
 	private String sectorDescription;
-
-	public EmergencyCareBedBo(Integer id, String description, boolean isAvailable) {
-		this.id = id;
-		this.description = description;
-		this.isAvailable = isAvailable;
-	}
+	private String roomDescription;
+	private String bedDescription;
+	private Boolean isBlocked;
 
 }

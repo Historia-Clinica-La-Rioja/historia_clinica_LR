@@ -1,0 +1,12 @@
+@import "../../../../../assets/styles/mixins.scss";
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+}
+
+.font-weight-bold {
+    @include font-weight-bold;
+}

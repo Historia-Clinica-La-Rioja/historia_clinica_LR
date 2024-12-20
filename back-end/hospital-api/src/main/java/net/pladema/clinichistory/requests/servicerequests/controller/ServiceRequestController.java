@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -184,7 +185,6 @@ public class ServiceRequestController {
     }
 
 	@PutMapping("/{appointmentId}/completeByRDI")
-	@Transactional
 	@ResponseStatus(code = HttpStatus.OK)
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, TECNICO')")
 	public void completeByRDI(@PathVariable(name = "institutionId") Integer institutionId,
@@ -206,7 +206,7 @@ public class ServiceRequestController {
                 institutionId,
                 patientId,
                 diagnosticReportId);
-        var result = uploadDiagnosticReportCompletedFileService.execute(files, diagnosticReportId, patientId);
+        var result = uploadDiagnosticReportCompletedFileService.execute(Arrays.asList(files), diagnosticReportId, patientId);
         log.debug(OUTPUT, result);
         return result;
     }

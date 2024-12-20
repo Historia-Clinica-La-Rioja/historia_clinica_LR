@@ -12,6 +12,8 @@ import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
 import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportSummaryDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderWorkListDto;
+import net.pladema.clinichistory.requests.servicerequests.domain.StudyOrderWorkListBo;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
 import org.mapstruct.IterableMapping;
@@ -19,7 +21,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class})
+@Mapper(uses = {SnomedMapper.class, LocalDateMapper.class, StudyOrderWorkListPatientMapper.class})
 public interface StudyMapper {
     @Named("parseToList")
     @IterableMapping(qualifiedByName = "parseTo")
@@ -61,7 +63,13 @@ public interface StudyMapper {
 	@Mapping(target = "diagnosticReports", source = "studies")
 	@Mapping(target = "observations", expression = "java(serviceRequestDto.getObservations())")
 	@Mapping(target = "studyTypeId", expression = "java(serviceRequestDto.getStudyType().getId())")
-	@Mapping(target = "requiresTransfer", expression = "java(serviceRequestDto.getRequiresTransfer())")
 	ExtendedServiceRequestBo toExtendedServiceRequestBo(BasicPatientDto patientDto, Integer doctorId, String categoryId, PrescriptionDto serviceRequestDto, List<PrescriptionItemDto> studies);
+
+	@Named("toStudyOrderWorkListDto")
+	@Mapping(target = "studyTypeId", expression = "java(EStudyType.map(studyOrderWorkListBo.getStudyTypeId()))")
+	@Mapping(target = "sourceTypeId", expression = "java(ESourceType.map(studyOrderWorkListBo.getSourceTypeId()))")
+	@Mapping(target = "status", expression = "java(EDiagnosticReportStatus.map(studyOrderWorkListBo.getStatus()))")
+	@Mapping(target = "patientDto", source = "patientBo")
+	StudyOrderWorkListDto toStudyOrderWorkListDto(StudyOrderWorkListBo studyOrderWorkListBo);
 
 }

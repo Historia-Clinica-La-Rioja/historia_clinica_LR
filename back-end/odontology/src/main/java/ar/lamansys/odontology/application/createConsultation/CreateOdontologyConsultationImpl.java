@@ -32,8 +32,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
@@ -55,9 +54,9 @@ import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyAppointmentStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyConsultationStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyDoctorStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
@@ -65,10 +64,9 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class CreateOdontologyConsultationImpl implements CreateOdontologyConsultation {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CreateOdontologyConsultationImpl.class);
 
     private static final Integer MIN_PERMANENT_TEETH = 0;
     private static final Integer MAX_PERMANENT_TEETH = 99;
@@ -91,7 +89,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
     private final OdontologyDocumentStorage odontologyDocumentStorage;
 
-    private final DrawOdontogramService drawOdontogramService;
+    private final DrawOdontogramServiceImpl drawOdontogramService;
 
 	private final SharedAppointmentPort sharedAppointmentPort;
 
@@ -114,7 +112,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     public CreateOdontologyConsultationImpl(DiagnosticStorage diagnosticStorage, ProcedureStorage proceduresStorage,
 											OdontologyConsultationStorage odontologyConsultationStorage, DateTimeProvider dateTimeProvider,
 											OdontologyDoctorStorage odontologyDoctorStorage, OdontologyDocumentStorage odontologyDocumentStorage,
-											DrawOdontogramService drawOdontogramService, SharedAppointmentPort sharedAppointmentPort,
+											DrawOdontogramServiceImpl drawOdontogramService, SharedAppointmentPort sharedAppointmentPort,
 											CpoCeoIndicesCalculator cpoCeoIndicesCalculator, GetToothSurfacesService getToothSurfacesService,
 											OdontologyAppointmentStorage odontologyAppointmentStorage, GetToothService getToothService,
 											Publisher publisher, SharedReferenceCounterReference sharedReferenceCounterReference,
@@ -145,7 +143,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     	ConsultationBo consultationBo,
     	List<CreateOdontologyConsultationServiceRequestBo> serviceRequestsToCreate)
 	{
-		LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		log.debug("Input parameter -> consultationBo {}", consultationBo);
 		if (consultationBo == null)
 			throw new CreateConsultationException(CreateConsultationExceptionEnum.NULL_CONSULTATION, "La información de la consulta es obligatoria");
 
@@ -156,17 +154,18 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 		processDentalActions(consultationBo);
 		Integer patientId = consultationBo.getPatientId();
-		drawOdontogramService.run(patientId, consultationBo.getDentalActions());
 
 		setPatientMedicalCoverageIfEmpty(consultationBo, doctorInfoBo);
 
-		LocalDate now = dateTimeProvider.nowDate();
+		LocalDate now = LocalDate.now();
 		Integer encounterId = odontologyConsultationStorage.save(newConsultationInfoBo(
 				consultationBo,
 				doctorInfoBo.getId(),
 				now,
 				true
 		));
+
+		drawOdontogramService.run(patientId, consultationBo.getDentalActions(), encounterId);
 
 		consultationBo.setConsultationId(encounterId);
 		cpoCeoIndicesCalculator.run(consultationBo);
@@ -205,42 +204,40 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		orderIds.addAll(orderIdsFromProcedures);
 		ConsultationResponseBo result = new ConsultationResponseBo(encounterId, orderIds);
 
-		LOG.debug("Output -> result {}", result);
+		log.debug("Output -> result {}", result);
 		return result;
     }
 
-	/**
-	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
-	 *
-	 * @return
-	 */
 	private List<Integer> createServiceRequest(
 			Integer doctorId,
-			List<CreateOdontologyConsultationServiceRequestBo> procedures,
+			List<CreateOdontologyConsultationServiceRequestBo> serviceRequests,
 			Integer medicalCoverageId,
 			BasicPatientDto patientDto,
 			Integer institutionId,
 			Integer newConsultationId)
 	{
 		List<Integer> orderIds = new ArrayList<>();
-		for (int i = 0; i < procedures.size(); i++) {
-			var procedure = procedures.get(i);
-			if (procedure != null) {
+		for (int i = 0; i < serviceRequests.size(); i++) {
+			var serviceRequest = serviceRequests.get(i);
+			if (serviceRequest != null) {
 
-				String categoryId = procedure.getCategoryId();
-				String healthConditionSctid = procedure.getHealthConditionSctid();
-				String healthConditionPt = procedure.getHealthConditionPt();
-				SnomedDto snomed = new SnomedDto(procedure.getSnomedSctid(), procedure.getSnomedPt());
-				Boolean createWithStatusFinal = procedure.getCreationStatusIsFinal();
-				Optional<SharedAddObservationsCommandVo> addObservationsCommand = procedure.getObservations();
+				String categoryId = serviceRequest.getCategoryId();
+				String healthConditionSctid = serviceRequest.getHealthConditionSctid();
+				String healthConditionPt = serviceRequest.getHealthConditionPt();
+				SnomedDto snomed = new SnomedDto(serviceRequest.getSnomedSctid(), serviceRequest.getSnomedPt());
+				Boolean createWithStatusFinal = serviceRequest.getCreationStatusIsFinal();
+				Optional<SharedAddObservationsCommandVo> addObservationsCommand = serviceRequest.getObservations();
 
 				Integer patientId = patientDto.getId();
 				Short patientGenderId = patientDto.getPerson().getGender().getId();
 				Short patientAge = patientDto.getPerson().getAge();
 
+				var files = serviceRequest.getFiles();
+				String textObservation = serviceRequest.getObservation();
+
 				Integer orderId = sharedCreateConsultationServiceRequest.createOdontologyServiceRequest(doctorId, categoryId, institutionId,
 						healthConditionSctid, healthConditionPt, medicalCoverageId, newConsultationId, snomed.getSctid(), snomed.getPt(),
-						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge, files, textObservation);
 				orderIds.add(orderId);
 			}
 		}
@@ -254,7 +251,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 	}
 
 	private void processDentalActions(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		log.debug("Input parameter -> consultationBo {}", consultationBo);
         setDefaultProblem(consultationBo);
         setCpoCeoIndicesInDentalActions(consultationBo);
         setSurfaceSctids(consultationBo);
@@ -262,7 +259,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     }
 
     private void setDefaultProblem(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		log.debug("Input parameter -> consultationBo {}", consultationBo);
         if (!consultationBo.getDentalActions().isEmpty() && !hasDefaultProblem(consultationBo.getDiagnostics())) {
             ConsultationDiagnosticBo problem = buildDefaultProblem();
             consultationBo.getDiagnostics().add(problem);
@@ -270,7 +267,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     }
 
     private ConsultationDiagnosticBo buildDefaultProblem() {
-        LOG.debug("No input parameters");
+		log.debug("No input parameters");
         ConsultationDiagnosticBo defaultProblem = new ConsultationDiagnosticBo();
         defaultProblem.setSnomed(new OdontologySnomedBo(DEFAULT_PROBLEM_SCTID, DEFAULT_PROBLEM_PT));
         defaultProblem.setStartDate(dateTimeProvider.nowDate());
@@ -283,13 +280,13 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     }
 
     private void sortDentalActions(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		log.debug("Input parameter -> consultationBo {}", consultationBo);
         // leaves diagnostics at the beginning and procedures at the end
         consultationBo.getDentalActions().sort(Comparator.comparing(ConsultationDentalActionBo::isProcedure));
     }
 
     private void setSurfaceSctids(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		log.debug("Input parameter -> consultationBo {}", consultationBo);
         if (consultationBo.getDentalActions() == null) return;
 
         Map<String, List<ConsultationDentalActionBo>> actionsByToothSctid = consultationBo.getDentalActions()
@@ -320,7 +317,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
     }
 
     private void assertTeethQuantityValid(ConsultationBo consultationBo) {
-        LOG.debug("Input parameter -> consultationBo {}", consultationBo);
+		log.debug("Input parameter -> consultationBo {}", consultationBo);
         Integer permanentTeethPresent = consultationBo.getPermanentTeethPresent();
         if (permanentTeethPresent != null &&
                 ((permanentTeethPresent < MIN_PERMANENT_TEETH) || (permanentTeethPresent > MAX_PERMANENT_TEETH))) {

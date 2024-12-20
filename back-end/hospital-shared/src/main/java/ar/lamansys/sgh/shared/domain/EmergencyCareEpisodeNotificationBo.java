@@ -17,15 +17,15 @@ public class EmergencyCareEpisodeNotificationBo {
 
 	private TriageCategoryBo triageCategory;
 
-	private String topic;
+	private String tvMonitor;
 
 	public EmergencyCareEpisodeNotificationBo(Integer episodeId, String patientFirstName, String patientLastName, String placeName, String triageCategoryName,
-											  String colorCode, String topic) {
+											  String colorCode, String tvMonitor) {
 		this.episodeId = episodeId;
 		this.patientName = patientLastName + " " + patientFirstName;
 		this.placeName = placeName;
 		this.triageCategory = new TriageCategoryBo(triageCategoryName, colorCode);
-		this.topic = topic;
+		this.tvMonitor = tvMonitor;
 	}
 
 }

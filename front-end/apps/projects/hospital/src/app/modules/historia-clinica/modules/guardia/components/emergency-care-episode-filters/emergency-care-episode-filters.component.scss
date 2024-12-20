@@ -1,0 +1,44 @@
+@import '../../../../../../../assets/styles/mat-mixins';
+@import '../../../../../../../assets/styles/mixins';
+
+@include mat-form-field-background-white;
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+.font-weigth {
+	@include info-primary;
+}
+
+.service-width {
+	display: block;
+}
+
+.clickeable {
+	cursor: pointer;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.triage-options {
+	width: 100%;
+}
+
+.flex-container {
+	display: flex;
+	flex-direction: column;
+	height: auto;
+}
+
+.margin-top-12 {
+	margin-top: 12px;
+}

@@ -1,0 +1,18 @@
+mat-card {
+	padding: 16px;
+  }
+
+.checkbox-group {
+	margin-bottom: 16px;
+
+	h4 {
+		margin: 0 0 8px;
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	mat-checkbox {
+		display: block;
+		margin: 4px 0;
+	}
+}

@@ -59,6 +59,8 @@ import { ProfessionalLicenseService } from '@api-rest/services/professional-lice
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { AuditablePatientInfo } from '../edit-patient/edit-patient.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -140,6 +142,10 @@ export class ProfileComponent implements OnInit {
 	public auditablePatientInfo: AuditablePatientInfo;
 	private auditableFullDate: Date;
 
+	extensions$: Observable<WCParams[]>;
+
+	isHabilitarInternacionOn = false;
+
 	constructor(
 		private patientService: PatientService,
 		private mapperService: MapperService,
@@ -165,11 +171,13 @@ export class ProfileComponent implements OnInit {
 		private readonly internmentService: InternacionService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 		private readonly dateFormatPipe: DateFormatPipe,
+		private readonly wcExtensionsService: WCExtensionsService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
 		this.featureFlagService.isActive(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP).subscribe(isOn => this.hideProfessions = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_INTERNACION).subscribe(isOn => this.isHabilitarInternacionOn = isOn);
 	}
 
 	ngOnInit(): void {
@@ -301,6 +309,8 @@ export class ProfileComponent implements OnInit {
 					.subscribe((personPhotoDto: PersonPhotoDto) => {
 						this.personPhoto = personPhotoDto;
 					});
+
+				this.extensions$ = this.wcExtensionsService.getPatientProfileComponents(this.patientId);
 			});
 
 		this.form = this.formBuilder.group({

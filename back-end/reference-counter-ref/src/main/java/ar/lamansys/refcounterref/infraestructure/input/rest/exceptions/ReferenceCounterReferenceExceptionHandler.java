@@ -11,6 +11,7 @@ import ar.lamansys.refcounterref.application.getcounterreferencefile.exceptions.
 import ar.lamansys.refcounterref.application.getreference.exceptions.ReferenceException;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataException;
 import ar.lamansys.refcounterref.application.getreferencefile.exceptions.GetReferenceFileException;
+import ar.lamansys.refcounterref.application.updatereferenceadministrativestate.exceptions.UpdateReferenceAdministrativeStateException;
 import ar.lamansys.refcounterref.application.updatereferenceregulationstate.exceptions.UpdateReferenceRegulationStateException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
@@ -111,6 +112,13 @@ public class ReferenceCounterReferenceExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ModifyReferenceException.class})
 	protected ApiErrorMessageDto handleModifyReferenceException(ModifyReferenceException ex, Locale locale) {
+		log.debug("ModifyReferenceException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({UpdateReferenceAdministrativeStateException.class})
+	protected ApiErrorMessageDto handleUpdateReferenceAdministrativeStateException(UpdateReferenceAdministrativeStateException ex, Locale locale) {
 		log.debug("ModifyReferenceException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}

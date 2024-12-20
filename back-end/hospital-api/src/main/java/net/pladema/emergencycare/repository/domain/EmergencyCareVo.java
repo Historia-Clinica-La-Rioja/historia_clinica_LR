@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
+import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
+import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.establishment.repository.domain.BedVo;
 import net.pladema.establishment.repository.domain.RoomVo;
@@ -76,6 +78,8 @@ public class EmergencyCareVo implements Serializable {
 
 	private SectorVo sector;
 
+	private TriageVo triage;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, String personIdentificationType,
 						   Short patientTypeId, String nameSelfDetermination, DoctorsOffice doctorsOffice, TriageCategory triage,
 						   Shockroom shockroom, Bed bed, Room room, Sector sector){
@@ -118,5 +122,11 @@ public class EmergencyCareVo implements Serializable {
 		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOffice, triage, policeInterventionDetails, shockroom, bed, endDate, room);
 		this.institutionName = institutionName ;
 	}
-	
+
+	public EmergencyCareVo (EmergencyCareEpisode emergencyCareEpisode, Person person, String personIdentificationType,
+							Short patientTypeId, String nameSelfDetermination, DoctorsOffice doctorsOffice, TriageCategory triageCategory,
+							Shockroom shockroom, Bed bed, Room room, Sector sector, Triage triage, String specialtySectorDescription, ProfessionalPersonVo triageCreator) {
+		this(emergencyCareEpisode, person, personIdentificationType, patientTypeId, nameSelfDetermination, doctorsOffice, triageCategory, shockroom, bed, room, sector);
+		this.triage = triage != null ? new TriageVo(triage, emergencyCareEpisode.getEmergencyCareTypeId(), specialtySectorDescription, triageCreator) : null;
+	}
 }

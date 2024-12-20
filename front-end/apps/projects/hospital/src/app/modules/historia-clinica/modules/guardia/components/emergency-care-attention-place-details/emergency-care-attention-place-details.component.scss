@@ -3,3 +3,9 @@
         margin: 13px 0;
     }
 }
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

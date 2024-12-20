@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { VMedicalDischargeDto } from '@api-rest/api-model';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DischargeTypes } from '@api-rest/masterdata';
@@ -43,7 +43,7 @@ export class MedicalDischargeSummaryComponent {
 				this.dischargeTypeDescriptionText = this.getDischargeTypeDescriptionText(data);
 				this.registerEditor = {
 					createdBy: `${data.medicalDischargeProfessionalName} ${data.medicalDischargeProfessionalLastName}`,
-					date: dateTimeDtoToDate(data.medicalDischargeOn),
+					date: dateTimeDtotoLocalDate(data.medicalDischargeOn),
 				};
 			}
 		);

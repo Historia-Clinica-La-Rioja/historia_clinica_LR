@@ -25,7 +25,9 @@
 
             <app-title-description *ngIf="responseEmergencyCare?.patient?.typeId === TEMPORARY_EMERGENCY_CARE && responseEmergencyCare?.patient?.patientDescription"
                 [title]="'ambulatoria.paciente.guardia.IDENTIFYNG_DETAIL'"
-                [text]="responseEmergencyCare.patient.patientDescription"></app-title-description>
+                [text]="responseEmergencyCare.patient.patientDescription"
+                [showFullText]="false"
+            ></app-title-description>
 
             <mat-divider inset></mat-divider>
 

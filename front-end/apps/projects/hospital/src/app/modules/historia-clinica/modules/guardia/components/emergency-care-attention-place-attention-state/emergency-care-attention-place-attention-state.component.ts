@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DateTimeDto, MasterDataDto, ProfessionalPersonDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { PatientNameService } from '@core/services/patient-name.service';
 import { EmergencyCareStatusLabels } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
 import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 
@@ -10,11 +9,11 @@ import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/
 	templateUrl: './emergency-care-attention-place-attention-state.component.html',
 	styleUrls: ['./emergency-care-attention-place-attention-state.component.scss']
 })
-export class EmergencyCareAttentionPlaceAttentionStateComponent implements OnInit {
+export class EmergencyCareAttentionPlaceAttentionStateComponent{
 
 	readonly REGISTER_EDITOR_CASES = REGISTER_EDITOR_CASES;
 
-	registerEditorInfo: RegisterEditor | null = null;
+	registerEditorInfo: RegisterEditor;
 	statusLabel: EmergencyCareStatusLabels;
 
 	private _professional: ProfessionalPersonDto;
@@ -29,31 +28,23 @@ export class EmergencyCareAttentionPlaceAttentionStateComponent implements OnIni
 	@Input() set professional(professional: ProfessionalPersonDto) {
 		if (professional) {
 			this._professional = professional;
+			this.updateRegisterEditorInfo();
 		}
 	}
 
 	@Input() set date(date: DateTimeDto) {
 		if (date) {
 			this._date = date;
+			this.updateRegisterEditorInfo();
 		}
 	}
 
-	constructor(private readonly patientNameService: PatientNameService) { }
-
-	ngOnInit() {
-		this.updateRegisterEditorInfo();
-	}
+	constructor() { }
 
 	private updateRegisterEditorInfo() {
 		if (this._professional && this._date) {
 			this.registerEditorInfo = {
-				createdBy: this.patientNameService.completeName(
-					this._professional.firstName,
-					this._professional.nameSelfDetermination,
-					this._professional.lastName,
-					this._professional.middleNames,
-					this._professional.otherLastNames
-				),
+				createdBy: this._professional.fullName,
 				date: dateTimeDtotoLocalDate(this._date)
 			};
 		}

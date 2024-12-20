@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -94,7 +95,7 @@ public class GetDiagnosticReportObservationGroupTest {
 
 		FhirObservationBo obsWithQty = new FhirObservationBo(
 			1, 123, loinc1Code , "value obsWithQty",
-			new FhirQuantityBo(1, Float.valueOf((float)123.1), "mm3")
+			new FhirQuantityBo(1, BigDecimal.valueOf(123.1), "mm3")
 		);
 
 		FhirObservationBo obsWithoutQty = new FhirObservationBo(

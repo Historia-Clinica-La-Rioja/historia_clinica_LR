@@ -22,9 +22,9 @@ import ar.lamansys.odontology.domain.consultation.ConsultationProcedureBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationReasonBo;
 import ar.lamansys.odontology.domain.consultation.CreateOdontologyConsultationServiceRequestBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyAppointmentStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyConsultationStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyDoctorStorage;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
@@ -70,7 +70,7 @@ class CreateOdontologyConsultationImplTest {
     private OdontologyDocumentStorage odontologyDocumentStorage;
 
     @Mock
-    private DrawOdontogramService drawOdontogramService;
+    private DrawOdontogramServiceImpl drawOdontogramService;
 
 	@Mock
 	private SharedAppointmentPort sharedAppointmentPort;

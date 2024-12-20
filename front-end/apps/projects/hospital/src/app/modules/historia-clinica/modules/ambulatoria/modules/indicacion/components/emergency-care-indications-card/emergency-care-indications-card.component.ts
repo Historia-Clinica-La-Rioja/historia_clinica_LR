@@ -142,7 +142,7 @@ export class EmergencyCareIndicationsCardComponent implements OnInit {
 			const ref = this.actionsButtonService.openDialog(INDICATION_TYPE.PHARMACO, mostFrequent);
 			ref.afterClosed().subscribe((result: DialogPharmacosFrequent<PharmacoSummaryDto>) => {
 				if (result?.openFormPharmaco) {
-					this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.emergencyCareEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
+					this.emergencyCareStateService.getEmergencyCareEpisodeDiagnosesWithoutNursingAttentionDiagnostic(this.emergencyCareEpisodeId).subscribe((diagnostics: DiagnosesGeneralStateDto[]) => {
 						if (diagnostics)
 							this.internacionMasterdataService.getHealthClinical().subscribe(healthClinical => {
 								const clinicalStatus = healthClinical?.filter(s => s.description === this.actionsButtonService.ACTIVE_STATE);

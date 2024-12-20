@@ -51,4 +51,7 @@ public class PrescriptionDto implements Serializable {
 
 	@Nullable
 	private DateTimeDto deferredDate;
+
+	@Nullable
+	private List<Integer> templateIds;
 }

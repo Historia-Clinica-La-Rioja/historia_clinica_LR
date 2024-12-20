@@ -1,0 +1,32 @@
+<div class="flex-container-row">
+    <div [ngSwitch]="attentionPlaceDetails.type">
+
+        <app-identifier-cases *ngSwitchCase="SpaceType.DoctorsOffices" [showLegend]="true"
+            [description]="attentionPlaceDetails.doctorsOffice.description"
+            [identifierCase]="IDENTIFIER_CASES.DOCTOR_OFFICE"></app-identifier-cases>
+
+        <app-identifier-cases *ngSwitchCase="SpaceType.ShockRooms" [showLegend]="true"
+            [description]="attentionPlaceDetails.shockroom.description" [identifierCase]="IDENTIFIER_CASES.SHOCKROOM">
+        </app-identifier-cases>
+
+        <ng-container *ngSwitchCase="SpaceType.Beds">
+            <ng-container *ngIf="attentionPlaceDetails.bedDetailDto as bed">
+                <div class="flex-container-row">
+                    <app-identifier-cases [showLegend]="true" [description]="bed.bedDescription"
+                        [identifierCase]="IDENTIFIER_CASES.BED">
+                    </app-identifier-cases>
+                    <app-identifier-cases [showLegend]="true" [description]="bed.roomDescription"
+                        [identifierCase]="IDENTIFIER_CASES.ROOM_V2">
+                    </app-identifier-cases>
+                </div>
+            </ng-container>
+        </ng-container>
+
+    </div>
+    <ng-container
+        *ngIf="attentionPlaceDetails.bed?.sectorDescription || attentionPlaceDetails.shockroom?.sectorDescription || attentionPlaceDetails.doctorsOffice?.sectorDescription as sectorDescription">
+        <app-identifier-cases [showLegend]="true" [description]="sectorDescription"
+            [identifierCase]="IDENTIFIER_CASES.SECTOR">
+        </app-identifier-cases>
+    </ng-container>
+</div>

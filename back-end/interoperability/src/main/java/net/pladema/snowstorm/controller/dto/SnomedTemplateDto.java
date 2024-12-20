@@ -13,6 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SnomedTemplateDto {
 
+	private Integer id;
+
 	private String description;
 
 	private List<SnomedSearchItemDto> concepts;

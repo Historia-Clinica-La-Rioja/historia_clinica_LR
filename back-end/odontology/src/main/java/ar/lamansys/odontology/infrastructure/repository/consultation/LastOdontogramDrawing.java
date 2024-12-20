@@ -50,6 +50,9 @@ public class LastOdontogramDrawing {
     @Column(name = "right_surface", length = 20)
     private String rightSurface;
 
+	@Column(name = "odontology_consultation_id")
+	private Integer  odontologyConsultationId;
+
     public LastOdontogramDrawing(Integer patientId, ToothDrawingsBo toothDrawings) {
         this.patientId = patientId;
 		this.toothId = toothDrawings.getToothId();
@@ -60,5 +63,17 @@ public class LastOdontogramDrawing {
         this.leftSurface = (toothDrawings.getLeftSurfaceDrawing() != null) ? toothDrawings.getLeftSurfaceDrawing().getSctid() : null;
         this.rightSurface = (toothDrawings.getRightSurfaceDrawing() != null) ? toothDrawings.getRightSurfaceDrawing().getSctid() : null;
     }
+
+	public LastOdontogramDrawing(Integer patientId, ToothDrawingsBo toothDrawings, Integer consultationId) {
+		this.patientId = patientId;
+		this.toothId = toothDrawings.getToothId();
+		this.odontologyConsultationId = consultationId;
+		this.wholeTooth = (toothDrawings.getWholeDrawing() != null) ? toothDrawings.getWholeDrawing().getSnomed().getSctid() : null;
+		this.internalSurface = (toothDrawings.getInternalSurfaceDrawing() != null) ? toothDrawings.getInternalSurfaceDrawing().getSctid() : null;
+		this.externalSurface = (toothDrawings.getExternalSurfaceDrawing() != null) ? toothDrawings.getExternalSurfaceDrawing().getSctid() : null;
+		this.centralSurface = (toothDrawings.getCentralSurfaceDrawing() != null) ? toothDrawings.getCentralSurfaceDrawing().getSctid() : null;
+		this.leftSurface = (toothDrawings.getLeftSurfaceDrawing() != null) ? toothDrawings.getLeftSurfaceDrawing().getSctid() : null;
+		this.rightSurface = (toothDrawings.getRightSurfaceDrawing() != null) ? toothDrawings.getRightSurfaceDrawing().getSctid() : null;
+	}
 
 }

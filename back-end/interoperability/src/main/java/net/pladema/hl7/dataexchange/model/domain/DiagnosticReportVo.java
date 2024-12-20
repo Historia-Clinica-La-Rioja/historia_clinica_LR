@@ -18,7 +18,7 @@ public class DiagnosticReportVo {
 	private String categoryCode;
 	private String code;
 	private String patientId;
-	private String doctorId;
+//	private String doctorId;
 	private String diagnosticReportId;
 	private UUID diagnosticReportUuid;
 	private UUID serviceRequestUuid;
@@ -32,6 +32,13 @@ public class DiagnosticReportVo {
 	private OrganizationVo organizationVo;
 	private CoverageVo coverageVo;
 	private ServiceRequestVo serviceRequestVo;
+
+	/**
+	 * The performer of the diagnostic report can be a practitioner,
+	 * an organization or both.
+	 */
+	private List<PractitionerVo> performerPractitioners;
+	private List<OrganizationVo> performerOrganizations;
 
 	public void addObservation(ObservationVo observationVo) {
 		observations.add(observationVo);

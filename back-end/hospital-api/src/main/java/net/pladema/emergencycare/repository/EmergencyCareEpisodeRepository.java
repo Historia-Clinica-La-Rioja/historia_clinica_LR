@@ -218,7 +218,10 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"FROM EmergencyCareEpisode ece " +
 			"JOIN Document d ON (ece.id = d.sourceId) " +
 			"WHERE ece.id = :episodeId " +
-			"AND d.typeId = " + DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE)
+			"AND d.typeId IN (" +
+				DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE + ", " + DocumentType.NURSING_EMERGENCY_CARE_EVOLUTION +
+			")"
+	)
 	Boolean episodeHasEvolutionNote(@Param("episodeId") Integer episodeId);
 
 	@Transactional(readOnly = true)

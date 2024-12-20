@@ -37,5 +37,4 @@ public class InstitutionMedicineGroupBo implements Serializable {
 		this.isDomain = isDomain;
 		this.enabled = !deleted;
 	}
-
 }

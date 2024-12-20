@@ -8,4 +8,5 @@ public interface ParameterStorage {
 
 	List<ParameterBo> findAllByIds(List<Integer> ids);
 
+	List<ParameterBo> findByDescription(String description);
 }

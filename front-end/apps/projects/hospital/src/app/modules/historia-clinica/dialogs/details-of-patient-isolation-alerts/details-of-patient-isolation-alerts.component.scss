@@ -1,0 +1,22 @@
+.dialog-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+mat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+mat-list-item {
+    max-width: 100%;
+    height: auto !important;
+}
+
+mat-list-item app-isolation-alert-detail[matLine] {
+    font-size: 15px;
+    margin-bottom: 10px;
+}

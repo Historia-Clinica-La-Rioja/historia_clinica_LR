@@ -40,11 +40,11 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
             "AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId is NULL " +
 			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)) " +
-			"AND r.regulationStateId = :regulationStateId")
+			"AND r.administrativeStateId = :administrativeStateId")
     List<ReferenceDataBo> getReferencesFromOutpatientConsultation(@Param("patientId") Integer patientId,
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds,
-																  @Param("regulationStateId") Short regulationStateId);
+																  @Param("administrativeStateId") Short administrativeStateId);
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.creationable.createdOn, " +
@@ -66,11 +66,11 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND r.serviceRequestId IS NULL " +
 			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN :loggedUserRoleIds AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)) " +
-			"AND r.regulationStateId = :regulationStateId")
+			"AND r.administrativeStateId = :administrativeStateId")
     List<ReferenceDataBo> getReferencesFromOdontologyConsultation(@Param("patientId") Integer patientId,
 																  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds,
-																  @Param("regulationStateId") Short regulationStateId);
+																  @Param("administrativeStateId") Short administrativeStateId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -409,7 +409,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"cl.id, cl.description, cs.id, cs.name, " +
 			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId," +
-			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId, r.administrativeStateId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
@@ -435,7 +435,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"cl.id, cl.description, cs.id, cs.name," +
 			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
 			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, " +
-			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId, r.administrativeStateId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
@@ -512,4 +512,29 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND d.typeId = " + DocumentType.ORDER)
 	Optional<ReferenceStudyBo> getReferenceStudy(@Param("referenceId") Integer referenceId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT r.destinationInstitutionId " +
+			"FROM Reference r " +
+			"WHERE r.id = :referenceId")
+	Integer getDestinationInstitutionId(@Param("referenceId") Integer referenceId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT oc.patientId " +
+			"FROM Reference r " +
+			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
+			"WHERE r.id = :referenceId")
+	Integer getPatientId(@Param("referenceId") Integer referenceId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT oc.institutionId " +
+			"FROM Reference r " +
+			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
+			"WHERE r.id = :referenceId")
+	Integer getOriginInstitutionId(@Param("referenceId") Integer referenceId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT r.serviceRequestId " +
+			"FROM Reference r " +
+			"WHERE r.id = :referenceId")
+	Optional<Integer> getServiceRequestId(@Param("referenceId") Integer referenceId);
 }

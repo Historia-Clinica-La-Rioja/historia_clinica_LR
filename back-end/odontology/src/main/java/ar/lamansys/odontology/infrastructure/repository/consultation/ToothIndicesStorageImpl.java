@@ -4,7 +4,7 @@ import ar.lamansys.odontology.application.odontogram.GetToothService;
 import ar.lamansys.odontology.domain.ToothBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.CpoCeoIndicesBo;
-import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
+import ar.lamansys.odontology.application.odontogram.ports.ToothIndicesStorage;
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.EOdontologyIndexBo;
 import ar.lamansys.odontology.domain.consultation.cpoCeoIndices.ToothIndicesBo;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EmergencyCareAttentionPlaceDto, EmergencyCareBedDetailDto, EmergencyCareDoctorsOfficeDetailDto, EmergencyCareShockRoomDetailDto } from '@api-rest/api-model';
+import { ChangeEmergencyCareEpisodeAttentionPlaceDto, EmergencyCareAttentionPlaceDto, EmergencyCareBedDetailDto, EmergencyCareDoctorsOfficeDetailDto, EmergencyCareDoctorsOfficeDto, EmergencyCareSectorHasAttentionPlaceDto, EmergencyCareShockRoomDetailDto, ShockroomDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -40,5 +40,30 @@ export class EmergencyCareAttentionPlaceService {
 		const url = `${this.BASE_URL}/doctors-office/${doctorOfficeId}`;
 		return this.http.get<EmergencyCareDoctorsOfficeDetailDto>(url);
 	}
+
+	getSectors(): Observable<EmergencyCareAttentionPlaceDto[]> {
+		const url = `${this.BASE_URL}/sector`;
+		return this.http.get<EmergencyCareAttentionPlaceDto[]>(url);
+	}
+
+	getSectorHasPlaces(sectorId: number): Observable<EmergencyCareSectorHasAttentionPlaceDto> {
+		const url = `${this.BASE_URL}/sector/${sectorId}/has-places`;
+		return this.http.get<EmergencyCareSectorHasAttentionPlaceDto>(url);
+	}
+
+	getFreeShockrooms(sectorId: number): Observable<ShockroomDto[]> {
+		const url = `${this.BASE_URL}/sector/${sectorId}/shockrooms`;
+		return this.http.get<ShockroomDto[]>(url);
+	}
+
+	getFreeDoctorsOffices(sectorId: number): Observable<EmergencyCareDoctorsOfficeDto[]> {
+		const url = `${this.BASE_URL}/sector/${sectorId}/doctors-offices`;
+		return this.http.get<EmergencyCareDoctorsOfficeDto[]>(url);
+	}
+
+	changeAttentionPlace(newPlace: ChangeEmergencyCareEpisodeAttentionPlaceDto): Observable<boolean> {
+        const url = `${this.BASE_URL}/change`;
+        return this.http.put<boolean>(url, newPlace);
+    }
 }
 

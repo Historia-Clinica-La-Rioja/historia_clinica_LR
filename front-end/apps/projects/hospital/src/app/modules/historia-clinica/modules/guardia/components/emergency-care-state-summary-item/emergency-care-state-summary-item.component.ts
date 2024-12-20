@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Episode } from '../emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { Episode } from '../emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { EstadosEpisodio } from '../../constants/masterdata';
 
 @Component({

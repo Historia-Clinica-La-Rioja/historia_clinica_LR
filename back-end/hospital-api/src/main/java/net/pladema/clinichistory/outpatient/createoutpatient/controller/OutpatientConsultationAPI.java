@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -26,9 +28,11 @@ public interface OutpatientConsultationAPI {
     ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,
-            @RequestBody @Valid CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException, CreateOutpatientConsultationServiceRequestException;
+			@RequestPart("createOutpatientDto") @Valid CreateOutpatientDto createOutpatientDto,
+			@RequestPart("serviceRequestFiles") MultipartFile[] serviceRequestFiles
+	) throws IOException, PDFDocumentException, CreateOutpatientConsultationServiceRequestException;
 
-    @PostMapping("/gettingVaccine")
+	@PostMapping("/gettingVaccine")
     ResponseEntity<Boolean> gettingVaccine(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,

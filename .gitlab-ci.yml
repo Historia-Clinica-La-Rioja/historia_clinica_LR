@@ -31,6 +31,35 @@ build_frontend:
       - front-end/apps/node_modules
       - front-end/backoffice/node_modules
 
+build_storybook:
+  extends: build_frontend
+  script:
+    - ./front-end/build-storybook.sh
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "main" || $ADD_STORYBOOK_BUILD == "true"'
+      when: always
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-build_storybook"
+    when: always
+    paths:
+      - front-end/.docker
+    expire_in: 2 days
+
+dockerize_app:
+  extends: .dockerize_folder
+  variables:
+    IMAGE_NAME: full
+    DOCKER_FOLDER: "ci/docker/nginx-jar"
+  dependencies:
+    - build_backend
+    - build_frontend
+    - build_storybook
+  before_script:
+    # move resources to DOCKER_FOLDER
+    - mv -v back-end/.docker/* ${DOCKER_FOLDER}/
+    - mv -v front-end/.docker/* ${DOCKER_FOLDER}/
+    - mkdir -p ${DOCKER_FOLDER}/storybook
+
 code_freeze:
   stage: publish-docker-image
   image: bitnami/git:2.42.0

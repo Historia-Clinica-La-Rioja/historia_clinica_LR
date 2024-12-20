@@ -19,7 +19,7 @@ public class GetUserIdByTokenImpl implements GetUserIdByToken {
 
 
     @Override
-    public Integer execute(String token) {
+    public Integer execute(String token)  {
         Integer result = passwordResetTokenStorage.get(token).getUserId();
         logger.debug("Output -> {}", result);
         return result;

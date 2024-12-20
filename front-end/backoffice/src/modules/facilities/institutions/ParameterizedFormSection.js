@@ -66,6 +66,7 @@ const ShowInstitutionalParameterizedForm = (props) => {
             target="institutionId"
             sort={{ field: 'id', order: 'ASC' }}
             filter={{ 'isDomain': false, 'institutionId': record.institutionId }}
+            perPage={10}
         >
             <ReferenceManyField
                 id='institutionalParameterizedForm'

@@ -6,5 +6,5 @@ public interface AppointmentReferenceStorage {
 
 	ReferencePhoneBo getReferencePhoneData(Integer referenceId);
 
-	void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, Boolean isProtected);
+	void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, Boolean isProtected, Integer institutionId);
 }

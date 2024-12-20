@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import net.pladema.patient.domain.GetMedicalCoverageHealthInsuranceValidationDataBo;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.repository.entity.PatientMedicalCoverageAssn;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,5 +42,14 @@ public interface PatientMedicalCoverageRepository extends JpaRepository<PatientM
 			"FROM PatientMedicalCoverageAssn pmc " +
 			"WHERE pmc.patientId IN :patients")
 	List<PatientMedicalCoverageAssn> getByPatients(@Param("patients")List<Integer> patients);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.patient.domain.GetMedicalCoverageHealthInsuranceValidationDataBo(mc.name, hi.acronym, mc.cuit, pmca.affiliateNumber) " +
+			"FROM PatientMedicalCoverageAssn pmca " +
+			"JOIN MedicalCoverage mc ON (mc.id = pmca.medicalCoverageId) " +
+			"LEFT JOIN HealthInsurance hi ON (hi.id = mc.id) " +
+			"WHERE pmca.id = :patientMedicalCoverageId " +
+			"AND pmca.active = TRUE")
+	GetMedicalCoverageHealthInsuranceValidationDataBo fetchMedicalCoverageHealthInsuranceValidationDataById(@Param("patientMedicalCoverageId") Integer patientMedicalCoverageId);
 
 }

@@ -28,6 +28,10 @@
             <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
                 [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
 
+            <app-isolation-alert-summary data-id="isolation-alert-summary" *ngIf="evolutionNoteSummary.isolationAlerts.length"
+                [isolationAlerts]="evolutionNoteSummary.isolationAlerts">
+            </app-isolation-alert-summary>
+
             <app-anthropometric-data-summary data-id="anthropometric-data-summary"
                 *ngIf="evolutionNoteSummary.anthropometricData"
                 [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>

@@ -1,0 +1,108 @@
+<div fxLayout="row" style="max-width: 300px">
+    <form [formGroup]="form" fxLayoutGap="24px">
+        <app-emergency-care-type-checkbox formControlName="emergencyCareTypes"></app-emergency-care-type-checkbox>
+
+        <app-triage-category-checkbox formControlName="triageCategories"></app-triage-category-checkbox>
+
+        <app-states-checkbox formControlName="states"></app-states-checkbox>
+
+        <app-service-chips-autocomplete class="service-width" formControlName="clinicalSpecialtySectorIds"></app-service-chips-autocomplete>
+
+        <div class="margin-top-12">
+            <span class="font-weigth"
+                translate="guardia.home.episodes.filters.FILTER_BY_PATIENT"></span>
+
+            <mat-form-field fxFlexFill appearance="outline">
+                <mat-label translate="guardia.home.episodes.filters.PATIENT_ID"></mat-label>
+                <input id="patient-id-filter" matInput type="number" formControlName="patientId"
+                    (keydown.enter)="filter()">
+                <div matSuffix fxLayout="row">
+                    <button *ngIf="form.value.patientId" id="clear-patientId-filter"
+                        type="button" mat-icon-button color="warn"
+                        (click)="clear('patientId'); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button id="search-patientId-filter" type="button" mat-icon-button
+                        (click)="filter(); $event.stopPropagation()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </div>
+            </mat-form-field>
+
+            <mat-form-field fxFlexFill appearance="outline">
+                <mat-label translate="guardia.home.episodes.filters.IDENTIFICATION_NUMBER"></mat-label>
+                <input id="person-idNumber-filter" matInput type="text"
+                    formControlName="identificationNumber" (keydown.enter)="filter()">
+                <div matSuffix fxLayout="row">
+                    <button *ngIf="form.value.identificationNumber"
+                        id="clear-idNumber-filter" type="button" mat-icon-button color="warn"
+                        (click)="clear('identificationNumber'); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button id="search-idNumber-filter" type="button" mat-icon-button
+                        (click)="filter(); $event.stopPropagation()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </div>
+                <mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')"
+                    translate="forms.MAX_LENGTH_ERROR"
+                    [translateParams]=" { max: getError(form, 'maxlength', 'identificationNumber').requiredLength }">
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlexFill appearance="outline">
+                <mat-label translate="guardia.home.episodes.filters.FIRST_NAME"></mat-label>
+                <input id="first-name-filter" matInput type="text" formControlName="firstName"
+                    (keydown.enter)="filter()">
+                <div matSuffix fxLayout="row">
+                    <button *ngIf="form.value.firstName" id="clear-first-name-filter"
+                        type="button" mat-icon-button color="warn"
+                        (click)="clear('firstName'); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button id="search-first-name-filter" type="button" mat-icon-button
+                        (click)="filter(); $event.stopPropagation()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </div>
+                <mat-error *ngIf="hasError(form, 'maxlength', 'firstName')"
+                    translate="forms.MAX_LENGTH_ERROR"
+                    [translateParams]=" { max: getError(form, 'maxlength', 'firstName').requiredLength }">
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlexFill appearance="outline">
+                <mat-label translate="guardia.home.episodes.filters.LAST_NAME"></mat-label>
+                <input id="last-name-filter" matInput type="text" formControlName="lastName"
+                    (keydown.enter)="filter()">
+                <div matSuffix fxLayout="row">
+                    <button *ngIf="form.value.lastName" id="clear-last-name-filter"
+                        type="button" mat-icon-button color="warn"
+                        (click)="clear('lastName'); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <button id="search-last-name-filter" type="button" mat-icon-button
+                        (click)="filter(); $event.stopPropagation()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </div>
+                <mat-error *ngIf="hasError(form, 'maxlength', 'lastName')"
+                    translate="forms.MAX_LENGTH_ERROR"
+                    [translateParams]=" { max: getError(form, 'maxlength', 'lastName').requiredLength }">
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-label translate="guardia.home.episodes.filters.EMERGENCY_CARE_TEMPORARY"></mat-label>
+            <mat-slide-toggle (change)="filter()" formControlName="emergencyCareTemporary">
+            </mat-slide-toggle>
+        </div>
+
+		<div class="margin-top-12">
+			<span class="clickeable span-color" (click)="resetFilters()">{{'guardia.home.episodes.filters.CLEAN_FILTERS' | translate}}</span>
+		</div>
+
+    </form>
+</div>

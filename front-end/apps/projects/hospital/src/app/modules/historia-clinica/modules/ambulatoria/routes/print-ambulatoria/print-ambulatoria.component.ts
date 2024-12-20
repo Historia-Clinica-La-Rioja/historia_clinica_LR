@@ -24,8 +24,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
-import { Observable, take } from 'rxjs';
+import { finalize, Observable, take } from 'rxjs';
 import { MatSort, MatSortable } from '@angular/material/sort';
+import { ButtonType } from '@presentation/components/button/button.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -76,6 +78,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
 
+	isDownloadingDocuments = false;
+	ButtonType = ButtonType.RAISED;
+	MAX_DOCUMENTS_TO_BE_SELECTED = 20;
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -86,6 +92,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		readonly datePipe: DatePipe,
 		private featureFlagService: FeatureFlagService,
 		private readonly printAmbulatoryService: PrintAmbulatoryService,
+		private readonly snackBar: SnackBarService
 	) {
 		this.route.paramMap.pipe(take(1)).subscribe(
 			(params) => {
@@ -189,20 +196,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.hideEncounterListSection();
 	}
 
-	isAllTableSelected(): boolean {
-		const numSelected = this.selection.selected.length;
-		const numRows = this.dataSource.data.length;
-		return numSelected === numRows;
-	}
-
-	toggleAllRows(): void {
-		if (this.isAllTableSelected()) {
-			this.selection.clear();
-			return;
-		}
-		this.selection.select(...this.dataSource.data);
-	}
-
 	goBack(): void {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/${ROUTE_HISTORY_CLINIC}`;
 		this.router.navigate([url]);
@@ -237,6 +230,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		this.loadingTable = true;
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
+			.pipe(finalize(() => this.loadingTable = false))
 			.subscribe(response => {
 				this.noInfo = response.length > 0 ? false : true;
 				const tableData = response.map(data => this.mapToDocumentSummary(data));
@@ -255,8 +249,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
-				this.toggleAllRows();
-				this.loadingTable = false;
 				this.updateLastDownload();
 			});
 	}
@@ -277,10 +269,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		return null;
 	}
 
-	download(document) {
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe(()=>this.updateLastDownload());
-	}
-
 	downloadSelected() {
 		const activeSortColumn = this.sort.active;
 		const activeSortDirection = this.sort.direction;
@@ -299,8 +287,19 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		const selectedIds = selectedItems.map(item => item.id);
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe(()=>this.updateLastDownload());
-
+		this.isDownloadingDocuments = true;
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds)
+			.pipe(finalize(() => this.isDownloadingDocuments = false))
+			.subscribe(()=>this.updateLastDownload());
 	}
 
+	toggleCheck = (row) => {
+		this.selection.toggle(row);
+		this.checkMaxDocumentsQuantity();
+	}
+
+	private checkMaxDocumentsQuantity = () => {
+		if (this.selection.selected.length >= this.MAX_DOCUMENTS_TO_BE_SELECTED) 
+			this.snackBar.showError("ambulatoria.print.encounter-list.MAX_DOCUMENTS_SELECTED");
+	}
 }

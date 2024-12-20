@@ -1,0 +1,161 @@
+databaseChangeLog:
+    - logicalFilePath: incrementales-v2_34
+
+    - changeSet:
+        id: change-fhir_quantity-value-datatype
+        comment: Changes fhir_quantity.value from double to numeric
+        author: efernandez
+        changes:
+          - modifyDataType:
+              tableName: fhir_quantity
+              columnName: value
+              newDataType: numeric
+
+    - changeSet:
+        id: dropForeignKey-counter_reference-institution_id
+        author: bchacon
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: counter_reference
+              constraintName: FK_counter_reference_institution_id
+
+    - changeSet:
+        id: addColumn-note_id-counter_reference
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: counter_reference
+              columns:
+                - column:
+                    name: note_id
+                    type: bigint
+          - addForeignKeyConstraint:
+              baseTableName: counter_reference
+              baseColumnNames: note_id
+              referencedTableName: note
+              referencedColumnNames: id
+              constraintName: FK_counter_reference_note_id
+
+    - changeSet:
+        id: migrate-note_id-counter_reference
+        author: bchacon
+        comment: migrate column note_id from document to counter_reference
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE counter_reference
+                SET note_id = doc.evolution_note_id
+                FROM document doc 
+                WHERE counter_reference.id = doc.source_id 
+                AND doc.evolution_note_id IS NOT NULL
+                AND doc.status_id = '445665009'
+                AND doc.source_type_id = 8
+                AND doc.type_id = 11
+
+    - changeSet:
+        id: addNotNullConstraint-note_id-counter_reference
+        author: bchacon
+        changes:
+          - addNotNullConstraint:
+              columnDataType: bigint
+              columnName: note_id
+              tableName: counter_reference
+              validate: true
+
+
+    - changeSet:
+        id: createTable-service_request_template
+        author: jirimoldi
+        changes:
+          - createTable:
+              tableName: service_request_template
+              columns:
+                - column:
+                    name: service_request_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: group_id
+                    type: int
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: service_request_id, group_id
+              constraintName: PK_service_request_template
+              tableName: service_request_template
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: service_request_id
+              baseTableName: service_request_template
+              constraintName: FK_service_request_template_service_request_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: service_request
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: group_id
+              baseTableName: service_request_template
+              constraintName: FK_service_request_template_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed_group
+              validate: true
+
+    - changeSet:
+        id: createTable-isolation_alert-isolation_status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: isolation_status
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_isolation_status
+                - column:
+                    name: description
+                    type: text
+                    constraints:
+                      nullable: false
+
+          - sql:
+              sql: |-
+                INSERT INTO isolation_status VALUES (1, 'Vigente');
+                INSERT INTO isolation_status VALUES (2, 'Finalizada');
+                INSERT INTO isolation_status VALUES (3, 'Finalizada');
+
+          - addColumn:
+              tableName: isolation_alert
+              columns:
+                - column:
+                    name: isolation_status_id
+                    type: smallint
+                    defaultValue: 1
+                    constraints:
+                      nullable: false
+                      references: isolation_status(id)
+                      foreignKeyName: FK_isolation_alert__isolation_status_id
+
+    - changeSet:
+        id: update-isolation_types-fix-name
+        author: efernandez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE isolation_type SET description = 'Aéreo (respiratorio)' WHERE id = 3;
+
+    - changeSet:
+          id: createIndex-file_info_relative_path
+          author: mromero
+          changes:
+              - sql:
+                    sql: |-
+                       CREATE INDEX "IDX_file_info_relative_path" ON file_info (relative_path);
+

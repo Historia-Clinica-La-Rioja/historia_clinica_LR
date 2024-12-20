@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { ConceptTypeaheadInfo } from '@hsi-components/concept-typeahead-search-v2/concept-typeahead-search-v2.component';
 
 
 const snomedEclMap: Record<string, SnomedECL> = {
@@ -25,6 +26,8 @@ const snomedEclMap: Record<string, SnomedECL> = {
 	VIOLENCE_TYPE: SnomedECL.VIOLENCE_TYPE,
 };
 
+const MAX_SEARCH_RESULTS: number = 30;
+
 @Component({
 	selector: 'app-loinc-input-snomed',
 	templateUrl: './loinc-input-snomed.component.html',
@@ -34,6 +37,12 @@ export class LoincInputSnomedComponent {
 
 	eclSelected: SnomedECL;
 	preloadSnomed: SnomedDto;
+	conceptTypeaheadInfo: ConceptTypeaheadInfo = {
+		clearButton: true,
+		required: false,
+		maxSearchResults: MAX_SEARCH_RESULTS,
+		debounceTime: 300,
+	}
 	@Input() set ecl(snomedGroupId: string) {
 		this.eclSelected = convertStringToEnum(snomedGroupId);
 	};

@@ -12,15 +12,15 @@ public class NotifyPatientDto {
     private final Integer sectorId;
     private final String doctorName;
     private final String doctorsOfficeName;
-    private String topic;
+    private String tvMonitor;
 
-    public NotifyPatientDto(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String topic) {
+    public NotifyPatientDto(Integer appointmentId, String patientName, Integer sectorId, String doctorName, String doctorsOfficeName, String tvMonitor) {
         this.appointmentId = appointmentId;
         this.patientName = patientName;
         this.sectorId = sectorId;
         this.doctorName = doctorName;
         this.doctorsOfficeName = doctorsOfficeName;
-        this.topic = topic;
+        this.tvMonitor = tvMonitor;
     }
 
 }

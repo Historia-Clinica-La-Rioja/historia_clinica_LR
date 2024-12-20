@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
 	requiringAtLeastOneMoreValue: boolean;
 	public tableModel: TableModel<PatientSearchDto>;
 	page = { pageIndex: 0, pageSize: 5 };
+	isLoadingRequest = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -110,7 +111,8 @@ export class HomeComponent implements OnInit {
 			return;
 		}
 
-		if ((this.personalInformationForm.valid)) {
+		if (this.personalInformationForm.valid) {
+			this.isLoadingRequest = true;
 			this.formSubmitted = true;
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
@@ -122,6 +124,7 @@ export class HomeComponent implements OnInit {
 				.subscribe((data: PageDto<PatientSearchDto>) => {
 					this.patientData = data.content;
 					this.patientResultsLength = data.totalElementsAmount;
+					this.isLoadingRequest = false;
 
 						setTimeout(() => {
 							this.scrollToSearchResults();

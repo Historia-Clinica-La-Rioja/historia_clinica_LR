@@ -12,10 +12,10 @@
 			{{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
 		</mat-hint>
 		<mat-error *ngIf="myControl.hasError('required')" translate="forms.REQUIRED"></mat-error>
-		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon && (snomedConcept == null)">
+		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon && (snomedConcept == null) && !loading">
 			<mat-icon>search</mat-icon>
 		</button>
-		<button *ngIf="clearButton && (snomedConcept != null)" id="clear" type="button" matSuffix color="warn"
+		<button *ngIf="clearButton && (snomedConcept != null) && !loading" id="clear" type="button" matSuffix color="warn"
 			mat-icon-button (click)="clear()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -23,5 +23,6 @@
 			(click)="emitButton()" matSuffix>
 			{{ buttonMessage | translate | uppercase }}
 		</button>
+		<mat-spinner *ngIf="loading" matSuffix [diameter]="25" color="primary"></mat-spinner>
 	</mat-form-field>
 </form>

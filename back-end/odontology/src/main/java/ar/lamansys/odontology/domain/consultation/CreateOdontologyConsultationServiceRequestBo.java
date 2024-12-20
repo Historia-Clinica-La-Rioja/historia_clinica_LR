@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.domain.consultation;
 
+import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
@@ -8,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -39,14 +42,15 @@ public class CreateOdontologyConsultationServiceRequestBo {
 	private String snomedSctid;
 	private String snomedPt;
 
+	private List<MultipartFile> files;
+	private String observation;
+
 	/**
 	* Observations data
 	*/
 	private Boolean isPartialUpload;
-
 	private Integer procedureTemplateId;
 	private ReferenceClosureDto referenceClosure;
-
 	private SharedAddObservationsCommandVo sharedAddObservationsCommandVo;
 
 	public Optional<SharedAddObservationsCommandVo> getObservations() {

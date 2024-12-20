@@ -45,6 +45,7 @@ import { GenericFinancedPharmacoSearchComponent } from './components/generic-fin
 import { GenericPharmacoItemComponent } from './components/generic-pharmaco-item/generic-pharmaco-item.component';
 import { GuardiaComponent } from './components/guardia/guardia.component';
 import { HistoricalProblemsFiltersComponent } from './components/historical-problems-filters/historical-problems-filters.component';
+import { IsolationAlertHeaderComponent } from './components/isolation-alert-header/isolation-alert-header.component';
 import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summary/main-diagnosis-summary.component';
 import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { NewViolenceEpisodeSectionComponent } from './components/new-violence-episode-section/new-violence-episode-section.component';
@@ -72,12 +73,14 @@ import { ViolenceSituationPersonInformationComponent } from './components/violen
 import { ViolenceSituationRelevantInformationSectionComponent } from './components/violence-situation-relevant-information-section/violence-situation-relevant-information-section.component';
 import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
 import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
+import { AuditRequiredMedicationComponent } from './dialogs/ordenes-prescripciones/audit-required-medication/audit-required-medicine.component';
 //pipes
+import { ShowMissingAlertsPipe } from './pipes/show-missing-alerts.pipe';
+import { MedicationPresentationPipe } from './pipes/medication-presentation.pipe';
 import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
-import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../../../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 //dialog
@@ -101,6 +104,7 @@ import { NewViolentPersonInfomationComponent } from './dialogs/new-violent-perso
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
 import { NumericalParameterComponent } from './components/numerical-parameter/numerical-parameter.component';
+import { OldDigitalPrescriptionItemComponent } from './dialogs/old-digital-prescription-item/old-digital-prescription-item.component';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
 import { OptionListParameterComponent } from './components/option-list-parameter/option-list-parameter.component';
 import { ParameterizedFormDialogComponent } from './dialogs/parameterized-form-dialog/parameterized-form-dialog.component';
@@ -116,6 +120,7 @@ import { SolveProblemComponent } from '../../dialogs/solve-problem/solve-problem
 import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.component';
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
+import { AddDigitalPrescriptionItemComponent } from './dialogs/add-digital-prescription-item/add-digital-prescription-item.component';
 //providers
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
 //review
@@ -139,102 +144,108 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 import { BackgroundFamilyComponent } from './components/background-family/background-family.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GetBackgroundsComponent } from './components/background-family/get-backgrounds/get-backgrounds.component';
+
 @NgModule({
 	declarations: [
+		AddDigitalPrescriptionItemComponent,
+		AgregarPrescripcionItemComponent,
+		AgregarVacunaComponent,
+		AgregarVacunasComponent,
+		AmbulatoriaPacienteComponent,
+		AmendProblemComponent,
+		AmendedProblemsComponent,
+		AmendedProblemsInformationComponent,
 		AssociatedParameterizedFormInformationComponent,
 		AssociatedParameterizedFormListComponent,
-		HomeComponent,
-		PatientProfileComponent,
-		AmbulatoriaPacienteComponent,
-		ResumenComponent,
-		ProblemasComponent,
-		VacunasComponent,
-		SolveProblemComponent,
-		HistoricalProblemsFiltersComponent,
-		NuevaConsultaDockPopupComponent,
-		ConfirmarPrescripcionComponent,
-		AgregarPrescripcionItemComponent,
+		AuditRequiredMedicationComponent,
+		CarelinesAndSpecialtiesReferenceComponent,
 		CardEstudiosComponent,
 		CardIndicacionesComponent,
+		ClinicalHistoryActionsComponent,
 		CompletarEstudioComponent,
+		CompleteInfoComponent,
 		CompleteStudyComponent,
 		CompleteStudyInformationComponent,
-		CompleteInfoComponent,
-		VerResultadosEstudioComponent,
-		ExternalSummaryCardComponent,
-		SuggestedFieldsPopupComponent,
-		AgregarVacunasComponent,
-		AgregarVacunaComponent,
-		DetalleVacunaComponent,
-		ExternalClinicalHistoriesFiltersComponent,
-		NuevaConsultaDockPopupEnfermeriaComponent,
-		ExternalClinicalHistoryComponent,
-		PreviousDataComponent,
-		EpidemiologicalReportComponent,
-		ReferenceComponent,
-		ReferenceNotificationComponent,
+		ConfirmarPrescripcionComponent,
+		ControlSelectTemplateComponent,
 		CounterreferenceDockPopupComponent,
-		SnvsReportsResultComponent,
-		ShowAllergiesComponent,
-		StudyInformationComponent,
-		InternacionPacienteComponent,
-		VacunasSummaryComponent,
-		MainDiagnosisSummaryComponent,
-		DiagnosisSummaryComponent,
-		InternmentSummaryComponent,
-		MedicalCoverageSummaryViewComponent,
 		CreateInternmentOrderComponent,
-		OperationDeniedComponent,
 		CreateOutpatientOrderComponent,
-		NewConsultationFamilyHistoryFormComponent,
-		VaccineSearchComponent,
-		ClinicalHistoryActionsComponent,
+		DeferredDateSelectorComponent,
+		DestinationInstitutionReferenceComponent,
+		DetalleVacunaComponent,
+		DiagnosisSummaryComponent,
+		EpidemiologicalReportComponent,
+		EpisodeSummaryComponent,
+		EmergencyCareProblemsComponent,
+		EnviarRecetaDigitalPorEmailComponent,
+		ExternalClinicalHistoriesFiltersComponent,
+		ExternalClinicalHistoryComponent,
+		ExternalSummaryCardComponent,
+		FreeTextParameterComponent,
 		GenericFinancedPharmacoSearchComponent,
 		GenericPharmacoItemComponent,
 		GuardiaComponent,
-		EnviarRecetaDigitalPorEmailComponent,
-		DestinationInstitutionReferenceComponent,
-		DeferredDateSelectorComponent,
-		CarelinesAndSpecialtiesReferenceComponent,
-		OriginInstitutionReferenceComponent,
-		EpisodeSummaryComponent,
-		EmergencyCareProblemsComponent,
-		PatientValidatorPopupComponent,
-		PrintAmbulatoriaComponent,
-		SearchSnomedConceptComponent,
-		ProblemsOptionsMenuComponent,
-		AmendProblemComponent,
-		AmendedProblemsComponent,
-		ViewDatailsBtnComponent,
-		AmendedProblemsInformationComponent,
-		ReferenceRequestDataComponent,
-		ReferenceStudyCloseComponent,
-		ReferenceCompleteStudyComponent,
-		ReferenceStudyClosureInformationComponent,
-		ReferenceStudyComponent,
+		HistoricalProblemsFiltersComponent,
+		HomeComponent,
+		InternacionPacienteComponent,
+		InternmentSummaryComponent,
+		IsolationAlertHeaderComponent,
+		MainDiagnosisSummaryComponent,
+		MedicalCoverageSummaryViewComponent,
+		NewConsultationFamilyHistoryFormComponent,
 		NewConsultationPersonalHistoryFormComponent,
-		PersonalHistoryViewDetailsComponent,
-		ViolenceSituationsComponent,
-		ViolenceSituationDockPopupComponent,
-		ViolenceSituationPersonInformationComponent,
 		NewViolenceEpisodeSectionComponent,
-		ViolenceSituationRelevantInformationSectionComponent,
-		ViolenceSituationImplementedActionsComponent,
-		ViolenceSituationViolentPersonInformationComponent,
-  		NewViolentPersonInfomationComponent,
-      	ViolenceSituationImplementedActionsComponent,
-      	ViolenceSituationListComponent,
-		ViolenceSituationHistoryFiltersComponent,
-		ShowClosedFormsTemplateComponent,
- 		ControlSelectTemplateComponent,
-		ParameterizedFormSectionComponent,
+		NewViolentPersonInfomationComponent,
+		NuevaConsultaDockPopupComponent,
+		NuevaConsultaDockPopupEnfermeriaComponent,
+		NumericalParameterComponent,
+		OldDigitalPrescriptionItemComponent,
+		OperationDeniedComponent,
+		OptionListParameterComponent,
+		OriginInstitutionReferenceComponent,
 		ParameterizedFormDialogComponent,
 		ParameterizedFormParametersSectionComponent,
-		NumericalParameterComponent,
-		FreeTextParameterComponent,
-		OptionListParameterComponent,
+		ParameterizedFormSectionComponent,
+		PatientProfileComponent,
+		PatientValidatorPopupComponent,
+		PersonalHistoryViewDetailsComponent,
+		PreviousDataComponent,
+		PrintAmbulatoriaComponent,
+		ProblemasComponent,
+		ProblemsOptionsMenuComponent,
+		ReferenceComponent,
+		ReferenceCompleteStudyComponent,
+		ReferenceNotificationComponent,
+		ReferenceRequestDataComponent,
+		ReferenceStudyCloseComponent,
+		ReferenceStudyClosureInformationComponent,
+		ReferenceStudyComponent,
+		ResumenComponent,
+		SearchSnomedConceptComponent,
+		ShowAllergiesComponent,
+		ShowClosedFormsTemplateComponent,
+		SnvsReportsResultComponent,
+		SolveProblemComponent,
+		SuggestedFieldsPopupComponent,
+		StudyInformationComponent,
+		VacunasComponent,
+		VacunasSummaryComponent,
+		VaccineSearchComponent,
+		VerResultadosEstudioComponent,
+		ViewDatailsBtnComponent,
+		ViolenceSituationDockPopupComponent,
+		ViolenceSituationHistoryFiltersComponent,
+		ViolenceSituationImplementedActionsComponent,
+		ViolenceSituationListComponent,
+		ViolenceSituationPersonInformationComponent,
+		ViolenceSituationRelevantInformationSectionComponent,
+		ViolenceSituationViolentPersonInformationComponent,
+		ViolenceSituationsComponent,
 		//pipe
+		MedicationPresentationPipe,
 		TranslateDeviceTextPipe,
+		ShowMissingAlertsPipe,
 		TablaSapComponent,
 		EstudiosPopupComponent,
 		AdultoMayorComponent,
@@ -272,7 +283,6 @@ import { GetBackgroundsComponent } from './components/background-family/get-back
 		//Standalone Component
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
-		ConceptsListComponent,
 		ConceptTypeaheadSearchComponent,
 		PatientSummaryComponent,
 	],

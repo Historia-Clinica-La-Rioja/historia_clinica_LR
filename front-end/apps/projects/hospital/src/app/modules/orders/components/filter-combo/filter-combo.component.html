@@ -1,0 +1,23 @@
+<section fxLayoutGap="16px">
+	<app-checkbox-group
+	  [title]="'orders.filter-section.SCOPE' | translate"
+	  [options]="scopeOptions"
+	  (selectionChange)="onSelectionChange('sourceTypeIds', $event)">
+	</app-checkbox-group>
+
+	<app-checkbox-group
+	  [title]="'orders.filter-section.STUDY_TYPE' | translate"
+	  [options]="studyTypeOptions"
+	  (selectionChange)="onSelectionChange('studyTypeIds', $event)">
+	</app-checkbox-group>
+
+	<app-checkbox-group
+	  [title]="'orders.filter-section.TRANSFER' | translate"
+	  [options]="transferOptions"
+	  (selectionChange)="onTransferSelection('requiresTransfer', $event)">
+	</app-checkbox-group>
+
+	<app-filter-by-patient
+  		(selectionChange)="onSelectionChange('patientTypeId', $event)">
+	</app-filter-by-patient>
+</section>

@@ -33,4 +33,8 @@ export class OrderStudiesService {
 		this.data = removeFrom<Study>(this.data, index);
 	}
 
+	getStudyByIndex = (index: number): Study => {
+		return this.data.at(index);
+	}
+
 }

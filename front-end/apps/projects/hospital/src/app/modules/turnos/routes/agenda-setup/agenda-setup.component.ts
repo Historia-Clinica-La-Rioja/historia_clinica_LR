@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SECTOR_AMBULATORIO } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable, filter, map, switchMap } from 'rxjs';
+import { Observable, filter, finalize, map, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -16,13 +16,16 @@ import { SectorService } from '@api-rest/services/sector.service';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import {
+	ApiErrorDto,
 	AppFeature,
 	CareLineDto,
 	CompleteDiaryDto,
 	DiaryADto,
+	DiaryBookingRestrictionDto,
 	DiaryDto,
 	DiaryLabelDto,
 	DoctorsOfficeDto,
+	EDiaryBookingRestrictionType,
 	HierarchicalUnitDto,
 	OccupationDto,
 	ProfessionalDto, SectorDto,
@@ -41,6 +44,7 @@ import { PracticesService } from '@api-rest/services/practices.service';
 import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -101,21 +105,25 @@ export class AgendaSetupComponent implements OnInit {
 	diaryLabels: DiaryLabelDto[] = [];
 	diaryStartDate: Date;
 	diaryEndDate: Date;
+	isSaving = false;
+	isHabilitarSolicitudReferenciaOn = false;
+	isHabilitarConfiguracionAgendasOn = false;
+	ButtonType = ButtonType;
 
 	constructor(
+		private readonly router: Router,
+		private readonly route: ActivatedRoute,
 		private readonly el: ElementRef,
-		private readonly sectorService: SectorService,
-		private translator: TranslateService,
+		private readonly cdr: ChangeDetectorRef,
 		private dialog: MatDialog,
+		private translator: TranslateService,
+		private readonly snackBarService: SnackBarService,
+		private readonly contextService: ContextService,
+		private readonly sectorService: SectorService,
 		private doctorsOfficeService: DoctorsOfficeService,
 		private healthcareProfessionalService: HealthcareProfessionalByInstitutionService,
-		private readonly contextService: ContextService,
-		private readonly router: Router,
-		private readonly cdr: ChangeDetectorRef,
 		private readonly diaryService: DiaryService,
-		private readonly snackBarService: SnackBarService,
 		private readonly diaryOpeningHoursService: DiaryOpeningHoursService,
-		private readonly route: ActivatedRoute,
 		private readonly patientNameService: PatientNameService,
 		private readonly specialtyService: SpecialtyService,
 		private readonly hierarchicalUnitsService: HierarchicalUnitsService,
@@ -123,17 +131,21 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly diaryCareLine: DiaryCareLineService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
-		private changeDetector: ChangeDetectorRef,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService, EDiaryType.CLASSIC);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS).subscribe(isOn =>
 			this.fieldHierarchicalUnitRequired = isOn
 		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isOn =>
+			this.isHabilitarSolicitudReferenciaOn = isOn
+		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS).subscribe(isOn =>
+			this.isHabilitarConfiguracionAgendasOn = isOn
+		);
 	}
 
 	ngOnInit(): void {
-
 		this.form = new UntypedFormGroup({
 			sectorId: new UntypedFormControl(null, [Validators.required]),
 			doctorOffice: new UntypedFormControl(null, [Validators.required]),
@@ -153,6 +165,7 @@ export class AgendaSetupComponent implements OnInit {
 			diaryType: new UntypedFormControl(this.CONSULTATION),
 			practices: new UntypedFormControl([]),
 			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
+			configurationDiary: new UntypedFormControl(null),
 		});
 
 		if (this.fieldHierarchicalUnitRequired) {
@@ -363,6 +376,9 @@ export class AgendaSetupComponent implements OnInit {
 			this.validationsPractices();
 		}
 
+		if (this.isHabilitarConfiguracionAgendasOn) {
+			this.form.controls.configurationDiary.setValue(diary.bookingRestriction);
+		}
 	}
 
 	private setHierarchicalUnitsByName(hierarchicalUnitId: number) {
@@ -375,7 +391,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	ngAfterContentChecked(): void {
-		this.changeDetector.detectChanges();
+		this.cdr.detectChanges();
 	}
 
 	private setSpecialityId(healthcareProfesionalId) {
@@ -446,25 +462,7 @@ export class AgendaSetupComponent implements OnInit {
 					okButtonLabel: 'Confirmar'
 				}
 			});
-
-			dialogRef.afterClosed().subscribe(confirmed => {
-				if (confirmed) {
-					this.errors = [];
-					if (this.editMode) {
-						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(this.diaryLabels));
-						this.diaryService.updateDiary(agendaEdit)
-							.subscribe((agendaId: number) => {
-								this.processSuccess(agendaId);
-							}, error => processErrors(error, (msg) => this.errors.push(msg)));
-					} else {
-						const agenda: DiaryADto = this.buildDiaryADto(this.diaryLabels);
-						this.diaryService.addDiary(agenda)
-							.subscribe((agendaId: number) => {
-								this.processSuccess(agendaId);
-							}, error => processErrors(error, (msg) => this.errors.push(msg)));
-					}
-				}
-			});
+			dialogRef.afterClosed().subscribe(confirmed => this.savedDiary(confirmed));
 		});
 	}
 
@@ -486,6 +484,37 @@ export class AgendaSetupComponent implements OnInit {
 		this.agendaHorarioService.setWeeklyOcupation(ocupations$);
 	}
 
+	private savedDiary = (confirmed: boolean) => {
+		if (!confirmed) return;
+
+		this.isSaving = true;
+		this.errors = [];
+		if (this.editMode) 
+			this.updateDiary();
+		else 
+			this.addDiary();
+	}
+
+	private updateDiary = () => {
+		const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(this.diaryLabels));
+		this.diaryService.updateDiary(agendaEdit)
+		.pipe(finalize(() => this.isSaving = false))
+		.subscribe({
+			next: (diaryId: number) => this.processSuccess(diaryId),
+			error: (error: ApiErrorDto) => processErrors(error, (msg) => this.errors.push(msg)) 
+		});
+	}
+
+	private addDiary = () => {
+		const agenda: DiaryADto = this.buildDiaryADto(this.diaryLabels);
+		this.diaryService.addDiary(agenda)
+		.pipe(finalize(() => this.isSaving = false))
+		.subscribe({
+			next: (diaryId: number) => this.processSuccess(diaryId),
+			error: (error: ApiErrorDto) => processErrors(error, (msg) => this.errors.push(msg)) 
+		});
+	}
+
 	private processSuccess(agendaId: number) {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
@@ -500,8 +529,7 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private buildDiaryADto(diaryLabels: DiaryLabelDto[]): DiaryADto {
-		return {
-
+		const resultDto = {
 			appointmentDuration: this.form.getRawValue().appointmentDuration,
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
@@ -524,8 +552,16 @@ export class AgendaSetupComponent implements OnInit {
 			practicesId: this.form.controls.practices.value,
 			protectedAppointmentsPercentage: null,
 			institutionId : this.contextService.institutionId,
-			diaryLabelDto: diaryLabels
+			diaryLabelDto: diaryLabels,
 		};
+		const configurationDiary: DiaryBookingRestrictionDto = this.isHabilitarConfiguracionAgendasOn ? this.handleConfigurationDiaryValues() : null
+		return {bookingRestriction: configurationDiary, ...resultDto}
+	}
+
+	private handleConfigurationDiaryValues(): DiaryBookingRestrictionDto {
+		if (this.form.controls.configurationDiary.value)
+			return {days: this.form.controls.configurationDiary.value?.daysRange, restrictionType: this.form.controls.configurationDiary.value?.configurationType}
+		else return {days: null, restrictionType: EDiaryBookingRestrictionType.UNRESTRICTED }
 	}
 
 	scrollToDefaultStartingHour(): void {
@@ -622,13 +658,13 @@ export class AgendaSetupComponent implements OnInit {
 		});
 	}
 
-	clear(i: number): void {
+	clear(professionalIndex: number): void {
 		const professionalsReference = this.form.controls.otherProfessionals as UntypedFormArray;
 		if (professionalsReference.length === 1) {
 			professionalsReference.controls[0].setValue({ healthcareProfessionalId: null });
 		}
 		else {
-			professionalsReference.removeAt(i);
+			professionalsReference.removeAt(professionalIndex);
 		}
 	}
 
