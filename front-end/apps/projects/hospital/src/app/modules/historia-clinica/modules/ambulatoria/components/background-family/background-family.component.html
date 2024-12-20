@@ -126,6 +126,19 @@
                   style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center; margin-top: 7px;"> Madre</span>
                 
                 <!-- MADRE -->
+
+                <div class="div1">
+                  <table>
+                    <tr>
+                      <th class="section4">Edad</th>
+                    </tr>
+                    <tr class="section4-b section4" id="44">
+                      <td class="chart-title2">Años</td>
+                      <input class="section4-b chart" type="number" id="45" name="counter2" [(ngModel)]="edadMadre.madre.counter1" min="0" (input)="onInput($event)">
+                    </tr>
+                  </table>
+                </div>
+
                 <div class="div1">
                   <table>
                     <tr>
@@ -163,7 +176,7 @@
                   <tr class="section4-b section4">
                     <td class="chart-title">Horas fuera de la casa</td>
                     <td>
-                      <input class="section4-b chart" type="number" [(ngModel)]="horasFueraDeCasa.horasMadre.H1"  name="HorasMadre" min="0">
+                      <input class="section4-b chart" type="number" [(ngModel)]="horasFueraDeCasa.horasMadre.H1"  name="HorasMadre" min="0" (input)="onInput($event)">
                     </td>
                   </tr>
                 </table>
@@ -181,7 +194,7 @@
                     <tr class="section4-b section4" id="44">
                       <td class="chart-title2">Años</td>
                       <td>
-                        <input class="section4-b chart" type="number" id="45" name="counter2" [(ngModel)]="edadPadre.padre.counter2" min="0">
+                        <input class="section4-b chart" type="number" id="45" name="counter2" [(ngModel)]="edadPadre.padre.counter2" min="0" (input)="onInput($event)">
                       </td>
                     </tr>
                   </table>
@@ -224,7 +237,7 @@
                   <tr class="section4-b section4">
                     <td class="chart-title">Horas fuera de la casa</td>
                     <td>
-                      <input class="section4-b chart" type="number" id="57" [(ngModel)]="horasFueraDeCasa.horasPadre.H2" name="HorasPadre" min="0">
+                      <input class="section4-b chart" type="number" id="57" [(ngModel)]="horasFueraDeCasa.horasPadre.H2" name="HorasPadre" min="0" (input)="onInput($event)" >
                     </td>
                   </tr>
                 </table>
@@ -237,13 +250,13 @@
                 <table>
                   <tr class="section4-b && section4" [(ngModel)]="hermanosVivos" id="46">
                    <td class="hermanos-name">Vivos</td>
-                   <td><input min="0" style="max-width: 16.2%; position: relative; left: 6px;" class="section4-b" type="number" name="vivo"
-                       [(ngModel)]="hermanosEnVida.vivo" id="47"></td>
+                   <td><input min="0" style="max-width: 15%; position: relative; left: 6px;" class="section4-b" type="number" name="vivo"
+                       [(ngModel)]="hermanosEnVida.vivo" id="47" (input)="onInput($event)" ></td>
                  </tr>
 
                    <tr class="section4-b && section4" [(ngModel)]="hermanosMuertos">
                    <td class="hermanos-name"> Muertos</td>
-                   <td><input min="0" style="max-width: 18%;position: relative; left: 6px;" class="section4-b && color-hermanos" type="number" name="desvivido" [(ngModel)]="hermanosEnVida.ido.desvivido" id="48"></td>
+                   <td><input min="0" style="max-width: 18%;position: relative; left: 6px;" class="section4-b && color-hermanos" type="number" name="desvivido" [(ngModel)]="hermanosEnVida.ido.desvivido" (input)="onInput($event)" id="48"></td>
                  </tr>
               </table>
   
@@ -258,7 +271,7 @@
                 <tr class="line">
                   <td style="position: relative;right: 32px;">Número de cuartos</td>
                   <td class="check-vivienda" [(ngModel)]="cantidadCuartos">
-                    <input min="0" style="max-width: 18%;" [(ngModel)]="numeroCuartos.cuartos.cantidad" class="chart-vivienda" name="cuartos" type="number" id="50">
+                    <input min="0" style="max-width: 18%;" (input)="onInput($event)" [(ngModel)]="numeroCuartos.cuartos.cantidad" class="chart-vivienda" name="cuartos" type="number" id="50">
                   </td>
                 </tr>
   

@@ -177,6 +177,11 @@ getCheckboxSiStyles(lugarKey: string): {[key: string]: string} {
   numeroCuartos = { cuartos: { cantidad: 0 } };
 
 
+  onInput(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
+  }
+
+
   optionIdCuartos(cuartos: any) {
     const mappingCantidadCuartos = {
       'cantidad': 0,
@@ -266,6 +271,8 @@ getCheckboxSiStyles(lugarKey: string): {[key: string]: string} {
     return mappingConexionAgua[selectedOptionAgua] || mappingConexionAgua[selectedOptionSinConexion] || undefined;
   }
 
+
+  
   optionIdViviendaElectricidad(electricidad: any) {
     const mappingElectricidad = {
       'si': 20,
