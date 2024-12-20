@@ -1,8 +1,8 @@
-<button mat-raised-button
+<div [ngClass]="isSelected ? 'selected' : ''">
+	<button mat-raised-button
 		[matTooltip]="description"
-		[ngClass]="[type,
-					isSelected ? 'selected' : '',
-					size === AvailableButtonWidth.SMALL ? 'small' : 'large']"
+		[ngClass]="[type, size === AvailableButtonWidth.SMALL ? 'small' : 'large']"
 		(click)="onSelection()">
-  {{ description }}
-</button>
+	{{ description }}
+	</button>
+</div>

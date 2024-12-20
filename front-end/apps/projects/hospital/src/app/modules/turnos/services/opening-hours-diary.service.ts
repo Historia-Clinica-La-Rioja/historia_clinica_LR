@@ -56,6 +56,7 @@ export class OpeningHoursDiaryService {
 	private _getOpeningHoursFor(startDate: string, endDate: string, date: Date): DiaryOpeningHoursDto[] {
 		const start = dateISOParseDate(startDate);
 		const end = dateISOParseDate(endDate);
+		end.setHours(23,59,59,59);
 
 		return !isBetweenDates(date, start, end, '[]') ? [] :
 			this.equipmentDiaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay())

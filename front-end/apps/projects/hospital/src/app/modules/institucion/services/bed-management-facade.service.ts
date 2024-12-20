@@ -85,7 +85,7 @@ export class BedManagementFacadeService {
 	}
 
 	private filterByFreeBed(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.filled ? true : bed.bed.free);
+		return (filter.filled ? true : !bed.bed.isBlocked && bed.bed.free);
 	}
 
 	private filterByHierarchicalUnits(filter: BedManagementFilter, bed: BedSummaryDto) {

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { EpisodeListTriage } from '../emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { EpisodeListTriage } from '../emergency-care-episodes-summary/emergency-care-episodes-summary.component';
 import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { IDENTIFIER_CASES } from '@hsi-components/identifier-cases/identifier-cases.component';
 

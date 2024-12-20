@@ -1,5 +1,8 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +35,16 @@ public enum EPatientType {
 				NOT_VALIDATED_PERMANENT.id,
 				REJECTED.id
 		);
+	}
+
+	public static EPatientType map(Short id) {
+		if (id == null) {
+			return null;
+		}
+		for (EPatientType e : values()) {
+			if (e.id.equals(id)) return e;
+		}
+		throw new NotFoundException("patient-type-not-exists", String.format("El tipo de paciente %s no es válido", id));
 	}
 
 }

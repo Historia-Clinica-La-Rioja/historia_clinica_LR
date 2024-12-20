@@ -7,7 +7,7 @@ import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulato
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subscription } from 'rxjs';
-import { ConceptsList } from '../../../hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '../concepts-list/concepts-list.component';
 
 @Component({
 	selector: 'app-alergias-form',
@@ -27,6 +27,8 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 	alergias = this.formBuilder.group({ data: [] });
 	onChangeSub: Subscription;
 	searchConceptsLocallyFFIsOn = false;
+	isNotReferred: boolean;
+	isEmpty = true;
 
 	allergyContent: ConceptsList = {
 		id: 'allergy-checkbox-concepts-list',
@@ -41,7 +43,9 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		}
 	}
 	@Output() isAllergyNoRefer = new EventEmitter<boolean>();
-	@Input() isAllergyNoReferInput: boolean;
+	@Input() set isAllergyNoReferInput(isAllergyNoRefer: boolean) {
+		this.isNotReferred = isAllergyNoRefer;
+	};
 
 	alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 
@@ -51,7 +55,12 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		private readonly dialog: MatDialog,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) {
-		this.alergiasNuevaConsultaService.alergias$.subscribe(alergias => this.alergias.controls.data.setValue(alergias));
+		this.alergiasNuevaConsultaService.alergias$.subscribe(alergias => {
+			this.alergias.controls.data.setValue(alergias);
+			if (!alergias.length)
+				this.isNotReferred = undefined;
+			this.calculateIsEmpty();
+		});
 	}
 
 	addAllergy(): void {
@@ -70,7 +79,9 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		if ($event.addPressed) {
 			this.addAllergy();
 		}
-		this.isAllergyNoRefer.emit(!$event.checkboxSelected);
+		this.isNotReferred = $event.checkboxSelected || undefined;
+		this.isAllergyNoRefer.emit(!this.isNotReferred);
+		this.calculateIsEmpty();
 	}
 
 	onTouched = () => { };
@@ -79,6 +90,7 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 		if (obj) {
 			this.alergias.setValue(obj);
 			this.alergiasNuevaConsultaService.setAllergies(obj.data);
+			this.calculateIsEmpty();
 		}
 	}
 
@@ -100,6 +112,10 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 
 	ngOnDestroy(): void {
 		this.onChangeSub.unsubscribe();
+	}
+
+	calculateIsEmpty() {
+		this.isEmpty = !this.alergias.value.data?.length && this.isNotReferred == undefined;
 	}
 
 

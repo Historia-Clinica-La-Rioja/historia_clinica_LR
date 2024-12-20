@@ -1,0 +1,13 @@
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
+    height: fit-content;
+}
+
+.pending-item{
+    width: 100%;
+}
+
+.dialog-actions {
+    app-button {
+        margin-left: 8px;
+    }
+}

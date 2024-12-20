@@ -44,7 +44,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 		log.debug("Input parameters -> episodeId {}, emergencyCareStateId {}, doctorsOfficeId {}, shockroomId {}, bedId {}",
 				episodeId, emergencyCareStateId, doctorsOfficeId, shockroomId, bedId);
 		assertEmergencyCareState(emergencyCareStateId, episodeId);
-		if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()))
+		if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_PACIENTE.getId()))
 			freeOccupiedEmergencyCareSpace(episodeId, institutionId, emergencyCareStateId);
 		if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId())) {
 			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId);
@@ -56,7 +56,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	private void assertEmergencyCareState(Short emergencyCareStateId, Integer episodeId) {
 		emergencyCareEpisodeRepository.getEpisode(episodeId).ifPresent(episode -> {
 			if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId())
-				&& episode.getEmergencyCareStateId().equals(EEmergencyCareState.ALTA_MEDICA.getId())) {
+				&& episode.getEmergencyCareStateId().equals(EEmergencyCareState.ALTA_PACIENTE.getId())) {
 				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.MEDICAL_DISCHARGE, "El episodio ya fue dado de alta médica");
 			}
 
@@ -65,7 +65,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.ADMINISTRATIVE_DISCHARGE, "El episodio ya fue dado de alta administrativa");
 			}
 
-			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()) && episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId())) {
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_PACIENTE.getId()) && episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId())) {
 				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM, "El episodio ha sido movido a sala de espera");
 			}
 

@@ -9,20 +9,22 @@ import { ResultPractice } from '../../dialogs/ordenes-prescripciones/ver-resulta
 export class ShowClosedFormsTemplateComponent {
 
 	templateResult: ResultPractice;
-	@Input() set result(templateResult: ResultPractice[]) {
+	resultsWithFilteredTitles: StudyResults[];
 
+	@Input() set result(templateResult: ResultPractice[]) {
 		this.templateResult = JSON.parse(JSON.stringify(templateResult));
-		this.removeRepeatedTitles();
+		this.resultsWithFilteredTitles = this.getUniqueDescriptions(this.templateResult.templateResult);
 	}
 
-	private removeRepeatedTitles() {
-		this.templateResult.templateResult.forEach((item: StudyResults) => {
-			if (this.templateResult[item.procedureParameterId] === undefined) {
-				this.templateResult[item.procedureParameterId] = true;
-			} else {
-				item.description = "";
-			}
-		});
+	private getUniqueDescriptions(items: StudyResults[]): StudyResults[] {
+		const seenDescriptions: Set<string> = new Set();
+
+		return items.map(item => ({
+			...item,
+			description: seenDescriptions.has(item.description)
+				? ""
+				: (seenDescriptions.add(item.description), item.description)
+		}));
 	}
 }
 

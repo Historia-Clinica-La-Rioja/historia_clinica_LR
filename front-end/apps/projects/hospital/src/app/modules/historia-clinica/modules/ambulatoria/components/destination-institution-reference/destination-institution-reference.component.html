@@ -7,17 +7,14 @@
 		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
 		(selectionChange)="onDepartmentSelectionChange($event)">
 	</app-typeahead>
-	<mat-error class="error-message" *ngIf="!departmentId && submitForm" [translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
 <div class="typeahead-field">
 	<app-typeahead id="institutionDestination" [disabled]="institutionsDisable" [options]="institutions"
 		[externalSetValue]="defaultInstitution"
 		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
-		(selectionChange)="onInstitutionSelectionChange($event)" [required]=true spellcheck="false">
+		(selectionChange)="onInstitutionSelectionChange($event)" spellcheck="false">
 	</app-typeahead>
-	<mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
-		[translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
 <ng-container *ngIf="institutionSelection">

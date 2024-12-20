@@ -18,9 +18,13 @@ export class OdontologyConsultationService {
 		private http: HttpClient,
 	) { }
 
-	createConsultation(patientId: number, odontologyConsultationDto: OdontologyConsultationDto): Observable<any> {
+	createConsultation(patientId: number, odontologyConsultationDto: OdontologyConsultationDto, selectedFiles?: File[]): Observable<any> {
+		const formData = new FormData();
+		if (selectedFiles)
+			Array.from(selectedFiles).forEach(file => formData.append('serviceRequestFiles', file));
+		formData.append('createConsultationDto', new Blob([JSON.stringify(odontologyConsultationDto)], {type: 'application/json'}))
 		const url = `${this.BASE_URL}/patient/${patientId}/odontology/consultation`;
-		return this.http.post<boolean>(url, odontologyConsultationDto);
+		return this.http.post<boolean>(url, formData);
 	}
 
 	getConsultationIndices(patientId: number): Observable<OdontologyConsultationIndicesDto[]> {

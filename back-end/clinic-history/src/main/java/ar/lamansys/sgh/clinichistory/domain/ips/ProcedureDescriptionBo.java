@@ -26,6 +26,7 @@ public class ProcedureDescriptionBo implements IpsBo {
     private Boolean nasogastricTube;
     private Boolean urinaryCatheter;
     private LocalTime foodIntake;
+    private LocalDate foodIntakeDate;
     private LocalDate anesthesiaStartDate;
     private LocalTime anesthesiaStartTime;
     private LocalDate anesthesiaEndDate;

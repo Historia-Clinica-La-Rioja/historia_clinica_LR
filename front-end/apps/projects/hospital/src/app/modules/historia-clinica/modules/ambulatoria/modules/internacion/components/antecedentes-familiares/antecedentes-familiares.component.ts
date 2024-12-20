@@ -8,7 +8,7 @@ import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulato
 import { AntecedentesFamiliaresNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '@historia-clinica/components/concepts-list/concepts-list.component';
 
 @Component({
 	selector: 'app-antecedentes-familiares',

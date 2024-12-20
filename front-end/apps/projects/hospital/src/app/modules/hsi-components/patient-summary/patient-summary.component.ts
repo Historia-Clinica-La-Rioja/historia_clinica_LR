@@ -16,7 +16,7 @@ export class PatientSummaryComponent {
 		this.itemSummary = {
 			title: capitalizeSentence(p.fullName),
 			subtitle: concatIdentifications(p.id, p.identification),
-			subtitle2: concatAgeAndGender(p.gender, p.age),
+			subtitle2: concatAgeAndGender(p.gender, p.age, p.monthsOfLife),
 			avatar: p.photo
 		}
 	}
@@ -39,17 +39,27 @@ const concatIdentifications = (id: number, identification: { type: string, numbe
 	if (identification) {
 		identificationText = `${identification?.type} ${identification?.number ? identification.number : 'Sin información' }`
 	}
-	return (idText && identificationText) ? `${idText} - ${identificationText}` : (idText || identificationText);
+	return (idText && identificationText) ? `${identificationText} - ${idText} ` : (idText || identificationText);
 }
 
-const concatAgeAndGender = (gender: string, age: number): string => {
-	if (!gender && !age)
+const concatAgeAndGender = (gender: string, age: number, monthsOfLife?:string): string => {
+	if (!gender && !age && !monthsOfLife)
 		return null;
 	let ageText;
 	if (age) {
 		ageText = `${age} años`
 	}
-	return (gender && ageText) ? `${gender} - ${ageText}` : (gender || ageText);
+	let monthsOfLifeText;
+	if (monthsOfLife)
+	{
+		monthsOfLifeText = `${monthsOfLife}`
+	}
+	if (age) {
+		return (gender && ageText) ? `${gender} - ${ageText}` : (gender || ageText);
+	}
+	else{
+		return (gender && monthsOfLifeText) ? `${gender} - ${monthsOfLifeText}` : (gender || monthsOfLifeText);
+	}
 }
 
 export interface PatientSummary {
@@ -61,5 +71,6 @@ export interface PatientSummary {
 	id?: number;
 	gender?: string;
 	age?: number;
+	monthsOfLife?: string;
 	photo?: string;
 }

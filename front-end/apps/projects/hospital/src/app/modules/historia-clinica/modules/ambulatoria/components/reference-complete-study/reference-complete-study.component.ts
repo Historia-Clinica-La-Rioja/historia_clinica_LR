@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EReferenceRegulationState, ReferenceCompleteDataDto, ReferenceRequestDto } from '@api-rest/api-model';
+import { EReferenceAdministrativeState, ReferenceCompleteDataDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { PrescriptionStatus, ReferenceCompleteData } from '../reference-request-data/reference-request-data.component';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { Observable, map } from 'rxjs';
@@ -12,6 +12,8 @@ import { BoxMessageInformation } from '@presentation/components/box-message/box-
 import { ResultPractice } from '../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { StudyInfo } from '../../services/study-results.service';
 
+const COMPLETED = 'Completado'
+
 @Component({
 	selector: 'app-reference-complete-study',
 	templateUrl: './reference-complete-study.component.html',
@@ -19,10 +21,14 @@ import { StudyInfo } from '../../services/study-results.service';
 	providers: [ButtonService]
 })
 export class ReferenceCompleteStudyComponent implements OnInit {
+
 	_reference$: Observable<ReferenceCompleteData>;
 	buttonTypeFlat = ButtonType.FLAT;
 	boxMessageInfo: BoxMessageInformation;
-	APPROVED = EReferenceRegulationState.APPROVED;
+	destinationState: EReferenceAdministrativeState;
+	APPROVED = EReferenceAdministrativeState.APPROVED;
+	COMPLETED = COMPLETED;
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			reference: ReferenceRequestDto;
@@ -35,16 +41,17 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 			studies: StudyInfo[];
 			resultsPractices: ResultPractice[];
 		},
-		private readonly institutionaReferenceReportService: InstitutionalReferenceReportService,
+		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		readonly buttonService: ButtonService,
 	) { }
 
 	ngOnInit() {
 		const referenceId = this.data.referenceId;
-		this._reference$ = this.institutionaReferenceReportService.getReferenceDetail(referenceId).pipe(
-			map((referenceComplete: ReferenceCompleteDataDto) =>
-				mapToReferenceCompleteData(referenceComplete.reference, referenceComplete.regulation.state)
-			)
+		this._reference$ = this.institutionalReferenceReportService.getReferenceDetail(referenceId).pipe(
+			map((referenceComplete: ReferenceCompleteDataDto) => {
+				this.destinationState = referenceComplete.administrativeState?.state;
+				return mapToReferenceCompleteData(referenceComplete.reference, referenceComplete.regulation.state)
+			})
 		);
 
 		this.setBoxMessageInfo();

@@ -95,6 +95,7 @@ public class TriageBo implements IDocumentBo {
 		this.encounterId = triageVo.getEmergencyCareEpisodeId();
 		this.clinicalSpecialtySectorBo = ClinicalSpecialtySectorBo.builder().id(triageVo.getClinicalSpecialtySectorId())
 				.description(triageVo.getClinicalSpecialtySectorDescription()).build();
+		this.creator = triageVo.getCreator() != null ? new ProfessionalPersonBo(triageVo.getCreator()) : null;
     }
 
 	public TriageBo(Triage triage){

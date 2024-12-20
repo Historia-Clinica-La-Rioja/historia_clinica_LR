@@ -46,4 +46,15 @@ public class EmergencyCareStateController {
 		return  ResponseEntity.ok().body(result);
 	}
 
+	@GetMapping("/diagnoses-without-nursing-attention-diagnostic")
+	public ResponseEntity<List<DiagnosesGeneralStateDto>> getEmergencyCareEpisodeDiagnosesWithoutNursingAttentionDiagnostic(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Input parameters -> institutionId {}, episodeId {}", institutionId, episodeId);
+		List<DiagnosisBo> diagnoses = fetchEmergencyCareEpisodeStateDiagnoses.getDiagnosesGeneralStateExcludeNursingDiagnostic(episodeId);
+		List<DiagnosesGeneralStateDto> result = internmentStateMapper.toListDiagnosesGeneralStateDtoFromDiagnosisBoList(diagnoses);
+		LOG.debug("Output -> result {}", result);
+		return  ResponseEntity.ok().body(result);
+	}
+
 }

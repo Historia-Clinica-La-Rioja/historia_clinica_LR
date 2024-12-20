@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStorage {
 
 	private static final Short APPOINTMENT_CANCELLED_STATE = 4;
+	
+	private static final Short APPOINTMENT_ABSENT_STATE = 3;
 
 	private final ReferenceAppointmentRepository referenceAppointmentRepository;
 
@@ -44,6 +48,19 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 		return referenceAppointmentBos.stream()
 				.collect(Collectors.groupingBy(ReferenceAppointmentBo::getReferenceId,
 						Collectors.mapping(ReferenceAppointmentBo::getAppointmentId, Collectors.toList())));
+	}
+
+	@Override
+	public boolean referenceHasAppointment(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {} ", referenceId);
+		var appointmentStates = List.of(APPOINTMENT_CANCELLED_STATE, APPOINTMENT_ABSENT_STATE);
+		return referenceAppointmentRepository.referenceHasAppointment(referenceId, appointmentStates);
+	}
+
+	@Override
+	public Optional<Integer> getAbsentAppointmentIdByReferenceId(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {} ", referenceId);
+		return referenceAppointmentRepository.getAbsentAppointmentIdByReferenceId(referenceId, APPOINTMENT_ABSENT_STATE);
 	}
 
 }

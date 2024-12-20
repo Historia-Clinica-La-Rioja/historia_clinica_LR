@@ -196,8 +196,8 @@ export class AppointmentsService {
 		return this.http.get<boolean>(url);
 	}
 
-	addStudyObservations(appoinmentId: number, observations: DetailsOrderImageDto): Observable<boolean> {
-		const url = `${this.BASE_URL}/study-observations/${appoinmentId}`;
+	finishStudy(appoinmentId: number, observations: DetailsOrderImageDto): Observable<boolean> {
+		const url = `${this.BASE_URL}/finish-study/${appoinmentId}`;
 		return this.http.post<boolean>(url, observations);
 	}
 

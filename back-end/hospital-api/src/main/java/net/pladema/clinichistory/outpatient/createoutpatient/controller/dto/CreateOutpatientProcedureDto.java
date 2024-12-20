@@ -31,8 +31,4 @@ public class CreateOutpatientProcedureDto {
 	@EqualsAndHashCode.Include
 	private String performedDate;
 
-	@Nullable
-	@EqualsAndHashCode.Include
-	private CreateOutpatientServiceRequestDto serviceRequest;
-
 }

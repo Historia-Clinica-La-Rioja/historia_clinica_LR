@@ -6,7 +6,7 @@ import net.pladema.establishment.domain.bed.EmergencyCareBedBo;
 
 @Getter
 @Setter
-public class EmergencyCareBedDetailBo extends EmergencyCareAttentionPlaceDetailBo{
+public class EmergencyCareBedDetailBo extends EmergencyCareAttentionPlaceDetailBo {
 
 	private EmergencyCareBedBo bed;
 

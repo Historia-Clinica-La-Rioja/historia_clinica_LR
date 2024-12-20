@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "fhir_quantity")
 @Getter
@@ -26,7 +28,7 @@ public class FhirQuantity {
 	private Integer id;
 
 	@Column(name = "value", nullable = false)
-	private Float value;
+	private BigDecimal value;
 
 	@Column(name = "unit", length = 20, nullable = false)
 	private String unit;

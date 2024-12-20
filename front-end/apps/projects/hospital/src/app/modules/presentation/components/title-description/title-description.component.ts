@@ -10,5 +10,5 @@ export class TitleDescriptionComponent {
 
 	@Input() title: string;
 	@Input() text: string;
-	@Input() limit: number;
+	@Input() showFullText = true;
 }

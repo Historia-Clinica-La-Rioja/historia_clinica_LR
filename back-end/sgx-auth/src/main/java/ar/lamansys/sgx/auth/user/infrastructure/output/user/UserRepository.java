@@ -45,11 +45,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("SELECT u.twoFactorAuthenticationEnabled FROM User AS u WHERE u.id = :id")
 	Boolean userHasTwoFactorAuthenticationEnabled(@Param("id") Integer id);
 
-	@Query("SELECT u.id FROM User u " +
-			"WHERE u.enable = true " +
-			"AND u.deleteable.deleted IS FALSE")
-	List<Integer> findAllIds();
-
 	@Query("SELECT u.enable FROM User AS u WHERE u.id = :id")
 	Boolean userIsEnabled(@Param("id") Integer id);
 }

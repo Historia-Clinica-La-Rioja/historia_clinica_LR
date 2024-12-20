@@ -12,6 +12,10 @@ import net.pladema.emergencycare.service.NotifyEmergencyCareSchedulerCallService
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
+
+import net.pladema.establishment.domain.FetchAttentionPlaceBlockStatusBo;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +30,16 @@ public class SetCalledEmergencyCareState {
 	private final EmergencyCareEpisodeStateStorage emergencyCareEpisodeStateStorage;
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 	private final NotifyEmergencyCareSchedulerCallService notifyEmergencyCareSchedulerCallService;
+	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
 	private static final Short INITIAL_CALLS_COUNT = 1;
+
 
 	@Transactional
 	public Boolean run(Integer episodeId, Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo emergencyCareEpisodeAttentionPlaceBo){
 		log.debug("Input SetCalledEmergencyCareState parameters -> episodeId {}", episodeId);
 		validateStateChange(episodeId);
+		validateNotDeleted(institutionId, emergencyCareEpisodeAttentionPlaceBo);
+		validateAttentionPlaceStatus(institutionId, emergencyCareEpisodeAttentionPlaceBo);
 		Optional<HistoricEmergencyEpisodeBo> hee = historicEmergencyEpisodeStorage.getLatestByEpisodeId(episodeId);
 		if (hee.isPresent() && hee.get().getEmergencyCareStateId().equals(EEmergencyCareState.LLAMADO.getId()))
 			saveHistoricEmergencyEpisode(episodeId, emergencyCareEpisodeAttentionPlaceBo, (short) (hee.get().getCalls() + 1));
@@ -46,6 +54,44 @@ public class SetCalledEmergencyCareState {
 		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, LocalDateTime.now(),EEmergencyCareState.LLAMADO.getId(),
 				eceap.getDoctorsOfficeId(), eceap.getShockroomId(), eceap.getBedId(), calls);
 		historicEmergencyEpisodeStorage.create(toSave);
+	}
+
+	private void validateAttentionPlaceStatus(Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo attentionPlace) {
+		findStatus(institutionId, attentionPlace).ifPresent(status -> checkBlocked(status));
+	}
+
+	private void validateNotDeleted(Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo attentionPlace) {
+		if (attentionPlace.isBed() && !fetchAttentionPlaceBlockStatus.bedExists(institutionId, attentionPlace.getBedId())) {
+			throw missing();
+		}
+		if (attentionPlace.isDoctorsOffice() && !fetchAttentionPlaceBlockStatus.doctorsOfficeExists(institutionId, attentionPlace.getDoctorsOfficeId())) {
+			throw missing();
+		}
+		if (attentionPlace.isShockRoom() && !fetchAttentionPlaceBlockStatus.shockRoomExists(institutionId, attentionPlace.getShockroomId())) {
+			throw missing();
+		}
+	}
+
+	private EmergencyCareEpisodeException missing() {
+		return new EmergencyCareEpisodeException(
+			EmergencyCareEpisodeExcepcionEnum.NOT_FOUND,
+			"El lugar de atención no existe");
+	}
+
+	private Optional<FetchAttentionPlaceBlockStatusBo> findStatus(Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo attentionPlace) {
+		if (attentionPlace.isBed())
+			 return fetchAttentionPlaceBlockStatus.findForBed(institutionId, attentionPlace.getBedId());
+		if (attentionPlace.isDoctorsOffice())
+			return fetchAttentionPlaceBlockStatus.findForDoctorsOffice(institutionId, attentionPlace.getDoctorsOfficeId());
+		if (attentionPlace.isShockRoom())
+			return fetchAttentionPlaceBlockStatus.findForShockRoom(institutionId, attentionPlace.getShockroomId());
+		return Optional.empty();
+	}
+
+	private void checkBlocked(FetchAttentionPlaceBlockStatusBo status) {
+		if(status.getIsBlocked())
+			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.BLOCKED,
+					"El lugar de atención se encuentra bloqueado.");
 	}
 
 	private void validateStateChange(Integer episodeId){

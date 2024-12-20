@@ -9,6 +9,7 @@ import { Position } from '../identifier/identifier.component';
 export class DetailsSectionCustomComponent {
   @Input() details: Detail[];
   @Input() layout: Position;
+  @Input() showFullText = true;
   constructor() { }
 
 }

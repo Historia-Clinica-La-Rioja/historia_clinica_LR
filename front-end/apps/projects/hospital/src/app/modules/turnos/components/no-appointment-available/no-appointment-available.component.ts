@@ -1,6 +1,8 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { AppFeature } from '@api-rest/api-model';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 @Component({
   selector: 'app-no-appointment-available',
@@ -15,7 +17,17 @@ export class NoAppointmentAvailableComponent {
   }
   @Input() redirectionDisabled?: boolean;
   isRegisterButtonDisabled = false;
-  constructor(private dialog: MatDialog) { }
+  isHabilitarSolicitudReferenciaOn = false;
+
+
+  constructor(
+    private dialog: MatDialog,
+    private readonly featureFlagService: FeatureFlagService,
+  ) {
+    this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isOn => {
+      this.isHabilitarSolicitudReferenciaOn = isOn;
+    });
+   }
 
   redirectToSearchInCareNetwork() {
     this.preloadData.emit(true);

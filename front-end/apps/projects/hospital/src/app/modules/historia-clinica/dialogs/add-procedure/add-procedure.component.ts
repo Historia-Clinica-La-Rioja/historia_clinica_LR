@@ -5,7 +5,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { ServiceRequestCategoryDto, SnomedDto } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { STUDY_STATUS_ENUM } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
-import { COMLETE_NOW, CreateOrderService } from '@historia-clinica/services/create-order.service';
+import { COMPLETE_NOW, CreateOrderService } from '@historia-clinica/services/create-order.service';
 
 @Component({
 	selector: 'app-add-procedure',
@@ -16,7 +16,7 @@ import { COMLETE_NOW, CreateOrderService } from '@historia-clinica/services/crea
 export class AddProcedureComponent implements OnInit {
 	studyCategoryOptions = [];
 	study_status = STUDY_STATUS_ENUM;
-	completeNow = COMLETE_NOW;
+	completeNow = COMPLETE_NOW;
 	radioControl : FormGroup<RadioControl>;
 	isLinear = false;
 

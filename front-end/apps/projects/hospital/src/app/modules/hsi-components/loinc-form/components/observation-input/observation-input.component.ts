@@ -47,6 +47,8 @@ export class ObservationInputComponent implements OnInit {
 			procedureParameterId: procedureParameter.id,
 			value: $event.value,
 			unitOfMeasureId: $event.unitOfMeasureId,
+			valueNumeric: $event.valueNumeric,
+			isValid: $event.isValid
 		});
 	}
 
@@ -55,9 +57,10 @@ export class ObservationInputComponent implements OnInit {
 		this.valueChange.emit({
 			procedureParameterId: procedureParameter.id,
 			value: null,
-			 unitOfMeasureId: null,
+			unitOfMeasureId: null,
 			snomedPt: $event.pt,
-		 	snomedSctid: $event.sctid
+		 	snomedSctid: $event.sctid,
+			valueNumeric: null
 		});
 	}
 
@@ -75,6 +78,7 @@ export class ObservationInputComponent implements OnInit {
 			procedureParameterId: procedureParameter.id,
 			value,
 			unitOfMeasureId: null,
+			valueNumeric: null
 		});
 	}
 

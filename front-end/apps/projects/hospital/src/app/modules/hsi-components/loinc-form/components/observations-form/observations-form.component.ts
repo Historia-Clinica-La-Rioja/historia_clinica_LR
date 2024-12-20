@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoincFormValues, LoincInput, LoincObservationValue } from '../../loinc-input.model';
 import { LoincFormControlService } from './loinc-form-control.service';
+import { ButtonService } from '@historia-clinica/modules/ambulatoria/services/button.service';
 
 @Component({
 	selector: 'app-observations-form',
@@ -14,7 +15,8 @@ export class ObservationsFormComponent  implements OnInit {
 
 	loincFormControl: LoincFormControlService;
 
-	constructor() {
+	constructor(
+		private readonly buttonService: ButtonService) {
 	}
 
 	ngOnInit() {
@@ -24,6 +26,7 @@ export class ObservationsFormComponent  implements OnInit {
 		this.loincFormControl = new LoincFormControlService(
 			this.loincForm as LoincInput[],
 			this.values,
+			this.buttonService
 		);
 		this.loincFormControl.valueChange$.subscribe(
 			values => this.valueChange.emit(values)

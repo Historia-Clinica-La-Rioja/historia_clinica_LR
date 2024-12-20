@@ -104,6 +104,7 @@ export class EquipmentDiaryComponent implements OnInit {
 		this.viewDate = date;
 		this.view = this.calendarViewEnum.Day;
 		this.setDateRange(date);
+		this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);
 	}
 
 	onClickedSegment(event) {

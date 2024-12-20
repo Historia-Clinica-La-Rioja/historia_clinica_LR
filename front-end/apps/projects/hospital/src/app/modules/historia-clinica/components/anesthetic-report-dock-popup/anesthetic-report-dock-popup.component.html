@@ -47,7 +47,9 @@
             [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate"
             icon="assignment" [collapsed]="true"
             [isEmpty]="anesthethicReportHandlerService.isPremedicationAndFoodIntakeEmpty$ | async" [hideBorder]="false">
-            <app-anesthetic-report-premedication-and-food-intake (timeSelected)="onLastFoodIntakeTimeSelected($event)">
+            <app-anesthetic-report-premedication-and-food-intake
+			(timeSelected)="onLastFoodIntakeTimeSelected($event)"
+			(dateSelected)="onLastFoodIntakeDateSelected($event)">
             </app-anesthetic-report-premedication-and-food-intake>
         </app-new-consultation-expansion-section>
 
@@ -118,7 +120,7 @@
 
         <app-new-consultation-expansion-section id="vital-signs-expansion-section"
             [title]="'internaciones.anesthesic-report.vital-signs.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isVitalSignsEmpty$ | async" [hideBorder]="false">
+            [collapsed]="anesthethicReportHandlerService.collapsedVitalSignsSection$ | async" [isEmpty]="anesthethicReportHandlerService.isVitalSignsEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-vital-signs>
             </app-anesthetic-report-vital-signs>
         </app-new-consultation-expansion-section>

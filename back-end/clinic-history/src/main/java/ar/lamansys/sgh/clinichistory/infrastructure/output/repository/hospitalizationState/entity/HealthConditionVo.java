@@ -110,4 +110,8 @@ public class HealthConditionVo extends ClinicalTermVo {
     public boolean isSecondaryDiagnosis() {
         return problemId.equals(ProblemType.DIAGNOSIS) && !main;
     }
+
+	public boolean isNursingProcedure() {
+		return this.getSnomed() != null && this.getSnomed().isNursingProcedure();
+	}
 }

@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.infraestructure.output.notification;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -41,13 +42,13 @@ class SendAppointmentNotificationImplTest {
                 "MockTopic"
         );
 		ArgumentCaptor<NotifyPatientDto> valueCapture = ArgumentCaptor.forClass(NotifyPatientDto.class);
-		sendAppointmentNotification.run(notifyPatientBoMock);
-		verify(hospitalApiPublisher, times(1)).appointmentCaller(valueCapture.capture());
+		sendAppointmentNotification.run(notifyPatientBoMock, 1);
+		verify(hospitalApiPublisher, times(1)).appointmentCaller(valueCapture.capture(), eq(1));
 		Assertions.assertEquals(notifyPatientBoMock.getAppointmentId(), valueCapture.getValue().getAppointmentId());
 		Assertions.assertEquals(notifyPatientBoMock.getPatientName(), valueCapture.getValue().getPatientName());
 		Assertions.assertEquals(notifyPatientBoMock.getDoctorName(), valueCapture.getValue().getDoctorName());
 		Assertions.assertEquals(notifyPatientBoMock.getDoctorsOfficeName(), valueCapture.getValue().getDoctorsOfficeName());
-		Assertions.assertEquals(notifyPatientBoMock.getTopic(), valueCapture.getValue().getTopic());
+		Assertions.assertEquals(notifyPatientBoMock.getTvMonitor(), valueCapture.getValue().getTvMonitor());
 		Assertions.assertEquals(notifyPatientBoMock.getSectorId(), valueCapture.getValue().getSectorId());
     }
 }

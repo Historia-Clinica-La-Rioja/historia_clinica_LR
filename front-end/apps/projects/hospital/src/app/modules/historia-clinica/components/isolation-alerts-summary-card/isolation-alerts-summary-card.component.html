@@ -1,0 +1,47 @@
+<app-summary-card id="isolation_alert_problems" [header]="ISOLATION_ALERT_HEADER" [editable]="false">
+	<ng-container *ngIf="patientIsolationAlertService.patientIsolationAlerts$ | async as patientIsolationAlerts">
+		<table *ngIf="patientIsolationAlerts.length else noInfo" mat-table [dataSource]="patientIsolationAlerts">
+
+			<ng-container matColumnDef="diagnosis">
+				<th mat-header-cell class="cell-header" *matHeaderCellDef>{{ 'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS' | translate }}</th>
+				<td mat-cell *matCellDef="let isolationAlert" class="cell-style">{{ isolationAlert.diagnosis | capitalizeFirstLetter }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="types">
+				<th mat-header-cell class="cell-header" *matHeaderCellDef>{{ 'historia-clinica.general.TYPE' | translate }}</th>
+				<td mat-cell *matCellDef="let isolationAlert" class="cell-style">
+					<app-show-more-concepts [concepts]="isolationAlert.types"></app-show-more-concepts>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="criticality">
+				<th mat-header-cell class="cell-header" *matHeaderCellDef>{{ 'historia-clinica.general.CRITICALITY' | translate }}</th>
+				<td mat-cell *matCellDef="let isolationAlert" class="cell-style">{{ isolationAlert.criticality }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="endAlert">
+				<th mat-header-cell class="cell-header" *matHeaderCellDef>{{ 'historia-clinica.isolation-alert.END_OF_ALERT' | translate }}</th>
+				<td mat-cell *matCellDef="let isolationAlert" class="cell-style">
+					<span *ngIf="isolationAlert.status.id == activeStatusId else showState">{{ isolationAlert.endDate | dateFormat: 'date' }}</span>
+					<ng-template #showState>
+						{{ isolationAlert.status.description }}
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+				<td mat-cell class="cell-style" *matCellDef="let isolationAlert">
+					<app-isolation-alerts-summary-actions [isolationAlertId]="isolationAlert.id" [isIsolationAlertActive]="isolationAlert.status.id == activeStatusId"></app-isolation-alerts-summary-actions>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</ng-container>
+</app-summary-card>
+
+<ng-template #noInfo>
+	<app-no-data></app-no-data>
+</ng-template>

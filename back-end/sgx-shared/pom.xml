@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.2</version>
+		<version>2.7.18</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
-		<lombok.version>1.18.22</lombok.version>
+		<lombok.version>1.18.10</lombok.version>
 		<mapstruct.version>1.4.2.Final</mapstruct.version>
 		<springdoc-openapi.version>1.6.3</springdoc-openapi.version>
 		<jacoco-plugin.version>0.8.2</jacoco-plugin.version>
@@ -33,7 +33,6 @@
 			<groupId>ar.lamansys</groupId>
 			<artifactId>sgx-backoffice</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -237,7 +236,8 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.16.1</version>
 		</dependency>
-    </dependencies>
+
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

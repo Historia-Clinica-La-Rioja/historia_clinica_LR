@@ -4,6 +4,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferencePort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
+import net.pladema.clinichistory.requests.servicerequests.application.port.ProcedureParameterStorage;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.ProcedureParameterBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportFinalizedException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportNotFoundException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
@@ -11,6 +13,8 @@ import net.pladema.clinichistory.requests.servicerequests.domain.observations.ex
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.UpdatedDiagnosticReportObservationBo;
 
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.InvalidProcedureTemplateChangeException;
+
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.ParameterTypeAndValueMismatchException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +26,11 @@ import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommand
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.DiagnosticReportObservationsForUpdateVo;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.NewDiagnosticReportObservationBo;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +40,7 @@ public class AddDiagnosticReportObservations {
 	private final DiagnosticReportObservationStorage diagnosticReportObservationStorage;
 	private final SnomedService snomedService;
 	private final SharedReferencePort sharedReferencePort;
+	private final ProcedureParameterStorage procedureParameterStorage;
 
 	/**
 	 * The given diagnostic report may have an associated observation group (and it's observations) or not.
@@ -92,9 +101,12 @@ public class AddDiagnosticReportObservations {
 			diagnosticReportObservationStorage.updateDiagnosticReportStatusToPartial(diagnosticReportId);
 	}
 
-	private void createNewObservations(Integer diagnosticReportId, SharedAddObservationsCommandVo addObservations) throws DiagnosticReportObservationException {
+	private void createNewObservations(
+		Integer diagnosticReportId,
+		SharedAddObservationsCommandVo addObservations
+	) throws DiagnosticReportObservationException {
 		log.debug("Creating new observations");
-		validate(diagnosticReportId);
+		validate(diagnosticReportId, addObservations);
 
 		/**
 		 * Attach results to the diagnostic report
@@ -112,7 +124,11 @@ public class AddDiagnosticReportObservations {
 			NewDiagnosticReportObservationBo newObservation;
 			valueBo.translateSnomed(this::translateSnomed);
 			if (valueBo.isNumeric())
-				newObservation = NewDiagnosticReportObservationBo.buildNumeric(valueBo.getProcedureParameterId(), valueBo.getValue(), valueBo.getUnitOfMeasureId());
+				newObservation = NewDiagnosticReportObservationBo.buildNumeric(
+					valueBo.getProcedureParameterId(),
+					valueBo.getValue(),
+					valueBo.getUnitOfMeasureId(),
+					valueBo.getValueNumeric());
 			else {
 				newObservation = NewDiagnosticReportObservationBo.buildNonNumeric(valueBo.getProcedureParameterId(), valueBo.getValue());
 			}
@@ -129,7 +145,7 @@ public class AddDiagnosticReportObservations {
 	private void updateObservations(Integer diagnosticReportId, DiagnosticReportObservationsForUpdateVo existingObservations, SharedAddObservationsCommandVo updatedObservations) throws DiagnosticReportObservationException, InvalidProcedureTemplateChangeException {
 		log.debug("Updating observations");
 		Integer groupId = existingObservations.getDiagnosticReportObservationGroupId();
-		validate(diagnosticReportId);
+		validate(diagnosticReportId, updatedObservations);
 
 		//Template changed
 		if (templateChanged(existingObservations, updatedObservations)) {
@@ -151,10 +167,31 @@ public class AddDiagnosticReportObservations {
 		return !existingObservations.getProcedureTemplateId().equals(updatedObservations.getProcedureTemplateId());
 	}
 
-	private void validate(Integer diagnosticReportId) throws DiagnosticReportFinalizedException {
+	private void validate(Integer diagnosticReportId, SharedAddObservationsCommandVo addObservations) throws DiagnosticReportObservationException {
 		if (diagnosticReportObservationStorage.existsRelatedFinalizedDiagnosticReport(diagnosticReportId)) {
 			throw new DiagnosticReportFinalizedException();
 		}
+		//The value type must match the referenced parameter's type
+		Map<Integer, ProcedureParameterBo> procedureParametersById = findProcedureParameters(addObservations.getParameterIds());
+		for (var value : addObservations.getValues()) {
+			var procedureParameter = procedureParametersById.get(value.getProcedureParameterId());
+			if (
+				value.hasValue() && (
+					(procedureParameter.getIsSnomed() && !value.isSnomed()) ||
+					(procedureParameter.getIsNumeric() && !value.isNumeric())
+				)
+			)
+			{
+				throw new ParameterTypeAndValueMismatchException();
+			}
+		}
+	}
+
+	private Map<Integer, ProcedureParameterBo> findProcedureParameters(List<Integer> parameterIds) {
+		return procedureParameterStorage
+			.findProcedureParametersById(parameterIds)
+			.stream()
+			.collect(Collectors.toMap(ProcedureParameterBo::getId, Function.identity()));
 	}
 
 	/**

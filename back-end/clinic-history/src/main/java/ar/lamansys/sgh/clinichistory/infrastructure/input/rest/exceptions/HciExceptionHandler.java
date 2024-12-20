@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.exceptions;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.exceptions.AnestheticReportException;
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.exceptions.FetchDocumentFileException;
 import ar.lamansys.sgh.clinichistory.application.getanthropometricgraphicdata.exceptions.GetAnthropometricGraphicDataException;
+import ar.lamansys.sgh.clinichistory.application.isolationalerts.exceptions.IsolationAlertException;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileException;
 import ar.lamansys.sgh.clinichistory.application.saveMedicationStatementInstitutionalSupply.exception.SaveMedicationStatementInstitutionalSupplyException;
 import ar.lamansys.sgh.clinichistory.application.signDocumentFile.exceptions.SignDocumentFileException;
@@ -75,6 +76,13 @@ public class HciExceptionHandler {
 	@ExceptionHandler({ SaveMedicationStatementInstitutionalSupplyException.class })
 	protected ApiErrorMessageDto handleSaveMedicationStatementInstitutionalSupplyException(SaveMedicationStatementInstitutionalSupplyException ex) {
 		log.error("SaveMedicationStatementInstitutionalSupplyException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ IsolationAlertException.class })
+	protected ApiErrorMessageDto handleIsolationAlertException(IsolationAlertException ex) {
+		log.error("IsolationAlertException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

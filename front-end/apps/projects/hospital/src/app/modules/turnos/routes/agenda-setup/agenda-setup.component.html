@@ -15,7 +15,7 @@
 								placeholder="{{'pacientes.form.SELECT' | translate}}"
 								(selectionChange)="getProfessionalSpecialties()">
 								<mat-option *ngFor="let professional of professionals" [value]="professional.id">
-									<span class="uppercase">{{professional.fullName}}</span>
+									<span class="mat-body">{{getFullName(professional)}}</span>
 								</mat-option>
 							</mat-select>
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
@@ -157,7 +157,7 @@
 					</mat-error>
 				</div>
 
-				<div fxLayout="column" class="padding">
+				<div *ngIf="isHabilitarSolicitudReferenciaOn" fxLayout="column" class="padding">
 					<span [translate]="'turnos.agenda-setup.OPTIONAL_CARELINE'"></span>
 					<mat-form-field appearance="outline">
 						<mat-select id="care_lines" name="careLines" formControlName="careLines" multiple
@@ -256,6 +256,7 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 				</div>
+				<app-diary-configuration *ngIf="isHabilitarConfiguracionAgendasOn" formControlName="configurationDiary"></app-diary-configuration>
 				<app-diary-labels [diaryId]="editingDiaryId" (labelsArray)="setLabelsArray($event)"></app-diary-labels>
 			</section>
 			<section *ngIf="form.valid" fxLayout="column"
@@ -311,10 +312,9 @@
 			</section>
 
 
-			<div *ngIf="form.valid" align="end">
-				<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
-					<span [translate]="'buttons.CONFIRM'"></span>
-				</button>
+			<div *ngIf="form.valid" class="confirm-button">
+				<app-button id="confirmAgenda" [isLoading]="isSaving" name="confirmAgenda" [buttonType]="ButtonType.RAISED" [text]="'buttons.CONFIRM'">
+				</app-button>
 			</div>
 		</form>
 	</section>

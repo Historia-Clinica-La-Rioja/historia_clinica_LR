@@ -5,7 +5,6 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
@@ -21,17 +20,16 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.CanBeMarkAsError;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.MarkAsErrorAProblem;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientProcedureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.mapper.ServiceRequestToFileMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ErrorProblemDto;
@@ -52,12 +50,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -108,7 +110,9 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             Integer institutionId,
             Integer patientId,
-            CreateOutpatientDto createOutpatientDto) {
+            @RequestPart("createOutpatientDto") CreateOutpatientDto createOutpatientDto,
+			@RequestPart(value = "serviceRequestFiles", required = false) MultipartFile[] serviceRequestFiles
+	) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, createOutpatientDto {}", institutionId, patientId, createOutpatientDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 
@@ -149,53 +153,71 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         }
 
 		/**
-		 * Create a service request for each procedure
+		 * Create the service requests
+		 * Before, service requests were created for each procedure. Now the input dto has an array of procedures
+		 * and another one of service request.
 		 */
-		try {
-			List<Integer> orderIdsFromProcedures = createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
-				institutionId, newOutPatient.getId());
-			orderIds.addAll(orderIdsFromProcedures);
-		} catch (CreateOutpatientConsultationServiceRequestException e) {
-			//Translate to runtime exception to rollback the transaction
-			throw new RuntimeException(e);
-		}
+		List<Integer> orderIdsFromServiceRequests = createServiceRequest(
+			doctorId, createOutpatientDto.getServiceRequests(), patientMedicalCoverageId, patientDto, institutionId,
+			newOutPatient.getId(), toList(serviceRequestFiles));
+		orderIds.addAll(orderIdsFromServiceRequests);
 
 		ConsultationResponseDto result = new ConsultationResponseDto(newOutPatient.getId(), orderIds);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
-	/**
-	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
-	 */
-	private List<Integer> createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
-		Integer medicalCoverageId, BasicPatientDto patientDto, Integer institutionId, Integer newOutpatientConsultationId)
-	{
-		List<Integer> orderIds = new ArrayList<>();
-		for (int i = 0; i < procedures.size(); i++) {
-			var procedure = procedures.get(i);
-			CreateOutpatientServiceRequestDto procedureServiceRequest = procedure.getServiceRequest();
-			if (procedureServiceRequest != null) {
+	private List<MultipartFile> toList(MultipartFile[] serviceRequestFiles) {
+		if (serviceRequestFiles == null) return Collections.emptyList();
+		return Arrays.asList(serviceRequestFiles);
+	}
 
-				String categoryId = procedureServiceRequest.getCategoryId();
-				String healthConditionSctid = procedureServiceRequest.getHealthConditionSctid();
-				String healthConditionPt = procedureServiceRequest.getHealthConditionPt();
-				SnomedDto snomed = procedure.getSnomed();
-				Boolean createWithStatusFinal = procedureServiceRequest.getCreationStatus().isFinal();
+	/**
+	 * Try to create a service request (and a diagnostic report with its observations) for each requested
+	 * service request
+	 */
+	private List<Integer> createServiceRequest(
+		Integer doctorId,
+		List<@Valid CreateOutpatientServiceRequestDto> serviceRequests,
+		Integer medicalCoverageId,
+		BasicPatientDto patientDto,
+		Integer institutionId,
+		Integer newOutpatientConsultationId,
+		List<MultipartFile> serviceRequestFiles
+	) {
+		List<Integer> orderIds = new ArrayList<>();
+		Map<CreateOutpatientServiceRequestDto, List<MultipartFile>> requestFiles = ServiceRequestToFileMapper.
+			buildRequestFilesMap(serviceRequests, serviceRequestFiles);
+		for (int i = 0; i < serviceRequests.size(); i++) {
+			CreateOutpatientServiceRequestDto serviceRequest = serviceRequests.get(i);
+			if (serviceRequest != null) {
+
+				String categoryId = serviceRequest.getCategoryId();
+				String healthConditionSctid = serviceRequest.getHealthConditionSctid();
+				String healthConditionPt = serviceRequest.getHealthConditionPt();
+				Boolean createWithStatusFinal = serviceRequest.getCreationStatus().isFinal();
 				Optional<SharedAddObservationsCommandVo> addObservationsCommand = Optional
-					.ofNullable(procedureServiceRequest.getObservations())
-					.map(x -> diagnosticReportObservationsMapper.fromDto(x));
+					.ofNullable(serviceRequest.getObservations())
+					.map(diagnosticReportObservationsMapper::fromDto);
 
 				Integer patientId = patientDto.getId();
 				Short patientGenderId = patientDto.getPerson().getGender().getId();
 				Short patientAge = patientDto.getPerson().getAge();
+				String sctid = serviceRequest.getSnomedSctid();
+				String pt = serviceRequest.getSnomedPt();
+				List<MultipartFile> files = requestFiles.get(serviceRequest);
+				String textObservation = serviceRequest.getObservation();
 
-				Integer orderId = sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(doctorId, categoryId, institutionId,
-						healthConditionSctid, healthConditionPt, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
-						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				Integer orderId = sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(
+					doctorId, categoryId, institutionId,
+					healthConditionSctid, healthConditionPt, medicalCoverageId, newOutpatientConsultationId,
+					sctid, pt, createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge,
+					files, textObservation
+				);
 				orderIds.add(orderId);
 			}
 		}
+
 		return orderIds;
 	}
 

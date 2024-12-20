@@ -19,7 +19,7 @@ const ParameterizedFormParameterCreate = props => (
             </div>
             <ReferenceInput
                 source="parameterId"
-                reference="parameters"
+                reference="parameters-autocomplete"
                 label="resources.parameterizedform.description"
                 filterToQuery={searchText => ({description: searchText})}
                 fullWidth

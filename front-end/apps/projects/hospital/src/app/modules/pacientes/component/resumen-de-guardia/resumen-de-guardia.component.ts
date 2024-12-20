@@ -147,7 +147,6 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
        		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
-			this.setEpisodeState();
 		});
 	}
 
@@ -248,7 +247,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 			okButtonLabel: 'guardia.home.episodes.episode.actions.mark_as_absent.buttons.CONFIRM',
 			cancelButtonLabel: 'buttons.NO_CANCEL',
 			buttonClose: true
-		}; 
+		};
 		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL };
         const dialog = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
         dialog.afterClosed().pipe(
@@ -439,7 +438,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 			[EstadosEpisodio.LLAMADO]: stateDescription,
 			[EstadosEpisodio.CON_ALTA_MEDICA]: 'guardia.home.episodes.episode.status.PATIENT_DISCHARGE'
 		}
-		
+
 		this.statusLabel = {stateId: this.episodeState, description: description[this.episodeState]}
 	}
 }

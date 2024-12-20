@@ -1,6 +1,7 @@
 package ar.lamansys.online.application.booking;
 
 import ar.lamansys.online.domain.booking.BookingBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
@@ -17,7 +18,7 @@ public class BookAppointment {
 
 	private final BookingConfirmationMailSender bookingConfirmationMailSender;
 
-	public SavedBookingAppointmentDto run(BookingBo bookingBo) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
+	public SavedBookingAppointmentDto run(BookingBo bookingBo) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, BookingCannotSendEmailException {
 		SavedBookingAppointmentDto savedBooking = this.bookingAppointmentStorage.save(bookingBo);
 		try{
 			bookingConfirmationMailSender.sendEmail(bookingBo, savedBooking.getUuid());
@@ -25,6 +26,7 @@ public class BookAppointment {
 		catch (Exception e){
 			log.error(e.getMessage(), e);
 			this.bookingAppointmentStorage.cancelBooking(savedBooking.getUuid());
+			throw new BookingCannotSendEmailException();
 		}
 		return savedBooking;
 	}

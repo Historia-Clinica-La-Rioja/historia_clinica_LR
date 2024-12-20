@@ -2,22 +2,22 @@
 	<mat-form-field appearance="outline">
 		<mat-select [value]="selectedOption" (selectionChange)="setSelectedOption($event.value)" required>
 			<mat-select-trigger>
-				<app-colored-label [description]="selectedStateOption.description | translate | uppercase"
-					[color]="selectedStateOption.color" [icon]="selectedStateOption.icon">
+				<app-colored-label [description]="selectedOptionColoredLabel.description | translate | uppercase"
+					[color]="selectedOptionColoredLabel.color" [icon]="selectedOptionColoredLabel.icon">
 				</app-colored-label>
 			</mat-select-trigger>
-			<mat-option *ngFor="let state of regulationStates" [value]="state">
-				<app-colored-label [description]="getOptionIconState(state).description| translate | uppercase"
-					[color]="getOptionIconState(state).color" [icon]="getOptionIconState(state).icon">
-				</app-colored-label>
-			</mat-option>
+			<div>
+				<mat-option *ngFor="let state of regulationStates" [value]="state">
+					<app-colored-label [description]="getOptionIconState(state).description| translate | uppercase"
+						[color]="getOptionIconState(state).color" [icon]="getOptionIconState(state).icon">
+					</app-colored-label>
+				</mat-option>
+			</div>
 		</mat-select>
 	</mat-form-field>
 </form>
 
-<div *ngIf="selectedOption != waitingApproval" fxLayout="column" fxLayoutGap="8px">
-	<span class="capitalize-first-letter">{{ selectedOptionData.subtitle | translate }}</span>
-
+<div *ngIf="(selectedOption != isWaitingAudit) && (selectedOption != isWaitingAproval)" fxLayout="column" fxLayoutGap="8px">
 	<form [formGroup]="reason" *ngIf="showReasonArea">
 		<mat-form-field class="reasonTextArea" appearance="outline">
 			<textarea id="reason" matInput type="text" formControlName="reason"

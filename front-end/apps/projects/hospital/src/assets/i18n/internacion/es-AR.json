@@ -436,7 +436,9 @@
 				"UNIT_PLACEHOLDER": "Ingresar unidad",
 				"VIA": "Via: ",
 				"VIA_PLACEHOLDER": "Ingresar via",
-				"LAST_FOOD_INTAKE": "Última ingesta de comida"
+				"LAST_FOOD_INTAKE": "Última ingesta de comida",
+				"TIME": "Hora",
+				"DATE": "Fecha"
 			},
 			"anesthetic-plan": {
 				"TITLE": "Plan anestésico",
@@ -540,6 +542,7 @@
 				"SUCCESS_ADD": "Punto de medición registrado correctamente",
 				"ERROR_ADD": "Ya existe un punto de medición registrado en ese horario",
 				"SUCCESS_EDIT": "Punto de medición editado correctamente",
+				"START_END_MINIMUM_DIFFERENCE": "La hora de finalización debe ser 5 minutos posterior a la hora de inicio.",
 				"measuring-point": {
 					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",
 					"REGISTERED_MEASURING_POINTS": "Puntos de medición registrados",
@@ -981,6 +984,7 @@
 				"DELETE_TITLE": "Aclarar motivo de eliminación",
 				"EDIT_TITLE": "Aclarar motivo de edición",
 				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál edita este documento.",
+				"DELETE_SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál elimina este documento.",
 				"REASON": "Motivo"
 			}
 		},

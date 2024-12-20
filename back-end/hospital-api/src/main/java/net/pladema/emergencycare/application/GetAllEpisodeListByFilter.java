@@ -16,7 +16,7 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
-import net.pladema.emergencycare.triage.application.fetchlasttriagebyemergencycareepisodeid.FetchLastTriageByEmergencyCareEpisodeId;
+import net.pladema.emergencycare.triage.application.fetchtriagereasons.FetchTriageReasons;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
@@ -39,13 +39,13 @@ public class GetAllEpisodeListByFilter {
 
 	private final InstitutionExternalService institutionExternalService;
 
-	private final FetchLastTriageByEmergencyCareEpisodeId fetchLastTriageByEmergencyCareEpisodeId;
-
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 
 	private final EmergencyCareEpisodeDischargeService emergencyCareEpisodeDischargeService;
 
 	private final FeatureFlagsService featureFlagsService;
+
+	private final FetchTriageReasons fetchTriageReasons;
 
 	public Page<EmergencyCareBo> run(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		log.debug("Input parameters -> institutionId {}, filter {}, pageable {}", institutionId, filter, pageable);
@@ -53,20 +53,22 @@ public class GetAllEpisodeListByFilter {
 		Page<EmergencyCareBo> result = emergencyCareEpisodeListStorage.getAllEpisodeListByFilter(institutionId, filter, pageable);
 		result.forEach(ec -> {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
-			ec.setTriage(fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId()));
+			ec.getTriage().setReasons(fetchTriageReasons.run(ec.getTriage().getTriageId()));
 			ec.setCanBeAbsent(getCanBeAbsent(ec.getId(), ec.getEmergencyCareStateId()));
 			setStateUpdatedOnAndCalls(ec,institutionId);
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);
 			}
-			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ALTA_MEDICA.getId())){
+			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ALTA_PACIENTE.getId())){
 				ec.setDischargeSummary(emergencyCareEpisodeDischargeService.getEpisodeDischargeSummary(ec.getId()));
 			}
 			if (selfPerceivedFF) setSelfDeterminationNames(ec);
 		});
+
 		log.debug("Output -> {}", result);
 		return result;
+
 	}
 
 	private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {

@@ -1,6 +1,13 @@
-<button id="edit-reference" mat-button type="button" (click)="openEditDialog()" color="primary">
-    <mat-icon class="material-icons-outlined edit-icon">edit</mat-icon>
-    <span>
-        {{'access-management.reference-edition.EDIT_REFERENCE_DATA' | translate}}
-    </span>
-</button>
+<ng-container *ngIf="isButton else textButton">
+    <app-button [text]="'access-management.search_references.reference.approval.EDIT_REFERENCE_BUTTON' | translate"
+		[buttonType]="ButtonType.RAISED" (clicked)="openEditDialog()"></app-button>
+</ng-container>
+
+<ng-template #textButton>
+    <button id="edit-reference" mat-button type="button" (click)="openEditDialog()" color="primary">
+        <mat-icon class="material-icons-outlined edit-icon">edit</mat-icon>
+        <span>
+            {{'access-management.reference-edition.EDIT_REFERENCE_DATA' | translate}}
+        </span>
+    </button>
+</ng-template>

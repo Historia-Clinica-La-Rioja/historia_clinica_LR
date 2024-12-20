@@ -11,7 +11,7 @@ import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstat
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationIncorrectPaymentException;
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationInvalidSoldUnitsException;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionCancelledWithNoObservationException;
-import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
@@ -132,13 +132,13 @@ public class HospitalPublicApiExceptionHandler {
 		);
 	}
 
-	@ExceptionHandler({ BookingPersonMailNotExistsException.class })
+	@ExceptionHandler({ BookingCannotSendEmailException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	protected ApiErrorMessageDto handleBookingPersonMailNotExists(BookingPersonMailNotExistsException ex) {
-		logger.debug("BookingPersonMailNotExists exception", ex);
+	protected ApiErrorMessageDto handleCannotSendEmailException(BookingCannotSendEmailException ex) {
+		logger.debug("CannotSendEmailException exception", ex);
 		return new ApiErrorMessageDto(
-				"email-not-exists",
-				"El mail no existe"
+				"cannot-send-email",
+				"Ha ocurrido un error al querer sacar un turno"
 		);
 	}
 

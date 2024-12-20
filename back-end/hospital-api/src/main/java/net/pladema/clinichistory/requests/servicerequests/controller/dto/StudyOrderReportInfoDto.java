@@ -40,10 +40,13 @@ public class StudyOrderReportInfoDto {
     private Integer diagnosticReportId;
 	private Boolean hasActiveAppointment;
     private String observationsFromServiceRequest;
+	private Short reportStatus;
     @Nullable
     private DateDto appointmentDate;
     @Nullable
     private TimeDto appointmentHour;
     @Nullable
     private String localViewerUrl;
+	@Nullable
+	private String DeriveTo;
 }

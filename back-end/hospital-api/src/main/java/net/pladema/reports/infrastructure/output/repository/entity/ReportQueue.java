@@ -37,4 +37,7 @@ public class ReportQueue {
 	@Column(name = "file_id")
 	private Long fileId;
 
+	@Column(name = "created_by")
+	private Integer createdBy;
+
 }

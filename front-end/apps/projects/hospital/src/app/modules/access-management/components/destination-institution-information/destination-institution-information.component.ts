@@ -28,7 +28,8 @@ export class DestinationInstitutionInformationComponent {
 	@Input()
 	set destinationInstitutionInfo(destinationInstitutionInfo: DestinationInstitutionInformation) {
 		this._destinationInstitutionInfo = destinationInstitutionInfo;
-		this.setDestinationDataForm();
+		if (destinationInstitutionInfo.referenceInstitution?.id)
+			this.setDestinationDataForm();
 		this.setDepartmentsTypeaheadOption();
 	};
 	@Output() institutionIdSelected = new EventEmitter<number>();

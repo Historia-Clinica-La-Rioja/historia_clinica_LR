@@ -48,11 +48,15 @@ public class FetchBedRelocationByActivityTest {
 				Arrays.asList(
 						new BedRelocationInfoBo(
 								1,
+								"1",
+								"Intensivos",
 								LocalDateTime.now(), "careType",
 								new SnomedBo("1", "1")
 						),
 						new BedRelocationInfoBo(
 								2,
+								"2",
+								"Mínimos",
 								LocalDateTime.now(), "careType",
 								new SnomedBo("2", "2")
 						)

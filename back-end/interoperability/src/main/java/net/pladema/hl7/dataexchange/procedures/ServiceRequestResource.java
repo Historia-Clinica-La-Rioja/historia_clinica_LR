@@ -6,6 +6,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -66,16 +67,19 @@ public class ServiceRequestResource extends IResourceFhir {
 	}
 
 	public List<ServiceRequest> fetchByPatientIdentificationNumber(String patientIdentificationNumber) {
-		List<ServiceRequestVo> serviceRequestList = store.getServiceRequestByPatientIdentificationNumber(patientIdentificationNumber);
-		return buildServiceRequest(serviceRequestList);
+		List<ServiceRequestVo> serviceRequestList = store
+			.getServiceRequestByPatientIdentificationNumber(patientIdentificationNumber);
+		return buildServiceRequest(removeDuplicates(serviceRequestList));
 	}
 
 	public List<ServiceRequest> fetchByIdAndPatientIdentificationNumber(Integer serviceRequestId, String patientIdentificationNumber) {
-		List<ServiceRequestVo> serviceRequestList = store.getServiceRequestByIdAndPatientIdentificationNumber(serviceRequestId, patientIdentificationNumber);
-		return buildServiceRequest(serviceRequestList);
+		List<ServiceRequestVo> serviceRequestList = store
+			.getServiceRequestByIdAndPatientIdentificationNumber(serviceRequestId, patientIdentificationNumber);
+		return buildServiceRequest(removeDuplicates(serviceRequestList));
 	}
 
 	private List<ServiceRequest> buildServiceRequest(List<ServiceRequestVo> serviceRequestList) {
+
 		Map<String, Reference> patientCache = new HashMap<>();
 		Map<String, Reference> coverageCache = new HashMap<>();
 		Map<String, Reference> practitionerCache = new HashMap<>();
@@ -177,6 +181,24 @@ public class ServiceRequestResource extends IResourceFhir {
 			resources.add(resource);
 		}
 		return resources;
+	}
+
+	/**
+	 * The query returns a row for each diagnostic report.
+	 * When a service request is completed, its diagnostic reports are duplicated
+	 * (for each one with status=initialized there's one with a finished status).
+	 * This method returns the latest version of each diagnostic report
+	 */
+	private List<ServiceRequestVo> removeDuplicates(List<ServiceRequestVo> serviceRequestList) {
+		List<ServiceRequestVo> result = new ArrayList<>();
+		serviceRequestList.forEach(row -> {
+			var hasChild = serviceRequestList
+				.stream()
+				.anyMatch(child -> Objects.equals(row.getDiagnosticReportId(), child.getDiagnosticReportParentId()));
+			if (!hasChild)
+				result.add(row);
+		});
+		return result;
 	}
 
 	private Map<ResourceType, Reference> adaptCacheForCoverage(String patientId, Map<String, Reference> referencesCache) {

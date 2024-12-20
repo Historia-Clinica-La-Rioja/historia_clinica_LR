@@ -4,6 +4,7 @@ package ar.lamansys.sgh.shared.infrastructure.input.service;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.staff.LicenseNumberDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.MedicineDoctorCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 
@@ -32,4 +33,7 @@ public interface SharedStaffPort {
 	String getDoctorsOfficeDescription(Integer doctorsOfficeId);
 
 	String getShockRoomDescription(Integer shockRoomId);
+
+	Optional<List<LicenseNumberDto>> getLicenses(Integer healthcareProfessionalId);
+
 }

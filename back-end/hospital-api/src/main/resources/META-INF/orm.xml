@@ -272,7 +272,8 @@
 			sr.institution_id, sr.request_date, sr.doctor_id, s.sctid as problemId,
 			s.pt as problemPt, sr.medical_coverage_id, n.description, dr.link,
 			dr.status_id as diagnosticReportStatus, dr.snomed_id as diagnosticReportSnomedId,
-			sr.uuid as serviceRequestUuid, dr.uuid as diagnosticReportUuid
+			sr.uuid as serviceRequestUuid, dr.uuid as diagnosticReportUuid,
+			diagnostic_report_tree.diagnostic_report_parent_id as diagnostic_report_parent_id
 			from service_request sr
 			join document d on ( sr.id = d.source_id and d.source_type_id = 3 )
 			join document_diagnostic_report ddr ON ( d.id = ddr.document_id )
@@ -282,6 +283,7 @@
 			left join snomed s on ( hc.snomed_id = s.id )
 			left join patient p on ( sr.patient_id = p.id )
 			left join person per on ( p.person_id = per.id )
+			left join diagnostic_report_tree on ( diagnostic_report_tree.diagnostic_report_child_id = dr.id )
 			where (sr.id = :serviceRequestId)
 			and (per.identification_type_id = 1)
 			and (per.identification_number = :identificationNumber)
@@ -289,7 +291,8 @@
 			select t.id, t.serviceRequestStatus, t.intent_id, t.categoryId, t.diagnosticReportId,
 			t.patient_id, t.institution_id, t.request_date, t.doctor_id, t.problemId, t.problemPt,
 			t.medical_coverage_id, t.description, t.link, t.diagnosticReportStatus,
-			s.sctid, s.pt, t.serviceRequestUuid, t.diagnosticReportUuid
+			s.sctid, s.pt, t.serviceRequestUuid, t.diagnosticReportUuid,
+			t.diagnostic_report_parent_id
 			from temporal t
 			left join snomed s on ( t.diagnosticReportSnomedId = s.id )
 		</query>
@@ -304,7 +307,8 @@
 			sr.institution_id, sr.request_date, sr.doctor_id, s.sctid as problemId,
 			s.pt as problemPt, sr.medical_coverage_id, n.description, dr.link,
 			dr.status_id as diagnosticReportStatus, dr.snomed_id as diagnosticReportSnomedId,
-			sr.uuid as serviceRequestUuid, dr.uuid as diagnosticReportUuid
+			sr.uuid as serviceRequestUuid, dr.uuid as diagnosticReportUuid,
+			diagnostic_report_tree.diagnostic_report_parent_id as diagnostic_report_parent_id
 			from service_request sr
 			join document d on ( sr.id = d.source_id and d.source_type_id = 3 )
 			join document_diagnostic_report ddr ON ( d.id = ddr.document_id )
@@ -314,13 +318,15 @@
 			left join snomed s on ( hc.snomed_id = s.id )
 			left join patient p on ( sr.patient_id = p.id )
 			left join person per on ( p.person_id = per.id )
+			left join diagnostic_report_tree on ( diagnostic_report_tree.diagnostic_report_child_id = dr.id )
 			where (per.identification_type_id = 1)
 			and (per.identification_number = :identificationNumber)
 			)
 			select t.id, t.serviceRequestStatus, t.intent_id, t.categoryId, t.diagnosticReportId,
 			t.patient_id, t.institution_id, t.request_date, t.doctor_id, t.problemId, t.problemPt,
 			t.medical_coverage_id, t.description, t.link, t.diagnosticReportStatus,
-			s.sctid, s.pt, t.serviceRequestUuid, t.diagnosticReportUuid
+			s.sctid, s.pt, t.serviceRequestUuid, t.diagnosticReportUuid,
+			t.diagnostic_report_parent_id
 			from temporal t
 			left join snomed s on ( t.diagnosticReportSnomedId = s.id )
 		</query>
@@ -2825,6 +2831,7 @@
 			<column name="pt" class="java.lang.String"/>
 			<column name="serviceRequestUuid" class="java.util.UUID"/>
 			<column name="diagnosticReportUuid" class="java.util.UUID"/>
+			<column name="diagnostic_report_parent_id" class="java.lang.Integer"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="HCE.getServiceRequestDataForValidationResult" >

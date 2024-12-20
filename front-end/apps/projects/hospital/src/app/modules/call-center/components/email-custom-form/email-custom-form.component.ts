@@ -36,7 +36,7 @@ export class EmailCustomFormComponent extends AbstractCustomForm {
 
 	createForm() {
 		this.form = new FormGroup<EmailCustomForm>({
-			email: new FormControl(null, [Validators.required, Validators.email]),
+			email: new FormControl(null, Validators.email),
 		});
 	}
 }

@@ -7,9 +7,9 @@ import net.pladema.medicalconsultation.diary.service.HolidaysService;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,19 +21,15 @@ import java.util.Optional;
 class AppointmentDailyAmountServiceImplTest {
 
 	@Mock
-	private DiaryService diaryService;
+	DiaryService diaryService;
 	@Mock
-	private AppointmentService appointmentService;
+	AppointmentService appointmentService;
 
 	@Mock
-	private HolidaysService holidaysService;
+	HolidaysService holidaysService;
 
-	private AppointmentDailyAmountServiceImpl appointmentDailyAmountService;
-
-	@BeforeEach
-	void setUp() {
-		this.appointmentDailyAmountService = new AppointmentDailyAmountServiceImpl(appointmentService, diaryService, holidaysService);
-	}
+	@InjectMocks
+	AppointmentDailyAmountServiceImpl appointmentDailyAmountService;
 
 	@Test
 	void getDailyAmountsWithNonExistentDiary() {
@@ -43,6 +39,6 @@ class AppointmentDailyAmountServiceImplTest {
 		var exception = Assertions.assertThrows(DiaryNotFoundException.class, () -> {
 			appointmentDailyAmountService.getDailyAmounts(1, LocalDate.now(),LocalDate.now());
 		});
-		Assertions.assertEquals(exception.getMessage(), "La Agenda solicitada no existe");
+		Assertions.assertEquals(exception.getMessage(), "La agenda solicitada no existe");
 	}
 }

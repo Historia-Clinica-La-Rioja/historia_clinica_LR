@@ -6,7 +6,6 @@ import { CubejsClientModule } from '@cubejs-client/ngx';
 // deps
 import { PresentationModule } from '@presentation/presentation.module';
 // routing
-import { InstitutionExtensionComponent, SystemExtensionComponent } from './routes/extension/extension.component';
 import { InstitutionRoutedExternalComponent } from './institution-routed-external/institution-routed-external.component';
 
 // components
@@ -50,9 +49,7 @@ import { cubejsOptions } from './extensions-cubejs';
 	],
 	declarations: [
 		// routing
-		InstitutionExtensionComponent,
 		InstitutionRoutedExternalComponent,
-		SystemExtensionComponent,
 		// components
 		AppointmentStateInputComponent,
 		CubejsCardComponent,

@@ -34,7 +34,8 @@
 			"VIEW_APPLICATION": "Ver solicitud",
 			"DOCUMENT_SEARCH": "Buscar por documento",
             "PRACTICE": "Práctica/Procedimiento",
-			"REGULATION_STATES": "Estado de aprobación",
+			"REGULATION_STATES": "Estado de auditoria",
+			"APPROVAL_STATES": "Estado de aprobación",
 			"reference": {
 				"TITLE": "Detalle de solicitud",
 				"CONTACT_DATA": "Datos de contacto",
@@ -43,14 +44,24 @@
 				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK": " asignar turno en red de atencion",
 				"ASSIGNED_BY": "Asignado por:",
 				"approval": {
-					"TITLE": "estado de aprobación",
+					"TITLE": "Estado de aprobación",
+					"SUBTITLE": "Solicitud ingresada por Regla General",
 					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
 					"states": {
-						"PENDING": "Esperando aprobacion",
+						"PENDING_APPROVAL": "Esperando aprobacion",
+						"PENDING_AUDIT": "Esperando auditoria",
 						"SUGGESTED": "Revision sugerida",
-						"REJECTED": "Solicitud rechazada",
-						"APPROVED": "Solicitud aprobada"
-					}
+						"REJECTED": "Rechazada",
+						"APPROVED": "Aprobada",
+						"AUDITED": "Auditada",
+						"AUDIT_NOT_REQUIRED": "No requiere auditoria"
+					},
+					"stepper-labels": {
+						"ORIGIN": "Origen",
+						"DESTINATION": "Destino",
+						"APPOINTMENT": "Turno"
+					},
+					"EDIT_REFERENCE_BUTTON": "Editar referencia / institución destino"
 				},
 				"institutional_network_actions": {
 					"REJECT": "rechazar",
@@ -58,19 +69,19 @@
 					"APPROVE": "aprobar"
 				},
 				"discard_popup": {
-					"approved": {
-						"TITLE": "aprobar solicitud",
-						"SUBTITLE": "se marcará la solicitud como aprobada"
+					"audit": {
+						"TITLE": "auditar revisión"
 					},
 					"rejected": {
 						"TITLE": "rechazar solicitud",
-						"SUBTITLE": "se marcará la solicitud como rechazada",
 						"PLACEHOLDER": "Explique el motivo de rechazo"
 					},
 					"suggested-review": {
 						"TITLE": "sugerir revisión",
-						"SUBTITLE": "se marcará la solicitud como revisión sugerida",
 						"PLACEHOLDER": "Explique el motivo de la revisión"
+					},
+					"approved": {
+						"TITLE": "aprobar solicitud"
 					}
 				},
 				"approval_actions": {
@@ -119,6 +130,16 @@
 			"SHOW_ERROR_DERIVATION:": "Error al cargar la derivación",
 			"DERIVATION_MESSAGE_TITLE": "DERIVADO A GESTIÓN {{forwardingType}}"
 		},
+		"administrative_reference_closure": {
+			"CLOSURE_BUTTON": "Cierre administrativo de referencia",
+			"DIALOG_TITLE": "¿Confirmar cierre administrativo?",
+			"DIALOG_DESCRIPTION": "La referencia se dará por finalizada y ya no podrá reabrirse.",
+			"DIALOG_INPUT_LABEL": "Motivo de cierre",
+			"DIALOG_INPUT_PLACEHOLDER": "Describa motivo de cierre",
+			"DIALOG_CANCEL_BUTTON": "Cancelar",
+			"DIALOG_CONFIRM_BUTTON": "Confirmar cierre",
+			"CLOSURE_NOTE_LABEL": "Motivo de cierre:"
+		},
 		"reference-edition": {
 			"TITLE": "Editar solicitud de referencia",
 			"EDIT_REFERENCE_DATA": "Editar datos de referencia",
@@ -156,7 +177,9 @@
 				"REFERENCE_EDITION_SUCCESS": "Se edito la referencia exitosamente",
 				"REFERENCE_EDITION_ERROR": "Hubo un error al editar la referencia",
 				"FILES_DELETE_SUCCESS": "Se eliminaron los archivos correctamente",
-				"FILES_DELETE_ERROR": "Hubo un error al eliminar los archivos"
+				"FILES_DELETE_ERROR": "Hubo un error al eliminar los archivos",
+				"ADMINISTRATIVE_CLOSURE_SUCCESS": "Cierre administrativo realizado con éxito",
+				"ADMINISTRATIVE_CLOSURE_ERROR": "Hubo un error al cerrar la referencia"
 			}
 		},
 		"holiday_warning": {

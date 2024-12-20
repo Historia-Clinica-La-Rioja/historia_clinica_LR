@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 
 import net.pladema.establishment.application.port.InstitutionalGroupStorage;
@@ -101,8 +102,8 @@ public class InstitutionServiceImpl implements InstitutionService {
 	}
 
 	@Override
-	public List<InstitutionBasicInfoBo> getInstitutionsByManagerUser(Integer userId) {
-		log.debug("Input parameters -> userId {}", userId);
+	public List<InstitutionBasicInfoBo> getInstitutionsByManagerUser() {
+		Integer userId = UserInfo.getCurrentAuditor();
 		List<Integer> institutionalGroupsIds = institutionalGroupStorage.getInstitutionalGroupsByUserId(userId).stream().map(InstitutionalGroupBo::getId).collect(Collectors.toList());
 		List<InstitutionBasicInfoBo> result = institutionRepository.getInstitutionsRelatedToInstitutionalGroups(institutionalGroupsIds);
 		log.debug("Output -> {}", result);

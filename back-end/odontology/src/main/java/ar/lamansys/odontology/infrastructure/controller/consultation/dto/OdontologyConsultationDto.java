@@ -2,6 +2,7 @@ package ar.lamansys.odontology.infrastructure.controller.consultation.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,9 @@ public class OdontologyConsultationDto {
 
     @Nullable
     private List<@Valid OdontologyProcedureDto> procedures = new ArrayList<>();
+
+	@Nullable
+	private List<@Valid CreateOutpatientServiceRequestDto> serviceRequests = new ArrayList<>();
 
     @Nullable
     private ReferableItemDto<@Valid OdontologyPersonalHistoryDto> personalHistories;

@@ -1,0 +1,48 @@
+<ng-container *ngIf="mainDiagnosis?.main as main">
+	<app-titled-content-card [title]="'internaciones.anamnesis.diagnosticos.TITLE_PRINCIPAL'">
+		<br>
+		<app-elemento-diagnostico [diagnosis]="main" [isMain]="true" (removeDiagnosis)="removeMainDiagnosis()"
+			[type]="type" [disabled]="mainDiagnosis.isAssociatedToIsolationAlert"></app-elemento-diagnostico>
+		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
+			<br>
+			<button id="modify-main-diagnosis" class="change-main-diagnosis" *ngIf="main"
+				class="diagnoses-action-button" mat-button color="primary" [disabled]="!otherDiagnoses?.length"
+				(click)="openModifyMainDiagnosisDialog(); $event.preventDefault()">
+				{{ 'internaciones.anamnesis.diagnosticos.CHANGE_MAIN_DIAGNOSIS' | translate }}
+			</button>
+		</div>
+	</app-titled-content-card>
+
+</ng-container>
+
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']" fxLayout="column" fxLayoutAlign="start start">
+	<button id="add-main-diagnosis" *ngIf="!mainDiagnosis?.main && type === 'ANAMNESIS'" class="diagnoses-action-button"
+		mat-button color="primary" (click)="openCreationDialog(true); $event.preventDefault()">
+		{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
+	</button>
+</div>
+
+<ng-container *ngIf="otherDiagnoses?.length">
+	<br><br>
+	<app-titled-content-card [title]="'internaciones.anamnesis.diagnosticos.TITLE'">
+		<div *ngFor="let otherDiagnosis of otherDiagnoses">
+			<app-elemento-diagnostico [diagnosis]="otherDiagnosis.diagnosis" [isMain]="false" [type]="type" [disabled]="otherDiagnosis.isAssociatedToIsolationAlert"
+				(removeDiagnosis)="removeDiagnosis($event)" (checkDiagnosis)="updateAll()" (editedDiagnosis)="updateDiagnosis($event)"></app-elemento-diagnostico>
+			<hr *ngIf="otherDiagnoses.length > 1">
+		</div>
+		<div *ngIf="mainDiagnosis?.main && otherDiagnoses?.length> 1">
+			<br>
+			<mat-checkbox id="all-selected" [checked]="allChecked"
+				(change)="setAll($event.checked)">{{'internaciones.epicrisis.diagnosticos.INCLUDE_ALL' |
+				translate}} </mat-checkbox>
+		</div>
+	</app-titled-content-card>
+</ng-container>
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']" fxLayout="column" fxLayoutAlign="start start">
+	<br>
+	<button id="add-diagnosis" class="diagnoses-action-button" mat-button color="primary"
+		(click)="openCreationDialog(false); $event.preventDefault()">
+		{{ 'internaciones.anamnesis.diagnosticos.ADD_OTHER_DIAGNOSIS' | translate }}
+	</button>
+</div>
+

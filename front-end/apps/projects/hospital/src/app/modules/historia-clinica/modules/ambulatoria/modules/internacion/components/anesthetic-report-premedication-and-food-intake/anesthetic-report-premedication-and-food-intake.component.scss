@@ -1,7 +1,17 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+.input-date {
+	@include mat-form-field-background-white;
+}
+
 .premedication-button {
     font-size: 16px;
 }
 
 .last-food-intake-title {
     margin: 0 0 8px;
+}
+
+.form-input-title {
+	font-weight: 500;
 }

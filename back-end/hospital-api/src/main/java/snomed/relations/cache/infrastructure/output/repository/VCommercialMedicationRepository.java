@@ -37,4 +37,10 @@ public interface VCommercialMedicationRepository extends JpaRepository<VCommerci
 			"ORDER BY vcm.commercialPt")
     List<SnomedBo> fetchSuggestedCommercialMedicationSnomedListByGeneric(@Param("sctid") String genericMedicationSctid);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT vcm.presentationUnit " +
+			"FROM VCommercialMedication vcm " +
+			"WHERE vcm.genericSctid = :genericSctid ")
+    String fetchGenericPresentationUnit(@Param("genericSctid") String genericSctid);
+
 }

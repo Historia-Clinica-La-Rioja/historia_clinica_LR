@@ -8,6 +8,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { NurseAssignComponent } from '@institucion/dialogs/nurse-assign/nurse-assign.component';
+import { BlockedAttentionPlaceDetails } from '@historia-clinica/modules/guardia/standalone/blocked-attention-place-details/blocked-attention-place-details.component';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { PatientNameService } from '@core/services/patient-name.service';
 
 @Component({
 	selector: 'app-bed-detail',
@@ -25,6 +28,7 @@ export class BedDetailComponent implements OnInit, OnChanges {
 	patientHasAnamnesis = false;
 	patientInternmentId: number;
 	INTERNMENT_SECTOR_TYPE = 2;
+	blockedAttentionPlaceDetails: BlockedAttentionPlaceDetails;
 
 	constructor(
 		private readonly bedService: BedService,
@@ -33,6 +37,7 @@ export class BedDetailComponent implements OnInit, OnChanges {
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
+		private readonly patientNameService: PatientNameService,
 	) { }
 
 	ngOnInit(): void {
@@ -46,6 +51,8 @@ export class BedDetailComponent implements OnInit, OnChanges {
 			this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => {
 				this.bedInfo = bedInfo;
 				this.setPatientData();
+				if (this.bedInfo.bed.isBlocked)
+					this.blockedAttentionPlaceDetails = this.getBlockedAttentionPlaceDetails(bedInfo);
 			});
 		}
 	}
@@ -123,5 +130,16 @@ export class BedDetailComponent implements OnInit, OnChanges {
 				this.snackBarService.showError(err.text);
 			}
 		})
+	}
+
+	private getBlockedAttentionPlaceDetails(bedInfo: BedInfoDto): BlockedAttentionPlaceDetails {
+		const bedStatusInfo = bedInfo.status;
+		const { firstName, nameSelfDetermination, lastName } = bedStatusInfo.blockedBy;
+		return {
+			createdOn: dateTimeDtoToDate(bedStatusInfo.createdOn),
+			reason: bedStatusInfo.reasonEnumDescription,
+			observations: bedStatusInfo.reason,
+			createdBy: this.patientNameService.completeName(firstName, nameSelfDetermination, lastName)
+		}
 	}
 }

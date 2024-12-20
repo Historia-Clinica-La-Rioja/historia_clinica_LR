@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.cipres.domain.SnomedBo;
 import net.pladema.snowstorm.application.fetchconcepts.FetchConcepts;
 import net.pladema.snowstorm.application.fetchconceptswithresultcount.FetchConceptsWithResultCount;
+import net.pladema.snowstorm.application.fetchconceptswithresultcountandnoterm.FetchConceptsWithResultCountAndNoTerm;
 import net.pladema.snowstorm.application.fetchmedicineconceptswithfundingdata.FetchMedicineConceptsWithFinancingData;
 import net.pladema.snowstorm.controller.dto.FullySpecifiedNamesDto;
 import net.pladema.snowstorm.controller.dto.PreferredTermDto;
@@ -47,6 +48,8 @@ public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";
 
+	private static final String CONCEPTS_WITHOUT_TERM = "/concepts-without-term";
+
 	private static final String OUTPUT = "Output -> {}";
 
 	private static final String INPUT_TERM_ECL = "Input data -> term: {}, ecl: {} ";
@@ -63,6 +66,8 @@ public class SnowstormController {
 
 	private final FetchConceptsWithResultCount fetchConceptsWithResultCount;
 
+	private final FetchConceptsWithResultCountAndNoTerm fetchConceptsWithResultCountAndNoTerm;
+
 	private final FetchMedicineConceptsWithFinancingData fetchMedicineConceptsWithFinancingData;
 
 	private final SnomedSearchMapper snomedSearchMapper;
@@ -77,6 +82,16 @@ public class SnowstormController {
         log.debug(OUTPUT, result);
         return result;
     }
+
+	@GetMapping(value = CONCEPTS_WITHOUT_TERM)
+	public SnomedSearchDto getConceptsWithResultCountAndNoTerm(
+			@RequestParam(value = "ecl", required = false) String eclKey) throws SnowstormApiException {
+		log.debug("Input data -> ecl: {} ", eclKey);
+		var snomedSearchBo = fetchConceptsWithResultCountAndNoTerm.run(eclKey);
+		SnomedSearchDto result = snomedSearchMapper.toSnomedSearchDto(snomedSearchBo);
+		log.debug(OUTPUT, result);
+		return result;
+	}
 
 	@GetMapping(value = "/search-concepts")
 	public List<SnomedSearchItemDto> getConcepts(@RequestParam(value = "term") String term,
@@ -123,6 +138,7 @@ public class SnowstormController {
                 .collect(Collectors.toList());
     }
 
+
 	@GetMapping(value = "/search-medication-concepts")
 	public List<SnomedMedicationSearchDto> getMedicationConceptsWithFinancingData(@RequestParam(value = "term") String term,
 																				  @RequestParam(value = "institutionId") Integer institutionId,
@@ -141,7 +157,7 @@ public class SnowstormController {
 				.stream()
 				.map(this::mapToSnomedSearchItemDto)
 				.collect(Collectors.toList());
-		return new SnomedTemplateDto(snomedTemplateSearchItemBo.getDescription(), items);
+		return new SnomedTemplateDto(snomedTemplateSearchItemBo.getGroupId(), snomedTemplateSearchItemBo.getDescription(), items);
 	}
 
 	private SnomedSearchItemDto mapToSnomedSearchItemDto(SnomedSearchItemBo snomedCachedSearchBo) {
@@ -160,6 +176,7 @@ public class SnowstormController {
 		result.setPt(new PreferredTermDto(snomedFinancedMedicineBo.getPt().getTerm(), "es"));
 		result.setFsn(new FullySpecifiedNamesDto(snomedFinancedMedicineBo.getPt().getTerm(), "es"));
 		result.setFinanced(snomedFinancedMedicineBo.isFinanced());
+		result.setAuditRequiredText(snomedFinancedMedicineBo.getAuditRequiredText());
 		return result;
 	}
 

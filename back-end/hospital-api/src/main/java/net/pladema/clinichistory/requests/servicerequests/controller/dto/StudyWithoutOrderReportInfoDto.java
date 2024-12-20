@@ -37,10 +37,16 @@ public class StudyWithoutOrderReportInfoDto {
 
 	@NotNull(message = "value.mandatory")
 	private Boolean viewReport;
+
+	@NotNull(message = "value.mandatory")
+	private Short reportStatus;
+
 	@Nullable
 	private DateDto appointmentDate;
 	@Nullable
 	private TimeDto appointmentHour;
 	@Nullable
 	private String localViewerUrl;
+	@Nullable
+	private String deriveTo;
 }

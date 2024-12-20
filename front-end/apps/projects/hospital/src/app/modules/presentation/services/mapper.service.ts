@@ -181,7 +181,8 @@ export class MapperService {
 				const newBed = {
 					bedId: summary.bed.id,
 					bedNumber: summary.bed.bedNumber,
-					free: summary.bed.free
+					free: summary.bed.free,
+					isBlocked: summary.bed.isBlocked,
 				};
 				sector.beds.push(newBed);
 			} else {
@@ -202,7 +203,8 @@ export class MapperService {
 					beds: [{
 						bedId: summary.bed.id,
 						bedNumber: summary.bed.bedNumber,
-						free: summary.bed.free
+						free: summary.bed.free,
+						isBlocked: summary.bed.isBlocked
 					}],
 					sectorTypeDescription: summary.sectorType.description,
 					hierarchicalUnits: summary.sector.hierarchicalUnit

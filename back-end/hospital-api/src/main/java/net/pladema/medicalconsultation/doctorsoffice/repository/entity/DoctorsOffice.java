@@ -46,4 +46,7 @@ public class DoctorsOffice extends SGXAuditableEntity<Integer> implements Serial
 
     @Column(name = "closing_time", columnDefinition = "time default '24:00:00'", nullable = false)
     private LocalTime closingTime;
+
+	@Column(name = "status_id", nullable = true)
+	private Integer statusId;
 }

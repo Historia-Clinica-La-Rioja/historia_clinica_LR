@@ -3,6 +3,7 @@ import { EmergencyCareAttentionPlaceService } from '../../services/emergency-car
 import { EmergencyCareAttentionPlaceDto } from '@api-rest/api-model';
 import { EmergencyCareAttentionPlaceAvailabilityButtonSelectionService } from '../../services/emergency-care-attention-place-availability-button-selection.service';
 import { SelectedSpace } from '../emergency-care-attention-place-space/emergency-care-attention-place-space.component';
+import { AttentionPlaceUpdateService } from '../../services/attention-place-update.service';
 
 @Component({
   selector: 'app-emergency-care-attention-places',
@@ -19,12 +20,14 @@ export class EmergencyCareAttentionPlacesComponent implements OnInit {
 
     constructor(
 		private emergencyCareAttentionPlaceService: EmergencyCareAttentionPlaceService,
-		private buttonSelectionService: EmergencyCareAttentionPlaceAvailabilityButtonSelectionService
+		private buttonSelectionService: EmergencyCareAttentionPlaceAvailabilityButtonSelectionService,
+		private attentionPlaceUpdateService: AttentionPlaceUpdateService
 	) { }
 
     ngOnInit() {
 		this.loadAttentionPlaces();
         this.listenToButtonSelection();
+		this.listenToUpdates();
     }
 
 	private loadAttentionPlaces(){
@@ -41,5 +44,11 @@ export class EmergencyCareAttentionPlacesComponent implements OnInit {
 				this.selectedSpace = space;
 			}
         });
+	}
+
+	private listenToUpdates(){
+		this.attentionPlaceUpdateService.update$.subscribe(() => {
+			this.loadAttentionPlaces();
+		});
 	}
 }

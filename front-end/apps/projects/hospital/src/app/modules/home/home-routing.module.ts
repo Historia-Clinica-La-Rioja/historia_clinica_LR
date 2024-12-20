@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { SystemExtensionComponent } from '@extensions/routes/extension/extension.component';
 
 import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
@@ -30,7 +29,6 @@ const routes: Routes = [
 				path: HomeRoutes.Profile + '/' + HomeRoutes.UserKeys,
 				component: ManageKeysComponent,
 			},
-			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
 			{ path: `${HomeRoutes.Settings}/template/:templateId`, component: TemplateRenderComponent },
 			{
 				path: HomeRoutes.Settings,

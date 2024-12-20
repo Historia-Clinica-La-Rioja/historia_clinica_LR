@@ -1,0 +1,14 @@
+<ng-container *ngIf="placesAvailability$ | async as availability">
+	<p class="mat-body-strong">{{"guardia.home.attention_places.change-attention-place.TYPE" | translate}}</p>
+	<mat-radio-group fxLayout="column" fxLayoutGap="8px" (change)="onPlaceTypeChange($event)">
+		<mat-radio-button [value]="spaceType.DoctorsOffices" [disabled]="!availability?.hasDoctorsOffices">
+			{{"guardia.home.attention_places.space.DOCTOR_OFFICE" | translate}}
+		</mat-radio-button>
+		<mat-radio-button [value]="spaceType.ShockRooms" [disabled]="!availability?.hasShockRooms">
+			{{"guardia.home.attention_places.space.SHOCKROOM" | translate}}
+		</mat-radio-button>
+		<mat-radio-button [value]="spaceType.Beds" [disabled]="!availability?.hasBeds">
+			{{"guardia.home.attention_places.space.BED" | translate}}
+		</mat-radio-button>
+	</mat-radio-group>
+</ng-container>

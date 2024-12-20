@@ -24,9 +24,9 @@ public class AppointmentReferenceStorageImpl implements AppointmentReferenceStor
 	}
 
 	@Override
-	public void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, Boolean isProtected) {
-		log.debug("Input parameter -> referenceId {}, appointmentId {}, isProtected {} ", referenceId, appointmentId, isProtected);
-		sharedReferenceCounterReference.associateReferenceToAppointment(referenceId, appointmentId, isProtected);
+	public void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, Boolean isProtected, Integer institutionId) {
+		log.debug("Input parameter -> referenceId {}, appointmentId {}, isProtected {}, institutionId {} ", referenceId, appointmentId, isProtected, institutionId);
+		sharedReferenceCounterReference.associateReferenceToAppointment(referenceId, appointmentId, isProtected, institutionId);
 	}
 
 	private ReferencePhoneBo mapToReferencePhoneBo(ReferencePhoneDto referencePhoneDto) {

@@ -69,4 +69,10 @@ public class ReferenceReportFilterBo {
 	@Nullable
 	private boolean domainManager;
 
+	@Nullable
+	private Short administrativeStateId;
+
+	@Nullable
+	private boolean isReceived = false;
+
 }

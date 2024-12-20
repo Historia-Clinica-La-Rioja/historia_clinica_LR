@@ -54,7 +54,7 @@ public class DiagnosticReportObservationsForUpdateVo {
 			var existing = existingObservationsCopy.remove(existingIndex);
 
 			if (update.isNumeric())
-				output.add(new UpdatedDiagnosticReportObservationBo(existing.getId(), update.getValue(), update.getUnitOfMeasureId()));
+				output.add(new UpdatedDiagnosticReportObservationBo(existing.getId(), update.getValue(), update.getUnitOfMeasureId(), update.getValueNumeric()));
 			else
 				output.add(new UpdatedDiagnosticReportObservationBo(existing.getId(), update.getValue()));
 		}

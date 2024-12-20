@@ -1,6 +1,1 @@
-<ng-container *ngIf="showTooltip else noTooltip">
-    <span [matTooltip]="_text">{{ truncateText | translate }}</span>
-</ng-container>
-<ng-template #noTooltip>
-    <span class="text">{{ truncateText | translate}}</span>
-</ng-template>
+<span class="text" #textContentElement [matTooltip]="isTextEllipsed ? text : ''" matTooltipClass="tooltip-word-break tooltip">{{ text | translate}}</span>

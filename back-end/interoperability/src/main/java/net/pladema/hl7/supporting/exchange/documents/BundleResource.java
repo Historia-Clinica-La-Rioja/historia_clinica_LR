@@ -38,6 +38,8 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirID;
 import net.pladema.hl7.dataexchange.model.domain.BundleVo;
 import net.pladema.hl7.dataexchange.model.domain.DiagnosticReportVo;
 import net.pladema.hl7.dataexchange.model.domain.MedicationDispenseVo;
+import net.pladema.hl7.dataexchange.model.domain.OrganizationVo;
+import net.pladema.hl7.dataexchange.model.domain.PractitionerVo;
 import net.pladema.hl7.dataexchange.procedures.DiagnosticReportResource;
 import net.pladema.hl7.dataexchange.procedures.ObservationResource;
 import net.pladema.hl7.dataexchange.procedures.ServiceRequestResource;
@@ -72,6 +74,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +82,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -231,6 +235,7 @@ public class BundleResource extends IResourceFhir {
 		return resource;
 	}
 
+	@Transactional
 	public void processBundle(Bundle bundle) {
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO))
 			throw new NotImplementedOperationException("Operation not implemented");
@@ -464,6 +469,7 @@ public class BundleResource extends IResourceFhir {
 
 	private DiagnosticReportVo encodeDiagnosticReportBundle(Map<ResourceType, Resource> resources) {
 		DiagnosticReport diagnosticReport = (DiagnosticReport) resources.get(ResourceType.DiagnosticReport);
+
 		if (diagnosticReport != null) {
 			DiagnosticReportVo diagnosticReportVo = DiagnosticReportResource.encode(diagnosticReport);
 			if (resources.containsKey(ResourceType.ServiceRequest)) {
@@ -489,18 +495,59 @@ public class BundleResource extends IResourceFhir {
 			if (resources.containsKey(ResourceType.Organization)) {
 				Organization organization = (Organization) resources.get(ResourceType.Organization);
 				diagnosticReportVo.setOrganizationVo(OrganizationResource.encode(organization));
-			} else
+			}
+			else
 				diagnosticReportVo.setOrganizationVo(null);
+
 			if (resources.containsKey(ResourceType.Location)) {
 				Location location = (Location) resources.get(ResourceType.Location);
 				diagnosticReportVo.setLocationVo(LocationResource.encode(location));
 			} else
 				diagnosticReportVo.setLocationVo(null);
 
+			//Who performed this diagnostic report
+			diagnosticReportVo.setPerformerOrganizations(getOrganizationPerformer(diagnosticReport));
+			diagnosticReportVo.setPerformerPractitioners(getPractitionerPerformer(diagnosticReport));
+
 			return diagnosticReportVo;
 		}
 
 		return null;
+	}
+
+	/**
+	 * Look for the practitioners, included in the bundle, referenced from the diagnostic report
+	 * performer's field.
+	 */
+	private List<PractitionerVo> getPractitionerPerformer(
+		DiagnosticReport diagnosticReport
+	){
+
+		return diagnosticReport
+			.getPerformer()
+			.stream()
+			.map(x -> (Resource)x.getResource())
+			.filter(resource -> resource.getResourceType().equals(ResourceType.Practitioner))
+			.map(resource -> {
+				Practitioner practitioner = (Practitioner) resource;
+				return PractitionerResource.encode(practitioner);
+			})
+			.collect(Collectors.toList());
+	}
+
+	private List<OrganizationVo> getOrganizationPerformer(
+		DiagnosticReport diagnosticReport
+	) {
+		return diagnosticReport
+			.getPerformer()
+			.stream()
+			.map(x -> (Resource)x.getResource())
+			.filter(resource -> resource.getResourceType().equals(ResourceType.Organization))
+			.map(resource -> {
+				Organization org = (Organization) resource;
+				return OrganizationResource.encode(org);
+			})
+			.collect(Collectors.toList());
 	}
 
 

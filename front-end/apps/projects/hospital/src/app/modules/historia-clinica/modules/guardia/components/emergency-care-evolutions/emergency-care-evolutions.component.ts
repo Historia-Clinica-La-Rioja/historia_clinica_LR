@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
-import { EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto } from '@api-rest/api-model';
+import { EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto, EEmergencyCareEvolutionNoteType } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { DocumentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
@@ -105,7 +105,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
                 registerEditor: this.buildRegisterEditor(fullName, dateTimeDtoToDate(en.performedDate)),
                 icon: 'assignment',
                 createdOn: dateTimeDtoToDate(en.performedDate),
-                title: this.translateService.instant('internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE'),
+				title: en.type === EEmergencyCareEvolutionNoteType.DOCTOR ? this.translateService.instant('internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE') : this.translateService.instant('guardia.actions.EVOLUTION_NOTE_BY_NURSE'),
                 docId: en.documentId,
                 docFileName: en.fileName,
                 specialty: en.clinicalSpecialtyName
@@ -161,4 +161,5 @@ export interface Item {
 enum EmergencyCaraDocumentTypes {
     TRIAGE = 'Triage',
     EVOLUTION_NOTE = 'Nota de evolución médica',
+	NURSING_EVOLUTION_NOTE = 'Nota de evolución de enfermería',
 }

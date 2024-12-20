@@ -52,7 +52,8 @@ public class CreateEmergencyCareEvolutionNote {
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Integer patientMedicalCoverageId = emergencyCareEpisodeService.getPatientMedicalCoverageIdByEpisode(episodeId);
 
-		EmergencyCareEvolutionNoteBo emergencyCareEvolutionNoteBo = createEmergencyCareEvolutionNoteService.execute(institutionId, evolutionNoteDocument.getPatientId(), doctorId, evolutionNoteDocument.getClinicalSpecialtyId(), patientMedicalCoverageId);
+		EmergencyCareEvolutionNoteBo emergencyCareEvolutionNoteBo = createEmergencyCareEvolutionNoteService
+			.execute(institutionId, evolutionNoteDocument.getPatientId(), doctorId, evolutionNoteDocument.getClinicalSpecialtyId(), patientMedicalCoverageId);
 
 		evolutionNoteDocument.setEncounterId(episodeId);
 		evolutionNoteDocument.setInstitutionId(institutionId);

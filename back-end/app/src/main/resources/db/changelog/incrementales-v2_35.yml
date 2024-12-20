@@ -1,0 +1,75 @@
+databaseChangeLog:
+    - logicalFilePath: incrementales-v2_35
+
+    - changeSet:
+        id: add-isolation_alert-parent_id
+        author: efernandez
+        changes:
+          - addColumn:
+              tableName: isolation_alert
+              columns:
+                - column:
+                    name: parent_id
+                    type: int
+                    constraints:
+                      nullable: true
+                      references: isolation_alert(id)
+                      foreignKeyName: FK_isolation_alert__isolation_parent_id
+
+          - sql:
+              sql: |-
+                UPDATE
+                  isolation_alert SET parent_id = alert_parent.id
+                FROM
+                  document_isolation_alert dia_child
+                  JOIN document doc_child ON (dia_child.document_id = doc_child.id)
+                  JOIN document doc_parent ON (doc_child.initial_document_id = doc_parent.id)
+                  JOIN document_isolation_alert dia_parent ON (dia_parent.document_id = doc_parent.id)
+                  JOIN isolation_alert alert_parent ON (alert_parent.id = dia_parent.isolation_alert_id)
+                WHERE
+                  dia_child.isolation_alert_id = isolation_alert.id
+                  AND isolation_alert.isolation_criticality_id = alert_parent.isolation_criticality_id
+                  AND isolation_alert.observations = alert_parent.observations
+                  AND isolation_alert.end_date = alert_parent.end_date;
+
+    - changeSet:
+        id: add-indexes-v_attention
+        author: lmanterola
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_updated_on" ON document (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_document_source_type_id" ON document (source_type_id);
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_updated_on" ON outpatient_consultation (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_internment_episode_updated_on" ON internment_episode (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_odontology_consultation_updated_on" ON odontology_consultation (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_vaccine_consultation_updated_on" ON vaccine_consultation (CAST(updated_on AS DATE));
+                CREATE INDEX IF NOT EXISTS "IDX_emergency_care_evolution_note_updated_on" ON emergency_care_evolution_note (CAST(updated_on AS DATE));
+
+    -   changeSet:
+          id: create-table-diary_booking_restriction
+          comment: Create table to save the booking restriction info asociated to a diary
+          author: fzudaire
+          changes:
+              -   createTable:
+                      tableName: diary_booking_restriction
+                      columns:
+                          -   column:
+                                  name: diary_id
+                                  type: int
+                                  constraints:
+                                      primaryKey: true
+                                      primaryKeyName: PK_diary_booking_restriction
+                                      references: diary(id)
+                                      foreignKeyName: FK__diary_booking_restriction__diary
+                          -   column:
+                                  name: restriction_type
+                                  type: smallint
+                                  constraints:
+                                      nullable: false
+                          -   column:
+                                  name: days
+                                  type: int
+                                  constraints:
+                                      nullable: true
+

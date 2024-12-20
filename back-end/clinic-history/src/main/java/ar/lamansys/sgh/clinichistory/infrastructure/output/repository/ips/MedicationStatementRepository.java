@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.CommercialPrescriptionDataBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.MedicationStatement;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
@@ -41,5 +42,13 @@ public interface MedicationStatementRepository extends SGXAuditableEntityJPARepo
 			"JOIN Quantity q ON (q.id = d.doseQuantityId) " +
 			"WHERE ms.id = :medicationStatementId")
 	Double fetchMedicationStatementQuantityById(@Param("medicationStatementId") Integer medicationStatementId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.CommercialPrescriptionDataBo(ms.id, mscp.presentationUnitQuantity, mscp.medicationPackQuantity, s.pt) " +
+			"FROM MedicationStatement ms " +
+			"JOIN Snomed s ON (s.id = ms.suggestedCommercialMedicationSnomedId) " +
+			"JOIN MedicationStatementCommercialPrescription mscp ON (mscp.medicationStatementId = ms.id) " +
+			"WHERE ms.id IN :medicationStatementIds")
+    List<CommercialPrescriptionDataBo> fetchCommercialPrescriptionDataByIds(@Param("medicationStatementIds") List<Integer> medicationStatementIds);
 
 }

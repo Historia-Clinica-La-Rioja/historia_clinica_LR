@@ -6,6 +6,8 @@ import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedRe
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getrequestedreferences.GetRequestedReferences;
 import ar.lamansys.refcounterref.application.modifyReference.ModifyReference;
+import ar.lamansys.refcounterref.application.updatereferenceadministrativestate.UpdateReferenceAdministrativeState;
+import ar.lamansys.refcounterref.application.updatereferenceregulationstate.UpdateReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.infraestructure.input.ReferenceReportFilterUtils;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
@@ -52,14 +54,18 @@ public class InstitutionalReferenceReportController {
 
 	private final CancelReference cancelReference;
 
+	private final UpdateReferenceRegulationState updateReferenceRegulationState;
+
 	private final ObjectMapper objectMapper;
 
 	private final ModifyReference modifyReference;
 
 	private final ReferenceMapper referenceMapper;
 
+	private final UpdateReferenceAdministrativeState updateReferenceAdministrativeState;
+
 	@GetMapping("/received")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<PageDto<ReferenceReportDto>> getAllReceivedReferences(@PathVariable(name = "institutionId") Integer institutionId,
 																				 @RequestParam(name = "filter") String filter,
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
@@ -73,7 +79,8 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@GetMapping("/requested")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, " +
+			"PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<PageDto<ReferenceReportDto>> getAllRequestedReferences(@PathVariable(name = "institutionId") Integer institutionId,
 																				 @RequestParam(name = "filter") String filter,
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
@@ -87,7 +94,8 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@GetMapping("/reference-detail/{referenceId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, " +
+			"ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<ReferenceCompleteDataDto> getReferenceDetail(@PathVariable(name = "institutionId") Integer institutionId,
 																	   @PathVariable(name = "referenceId") Integer referenceId) {
 		log.debug("Input parameters -> institutionId {}, referenceId {} ", institutionId, referenceId);
@@ -98,7 +106,8 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@PostMapping("/{referenceId}/add-observation")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, " +
+			"ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public ResponseEntity<Boolean> addObservation(@PathVariable(name = "institutionId") Integer institutionId,
 												  @PathVariable(name = "referenceId") Integer referenceId,
 												  @RequestParam(name = "observation") String observation) {
@@ -127,6 +136,28 @@ public class InstitutionalReferenceReportController {
 		Integer currentUserId = SecurityContextUtils.getUserDetails().getUserId();
 		modifyReference.run(currentUserId, referenceId, referenceMapper.fromReferenceDto(referenceDto));
 		return ResponseEntity.ok().body(Boolean.TRUE);
+	}
+
+	@PutMapping("/{referenceId}/change-regulation-state")
+	@PreAuthorize("hasPermission(#institutionId, 'GESTOR_DE_ACCESO_INSTITUCIONAL')")
+	public boolean updateRegulationState(@PathVariable(name = "institutionId") Integer institutionId,
+										 @PathVariable(name = "referenceId") Integer referenceId,
+										 @RequestParam(name = "stateId") Short stateId,
+										 @RequestParam(name = "reason", required = false) String reason) {
+		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
+		this.updateReferenceRegulationState.run(referenceId, stateId, reason);
+		return Boolean.TRUE;
+	}
+
+	@PutMapping("/{referenceId}/change-administrative-state")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_INSTITUCIONAL')")
+	public Boolean changeReferenceAdministrativeState(@PathVariable(name = "institutionId") Integer institutionId,
+													  @PathVariable(name = "referenceId") Integer referenceId,
+													  @RequestParam(name = "stateId") Short stateId,
+													  @RequestParam(name = "reason", required = false) String reason) {
+		log.debug("Input parameters -> referenceId {}, stateId {}, reason {}", referenceId, stateId, reason);
+		this.updateReferenceAdministrativeState.run(referenceId, stateId, reason);
+		return Boolean.TRUE;
 	}
 
 }

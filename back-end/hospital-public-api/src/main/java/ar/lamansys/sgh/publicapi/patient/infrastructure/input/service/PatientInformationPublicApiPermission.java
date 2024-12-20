@@ -16,4 +16,6 @@ public interface PatientInformationPublicApiPermission {
 
 	boolean canAccessSaveExternalPatient();
 
+	boolean canFetchMedicalCoverages();
+
 }

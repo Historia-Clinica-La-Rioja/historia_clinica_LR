@@ -16,7 +16,6 @@ import {
 import SectionTitle from '../../components/SectionTitle';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
 import { formIsUpdatable } from './ParameterizedFormStatus';
-import { ParameterLoincCode } from '../parameters/ParameterList';
 import { TYPE_CHOICES_IDS } from '../parameters/ParameterTypes';
 import UpdateParameterizedFormParameterOrder from './UpdateParameterizedFormParameterOrder';
 import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
@@ -42,6 +41,17 @@ const AddParameter = ({ canEdit, ...props }) => {
 
 };
 
+const ParameterLoincCode = props => (
+    <ReferenceField
+        source="loincId"
+        reference="loinc-codes"
+        link={false}
+        sortable={false}
+    >
+        <TextField source="code" />
+    </ReferenceField>
+)
+
 const AssociatedParameters = (props) => {
     const record = useRecordContext(props);
     const userIsInstitutionalAdmin = UserIsInstitutionalAdmin();
@@ -64,7 +74,7 @@ const AssociatedParameters = (props) => {
                     </ReferenceField>
 
                     <ReferenceField source="parameterId" reference="parameters" label="resources.parameters.fields.loincId" sortable={false} link={false}>
-                        <ParameterLoincCode />
+                        <ParameterLoincCode/>
                     </ReferenceField>
 
                     <ReferenceField source="parameterId" reference="parameters" label="resources.parameters.fields.type" sortable={false} link={false}>

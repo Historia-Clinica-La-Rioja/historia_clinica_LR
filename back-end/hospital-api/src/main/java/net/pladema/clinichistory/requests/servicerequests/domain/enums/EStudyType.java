@@ -15,6 +15,9 @@ public enum EStudyType {
 	}
 
 	public static EStudyType map(Short id) {
+		if (id == null) {
+			return null;
+		}
 		for (EStudyType e : values()) {
 			if (e.id.equals(id)) return e;
 		}

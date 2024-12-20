@@ -1,7 +1,8 @@
 import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 import { DescriptionPriority } from "@presentation/components/priority-select/priority-select.component";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
-import { ReferenceApprovalState } from "./approval";
+import { ReferenceApprovalState, ReferenceOriginState } from "./approval";
+import { EReferenceRegulationState, EReferenceAdministrativeState } from '@api-rest/api-model';
 
 const NO_CLOSURE = -1;
 const NO_APPOINTMENT = -1;
@@ -94,6 +95,10 @@ export const CLOSURE_OPTIONS = [
     {
         id: 4,
         description: "Contrarreferencia"
+    },
+    {
+        id: 5,
+        description: "Cierre administrativo de referencia"
     }
 ];
 
@@ -102,7 +107,7 @@ export const PENDING: ColoredLabel = {
     color: Color.YELLOW
 }
 
-export const REGULATION_OPTIONS = [
+export const REFERENCE_APPROVAL_OPTIONS = [
     {
         id: ReferenceApprovalState.WAITING_APPROVAL,
         description: "Esperando aprobación"
@@ -112,11 +117,44 @@ export const REGULATION_OPTIONS = [
         description: "Solicitud aprobada"
     },
     {
-        id: ReferenceApprovalState.REJECTED,
-        description: "Solicitud rechazada"
-    },
-    {
         id: ReferenceApprovalState.SUGGESTED_REVISION,
         description: "Revisión sugerida"
     }
 ];
+
+export const REFERENCE_ORIGIN_STATE_OPTIONS = [
+    {
+        id: ReferenceOriginState.PENDING_AUDIT,
+        description: "Esperando auditoria"
+    },
+    {
+        id: ReferenceOriginState.AUDIT,
+        description: "Auditada"
+    },
+    {
+        id: ReferenceOriginState.REJECTED,
+        description: "Rechazada"
+    },
+    {
+        id: ReferenceOriginState.SUGGESTED_REVISION,
+        description: "Revisión sugerida"
+    },
+    {
+        id: ReferenceOriginState.AUDIT_NOT_REQUIRED,
+        description: "No requiere auditoria"
+    }
+]
+
+export const REFERENCE_ORIGIN_STATES = {
+    waitingAudit: EReferenceRegulationState.WAITING_AUDIT,
+    audited: EReferenceRegulationState.AUDITED,
+    rejected: EReferenceRegulationState.REJECTED,
+    suggestedRevision: EReferenceRegulationState.SUGGESTED_REVISION,
+    noAuditRequired: EReferenceRegulationState.DONT_REQUIRES_AUDIT
+}
+
+export const REFERENCE_DESTINATION_STATES = {
+    waitingApproval: EReferenceAdministrativeState.WAITING_APPROVAL,
+    approval: EReferenceAdministrativeState.APPROVED,
+    suggestedRevision: EReferenceAdministrativeState.SUGGESTED_REVISION
+}

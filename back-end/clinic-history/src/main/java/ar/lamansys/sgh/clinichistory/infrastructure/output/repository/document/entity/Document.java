@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
@@ -129,5 +130,9 @@ public class Document extends SGXAuditableEntity<Long> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, sourceId, typeId, sourceTypeId);
+	}
+
+	public EDocumentType getTypeEnum() {
+		return EDocumentType.map(this.getTypeId());
 	}
 }

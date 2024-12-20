@@ -24,7 +24,7 @@ import net.pladema.staff.domain.ProfessionBo;
 import net.pladema.staff.domain.ProfessionSpecialtyBo;
 import net.pladema.staff.domain.ProfessionalCompleteBo;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 
 @Slf4j
 @RequiredArgsConstructor

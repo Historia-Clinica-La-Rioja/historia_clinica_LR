@@ -12,6 +12,7 @@ import { LoincInputTextBoxComponent } from './components/loinc-input-text-box/lo
 import { LoincInputDropdownComponent } from './components/loinc-input-dropdown/loinc-input-dropdown.component';
 //standalone
 import { ConceptTypeaheadSearchComponent } from '../concept-typeahead-search/concept-typeahead-search.component';
+import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typeahead-search-v2/concept-typeahead-search-v2.component';
 
 @NgModule({
 	declarations: [
@@ -29,6 +30,7 @@ import { ConceptTypeaheadSearchComponent } from '../concept-typeahead-search/con
 		PresentationModule,
 		//standalone
 		ConceptTypeaheadSearchComponent,
+		ConceptTypeaheadSearchV2Component,
 	],
 	exports: [
 		DiagnosticReportLoincFormComponent,

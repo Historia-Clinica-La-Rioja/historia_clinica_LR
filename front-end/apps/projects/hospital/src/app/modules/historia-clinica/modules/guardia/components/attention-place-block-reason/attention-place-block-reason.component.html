@@ -1,0 +1,19 @@
+<form [formGroup]="form">
+    <section class="flex-container-column">
+        <span class="subtitle">{{ 'guardia.block_unblock_attention_place.dialog.block_reason.REASONS' | translate}}</span>
+        <mat-radio-group formControlName="reasonId" class="flex-container-column" (change)="updateFormValidations()" color="primary">
+            <mat-radio-button *ngFor="let blockReason of blockReasons" id="block-reason-{{blockReason.id}}" [value]="blockReason.id">
+                {{blockReason.description}}
+            </mat-radio-button>
+            <mat-error *ngIf="!form.value.reasonId">{{'forms.REQUIRED' | translate}}</mat-error>
+        </mat-radio-group>
+    </section>
+    <section class="flex-container-column">
+        <span class="subtitle">{{ 'guardia.block_unblock_attention_place.dialog.block_reason.OBSERVATIONS' | translate}}</span>
+        <mat-form-field appearance="outline">
+            <textarea matInput formControlName="reason" id="block-reason-observation" type="text"
+                placeholder="{{'guardia.block_unblock_attention_place.dialog.block_reason.OBSERVATIONS_PLACEHOLDER' | translate}}"></textarea>
+            <mat-error>{{'forms.REQUIRED' | translate}}</mat-error>
+        </mat-form-field>
+    </section>
+</form>

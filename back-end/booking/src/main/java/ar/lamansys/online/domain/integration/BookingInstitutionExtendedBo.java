@@ -11,7 +11,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Builder
-@Setter
 public class BookingInstitutionExtendedBo {
 	private final Integer id;
 	private final String description;
@@ -21,7 +20,8 @@ public class BookingInstitutionExtendedBo {
 	private final String city;
 	private final String department;
 	private final List<String> clinicalSpecialtiesNames;
-	private final List<String> aliases;
+	@Setter
+	private List<String> aliases;
 
 	@Override
 	public boolean equals(Object o) {

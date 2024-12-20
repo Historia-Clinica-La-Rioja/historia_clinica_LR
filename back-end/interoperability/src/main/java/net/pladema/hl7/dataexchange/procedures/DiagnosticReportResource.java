@@ -1,8 +1,10 @@
 package net.pladema.hl7.dataexchange.procedures;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.observation.FhirDiagnosticReportPerformersDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.observation.FhirObservationGroupInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.observation.FhirObservationInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.observation.FhirQuantityInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.observation.SharedFhirDiagnosticReportPerformersPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.observation.SharedObservationPort;
 import net.pladema.hl7.dataexchange.IResourceFhir;
 import net.pladema.hl7.dataexchange.exceptions.DiagnosticReportException;
@@ -32,10 +34,16 @@ import java.util.UUID;
 public class DiagnosticReportResource extends IResourceFhir {
 
 	private final SharedObservationPort sharedObservationPort;
+	private final SharedFhirDiagnosticReportPerformersPort sharedFhirDiagnosticReportPerformersPort;
 
-	protected DiagnosticReportResource(FhirPersistentStore store, SharedObservationPort sharedObservationPort) {
+	protected DiagnosticReportResource(
+		FhirPersistentStore store,
+		SharedObservationPort sharedObservationPort,
+		SharedFhirDiagnosticReportPerformersPort sharedFhirDiagnosticReportPerformersPort
+	) {
 		super(store);
 		this.sharedObservationPort = sharedObservationPort;
+		this.sharedFhirDiagnosticReportPerformersPort = sharedFhirDiagnosticReportPerformersPort;
 	}
 
 	@Override
@@ -45,6 +53,7 @@ public class DiagnosticReportResource extends IResourceFhir {
 
 	public void saveDiagnosticReport(DiagnosticReportVo diagnosticReportVo) {
 		List<FhirObservationInfoDto> fhirObservationInfoDtoList = new ArrayList<>();
+		Integer diagnosticReportId = Integer.parseInt(diagnosticReportVo.getDiagnosticReportId());
 		for (ObservationVo observation : diagnosticReportVo.getObservations()) {
 			FhirObservationInfoDto observationInfoDto = new FhirObservationInfoDto();
 			observationInfoDto.setLoincCode(observation.getCode());
@@ -62,10 +71,41 @@ public class DiagnosticReportResource extends IResourceFhir {
 		FhirObservationGroupInfoDto fhirObservationGroupInfoDto = new FhirObservationGroupInfoDto();
 		fhirObservationGroupInfoDto.setPatientId(Integer.parseInt(diagnosticReportVo.getPatientId()));
 		fhirObservationGroupInfoDto.setObservations(fhirObservationInfoDtoList);
-		fhirObservationGroupInfoDto.setDiagnosticReportId(Integer.parseInt(diagnosticReportVo.getDiagnosticReportId()));
+		fhirObservationGroupInfoDto.setDiagnosticReportId(diagnosticReportId);
+
+		FhirDiagnosticReportPerformersDto performersDto = buildPerformersDto(diagnosticReportVo);
 
 		sharedObservationPort.save(fhirObservationGroupInfoDto);
+		sharedFhirDiagnosticReportPerformersPort.savePerformers(diagnosticReportId, performersDto);
 		store.setDiagnosticReportStatus(diagnosticReportVo.getDiagnosticReportUuid(), diagnosticReportVo.getStatusId());
+	}
+
+	private FhirDiagnosticReportPerformersDto buildPerformersDto(DiagnosticReportVo diagnosticReportVo) {
+		FhirDiagnosticReportPerformersDto ret = new FhirDiagnosticReportPerformersDto();
+		diagnosticReportVo
+		.getPerformerOrganizations()
+		.forEach(organizationVo ->
+			ret.addOrganization(
+				organizationVo.getName(),
+				organizationVo.getFullAddress().getAddress(),
+				organizationVo.getFullAddress().getCity(),
+				organizationVo.getFullAddress().getPostcode(),
+				organizationVo.getFullAddress().getProvince(),
+				organizationVo.getFullAddress().getCountry(),
+				organizationVo.getPhoneNumber(),
+				organizationVo.getEmail()
+			)
+		);
+		diagnosticReportVo
+		.getPerformerPractitioners()
+		.forEach(practitionerVo ->
+			ret.addPractitioner(
+				practitionerVo.getIdentificationNumber(),
+				practitionerVo.getFirstName(),
+				practitionerVo.getLastName()
+			)
+		);
+		return ret;
 	}
 
 	public void validateDiagnosticReport(DiagnosticReportVo diagnosticReport) {
@@ -127,7 +167,7 @@ public class DiagnosticReportResource extends IResourceFhir {
 		data.setCategoryCode(resource.getCategoryFirstRep().getText());
 		data.setCode(resource.getCode().getCodingFirstRep().getCode());
 		data.setPatientId(resource.getSubject().getReferenceElement().getIdPart());
-		data.setDoctorId(resource.getPerformerFirstRep().getReferenceElement().getIdPart());
+//		data.setDoctorId(resource.getPerformerFirstRep().getReferenceElement().getIdPart());
 		data.setDiagnosticReportUuid(UUID.fromString(resource.getBasedOnFirstRep().getReferenceElement().getIdPart()));
 		
 		data.setConclusion(resource.getConclusion());

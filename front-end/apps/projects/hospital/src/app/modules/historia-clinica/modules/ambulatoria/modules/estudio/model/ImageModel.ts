@@ -24,6 +24,8 @@ export interface InfoNewTypeOrderDto {
 	associatedStudies?: string[];
 	dateAppoinment: AppointmentDate;
 	localViewerUrl?: string;
+	reportStatus: number;
+	deriveTo: string;
 }
 
 

@@ -110,4 +110,11 @@ public interface LocalDateMapper {
 		return new DateTimeDto(dateDto, timeDto);
 	}
 
+	default DateTimeDto zonedDateTimeToDateTimeDto(ZonedDateTime zonedDateTime) {
+		LocalDateTime localDateTime = zonedDateTime
+			.withZoneSameInstant(ZoneId.of(JacksonDateFormatConfig.ZONE_ID))
+			.toLocalDateTime();
+		return toDateTimeDto(localDateTime);
+	}
+
 }

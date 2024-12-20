@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.staff;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,5 +35,15 @@ public class LicenseNumberDto {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId(), getNumber(), getType());
+	}
+
+	@JsonIgnore
+	public boolean hasMN() {
+		return "MN".equals(getType());
+	}
+
+	@JsonIgnore
+	public boolean hasMP() {
+		return "MP".equals(getType());
 	}
 }

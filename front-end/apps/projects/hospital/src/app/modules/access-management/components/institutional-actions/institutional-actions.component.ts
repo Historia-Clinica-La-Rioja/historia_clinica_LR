@@ -68,7 +68,7 @@ export class InstitutionalActionsComponent {
 
 	private setActions(): void {
 		if (!this.refenceCompleteDto.reference.closureType) {
-			this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO])
+			this.permissionService.hasContextAssignments$([ERole.ADMINISTRATIVO, ERole.GESTOR_DE_ACCESO_INSTITUCIONAL])
 				.pipe(take(1))
 				.subscribe(hasRole => hasRole ? this.setAdministrativeActions() : this.setMedicalActions())
 		}

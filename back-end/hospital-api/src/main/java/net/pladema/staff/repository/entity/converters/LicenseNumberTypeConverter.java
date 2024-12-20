@@ -3,7 +3,7 @@ package net.pladema.staff.repository.entity.converters;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 
 @Converter
 public class LicenseNumberTypeConverter implements AttributeConverter<ELicenseNumberTypeBo, Short> {

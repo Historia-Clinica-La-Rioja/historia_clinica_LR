@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemException;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.exceptions.MarkAsErrorAProblemExceptionEnum;
+import net.pladema.clinichistory.outpatient.application.port.output.GetOdontologyDocumentIdPort;
+import net.pladema.clinichistory.outpatient.application.port.output.UpdateLastOdontogramDrawingFromHistoricPort;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.ServiceRequestRepository;
@@ -37,9 +39,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class MarkAsErrorAProblem {
 
     private final HealthConditionRepository healthConditionRepository;
@@ -53,6 +55,8 @@ public class MarkAsErrorAProblem {
     private final DeleteReference deleteReference;
     private final OutpatientConsultationRepository outpatientConsultationRepository;
     private final RebuildFile rebuildFile;
+	private final UpdateLastOdontogramDrawingFromHistoricPort updateLastOdontogramDrawingFromHistoricPort;
+	private final GetOdontologyDocumentIdPort getOdontologyDocumentIdPort;
 
     @Transactional
     public boolean run(Integer institutionId, Integer patientId, ProblemErrorBo problem) {
@@ -72,7 +76,8 @@ public class MarkAsErrorAProblem {
         this.cancelReferences(problem.getReferencesId());
 
         this.regenerateOutpatientDocument(problem.getId());
-
+		updateLastOdontogramDrawingFromHistoricPort.run(patientId, problem.getId());
+		regenerateOdontologyDocument(problem.getId());
         log.debug("Output -> {}", true);
         return true;
     }
@@ -130,8 +135,10 @@ public class MarkAsErrorAProblem {
     }
 
     private void regenerateOutpatientDocument(Integer healthConditionId) {
-        Long documentId = outpatientConsultationRepository.getOutpatientConsultationDocument(healthConditionId)
-                .orElseThrow(() -> new NotFoundException("OutpatientConsultationDocument-not-found", "OutpatientConsultationDocument not found"));
-        rebuildFile.run(documentId);
+        outpatientConsultationRepository.getOutpatientConsultationDocument(healthConditionId).ifPresent((rebuildFile::run));
     }
+
+	private void regenerateOdontologyDocument(Integer healthConditionId) {
+		getOdontologyDocumentIdPort.run(healthConditionId).ifPresent(rebuildFile::run);
+	}
 }

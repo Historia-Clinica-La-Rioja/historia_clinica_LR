@@ -126,8 +126,13 @@ public class ClinicHistoryContextBuilder {
 		BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(document.getPatientId());
 		context.put("patient", patientExternalService.getBasicDataFromPatient(document.getPatientId()));
 		context.put("patientName", patient.getCompletePersonName(selfPerceived));
-		String patientAge = document.getPatientAgePeriod().contains("Y") ? document.getPatientAgePeriod().substring(1, document.getPatientAgePeriod().indexOf("Y")) : "0";
-		context.put("patientAge", patientAge);
+		Optional.ofNullable(document.getPatientAgePeriod())
+						.ifPresent(patientAgePeriod -> {
+							var patientAge = patientAgePeriod.contains("Y")
+									? patientAgePeriod.substring(1, patientAgePeriod.indexOf("Y"))
+									: "0";
+							context.put("patientAge", patientAge);
+						});
 	}
 
 	private void addEncounterInfo(Map<String, Object> context, CHDocumentBo document, Integer episodeId, ECHEncounterType encounterType){

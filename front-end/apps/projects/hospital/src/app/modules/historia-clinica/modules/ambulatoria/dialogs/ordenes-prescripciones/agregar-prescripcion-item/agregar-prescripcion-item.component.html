@@ -13,13 +13,6 @@
 				<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem.snomed.sctid">
 					{{healthProblem.snomed.pt}}
 				</mat-option>
-				<div *appFeatureFlag="HABILITAR_RECETA_DIGITAL">
-					<mat-option *appHasRole="[PRESCRIPTOR]" (click)="addNewProblem()">
-						<button mat-button type="button" color="primary">
-							{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADD_NEW_PROBLEM' | translate }}
-						</button>
-					</mat-option>
-				</div>
 			</mat-select>
 			<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" translate="forms.REQUIRED"></mat-error>
 		</mat-form-field>
@@ -33,13 +26,13 @@
 			</mat-radio-button>
 		</mat-radio-group>
 
-		<ng-container *ngIf="(isHabilitarRecetaDigitalFFActive && isEnabledFinancedPharmaco && !data.hasSelectedCoverage) else genericPharmaco">
+		<ng-container *ngIf="(isEnabledFinancedPharmaco && !data.hasSelectedCoverage) else genericPharmaco">
 			<ng-container *ngIf="prescriptionItemForm.value.pharmacoSearchType === DEFAULT_RADIO_OPTION else commercialPharmaco">
 				<app-generic-financed-pharmaco-search
 					[problemSelected]="prescriptionItemForm.value.healthProblem"
 					[preloadConcept]="data.item?.snomed"
 					[markFormAsTouched]="markFormAsTouched"
-					(conceptSelected)="setConcept($event)"
+					(conceptSelected)="setConceptFinancedPharmaco($event)"
 				>
 				</app-generic-financed-pharmaco-search>
 			</ng-container>
@@ -61,17 +54,24 @@
 		</ng-template>
 
 		<ng-template #commercialPharmaco>
-			<app-commercial-pharmaco-typeahead *ngIf="prescriptionItemForm.value.pharmacoSearchType === OTHER_RADIO_OPTION && snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
+			<app-commercial-pharmaco-typeahead
+				*ngIf="prescriptionItemForm.value.pharmacoSearchType === OTHER_RADIO_OPTION && snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
 				[ecl]="data.eclTerm"
 				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
-				[required]="true"
-				(conceptSelected)="setCommercialMedicationConcept($event)">
+				[required]="true" (conceptSelected)="setCommercialMedicationConcept($event)">
 			</app-commercial-pharmaco-typeahead>
 		</ng-template>
 
-		<mat-checkbox *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn" formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="changeCheckboxValue($event)">
+		<app-audit-required-medicine
+			*ngIf="isEnabledFinancedPharmaco && this.prescriptionItemForm.value.healthProblem && snomedConcept"
+			[auditRequiredData]="auditRequiredInput">
+		</app-audit-required-medicine>
+
+		<mat-checkbox *ngIf="snomedRelationsFFIsOn && searchConceptsLocallyFFIsOn"
+			formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'" (change)="changeCheckboxValue($event)">
 			<span id="suggest-commercial-checkbox">
-				{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION' | translate}}
+				{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION' |
+				translate}}
 			</span>
 		</mat-checkbox>
 
@@ -81,46 +81,6 @@
 			[options]="suggestedCommercialMedicationOptions"
 			(selectionChange)="setSuggestedCommercialMedication($event)">
 		</app-typeahead>
-
-		<section *appFeatureFlag="HABILITAR_RECETA_DIGITAL">
-			<div class="unit-day-dose-container" *ngIf="enableFields">
-				<mat-form-field appearance="outline">
-					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.UNIT_DOSE' | translate}}</mat-label>
-					<input type="number" matInput autocomplete="off" formControlName="unitDose">
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'unitDose')" translate="forms.REQUIRED"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'unitDose')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'unitDose')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.DAY_DOSE' | translate}}</mat-label>
-					<input (input)="setQuantityMultiplication()" type="number" matInput autocomplete="off" formControlName="dayDose">
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'dayDose')" translate="forms.REQUIRED"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'dayDose')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'dayDose')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
-				</mat-form-field>
-			</div>
-
-			<div class="administration-days-quantity-container">
-				<mat-form-field appearance="outline">
-					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.TREATMENT_DAYS' | translate}}</mat-label>
-					<input (input)="setQuantityMultiplication()" type="number" matInput autocomplete="off" formControlName="administrationTimeDays">
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'administrationTimeDays')" translate="forms.REQUIRED"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'administrationTimeDays')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'administrationTimeDays')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
-				</mat-form-field>
-
-				<mat-form-field appearance="outline">
-					<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.QUANTITY' | translate}}</mat-label>
-					<input type="text" matInput autocomplete="off" formControlName="quantity">
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'quantity')" translate="forms.REQUIRED"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'quantity')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_QUANTITY}"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'quantity')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
-					<mat-error *ngIf="hasError(prescriptionItemForm, 'pattern', 'quantity')" translate="forms.FORMAT_NUMERIC"></mat-error>
-				</mat-form-field>
-			</div>
-
-		</section>
 
 		<mat-form-field *ngIf="data.showStudyCategory" appearance="outline">
 			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_CATEGORY' | translate}}</mat-label>
@@ -149,7 +109,7 @@
 			</div>
 		</div>
 
-		<div *ngIf="! this.isHabilitarRecetaDigitalFFActive" fxLayout="column" fxLayoutGap="10px">
+		<div fxLayout="column" fxLayoutGap="10px">
 			<mat-label class="mat-subheading-2">{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADMINISTRATION_TIME' | translate}}</mat-label>
 			<mat-radio-group formControlName="administrationTime" fxLayout="column" fxLayoutGap="10px">
 				<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">

@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public class BedRelocationInfoBo {
 
 	private Integer bedId;
+	private String bedNumber;
+	private String bedCategory;
 	private LocalDateTime relocationDate;
 	private String careType;
 	private SnomedBo service;

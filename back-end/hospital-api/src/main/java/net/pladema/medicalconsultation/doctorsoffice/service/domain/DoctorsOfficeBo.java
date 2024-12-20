@@ -27,6 +27,7 @@ public class DoctorsOfficeBo {
 
 	private boolean isAvailable;
 	private String sectorDescription;
+	private Boolean isBlocked;
 
     public DoctorsOfficeBo(Integer id, String description) {
         this.id = id;
@@ -38,6 +39,7 @@ public class DoctorsOfficeBo {
         this.description = doctorsOfficeVo.getDescription();
         this.openingTime = doctorsOfficeVo.getOpeningTime();
         this.closingTime = doctorsOfficeVo.getClosingTime();
+        this.isBlocked = doctorsOfficeVo.getIsBlocked();
     }
 
     public DoctorsOfficeBo(DoctorsOffice doctorsOffice) {
@@ -53,5 +55,17 @@ public class DoctorsOfficeBo {
 		this.openingTime = openingTime;
 		this.closingTime = closingTime;
 		this.isAvailable = isAvailable;
+	}
+
+	public Boolean getIsBlocked() {
+		return this.isBlocked == null ? false : this.isBlocked;
+	}
+
+	public boolean getIsAvailable() {
+		return this.isAvailable && !this.getIsBlocked();
+	}
+
+	public boolean isAvailable() {
+		return this.getIsAvailable();
 	}
 }

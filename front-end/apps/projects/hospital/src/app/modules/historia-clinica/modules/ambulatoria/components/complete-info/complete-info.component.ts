@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, switchMap } from 'rxjs';
 import {
 	AddDiagnosticReportObservationsCommandDto, DiagnosticReportInfoDto,
 	CompleteRequestDto
@@ -42,9 +42,14 @@ export class CompleteInfoComponent implements OnInit {
 			description: new FormControl('', [Validators.required])
 		})
 
-		this.formStudyClosure.valueChanges.subscribe(_ =>
-			this.buttonService.updateFormStatus(!this.formStudyClosure.valid)
-		);
+		this.formStudyClosure.valueChanges.pipe(
+			switchMap(() =>
+				this.buttonService.formDisabledPartialSave$
+			)
+		).subscribe(disabled => {
+			const isFormValid = this.formStudyClosure.valid;
+			this.buttonService.updateFormStatus(!isFormValid || disabled);
+		});
 
 		this.buttonService.submit$.subscribe(submit => {
 			if (submit)

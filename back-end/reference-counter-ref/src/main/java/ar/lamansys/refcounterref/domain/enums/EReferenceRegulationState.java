@@ -13,10 +13,11 @@ import java.util.stream.Stream;
 @Getter
 public enum EReferenceRegulationState {
 
-	WAITING_APPROVAL(0, "Esperando aprobación"),
-	APPROVED (1, "Aprobada"),
+	WAITING_AUDIT(0, "Esperando auditoría"),
+	DONT_REQUIRES_AUDIT (1, "No requiere auditoria"),
 	REJECTED (2, "Rechazada"),
-	SUGGESTED_REVISION (3, "Revisión sugerida");
+	SUGGESTED_REVISION (3, "Revisión sugerida"),
+	AUDITED(4, "Auditada");
 
 	private Short id;
 	private String description;

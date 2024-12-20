@@ -8,30 +8,32 @@ import { Observable } from 'rxjs';
 
 
 @Component({
-    selector: 'app-anesthetic-report-vital-signs',
-    templateUrl: './anesthetic-report-vital-signs.component.html',
-    styleUrls: ['./anesthetic-report-vital-signs.component.scss']
+	selector: 'app-anesthetic-report-vital-signs',
+	templateUrl: './anesthetic-report-vital-signs.component.html',
+	styleUrls: ['./anesthetic-report-vital-signs.component.scss']
 })
 export class AnestheticReportVitalSignsComponent {
 
-    vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>;
+	vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>;
+	selectedData$: Observable<VitalSignsData>;
 
-	selectedData$: Observable<VitalSignsData>
+	constructor(
+		readonly service: AnestheticReportService,
+	) { }
 
-    constructor(
-        readonly service: AnestheticReportService,
-    ) { }
+	ngOnInit(): void {
+		this.vitalSignsForm = this.service.anestheticReportVitalSignsService.getVitalSignsForm();
+		this.selectedData$ = this.service.anestheticReportVitalSignsService.vitalSigns$;
+		this.service.anestheticReportVitalSignsService.validateDates(this.vitalSignsForm)
+	}
 
-    ngOnInit(): void {
-        this.vitalSignsForm = this.service.anestheticReportVitalSignsService.getVitalSignsForm();
-		this.selectedData$ = this.service.anestheticReportVitalSignsService.vitalSigns$
-    }
+	setDateAttribute(date: Date, attribute: VitalSignsAttribute) {
+		this.service.anestheticReportVitalSignsService.setFormDateAttributeValue(attribute, date);
+		this.service.anestheticReportVitalSignsService.validateDates(this.vitalSignsForm)
+	}
 
-    setDateAttribute(date: Date, attribute: VitalSignsAttribute) {
-        this.service.anestheticReportVitalSignsService.setFormDateAttributeValue(attribute, date)
-    }
-
-    setTimeAttribute(time: TimeDto, attribute: VitalSignsAttribute) {
-        this.service.anestheticReportVitalSignsService.setFormTimeAttributeValue(attribute, time)
-    }
+	setTimeAttribute(time: TimeDto, attribute: VitalSignsAttribute) {
+		this.service.anestheticReportVitalSignsService.setFormTimeAttributeValue(attribute, time);
+		this.service.anestheticReportVitalSignsService.validateDates(this.vitalSignsForm)
+	}
 }

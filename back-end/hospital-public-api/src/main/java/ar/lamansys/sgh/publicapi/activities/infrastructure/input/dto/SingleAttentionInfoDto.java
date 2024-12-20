@@ -25,4 +25,5 @@ public class SingleAttentionInfoDto {
 	private DateTimeDto attentionDateWithTime;
 	private PersonExtendedInfoDto personExtendedInfo;
 	private DateTimeDto emergencyCareAdministrativeDischargeDateTime;
+	private Boolean billable;
 }

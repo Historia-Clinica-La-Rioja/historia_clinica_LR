@@ -20,10 +20,13 @@ import { BackgroundListComponent } from './components/background-list/background
 import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
+import { CriticalityPickerComponent } from './components/criticality-picker/criticality-picker.component';
 import { CustomFormComponent } from './components/custom-form/custom-form.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
+import { DetailsOfPatientIsolationAlertsComponent } from './dialogs/details-of-patient-isolation-alerts/details-of-patient-isolation-alerts.component';
+import { DiagnosisFormByNurseComponent } from './components/diagnosis-form-by-nurse/diagnosis-form-by-nurse.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
@@ -31,7 +34,7 @@ import { DocumentsSummaryComponent } from './components/documents-summary/docume
 import { DocumentSummaryHeaderComponent } from './components/document-summary-header/document-summary-header.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
-import { EmergencyCareEpisodeCallOrAttendService } from './services/emergency-care-episode-call-or-attend.service';
+import { EmergencyCareDiagnosesComponent } from './components/emergency-care-diagnoses/emergency-care-diagnoses.component';
 import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
 import { EpicrisisDocumentSummaryComponent } from './components/epicrisis-document-summary/epicrisis-document-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
@@ -41,6 +44,7 @@ import { EvolutionChartOptionsComponent } from './components/evolution-chart-opt
 import { EvolutionChartSelectComponent } from './components/evolution-chart-select/evolution-chart-select.component';
 import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-type-select/evolution-chart-type-select.component';
 import { EvolutionNoteDocumentSummaryComponent } from './components/evolution-note-document-summary/evolution-note-document-summary.component';
+import { EvolutionNoteDockPopupByNurseComponent } from './components/evolution-note-dock-popup-by-nurse/evolution-note-dock-popup-by-nurse.component';
 import { ExternalCauseSummaryComponent } from './components/external-cause-summary/external-cause-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
@@ -50,7 +54,14 @@ import { HistoriesSummaryComponent } from './components/histories-summary/histor
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
+import { IsolationAlertFormComponent } from './components/isolation-alert-form/isolation-alert-form.component';
+import { IsolationAlertSummaryComponent } from './components/isolation-alert-summary/isolation-alert-summary.component';
+import { IsolationAlertSectionComponent } from './components/isolation-alert-section/isolation-alert-section.component';
+import { IsolationAlertDetailComponent } from './components/isolation-alert-detail/isolation-alert-detail.component';
+import { IsolationAlertActionPopupComponent } from './dialogs/isolation-alert-action-popup/isolation-alert-action-popup.component';
+import { IsolationAlertsSummaryActionsComponent } from './components/isolation-alerts-summary-actions/isolation-alerts-summary-actions.component';
 import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
+import { IsolationAlertsSummaryCardComponent } from './components/isolation-alerts-summary-card/isolation-alerts-summary-card.component';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
@@ -58,6 +69,7 @@ import { MedicationListComponent } from './components/medication-list/medication
 import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 import { NotaDeEvolucionDockPopupComponent } from './components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { ObservationsCustomFormComponent } from './components/observations-custom-form/observations-custom-form.component';
 import { ObstetricEventSummaryComponent } from './components/obstetric-event-summary/obstetric-event-summary.component';
 import { PatientEvolutionChartsButtonComponent } from './components/patient-evolution-charts-button/patient-evolution-charts-button.component';
 import { PatientEvolutionChartsComponent } from './components/patient-evolution-charts/patient-evolution-charts.component';
@@ -105,7 +117,9 @@ import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/au
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
 import { ConceptsTypeaheadSearchDialogComponent } from './dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component';
+import { EditIsolationAlertPopupComponent } from './dialogs/edit-isolation-alert-popup/edit-isolation-alert-popup.component';
 import { EffectiveTimeDialogComponent } from './dialogs/effective-time-dialog/effective-time-dialog.component';
+import { IsolationAlertPopupComponent } from './dialogs/isolation-alert-popup/isolation-alert-popup.component';
 import { NewConsultationAddProblemFormComponent } from './dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
@@ -116,11 +130,13 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-popup/vital-signs-chart-popup.component';
+//services
+import { EmergencyCareEpisodeCallOrAttendService } from './services/emergency-care-episode-call-or-attend.service';
+import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 //pipes
 import { ProblemStatusPipe } from './pipes/problem-status.pipe';
 import { ShowSpaceDetailTitlePipe } from './pipes/show-space-detail-title.pipe';
 import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
-import { ShowTimeElapsedPipe } from './pipes/show-time-elapsed.pipe';
 //Porque estan aca?
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
@@ -146,7 +162,6 @@ import { AnesthesiaFormComponent } from './dialogs/anesthesia-form/anesthesia-fo
 import { AnestheticReportEndOfAnesthesiaStatusComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-end-of-anesthesia-status/anesthetic-report-end-of-anesthesia-status.component';
 import { AnestheticReportVitalSignsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-vital-signs/anesthetic-report-vital-signs.component';
 import { AnestheticReportDocumentSummaryComponent } from './components/anesthetic-report-document-summary/anesthetic-report-document-summary.component';
-import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { MeasuringPointComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point/measuring-point.component';
 import { MeasuringPointBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-background-list/measuring-point-background-list.component';
 import { MeasuringPointItemComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-item/measuring-point-item.component';
@@ -155,9 +170,12 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
-import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
+import { ConceptsListComponent } from './components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
+import { AddStudyComponent } from './dialogs/add-study/add-study.component';
+import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
+import { ConceptTypeaheadSearchV2Component } from '@hsi-components/concept-typeahead-search-v2/concept-typeahead-search-v2.component';
 
 @NgModule({
 	declarations: [
@@ -189,14 +207,18 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		AntropometricosSummaryComponent,
 		BackgroundListComponent,
         ClinicalEvaluationSummaryComponent,
+		ConceptsListComponent,
+		CriticalityPickerComponent,
 		ConceptsSearchComponent,
 		CreateOrderComponent,
 		CustomFormComponent,
         DescriptionItemDataSummaryComponent,
+    	DiagnosisFormByNurseComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
+		EmergencyCareDiagnosesComponent,
 		EndOfAnesthesiaStatusSummaryComponent,
         EpicrisisDocumentSummaryComponent,
 		EpisodeDataComponent,
@@ -204,6 +226,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		EvolutionChartTypeSelectComponent,
 		EvolutionChartOptionsComponent,
         EvolutionNoteDocumentSummaryComponent,
+		EvolutionNoteDockPopupByNurseComponent,
         ExternalCauseSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
@@ -240,6 +263,13 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		InternacionAntecedentesPersonalesSummaryComponent,
 		InterveningProfessionalsComponent,
 		IntrasurgicalAnestheticProceduresSummaryComponent,
+		IsolationAlertSectionComponent,
+		IsolationAlertSummaryComponent,
+		IsolationAlertsSummaryActionsComponent,
+		IsolationAlertActionPopupComponent,
+		IsolationAlertFormComponent,
+		IsolationAlertDetailComponent,
+		IsolationAlertsSummaryCardComponent,
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
 		MeasuringPointSummaryComponent,
@@ -248,6 +278,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		MeasuringPointItemComponent,
 		MedicacionSummaryComponent,
 		NewConsultationExpansionSectionComponent,
+		ObservationsCustomFormComponent,
         ObstetricEventSummaryComponent,
 		PatientEvolutionChartsButtonComponent,
 		PatientEvolutionChartsButtonComponent,
@@ -279,7 +310,10 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		AddProcedureComponent,
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
+		DetailsOfPatientIsolationAlertsComponent,
+		EditIsolationAlertPopupComponent,
 		EffectiveTimeDialogComponent,
+		IsolationAlertPopupComponent,
 		RemoveDiagnosisComponent,
 		PatientEvolutionChartsPopupComponent,
 		ProbableDischargeDialogComponent,
@@ -333,7 +367,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		ProblemStatusPipe,
 		ShowSpaceDetailTitlePipe,
 		ShowTitleByPatientDataPipe,
-  		ShowTimeElapsedPipe,
+    	AddStudyComponent,
 	],
 	imports: [
 		CommonModule,
@@ -346,7 +380,8 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		//standalone
 		IdentifierCasesComponent,
 		ConceptTypeaheadSearchComponent,
-		ConceptsListComponent
+		ConceptTypeaheadSearchV2Component,
+		PatientSummaryComponent
 	],
 	exports: [
 		// components
@@ -355,15 +390,18 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		AntecedentesFamiliaresSummaryComponent,
 		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
+		ConceptsListComponent,
 		ConceptsSearchComponent,
         DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
+		IsolationAlertSummaryComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
+		IsolationAlertsSummaryCardComponent,
 		FactoresDeRiesgoFormComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
@@ -398,11 +436,10 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		//pipes
 		ProblemStatusPipe,
 		ShowSpaceDetailTitlePipe,
-		ShowTimeElapsedPipe,
 	],
 	providers: [
 		InternmentSummaryFacadeService,
-		EmergencyCareEpisodeCallOrAttendService
+		EmergencyCareEpisodeCallOrAttendService,
 	]
 })
 export class HistoriaClinicaModule {

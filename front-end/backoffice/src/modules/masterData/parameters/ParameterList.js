@@ -7,49 +7,29 @@ import {
     ReferenceArrayField,
     SingleFieldList,
     ChipField,
-    ReferenceField,
-    FunctionField,
     EditButton,
+    Filter,
+    TextInput
 } from 'react-admin';
 import { TYPE_CHOICES_IDS } from './ParameterTypes';
 
-const LoincDescription = (props) => (
-    <ReferenceField
-        source="loincId"
-        reference="loinc-codes"
-        label="resources.parameters.fields.loincId"
-        link={false}
-    >
-        <FunctionField
-            render={(x) => x?.customDisplayName || x?.description || ''}
-            label="resources.parameters.fields.loincId" />
-    </ReferenceField>
+const ParameterFilter = props =>(
+    <Filter {...props}>
+        <TextInput source="loincCode" label="resources.parameters.fields.loincId" />
+        <TextInput source="description" />
+    </Filter>
 );
-
-const ParameterDescription = props => (
-    props.record.description ? <TextField source="description" /> : <LoincDescription />
-);
-
-export const ParameterLoincCode = props => (
-    <ReferenceField
-        source="loincId"
-        reference="loinc-codes"
-        link={false}
-        sortable={false}
-    >
-        <TextField source="code" />
-    </ReferenceField>
-)
 
 const ParameterList = props => (
     <List
         {...props}
         hasCreate={true}
         bulkActionButtons={false}
+        filters={<ParameterFilter/>}
     >
         <Datagrid rowClick="show">
-            <ParameterDescription label="resources.parameters.fields.description" />
-            <ParameterLoincCode  label="resources.parameters.fields.loincId"/>
+            <TextField source="description" label="resources.parameters.fields.description" />
+            <TextField source="loincCode" sortable={false} label="resources.parameters.fields.loincId"/>
             <SelectField source='typeId' label="resources.parameters.fields.type" choices={TYPE_CHOICES_IDS} sortable={false} />
             <ReferenceArrayField
                 label="resources.parameters.fields.units"

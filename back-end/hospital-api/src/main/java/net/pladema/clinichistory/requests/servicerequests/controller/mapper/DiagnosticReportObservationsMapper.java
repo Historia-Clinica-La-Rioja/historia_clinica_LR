@@ -25,6 +25,7 @@ public interface DiagnosticReportObservationsMapper {
 		ret.setUnitOfMeasureId(dto.getUnitOfMeasureId());
 		ret.setSnomedSctid(dto.getSnomedSctid());
 		ret.setSnomedPt(dto.getSnomedPt());
+		ret.setValueNumeric(dto.getValueNumeric());
 		return ret;
 	}
 

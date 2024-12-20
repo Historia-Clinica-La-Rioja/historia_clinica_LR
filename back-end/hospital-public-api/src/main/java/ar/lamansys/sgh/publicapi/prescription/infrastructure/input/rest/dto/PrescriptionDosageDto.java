@@ -15,7 +15,7 @@ public class PrescriptionDosageDto {
 
 	private String presentation;
 
-	private Short presentationQuantity;
+	private Short packageQuantity;
 
 	private Double quantity;
 

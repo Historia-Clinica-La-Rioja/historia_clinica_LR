@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.application.odontogram;
 
-import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

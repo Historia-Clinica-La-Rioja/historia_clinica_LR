@@ -61,7 +61,6 @@ export class ReferenceDashboardComponent {
 		if (this.hasToResetToFirstPage && this.paginator)
 			this.paginator.pageIndex = 0;
 		this.totalElementsAmount = totalElementsAmount;
-		this.hasToResetToFirstPage = true;
 	}
 
 }

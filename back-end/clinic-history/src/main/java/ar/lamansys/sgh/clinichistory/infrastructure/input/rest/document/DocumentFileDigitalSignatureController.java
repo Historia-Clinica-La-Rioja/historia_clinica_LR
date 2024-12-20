@@ -32,8 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-@RestController
 @RequestMapping("/institutions/{institutionId}/signature/documents")
+@RestController
 public class DocumentFileDigitalSignatureController {
 
 	private final SignDocumentFile signDocumentFile;
@@ -64,6 +64,7 @@ public class DocumentFileDigitalSignatureController {
 				.documentId(bo.getDocumentId())
 				.sourceTypeDto(new SourceTypeDto(bo.getSourceTypeBo().getId(), bo.getSourceTypeBo().getDescription()))
 				.createdOn(bo.getCreatedOn())
+				.patientFullName(bo.getPatientFullName())
 				.professionalFullName(bo.getProfessionalFullName())
 				.snomedConcepts(Collections.arrayToList(bo.getSnomedConceptBo().toArray()))
 				.documentTypeDto(new DocumentTypeDto(bo.getDocumentTypeBo().getId().intValue(), bo.getDocumentTypeBo().getDescription()))

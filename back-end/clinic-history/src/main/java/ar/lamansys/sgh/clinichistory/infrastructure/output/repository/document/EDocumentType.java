@@ -28,6 +28,7 @@ public enum EDocumentType {
 	MEDICAL_IMAGE_REPORT(17, "medicalImageReport", "report_image", "Reporte de imagen médica"),
 	SURGICAL_HOSPITALIZATION_REPORT(18, "surgicalReport", "surgical_report", "Parte quirúrgico"),
 	ANESTHETIC_REPORT(20, "anestheticReport", "anesthetic_report", "Parte anestésico"),
+	NURSING_EMERGENCY_CARE_EVOLUTION(21, "nursingEmergencyCareEvolutionNote", "emergency_care_evolution_note", "Nota de evolución de enfermería de guardia"),
     ;
 
     private Short id;

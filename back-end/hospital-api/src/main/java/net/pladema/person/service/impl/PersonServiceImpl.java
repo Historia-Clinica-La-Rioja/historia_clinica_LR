@@ -166,6 +166,13 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
+	public String getCompletePersonNameByUserId(Integer userId) {
+		LOG.debug("Input parameter -> userId {}", userId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameByUserId(userId);
+		return parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
 	public String getCompletePersonNameById(Integer personId) {
 		LOG.debug("Input parameters -> personId {}", personId);
 		CompletePersonNameVo personName = personRepository.getCompletePersonNameByIds(List.of(personId)).get(0);

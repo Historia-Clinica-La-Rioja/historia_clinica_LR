@@ -70,6 +70,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		if (careLine) {
 			this.formReference.controls.clinicalSpecialties.enable();
 			this.formReference.controls.studyCategory.enable();
+			this.formReference.controls.practiceOrProcedure.enable();
 			this.practiceOrProcedureDisabled = false;
 			this.specialtiesSubject$.next(this.formReference.value.careLine.clinicalSpecialties);
 		} else {
@@ -298,7 +299,10 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 				this.setSpecialties();
 				this.formReference.controls.studyCategory.enable();
 				this.formReference.controls.studyCategory.updateValueAndValidity();
+				this.formReference.controls.practiceOrProcedure.enable();
 			}
+			this.formReference.controls.practiceOrProcedure.enable();
+			this.formReference.controls.practiceOrProcedure.updateValueAndValidity();
 			function disableInputs(formReference: UntypedFormGroup, referenceProblemDto: ReferenceProblemDto[]) {
 				if (referenceProblemDto.length === 0) {
 					formReference.controls.careLine.disable();

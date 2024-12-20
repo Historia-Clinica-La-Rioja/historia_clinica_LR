@@ -130,5 +130,11 @@ public class DocumentBo implements IDocumentBo {
         return patientId;
     }
 
+    @Override
+    public String getEvolutionNote() {
+        return this.getNotes() != null
+                ? this.getNotes().getEvolutionNote()
+                : null;
+    }
 
 }

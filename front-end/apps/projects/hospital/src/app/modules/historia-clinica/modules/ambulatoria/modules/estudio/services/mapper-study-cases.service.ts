@@ -22,7 +22,9 @@ constructor() { }
 			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
 			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
-			localViewerUrl: source.localViewerUrl
+			localViewerUrl: source.localViewerUrl,
+			reportStatus: source.reportStatus,
+			deriveTo: source.deriveTo
 		}
 	}
 
@@ -35,7 +37,9 @@ constructor() { }
 			viewReport: source.viewReport,
 			associatedStudies: source.diagnosticReports,
 			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
-			localViewerUrl: source.localViewerUrl
+			localViewerUrl: source.localViewerUrl,
+			reportStatus: source.reportStatus,
+			deriveTo: source.deriveTo
 		}
 	}
 
@@ -48,7 +52,9 @@ constructor() { }
 			viewReport: source.viewReport,
 			hasActiveAppointment: source.hasActiveAppointment,
 			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
-			localViewerUrl: source.localViewerUrl
+			localViewerUrl: source.localViewerUrl,
+			reportStatus: source.reportStatus,
+			deriveTo: source.deriveTo
 		}
 	}
 

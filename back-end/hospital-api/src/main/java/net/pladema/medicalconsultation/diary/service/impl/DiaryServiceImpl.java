@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
+import net.pladema.medicalconsultation.diary.application.GetDiaryBookingRestriction;
+import net.pladema.medicalconsultation.diary.application.PersistBookingRestriction;
 import net.pladema.medicalconsultation.diary.service.domain.ActiveDiaryAliasBo;
 
 import org.springframework.stereotype.Service;
@@ -100,7 +102,10 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final FeatureFlagsService featureFlagsService;
 
-	@Override
+    private final PersistBookingRestriction persistBookingRestriction;
+    private final GetDiaryBookingRestriction getDiaryBookingRestriction;
+
+    @Override
 	@Transactional
 	public Integer addDiary(DiaryBo diaryToSave) {
         log.debug("Input parameters -> diaryToSave {}", diaryToSave);
@@ -118,6 +123,7 @@ public class DiaryServiceImpl implements DiaryService {
     private Integer persistDiary(DiaryBo diaryToSave, Diary diary) {
         diary = diaryRepository.save(diary);
         Integer diaryId = diary.getId();
+        persistBookingRestriction.run(diaryId,diaryToSave.getBookingRestriction());
         diaryOpeningHoursService.update(diaryId, diaryToSave.getDiaryOpeningHours());
         diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
         diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
@@ -158,6 +164,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = createDiaryInstance(diaryToSave);
         diary = diaryRepository.save(diary);
         Integer diaryId = diary.getId();
+        persistBookingRestriction.run(diaryId,diaryToSave.getBookingRestriction());
         diaryCareLineService.updateCareLinesAssociatedToDiary(diaryId, diaryToSave.getCareLines());
         diaryAssociatedProfessionalService.updateDiaryAssociatedProfessionals(diaryToSave.getDiaryAssociatedProfessionalsId(), diaryId);
         diaryPracticeService.updateDiaryPractices(diaryToSave.getPracticesId(), diaryId);
@@ -287,6 +294,7 @@ public class DiaryServiceImpl implements DiaryService {
             completeDiaryBo.setAssociatedProfessionalsInfo(diaryAssociatedProfessionalService.getAllDiaryAssociatedProfessionalsInfo(diaryId));
             completeDiaryBo.setCareLinesInfo(diaryCareLineService.getAllCareLinesByDiaryId(diaryId, completeDiaryBo.getHealthcareProfessionalId()));
             completeDiaryBo.setPracticesInfo(diaryPracticeService.getAllByDiaryId(diaryId));
+            completeDiaryBo.setBookingRestriction(getDiaryBookingRestriction.run(diaryId).orElse(null));
         });
         log.debug(OUTPUT, result);
         return result;

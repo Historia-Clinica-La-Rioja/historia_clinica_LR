@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, PostCloseAnestheticReportDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticReportDto, DateDto, DiagnosisDto, HealthConditionDto, PostCloseAnestheticReportDto, TimeDto } from '@api-rest/api-model';
 import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { AnestheticReportService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
@@ -74,8 +74,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 	}
 
     private openEditReason(anestheticReport: AnestheticReportDto) {
-        const dialogRef = this.dialogService.open(DocumentActionReasonComponent, 
-            { dialogWidth: DialogWidth.SMALL }, 
+        const dialogRef = this.dialogService.open(DocumentActionReasonComponent,
+            { dialogWidth: DialogWidth.SMALL },
             {
                 title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
                 subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
@@ -94,6 +94,10 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
     onLastFoodIntakeTimeSelected(newLastFoodIntakeTimeSelected: TimeDto) {
         this.anesthethicReportHandlerService.setLastFoodIntakeTime(newLastFoodIntakeTimeSelected);
+    }
+
+	onLastFoodIntakeDateSelected(newLastFoodIntakeDateSelected: DateDto) {
+        this.anesthethicReportHandlerService.setLastFoodIntakeDate(newLastFoodIntakeDateSelected);
     }
 }
 

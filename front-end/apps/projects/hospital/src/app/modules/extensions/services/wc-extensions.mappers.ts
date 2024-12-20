@@ -21,6 +21,10 @@ export const toClinicHistoryWCParams = (patientId: number) =>
 	(element: SlotedInfo): WCParams =>
 		slotedInfoToWCParamsMapper(element, { patientId });
 
+export const toPatientProfileWCParams = (patientId: number) =>
+	(element: SlotedInfo): WCParams =>
+		slotedInfoToWCParamsMapper(element, { patientId });
+
 export const toSystemHomeWCParams = (element: SlotedInfo): WCParams =>
 	slotedInfoToWCParamsMapper(element, {});
 

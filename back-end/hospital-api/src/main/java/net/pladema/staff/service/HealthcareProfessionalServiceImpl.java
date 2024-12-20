@@ -60,7 +60,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     @Override
     public List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
-        List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId);
+        List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId, List.of(ERole.ESPECIALISTA_MEDICO.getId(), ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId()));
         LOG.debug(OUTPUT, result);
         return result;
     }

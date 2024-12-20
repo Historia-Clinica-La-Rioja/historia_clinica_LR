@@ -83,6 +83,9 @@ public class ModifyReference {
 		result.setPatientId(referenceData.getPatientId());
 		result.setPatientMedicalCoverageId(referenceData.getPatientMedicalCoverageId());
 		result.setStudy(referenceStudy.orElse(null));
+		result.setRegulationState(referenceData.getRegulationState());
+		result.setAdministrativeState(referenceData.getAdministrativeState());
+		result.setOldReferenceId(oldReferenceId);
 
 		return result;
 	}
@@ -99,9 +102,6 @@ public class ModifyReference {
 
 		if(referenceData.getPriority() == null)
 			throw new ModifyReferenceException(ModifyReferenceExceptionEnum.PRIORITY_REQUIRED, "Se debe indicar un nivel de prioridad");
-
-		if(referenceData.getInstitutionDestination() == null || referenceData.getInstitutionDestination().getId() == null)
-			throw new ModifyReferenceException(ModifyReferenceExceptionEnum.DESTINATION_INSTITUTION_REQUIRED, "Se debe indicar una institución de destino");
 		
 	}
 

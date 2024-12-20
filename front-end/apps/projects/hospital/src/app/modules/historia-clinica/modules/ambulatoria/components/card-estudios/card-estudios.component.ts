@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEHealthConditionDto, InternmentEpisodeBMDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
-import { ESTUDIOS, PatientType } from '@historia-clinica/constants/summaries';
+import { ESTUDIOS } from '@historia-clinica/constants/summaries';
 import { STUDY_STATUS } from '../../constants/prescripciones-masterdata';
 import { ConfirmarPrescripcionComponent } from '../../dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { StudyCategories } from '../../modules/estudio/constants/internment-studies';
@@ -56,7 +56,6 @@ export class CardEstudiosComponent implements OnInit {
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
 	episodeEnAtencion = false;
-	notEmergencyCareTemporaryPatient = true;
 	intermentDiagnosis;
 	emergencyCareDiagnosis;
 	episodeId: number;
@@ -150,7 +149,6 @@ export class CardEstudiosComponent implements OnInit {
 						this.patientEmergencyCareMedicalCoverageId = episode.patient.patientMedicalCoverageId;
 						this.episodeId = episode.id;
 						this.episodeEnAtencion = episode.state.id === EstadosEpisodio.EN_ATENCION;
-						this.notEmergencyCareTemporaryPatient = episode.patient.typeId != PatientType.EMERGENCY_CARE_TEMPORARY;
 						this.getEmergencyCareEpisodeDiagnoses().subscribe(
 							d => this.emergencyCareDiagnosis = d
 						)
@@ -440,7 +438,7 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	private getEmergencyCareEpisodeDiagnoses(): Observable<any[]> {
-		return this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.episodeId).
+		return this.emergencyCareStateService.getEmergencyCareEpisodeDiagnosesWithoutNursingAttentionDiagnostic(this.episodeId).
 			pipe(
 				map((d: DiagnosesGeneralStateDto[]) => d.map(this.mapDiagnosesGeneralStateDto))
 			)

@@ -5,10 +5,10 @@ import {
     TextField,
     ReferenceField,
     SelectField,
-    DateField,
     TextInput,
     Filter
 } from 'react-admin';
+import SgxDateField from '../../../dateComponents/sgxDateField';
 
 const StudyFilter = props =>(
     <Filter {...props}>
@@ -25,7 +25,7 @@ const MoveStudiesList = props => {
                 <ReferenceField link={false} source="institutionId" reference="institutions">
                     <TextField source="name" />
                 </ReferenceField>
-                <DateField source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
+                <SgxDateField source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
                 <TextField source="imageId" />
 
                 <SelectField source="status" choices={[

@@ -109,3 +109,25 @@ export const DisabledButtonSelected: Story = {
 		isSelected: true
 	},
 };
+
+export const BlockedButton: Story = {
+	args: {
+		...AvailableButton.args,
+		type: AvailableButtonType.BLOCKED,
+	},
+};
+
+export const BlockedButtonSmall: Story = {
+	args: {
+		...BlockedButton.args,
+		description: '135',
+		size: AvailableButtonWidth.SMALL,
+	},
+};
+
+export const BlockedButtonSelected: Story = {
+	args: {
+		...BlockedButton.args,
+		isSelected: true
+	},
+};

@@ -116,24 +116,24 @@
 			[isEmpty]="createOrderService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
 				<app-titled-content-card
-				*ngIf="!procedimientoNuevaConsultaService.isEmpty()"
-				title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' | translate}}">
+					*ngIf="!procedimientoNuevaConsultaService.isEmpty()"
+					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' | translate}}">
 
-				<div *ngFor="let procedimiento of procedimientoNuevaConsultaService.getProcedimientos(); index as i; last as isLast">
-					<div fxLayout="row" fxLayoutAlign="space-between center">
-						<div fxLayout="column">
-							<span>{{ procedimiento.snomed.pt }}</span>
-							<span *ngIf="procedimiento?.performedDate" class="mat-caption gray-caption">
-								{{ procedimiento.performedDate | dateFormat : 'date' }}
-							</span>
+					<div *ngFor="let procedimiento of procedimientoNuevaConsultaService.getProcedimientos(); index as i; last as isLast">
+						<div fxLayout="row" fxLayoutAlign="space-between center">
+							<div fxLayout="column">
+								<span>{{ procedimiento.snomed.pt }}</span>
+								<span *ngIf="procedimiento?.performedDate" class="mat-caption gray-caption">
+									{{ procedimiento.performedDate | dateFormat : 'date' }}
+								</span>
+							</div>
+							<button type="button" mat-icon-button color="warn" (click)="procedimientoNuevaConsultaService.remove(i)">
+								<mat-icon>delete_outline</mat-icon>
+							</button>
 						</div>
-						<button type="button" mat-icon-button color="warn" (click)="procedimientoNuevaConsultaService.remove(i)">
-							<mat-icon>delete_outline</mat-icon>
-						</button>
+						<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 					</div>
-					<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-				</div>
-			</app-titled-content-card>
+				</app-titled-content-card>
 
 				<div>
 					<button mat-button type="button" id="add-procedure-button" color="primary" class="add-button"
@@ -142,6 +142,24 @@
 					</button>
 				</div>
 			</div>
+		</app-new-consultation-expansion-section>
+
+		<app-new-consultation-expansion-section id="studies" *ngIf="isEnabledStudiesFF"
+			[title]="'ambulatoria.paciente.nueva-consulta.studies.TITLE' | translate" icon="library_add"
+			[isEmpty]="createOrderService.isEmpty()">
+
+			<app-titled-content-card *ngIf="!createOrderService.isEmpty()"
+				title="{{ 'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' }}">
+				<app-procedure-list [service]="createOrderService"> </app-procedure-list>
+			</app-titled-content-card>
+
+			<div>
+				<button mat-button type="button" id="add-study-button" color="primary" class="add-button"
+					(click)="openStudiesComponent()">
+					+ {{ 'ambulatoria.paciente.nueva-consulta.studies.buttons.ADD' | translate }}
+				</button>
+			</div>
+
 		</app-new-consultation-expansion-section>
 
 		<app-new-consultation-expansion-section id="factores_de_riesgo"
@@ -166,31 +184,32 @@
 			<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
 		</app-concepts-list>
 
-		<app-new-consultation-expansion-section id="solicitud-referencia"
-			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
-			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [(collapsed)]="collapsedReferenceRequest">
-			<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
-				<app-box-message *ngIf="showWarningViolenceSituation"
-					[boxMessageInfo]="boxMessageInfo"
-					(response)="openReferenceDialog($event)"
-					id="violence_situation_data_question">
-				</app-box-message>
+		<ng-container *ngIf="isHabilitarSolicitudReferenciaOn">
+			<app-new-consultation-expansion-section id="solicitud-referencia"
+				[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
+				[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [(collapsed)]="collapsedReferenceRequest">
+				<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
+					<app-box-message *ngIf="showWarningViolenceSituation"
+						[boxMessageInfo]="boxMessageInfo"
+						(response)="openReferenceDialog($event)"
+						id="violence_situation_data_question">
+					</app-box-message>
 
-				<app-titled-content-card *ngIf="!ambulatoryConsultationReferenceService.isEmpty()"
-					title="{{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGISTERED_REQUEST' }}">
-					<app-reference-request-list [service]="ambulatoryConsultationReferenceService">
-					</app-reference-request-list>
-				</app-titled-content-card>
+					<app-titled-content-card *ngIf="!ambulatoryConsultationReferenceService.isEmpty()"
+						title="{{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGISTERED_REQUEST' }}">
+						<app-reference-request-list [service]="ambulatoryConsultationReferenceService">
+						</app-reference-request-list>
+					</app-titled-content-card>
 
-				<div>
-					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
-						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()" [disabled]="showWarningViolenceSituation">
-						+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
-					</button>
+					<div>
+						<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
+							(click)="ambulatoryConsultationReferenceService.openReferenceDialog()" [disabled]="showWarningViolenceSituation">
+							+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
+						</button>
+					</div>
 				</div>
-
-			</div>
-		</app-new-consultation-expansion-section>
+			</app-new-consultation-expansion-section>
+		</ng-container>
 
 		<div #apiErrorsView>
 			<div id="validations" *ngIf="apiErrors?.length > 0">

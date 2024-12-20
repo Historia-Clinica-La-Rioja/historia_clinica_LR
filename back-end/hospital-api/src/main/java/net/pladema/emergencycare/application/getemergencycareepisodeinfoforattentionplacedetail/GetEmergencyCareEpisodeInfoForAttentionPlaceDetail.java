@@ -42,6 +42,7 @@ public class GetEmergencyCareEpisodeInfoForAttentionPlaceDetail {
 		ecap.setEmergencyCareTypeId(ec.getEmergencyCareTypeId());
 		ecap.setEmergencyCareStateId(ec.getEmergencyCareStateId());
 		ecap.setProfessional(emergencyCareEpisodeStorage.getProfessionalByEpisodeId(ec.getId()));
+		ecap.setEpisodeId(ec.getId());
 		TriageBo lastTriage = fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId());
 		if (lastTriage != null){
 			ecap.setLastTriage(new EmergencyCareTriageBo(

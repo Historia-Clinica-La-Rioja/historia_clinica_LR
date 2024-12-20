@@ -82,4 +82,27 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 			"AND ra.pk.appointmentId = :appointmentId ")
 	Optional<ReferenceAppointmentSummaryBo> getReferenceByAppointmentId(@Param("appointmentId")Integer appointmentId);
 
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT EXISTS (" +
+			"SELECT 1 " +
+			"FROM reference_appointment ra " +
+			"JOIN appointment a ON (ra.appointment_id = a.id) " +
+			"WHERE ra.reference_id = :referenceId " +
+			"AND a.appointment_state_id NOT IN (:appointmentStates)" +
+			"AND ra.deleted = false)", nativeQuery = true)
+	boolean referenceHasAppointment(@Param("referenceId") Integer referenceId,
+									@Param("appointmentStates") List<Short> appointmentStates);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT a.id " +
+			"FROM reference_appointment ra " +
+			"JOIN appointment a ON (ra.appointment_id = a.id) " +
+			"WHERE ra.reference_id = :referenceId " +
+			"AND a.appointment_state_id = :absentAppointmentState " +
+			"AND ra.deleted = false " +
+			"ORDER BY ra.created_on DESC " +
+			"LIMIT 1", nativeQuery = true)
+	Optional<Integer> getAbsentAppointmentIdByReferenceId(@Param("referenceId") Integer referenceId,
+														  @Param("absentAppointmentState") Short absentAppointmentState);
+
 }

@@ -49,3 +49,8 @@ form {
 .fixed-header {
     @include fixed-header;
 }
+
+.confirm-button {
+	display: flex;
+	justify-content: flex-end;
+}

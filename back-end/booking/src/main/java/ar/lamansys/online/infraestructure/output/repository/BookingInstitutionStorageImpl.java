@@ -100,15 +100,20 @@ public class BookingInstitutionStorageImpl implements BookingInstitutionStorage 
 			if (index == -1) {
 				result.add(toInsert);
 			} else {
-				var names = result.get(index).getClinicalSpecialtiesNames();
+				//there's already a record for that institution
+				//so we add the clinical specialty
+				var existing = result.get(index);
+				var names = existing.getClinicalSpecialtiesNames();
 				if(!names.contains((String) row[7])) {
 					names.add((String) row[7]);
 				}
 
-				if(result.get(index) != null && result.get(index).getAliases() != null) {
-					var aliases = result.get(index).getAliases();
-					if (row[8] != null && aliases != null && !aliases.contains((String) row[8])) {
-						aliases.add((String) row[8]);
+				//and we add the alias of the diary, if it exists
+				if(toInsert.getAliases() != null) {
+					if(existing.getAliases() == null) {
+						existing.setAliases(toInsert.getAliases());
+					} else {
+						existing.getAliases().add(toInsert.getAliases().get(0));
 					}
 				}
 			}

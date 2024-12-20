@@ -41,7 +41,7 @@ import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical
 import { ConfirmarPrescripcionComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
-import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptsList } from '@historia-clinica/components/concepts-list/concepts-list.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -53,6 +53,9 @@ import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulato
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { Concept, ConceptDateFormComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/concept-date-form/concept-date-form.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { AddStudyComponent } from '@historia-clinica/dialogs/add-study/add-study.component';
+
+const TIME_OUT = 5000;
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -81,6 +84,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
 
 	searchConceptsLocallyFFIsOn = false;
+	isEnabledStudiesFF = false;
 	episodeData: EpisodeData;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
@@ -115,6 +119,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 	}
 	isPersonalHistories: boolean = true;
+	isHabilitarSolicitudReferenciaOn = false;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
@@ -147,8 +152,9 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
 		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService);
-		this.createOrderService  = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
+		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO).subscribe(isEnabled => this.isEnabledStudiesFF = isEnabled);
 	}
 
 	ngOnInit(): void {
@@ -178,6 +184,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFFIsOn = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_SOLICITUD_REFERENCIA).subscribe(isOn => this.isHabilitarSolicitudReferenciaOn = isOn);
 	}
 
 	save() {
@@ -317,14 +324,14 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	private addProcedure(procedure: ProcedureDto) {
 		this.procedures = pushIfNotExists<ProcedureDto>(this.procedures, procedure, this.compareProcedure);
-		this.otherProceduresService.add({snomed: procedure.snomed, performedDate: this.fromStringToDate(procedure.performedDate)});
+		this.otherProceduresService.add({ snomed: procedure.snomed, performedDate: this.fromStringToDate(procedure.performedDate) });
 	}
 
 	private fromStringToDate(date: string): Date {
 		if (!date) return;
 
 		const dateData = date.split("-");
-		return new Date(+dateData[0], +dateData[1]-1, +dateData[2]);
+		return new Date(+dateData[0], +dateData[1] - 1, +dateData[2]);
 	}
 
 	private compareProcedure(concept1: ProcedureDto, concept2: ProcedureDto): boolean {
@@ -365,16 +372,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	private createConsultation(odontologyDto: OdontologyConsultationDto) {
+		const selectedFiles = this.createOrderService.getSelectedFiles();
+
 		if (odontologyDto.references.length) {
 			odontologyDto.diagnostics = this.problemsToUpdate(odontologyDto);
 		}
 
-		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto).subscribe(
+		this.odontologyConsultationService.createConsultation(this.data.patientId, odontologyDto, selectedFiles).subscribe(
 			res => {
 				res.orderIds.forEach((order) => {
 					this.openNewEmergencyCareStudyConfirmationDialog([order]);
-				  });
-				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente');
+				});
+				this.snackBarService.showSuccess('El documento de consulta odontologica se guardó exitosamente', { duration: TIME_OUT });
 				this.dockPopupRef.close({
 					confirmed: true,
 					fieldsToUpdate: this.mapFieldsToUpdate(odontologyDto)
@@ -397,10 +406,27 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
 					prescriptionType: PrescriptionTypes.STUDY,
 					patientId: this.data.patientId,
+					timeout: TIME_OUT,
 					prescriptionRequest: order,
 				},
 				width: '35%',
 			});
+	}
+
+	openStudiesComponent(): void {
+		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.patientId, this.hceGeneralStateService);
+		const medicalCoverageId = this.episodeData.medicalCoverageId;
+		this.dialog.open(AddStudyComponent, {
+			data: {
+				patientId: this.data.patientId,
+				createOrderService: this.createOrderService,
+				problems: problems,
+				medicalCoverageId: medicalCoverageId
+			},
+			autoFocus: false,
+			width: DialogWidth.MEDIUM,
+			disableClose: true,
+		});
 	}
 
 	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
@@ -426,7 +452,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 		return {
 			allergies: {
-				isReferred: (this.isAllergyNoRefer && this.allergiesNewConsultationService.getAlergias().length === 0) ? null: this.isAllergyNoRefer,
+				isReferred: (this.isAllergyNoRefer && this.allergiesNewConsultationService.getAlergias().length === 0) ? null : this.isAllergyNoRefer,
 				content: this.allergiesNewConsultationService.getAlergias().map(toOdontologyAllergyConditionDto)
 			},
 			evolutionNote: this.form.value.evolution,
@@ -437,21 +463,22 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,
 			personalHistories: {
-				isReferred: (this.isPersonalHistories && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null: this.isPersonalHistories,
+				isReferred: (this.isPersonalHistories && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null : this.isPersonalHistories,
 				content: this.personalHistoriesNewConsultationService.getPersonalHistories().map(toOdontologyPersonalHistoryDto),
 			},
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
-			hierarchicalUnitId: this.episodeData.hierarchicalUnitId
+			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
+			serviceRequests: this.createOrderService.getStudies(),
 		};
 	}
 
 	private mapProcedimientoToNursingProcedure = (procedimiento: Procedimiento): OdontologyProcedureDto => {
 		return {
-		  	performedDate: procedimiento.performedDate ? toApiFormat(procedimiento.performedDate): null,
-		  	snomed: procedimiento.snomed
+			performedDate: procedimiento.performedDate ? toApiFormat(procedimiento.performedDate) : null,
+			snomed: procedimiento.snomed
 		};
 	}
 
@@ -472,17 +499,17 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			}
 
 			if (referencesToUpdate.length) {
-					forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
-						const filesAmount = reference.referenceFiles.length;
-						for(let i = 0; i < filesAmount; i++ ){
-							if (referenceFileIds[index]?.[i]) {
-								this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
-							}
+				forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
+					const filesAmount = reference.referenceFiles.length;
+					for (let i = 0; i < filesAmount; i++) {
+						if (referenceFileIds[index]?.[i]) {
+							this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
 						}
-						this.createConsultation(odontologyDto);
-					}, _ => {
-						this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
-					});
+					}
+					this.createConsultation(odontologyDto);
+				}, _ => {
+					this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
+				});
 			} else {
 				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
 				this.createConsultation(odontologyDto);

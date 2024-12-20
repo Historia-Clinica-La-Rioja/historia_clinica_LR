@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEpisodeListTriageDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCarePatientDto;
+import net.pladema.establishment.infrastructure.input.rest.dto.FetchAttentionPlaceStatusDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
 
 import javax.annotation.Nullable;
@@ -38,6 +39,12 @@ public class EmergencyCareAttentionPlaceDetailDto {
 
 	@Nullable
 	private EmergencyCareEpisodeListTriageDto lastTriage;
+
+	@Nullable
+	private Integer episodeId;
+
+	@Nullable
+	private FetchAttentionPlaceStatusDto status;
 
 	public Boolean hasPersonId(){
 		return this.patient != null &&

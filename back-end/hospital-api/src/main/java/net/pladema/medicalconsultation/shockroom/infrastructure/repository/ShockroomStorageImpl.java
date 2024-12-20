@@ -21,17 +21,9 @@ public class ShockroomStorageImpl implements ShockroomStorage {
 	public static final String OUTPUT = "Output -> {}";
 
 	@Override
-	public List<ShockRoomBo> getShockrooms(Integer instutitionId) {
-		log.debug("Input parameters -> institutionId {}", instutitionId);
-		List<ShockRoomBo> result = shockroomRepository.getShockrooms(instutitionId)
-				.stream()
-				.map(entity -> {
-					boolean isAvailable = emergencyCareEpisodeRepository.existsEpisodeInOffice(null, entity.getId()) == 0;
-					ShockRoomBo shockRoomBo = new ShockRoomBo(entity.getId(), entity.getDescription());
-					shockRoomBo.setAvailable(isAvailable);
-					return shockRoomBo;
-				})
-				.collect(Collectors.toList());
+	public List<ShockRoomBo> getShockrooms(Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		List<ShockRoomBo> result = shockroomRepository.getShockroomsByInstitutionId(institutionId);
 		log.debug(OUTPUT, result);
 		return result;
 	}

@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 COPY create-schema.sql ./
 COPY concept_term.sql ./
 COPY views.sql ./
+COPY create-commercial-medication-schema.sql ./
 
 # Copia archivos de Release
 # COPY Release112023 ./

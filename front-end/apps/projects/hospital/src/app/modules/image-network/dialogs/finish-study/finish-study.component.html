@@ -11,9 +11,14 @@
                 <textarea class="observations-container" matInput [(ngModel)]="observations" type="text" id="observations" name="observations" placeholder="{{'turnos.appointment.observations.OBSERVATIONS' | translate}}"></textarea>
             </mat-form-field>
             <mat-checkbox (change)="changeReportRequirementStatus($event)" color="primary">{{'image-network.worklist.REPORT_NOT_REQUIRED' | translate}}</mat-checkbox>
-            <button class="complete-btn" mat-flat-button color="primary" (click)="confirm()">
-                <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
-            </button>
+<!--            <button class="complete-btn" mat-flat-button color="primary" (click)="confirmFinishStudy()">-->
+<!--                <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>-->
+<!--            </button>-->
+            <app-button class="complete-btn" [buttonType]="ButtonType.RAISED" [text]="'image-network.appointments.CONFIRM'"
+                        [isLoading]="isLoading"
+                        (clicked)="confirmFinishStudy()">
+            </app-button>
+
         </div>
     </mat-dialog-content>
 </ng-container>

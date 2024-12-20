@@ -93,7 +93,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
 				.setParameter("typeId", PatientType.TEMPORARY)
 				.setParameter("maxDate", maxDate)
 				.setParameter("activeStatusId", InternmentEpisodeStatus.ACTIVE_ID)
-				.setParameter("emergencyCareStateIds", List.of(EmergencyCareState.EN_ATENCION, EmergencyCareState.EN_ESPERA, EmergencyCareState.CON_ALTA_MEDICA))
+				.setParameter("emergencyCareStateIds", List.of(EmergencyCareState.EN_ATENCION, EmergencyCareState.EN_ESPERA, EmergencyCareState.CON_ALTA_PACIENTE))
 				.setParameter("appointmentStatsIds", List.of(AppointmentState.CANCELLED, AppointmentState.SERVED))
 				.setMaxResults(limit)
 				.getResultList();

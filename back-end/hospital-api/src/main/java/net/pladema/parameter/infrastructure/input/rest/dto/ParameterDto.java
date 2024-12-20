@@ -17,6 +17,7 @@ public class ParameterDto {
 
 	private Integer id;
 	private Integer loincId;
+	private String loincCode;
 	private String description;
 	private Short typeId;
 	private Short inputCount;

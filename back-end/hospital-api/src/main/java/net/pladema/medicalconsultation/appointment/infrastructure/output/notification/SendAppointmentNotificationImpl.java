@@ -15,8 +15,8 @@ public class SendAppointmentNotificationImpl implements SendAppointmentNotificat
 	private final HospitalApiPublisher hospitalApiPublisher;
 
     @Override
-    public void run(NotifyPatientBo notifyPatientBo) {
-		hospitalApiPublisher.appointmentCaller(mapTo(notifyPatientBo));
+    public void run(NotifyPatientBo notifyPatientBo, Integer institutionId) {
+		hospitalApiPublisher.appointmentCaller(mapTo(notifyPatientBo), institutionId);
     }
 
     private NotifyPatientDto mapTo(NotifyPatientBo notifyPatientBo) {
@@ -26,7 +26,7 @@ public class SendAppointmentNotificationImpl implements SendAppointmentNotificat
 				notifyPatientBo.getSectorId(),
 				notifyPatientBo.getDoctorName(),
 				notifyPatientBo.getDoctorsOfficeName(),
-				notifyPatientBo.getTopic()
+				notifyPatientBo.getTvMonitor()
         );
     }
 }

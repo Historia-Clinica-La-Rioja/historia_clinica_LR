@@ -62,6 +62,7 @@ public class DiagnosisBo extends HealthConditionBo implements IpsBo {
 		this.setCie10codes(healthCondition.getCie10codes());
 		this.setId(healthCondition.getId());
 		this.setPatientId(healthCondition.getPatientId());
+		this.setPresumptive(ConditionVerificationStatus.PRESUMPTIVE.equals(healthCondition.getVerificationId()));
 	}
 
     @Override

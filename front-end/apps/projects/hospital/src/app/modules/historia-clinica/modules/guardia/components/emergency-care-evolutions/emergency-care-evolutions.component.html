@@ -19,7 +19,7 @@
             <div *ngIf="activeDocument && (activeDocument.summary.title === DOCUMENT_TYPES.TRIAGE)" class="summary">
                 <app-triage-summary [content]="activeDocument" [episodeId]="emergencyCareId"></app-triage-summary>
             </div>
-            <div *ngIf="activeDocument && (activeDocument.summary.title === DOCUMENT_TYPES.EVOLUTION_NOTE)" class="summary">
+            <div *ngIf="activeDocument && (activeDocument.summary.title === DOCUMENT_TYPES.EVOLUTION_NOTE || activeDocument.summary.title === DOCUMENT_TYPES.NURSING_EVOLUTION_NOTE)" class="summary">
                 <app-emergency-care-evolution-note [content]="activeDocument" [episodeId]="emergencyCareId"
                     [patientId]="patientId" (resetActiveDocument)="resetActiveDocument()"></app-emergency-care-evolution-note>
             </div>

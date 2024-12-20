@@ -16,7 +16,7 @@ public class AnestheticReportValidator {
     private final BloodRiskFactorsValidator bloodRiskFactorsValidator;
     private final AnestheticSubstanceValidator anestheticSubstanceValidator;
     private final AnestheticTechniqueValidator anestheticTechniqueValidator;
-    //private final ProcedureDescriptionValidator procedureDescriptionValidator;
+    private final ProcedureDescriptionValidator procedureDescriptionValidator;
     private final MeasuringPointValidator measuringPointValidator;
 
     public void assertContextValid(AnestheticReportBo anestheticReport) {
@@ -37,6 +37,7 @@ public class AnestheticReportValidator {
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getNonAnestheticDrugs());
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getAntibioticProphylaxis());
         measuringPointValidator.assertContextValid(anestheticReport.getMeasuringPoints());
+        procedureDescriptionValidator.assertStartEndDatesTimes(anestheticReport.getProcedureDescription());
 
         log.trace("Output -> isValid anestheticReport {}", anestheticReport);
     }

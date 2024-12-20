@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
     Show,
     SimpleShowLayout,
@@ -19,8 +19,11 @@ import SectionTitle from '../../components/SectionTitle';
 import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 import UnidadesJerarquicas from './UnidadesJerarquicas';
 import { Grid, Divider } from '@material-ui/core';
-import { ParameterizedFormSection } from './ParameterizedFormSection';
 import { MedicineTabs } from './MedicineTabs';
+import { ParameterizedFormSection } from './ParameterizedFormSection';
+import {Button} from '@material-ui/core';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -100,6 +103,100 @@ const ShowSectors = () => {
 const InstitutionShow = props => {
     const { permissions } = usePermissions();
     const parameterizedFormFF = permissions?.featureFlags.some( ff => ff === 'HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
+
+    const [showButtons, setShowButtons] = useState(true);
+    const [showSectors, setShowSectors] = useState(false);
+    const [showHierarchicalUnit, setHierarchicalUnit] = useState(false);
+    const [showParameterizedForm, setShowParameterizedForm] = useState(false);
+    const [showPharmacosSection, setPharmacosSection] = useState(false);
+
+    const toggleShowSectors = () => {
+        setShowSectors(true);
+        setShowButtons(false);
+    };
+
+    const toggleShowHierarchicalUnit = () => {
+        setHierarchicalUnit(true);
+        setShowButtons(false);
+    };
+
+    const toggleShowParameterizedForm = () => {
+        setShowParameterizedForm(true);
+        setShowButtons(false);
+    };
+
+    const toggleShowPharmacosSection = () => {
+        setPharmacosSection(true);
+        setShowButtons(false);
+    };
+
+    const resetShowSections = () => {
+        setShowSectors(false);
+        setShowButtons(true);
+        setHierarchicalUnit(false);
+        setShowParameterizedForm(false);
+        setPharmacosSection(false);
+    };
+
+    const ActionButton = ({ onClick, label }) => (
+        <Button color="primary" onClick={onClick} style={{marginBottom : 10, marginTop : 10}}>
+            {label} &nbsp; <ArrowForwardIosIcon fontSize='inherit'/>
+        </Button>
+    );
+
+    const BackButton = () => {
+        return (
+            <Button color="primary" onClick={resetShowSections} variant='outlined' style={{marginTop : 10}}>
+                <ArrowBackIcon fontSize='inherit'/> &nbsp; Volver
+            </Button>
+        );
+    }
+
+    const SectorsSection = ({ record }) => {
+        return (
+            <>
+                <SectionTitle label="resources.institutions.fields.sectors" />
+                    <CreateRelatedButton
+                        customRecord={{ institutionId: record.id}}
+                        reference="sectors"
+                        label="resources.sectors.createRelated"
+                    />
+                <ShowSectors />
+                <BackButton />
+            </>
+        );
+    }
+
+    const HierarchicalUnitSection = (props) => {
+        return (
+            <>
+                <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
+                <CreateHierarchicalUnit {...props} />
+                <HierarchicalUnitTabs {...props} />
+                <BackButton />
+            </>
+        );
+    }
+
+    const PharmacosSection = () => {
+        return (
+            <>
+                <SectionTitle label="resources.institutions.fields.pharmacos" />
+                <MedicineTabs {...props}/>
+                <BackButton />
+            </>
+        );
+    }
+
+    const ParameterizedFormsSection = (props) => {
+        return (
+            <>
+                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
+                <BackButton />
+            </>
+        );
+    }
+
     return (
         <Show actions={<InstitutionShowActions />} {...props}>
             <SimpleShowLayout>
@@ -191,19 +288,16 @@ const InstitutionShow = props => {
                     </Grid>
                       
                 </Grid>
-                <SectionTitle label="resources.institutions.fields.sectors"/>
-                <CreateRelatedButton
-                    reference="sectors"
-                    refFieldName="institutionId"
-                    label="resources.sectors.createRelated"
-                />
-                <ShowSectors />
-                <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
-                <CreateHierarchicalUnit />
-                <HierarchicalUnitTabs {...props} />
-                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
-                <SectionTitle label="resources.institutions.fields.pharmacos" />
-                <MedicineTabs {...props}/>
+
+                {showButtons && <ActionButton onClick={toggleShowSectors} label="Sectores" />}
+                {showButtons && <ActionButton onClick={toggleShowHierarchicalUnit} label="Unidades jerárquicas" />}
+                {(parameterizedFormFF && showButtons) && <ActionButton onClick={toggleShowParameterizedForm} label="Formularios configurables" />}
+                {showButtons && <ActionButton onClick={toggleShowPharmacosSection} label="Fármacos y Grupos de fármacos" />}
+                {showSectors && <SectorsSection/>}
+                {showHierarchicalUnit && <HierarchicalUnitSection {...props} />}
+                {showParameterizedForm && <ParameterizedFormsSection {...props} />}
+                {showPharmacosSection && <PharmacosSection/>}
+
             </SimpleShowLayout>
         </Show>
     );
@@ -220,7 +314,7 @@ const HierarchicalUnitTabs = (props) => (
             </Tab>
         </TabbedShowLayout>
     </Fragment>
-)
+);
 
 export default InstitutionShow;
 export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, HierarchicalUnitTabs, ShowSectors };

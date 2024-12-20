@@ -26,12 +26,14 @@ public class StudyOrderReportInfoBo {
     private Integer serviceRequestId;
     private Integer diagnosticReportId;
 	private Boolean hasActiveAppointment;
+	private Short reportStatusId;
     private Boolean isAvailableInPACS;
     private String observationsFromServiceRequest;
     private Integer appointmentId;
     private LocalDate appointmentDate;
     private LocalTime appointmentHour;
     private String localViewerUrl;
+	private String deriveToInstitution;
 
 
 }

@@ -43,7 +43,7 @@ public class CreateMedicalDischarge {
         this.setValuesFromEpisodeAndInstitution(medicalDischargeBo, episodeId, institutionId);
 
         boolean saved = emergencyCareEpisodeDischargeService.newMedicalDischarge(medicalDischargeBo, institutionId);
-        emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_MEDICA, null, null, null);
+        emergencyCareEpisodeStateService.changeState(episodeId, institutionId, EmergencyCareState.CON_ALTA_PACIENTE, null, null, null);
         hospitalApiPublisher.publish(medicalDischargeBo.getPatientId(), institutionId, EHospitalApiTopicDto.ALTA_MEDICA);
 
         log.debug("Output -> {}", saved);

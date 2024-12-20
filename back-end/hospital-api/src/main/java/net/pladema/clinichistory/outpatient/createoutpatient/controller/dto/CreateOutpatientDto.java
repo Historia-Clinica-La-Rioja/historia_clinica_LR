@@ -2,6 +2,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,8 @@ public class CreateOutpatientDto {
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();
 
     private List<@Valid CreateOutpatientProcedureDto> procedures = new ArrayList<>();
+	@Nullable
+	private List<@Valid CreateOutpatientServiceRequestDto> serviceRequests = new ArrayList<>();
 
     @Nullable
     private ReferableItemDto<@Valid OutpatientPersonalHistoryDto> personalHistories;

@@ -56,4 +56,9 @@ public class EmergencyCareEpisodeStorageImpl implements EmergencyCareEpisodeStor
 		return emergencyCareEpisodeRepository.findByDoctorsOfficeIdInAttention(doctorsOfficeId).map(EmergencyCareBo::new);
 	}
 
+	@Override
+	public Optional<EmergencyCareBo> getById(Integer episodeId) {
+		return emergencyCareEpisodeRepository.findById(episodeId).map(EmergencyCareBo::new);
+	}
+
 }

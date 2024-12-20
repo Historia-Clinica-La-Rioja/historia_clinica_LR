@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository.TranscribedServiceRequestRepository;
+import net.pladema.imagenetwork.application.exception.StudyException;
+import net.pladema.imagenetwork.domain.exception.EStudyException;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentDetailOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
@@ -18,6 +20,7 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImage
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentOrderImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.DetailsOrderImageBo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,10 +38,16 @@ public class AppointmentOrderImageServiceImpl implements AppointmentOrderImageSe
 	}
 
 	@Override
+	@Transactional
 	public void updateCompleted(DetailsOrderImageBo detailsOrderImageBo) {
 		log.debug("Input parameters -> DetailsOrderImageBo '{}'", detailsOrderImageBo);
 		Integer appointmentId = detailsOrderImageBo.getAppointmentId();
 		Boolean isReportRequired = detailsOrderImageBo.getIsReportRequired();
+
+		if (isAlreadyCompleted(appointmentId)) {
+			throw new StudyException(EStudyException.STUDY_ALREADY_FINISHED, "appointment.study.already.finished");
+		}
+
 		DetailsOrderImage doi = detailsOrderImageRepository.save(new DetailsOrderImage(appointmentId,
 				detailsOrderImageBo.getObservations(), detailsOrderImageBo.getCompletedOn(),
 				detailsOrderImageBo.getProfessionalId(), isReportRequired));

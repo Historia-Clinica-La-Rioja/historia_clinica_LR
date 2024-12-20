@@ -71,6 +71,12 @@
 			<version>${revision}</version>
         </dependency>
 
+		<dependency>
+			<groupId>ar.lamansys.hsi</groupId>
+			<artifactId>sgx-dashboards</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>

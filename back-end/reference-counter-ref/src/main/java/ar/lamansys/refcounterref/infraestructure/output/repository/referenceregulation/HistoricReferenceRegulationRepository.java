@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation;
 
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceregulation.entity.HistoricReferenceRegulation;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 
 import org.springframework.data.jpa.repository.Modifying;

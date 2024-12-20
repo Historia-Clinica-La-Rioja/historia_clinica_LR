@@ -30,7 +30,7 @@ public class SnomedConceptsRepository {
 	}
 
     public SnomedSearchVo searchConceptsWithResultCountByEcl(String term, String ecl, String groupDescription) {
-        log.debug("Input parameters -> term {}, ecl {}", term, ecl);
+        log.debug("Input parameters -> ecl {}", ecl);
         List<SnomedSearchItemVo> items = searchConcepts(term, ecl, groupDescription);
         Integer matchCount = Math.toIntExact(getTotalResultCount(term, ecl, groupDescription));
         SnomedSearchVo result = new SnomedSearchVo(items, matchCount);
@@ -39,7 +39,7 @@ public class SnomedConceptsRepository {
     }
 
     private List<SnomedSearchItemVo> searchConcepts(String term, String ecl, String groupDescription) {
-        String sqlString =
+        String sqlString = term != null ?
                 "SELECT s.id, s.sctid, s.pt " +
                     ", ts_rank( to_tsvector('spanish', s.pt), plainto_tsquery('spanish', :term), 2 ) as rank " +
 						// the parameter '2' makes the ts_rank function divide the rank by the document length
@@ -52,13 +52,31 @@ public class SnomedConceptsRepository {
 					"AND (sg.description = :groupDescription) " +
                     "AND (srg.lastUpdate >= sg.lastUpdate) " +
                 "ORDER BY rank DESC "
+
+				:
+
+				"SELECT s.id, s.sctid, s.pt " +
+						", ts_rank( to_tsvector('spanish', s.pt), '0') as rank " +
+						// in this case, there's no term to filter, so the rank is set to 0
+						" FROM Snomed s " +
+						" JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
+						" JOIN SnomedGroup sg ON (srg.groupId = sg.id) " +
+						" WHERE (sg.ecl = :ecl) " +
+						" AND (sg.description = :groupDescription) " +
+						" AND (srg.lastUpdate >= sg.lastUpdate) " +
+						" ORDER BY rank DESC "
         ;
 
-        Query query = entityManager.createQuery(sqlString)
+        Query query = term != null ? entityManager.createQuery(sqlString)
 				.setParameter("ecl", ecl)
 				.setParameter("groupDescription", groupDescription)
                 .setParameter("term", term)
                 .setMaxResults(LIMIT)
+				:
+				entityManager.createQuery(sqlString)
+						.setParameter("ecl", ecl)
+						.setParameter("groupDescription", groupDescription)
+						.setMaxResults(LIMIT)
                 ;
 
         List<Object[]> queryResult = query.getResultList();
@@ -81,7 +99,7 @@ public class SnomedConceptsRepository {
 
     private Long getTotalResultCount(String term, String ecl, String groupDescription) {
 
-        String sqlString =
+        String sqlString = term != null ?
                 "SELECT COUNT(s.id) " +
                 "FROM Snomed s " +
                 "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
@@ -90,13 +108,24 @@ public class SnomedConceptsRepository {
 					"AND (sg.ecl = :ecl) " +
 					"AND (sg.description = :groupDescription ) " +
                     "AND (srg.lastUpdate >= sg.lastUpdate ) "
-                ;
+                 :
+				"SELECT COUNT(s.id) " +
+						"FROM Snomed s " +
+						"JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
+						"JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
+						"WHERE (sg.ecl = :ecl) " +
+						"AND (sg.description = :groupDescription ) " +
+						"AND (srg.lastUpdate >= sg.lastUpdate ) ";
 
-        Query query = entityManager.createQuery(sqlString)
+        Query query = term != null ?
+				entityManager.createQuery(sqlString)
 				.setParameter("ecl", ecl)
 				.setParameter("groupDescription", groupDescription)
                 .setParameter("term", term)
-                ;
+				:
+				entityManager.createQuery(sqlString)
+						.setParameter("ecl", ecl)
+						.setParameter("groupDescription", groupDescription);
 
         List<Object> queryResult = query.getResultList();
 

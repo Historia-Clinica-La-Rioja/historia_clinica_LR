@@ -1,0 +1,24 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div>
+		<span mat-dialog-title class="mat-h2">{{ template.title | translate }}</span>
+		<app-attention-place-summary [attentionPlaceDetails]="data.attentionPlaceDetails"></app-attention-place-summary>
+	</div>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>clear</mat-icon>
+	</button>
+</div>
+
+<mat-dialog-content *ngIf="dialogType === 'block'">
+	<form [formGroup]="blockReasonForm">
+		<app-attention-place-block-reason formControlName="reason"
+			[submitParentFormEvent]="submitFormEvent"></app-attention-place-block-reason>
+	</form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" fxLayoutGap="10px">
+	<app-button id="cancel" *ngIf="template.hasCancelButton" text="{{template.cancelButtonDescription}}" (clicked)="closeDialog()">
+	</app-button>
+	<app-button id="confirm" buttonType="{{RAISED}}" color="{{template.confirmationButtonColor}}"
+		text="{{template.confirmationButtonDescription}}" [isLoading]="isLoadingRequest" (clicked)="save()">
+	</app-button>
+</mat-dialog-actions>

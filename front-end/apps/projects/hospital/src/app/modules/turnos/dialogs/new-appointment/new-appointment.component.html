@@ -225,31 +225,27 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button id="back" class="back-btn" *ngIf="stepper.selectedIndex > indexStep.MODALITY" mat-stroked-button color="primary"
-		[disabled]="preselectedPatient && stepper.selectedIndex === indexStep.INFO" (click)="back(stepper)">
-		<span [translate]="'buttons.BACK'"></span>
-	</button>
-	<div fxLayout="row" fxLayoutAlign="end" *ngIf="stepper.selectedIndex === indexStep.SEARCH">
+	<app-button id="back" class="back-btn" *ngIf="stepper.selectedIndex > indexStep.MODALITY"
+		[disabled]="preselectedPatient && stepper.selectedIndex === indexStep.INFO" text="buttons.BACK" (clicked)="back(stepper)">
+	</app-button>
+	<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px" *ngIf="stepper.selectedIndex === indexStep.SEARCH">
 		<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-			<button id="add-patient" mat-flat-button [mat-dialog-close]="-1" color="primary" (click)="goCreatePatient()"
+			<app-button id="add-patient" buttonType="mat-flat-button" color="primary" text="turnos.new-appointment.BUTTON_ADD_PATIENT" (clicked)="goCreatePatient()"
 				*ngIf="showAddPatient">
-				<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
-			</button>
+			</app-button>
 		</ng-container>
-		<button id="search-patient" mat-flat-button color="primary" type="submit" (click)="search()">
-			<span [translate]="'buttons.CONTINUE'"></span>
-		</button>
+		<app-button id="search-patient" buttonType="mat-flat-button" color="primary" text="buttons.CONTINUE" (clicked)="search()">
+		</app-button>
 	</div>
 
-	<button id="confirm" mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"
-		[disabled]="isSubmitButtonDisabled">
-		<span [translate]="'buttons.CONFIRM'"></span>
-	</button>
-	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && !data.expiredAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || ((data.protectedAppointment || data.expiredAppointment) && (stepper.selectedIndex === indexStep.INFO || stepper.selectedIndex === indexStep.MODALITY)) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid" mat-raised-button type="button" color="primary">
-		<span [translate]="'buttons.CONTINUE'"></span>
-	</button>
-	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"
-		*ngIf="((data.protectedAppointment || data.expiredAppointment) && stepper.selectedIndex === indexStep.PROTECTED_MOTIVE)" [disabled]="disableConfirmButtonStep3()">
-		<span [translate]="'buttons.CONFIRM'"></span>
-	</button>
+	<app-button id="confirm" buttonType="mat-raised-button" text="buttons.CONFIRM" color="primary" *ngIf="showConfirmButton()" (clicked)="submit()"
+		[isLoading]="isLoadingRequest">
+	</app-button>
+	<app-button id="next" buttonType="mat-raised-button" color="primary" text="buttons.CONTINUE" 
+		(clicked)="stepper.next()" *ngIf="(!data.protectedAppointment && !data.expiredAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || ((data.protectedAppointment || data.expiredAppointment) && (stepper.selectedIndex === indexStep.INFO || stepper.selectedIndex === indexStep.MODALITY)) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid">
+	</app-button>
+	<app-button id="confirm-from-step-3" (clicked)="submit(true)" buttonType="mat-raised-button" color="primary" text="buttons.CONFIRM" 
+		[disabled]="disableConfirmButtonStep3()" [isLoading]="isLoadingRequest"
+		*ngIf="((data.protectedAppointment || data.expiredAppointment) && stepper.selectedIndex === indexStep.PROTECTED_MOTIVE)"
+	></app-button>
 </mat-dialog-actions>

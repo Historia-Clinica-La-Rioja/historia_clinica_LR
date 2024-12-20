@@ -225,7 +225,7 @@ public class DiaryController {
     }
 
 	@GetMapping("/active-diaries-clinical-specialties")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public List<MasterDataDto> getClinicalSpecialtiesWithActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		var clinicalSpecialties = diaryService.getActiveDiariesClinicalSpecialties(institutionId);
@@ -242,7 +242,7 @@ public class DiaryController {
 	}
 
 	@GetMapping("/clinical-specialty/{clinicalSpecialtyId}/active-diaries-aliases")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
 	public List<MasterDataDto> getClinicalSpecialtyAliasesWithActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
@@ -262,7 +262,7 @@ public class DiaryController {
 	}
 
     @PostMapping("/generate-empty-appointments")
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL')")
     public ResponseEntity<List<EmptyAppointmentDto>> getAvailableAppointments(
             @PathVariable(name = "institutionId") Integer institutionId,
             @RequestBody AppointmentSearchDto searchCriteria) {

@@ -62,4 +62,6 @@ public interface PersonService {
     CompletePersonNameBo findByHealthcareProfessionalId(Integer healthcareProfessionalId);
 
 	Optional<PersonBo> getPersonData(Integer patientId);
+
+	String getCompletePersonNameByUserId(Integer userId);
 }

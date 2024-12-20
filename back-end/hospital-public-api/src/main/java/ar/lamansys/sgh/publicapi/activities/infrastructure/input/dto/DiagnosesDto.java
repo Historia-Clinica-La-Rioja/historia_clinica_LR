@@ -18,4 +18,10 @@ public class DiagnosesDto {
 		this.others = new ArrayList<>();
 	}
 
+	public static DiagnosesDto emptyDiagnoses(){
+		var ret = new DiagnosesDto();
+		ret.setMain(SnomedCIE10Dto.empty());
+		return ret;
+	}
+
 }

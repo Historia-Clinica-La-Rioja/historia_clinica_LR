@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 
 
+import net.pladema.imagenetwork.derivedstudies.application.exception.MoveStudiesException;
+import net.pladema.imagenetwork.derivedstudies.domain.exception.EMoveStudiesException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +66,10 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	private final SavePacWhereStudyIsHosted savePacWhereStudyIsHosted;
 
 	private final PatientExternalService patientExternalService;
+
+
 	@Override
+	@Transactional
 	public Integer save(MoveStudiesBO moveStudyBO) {
 		MoveStudies moveStudy = new MoveStudies( moveStudyBO.getAppointmentId(),
 				moveStudyBO.getOrchestratorId(),
@@ -80,32 +85,40 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
+	@Transactional
 	public Integer create(Integer appointmentId, Integer institutionId) {
-		List<PacServerBO> pacServers = pacServerService.getAllPacServer();
-		String imageId = appointmentOrderImageService.getImageId(appointmentId).orElse("none");
-		MoveStudiesBO moveStudyBO = new MoveStudiesBO();
-		if ( !pacServers.isEmpty() && !imageId.equals("none")){
+
+			Integer pacServerId = pacServerService.getAllPacServer().stream()
+					.findFirst()
+					.map(PacServerBO::getId)
+					.orElseThrow(() -> new MoveStudiesException(EMoveStudiesException.NO_PACS_AVAILABLE, "app.imagenetwork.error.no-pacs-available"));
+
+			String imageId = appointmentOrderImageService.getImageId(appointmentId)
+					.stream()
+					.dropWhile(String::isBlank)
+					.findFirst()
+					.orElseThrow(() -> new MoveStudiesException(EMoveStudiesException.IMAGE_ID_NOT_DEFINED, "app.imagenetwork.error.image-id-not-defined"));
+
+			Integer orchestratorId = appointmentService.getEquipmentAppointment(appointmentId)
+					.map(AppointmentBo::getDiaryId)
+					.flatMap(equipmentDiaryService::getEquipmentDiary)
+					.map(CompleteEquipmentDiaryBo::getEquipmentId)
+					.map(equipmentService::getEquipment)
+					.map(EquipmentBO::getOrchestratorId)
+					.orElseThrow(() -> new MoveStudiesException(EMoveStudiesException.ORCHESTRATOR_NOT_FOUND, "app.imagenetwork.error.orchestrator-not-found"));
+
+			MoveStudiesBO moveStudyBO = new MoveStudiesBO();
 			moveStudyBO.setAppointmentId(appointmentId);
 			moveStudyBO.setStatus(MoveStudiesJob.PENDING);
 			moveStudyBO.setPriorityMax(0);
 			moveStudyBO.setAttempsNumber(0);
-			Integer pacServerId = pacServers.get(0).getId();
 			moveStudyBO.setPacServerId(pacServerId);
-
-			AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
-			Integer diaryId = appointment.getDiaryId();
-			CompleteEquipmentDiaryBo equipmentDiary = equipmentDiaryService.getEquipmentDiary(diaryId).orElse(null);
-			Integer equipmentId = equipmentDiary.getEquipmentId();
-			EquipmentBO equipmentBO = equipmentService.getEquipment(equipmentId);
-			Integer orchestratorId = equipmentBO.getOrchestratorId();
 			moveStudyBO.setOrchestratorId(orchestratorId);
 			moveStudyBO.setImageId(imageId);
 			moveStudyBO.setPriority(5);
 			moveStudyBO.setInstitutionId(institutionId);
-			return save(moveStudyBO);
-		}
-		return -1;
 
+			return save(moveStudyBO);
 	}
 
 	@Override
@@ -116,6 +129,7 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
+	@Transactional
 	public void updateSize(Integer idMove, Integer size, String imageId) {
 		moveStudiesRepository.updateSize(idMove, size);
 		MoveStudies moveStudy = moveStudiesRepository.findById(idMove).orElse(null);
@@ -140,11 +154,13 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
+	@Transactional
 	public void updateStatus(Integer idMove, String status) {
 		moveStudiesRepository.updateStatus(idMove, status);
 	}
 
 	@Override
+	@Transactional
 	public void updateStatusAndResult(Integer idMove, String status, String result) {
 		moveStudiesRepository.updateStatusandResult(idMove, status, result);
 		if(MoveStudiesJob.MOVING.equals(status)){
@@ -206,12 +222,13 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 	}
 
 	@Override
+	@Transactional
 	public void updateAttemps(Integer idMove, Integer attemps) {
 		moveStudiesRepository.updateAttemps(idMove,attemps);
 	}
 
 	@Override
-	public void getSizeFromOrchestrator(Integer idMove) {
+	public void publishSizeFromOrchestrator(Integer idMove) {
 
 		Optional<MoveStudies> optionalMoveStudies = moveStudiesRepository.findById(idMove);
 

@@ -19,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 public class BookingSpecialtyStorageImpl implements BookingSpecialtyStorage {
 
     private static final short SPECIALTY = 2;
+	private static final short MEDICAL_ATTENTION_TYPE = 1;
 
     private final BookingClinicalSpecialtyJpaRepository repository;
     private final EntityManager entityManager;
+
 
     public BookingSpecialtyStorageImpl(
             BookingClinicalSpecialtyJpaRepository repository,
@@ -159,7 +161,15 @@ public class BookingSpecialtyStorageImpl implements BookingSpecialtyStorage {
         return Optional.ofNullable(result);
     }
 
-    private List<BookingSpecialtyBo> createPracticesList(List<Object[]> rows) {
+	@Override
+	public List<BookingSpecialtyBo> findSpecialtiesByProfessionals() {
+		log.debug("Find specialties by professionals");
+		var specialties = repository.findSpecialtiesByProfessionals(SPECIALTY, MEDICAL_ATTENTION_TYPE);
+		log.debug("specialties => {}", specialties);
+		return specialties;
+	}
+
+	private List<BookingSpecialtyBo> createPracticesList(List<Object[]> rows) {
         if (rows.isEmpty()) return null;
         return rows.stream().map(row ->
                 new BookingSpecialtyBo((Integer) row[0], (String) row[1])

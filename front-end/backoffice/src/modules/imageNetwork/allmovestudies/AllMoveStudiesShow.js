@@ -8,11 +8,11 @@ import {
     ReferenceField,
     SimpleShowLayout,
     SelectField,
-    DateField,
     useRedirect
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {makeStyles} from "@material-ui/core/styles";
+import SgxDateField from '../../../dateComponents/sgxDateField';
 
 const MoveStudiesActions = ({ data }) => {
     const useStyles = makeStyles({
@@ -63,7 +63,7 @@ const MoveStudiesShow = (props) => (
            <TextField source="identificationNumber" />
            <TextField source="firstName" />
            <TextField source="lastName" />
-           <DateField source="appoinmentDate"/>
+           <SgxDateField source="appoinmentDate"/>
            <TextField source="appoinmentTime" type="time"/>
            <TextField source="imageId" />
            <SelectField source="status" choices={[

@@ -62,6 +62,8 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         result.setAppointmentId((Integer) row[11]);
         result.setHasActiveAppointment((Boolean) row[12]);
         result.setObservationsFromServiceRequest((String) row[13]);
+		result.setReportStatusId((Short) row[14]);
+		result.setDeriveToInstitution((String) row[15]);
         log.trace("Output -> {}", result);
         return result;
     }

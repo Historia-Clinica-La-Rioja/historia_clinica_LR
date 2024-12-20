@@ -32,7 +32,7 @@ public class AppointmentNotificationStorageImpl implements AppointmentNotificati
                 notifyPatientVo.getSectorId(),
                 notifyPatientVo.getDoctorLastName()+", "+notifyPatientVo.getDoctorFirstName(),
                 notifyPatientVo.getDoctorsOfficeName(),
-                notifyPatientVo.getTopic()
+                notifyPatientVo.getTvMonitor()
         ));
     }
 }

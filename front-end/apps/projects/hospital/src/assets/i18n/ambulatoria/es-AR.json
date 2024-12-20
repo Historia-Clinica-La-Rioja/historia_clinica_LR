@@ -257,7 +257,7 @@
 					"RECEIVER": "Receptor",
 					"PROTECTED_APPOINTMENT": " turnos protegidos disponibles para ser asignados por red de atención en los próximos 60 días.",
                     "APPOINTMENT": " turnos disponibles para ser asignados por la institución destino en los próximos 60 días.",
-					"PRACTICE_PROCEDURE": "Práctica/procedimiento",
+					"PRACTICE_PROCEDURE": "Práctica/procedimiento *",
 					"STUDY_CATEGORY": "Categoría de estudios",
                     "CONFIRM": "Confirmar"
                 },
@@ -276,7 +276,37 @@
                         "TYPEAHEAD_PLACEHOLDER": "Formulario"
                     },
                     "REGISTERED_FORM": "Formularios registrado/s"
-                }
+                },
+				"studies": {
+					"TITLE": "Estudios",
+					"buttons": {
+						"ADD": "Agregar estudio"
+					},
+					"dialog": {
+						"TITLE": "Estudios realizados",
+						"PATIENT_DATA": "Datos del paciente",
+						"SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+						"MEDICAL_COVERAGE": "Cobertura médica",
+						"UPDATE_COVERAGE": "Actualizar cobertura",
+						"HEALTH_PROBLEM": "Problema asociado",
+						"SELECT_PROBLEM": "Seleccione problema asociado",
+						"BACK": "Volver",
+						"NEXT": "Siguiente",
+						"STUDIES_LABEL": "Estudios realizados",
+						"CATEGORY": "Categoría de estudio",
+						"SELECT_CATEGORY": "Seleccionar categoría",
+						"STUDY": "Estudio",
+						"SEARCH_STUDY":"Buscar estudio...",
+						"RESULT": "Resultados",
+						"LOAD_RESULT": "¿Cargar resultados?",
+						"OPTION_NO": "No, dejar resultados pendientes",
+						"OPTION_YES": "Si, cargar resultado de estudio ahora",
+						"ADD": "Agregar estudio realizado",
+						"OBSERVATIONS": "Observaciones",
+						"OBSERVATIONS_DESCRIPTION": "Descripción de los resultados",
+						"UPLOAD_FILE": "Adjuntar archivo"
+					}
+				}
             },
             "reference-notification": {
                 "title": {
@@ -523,12 +553,9 @@
                     "OBSERVATIONS": "Observaciones",
                     "INTERVAL_HOURS_REQUIRED": "Ingrese cantidad de horas válidas",
                     "ADMINISTRATION_TIME_DAYS_REQUIRED": "Ingrese cantidad de días",
-                    "UNIT_DOSE": "Dosis / Unidad",
-                    "DAY_DOSE": "Dosis / Día",
                     "TREATMENT_DAYS": "Días de tratamiento",
                     "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
                     "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado",
-                    "QUANTITY": "Cantidad",
 					"GENERIC_SEARCH": "Buscar por genérico",
 					"COMMERCIAL_SEARCH": "Buscar por comercial",
 					"GENERIC_PHARMACO_SEARCH": "Buscar por fármaco genérico",
@@ -537,9 +564,24 @@
 					"SUGGESTED_COMMERCIAL_MEDICATION": "Marca sugerida",
 					"PRESENTATION_UNITS": "Presentaciones disponibles",
 					"SELECT_PRESENTATION_UNITS": "Seleccione presentación",
-					"UNITS": " unidades",
+					"UNITS": " unidad/es",
 					"MEDICATION_PACK_QUANTITY": "Cantidad de envases",
-                    "ENABLED_IN_VADEME": "Habilitado en Vademe"
+                    "ENABLED_IN_VADEME": "Habilitado en Vademe",
+                    "AUDIT_REQUIRED_TEXT":"Al incluir la indicación de este fármaco se requiere la siguiente documentación para ser auditada:"
+                },
+                "old_digital_prescription_item_dialog": {
+                    "UNIT_DOSE":"Dosis / Unidad",
+                    "DAY_DOSE":"Dosis / Día",
+                    "QUANTITY":"Cantidad"
+                },
+                "add_digital_prescription_item_dialog": {
+                    "QUANTITY": "Cantidad por vez",
+                    "TOTAL_QUANTITY": "Cantidad total",
+                    "FREQUENCY": "Frecuencia",
+                    "frequency_type": {
+                        "DAY": "día/s",
+                        "HS": "hs."
+                    }
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
@@ -579,7 +621,7 @@
                     "DAY_DOSE": "Dosis / Día: {{dayDose}}",
                     "QUANTITY": "Cantidad: {{quantity}}",
                     "TREATMENT_DAYS": "Días de tratamiento: {{treatmentDays}}",
-                    "INTERVAL": "Cada {{interval}} hs.",
+                    "INTERVAL": "cada {{frequency}} {{frequencyType}}",
                     "USUAL": "Habitual",
                     "DAILY": "Diario",
                     "DIAGNOSIS": "Diagnóstico: {{healthProblem}}",
@@ -738,7 +780,8 @@
                     "EDUCATION": "Educación"
                 },
 				"select_template": {
-                    "TITLE": "Plantilla de resultados"
+                    "TITLE": "Plantilla de resultados",
+					"PLACEHOLDER": "Seleccione una plantilla"
 				},
                 "dialog": {
                     "TITLE_DELETE_STUDY_CONFIRM": "¿Seguro que desea eliminar el estudio?"
@@ -866,6 +909,7 @@
                     "CATEGORY": "Categoría del estudio",
                     "SEARCH_STUDY": "Buscar estudio...",
                     "HEALTH_PROBLEM": "Problema asociado",
+					"HEALTH_PROBLEM_PLACEHOLDER": "Seleccione problema asociado",
                     "NOTES": "Observaciones",
                     "NEXT_BUTTON": "Agregar",
                     "TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
@@ -1173,7 +1217,8 @@
 				"ALL": "Todos",
 				"SELECTED_ROWS": "Filas seleccionadas:",
 				"DOWNLOAD": "Descargar",
-				"LAST_PRINTED": "Última impresión realizada por "
+				"LAST_PRINTED": "Última impresión realizada por ",
+                "MAX_DOCUMENTS_SELECTED": "No es posible descargar más de 20 documentos por vez"
 			}
 		},
         "screen_change_warning_dialog": {
@@ -1213,6 +1258,9 @@
 				"CONTENT": "Si completa parcialmente el estudio, la especialidad, el tipo de cierre, las observaciones y los archivos adjuntos no quedarán guardados. ¿Desea completar parcialmente de todos modos?",
 				"OK_BUTTON" : "Si, completar",
 				"CANCEL": "No, cancelar"
+			},
+			"form": {
+				"INVALID_FORMAT": "El formato ingresado es inválido"
 			}
 		},
 		"reference-study-closure-information":{

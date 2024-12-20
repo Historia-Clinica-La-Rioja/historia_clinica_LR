@@ -11,6 +11,7 @@ import { PatientNameService } from '@core/services/patient-name.service';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { OrderTemplateService } from '@historia-clinica/services/order-template.service';
 import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { ButtonType } from '@presentation/components/button/button.component';
@@ -21,7 +22,8 @@ import { map } from "rxjs/operators";
 @Component({
 	selector: 'app-create-outpatient-order',
 	templateUrl: './create-outpatient-order.component.html',
-	styleUrls: ['./create-outpatient-order.component.scss']
+	styleUrls: ['./create-outpatient-order.component.scss'],
+	providers: [OrderTemplateService]
 })
 export class CreateOutpatientOrderComponent implements OnInit {
 	eStudyType: EStudyType;
@@ -39,6 +41,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	orderStudiesService: OrderStudiesService;
 	size = Size.SMALL;
 	ButtonType = ButtonType;
+	templateIds: number[] = [];
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, healthProblems },
@@ -51,7 +54,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
-		private readonly patientNameService: PatientNameService
+		private readonly patientNameService: PatientNameService,
+		private readonly orderTemplate: OrderTemplateService
 	) {
 
 		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
@@ -70,7 +74,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			studyType: [EStudyType.ROUTINE, Validators.required],
-			requiresTechnical: [false, Validators.required],
 			healthProblem: [null, Validators.required],
 			notes: [null]
 		});
@@ -155,6 +158,7 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	private loadSelectedConceptsIntoOrderStudiesService() {
 		const addStudy = (study: Study) => {
 			const added = this.orderStudiesService.add(study);
+			this.orderTemplate.addTemplate(this.orderStudiesService.getStudies());
 			if (!added) {
 				this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED');
 			}
@@ -169,7 +173,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 
 		if (this.selectedStudyIsTemplate()) {
 			const conceptsToLoad = this.selectedStudy.data.concepts.map(mapConceptToStudy);
-			conceptsToLoad.forEach(addStudy);
+			conceptsToLoad.forEach(addStudy);	
+			this.addTemplateId();
 		} else {
 			const conceptToLoad = mapConceptToStudy(this.selectedStudy.data);
 			addStudy(conceptToLoad);
@@ -177,6 +182,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	}
 
 	removeStudy(i) {
+		const study = this.orderStudiesService.getStudyByIndex(i);
+		this.orderTemplate.updateStudiesFromTemplate(study.snomed.sctid);
 		this.orderStudiesService.remove(i);
 	}
 
@@ -199,7 +206,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			hasRecipe: true,
 			observations: this.form.controls.notes.value,
 			studyType: this.form.controls.studyType.value,
-			requiresTransfer: this.form.controls.requiresTechnical.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
@@ -207,9 +213,18 @@ export class CreateOutpatientOrderComponent implements OnInit {
 					categoryId: this.form.controls.studyCategory.value,
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
-			})
+			}),
+			templateIds: this.orderTemplate.getTemplatesIds()
 		};
 		this.saveOutpatientOrder(newOutpatientOrder);
+	}
+
+	private addTemplateId = () => {
+		this.selectedStudy.data.concepts.forEach(concept => {
+			const templateId = this.selectedStudy.data.id;
+			const sctid = concept.conceptId;
+			this.orderTemplate.addStudy(sctid, templateId)
+		});
 	}
 
 	private saveOutpatientOrder(newOutpatientOrder: PrescriptionDto) {

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
 import { dateISOParseDate } from '@core/utils/moment.utils';
@@ -19,6 +19,7 @@ import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
 import { TabsLabel } from '@turnos/constants/tabs';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -61,6 +62,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	editingDiaryId: number;
 	diaryStartDate: Date;
 	diaryEndDate: Date;
+	ButtonType = ButtonType;
+	isSaving = false;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -179,15 +182,18 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
+					this.isSaving = true;
 					this.errors = [];
 					const diary: EquipmentDiaryADto = this.buildEquipmentDiaryDto();
 					if (this.editMode) {
 						this.equipmentDiaryService.updateEquipmentDiary(diary, this.editingDiaryId)
+							.pipe(finalize(() => this.isSaving = false))
 							.subscribe((diaryId: number) => {
 								this.processSuccess(diaryId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)))
 					} else {
 						this.equipmentDiaryService.addEquipmentDiary(diary)
+							.pipe(finalize(() => this.isSaving = false))
 							.subscribe((diaryId: number) => {
 								this.processSuccess(diaryId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)));

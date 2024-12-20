@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import ar.lamansys.sgh.publicapi.appointment.application.fetchbookingbyinstitution.FetchBookingByInstitution;
 import ar.lamansys.sgh.publicapi.appointment.application.makeBooking.MakeBooking;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingCannotSendEmailException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
@@ -44,7 +45,7 @@ public class BookingByInstitutionPublicController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public SavedBookingAppointmentDto bookPreappointment(@PathVariable (name = "institutionId") Integer institutionId, @RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException {
+	public SavedBookingAppointmentDto bookPreappointment(@PathVariable (name = "institutionId") Integer institutionId, @RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException, SaveExternalBookingException, BookingCannotSendEmailException {
 		return makeBooking.run(institutionId,bookingDto);
 	}
 

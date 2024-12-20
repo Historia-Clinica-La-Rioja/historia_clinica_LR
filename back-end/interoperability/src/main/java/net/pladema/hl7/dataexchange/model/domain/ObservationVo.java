@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,7 +23,7 @@ public class ObservationVo {
 	private String valueString;
 	private Integer valueInteger;
 	private Boolean valueBoolean;
-	private Float quantityValue;
+	private BigDecimal quantityValue;
 	private String quantityUnit;
 
 	private String bodyPartCode;

@@ -98,9 +98,6 @@ public enum AppFeature implements Feature {
 
 	@Label("Oculta el listado de profesiones asociado a un paciente en la webapp")
 	OCULTAR_LISTADO_PROFESIONES_WEBAPP,
-	
-	@Label("Muestra en HC la seccion de Enfermeria")
-	HABILITAR_MODULO_ENF_EN_DESARROLLO,
 
 	@Label("Indica si está habilitado el doble factor de autenticación")
 	HABILITAR_2FA,
@@ -200,9 +197,6 @@ public enum AppFeature implements Feature {
 	
 	@Label("Habilita el límite de 1 turno por profesional por persona en reserva online")
 	HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL,
-	
-	@Label("Indica si se muestra el botón 'Agregar nota de Evolución' para el rol ENFERMERO en las acciones de guardia")
-	HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,
 
 	@Label("Indica si se encuentra habilitada la api FHIR para dispensar recetas y cargar resultados de laboratorio") HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO,
 
@@ -241,6 +235,45 @@ public enum AppFeature implements Feature {
 
 	@Label("Indica si se encuentra habilitada la financiacion de medicamentos")
 	HABILITAR_FINANCIACION_DE_MEDICAMENTOS,
+
+	@Label("Indica si se debe avisar por mail que se encuentra disponible el reporte generado al solicitante, para su descarga")
+	HABILITAR_NOTIFICACIONES_REPORTES_PROGRAMADOS,
+
+	@Label("Indica si se encuentran habilitados los reportes que utilizan Cube solicitados por Nación")
+	HABILITAR_REPORTES_NACION_CUBE,
+
+	@Label("Indica si se debe mostrar la sección de carga de estudios en el formulario de consulta ambulatoria")
+	HABILITAR_ESTUDIOS_EN_CONSULTA_AMBULATORIA_EN_DESARROLLO,
+
+	@Label("Indica si está habilitado el módulo de internación")
+	HABILITAR_MODULO_INTERNACION,
+
+	@Label("Indica si está habilitado la funcionalidad asociada a la solicitud de referencias")
+	HABILITAR_SOLICITUD_REFERENCIA,
+
+	@Label("Indica si está habilitado el módulo de camas")
+	HABILITAR_MODULO_CAMAS,
+
+	@Label("Indica si se encuentra habilitada la lista de estudios a realizar en guardia e internación")
+	HABILITAR_LISTA_DE_TRABAJO_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la creación de alertas de aislamiento para pacientes colonizados")
+	HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la creación de sobreturnos mediante API pública (booking)")
+	HABILITAR_SOBRETURNOS_API_PUBLICA,
+	
+	@Label("Indica si se encuentra habilitada la actualizacion del esquema de medicacion comercial")
+	HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS,
+
+	@Label("Indica si se encuentra habilitada la restricción de asignación de turnos en agendas")
+	HABILITAR_RESTRICCION_CANTIDAD_DIAS_ASIG_TURNOS,
+	
+	@Label("Habilita el formulario de receta digital actualizado")
+	HABILITAR_RECETA_DIGITAL_ACTUALIZADA,
+
+	@Label("Habilita la validación de la receta digital a través de api integradora")
+	HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR,
 
 	@Label("Indica si el módulo de cuestionarios está activo")
 	HABILITAR_CUESTIONARIOS,

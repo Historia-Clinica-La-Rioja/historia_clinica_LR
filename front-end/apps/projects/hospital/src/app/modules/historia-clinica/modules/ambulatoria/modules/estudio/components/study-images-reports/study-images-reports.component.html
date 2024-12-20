@@ -1,20 +1,25 @@
 <div fxLayoutAlign="center center" fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="18px">
     <app-tooltip-order [typeOrder]="studyInfo.typeOrder"></app-tooltip-order>
-    <div [ngClass]="isImageOrderCasesIncomplete ? 'files-section' : ''"  fxLayout="row" fxLayoutGap="18px" fxLayoutAlign="center center">
+    <div [ngClass]="isImageOrderCasesIncomplete ? 'files-section' : ''"  [fxLayout]="reportStatusDescription.id !== reportStates.DERIVED ? 'row' : 'column'" fxLayoutGap="18px" fxLayoutAlign="center center">
         <ng-container *ngIf="showAccessToFiles">
-            <app-view-study class="view-study-btn"
-                [isImageId]="studyInfo.infoOrderInstances?.isAvailableInPACS"
-                [studyAvailable]="studyInfo.infoOrderInstances?.isAvailableInPACS"
-                [appointmentId]="appointmentId">
-            </app-view-study>
-            <button *ngIf="this.studyInfo.infoOrderInstances.localViewerUrl" id="view_study_local" mat-stroked-button color="primary" class="buttons"
-            (click)="viewLocalStudy(this.studyInfo.infoOrderInstances.localViewerUrl)">
-                <span>{{'image-network.worklist.details_study.VIEW_STUDY_LOCAL' | translate | uppercase }}</span>
-            </button>
+			<div fxLayoutGap="18px">
+				<app-view-study class="view-study-btn"
+					[isImageId]="studyInfo.infoOrderInstances?.isAvailableInPACS"
+					[studyAvailable]="studyInfo.infoOrderInstances?.isAvailableInPACS"
+					[appointmentId]="appointmentId">
+				</app-view-study>
+				<button *ngIf="this.studyInfo.infoOrderInstances.localViewerUrl" id="view_study_local" mat-stroked-button color="primary" class="buttons"
+				(click)="viewLocalStudy(this.studyInfo.infoOrderInstances.localViewerUrl)">
+					<span>{{'image-network.worklist.details_study.VIEW_STUDY_LOCAL' | translate | uppercase }}</span>
+				</button>
+			</div>
             <div class="report-status">
-                <span *ngIf="!reportStatus; else pendingReport" class="report-label">{{'image-network.worklist.PENDING_REPORT' |
-                    translate}}</span>
-                <ng-template #pendingReport>
+                <ng-container *ngIf="!this.studyInfo.infoOrderInstances.viewReport; else viewReport">
+                    <span class="report-adjust {{reportStatusDescription.color}}">
+                        {{reportStatusDescription.description}}{{reportStatusDescription.id == reportStates.DERIVED ? this.studyInfo.infoOrderInstances.deriveTo : null}}
+                    </span>
+                </ng-container>
+                <ng-template #viewReport>
                     <app-view-report
                         [buttonText]="'image-network.worklist.VIEW_REPORT'"
                         [appointmentId]="appointmentId"

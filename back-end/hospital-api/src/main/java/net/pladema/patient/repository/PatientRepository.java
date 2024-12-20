@@ -1,5 +1,6 @@
 package net.pladema.patient.repository;
 
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherPatientBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.domain.EmergencyCarePatientBo;
 import net.pladema.patient.domain.DocumentPatientBo;
@@ -155,4 +156,13 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			" LEFT JOIN IdentificationType it ON (pe.identificationTypeId = it.id) " +
 			" WHERE p.id = :id ")
 	EmergencyCarePatientBo findEmergencyCarePatientById(@Param("id") Integer id);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherPatientBo(p2.firstName, p2.lastName, it.description, p2.identificationNumber) " +
+			"FROM Patient p " +
+			"JOIN Person p2 ON (p2.id = p.personId) " +
+			"JOIN IdentificationType it ON (it.id = p2.identificationTypeId) " +
+			"WHERE p.id = :patientId")
+    MedicationRequestValidationDispatcherPatientBo fetchPatientDataNeededForMedicationRequestValidation(@Param("patientId") Integer patientId);
+
 }

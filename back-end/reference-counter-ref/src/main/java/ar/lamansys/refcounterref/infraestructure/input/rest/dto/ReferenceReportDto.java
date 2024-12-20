@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.infraestructure.input.rest.dto;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
@@ -51,5 +52,7 @@ public class ReferenceReportDto {
 	private EReferenceRegulationState regulationState;
 
 	private String forwardingType;
+
+	private EReferenceAdministrativeState administrativeState;
 
 }

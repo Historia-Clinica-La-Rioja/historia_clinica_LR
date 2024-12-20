@@ -18,8 +18,10 @@ import { AuthComponent } from './auth.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
 import { UpdatePasswordComponent } from "./components/update-password/update-password.component";
 import { UpdatePasswordSuccessComponent } from './components/update-password-success/update-password-success.component';
+import { PendingTaskItemComponent } from './components/pending-task-item/pending-task-item.component';
 //dialogs
 import { LoginPinCodeComponent } from './dialogs/login-pin-code/login-pin-code.component';
+import { LogoutComponent } from './dialogs/logout/logout.component';
 
 @NgModule({
 	declarations: [
@@ -35,11 +37,13 @@ import { LoginPinCodeComponent } from './dialogs/login-pin-code/login-pin-code.c
 		OauthLoginComponent,
 		AccessDataResetComponent,
 		ExternalOAuthLoginComponent,
-  		HospitalLoginComponent,
+		HospitalLoginComponent,
 		UpdatePasswordComponent,
-  		UpdatePasswordSuccessComponent,
+		UpdatePasswordSuccessComponent,
+		PendingTaskItemComponent,
 		// dialogs
-    	LoginPinCodeComponent,
+		LoginPinCodeComponent,
+		LogoutComponent,
 	],
 	exports: [
 		ExternalOAuthLoginComponent,

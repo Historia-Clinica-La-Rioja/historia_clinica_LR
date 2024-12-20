@@ -87,7 +87,7 @@ export class NewAppointmentComponent implements OnInit {
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
 	private readonly routePrefix;
 	isFormSubmitted = false;
-	public isSubmitButtonDisabled = false;
+	isLoadingRequest = false;
 	VALIDATIONS = VALIDATIONS;
 	lastAppointmentId = -1;
 	patientMedicalOrderTooltipDescription = '';
@@ -348,7 +348,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	submit(itComesFromStep3?: boolean): void {
 		if (this.isAppointmentFormValid()) {
-			this.isSubmitButtonDisabled = true;
+			this.isLoadingRequest = true;
 
 			if (this.data.expiredAppointment) {
 				this.createExpiredAppointment();
@@ -386,7 +386,7 @@ export class NewAppointmentComponent implements OnInit {
 				}
 			}, error => {
 				this.dialogRef.close();
-				this.isSubmitButtonDisabled = false;
+				this.isLoadingRequest = false;
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			})
 		}
@@ -407,7 +407,7 @@ export class NewAppointmentComponent implements OnInit {
 				this.dialogRef.close({ id: appointmentId, email: this.appointmentInfoForm.controls.patientEmail.value });
 			}
 		}, error => {
-			this.isSubmitButtonDisabled = false;
+			this.isLoadingRequest = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
 	}
@@ -422,6 +422,7 @@ export class NewAppointmentComponent implements OnInit {
 			identificationNumber: this.formSearch.controls.identifNumber.value,
 			genderId: this.formSearch.controls.gender.value
 		}
+		this.dialogRef.close(-1);
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
 				queryParams: paramsToSearchPerson
@@ -607,7 +608,7 @@ export class NewAppointmentComponent implements OnInit {
 				this.dialogRef.close({ id: newExpiredAppointmentId, email: this.appointmentInfoForm.controls.patientEmail.value });
 			},
 			error: () => {
-				this.isSubmitButtonDisabled = false;
+				this.isLoadingRequest = false;
 				this.snackBarService.showError("turnos.new-appointment.expired-appointment.MESSAGE_ERROR");
 			}
 		});

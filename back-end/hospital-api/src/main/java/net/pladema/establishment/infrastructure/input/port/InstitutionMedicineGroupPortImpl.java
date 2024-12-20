@@ -1,5 +1,6 @@
 package net.pladema.establishment.infrastructure.input.port;
 
+import ar.lamansys.sgh.shared.domain.medicineGroup.MedicineGroupAuditFinancedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +21,7 @@ public class InstitutionMedicineGroupPortImpl implements ValidateFinancingMedica
 	private final ValidateFinancingMedicinesByInstitutionAndProblem validateFinancingMedicinesByInstitutionAndProblem;
 
 	@Override
-	public Map<String, Boolean> validateFinancingByInstitutionAndProblem(Integer institutionId, List<String> medicineSctids, String problemSctid) {
+	public Map<String, MedicineGroupAuditFinancedBo> validateFinancingByInstitutionAndProblem(Integer institutionId, List<String> medicineSctids, String problemSctid) {
 		log.debug("Input parameters -> institutionId: {}, medicineSctids: {}, problemSctid: {}", institutionId, medicineSctids, problemSctid);
 		return validateFinancingMedicinesByInstitutionAndProblem.run(institutionId, medicineSctids, problemSctid);
 	}

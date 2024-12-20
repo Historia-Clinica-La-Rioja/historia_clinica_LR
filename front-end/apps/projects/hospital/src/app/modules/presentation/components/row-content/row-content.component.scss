@@ -1,0 +1,14 @@
+.row-wrap {
+	display: flex;
+	gap: 16px;
+	justify-content: space-between;
+	align-items: flex-start;
+	align-content: flex-start;
+	row-gap: 16px;
+	align-self: stretch;
+	flex-wrap: wrap;
+
+	> * {
+		flex: 1 0 0;
+	}
+}

@@ -10,13 +10,8 @@ import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
 
 @Getter
 @Setter
@@ -26,15 +21,6 @@ import static java.util.stream.Collectors.groupingBy;
 public class UpdateDiaryOpeningHoursBo extends DiaryOpeningHoursBo {
 
     private List<UpdateDiaryAppointmentBo> appointments = new ArrayList<>();
-
-    public boolean isOverturnsOutOfLimit() {
-        Map<LocalDate, Long> overturnsByDate = appointments.stream()
-                .filter(UpdateDiaryAppointmentBo::isOverturn)
-                .collect(groupingBy(UpdateDiaryAppointmentBo::getDate, counting()));
-        return overturnsByDate.values()
-                .stream()
-                .anyMatch(overturns -> overturns > this.getOverturnCount().intValue());
-    }
 
     public boolean tryToAdjustAppointment(UpdateDiaryAppointmentBo a) {
         if (this.fitsAppointmentHere(a)) {

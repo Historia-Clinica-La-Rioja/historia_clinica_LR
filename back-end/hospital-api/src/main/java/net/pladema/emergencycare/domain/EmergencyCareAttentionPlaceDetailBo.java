@@ -20,4 +20,5 @@ public class EmergencyCareAttentionPlaceDetailBo {
 	private ProfessionalPersonBo professional;
 	private LocalDateTime updatedOn;
 	private EmergencyCareTriageBo lastTriage;
+	private Integer episodeId;
 }

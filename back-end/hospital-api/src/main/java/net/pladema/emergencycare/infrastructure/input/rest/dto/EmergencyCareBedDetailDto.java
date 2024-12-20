@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmergencyCareBedDetailDto extends EmergencyCareAttentionPlaceDetailDto{
-
+public class EmergencyCareBedDetailDto extends EmergencyCareAttentionPlaceDetailDto {
 	private EmergencyCareBedDto bed;
-
 
 }

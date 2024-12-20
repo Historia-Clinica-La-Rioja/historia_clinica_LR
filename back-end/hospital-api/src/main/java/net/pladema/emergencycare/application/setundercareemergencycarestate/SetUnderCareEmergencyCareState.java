@@ -13,7 +13,10 @@ import net.pladema.emergencycare.domain.EmergencyCareEpisodeAttentionPlaceBo;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 
+import net.pladema.establishment.application.attentionplaces.FetchAttentionPlaceBlockStatus;
 import net.pladema.establishment.controller.service.BedExternalService;
+
+import net.pladema.establishment.domain.FetchAttentionPlaceBlockStatusBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,21 +33,23 @@ public class SetUnderCareEmergencyCareState {
 	private final EmergencyCareEpisodeStateStorage emergencyCareEpisodeStateStorage;
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 	private final BedExternalService bedExternalService;
+	private final FetchAttentionPlaceBlockStatus fetchAttentionPlaceBlockStatus;
 
 	@Transactional
-	public Boolean run(Integer episodeId, Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo eceap){
+	public Boolean run(Integer episodeId, Integer institutionId, EmergencyCareEpisodeAttentionPlaceBo attentionPlace){
 		log.debug("Input SetUnderCareEmergencyCareState parameters -> episodeId {}, institutionId {}, " +
-				"emergencyCareEpisodeAttentionPlaceBo {}", episodeId, institutionId, eceap);
+				"emergencyCareEpisodeAttentionPlaceBo {}", episodeId, institutionId, attentionPlace);
 		validateStateChange(episodeId);
-		Integer doctorsOfficeId = eceap.getDoctorsOfficeId();
-		Integer shockroomId = eceap.getShockroomId();
-		Integer bedId = eceap.getBedId();
+		Integer doctorsOfficeId = attentionPlace.getDoctorsOfficeId();
+		Integer shockroomId = attentionPlace.getShockroomId();
+		Integer bedId = attentionPlace.getBedId();
 		Short emergencyCareStateId = EEmergencyCareState.ATENCION.getId();
-
+		validateNotDeleted(institutionId, bedId, doctorsOfficeId, shockroomId);
+		validateAttentionPlaceStatus(institutionId, bedId, doctorsOfficeId, shockroomId);
 		if (doctorsOfficeId != null || shockroomId != null)
 			validateAttentionPlace(doctorsOfficeId, shockroomId);
 
-		saveHistoricEmergencyEpisode(episodeId, eceap);
+		saveHistoricEmergencyEpisode(episodeId, attentionPlace);
 
 		if (bedId != null) {
 			validateBedStatus(bedId);
@@ -61,6 +66,18 @@ public class SetUnderCareEmergencyCareState {
 		Boolean result = true;
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void validateNotDeleted(Integer institutionId, Integer bedId, Integer doctorsOfficeId, Integer shockroomId) {
+		if (bedId != null && !fetchAttentionPlaceBlockStatus.bedExists(institutionId, bedId)) {
+			 throw missing();
+		}
+		if (doctorsOfficeId != null && !fetchAttentionPlaceBlockStatus.doctorsOfficeExists(institutionId, doctorsOfficeId)) {
+			throw missing();
+		}
+		if (shockroomId != null && !fetchAttentionPlaceBlockStatus.shockRoomExists(institutionId, shockroomId)) {
+			throw missing();
+		}
 	}
 
 	private void saveHistoricEmergencyEpisode(Integer episodeId, EmergencyCareEpisodeAttentionPlaceBo eceap) {
@@ -102,5 +119,37 @@ public class SetUnderCareEmergencyCareState {
 			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.BED_NOT_AVAILABLE,
 					"La cama seleccionada no está disponible.");
 		}
+	}
+	private void validateAttentionPlaceStatus(
+			Integer institutionId, Integer bedId, Integer doctorsOfficeId, Integer shockroomId
+	) {
+		findStatus(institutionId, bedId, doctorsOfficeId, shockroomId)
+		.ifPresent(status -> checkBlocked(status));
+	}
+
+	private Optional<FetchAttentionPlaceBlockStatusBo> findStatus(
+			Integer institutionId, Integer bedId, Integer doctorsOfficeId, Integer shockroomId
+	) {
+		if (bedId != null) {
+			return fetchAttentionPlaceBlockStatus.findForBed(institutionId, bedId);
+		}
+		if (doctorsOfficeId != null) {
+			return fetchAttentionPlaceBlockStatus.findForDoctorsOffice(institutionId, doctorsOfficeId);
+		}
+		if (shockroomId != null) {
+			return fetchAttentionPlaceBlockStatus.findForShockRoom(institutionId, shockroomId);
+		}
+		return Optional.empty();
+	}
+
+	private void checkBlocked(FetchAttentionPlaceBlockStatusBo status) {
+		if(status.getIsBlocked())
+			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.BLOCKED,
+					"El lugar de atención se encuentra bloqueado.");
+	}
+	private EmergencyCareEpisodeException missing() {
+		return new EmergencyCareEpisodeException(
+				EmergencyCareEpisodeExcepcionEnum.NOT_FOUND,
+				"El lugar de atención no existe");
 	}
 }

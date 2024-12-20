@@ -5,12 +5,14 @@ import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.infrastructure.repository.consultation.LastOdontogramDrawing;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class ToothDrawingsBo {
 

@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.domain.reference;
 
+import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
 import lombok.AllArgsConstructor;
@@ -25,14 +26,20 @@ public class ReferenceCompleteDataBo {
 
 	private ReferenceForwardingBo forwarding;
 
+	private CounterReferenceSummaryBo closure;
+
+	private ReferenceAdministrativeStateBo administrativeState;
+
 	public ReferenceCompleteDataBo(ReferenceDataBo reference, ReferencePatientBo patient,
 								   ReferenceAppointmentBo appointment, ReferenceRegulationBo regulation,
-								   ReferenceObservationBo observation) {
+								   ReferenceObservationBo observation, CounterReferenceSummaryBo closure, ReferenceAdministrativeStateBo administrativeState) {
 		this.reference = reference;
 		this.patient = patient;
 		this.appointment = appointment;
 		this.regulation = regulation;
 		this.observation = observation;
+		this.closure = closure;
+		this.administrativeState = administrativeState;
 	}
 
 }

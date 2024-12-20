@@ -1,0 +1,13 @@
+<p class="mat-body-strong">{{"guardia.home.attention_places.space.SHOCKROOM" | translate}}</p>
+<form [formGroup]="form">
+	<mat-form-field appearance="outline" fxFlex="100%">
+		<mat-label>{{"guardia.home.attention_places.change-attention-place.SELECT_SHOCKROOM" | translate}}</mat-label>
+		<mat-select formControlName="shockroom">
+			<mat-option *ngFor="let shockroom of availableShockrooms$ | async" [value]="shockroom">
+				{{ shockroom.description }}
+				{{"guardia.home.attention_places.change-attention-place.PREPOSITION_OF" | translate}}
+				{{ shockroom.sectorDescription }}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>

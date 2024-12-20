@@ -9,4 +9,11 @@ public class MasterDataDto extends AbstractMasterdataDto<Number> {
         return Stream.of(getId(), getDescription()).allMatch(Objects::isNull);
     }
 
+    public static MasterDataDto fromShort(Short id, String description) {
+    	var ret = new MasterDataDto();
+    	ret.setId(id);
+    	ret.setDescription(description);
+    	return ret;
+    }
+
 }

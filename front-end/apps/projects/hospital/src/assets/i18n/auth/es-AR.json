@@ -1,62 +1,6 @@
 {
 	"auth": {
-		"login": {
-			"form": {
-				"TITLE": "Iniciar sesión",
-				"USERNAME_LABEL": "Nombre de usuario",
-				"USERNAME_PLACEHOLDER": "Ingrese nombre de usuario",
-				"USERNAME_REQUIRED": "Debe ingresar su usuario",
-				"PASSWORD_LABEL": "Clave",
-				"PASSWORD_PLACEHOLDER": "*****",
-				"PASSWORD_REQUIRED": "Debe ingresar su clave",
-				"SUBMIT": "INGRESAR"
-			},
-			"external": {
-				"TITLE": "Iniciar sesión",
-				"GO_TO_EXTERNAL_LOGIN": "Ingresar con OAuth"
-			},
-			"two-factor-authentication-dialog": {
-				"TITLE": "Ingrese código de autenticación por doble factor",
-				"DESCRIPTION": "Ingrese el código que aparece en su aplicación de doble factor de autenticación (Google Authenticator, FreeOTP o similar)",
-				"VERIFICATION_CODE_MINIMUM_LENGTH": "El código debe contener 6 dígitos",
-				"VERIFICATION_CODE_INVALID": "Código incorrecto",
-				"VERIFY": "Verificar"
-			},
-			"PASSWORD_RECOVER": "¿Olvidaste tu contraseña?"
-		},
 		"LOGOUT": "Cerrar Sesión",
-		"password-reset": {
-			"form": {
-				"TITLE": "Definir clave",
-				"PASSWORD_LABEL": "Nueva clave",
-				"PASSWORD_PLACEHOLDER": "Ingrese una nueva clave",
-				"PASSWORD_REQUIRED": "Debe especificar una clave",
-				"REPASSWORD_LABEL": "Confirme clave",
-				"REPASSWORD_PLACEHOLDER": "Vuelva a ingresar la nueva clave",
-				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
-				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
-				"SUBMIT": "CONFIRMAR"
-			},
-			"result": {
-				"ERROR": "Error definiendo nueva clave",
-				"OK": "Se definió correctamente la clave para el usuario",
-				"TITLE": "Definiendo nueva clave"
-			}
-		},
-		"password-recover": {
-			"TITLE": "Recuperar contraseña",
-			"SUBTITLE":"Por favor ingresá tu usuario y te enviaremos un link vía email para restablecer tu contraseña.",
-			"USER_LABEL": "Nombre de usuario",
-			"ERROR": "Nombre de usuario inexistente. Revise los datos ingresados o, caso contrario, comuníquese con el administrador del sistema.",
-			"RECOVER_PASSWORD": "Recuperar contraseña",
-			"BACK": "Volver al inicio",
-			"USER_ERROR": "Debe ingresar su usuario",
-			"USER_VERIFICATION":"Verificando usuario",
-			"result": {
-				"ERROR": "Su usuario no tiene email registrado, por favor comuníquese con el administrador del sistema",
-				"OK": "Se ha enviado un email a {{email}} con un link para restablecer la contraseña"
-			}
-		},
 		"access-data-reset": {
 			"TITLE": "Establecer datos de aceso",
 			"SUBTITLE": "Puede copiar el link para compartir con otro usuario o establecer los datos de acceso en el siguiente formulario.",
@@ -82,7 +26,72 @@
 				"ERROR_TITLE": "El link ha expirado",
 				"ERROR_SUBTITLE": "Por favor solicite un nuevo link para establecer datos de acceso de usuario"
 			}
-
+		},
+		"login": {
+			"form": {
+				"TITLE": "Iniciar sesión",
+				"USERNAME_LABEL": "Nombre de usuario",
+				"USERNAME_PLACEHOLDER": "Ingrese nombre de usuario",
+				"USERNAME_REQUIRED": "Debe ingresar su usuario",
+				"PASSWORD_LABEL": "Clave",
+				"PASSWORD_PLACEHOLDER": "*****",
+				"PASSWORD_REQUIRED": "Debe ingresar su clave",
+				"SUBMIT": "INGRESAR"
+			},
+			"external": {
+				"TITLE": "Iniciar sesión",
+				"GO_TO_EXTERNAL_LOGIN": "Ingresar con OAuth"
+			},
+			"two-factor-authentication-dialog": {
+				"TITLE": "Ingrese código de autenticación por doble factor",
+				"DESCRIPTION": "Ingrese el código que aparece en su aplicación de doble factor de autenticación (Google Authenticator, FreeOTP o similar)",
+				"VERIFICATION_CODE_MINIMUM_LENGTH": "El código debe contener 6 dígitos",
+				"VERIFICATION_CODE_INVALID": "Código incorrecto",
+				"VERIFY": "Verificar"
+			},
+			"PASSWORD_RECOVER": "¿Olvidaste tu contraseña?"
+		},
+		"logout-dialog": {
+				"TITLE": "Tareas en curso",
+				"SUBTITLE": "Hay tareas en proceso en una o más extensiones. Si cierras la sesión, pueden que estas tareas se interrumpan, cancelen o haya consecuencias inesperadas.",
+				"QUESTION": "¿Deseas continuar con el cierre de sesión?",
+				"ACTION-TITLE": "Haga click en alguna de las siguientes opciones para completar el flujo pendiente",
+				"FORCE_LOGOUT": "Forzar cierre de sesión"
+		},
+		"password-recover": {
+			"TITLE": "Recuperar contraseña",
+			"SUBTITLE": "Por favor ingresá tu usuario y te enviaremos un link vía email para restablecer tu contraseña.",
+			"USER_LABEL": "Nombre de usuario",
+			"ERROR": "Nombre de usuario inexistente. Revise los datos ingresados o, caso contrario, comuníquese con el administrador del sistema.",
+			"RECOVER_PASSWORD": "Recuperar contraseña",
+			"BACK": "Volver al inicio",
+			"USER_ERROR": "Debe ingresar su usuario",
+			"USER_VERIFICATION": "Verificando usuario",
+			"result": {
+				"ERROR": "Su usuario no tiene email registrado, por favor comuníquese con el administrador del sistema",
+				"OK": "Se ha enviado un email a {{email}} con un link para restablecer la contraseña"
+			}
+		},
+		"password-reset": {
+			"form": {
+				"TITLE": "Definir clave",
+				"PASSWORD_LABEL": "Nueva clave",
+				"PASSWORD_PLACEHOLDER": "Ingrese una nueva clave",
+				"PASSWORD_REQUIRED": "Debe especificar una clave",
+				"REPASSWORD_LABEL": "Confirme clave",
+				"REPASSWORD_PLACEHOLDER": "Vuelva a ingresar la nueva clave",
+				"REPASSWORD_NOTEQUIVALENT": "Deben coincidir las claves",
+				"REPASSWORD_REQUIRED": "Debe reingresar la clave",
+				"SUBMIT": "CONFIRMAR"
+			},
+			"result": {
+				"ERROR": "Error definiendo nueva clave",
+				"OK": "Se definió correctamente la clave para el usuario",
+				"TITLE": "Definiendo nueva clave"
+			}
+		},
+		"pending-task-item":{
+			"action-button":"Ir a {{extensionName}}"
 		},
 		"roles": {
 			"LEVEL0": "De todo el sistema",
@@ -95,7 +104,7 @@
 				"ADMINISTRATIVO": "Administrativo",
 				"ENFERMERO_ADULTO_MAYOR": "Enfermero adulto mayor",
 				"ENFERMERO": "Enfermero",
-				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE":  "Administrador institucional",
+				"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE": "Administrador institucional",
 				"ADMINISTRADOR_AGENDA": "Administrador de agenda",
 				"ESPECIALISTA_EN_ODONTOLOGIA": "Especialista en Odontología",
 				"ADMINISTRADOR_DE_CAMAS": "Administrador de camas",
@@ -117,7 +126,7 @@
 				"API_SIPPLUS": "API Sip+",
 				"API_USERS": "API Usuarios",
 				"VIRTUAL_CONSULTATION_RESPONSIBLE": "Responsable de teleconsulta",
-				"VIRTUAL_CONSULTATION_PROFESSIONAL":"Profesional de teleconsulta",
+				"VIRTUAL_CONSULTATION_PROFESSIONAL": "Profesional de teleconsulta",
 				"ADMINISTRADOR_DE_ACCESO_DOMINIO": "Administrador de acceso dominio",
 				"GESTOR_DE_ACCESO_DE_DOMINIO": "Gestor de acceso de dominio",
 				"GESTOR_DE_ACCESO_REGIONAL": "Gestor de acceso regional",
@@ -125,10 +134,11 @@
 				"GESTOR_DE_ACCESO_INSTITUCIONAL": "Gestor de acceso institucional",
 				"ABORDAJE_VIOLENCIAS": "Abordaje violencias",
 				"AUDITORIA_DE_ACCESO": "Auditoria de Acceso",
-				"GESTOR_CENTRO_LLAMADO":  "Gestor de centro de llamado",
+				"GESTOR_CENTRO_LLAMADO": "Gestor de centro de llamado",
 				"ADMINISTRADOR_DE_DATOS_PERSONALES": "Administrador de datos personales",
 				"API_REPORTES": "API Reportes",
-                "API_IMAGENES": "API Imagenes"
+				"API_IMAGENES": "API Imagenes",
+				"FHIR_ACCESS_ALL_RESOURCES": "API FHIR Acceso general a la API"
 			}
 		}
 	}

@@ -11,7 +11,7 @@
 
 		<div fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-				<div fxFlex="50%">
+				<div class="summary-card">
 					<app-summary-card id="active_problems" [header]="activos" [editable]="false">
 						<mat-list id="lista-problemas-activos"
 							*ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
@@ -60,7 +60,7 @@
 						</mat-list>
 					</app-summary-card>
 				</div>
-				<div fxFlex="50%">
+				<div class="summary-card">
 					<app-summary-card id="chronic_problems" [header]="cronicos" [editable]="false">
 						<mat-list id="lista-problemas-cronicos"
 							*ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
@@ -113,7 +113,7 @@
 			</div>
 
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-				<div fxFlex="50%">
+				<div class="summary-card">
 					<app-summary-card id="solved_problems" [header]="resueltos" [editable]="false">
 						<mat-list id="lista-problemas-resueltos"
 							*ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
@@ -171,42 +171,49 @@
 						</mat-list>
 					</app-summary-card>
 				</div>
-				<div fxFlex="50%">
-					<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false">
-						<mat-list id="lista-problemas-hospitalization"
-							*ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
-							<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
-								<mat-list-item>
-									<div fxFlex="100%">
-										<span mat-line class="capitalize-first-letter">
-											{{ problem.mainDiagnose.snomed.pt }}
-										</span>
-										<span mat-line>
-											{{ problem.entryDate | viewDateDto : 'datetime' | dateFormat: 'date' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | dateFormat: 'date') :
-											"actualmente internado" }}
-										</span>
-									</div>
-									<ng-container
-										*ngIf="this.internmentInProcess.inProgress == false || (this.internmentInProcess.inProgress && this.internmentInProcess.id !== problem.sourceId)">
-										<button
-											*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-											mat-icon-button [matMenuTriggerFor]="menu">
-											<mat-icon>more_vert</mat-icon>
-										</button>
-										<mat-menu #menu="matMenu">
-											<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
-												<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+				<ng-container *ngIf="isHabilitarInternacionOn">
+					<div class="summary-card">
+						<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false">
+							<mat-list id="lista-problemas-hospitalization"
+								*ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
+								<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
+									<mat-list-item>
+										<div fxFlex="100%">
+											<span mat-line class="capitalize-first-letter">
+												{{ problem.mainDiagnose.snomed.pt }}
+											</span>
+											<span mat-line>
+												{{ problem.entryDate | viewDateDto : 'datetime' | dateFormat: 'date' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | dateFormat: 'date') :
+												"actualmente internado" }}
+											</span>
+										</div>
+										<ng-container
+											*ngIf="this.internmentInProcess.inProgress == false || (this.internmentInProcess.inProgress && this.internmentInProcess.id !== problem.sourceId)">
+											<button
+												*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+												mat-icon-button [matMenuTriggerFor]="menu">
+												<mat-icon>more_vert</mat-icon>
 											</button>
-										</mat-menu>
-									</ng-container>
-								</mat-list-item>
-								<mat-divider></mat-divider>
-							</div>
-						</mat-list>
-					</app-summary-card>
-				</div>
+											<mat-menu #menu="matMenu">
+												<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
+													<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+												</button>
+											</mat-menu>
+										</ng-container>
+									</mat-list-item>
+									<mat-divider></mat-divider>
+								</div>
+							</mat-list>
+						</app-summary-card>
+					</div>
+				</ng-container>
 			</div>
-			<app-emergency-care-problems [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
+			<ng-container *ngIf="isHabilitarGuardiaOn">
+				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+					<app-emergency-care-problems id="emergency-care-problems-summary-card" class="summary-card" [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
+					<app-isolation-alerts-summary-card id="isolation-alerts-summary-card" class="summary-card" *appFeatureFlag="HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO" [patientId]="patientId"></app-isolation-alerts-summary-card>
+				</div>
+			</ng-container>
 
 			<app-amended-problems (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
 		</div>
@@ -451,7 +458,7 @@
 																		[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
 																	</h3>
 																	<span>
-																		{{reference.counterReference.professional?.fullName}}
+																		{{reference.counterReference.authorFullName}}
 																	</span>
 																</div>
 

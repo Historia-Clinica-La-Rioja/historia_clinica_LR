@@ -10,7 +10,8 @@ import { AppFeature } from "@api-rest/api-model";
 import { EDiaryType } from '@turnos/services/agenda-horario.service';
 import { getElementAtPosition } from '@core/utils/array.utils';
 
-const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS, AppFeature.HABILITAR_TELEMEDICINA, AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO]}]
+const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS, AppFeature.HABILITAR_TELEMEDICINA, 
+	AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO, AppFeature.HABILITAR_SOLICITUD_REFERENCIA]}]
 
 @Component({
 	selector: 'app-new-attention',
@@ -33,6 +34,8 @@ export class NewAttentionComponent implements OnInit {
 	showErrorModality: boolean = false;
 	regulationProtectedAppointmentsAllowed = false;
 	isEnableReportReference = false;
+	isHabilitarSolicitudReferenciaOn = false
+
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
@@ -45,6 +48,7 @@ export class NewAttentionComponent implements OnInit {
 			this.isEnableOnlineAppointments = activesFFElements.includes(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS) || activesFFElements.includes(AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO);
 			this.isEnableTelemedicina = activesFFElements.includes(AppFeature.HABILITAR_TELEMEDICINA);
 			this.isEnableReportReference = activesFFElements.includes(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO);
+			this.isHabilitarSolicitudReferenciaOn = activesFFElements.includes(AppFeature.HABILITAR_SOLICITUD_REFERENCIA)
 		});
 	}
 

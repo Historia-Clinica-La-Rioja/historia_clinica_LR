@@ -12,7 +12,10 @@ import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmen
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 
+import net.pladema.medicalconsultation.diary.application.ValidateBookingRestriction;
 import net.pladema.medicalconsultation.diary.repository.DiaryOpeningHoursRepository;
+
+import net.pladema.medicalconsultation.diary.service.DiaryService;
 
 import org.springframework.stereotype.Service;
 
@@ -50,7 +53,11 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private final AppointmentService appointmentService;
 
+	private final DiaryService diaryService;
+
 	private final AppointmentReferenceStorage appointmentReferenceStorage;
+
+	private final ValidateBookingRestriction validateBookingRestriction;
 
 	@Override
 	@Transactional
@@ -90,7 +97,8 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private void associateReference(Integer appointmentId, Integer referenceId, Integer openingHoursId, Integer diaryId, boolean appointmentHasPhone) {
 		boolean isProtected = appointmentService.openingHourAllowedProtectedAppointment(openingHoursId, diaryId);
-		appointmentReferenceStorage.associateReferenceToAppointment(referenceId, appointmentId, isProtected);
+		Integer institutionId = diaryService.getInstitution(diaryId);
+		appointmentReferenceStorage.associateReferenceToAppointment(referenceId, appointmentId, isProtected, institutionId);
 		if (!appointmentHasPhone) {
 			ReferencePhoneBo phoneReference = appointmentReferenceStorage.getReferencePhoneData(referenceId);
 			appointmentService.updatePhoneNumber(appointmentId, phoneReference.getPhonePrefix(), phoneReference.getPhoneNumber(), UserInfo.getCurrentAuditor());
@@ -98,6 +106,9 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 	}
 
 	private void validateAppointment(AppointmentBo appointment) {
+		if (appointment.isBookingRestictionEnabled()){
+			validateBookingRestriction.run(appointment.getDiaryId(),appointment.getDate());
+		}
 		Boolean isPatientVirtualConsultationAllowed = diaryOpeningHoursRepository.isPatientVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
 		Boolean isSecondOpinionVirtualConsultationAllowed = diaryOpeningHoursRepository.isSecondOpinionVirtualConsultationAllowed(appointment.getDiaryId(), appointment.getOpeningHoursId());
 		if (isPatientVirtualConsultationAllowed != null && isPatientVirtualConsultationAllowed && appointment.getModalityId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId())) {

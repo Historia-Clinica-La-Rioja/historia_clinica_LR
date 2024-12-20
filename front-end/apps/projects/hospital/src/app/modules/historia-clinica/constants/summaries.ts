@@ -156,6 +156,11 @@ export const NURSING_CARE: SummaryHeader = {
 	matIcon: 'event_available',
 }
 
+export const ISOLATION_ALERT_HEADER: SummaryHeader = {
+	matIcon: 'warning_amber',
+	title: 'historia-clinica.isolation-alert.CARD_TITLE'
+};
+
 export enum PatientType {
 	PERMANENT = 1,
 	VALIDATED = 2,

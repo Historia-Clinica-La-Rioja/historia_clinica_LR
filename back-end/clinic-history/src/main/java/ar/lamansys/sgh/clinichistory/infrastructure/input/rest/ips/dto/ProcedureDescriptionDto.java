@@ -66,6 +66,9 @@ public class ProcedureDescriptionDto {
     private TimeDto foodIntake;
 
     @Nullable
+    private DateDto foodIntakeDate;
+
+    @Nullable
     @JsonIgnore
     private LocalDate anesthesiaStartLocalDate;
 
@@ -100,6 +103,10 @@ public class ProcedureDescriptionDto {
     @Nullable
     @JsonIgnore
     private LocalTime foodIntakeClockTime;
+
+    @Nullable
+    @JsonIgnore
+    private LocalDate foodIntakeClockDate;
 
     public boolean hasHistoryStringValues() {
         return (note != null  && !note.isEmpty()) || asa != null;

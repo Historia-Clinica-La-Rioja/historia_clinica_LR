@@ -59,6 +59,7 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
+import { ExtensionsModule } from '@extensions/extensions.module';
 
 @NgModule({
 	declarations: [
@@ -134,6 +135,7 @@ import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 		EmergencyCareStatusLabelsComponent,
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
+		ExtensionsModule
 	],
 	providers: [
 		DateFormatPipe,

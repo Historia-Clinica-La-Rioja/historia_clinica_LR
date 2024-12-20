@@ -1,0 +1,20 @@
+.flex-container-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.break-word {
+    word-break: break-word;
+	white-space: pre-line;
+}
+
+.flex-container-row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.subtitle {
+    font-weight: 500;
+}

@@ -45,6 +45,8 @@ public class GenericServiceRequestBo {
 
 	private LocalDateMapper localDateMapper;
 
+	private List<Integer> templateIds;
+
 	private static final int maxDeferredDate = 45;
 
 	public Integer getPatientId() {

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.establishment.infrastructure.input.rest.dto.FetchAttentionPlaceStatusDto;
 
 @Getter
 @Setter
@@ -23,5 +24,7 @@ public class BedDto implements Serializable {
     private RoomDto room;
     
     private Boolean free;
+
+    private Boolean isBlocked;
 
 }

@@ -1,4 +1,4 @@
-import { stringToDate } from './../../../api-rest/mapper/date-dto.mapper';
+import { mapDateWithHypenToDateWithSlash } from './../../../api-rest/mapper/date-dto.mapper';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
@@ -6,6 +6,7 @@ import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { fromStringToDate } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -61,7 +62,8 @@ export class AppointmentDetailsComponent implements OnInit {
 				if (result !== -1) {
 					this.resetInformation.emit();
 
-					var fullAppointmentDate = this.dateFormatPipe.transform(stringToDate(this.emptyAppointment.date), 'fulldate');
+					var fullAppointmentDate = this.dateFormatPipe.transform(fromStringToDate(mapDateWithHypenToDateWithSlash(this.emptyAppointment.date)), 'fulldate');
+
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = this.emptyAppointment.hour.split(":");
 

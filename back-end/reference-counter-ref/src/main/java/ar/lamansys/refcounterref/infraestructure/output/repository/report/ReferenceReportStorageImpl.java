@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceForwardingStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceReportStorage;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.refcounterref.domain.enums.EReferencePriority;
@@ -34,7 +35,6 @@ import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -46,8 +46,9 @@ import java.util.stream.Collectors;
 public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private static final String SELECT_INFO = "SELECT DISTINCT r.id, r.priority, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
-			"pex.name_self_determination, it.description, pe.identification_number, oc.created_on, cs2.name AS clinicalSpecialtyOrigin, " +
-			"i.name AS institutionOrigin, cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt, r.regulation_state_id ";
+			"pex.name_self_determination, it.description, pe.identification_number, oc.created_on as referenceDate, cs2.name AS clinicalSpecialtyOrigin, " +
+			"i.name AS institutionOrigin, cl.description AS careLine, cr.closure_type_id, i2.name AS institutionDestination, s.id AS snomedId, s.sctid, s.pt, " +
+			"r.regulation_state_id, last_reference_observation.created_on as lastReferenceObservationDate, last_reference_regulation.created_on as lastReferenceRegulationDate, r.administrative_state_id ";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(DISTINCT r.id) as total ";
 
@@ -90,8 +91,9 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		String outpatientConsultationCondition = getCondition(filter, outpatientDateFilterAndCommonData);
 		String odontologyConsultationCondition = getCondition(filter, odontologyDateFilterAndCommonData);
 
-		String sqlQueryData = SELECT_INFO + getOutpatientReferenceFromStatement(filter) + outpatientConsultationCondition + " UNION ALL " +
+		String queries = SELECT_INFO + getOutpatientReferenceFromStatement(filter) + outpatientConsultationCondition + " UNION ALL " +
 				SELECT_INFO + getOdontologyReferenceFromStatement(filter) + odontologyConsultationCondition;
+		String sqlQueryData = "SELECT * FROM (" + queries + ") AS result ORDER BY GREATEST(referenceDate, lastReferenceObservationDate, lastReferenceRegulationDate) DESC";
 		String sqlCountQuery = SELECT_COUNT + getOutpatientReferenceFromStatement(filter) + outpatientConsultationCondition + " UNION ALL " +
 				SELECT_COUNT + getOdontologyReferenceFromStatement(filter) + odontologyConsultationCondition;
 		return executeQueryAndProcessResults(sqlQueryData, sqlCountQuery, filter, pageable);
@@ -139,7 +141,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		if (filter.getIdentificationNumber() != null)
 			condition.append(" AND pe.identification_number = '").append(filter.getIdentificationNumber()).append("' ");
 		if (filter.getAttentionStateId() != null && filter.getAttentionStateId().equals(EReferenceAttentionState.PENDING.getId()))
-			condition.append(" AND (cr.closure_type_id IS null AND r.regulation_state_id = ").append(EReferenceRegulationState.APPROVED.getId()).append(") ");
+			condition.append(" AND (cr.closure_type_id IS null AND r.administrative_state_id = ").append(EReferenceAdministrativeState.APPROVED.getId()).append(") ");
 
 		if (filter.getManagerUserId() != null) {
 			condition.append(" AND igu.user_id = ").append(filter.getManagerUserId());
@@ -152,15 +154,19 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND igi.deleted IS FALSE ");
 		}
 
-
 		if (filter.getRegulationStateId() != null)
 			condition.append(" AND r.regulation_state_id = ").append(filter.getRegulationStateId());
+		else if (filter.isReceived())
+			condition.append(" AND r.regulation_state_id IN (").append(EReferenceRegulationState.AUDITED.getId()).append(", ").append(EReferenceRegulationState.DONT_REQUIRES_AUDIT.getId()).append(")");
 
 		if (filter.getCareLineId() != null)
 			condition.append(" AND r.care_line_id = ").append(filter.getCareLineId());
 
 		if (filter.getDestinationDepartmentId() != null)
 			condition.append(" AND de.id = ").append(filter.getDestinationDepartmentId());
+
+		if (filter.getAdministrativeStateId() != null)
+			condition.append(" AND r.administrative_state_id = ").append(filter.getAdministrativeStateId());
 
 		return condition.toString();
 	}
@@ -177,23 +183,14 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 		if (filter.getAttentionStateId() != null) {
 			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
-
 			result = result.stream()
 					.filter( r -> r.getAttentionState() != null && filter.getAttentionStateId().equals(r.getAttentionState().getId()))
-					.sorted(Comparator.comparing(ReferenceReportBo::getDate))
 					.collect(Collectors.toList());
-
 			return createPage(result, pageable);
-
 		} else {
 			query.setFirstResult(pageable.getPageSize() * pageable.getPageNumber());
 			query.setMaxResults(pageable.getPageSize());
-
 			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
-			result = result.stream()
-					.sorted(Comparator.comparing(ReferenceReportBo::getDate))
-					.collect(Collectors.toList());
-
 			return createPage(result, pageable, sqlCountQuery, filter);
 		}
 	}
@@ -224,6 +221,24 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
+				"LEFT JOIN ( " +
+				"	SELECT reference_id, created_on, row_num " +
+				"	FROM (" +
+				"		SELECT reference_id, created_on, " +
+				"			ROW_NUMBER() OVER (PARTITION BY reference_id ORDER BY created_on DESC) AS row_num " +
+				"		FROM {h-schema}historic_reference_regulation" +
+				"	) as hrr " +
+				"	WHERE hrr.row_num = 1	" +
+				") AS last_reference_regulation ON (last_reference_regulation.reference_id = r.id) " +
+				"LEFT JOIN ( " +
+				"	SELECT reference_id, created_on, row_num " +
+				"	FROM (" +
+				"		SELECT reference_id, created_on, " +
+				"			ROW_NUMBER() OVER (PARTITION BY reference_id ORDER BY created_on DESC) AS row_num " +
+				"		FROM {h-schema}reference_observation" +
+				"	) as ro " +
+				"	WHERE ro.row_num = 1	" +
+				") AS last_reference_observation ON (last_reference_observation.reference_id = r.id) " +
 				"WHERE ";
 	}
 
@@ -254,6 +269,22 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
 				"LEFT JOIN {h-schema}care_line_role clr ON (clr.care_line_id = cl.id) " +
+				"LEFT JOIN ( " +
+				"	SELECT reference_id, created_on, row_num " +
+				"	FROM (" +
+				"		SELECT reference_id, created_on, ROW_NUMBER() OVER (PARTITION BY reference_id ORDER BY created_on DESC) AS row_num " +
+				"		FROM {h-schema}historic_reference_regulation" +
+				"	) as hrr " +
+				"	WHERE hrr.row_num = 1	" +
+				") AS last_reference_regulation ON (last_reference_regulation.reference_id = r.id) " +
+				"LEFT JOIN ( " +
+				"	SELECT reference_id, created_on, row_num " +
+				"	FROM (" +
+				"		SELECT reference_id, created_on, ROW_NUMBER() OVER (PARTITION BY reference_id ORDER BY created_on DESC) AS row_num " +
+				"		FROM {h-schema}reference_observation" +
+				"	) as ro " +
+				"	WHERE ro.row_num = 1	" +
+				") AS last_reference_observation ON (last_reference_observation.reference_id = r.id) " +
 				"WHERE ";
 	}
 
@@ -284,6 +315,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				.institutionDestination((String) row[14])
 				.procedure(new SnomedBo((Integer) row[15], (String) row[16],(String) row[17]))
 				.regulationState(row[18] != null ? EReferenceRegulationState.getById((Short) row[18]) : null)
+				.administrativeState(row[21] != null ? EReferenceAdministrativeState.map((Short) row[21]) : null)
 				.build();
 	}
 
@@ -297,28 +329,27 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		references.forEach(ref -> {
 			ref.setProblems(referencesProblems.stream().filter(rp -> rp.getReferenceId().equals(ref.getId())).map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
 			var appointment = referencesAppointmentStateData.get(ref.getId());
-			ref.setAttentionState(getAttentionState(ref.getClosureType() != null, appointment != null ? appointment.getAppointmentStateId() : null, ref.getRegulationState()));
+			ref.setAttentionState(getAttentionState(ref.getClosureType() != null, appointment != null ? appointment.getAppointmentStateId() : null, ref.getAdministrativeState()));
 			ref.setPatientFullName(sharedPersonPort.parseCompletePersonName(ref.getPatientFirstName(), ref.getPatientMiddleNames(), ref.getPatientLastName(), ref.getPatientOtherLastNames(), ref.getPatientNameSelfDetermination()));
 			var forwarding = referenceForwardingStorage.getLastForwardingReference(ref.getId());
 			ref.setForwardingType(forwarding != null ? forwarding.getDescription() : null);
 		});
 	}
 
-	private EReferenceAttentionState getAttentionState(boolean hasClosure, Short appointmentState, EReferenceRegulationState regulationState) {
+	private EReferenceAttentionState getAttentionState(boolean hasClosure, Short appointmentState, EReferenceAdministrativeState administrativeState) {
 		if (hasClosure)
 			return EReferenceAttentionState.SERVED;
-		if (regulationState.equals(EReferenceRegulationState.APPROVED) && appointmentState != null) {
-			if (appointmentState.equals(APPOINTMENT_ASSIGNED_STATE) || appointmentState.equals(APPOINTMENT_CONFIRMED_STATE))
-				return EReferenceAttentionState.ASSIGNED;
-			if (appointmentState.equals(APPOINTMENT_ABSENT_STATE))
-				return EReferenceAttentionState.ABSENT;
-			if (appointmentState.equals(APPOINTMENT_SERVED_STATE))
-				return EReferenceAttentionState.SERVED;
-			if (appointmentState.equals(APPOINTMENT_CANCELLED_STATE))
+		if (administrativeState != null) {
+			if (administrativeState.equals(EReferenceAdministrativeState.APPROVED) && appointmentState != null) {
+				if (appointmentState.equals(APPOINTMENT_ASSIGNED_STATE) || appointmentState.equals(APPOINTMENT_CONFIRMED_STATE))
+					return EReferenceAttentionState.ASSIGNED;
+				if (appointmentState.equals(APPOINTMENT_ABSENT_STATE)) return EReferenceAttentionState.ABSENT;
+				if (appointmentState.equals(APPOINTMENT_SERVED_STATE)) return EReferenceAttentionState.SERVED;
+				if (appointmentState.equals(APPOINTMENT_CANCELLED_STATE)) return EReferenceAttentionState.PENDING;
+			}
+			if (administrativeState.equals(EReferenceAdministrativeState.APPROVED))
 				return EReferenceAttentionState.PENDING;
 		}
-		if (regulationState.equals(EReferenceRegulationState.APPROVED))
-			return EReferenceAttentionState.PENDING;
 		return null;
 	}
 

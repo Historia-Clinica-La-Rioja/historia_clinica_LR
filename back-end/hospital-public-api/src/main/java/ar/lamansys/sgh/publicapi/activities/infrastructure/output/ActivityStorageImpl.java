@@ -47,135 +47,190 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 	private final LocalDateMapper localDateMapper;
 
-	private static final String JOIN_PATIENT_MEDICAL_COVERAGE = "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id)";
+	private final String V_ATTENTION_FILTERED =
+			"WITH v_attention_filtered AS ( " +
+					"   SELECT va.id, va.performed_date, va.scope_id, va.encounter_id, va.created_on, " +
+					"          va.patient_id, va.doctor_id, va.clinical_speciality_id " +
+					"   FROM v_attention va " +
+					"   JOIN institution i ON va.institution_id = i.id " +
+					"   LEFT JOIN attention_reads ar ON (ar.attention_id = va.id ) " +
+					"   %1$s " +
+					") ";
 
-	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
-	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
-	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
-	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	String QUERY =
+			V_ATTENTION_FILTERED +
+					" ( " +
+					"   SELECT va.id AS attention_id, va.performed_date AS attention_date, snm.name, snm.sctid_code, " +
+					"          ppat.first_name AS person_name, ppat.last_name AS person_last_name, " +
+					"          ppat.identification_number AS person_identification_number, " +
+					"          ppat.gender_id AS person_gender_id, ppat.birth_date AS person_birth_date, " +
+					"          pmc.affiliate_number, va.scope_id, pd.administrative_discharge_date, hp.id, " +
+					"          pprof.first_name AS doctor_name, pprof.last_name AS doctor_last_name, hp.license_number, " +
+					"          pprof.identification_number AS doctor_identification_number, mc.cuit, " +
+					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
+					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
+					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
+					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP), " +
+					"          true as billable " +
+					"   FROM v_attention_filtered va " +
+					"   JOIN patient pat ON (pat.id = va.patient_id) " +
+					"   JOIN person ppat ON ppat.id = pat.person_id " +
+					"   JOIN person_extended pepat ON pepat.person_id = ppat.id " +
+					"   JOIN healthcare_professional hp ON (hp.id = va.doctor_id) " +
+					"   JOIN person pprof ON hp.person_id = pprof.id " +
+					"   LEFT JOIN clinical_specialty snm ON (va.clinical_speciality_id = snm.id) " +
+					"   LEFT JOIN patient_discharge pd ON (pd.internment_episode_id = va.encounter_id) " +
+					"   LEFT JOIN internment_episode event ON event.id = va.encounter_id " +
+					"   LEFT JOIN patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"   LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"   LEFT JOIN medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
+					"   LEFT JOIN document_health_condition dhc ON dhc.document_id = va.id " +
+					"   LEFT JOIN health_condition hc ON hc.id = dhc.health_condition_id " +
+					"   LEFT JOIN snomed s3 ON s3.id = hc.snomed_id " +
+					"   WHERE va.scope_id = 0 %2$s" +
+					" ) " +
 
-	private static final Integer HOSPITALIZATION = 0;
-	private static final Integer OUTPATIENT_CONSULTATION = 1;
-	private static final Integer ODONTOLOGY = 6;
-	private static final Integer EMERGENCY_CARE = 4;
+					" UNION ALL " +
 
-	private static final String JOIN_ANY_EVENT = "LEFT JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id AND va.scope_id =" + HOSPITALIZATION + " " +
-			"LEFT JOIN {h-schema} outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
-			"LEFT JOIN {h-schema} odontology_consultation odc ON odc.id = va.encounter_id and va.scope_id = " + ODONTOLOGY + " " +
-			"LEFT JOIN {h-schema} emergency_care_episode ece ON ece.id = va.encounter_id and va.scope_id = " + EMERGENCY_CARE + " " +
-			"LEFT JOIN {h-schema} patient_medical_coverage pmc ON (" +
-			"(ie.id IS NOT NULL AND pmc.id = ie.patient_medical_coverage_id) " +
-			"OR (oc.id IS NOT NULL AND pmc.id = oc.patient_medical_coverage_id) " +
-			"OR (odc.id IS NOT NULL AND pmc.id = odc.patient_medical_coverage_id) " +
-			"OR (ece.id IS NOT NULL AND pmc.id = ece.patient_medical_coverage_id) " +
-			")";
+					" ( " +
+					"   SELECT va.id AS attention_id, va.performed_date AS attention_date, snm.name, snm.sctid_code, " +
+					"          ppat.first_name AS person_name, ppat.last_name AS person_last_name, " +
+					"          ppat.identification_number AS person_identification_number, " +
+					"          ppat.gender_id AS person_gender_id, ppat.birth_date AS person_birth_date, " +
+					"          pmc.affiliate_number, va.scope_id, CAST(NULL AS TIMESTAMP), hp.id, " +
+					"          pprof.first_name AS doctor_name, pprof.last_name AS doctor_last_name, hp.license_number, " +
+					"          pprof.identification_number AS doctor_identification_number, mc.cuit, " +
+					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
+					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
+					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
+					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP), " +
+					"          event.billable as billable " +
+					"   FROM v_attention_filtered va " +
+					"   JOIN patient pat ON (pat.id = va.patient_id) " +
+					"   JOIN person ppat ON ppat.id = pat.person_id " +
+					"   JOIN person_extended pepat ON pepat.person_id = ppat.id " +
+					"   JOIN healthcare_professional hp ON (hp.id = va.doctor_id) " +
+					"   JOIN person pprof ON hp.person_id = pprof.id " +
+					"   LEFT JOIN clinical_specialty snm ON (va.clinical_speciality_id = snm.id) " +
+					"   LEFT JOIN outpatient_consultation event ON event.id = va.encounter_id " +
+					"   LEFT JOIN patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"   LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"   LEFT JOIN medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
+					"   LEFT JOIN document_health_condition dhc ON dhc.document_id = va.id " +
+					"   LEFT JOIN health_condition hc ON hc.id = dhc.health_condition_id " +
+					"   LEFT JOIN snomed s3 ON s3.id = hc.snomed_id " +
+					"   WHERE va.scope_id = 1 %2$s " +
+					" ) " +
 
-	private static final String SQL_STRING =
-			"SELECT va.id as attention_id, va.performed_date as attention_date, " +
-					"snm.name , snm.sctid_code, " +
-					"p.first_name as person_name, p.last_name as person_last_name, p.identification_number as person_identification_number, p.gender_id as person_gender_id, p.birth_date as person_birth_date, " +
-					"pmc.affiliate_number, " +
-					"va.scope_id, " +
-					"pd.administrative_discharge_date, " +
-					"d.doctor_id, d.first_name as doctor_name, d.last_name as doctor_last_name, d.license_number, d.identification_number as doctor_identification_number, " +
-					"mc.cuit, " +
-					"va.encounter_id AS encounter_id, " +
-					"s3.sctid, " +
-					"s3.pt, " +
-					"hc.main, " +
-					"hc.problem_id, " +
-					"hc.verification_status_id, " +
-					"hc.updated_on, " +
-					"mcp.plan, " +
-					"hc.cie10_codes, " +
-					"va.created_on, " +
-					"p.middle_names, " +
-					"p.other_last_names, " +
-					"p.email, " +
-					"p.name_self_determination, " +
-					"p.gender_self_determination, " +
-					"ecd.administrative_discharge_on " +
-					"FROM {h-schema}v_attention va " +
-					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
-					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number, pp.gender_id, pp.birth_date, " +
-					"pp.middle_names, pp.other_last_names, pe.email, pe.name_self_determination, pe.gender_self_determination " +
-					"FROM {h-schema}patient pat " +
-					"JOIN {h-schema}person pp on pp.id = pat.person_id " +
-					"LEFT JOIN {h-schema}person_extended pe on pe.person_id = pp.id) AS p ON (p.patient_id = va.patient_id) " +
-					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
-					"FROM {h-schema}healthcare_professional hp " +
-					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
-					"LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
-					"FROM {h-schema}clinical_specialty cs ) snm ON (va.clinical_speciality_id = snm.id) " +
-					"LEFT JOIN {h-schema}patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
-					" %s " +
-					"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-					"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
-					"LEFT JOIN {h-schema}document_health_condition dhc on dhc.document_id = va.id " +
-					"LEFT JOIN {h-schema}health_condition hc on hc.id = dhc.health_condition_id " +
-					"LEFT JOIN {h-schema}snomed s3 on s3.id = hc.snomed_id " +
-					"LEFT JOIN {h-schema}emergency_care_discharge ecd ON (va.scope_id = 4 AND ecd.emergency_care_episode_id = va.encounter_id) " +
-					"WHERE %s " +
-					"ORDER BY encounter_id DESC";
+					" UNION ALL " +
 
-	private static final String SQL_STRING_ODONTOLOGY =
-			"SELECT va.id as attention_id, va.performed_date as attention_date, " +
-					"snm.name , snm.sctid_code, " +
-					"p.first_name as person_name, p.last_name as person_last_name, p.identification_number as person_identification_number, p.gender_id as person_gender_id, p.birth_date as person_birth_date, " +
-					"pmc.affiliate_number, " +
-					"va.scope_id, " +
-					"pd.administrative_discharge_date, " +
-					"d.doctor_id, d.first_name as doctor_name, d.last_name as doctor_last_name, d.license_number, d.identification_number as doctor_identification_number, " +
-					"mc.cuit, " +
-					"va.encounter_id AS encounter_id, " +
-					"s3.sctid, " +
-					"s3.pt, " +
-					"hc.main, " +
-					"hc.problem_id, " +
-					"hc.verification_status_id, " +
-					"hc.updated_on, " +
-					"mcp.plan, " +
-					"hc.cie10_codes, " +
-					"va.created_on, " +
-					"p.middle_names, " +
-					"p.other_last_names, " +
-					"p.email, " +
-					"p.name_self_determination, " +
-					"p.gender_self_determination, " +
-					"ecd.administrative_discharge_on " +
-					"FROM {h-schema}v_attention va " +
-					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
-					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number, pp.gender_id, pp.birth_date, " +
-					"pp.middle_names, pp.other_last_names, pe.email, pe.name_self_determination, pe.gender_self_determination " +
-					"FROM {h-schema} patient pat " +
-					"JOIN {h-schema}person pp on pp.id = pat.person_id " +
-					"LEFT JOIN {h-schema}person_extended pe on pe.person_id = pp.id) AS p ON (p.patient_id = va.patient_id) " +
-					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
-					"FROM {h-schema}healthcare_professional hp " +
-					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
-					"LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
-					"FROM {h-schema} clinical_specialty cs) snm ON (va.clinical_speciality_id = snm.id) " +
-					"LEFT JOIN {h-schema} patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
-					"LEFT JOIN {h-schema} document_odontology_diagnostic dod ON (dod.document_id = va.id) " +
-					"LEFT JOIN {h-schema} odontology_diagnostic od ON od.id = (dod.odontology_diagnostic_id) " +
-					" %s " +
-					"LEFT JOIN {h-schema} medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-					"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
-					"LEFT JOIN {h-schema} document_health_condition dhc ON (dhc.document_id = va.id) " +
-					"LEFT JOIN {h-schema} health_condition hc ON (hc.id = dhc.health_condition_id) " +
-					"LEFT JOIN {h-schema} snomed s3 ON (s3.id = od.snomed_id) " +
-					"LEFT JOIN {h-schema}emergency_care_discharge ecd ON (va.scope_id = 4 AND ecd.emergency_care_episode_id = va.encounter_id) " +
-					"WHERE %s " +
-					"ORDER BY encounter_id DESC";
+					" ( " +
+					"   SELECT va.id AS attention_id, va.performed_date AS attention_date, snm.name, snm.sctid_code, " +
+					"          ppat.first_name AS person_name, ppat.last_name AS person_last_name, " +
+					"          ppat.identification_number AS person_identification_number, " +
+					"          ppat.gender_id AS person_gender_id, ppat.birth_date AS person_birth_date, " +
+					"          pmc.affiliate_number, va.scope_id, CAST(NULL AS TIMESTAMP), hp.id, " +
+					"          pprof.first_name AS doctor_name, pprof.last_name AS doctor_last_name, hp.license_number, " +
+					"          pprof.identification_number AS doctor_identification_number, mc.cuit, " +
+					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
+					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
+					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
+					"          pepat.gender_self_determination, CAST(NULL AS TIMESTAMP), " +
+					"		   event.billable as billable " +
+					"   FROM v_attention_filtered va " +
+					"   JOIN patient pat ON (pat.id = va.patient_id) " +
+					"   JOIN person ppat ON ppat.id = pat.person_id " +
+					"   JOIN person_extended pepat ON pepat.person_id = ppat.id " +
+					"   JOIN healthcare_professional hp ON (hp.id = va.doctor_id) " +
+					"   JOIN person pprof ON hp.person_id = pprof.id " +
+					"   LEFT JOIN clinical_specialty snm ON (va.clinical_speciality_id = snm.id) " +
+					"   LEFT JOIN document_odontology_diagnostic dod ON (dod.document_id = va.id) " +
+					"   LEFT JOIN odontology_diagnostic od ON od.id = (dod.odontology_diagnostic_id) " +
+					"   LEFT JOIN odontology_consultation event ON event.id = va.encounter_id " +
+					"   LEFT JOIN patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"   LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"   LEFT JOIN medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
+					"   LEFT JOIN document_health_condition dhc ON dhc.document_id = va.id " +
+					"   LEFT JOIN health_condition hc ON hc.id = dhc.health_condition_id " +
+					"   LEFT JOIN snomed s3 ON s3.id = od.snomed_id " +
+					"   WHERE va.scope_id = 6 %2$s " +
+					" ) " +
+
+					" UNION ALL " +
+
+					" ( " +
+					"   SELECT va.id AS attention_id, va.performed_date AS attention_date, snm.name, snm.sctid_code, " +
+					"          ppat.first_name AS person_name, ppat.last_name AS person_last_name, " +
+					"          ppat.identification_number AS person_identification_number, " +
+					"          ppat.gender_id AS person_gender_id, ppat.birth_date AS person_birth_date, " +
+					"          pmc.affiliate_number, va.scope_id, CAST(NULL AS TIMESTAMP), hp.id, " +
+					"          pprof.first_name AS doctor_name, pprof.last_name AS doctor_last_name, hp.license_number, " +
+					"          pprof.identification_number AS doctor_identification_number, mc.cuit, " +
+					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
+					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
+					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
+					"          pepat.gender_self_determination, ecd.administrative_discharge_on, " +
+					"          true as billable " +
+					"   FROM v_attention_filtered va " +
+					"   JOIN patient pat ON (pat.id = va.patient_id) " +
+					"   JOIN person ppat ON ppat.id = pat.person_id " +
+					"   JOIN person_extended pepat ON pepat.person_id = ppat.id " +
+					"   JOIN healthcare_professional hp ON (hp.id = va.doctor_id) " +
+					"   JOIN person pprof ON hp.person_id = pprof.id " +
+					"   LEFT JOIN clinical_specialty snm ON (va.clinical_speciality_id = snm.id) " +
+					"   LEFT JOIN emergency_care_episode event ON event.id = va.encounter_id " +
+					"   LEFT JOIN patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"   LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"   LEFT JOIN medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
+					"   LEFT JOIN document_health_condition dhc ON dhc.document_id = va.id " +
+					"   LEFT JOIN health_condition hc ON hc.id = dhc.health_condition_id " +
+					"   LEFT JOIN snomed s3 ON s3.id = hc.snomed_id " +
+					"   LEFT JOIN emergency_care_discharge ecd ON (ecd.emergency_care_episode_id = va.encounter_id) " +
+					"   WHERE va.scope_id = 4 %2$s " +
+					" ) " +
+
+					" UNION ALL " +
+
+					" ( " +
+					"   SELECT va.id AS attention_id, va.performed_date AS attention_date, snm.name, snm.sctid_code, " +
+					"          ppat.first_name AS person_name, ppat.last_name AS person_last_name, " +
+					"          ppat.identification_number AS person_identification_number, " +
+					"          ppat.gender_id AS person_gender_id, ppat.birth_date AS person_birth_date, " +
+					"          pmc.affiliate_number, va.scope_id, CAST(NULL AS TIMESTAMP), hp.id, " +
+					"          pprof.first_name AS doctor_name, pprof.last_name AS doctor_last_name, hp.license_number, " +
+					"          pprof.identification_number AS doctor_identification_number, mc.cuit, " +
+					"          va.encounter_id AS encounter_id, s3.sctid, s3.pt, hc.main, hc.problem_id, " +
+					"          hc.verification_status_id, hc.updated_on, mcp.plan, hc.cie10_codes, va.created_on, " +
+					"          ppat.middle_names, ppat.other_last_names, pepat.email, pepat.name_self_determination, " +
+					"          pepat.gender_self_determination, ecd.administrative_discharge_on, " +
+					"          true as billable " +
+					"   FROM v_attention_filtered va " +
+					"   JOIN patient pat ON (pat.id = va.patient_id) " +
+					"   JOIN person ppat ON ppat.id = pat.person_id " +
+					"   JOIN person_extended pepat ON pepat.person_id = ppat.id " +
+					"   JOIN healthcare_professional hp ON (hp.id = va.doctor_id) " +
+					"   JOIN person pprof ON hp.person_id = pprof.id " +
+					"   LEFT JOIN clinical_specialty snm ON (va.clinical_speciality_id = snm.id) " +
+					"   LEFT JOIN nursing_consultation event ON event.id = va.encounter_id " +
+					"   LEFT JOIN patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id) " +
+					"   LEFT JOIN medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
+					"   LEFT JOIN medical_coverage_plan mcp ON (mc.id = mcp.medical_coverage_id) " +
+					"   LEFT JOIN document_health_condition dhc ON dhc.document_id = va.id " +
+					"   LEFT JOIN health_condition hc ON hc.id = dhc.health_condition_id " +
+					"   LEFT JOIN snomed s3 ON s3.id = hc.snomed_id " +
+					"   LEFT JOIN emergency_care_discharge ecd ON (ecd.emergency_care_episode_id = va.encounter_id) " +
+					"   WHERE va.scope_id = 7 %2$s " +
+					" ) ";
+
+	private final String WHERE_CLAUSE = " WHERE CAST(va.updated_on AS DATE) BETWEEN :fromDate AND :toDate " +
+			" AND (ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing) " +
+			" AND i.sisa_code = :refsetCode ";
 
 	@Override
 	public Optional<AttentionInfoBo> getActivityById(String refsetCode, Long activityId) {
 		LOG.debug("getActivityById ActivityStorage -> refsetCode {}, activityId {}", refsetCode, activityId);
 
-		Query query = entityManager.createNativeQuery(String.format(SQL_STRING, JOIN_ANY_EVENT, "va.id = :activityId "))
-				.setParameter("refsetCode", refsetCode)
+		Query query = entityManager.createNativeQuery(String.format(QUERY, " WHERE va.id = :activityId ", " "))
 				.setParameter("activityId", activityId);
 
 		var queryResult = query.getResultList();
@@ -193,19 +248,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitution ActivityStorage -> refsetCode {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, fromDate, toDate, reprocessing);
 
-		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
-				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing )" +
-				"AND va.scope_id = ";
-		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING_ODONTOLOGY, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
-
-
-		Query query = entityManager.createNativeQuery(finalQuery)
+		Query query = entityManager.createNativeQuery(String.format(QUERY, WHERE_CLAUSE, ""))
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("fromDate", fromDate)
 				.setParameter("toDate", toDate)
@@ -229,16 +272,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndPatient ActivityStorage -> refsetCode {}, identificationNumber {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, identificationNumber, fromDate, toDate, reprocessing);
 
-		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
-				"p.identification_number = :identificationNumber AND " +
-				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing) " +
-				"AND va.scope_id = ";
+		String finalQuery = String.format(QUERY, WHERE_CLAUSE, " AND ppat.identification_number = :identificationNumber ");
 
-		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("identificationNumber", identificationNumber)
@@ -264,16 +299,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndCoverage ActivityStorage -> refsetCode {}, coverageCuit {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, coverageCuit, fromDate, toDate, reprocessing);
 
-		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
-				"mc.cuit = :coverageCuit AND " +
-				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing)" +
-				"AND va.scope_id = ";
+		String finalQuery = String.format(QUERY, WHERE_CLAUSE, " AND mc.cuit = :coverageCuit ");
 
-		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
-				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("fromDate", fromDate)
@@ -307,7 +334,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 				buildDiagnoses(rawAttention),
 				buildDateTimeBo(rawAttention, 27),
 				buildPersonExtendedInfoBo(rawAttention),
-				buildDateTimeBo(rawAttention, 33)
+				buildDateTimeBo(rawAttention, 33),
+				(boolean)rawAttention[34]
 		);
 	}
 
@@ -369,8 +397,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private InternmentBo buildInternmentBo(Object[] rawAttention) {
 		return ScopeEnum.map((Short) rawAttention[10]).equals(ScopeEnum.INTERNACION) ?
 				new InternmentBo(rawAttention[0].toString(),
-						rawAttention[1] != null ? ((Timestamp) rawAttention[1]).toLocalDateTime() : null,
-						rawAttention[11] != null ? ((Timestamp) rawAttention[11]).toLocalDateTime() : null) :
+						rawAttention[1] != null ? localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[1])
+								.toLocalDateTime()).toLocalDateTime() : null,
+						rawAttention[11] != null ? localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[11])
+								.toLocalDateTime()).toLocalDateTime() : null
+				) :
 				new InternmentBo();
 	}
 

@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.domain.reference;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +37,8 @@ public class ReferenceSummaryBo {
 	private Integer destinationInstitutionId;
 
 	private EReferenceRegulationState regulationState;
+
+	private EReferenceAdministrativeState administrativeState;
 
 
 	public ReferenceSummaryBo(Integer id, String institutionName,

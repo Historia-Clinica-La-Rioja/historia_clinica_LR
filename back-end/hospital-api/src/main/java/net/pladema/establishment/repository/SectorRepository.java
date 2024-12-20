@@ -69,14 +69,19 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 	List<Sector> getChildSectorsBySectorId(@Param("sectorId") Integer sectorId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.establishment.service.domain.AttentionPlacesQuantityBo(COUNT(DISTINCT CASE WHEN s.deleteable.deleted = false THEN 1 END), COUNT(DISTINCT CASE WHEN do.deleteable.deleted = false THEN 1 END), COUNT(DISTINCT b.id)) " +
+	@Query("SELECT new net.pladema.establishment.service.domain.AttentionPlacesQuantityBo(" +
+	 "		COUNT(DISTINCT CASE WHEN s.deleteable.deleted = false THEN 1 END), " +
+	 "		COUNT(DISTINCT CASE WHEN do.deleteable.deleted = false THEN 1 END)," +
+	 "		COUNT(DISTINCT b.id)) " +
 			"FROM Sector AS se " +
 			"LEFT JOIN DoctorsOffice AS do ON do.sectorId = se.id " +
 			"LEFT JOIN Shockroom AS s ON s.sectorId = se.id " +
 			"LEFT JOIN Room AS r ON r.sectorId = se.id " +
 			"LEFT JOIN Bed AS b ON b.roomId = r.id " +
 			"WHERE se.institutionId = :institutionId " +
-			"AND se.sectorTypeId = :sectorTypeId ")
+			"AND se.sectorTypeId = :sectorTypeId " +
+			"AND se.deleteable.deleted = false"
+			)
 	AttentionPlacesQuantityBo quantityAttentionPlacesBySectorType(@Param("institutionId") Integer institutionId,
 															@Param("sectorTypeId") Short sectorTypeId);
 
@@ -94,6 +99,15 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 			"AND s.deleteable.deleted IS FALSE " +
 			"ORDER BY COALESCE(s.sectorId, s.id), CASE WHEN s.sectorId IS NULL THEN 0 ELSE 1 END, s.id")
 	List<EmergencyCareAttentionPlaceBo> findAllEmergencyCareSectorByInstitutionOrderByHierarchy(@Param("institutionId") Integer institutionId,
+																								@Param("sectorType") Short sectorType);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.emergencycare.domain.EmergencyCareAttentionPlaceBo(s.id, s.description, s.sectorOrganizationId, s.sectorId) " +
+			"FROM Sector s " +
+			"WHERE s.institutionId = :institutionId " +
+			"AND s.sectorTypeId = :sectorType " +
+			"AND s.deleteable.deleted IS FALSE ")
+	List<EmergencyCareAttentionPlaceBo> findAllEmergencyCareSectorByInstitution(@Param("institutionId") Integer institutionId,
 																								@Param("sectorType") Short sectorType);
 
 }

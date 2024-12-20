@@ -1,5 +1,6 @@
 package net.pladema.establishment.application.medicinegroup;
 
+import ar.lamansys.sgh.shared.domain.medicineGroup.MedicineGroupAuditFinancedBo;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,9 @@ public class ValidateFinancingMedicinesByInstitutionAndProblem {
 
 	InstitutionMedicineGroupStorage institutionMedicineGroupStorage;
 
-	public Map<String, Boolean> run(Integer institutionId, List<String> medicineSctids, String problemSctid) {
+	public Map<String, MedicineGroupAuditFinancedBo> run(Integer institutionId, List<String> medicineSctids, String problemSctid) {
 		log.debug("Input parameters -> institutionId: {}, medicineSctids: {}, problemSctid: {}", institutionId, medicineSctids, problemSctid);
-		Map<String, Boolean> result = institutionMedicineGroupStorage.validateFinancingMedicinesByInstitutionAndProblem(institutionId, medicineSctids, problemSctid);
+		Map<String, MedicineGroupAuditFinancedBo> result = institutionMedicineGroupStorage.validateFinancingMedicinesByInstitutionAndProblem(institutionId, medicineSctids, problemSctid);
 		log.debug("Output result -> {}", result.size());
 		return result;
 	}

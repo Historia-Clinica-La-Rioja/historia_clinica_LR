@@ -53,11 +53,10 @@ export class MedicalCoverageComponent implements OnInit {
 		this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
 	}
 
-
 	ngOnInit(): void {
 		this.healthInsuranceService.getAll().subscribe((values: MedicalCoverageDto[]) => {
 			this.healthInsuranceMasterData = values;
-			this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = [];
+			this.personInfo?.patientId ? this.setPatientMedicalCoverages() : this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
 			if (this.personInfo.identificationTypeId === DNI_TYPE_ID && this.personInfo.genderId) {
 				this.renaperService.getHealthInsurance
 					({ genderId: this.personInfo.genderId, identificationNumber: this.personInfo.identificationNumber })
@@ -80,7 +79,6 @@ export class MedicalCoverageComponent implements OnInit {
 			}
 		}
 		);
-
 	}
 
 	private setPatientMedicalCoverages(): void {
@@ -120,7 +118,6 @@ export class MedicalCoverageComponent implements OnInit {
 
 		return initText + endText;
 	}
-	// -----------------------------------------------------------------------------------------------------------------------------
 
 	save() {
 		this.dialogRef.close({

@@ -4,6 +4,7 @@ import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummary
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 
@@ -11,6 +12,7 @@ import org.mapstruct.Named;
 public interface CounterReferenceSummaryMapper {
 
     @Named("fromCounterReferenceSummaryBo")
+	@Mapping(target = "closureType", source="closureType.description")
     CounterReferenceSummaryDto fromCounterReferenceSummaryBo(CounterReferenceSummaryBo counterReferenceSummaryBo);
 
 }

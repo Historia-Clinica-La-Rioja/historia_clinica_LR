@@ -90,6 +90,7 @@ export class EditPatientComponent implements OnInit {
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
+	public isHabilitarAuditoriaOn = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -117,6 +118,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_AUDITORIA).subscribe(isOn => this.isHabilitarAuditoriaOn = isOn);
 		this.loggedUserService.assignments$.subscribe((roleAssignment: RoleAssignmentDto[]) => this.hasAuditorRole = anyMatch<ERole>(roleAssignment.map(roleAssignment => roleAssignment.role), [ERole.AUDITOR_MPI]));
 		this.route.queryParams
 			.subscribe(params => {

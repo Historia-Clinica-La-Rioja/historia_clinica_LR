@@ -85,6 +85,7 @@ import { RouteMenuItemComponent } from './components/route-menu-item/route-menu-
 import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
+import { ShowMoreConceptsComponent } from './components/show-more-concepts/show-more-concepts.component';
 import { TableComponent } from './components/table/table.component';
 import { TextEllipsisTooltipComponent } from './components/text-ellipsis-tooltip/text-ellipsis-tooltip.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
@@ -122,9 +123,12 @@ import { IsoToDatePipe } from './pipes/iso-to-date.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { PatientToPersonPipe } from './pipes/PatientToPersonPipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
+import { ShowTimeElapsedPipe } from './pipes/show-time-elapsed.pipe';
 import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
+import { RowContentComponent } from './components/row-content/row-content.component';
+import { PatientSummaryPipe } from './pipes/patient-summary.pipe';
 
 @NgModule({
 	declarations: [
@@ -203,9 +207,11 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		RouteBackComponent,
 		RouteMenuComponent,
 		RouteMenuItemComponent,
+		RowContentComponent,
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
+		ShowMoreConceptsComponent,
 		TableComponent,
 		TextEllipsisTooltipComponent,
 		TimePickerComponent,
@@ -243,7 +249,9 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		IsoToDatePipe,
 		PaginatePipe,
 		PatientToPersonPipe,
+		PatientSummaryPipe,
 		PersonIdentificationPipe,
+		ShowTimeElapsedPipe,
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
@@ -336,10 +344,13 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		RichTextEditorComponent,
 		RouteBackComponent,
 		RouteMenuComponent,
+		RowContentComponent,
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
+		ShowMoreConceptsComponent,
 		TableComponent,
+		TextEllipsisTooltipComponent,
 		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
@@ -365,8 +376,10 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		IsoToDatePipe,
 		PaginatePipe,
 		PatientToPersonPipe,
+		PatientSummaryPipe,
 		PersonIdentificationPipe,
 		ShowMoreConceptsPipe,
+		ShowTimeElapsedPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 	],

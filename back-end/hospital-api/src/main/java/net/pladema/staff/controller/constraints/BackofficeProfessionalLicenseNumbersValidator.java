@@ -6,7 +6,7 @@ import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberDto;
 import net.pladema.staff.repository.ProfessionalLicenseNumberRepository;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 
 @Component
 public class BackofficeProfessionalLicenseNumbersValidator extends BackofficeEntityValidatorAdapter<ProfessionalLicenseNumberDto, Integer> {

@@ -45,12 +45,7 @@ setConcept(selectedConcept: SnomedDto): void {
   this.dialogRef.close(this.snomedConcept)
 }
 
-addStudy(): void {
-  this.dialogRef.close(this.snomedConcept)
-}
-
 close(): void {
   this.dialogRef.close()
 }
-
 }

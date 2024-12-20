@@ -9,7 +9,11 @@ import net.pladema.parameter.infrastructure.output.repository.ParameterRepositor
 
 import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;
 
+
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +24,44 @@ import java.util.stream.Collectors;
 public class ParameterStorageImpl implements ParameterStorage {
 
 	private final ParameterRepository parameterRepository;
+	private final EntityManager entityManager;
 
 	@Override
 	public List<ParameterBo> findAllByIds(List<Integer> ids) {
 		log.debug("Input parameters -> ids {}", ids);
 		List<ParameterBo> result = parameterRepository.findAllById(ids).stream().map(this::mapToBo).collect(Collectors.toList());
 		log.debug("Output -> result {}", result);
+		return result;
+	}
+
+	@Override
+	public List<ParameterBo> findByDescription(String description) {
+
+		String sqlString = "" +
+			"SELECT " +
+			"	DISTINCT ON (computed_desc) " +
+			"	parameter.id as id, " +
+			"	COALESCE(loinc_code.custom_display_name,loinc_code.display_name, loinc_code.description, parameter.description) as computed_desc " +
+			"FROM " +
+			"   parameter " +
+			"   LEFT JOIN loinc_code ON (loinc_code.id = parameter.loinc_id) " +
+			"WHERE " +
+			"	COALESCE(loinc_code.custom_display_name,loinc_code.display_name, loinc_code.description, parameter.description) ILIKE :description " +
+			"ORDER BY " +
+			"	computed_desc DESC, parameter.id ASC " +
+			"LIMIT :limit";
+		Query query = entityManager.createNativeQuery(sqlString);
+		query.setParameter("description", String.format("%%%s%%",description));
+		query.setParameter("limit", 100);
+
+		List<Object[]> rows = query.getResultList();
+		var result = rows.stream().map(row -> {
+			var ret = new ParameterBo();
+			ret.setId((Integer) row[0]);
+			ret.setDescription((String) row[1]);
+			return ret;
+		})
+		.collect(Collectors.toList());
 		return result;
 	}
 

@@ -97,7 +97,8 @@ public class NursingConsultationController {
 											value.getValue(),
 											value.getUnitOfMeasureId(),
 											value.getSnomedSctid(),
-											value.getSnomedPt()
+											value.getSnomedPt(),
+											value.getValueNumeric()
 									);
 								});
 							}

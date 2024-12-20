@@ -16,4 +16,6 @@ public interface SnomedRelationCacheStorage {
 
 	List<SnomedBo> getSuggestedCommercialMedicationSnomedListByGeneric(String genericMedicationSctid);
 
+    List<String> getAllGenericPresentationUnitUnitValues(String genericSctid);
+
 }

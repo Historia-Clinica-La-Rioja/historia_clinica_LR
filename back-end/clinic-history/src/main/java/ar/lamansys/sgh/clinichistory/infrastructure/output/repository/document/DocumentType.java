@@ -44,6 +44,8 @@ public class DocumentType implements Serializable {
 	public static final short SURGICAL_HOSPITALIZATION_REPORT = (short) 18;
 	public static final short EMERGENCY_SURGICAL_REPORT = (short) 19;
 	public static final short ANESTHETIC_REPORT = (short) 20;
+	public static final short NURSING_EMERGENCY_CARE_EVOLUTION = (short) 21;
+	//Should be kept in sync with EDocumentType
 
 	@Id
 	@Column(name = "id")

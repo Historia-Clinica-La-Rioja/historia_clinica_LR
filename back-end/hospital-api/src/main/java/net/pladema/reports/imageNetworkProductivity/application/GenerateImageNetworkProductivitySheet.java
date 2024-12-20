@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.person.service.PersonService;
+import net.pladema.reports.domain.InstitutionReportType;
 import net.pladema.reports.imageNetworkProductivity.application.exception.WrongDateException;
 import net.pladema.reports.imageNetworkProductivity.application.port.ImageNetworkProductivityReportInstitutionStorage;
 import net.pladema.reports.imageNetworkProductivity.application.port.ImageNetworkProductivityReportStorage;
@@ -76,7 +77,7 @@ public class GenerateImageNetworkProductivitySheet {
 	}
 
 	private void createWorkBookSheet(IWorkbook workbook, ImageNetworkProductivityFilterBo filter) {
-		final String SHEET_NAME = "Detalle nominal de prestaciones RDI";
+		final String SHEET_NAME = InstitutionReportType.ImageNetworkProductivity.getDescription();
 		InstitutionBo institutionData = imageNetworkProductivityReportInstitutionStorage.fetchInstitutionData(filter.getInstitutionId());
 		ISheet sheet = workbook.createSheet(SHEET_NAME);
 		addHeaders(sheet, filter, institutionData);

@@ -61,6 +61,12 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 											  @Param("userId") Integer userId,
 											  @Param("templateGroupType") Short templateGroupType);
 
+	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
+			" FROM SnomedGroup sg " +
+			" JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
+			" JOIN Snomed s ON (srg.snomedId = s.id) " +
+			" WHERE sg.id IN :templateIds ")
+	List<SnomedTemplateSearchVo> getTemplatesByIds(@Param("templateIds") List<Integer> templateIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT sg " +

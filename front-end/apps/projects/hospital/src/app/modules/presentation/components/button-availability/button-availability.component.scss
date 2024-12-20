@@ -1,7 +1,7 @@
 button {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .small {
@@ -13,9 +13,10 @@ button {
 }
 
 .available {
-  background-color: #51A351;
-  color: white;
-  border: 1px solid #51A351;
+	background-color: #51A351;
+	color: white;
+	border: 1px solid #51A351;
+	box-shadow: none;
 }
 
 .not-available {
@@ -25,11 +26,21 @@ button {
 }
 
 .disable {
-  background-color: #9A9A9A;
-  color: white;
-  border: 1px solid #9A9A9A;
+	background-color: #9A9A9A;
+	color: white;
+	border: 1px solid #9A9A9A;
+}
+
+.blocked {
+  background-color: white;
+  color: #6D6D6D;
+  border: 1px solid #6D6D6D;
+  box-shadow: none;
 }
 
 .selected {
 	border: 2px solid rgba(38, 135, 197, 1);
+	border-radius: 4px;
+	padding: 2px;
+	margin: -4px;
 }

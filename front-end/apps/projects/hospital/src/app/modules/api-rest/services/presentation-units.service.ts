@@ -20,4 +20,9 @@ export class PresentationUnitsService {
 		const url = `${this.BASE_URL}/snomed-medication/${medicationSctid}/get-presentation-units`;
 		return this.http.get<number[]>(url);
 	}
+
+	getMedicationPresentationByGenericSctid = (genericSctid: string): Observable<string[]> => {
+		const url = `${this.BASE_URL}/snomed-medication/${genericSctid}/get-commercial-medication-dosage-form-units`;
+		return this.http.get<string[]>(url);
+	}
 }

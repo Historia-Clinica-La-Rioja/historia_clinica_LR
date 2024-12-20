@@ -101,7 +101,7 @@ public class MedicineFinancingStatusSearchStorageImpl implements MedicineFinanci
 
 		String sqlWhereStatement = "WHERE (mfs.financed IS TRUE OR imfs.financed IS TRUE) " +
 				"AND imfs.institution_id = " + institutionId +
-				(conceptPt != null ? " AND s.pt LIKE %" + conceptPt + "% " : " ");
+				(conceptPt != null ? " AND s.pt LIKE '%" + conceptPt + "%' " : " ");
 
 		String sqlOrderByStatement = "ORDER BY s.pt ASC";
 

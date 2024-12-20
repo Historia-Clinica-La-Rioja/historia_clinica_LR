@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { EReferenceRegulationState, ReferenceCompleteDataDto } from '@api-rest/api-model';
+import { EReferenceAdministrativeState, ReferenceCompleteDataDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 
@@ -12,10 +12,7 @@ export class PopupActionsComponent {
 
 	NO_INSTITUTION = NO_INSTITUTION;
 
-	referenceApprovalState = {
-		approved: EReferenceRegulationState.APPROVED,
-		pending: EReferenceRegulationState.WAITING_APPROVAL,
-	}
+	referenceApprovalState = EReferenceAdministrativeState.APPROVED;
 
 	@Input() reportCompleteData: ReferenceCompleteDataDto;
 
