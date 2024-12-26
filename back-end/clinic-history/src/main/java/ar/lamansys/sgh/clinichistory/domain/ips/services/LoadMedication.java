@@ -18,6 +18,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Quantity;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class LoadMedication {
     private final NoteService noteService;
     private final QuantityRepository quantityRepository;
 	private final MedicationStatementCommercialPrescriptionRepository medicationStatementCommercialPrescriptionRepository;
+	private final FeatureFlagsService featureFlagsService;
 
     public MedicationBo run(Integer patientId, Long documentId, MedicationBo medicationBo) {
         log.debug("Input parameters -> patientId {}, documentId {}, medicationBo {}", patientId, medicationBo, medicationBo);
@@ -140,7 +143,7 @@ public class LoadMedication {
         newDosage.setDosesByDay(dosage.getDosesByDay());
         newDosage.setDosesByUnit(dosage.getDosesByUnit());
         newDosage.setDoseQuantityId(id);
-        if (EUnitsOfTimeBo.DAY.getValue().equals(dosage.getPeriodUnit()))
+        if (EUnitsOfTimeBo.DAY.getValue().equals(dosage.getPeriodUnit()) && !featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA))
             newDosage.setFrequency(1);
         else newDosage.setFrequency(dosage.getFrequency());
         newDosage = dosageRepository.save(newDosage);
