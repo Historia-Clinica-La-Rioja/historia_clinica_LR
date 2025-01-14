@@ -24,6 +24,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,6 +81,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 	@MockBean
 	private MedicationStatementCommercialPrescriptionRepository medicationStatementCommercialPrescriptionRepository;
 
+	@MockBean
+	private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp() {
         medicationServiceImpl = new LoadMedication(
@@ -89,7 +94,8 @@ class CreateMedicationServiceImplTest extends UnitRepository {
                 snomedService,
                 noteService,
                 quantityRepository,
-				medicationStatementCommercialPrescriptionRepository
+				medicationStatementCommercialPrescriptionRepository,
+				featureFlagsService
         );
     }
 
