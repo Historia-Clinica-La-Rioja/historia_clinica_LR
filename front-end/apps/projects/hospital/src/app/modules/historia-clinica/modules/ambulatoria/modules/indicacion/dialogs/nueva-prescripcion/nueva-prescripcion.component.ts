@@ -16,11 +16,12 @@ import {
 	PrescriptionDto,
 } from '@api-rest/api-model.d';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import {hasError, processErrors, scrollIntoError} from '@core/utils/form.utils';
+import {hasError, scrollIntoError} from '@core/utils/form.utils';
 import { NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { mapToAPatientDto } from '../../utils/prescripcion-mapper';
 import { finalize } from 'rxjs';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -143,7 +144,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 			},
 			error: (err: ApiErrorDto) => {
 				this.submitted = false;
-				processErrors(err, (msg) => this.snackBarService.showError(msg));
+				const message = getElementAtPosition<string>(err.errors, 0);
+				this.snackBarService.showError(message);
 			}
 		});
 	}

@@ -6,11 +6,14 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 @RestControllerAdvice(basePackages = "net.pladema.clinichistory.requests.medicationrequests")
 public class MedicationRequestExceptionHandler {

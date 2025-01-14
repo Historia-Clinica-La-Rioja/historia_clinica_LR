@@ -22,7 +22,8 @@ public class MedicationRequestValidationRestClient extends RestClient {
 	public HttpHeaders getHeaders() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(APPLICATION_JSON);
-		headers.setBearerAuth(medicationRequestValidationWSConfig.getToken());
+		headers.set("AppId", medicationRequestValidationWSConfig.getUsername());
+		headers.set("Authorization", medicationRequestValidationWSConfig.getPassword());
 		return headers;
 	}
 

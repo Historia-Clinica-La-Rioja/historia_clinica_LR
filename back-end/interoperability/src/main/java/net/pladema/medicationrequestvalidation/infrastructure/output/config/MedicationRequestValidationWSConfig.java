@@ -13,18 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class MedicationRequestValidationWSConfig extends WSConfig {
 
-	public final static String VALIDATE_PATH = "/apirecipe/Receta";
+	public final static String VALIDATE_PATH = "/prescription-validation";
 
-	private final String clientId;
+	private final String username;
 
-	private final String token;
+	private final String password;
 
 	public MedicationRequestValidationWSConfig(@Value("${ws.medication.request.validation.baseUrl:}") String baseUrl,
-											   @Value("${ws.medication.request.validation.clientId:}") String clientId,
-											   @Value("${ws.medication.request.validation.token:}") String token) {
+											   @Value("${ws.medication.request.validation.username:}") String username,
+											   @Value("${ws.medication.request.validation.password:}") String password) {
 		super(baseUrl, false);
-		this.clientId = clientId;
-		this.token = token;
+		this.username = username;
+		this.password = password;
 	}
 
 }
