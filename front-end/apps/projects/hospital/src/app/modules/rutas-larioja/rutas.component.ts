@@ -92,7 +92,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     IconDR: ICON + "DR-active-icon.png",
     IconDT: ICON + "DT-active-icon.png",
     Orden: 7,
-    Nombre: " Sonríe",
+    Nombre: " Enfermedades Infectocontagiosas",
     pdfDR: null,
     routerLink: '../../../assets/rutas-lr/',
     pdfDT: null,
@@ -188,10 +188,8 @@ export class RutasComponent implements OnInit {
     const element = isPreventiva ? this.dataP[index] : this.data[index];
   
     if (element && element.pdfDR) { 
-      console.log('Abriendo PDF:', element.pdfDR); // Log para depuración
       window.open(element.pdfDR, '_blank');
     } else if (element && element.routerLink) {
-      console.log('Navegando a:', element.routerLink);
       this.router.navigate([element.routerLink]);
     } 
   }
@@ -200,10 +198,8 @@ export class RutasComponent implements OnInit {
     const element = isPreventiva ? this.dataP[index] : this.data[index];
   
     if (element && element.pdfDT) { 
-      console.log('Abriendo PDF:', element.pdfDT); // Log para depuración
       window.open(element.pdfDT, '_blank');
     } else if (element && element.routerLink) {
-      console.log('Navegando a:', element.routerLink);
       this.router.navigate([element.routerLink]);
     }
   }
