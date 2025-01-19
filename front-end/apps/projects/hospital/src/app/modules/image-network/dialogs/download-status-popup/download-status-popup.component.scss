@@ -1,0 +1,46 @@
+@import '../../../../../assets/styles/mixins';
+
+.icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+    margin-bottom: 10px
+}
+
+.error-icon {
+    width: 70px;
+    height: 70px;
+	font-size: 5em;
+	line-height: 4rem;
+    display: flex;
+    align-items: center;
+}
+
+.dialog-title {
+    @include space-between;
+}
+
+.actions-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.text-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.title {
+    @include font-weight-bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    text-align: center;
+}

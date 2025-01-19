@@ -1,0 +1,32 @@
+<div fxFlex fxLayout="column">
+    <div fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <span class="header-title">{{ _headerData?.title }}</span>
+        <div *ngIf="!isPopUpOpen">
+            <button mat-icon-button color="primary" data-id="download_document" *ngIf="_headerData.download"
+                (click)="download()">
+                <mat-icon fontSet="material-icons-outlined">download_icon</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" data-id="edit_document" *ngIf="_headerData.edit" (click)="edit()">
+                <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" data-id="delete_document" *ngIf="_headerData.delete"
+                (click)="delete()">
+                <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="data-description" data-id="data-description">
+        <div class="identifier-row">
+            <ng-container *ngFor="let data of _headerData.headerDescriptionData">
+                <app-identifier-cases
+                    *ngIf="data.value"
+                    data-id="data.dataId"
+                    position="{{ position.COLUMN }}"
+                    showLegend="true"
+                    [description]="data.value"
+                    [identifierCase]="data.identifierCase">
+                </app-identifier-cases>
+            </ng-container>
+        </div>
+    </div>
+</div>

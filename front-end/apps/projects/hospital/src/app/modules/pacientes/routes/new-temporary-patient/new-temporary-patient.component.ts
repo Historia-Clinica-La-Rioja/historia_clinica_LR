@@ -7,19 +7,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { Moment } from 'moment';
-import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { toParamsToSearchPerson } from '@pacientes/utils/search.utils';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -41,7 +40,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
 	public isSubmitButtonDisabled = false;
-	public today: Moment = moment();
+	public today = newDate();
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public gendersId: string[];
@@ -96,6 +95,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.route.queryParams
+			.pipe(take(1), map(params => toParamsToSearchPerson(params)))
 			.subscribe(params => {
 				this.identityVerificationStatus = Number(params.identityVerificationStatus);
 				this.comments = params.comments;
@@ -106,12 +106,12 @@ export class NewTemporaryPatientComponent implements OnInit {
 					lastName: [params.lastName],
 					otherLastNames: [params.otherLastNames],
 					identificationTypeId: [Number(params.identificationTypeId)],
-					identificationNumber: [params.identificationNumber, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)],
+					identificationNumber: [params.identificationNumber, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 					genderId: [Number(params.genderId)],
-					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
+					birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : undefined],
 
 					// Person extended
-					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
+					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -238,7 +238,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 				this.setProvinces();
 			});
 		setTimeout(() => {
-			this.startView.nativeElement.scrollIntoView();}, TIME_TO_PREVENT_SCROLL);
+			this.startView.nativeElement.scrollIntoView();
+		}, TIME_TO_PREVENT_SCROLL);
 
 		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
 
@@ -272,11 +273,11 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 	}
 	private getMessagesSuccess(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT';
 	}
 
 	private getMessagesError(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT';
 	}
 
 	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
@@ -298,6 +299,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value,
 			otherLastNames: this.form.controls.otherLastNames.value,
+			personAge: null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,
@@ -447,10 +449,10 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.showOtherSelfPerceivedGender();
 	}
 
-	updatePhoneValidators(){
-		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.form, 'phonePrefix',[Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+	updatePhoneValidators() {
+		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);
@@ -466,7 +468,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.gendersId = [];
 		this.genders.forEach(
 			(gender: GenderDto) => {
-				this.gendersId.push("op_sexo_"+gender.description.toLowerCase());
+				this.gendersId.push("op_sexo_" + gender.description.toLowerCase());
 			}
 		);
 	}

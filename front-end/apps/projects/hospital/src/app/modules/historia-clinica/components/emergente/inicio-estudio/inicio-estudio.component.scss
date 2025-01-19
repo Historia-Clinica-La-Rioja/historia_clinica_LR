@@ -1,3 +1,7 @@
+mat-card {
+     overflow: hidden;
+}
+
 .masEstudios {
 	padding: 15px;
 	margin-left: 1.6%;
@@ -10,8 +14,7 @@
 }
 
 .botones {
-	padding: 1.3%;
-	width: 169px;
+	padding-top: 5%;
 }
 
 .btnEstudios {
@@ -21,8 +24,13 @@
 }
 
 .btnEstudios button {
-	width: 97%;
-	border-radius: 0;
+	width: 200px;
+	border-radius: 3px;
+	text-align: left;
+}
+
+.btnEstudios button:hover {
+	background-color: #f0f8ff9c;
 }
 
 .mat-card.box .mat-card-header {
@@ -55,4 +63,119 @@
 	width: 25px;
 	position: relative;
 	right: 7px;
+}
+
+mat-icon {
+
+	position: relative;
+	bottom: 1.5px;
+	margin-right: 4px;
+}
+
+.element-light-color {
+	color: rgba(0, 0, 0, 0.54);
+}
+
+.header-filters {
+	padding: 6px 16px 0px;
+}
+
+.filter-button {
+	padding-bottom: 1.34em;
+}
+
+
+
+.mat-button.mat-primary.mat-button-disabled {
+	color: #2687c5;
+	;
+}
+
+.buttonAdd {
+	margin-left: 96%;
+	position: relative;
+	bottom: 45px;
+}
+
+.box {
+	padding: 10px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	background-color: #f6fafb;
+	color: #2687c5;
+	font-weight: normal;
+	font-size: medium;
+}
+
+.iconMedical {
+	position: relative;
+	left: 3px;
+	bottom: -3px;
+	margin-right: 2px;
+	background-color: #f6fafb;
+
+}
+
+.buttonDescarga {
+
+	margin-left: 93%;
+	position: relative;
+	bottom: 25px;
+	color: #2687c5;
+
+}
+
+
+mat-card {
+
+	padding: 0%;
+}
+
+h3 {
+
+	padding-bottom: 0.34em;
+	margin-left: 2%;
+}
+
+ul {
+	list-style: none;
+}
+
+.fecha {
+
+	margin-bottom: -20px;
+	position: relative;
+	left: 64%;
+	bottom: 20px;
+	color: #a8a8a8;
+}
+
+
+.resultFrail {
+
+	display: inline-block;
+	border-radius: 6px;
+	padding: 3px 8px;
+	width: fit-content;
+	position: relative;
+	top: 4px;
+}
+
+.resultEdmonton {
+	display: inline-block;
+	border-radius: 6px;
+	padding: 3px 8px;
+	width: fit-content;
+	position: relative;
+	top: 4px;
+}
+
+.resultPhysical {
+	display: inline-block;
+	border-radius: 6px;
+	padding: 3px 8px;
+	width: fit-content;
+	position: relative;
+	top: 4px;
+
 }

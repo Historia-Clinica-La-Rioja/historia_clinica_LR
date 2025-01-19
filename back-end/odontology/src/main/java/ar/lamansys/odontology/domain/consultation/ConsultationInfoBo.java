@@ -1,15 +1,15 @@
 package ar.lamansys.odontology.domain.consultation;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
+@AllArgsConstructor
 public class ConsultationInfoBo {
 
     private Integer id;
@@ -32,17 +32,20 @@ public class ConsultationInfoBo {
 
 	private Integer hierarchicalUnitId;
 
-    public ConsultationInfoBo(Integer id, ConsultationBo consultation, Integer patientMedicalCoverageId, Integer doctorId, LocalDate performedDate, boolean billable, Integer hierarchicalUnitId) {
+    public static ConsultationInfoBo newConsultationInfoBo(ConsultationBo consultation, Integer doctorId, LocalDate performedDate, boolean billable) {
+		return new ConsultationInfoBo(null, consultation.getPatientId(), consultation.getPatientMedicalCoverageId(), consultation.getInstitutionId(), consultation.getClinicalSpecialtyId(), performedDate, doctorId, billable, consultation.getReasons(), consultation.getHierarchicalUnitId());
+	}
+	
+    public ConsultationInfoBo(Integer id, ConsultationBo consultation, Integer doctorId, LocalDate performedDate, boolean billable) {
         this.id = id;
         this.patientId = consultation.getPatientId();
         this.institutionId = consultation.getInstitutionId();
         this.clinicalSpecialtyId = consultation.getClinicalSpecialtyId();
         this.reasons = consultation.getReasons();
-        this.patientMedicalCoverageId = patientMedicalCoverageId;
+        this.patientMedicalCoverageId = consultation.getPatientMedicalCoverageId();
         this.doctorId = doctorId;
         this.performedDate = performedDate;
         this.billable = billable;
-		this.hierarchicalUnitId = hierarchicalUnitId;
     }
 
 }

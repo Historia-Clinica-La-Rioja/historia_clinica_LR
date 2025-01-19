@@ -1,18 +1,48 @@
 <div mat-dialog-title fxLayout="column" fxLayoutGap="10px">
-	<div class="mat-h2"
-		[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></div>
-	<div class="mat-h3" fxLayoutAlign="start center">
-		<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
-		<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
-		<span class="appointment-title-dot">●</span>
-		<span>{{data.hour | viewHourMinute}}hs</span>
+	<div fxLayout="row" fxLayoutAlign="space-between start">
+		<p class="mat-h2" *ngIf="data.expiredAppointment else newAppointment">{{'turnos.new-appointment.expired-appointment.TITLE' | translate}}</p>
+		<ng-template #newAppointment>
+			<p class="mat-h2"
+				[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></p>
+		</ng-template>
+		<button id="close-dialog" mat-icon-button [mat-dialog-close]="-1" (click)="cancelBtnActions()" type="button" class="icon-close">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+    <div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign="space-between start">
+		<div fxLayout="row" fxLayout.xs="column" fxFlex="62">
+			<div fxLayout="row" fxLayoutAlign="space-between center">
+				<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
+				<span>{{data.date | isoToDate | dateFormat: 'fulldate'}}</span>
+			</div>
+			<div fxLayout="row" fxLayoutAlign="start center">
+				<span class="appointment-title-dot">●</span>
+				<span id="time">{{fullDate | dateFormat: 'time'}}</span>
+				
+			</div>
+		</div>
+
+		<div>
+			<app-modality-label *ngIf="viewModalityLabel$ | async " [modality]="modalitySelected"></app-modality-label>
+		</div>
 	</div>
 </div>
 
 <div mat-dialog-content class="dialog-content">
 
-	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
-		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}">
+    <div class=" box-message">
+        <app-box-message class="mat-h3" *ngIf="data.expiredAppointment" [boxMessageInfo]="boxMessageInfo"></app-box-message>
+    </div>
+
+	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom" (selectionChange)="onStepChange($event)">
+		<mat-step [stepControl]="modalityForm" label="{{'turnos.new-appointment.STEP_0' | translate}}" [editable]="editableStepModality">
+			<mat-card class="mat-typography mat-elevation-z0">
+				<app-modality-radio-button-form (selectedModality)="setModalityValidation($event)" 
+				 [modalitys]="modalitys" layout="column"></app-modality-radio-button-form>
+			</mat-card>
+		</mat-step>
+		<mat-step [stepControl]="formSearch" label="{{'turnos.new-appointment.STEP_1' | translate}}"
+			[editable]="editableStep1">
 			<mat-card class="mat-typography mat-elevation-z0">
 				<form [formGroup]="formSearch" (ngSubmit)="search()">
 					<mat-card-content>
@@ -145,13 +175,12 @@
 							<mat-form-field appearance="outline">
 								<mat-label [translate]="'turnos.new-appointment.EMAIL'"></mat-label>
 								<input matInput type="patientEmail" id="patientEmail" name="patientEmail"
-									formControlName="patientEmail"
-									placeholder="usuario@example.com">
+									formControlName="patientEmail" placeholder="usuario@example.com">
 								<mat-error *ngIf="hasError(appointmentInfoForm, 'required', 'patientEmail')">
 									<span translate="forms.REQUIRED"></span>
 								</mat-error>
 								<mat-error *ngIf="hasError(appointmentInfoForm,'email', 'patientEmail')"
-								[translate]="'pacientes.form.INVALID'"></mat-error>
+									[translate]="'pacientes.form.INVALID'"></mat-error>
 							</mat-form-field>
 						</div>
 					</div>
@@ -159,73 +188,64 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.STEP_3' | translate }}"
+		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.REFERENCE_STEP_3' | translate }}"
 			*ngIf="data.protectedAppointment">
 			<mat-card>
 				<form [formGroup]="associateReferenceForm">
 					<mat-form-field appearance="outline">
 						<mat-label>{{ 'turnos.new-appointment.ASSOCIATED_REFERENCE' | translate }}</mat-label>
 						<mat-select formControlName="reference" name="reference">
-							<mat-option *ngFor="let reference of referenceList; index as i" [value]="reference">
-								{{ reference.institution.name }}, {{ referenceDateViewList[i] }},
+							<mat-option *ngFor="let reference of referenceList" [value]="reference">
+								{{ reference.institution }}, {{ reference.date | viewDateDto: 'date' | dateFormat: 'date' }},
 								{{ reference.professionalFullName }}
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
-					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column" *ngIf="data.modalityAttention === MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION">
+					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column"
+						*ngIf="data.modalityAttention === MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION">
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'turnos.new-appointment.PROFESSIONAL_EMAIL'"></mat-label>
 							<input matInput type="professionalEmail" id="professionalEmail" name="professionalEmail"
-								formControlName="professionalEmail"
-								placeholder="usuario@example.com">
+								formControlName="professionalEmail" placeholder="usuario@example.com">
 							<mat-error *ngIf="hasError(associateReferenceForm, 'required', 'professionalEmail')">
 								<span translate="forms.REQUIRED"></span>
 							</mat-error>
 							<mat-error *ngIf="hasError(associateReferenceForm,'email', 'professionalEmail')"
-							[translate]="'pacientes.form.INVALID'"></mat-error>
+								[translate]="'pacientes.form.INVALID'"></mat-error>
 						</mat-form-field>
 					</div>
 				</form>
-				<div fxLayout="row">
-					<button mat-stroked-button matStepperPrevious color="primary">
-						<span [translate]="'buttons.BACK'"></span>
-					</button>
-				</div>
 			</mat-card>
+		</mat-step>
+
+		<mat-step *ngIf="data.expiredAppointment" [stepControl]="expiredAppointmentForm" label="{{'turnos.new-appointment.MOTIVE_STEP_3' | translate }}">
+			<app-expired-appointment-motive-form [expiredAppointmentForm]="expiredAppointmentForm"></app-expired-appointment-motive-form>
 		</mat-step>
 	</mat-stepper>
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button id="cancel" *ngIf="stepper.selectedIndex !== 1" mat-stroked-button color="primary"
-		(click)="cancelBtnActions()" [mat-dialog-close]="-1">
-		<span [translate]="'buttons.CANCEL'"></span>
-	</button>
-	<div fxLayout="row" fxLayoutAlign="end" *ngIf="stepper.selectedIndex === 0">
+	<app-button id="back" class="back-btn" *ngIf="stepper.selectedIndex > indexStep.MODALITY"
+		[disabled]="preselectedPatient && stepper.selectedIndex === indexStep.INFO" text="buttons.BACK" (clicked)="back(stepper)">
+	</app-button>
+	<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px" *ngIf="stepper.selectedIndex === indexStep.SEARCH">
 		<ng-container *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-			<button id="add-patient" mat-flat-button [mat-dialog-close]="-1" color="primary" (click)="goCreatePatient()"
+			<app-button id="add-patient" buttonType="mat-flat-button" color="primary" text="turnos.new-appointment.BUTTON_ADD_PATIENT" (clicked)="goCreatePatient()"
 				*ngIf="showAddPatient">
-				<span [translate]="'turnos.new-appointment.BUTTON_ADD_PATIENT'"></span>
-			</button>
+			</app-button>
 		</ng-container>
-		<button id="search-patient" mat-flat-button color="primary" type="submit" (click)="search()">
-			<span [translate]="'turnos.new-appointment.BUTTON_SEARCH'"></span>
-		</button>
+		<app-button id="search-patient" buttonType="mat-flat-button" color="primary" text="buttons.CONTINUE" (clicked)="search()">
+		</app-button>
 	</div>
-	<button id="back" *ngIf="stepper.selectedIndex === 1" class="back-btn" mat-stroked-button color="primary"
-		[disabled]="preselectedPatient" (click)="toFirstStep(stepper)">
-		<span [translate]="'buttons.BACK'"></span>
-	</button>
-	<button id="confirm" mat-raised-button color="primary" *ngIf="showConfirmButton()" (click)="submit()"
-		[disabled]="isSubmitButtonDisabled">
-		<span [translate]="'buttons.CONFIRM'"></span>
-	</button>
-	<button id="next" (click)="stepper.next()" mat-raised-button type="button" color="primary"
-		*ngIf="data.protectedAppointment && stepper.selectedIndex === 1" [disabled]="!appointmentInfoForm.valid">
-		<span [translate]="'buttons.NEXT'"></span>
-	</button>
-	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"
-		*ngIf="data.protectedAppointment && stepper.selectedIndex === 2" [disabled]="disableConfirmButtonStep3()">
-		<span [translate]="'buttons.CONFIRM'"></span>
-	</button>
+
+	<app-button id="confirm" buttonType="mat-raised-button" text="buttons.CONFIRM" color="primary" *ngIf="showConfirmButton()" (clicked)="submit()"
+		[isLoading]="isLoadingRequest">
+	</app-button>
+	<app-button id="next" buttonType="mat-raised-button" color="primary" text="buttons.CONTINUE" 
+		(clicked)="stepper.next()" *ngIf="(!data.protectedAppointment && !data.expiredAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || ((data.protectedAppointment || data.expiredAppointment) && (stepper.selectedIndex === indexStep.INFO || stepper.selectedIndex === indexStep.MODALITY)) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid">
+	</app-button>
+	<app-button id="confirm-from-step-3" (clicked)="submit(true)" buttonType="mat-raised-button" color="primary" text="buttons.CONFIRM" 
+		[disabled]="disableConfirmButtonStep3()" [isLoading]="isLoadingRequest"
+		*ngIf="((data.protectedAppointment || data.expiredAppointment) && stepper.selectedIndex === indexStep.PROTECTED_MOTIVE)"
+	></app-button>
 </mat-dialog-actions>

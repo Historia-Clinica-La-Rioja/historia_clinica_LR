@@ -1,0 +1,385 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_18
+
+    - changeSet:
+        id: createTable-unsatisfied_appointment_demand
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: unsatisfied_appointment_demand
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_unsatisfied_appointment_demand
+                    name: id
+                    type: int
+                - column:
+                    name: clinical_specialty_name_or_alias
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: initial_search_time
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: end_search_time
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: initial_search_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: end_search_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: modality_id
+                    type: smallint
+                - column:
+                    constraints:
+                      references: snomed(id)
+                      foreignKeyName: FK_unsatisfied_appointment_demand_snomed
+                    name: practice_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_unsatisfied_appointment_demand_institution
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-unsatisfied_appointment_demand_day
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: unsatisfied_appointment_demand_day
+              columns:
+                - column:
+                    constraints:
+                      references: unsatisfied_appointment_demand(id)
+                      foreignKeyName: FK_unsatisfied_appointment_demand_unsatisfied_appointment_demand_day
+                    name: unsatisfied_appointment_demand_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: week_day_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: unsatisfied_appointment_demand_id, week_day_id
+              constraintName: PK_unsatisfied_appointment_demand_day
+              tableName: unsatisfied_appointment_demand_day
+              validate: true
+
+    - changeSet:
+        id: createTable-analgesic_technique
+        author: mromero
+        changes:
+          - createTable:
+              tableName: analgesic_technique
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_analgesic_technique
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: anesthetic_substance(id)
+                      foreignKeyName: FK_anesthetic_substance_id_analgesic_technique
+                    name: anesthetic_substance_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_injection_note_id_analgesic_technique
+                    name: injection_note_id
+                    type: bigint
+                - column:
+                    name: catheter
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_catheter_note_id_analgesic_technique
+                    name: catheter_note_id
+                    type: bigint
+
+    - changeSet:
+        id: dropNotNullConstraints-via_id-dosage_id-anesthetic_substance
+        author: mromero
+        changes:
+          - dropNotNullConstraint:
+              tableName: anesthetic_substance
+              columnName: via_id
+          - dropNotNullConstraint:
+              tableName: anesthetic_substance
+              columnName: dosage_id
+
+    - changeSet:
+        id: createTable-anesthetic_technique
+        author: mromero
+        changes:
+          - createTable:
+              tableName: anesthetic_technique
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_anesthetic_technique
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_anesthetic_technique
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: snomed(id)
+                      foreignKeyName: FK_snomed_id_anesthetic_technique
+                    name: snomed_id
+                    type: int
+                - column:
+                    name: technique_id
+                    type: smallint
+                - column:
+                    name: tracheal_intubation
+                    type: boolean
+                - column:
+                    name: breathing_id
+                    type: smallint
+                - column:
+                    name: circuit_id
+                    type: smallint
+
+    - changeSet:
+        id: createTable-document_anesthetic_technique
+        author: mromero
+        changes:
+          - createTable:
+              tableName: document_anesthetic_technique
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: anesthetic_technique_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, anesthetic_technique_id
+              constraintName: PK_document_anesthetic_technique
+              tableName: document_anesthetic_technique
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_anesthetic_technique
+              constraintName: FK_document_id_document_anesthetic_technique
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: anesthetic_technique_id
+              baseTableName: document_anesthetic_technique
+              constraintName: FK_anesthetic_technique_id_document_anesthetic_technique
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: anesthetic_technique
+              validate: true
+
+    - changeSet:
+        id: createTable-tracheal_intubation
+        author: mromero
+        changes:
+          - createTable:
+              tableName: tracheal_intubation
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: anesthetic_technique_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: tracheal_intubation_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: anesthetic_technique_id, tracheal_intubation_id
+              constraintName: PK_tracheal_intubation
+              tableName: tracheal_intubation
+              validate: true
+
+    - changeSet:
+        id: addColumns-anesthetic_part3-procedure_description
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: procedure_description
+              columns:
+                - column:
+                    name: venous_access
+                    type: boolean
+                - column:
+                    name: nasogastric_tube
+                    type: boolean
+                - column:
+                    name: urinary_catheter
+                    type: boolean
+                - column:
+                    name: food_intake
+                    type: time
+
+    - changeSet:
+        id: dropTable-food_intake
+        author: mromero
+        changes:
+          - dropTable:
+              tableName: food_intake
+
+    - changeSet:
+        id: createTable-cipres_establishment
+        comment: Create table cipres_establishment
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: cipres_establishment
+              columns:
+                - column:
+                    name: sisa_code
+                    type: varchar(15)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: cipres_establishment_id
+                    type: int
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: sisa_code, cipres_establishment_id
+              constraintName: PK_cipres_establishment
+              tableName: cipres_establishment
+              validate: true
+
+    - changeSet:
+          id: createTable-cipres_clinical_specialty
+          comment: Create table cipres_clinical_specialty
+          author: bchacon
+          changes:
+            - createTable:
+                tableName: cipres_clinical_specialty
+                columns:
+                  - column:
+                      name: clinical_specialty_id
+                      type: int
+                      constraints:
+                        foreignKeyName: FK_cipres_clinical_specialty_id
+                        references: clinical_specialty(id)
+                        nullable: false
+                  - column:
+                      name: cipres_clinical_specialty_id
+                      type: int
+                      constraints:
+                        nullable: false
+            - addPrimaryKey:
+                clustered: true
+                columnNames: clinical_specialty_id, cipres_clinical_specialty_id
+                constraintName: PK_cipres_clinical_specialty
+                tableName: cipres_clinical_specialty
+                validate: true
+
+    - changeSet:
+        id: epidemiological_week-table-add-2024-data
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  startDate DATE;
+                  endDate DATE;
+                  epidemiologicalWeekNumber SMALLINT;
+                BEGIN
+                  startDate := '2024-01-07';
+                  endDate := '2024-01-13';
+                  epidemiologicalWeekNumber := 2;
+                  FOR iteration IN 0..51 LOOP
+                      INSERT INTO epidemiological_week(start_date, end_date, epidemiological_week_number) VALUES(startDate, endDate, epidemiologicalWeekNumber);
+                      startDate := endDate + INTERVAL '1 days';
+                      endDate := startDate + INTERVAL '6 days';
+                      epidemiologicalWeekNumber := epidemiologicalWeekNumber + 1;
+                      IF (epidemiologicalWeekNumber = 53) THEN
+                      	epidemiologicalWeekNumber := 1;
+                      END IF;
+                  END LOOP;
+                END $$;

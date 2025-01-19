@@ -1,0 +1,11 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="10px">
+    <mat-label [class]="searchCriteryStyle" fxLayout="column" [translate]="label"></mat-label>
+    <mat-radio-group id="search-criteria" fxLayout="row" fxLayoutGap="40px" formControlName="criteria">
+        <mat-radio-button color="primary" [value]="searchCriteria.CONSULTATION" (change)="emit($event)">
+            {{'turnos.CONSULTATION' | translate}}
+        </mat-radio-button>
+        <mat-radio-button color="primary" [value]="searchCriteria.PRACTICES" (change)="emit($event)">
+            {{'turnos.PRACTICE' | translate}}
+        </mat-radio-button>
+    </mat-radio-group>
+</form>

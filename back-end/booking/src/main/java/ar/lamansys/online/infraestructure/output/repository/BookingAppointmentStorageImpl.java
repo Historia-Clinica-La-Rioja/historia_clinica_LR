@@ -2,7 +2,13 @@ package ar.lamansys.online.infraestructure.output.repository;
 
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
@@ -12,17 +18,15 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedApp
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 
+@RequiredArgsConstructor
 @Service
 public class BookingAppointmentStorageImpl implements BookingAppointmentStorage {
 
     private final SharedAppointmentPort sharedAppointmentPort;
-
-    public BookingAppointmentStorageImpl(SharedAppointmentPort sharedAppointmentPort) {
-        this.sharedAppointmentPort = sharedAppointmentPort;
-    }
+	private final SharedInstitutionPort sharedInstitutionPort;
 
     @Override
-    public SavedBookingAppointmentDto save(BookingBo bookingBo) {
+    public SavedBookingAppointmentDto save(BookingBo bookingBo) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
         return sharedAppointmentPort.saveBooking(
                 mapToAppointment(bookingBo),
                 mapToBookingPerson(bookingBo),
@@ -50,6 +54,14 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
         return sharedAppointmentPort.getProfessionalName(diaryId);
     }
 
+	@Override
+	public String getInstitutionAddress(Integer diaryId) {
+		Integer institutionId = sharedAppointmentPort.getInstitutionId(diaryId);
+		String institutionName = sharedInstitutionPort.fetchInstitutionById(institutionId).getName();
+		String institutionAddress = sharedInstitutionPort.fetchInstitutionAddress(institutionId).getCompleteAddress();
+		return institutionName + " - " + institutionAddress;
+	}
+
     private BookingPersonDto mapToBookingPerson(BookingBo bookingBo) {
         if(bookingBo.bookingPerson == null) {
             return null;
@@ -61,7 +73,9 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
                 bookingPerson.getFirstName(),
                 bookingPerson.getGenderId(),
                 bookingPerson.getIdNumber(),
-                bookingPerson.getLastName()
+                bookingPerson.getLastName(),
+				bookingPerson.getPhonePrefix(),
+				bookingPerson.getPhoneNumber()
         );
     }
 
@@ -73,7 +87,8 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
                 bookingAppointment.getDiaryId(),
                 bookingAppointment.getHour(),
                 bookingAppointment.getOpeningHoursId(),
-                bookingAppointment.getPhoneNumber(),
+                bookingAppointment.getPhonePrefix(),
+				bookingAppointment.getPhoneNumber(),
                 bookingAppointment.getSnomedId(),
 				bookingAppointment.getSpecialtyId());
     }

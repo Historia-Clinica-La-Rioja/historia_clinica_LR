@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReasonDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,4 +42,9 @@ public class ReasonExternalService {
         reasonService.addReasons(reasonBos);
         return reasons;
     }
+
+	public Optional<ReasonDto> getByReasonId(String reasonId){
+		return reasonService.getByReasonId(reasonId)
+				.map(reasonBo -> new ReasonDto(snomedMapper.fromReasonBo(reasonBo)));
+	}
 }

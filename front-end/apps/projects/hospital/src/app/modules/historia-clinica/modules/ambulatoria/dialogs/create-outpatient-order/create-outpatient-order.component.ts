@@ -1,42 +1,47 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto, SnomedECL } from "@api-rest/api-model";
+import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto, SnomedECL } from "@api-rest/api-model";
 import { OutpatientOrderService } from "@api-rest/services/outpatient-order.service";
 import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
 import { PatientService } from "@api-rest/services/patient.service";
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { MapperService } from "@core/services/mapper.service";
+import { PatientNameService } from '@core/services/patient-name.service';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
-import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
+import { OrderTemplateService } from '@historia-clinica/services/order-template.service';
+import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
+import { ButtonType } from '@presentation/components/button/button.component';
+import { Size } from '@presentation/components/item-summary/item-summary.component';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { map } from "rxjs/operators";
 
 @Component({
-  selector: 'app-create-outpatient-order',
-  templateUrl: './create-outpatient-order.component.html',
-  styleUrls: ['./create-outpatient-order.component.scss']
+	selector: 'app-create-outpatient-order',
+	templateUrl: './create-outpatient-order.component.html',
+	styleUrls: ['./create-outpatient-order.component.scss'],
+	providers: [OrderTemplateService]
 })
 export class CreateOutpatientOrderComponent implements OnInit {
-
+	eStudyType: EStudyType;
+	ROUTINE = EStudyType.ROUTINE
+	URGENT = EStudyType.URGENT
+	patient: PatientSummary;
 	readonly ecl = SnomedECL.PROCEDURE;
-	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	hasError = hasError;
-
 	form: UntypedFormGroup;
-	firstStepCompleted = false;
-
 	private patientData: BasicPatientDto;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	studyCategoryOptions = [];
 	healthProblemOptions = [];
 	selectedStudy: TemplateOrConceptOption = null;
-
 	orderStudiesService: OrderStudiesService;
+	size = Size.SMALL;
+	ButtonType = ButtonType;
+	templateIds: number[] = [];
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, healthProblems },
@@ -49,7 +54,17 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
+		private readonly patientNameService: PatientNameService,
+		private readonly orderTemplate: OrderTemplateService
 	) {
+
+		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
+			patient => {
+				this.patientService.getPatientPhoto(patient.id).subscribe(photo => {
+					this.patient = this.mapperService.toPatientSummary(patient,photo, this.patientNameService);
+				})
+			});
+
 		this.orderStudiesService = new OrderStudiesService();
 	}
 
@@ -58,8 +73,9 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			patientMedicalCoverage: [null],
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
+			studyType: [EStudyType.ROUTINE, Validators.required],
 			healthProblem: [null, Validators.required],
-			notes: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
+			notes: [null]
 		});
 
 		this.setMedicalCoverages();
@@ -118,6 +134,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	handleStudySelected(study) {
 		this.selectedStudy = study;
 		this.form.controls.studySelection.setValue(this.getStudyDisplayName());
+		this.loadSelectedConceptsIntoOrderStudiesService();
+		this.resetStudySelector();
 	}
 
 	resetStudySelector() {
@@ -137,35 +155,35 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		return this.selectedStudy.data.concepts.map(c => c.pt.term).join(', ');
 	}
 
-	goToConfirmationStep() {
-		this.firstStepCompleted = true;
-		this.loadSelectedConceptsIntoOrderStudiesService();
-	}
-
 	private loadSelectedConceptsIntoOrderStudiesService() {
-		let conceptsToLoad: Study[];
+		const addStudy = (study: Study) => {
+			const added = this.orderStudiesService.add(study);
+			this.orderTemplate.addTemplate(this.orderStudiesService.getStudies());
+			if (!added) {
+				this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED');
+			}
+		};
+
+		const mapConceptToStudy = (concept: any): Study => ({
+			snomed: {
+				sctid: concept.conceptId,
+				pt: concept.pt.term,
+			}
+		});
+
 		if (this.selectedStudyIsTemplate()) {
-			conceptsToLoad = this.selectedStudy.data.concepts.map(concept => ({
-				snomed: {
-					sctid: concept.conceptId,
-					pt: concept.pt.term
-				}
-			}));
+			const conceptsToLoad = this.selectedStudy.data.concepts.map(mapConceptToStudy);
+			conceptsToLoad.forEach(addStudy);	
+			this.addTemplateId();
+		} else {
+			const conceptToLoad = mapConceptToStudy(this.selectedStudy.data);
+			addStudy(conceptToLoad);
 		}
-		else {
-			conceptsToLoad = [
-				{
-					snomed: {
-						sctid: this.selectedStudy.data.conceptId,
-						pt: this.selectedStudy.data.pt.term
-					}
-				}
-			];
-		}
-		this.orderStudiesService.addAll(conceptsToLoad);
 	}
 
 	removeStudy(i) {
+		const study = this.orderStudiesService.getStudyByIndex(i);
+		this.orderTemplate.updateStudiesFromTemplate(study.snomed.sctid);
 		this.orderStudiesService.remove(i);
 	}
 
@@ -186,17 +204,27 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		const newOutpatientOrder: PrescriptionDto = {
 			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
 			hasRecipe: true,
+			observations: this.form.controls.notes.value,
+			studyType: this.form.controls.studyType.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
-					observations: this.form.controls.notes.value,
 					snomed: study.snomed,
 					categoryId: this.form.controls.studyCategory.value,
 					prescriptionLineNumber: ++prescriptionLineNumberAux,
 				};
-			})
+			}),
+			templateIds: this.orderTemplate.getTemplatesIds()
 		};
 		this.saveOutpatientOrder(newOutpatientOrder);
+	}
+
+	private addTemplateId = () => {
+		this.selectedStudy.data.concepts.forEach(concept => {
+			const templateId = this.selectedStudy.data.id;
+			const sctid = concept.conceptId;
+			this.orderTemplate.addStudy(sctid, templateId)
+		});
 	}
 
 	private saveOutpatientOrder(newOutpatientOrder: PrescriptionDto) {
@@ -208,34 +236,18 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			});
 	}
 
-	private closeModal(newOutpatientOrder: NewOutpatientOrder): void {
+	private closeModal(newOutpatientOrder: NewOutpatientOrder) {
 		this.dialogRef.close(newOutpatientOrder);
 	}
 
-	openAddAnotherStudyDialog() {
-		const addStudy = this.dialog.open(ConceptsTypeaheadSearchDialogComponent, {
-			width: '25%',
-			data: {
-				ecl: this.ecl,
-				placeholder: 'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY',
-				title: 'ambulatoria.paciente.outpatient-order.create-order-dialog.ADD_STUDY_DIALOG_TITLE'
-			},
-		});
-
-		addStudy.afterClosed().subscribe((addStudyDialogData) => {
-			if (addStudyDialogData?.selectedConcept) {
-				let added = this.orderStudiesService.add({snomed: addStudyDialogData.selectedConcept});
-				if (!added)
-					this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED')
-			}
-		})
+	validateForm(){
+		this.form.markAllAsTouched();
 	}
-
 	clear(control: AbstractControl): void {
 		control.reset();
 	}
 
-}
+  }
 
 export class NewOutpatientOrder {
 	prescriptionDto: PrescriptionDto;

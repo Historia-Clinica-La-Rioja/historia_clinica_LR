@@ -1,0 +1,31 @@
+<div fxLayout="column" fxLayoutGap="5px">
+    <div *ngIf="permissionService.visualPermissions.showAuditDropdown; else showRegulationState">
+        <app-institutional-network-actions-dropdown
+            *appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
+            [isOrigin]="true" (newState)="onNewState($event)" (editing)="onEditingState($event)"
+            [regulationStates]="this.permissionService.referenceCompleteData.administrativeState?.state !== this.permissionService.referenceDestinationState.suggestedRevision?
+                regulationOriginStatesWithAudit: regulationOriginStates">
+        </app-institutional-network-actions-dropdown>
+    </div>
+
+    <ng-template #showRegulationState>
+        <app-colored-label [description]="regulationState.description | translate | uppercase"
+            [color]="regulationState.color" [icon]="regulationState.icon">
+        </app-colored-label>
+    </ng-template>
+
+    <div *ngIf="referenceRegulationData?.state !== permissionService.referenceOriginStates.noAuditRequired
+            && referenceRegulationData?.state !== permissionService.referenceOriginStates.waitingAudit
+            && !hideReason" fxLayout="column" fxLayoutGap="5px">
+        <span *ngIf="referenceRegulationData?.reason" class="reason">"{{referenceRegulationData.reason}}"</span>
+        <div class="grey" fxLayout="row" fxLayoutAlign="space-between">
+            <span>{{referenceRegulationData.professionalName}}</span>
+            <span>{{referenceRegulationData.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
+        </div>
+    </div>
+
+    <div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+        <app-reference-state-actions *ngIf="loggedUserCanDoActions && !referenceCompleteData.reference?.closureType"
+            [referenceCompleteDataDto]="referenceCompleteData"></app-reference-state-actions>
+    </div>
+</div>

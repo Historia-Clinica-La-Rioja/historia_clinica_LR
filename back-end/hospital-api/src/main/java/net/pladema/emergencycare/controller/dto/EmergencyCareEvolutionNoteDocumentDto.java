@@ -3,6 +3,7 @@ package net.pladema.emergencycare.controller.dto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.Setter;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEvolutionNoteType;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 
 @Getter
@@ -20,5 +21,11 @@ public class EmergencyCareEvolutionNoteDocumentDto {
 	private DateTimeDto performedDate;
 
 	private EmergencyCareEvolutionNoteClinicalData emergencyCareEvolutionNoteClinicalData;
+
+	private DateTimeDto editedOn;
+
+	private HealthcareProfessionalDto editor;
+
+	private EEmergencyCareEvolutionNoteType type;
 
 }

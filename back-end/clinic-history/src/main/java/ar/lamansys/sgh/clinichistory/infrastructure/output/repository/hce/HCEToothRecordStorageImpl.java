@@ -39,9 +39,15 @@ public class HCEToothRecordStorageImpl implements HCEToothRecordStorage {
                         "JOIN {h-schema}snomed snomed_tooth ON (bp.sctid = snomed_tooth.sctid AND bp.pt = snomed_tooth.pt) " +
                         "JOIN {h-schema}odontology_diagnostic od ON (snomed_tooth.id = od.tooth_id) " +
                         "JOIN {h-schema}snomed snomed_diagnostic ON (od.snomed_id = snomed_diagnostic.id) " +
+						"JOIN {h-schema}document_odontology_diagnostic dod ON (dod.odontology_diagnostic_id = od.id) " +
+						"JOIN {h-schema}document d ON (dod.document_id = d.id) " +
+						"JOIN {h-schema}document_health_condition dhc ON (dhc.document_id = d.id) " +
+						"JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
                         "LEFT JOIN {h-schema}snomed snomed_surface ON (od.surface_id = snomed_surface.id) " +
                         "WHERE t.sctid = :toothSctid " +
-                        "   AND od.patient_id = :patientId ) " +
+                        "AND od.patient_id = :patientId " +
+						"AND hc.status_id = '55561003' " +
+						"AND hc.snomed_id = '1242') " +
                         "UNION " +
                         "(SELECT snomed_procedure.sctid as snomed_procedure_sctid , snomed_procedure.pt , " +
                         "           snomed_surface.sctid as snomed_surface_sctid , op.performed_date , op.updated_on " +
@@ -50,9 +56,15 @@ public class HCEToothRecordStorageImpl implements HCEToothRecordStorage {
                         "JOIN {h-schema}snomed snomed_tooth ON (bp.sctid = snomed_tooth.sctid AND bp.pt = snomed_tooth.pt) " +
                         "JOIN {h-schema}odontology_procedure op ON (snomed_tooth.id = op.tooth_id) " +
                         "JOIN {h-schema}snomed snomed_procedure ON (op.snomed_id = snomed_procedure.id) " +
+						"JOIN {h-schema}document_odontology_procedure dop ON (dop.odontology_procedure_id = op.id) " +
+						"JOIN {h-schema}document d ON (dop.document_id = d.id) " +
+						"JOIN {h-schema}document_health_condition dhc ON (dhc.document_id = d.id) " +
+						"JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
                         "LEFT JOIN {h-schema}snomed snomed_surface ON (op.surface_id = snomed_surface.id) " +
                         "WHERE t.sctid = :toothSctid " +
-                        "   AND op.patient_id = :patientId ) " +
+                        "AND op.patient_id = :patientId " +
+						"AND hc.status_id = '55561003' " +
+						"AND hc.snomed_id = '1242') " +
                         "ORDER BY updated_on DESC " );
         query.setParameter("toothSctid", toothSctid);
         query.setParameter("patientId", patientId);

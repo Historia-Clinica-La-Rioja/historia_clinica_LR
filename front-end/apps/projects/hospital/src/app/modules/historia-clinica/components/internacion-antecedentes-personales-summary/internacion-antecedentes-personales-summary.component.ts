@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {HCEPersonalHistoryDto, HealthConditionDto} from "@api-rest/api-model";
+import {HCEHealthConditionDto, HealthConditionDto} from "@api-rest/api-model";
 import {SummaryHeader} from "@presentation/components/summary-card/summary-card.component";
 import {TableModel} from "@presentation/components/table/table.component";
 
@@ -10,7 +10,7 @@ import {TableModel} from "@presentation/components/table/table.component";
 })
 export class InternacionAntecedentesPersonalesSummaryComponent implements OnChanges {
 
-	@Input() personalHistory: HCEPersonalHistoryDto[];
+	@Input() personalHistory: HCEHealthConditionDto[];
 	@Input() personalHistoriesHeader: SummaryHeader;
 	tableModel: TableModel<HealthConditionDto>;
 
@@ -21,7 +21,7 @@ export class InternacionAntecedentesPersonalesSummaryComponent implements OnChan
 		this.tableModel = this.buildTable(this.personalHistory);
 	}
 
-	private buildTable(data: HCEPersonalHistoryDto[]): TableModel<HCEPersonalHistoryDto> {
+	private buildTable(data: HCEHealthConditionDto[]): TableModel<HCEHealthConditionDto> {
 		return {
 			columns: [
 				{

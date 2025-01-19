@@ -1,0 +1,86 @@
+<div>
+    <div class="label">
+        <button mat-button color="primary" id="filter" (click)="toggleChanged()">
+            <span>{{'ambulatoria.paciente.problemas.amend_problems.AMENDED_PROBLEMS' | translate | uppercase}}</span>
+            <mat-icon *ngIf="isFilterExpanded; else IsNotExpanded">expand_less</mat-icon>
+        </button>
+        
+        <ng-template #IsNotExpanded>
+            <mat-icon>expand_more</mat-icon>
+        </ng-template>
+    </div>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" *ngIf="isFilterExpanded">
+        <div fxFlex="50%" class="amend-problems-card">
+            <app-summary-card id="amended_problems" [header]="problemasPorError" [editable]="false">
+                <mat-list *ngIf="amendedProblems.length else noInfo">
+                    <div fxLayout="row">
+                        <mat-list-item class="problems-table-header">
+                            <div fxFlex="35%"><span class="problems-table-header-text"
+                                    [translate]="'ambulatoria.paciente.problemas.table-columns.TYPE'"></span>
+                            </div>
+                            <div fxFlex="20%"><span class="problems-table-header-text"
+                                    [translate]="'ambulatoria.paciente.problemas.table-columns.SEVERITY'"></span>
+                            </div>
+                            <div fxFlex="20%"><span class="problems-table-header-text"
+                                    [translate]="'ambulatoria.paciente.problemas.table-columns.START_DATE'"></span>
+                            </div>
+                            <div fxFlex="20%"><span class="problems-table-header-text"
+                                    [translate]="'ambulatoria.paciente.problemas.table-columns.END_DATE'"></span>
+                            </div>
+                        </mat-list-item>
+                    </div>
+
+                    <div fxLayout="row" *ngFor="let problem of amendedProblems">
+                        <mat-list-item>
+                            <div fxFlex="35%">
+                                <span mat-line class="capitalize-first-letter">
+                                    {{ problem.data.snomed.pt }}
+                                </span>
+                            </div>
+                            <div fxFlex="20%">
+                                {{ problem.severity }}
+                            </div>
+
+                            <div fxFlex="20%" id="start-date">
+                                <div class="date" fxShow="false" fxShow.md="true"
+                                    matTooltip="{{ problem.startDate }}">
+                                    {{problem.startDate}}
+                                </div>
+                                <div class="date" fxShow.md="false">
+                                    {{problem.startDate}}
+                                </div>
+                            </div>
+
+                            <div fxFlex="20%">
+                                <div class="date" fxShow="false" fxShow.md="true"
+                                    matTooltip="{{ problem.endDate }}">
+                                    {{problem.endDate}}
+                                </div>
+                                <div class="date" fxShow.md="false">
+                                    {{problem.endDate}}
+                                </div>
+                            </div>
+
+                            <div fxFlex="5%">
+                                <button
+                                    *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"
+                                    mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu" data-id="menu-dialog">
+                                    <app-view-datails-btn [problem]="problem.data" (setProblemOnHistoric)="viewProblemDetails(problem.data)"></app-view-datails-btn>
+                                </mat-menu>
+                            </div>
+
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                    </div>
+                </mat-list>
+            </app-summary-card>
+        </div>
+    </div>
+</div>
+
+<ng-template #noInfo>
+    <app-no-data></app-no-data>
+</ng-template>

@@ -4,16 +4,19 @@ import ar.lamansys.sgh.clinichistory.UnitRepository;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedication;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementCommercialPrescriptionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.QuantityRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
@@ -21,6 +24,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.MedicamentStatementStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.SnomedRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,15 +33,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class CreateMedicationServiceImplTest extends UnitRepository {
 
-    private LoadMedications medicationServiceImpl;
+    private LoadMedication medicationServiceImpl;
 
     @Autowired
     private MedicationStatementRepository medicationStatementRepository;
@@ -68,24 +72,38 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 	@MockBean
 	private DocumentRepository documentRepository;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+
+	@MockBean
+	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
+
+	@MockBean
+	private MedicationStatementCommercialPrescriptionRepository medicationStatementCommercialPrescriptionRepository;
+
+	@MockBean
+	private FeatureFlagsService featureFlagsService;
+
     @BeforeEach
     void setUp() {
-        medicationServiceImpl = new LoadMedications(
+        medicationServiceImpl = new LoadMedication(
                 medicationStatementRepository,
                 dosageRepository,
                 medicamentStatementStatusRepository,
                 documentService,
                 snomedService,
                 noteService,
-                quantityRepository
+                quantityRepository,
+				medicationStatementCommercialPrescriptionRepository,
+				featureFlagsService
         );
     }
 
     @Test
-    void createDocument_withEmptyList() {
-        var result = medicationServiceImpl.run(1, 1l, Collections.emptyList());
-        Assertions.assertThat(result.isEmpty())
-                    .isTrue();
+    void createDocument_withNullBo() {
+        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () ->
+                medicationServiceImpl.run(1, 1L, null));
+        assertEquals("Parámetro de medicamento no puede ser vacío", exception.getMessage());
     }
 
     @Test
@@ -100,12 +118,8 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
-                createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0), new QuantityBo(1,"ml")));
-        var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
-        Assertions.assertThat(result.size())
-                .isEqualTo(1);
-
-        MedicationBo resultMedication = result.get(0);
+                createDosageBo(15d,8, false, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,5,25,0,0,0), new QuantityBo(1,"ml")));
+        MedicationBo resultMedication = medicationServiceImpl.run(patientInfo, 1L, medication);
 
         Assertions.assertThat(resultMedication)
                 .isNotNull();
@@ -160,12 +174,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 
 
         MedicationBo medication = createMedicationBo("IBUPROFENO", 13,
-                createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0), new QuantityBo(1,"ml")));
-        var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
-        Assertions.assertThat(result.size())
-                .isEqualTo(1);
+                createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020, 5,25,0,0,0), new QuantityBo(1,"ml")));
 
-        MedicationBo resultMedication = result.get(0);
+        MedicationBo resultMedication = medicationServiceImpl.run(patientInfo, 1L, medication);
 
         Assertions.assertThat(resultMedication)
                 .isNotNull();
@@ -218,12 +229,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
         when(documentService.createDocumentMedication(any(), any())).thenReturn(null);
 
 
-        MedicationBo medication = createMedicationBo("IBUPROFENO", null,createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,05,25,0,0,0), new QuantityBo(2,"ml")));
-        var result = medicationServiceImpl.run(patientInfo, 1l, List.of(medication));
-        Assertions.assertThat(result.size())
-                .isEqualTo(1);
+        MedicationBo medication = createMedicationBo("IBUPROFENO", null,createDosageBo(15d,8, true, EUnitsOfTimeBo.HOUR, LocalDateTime.of(2020,5,25,0,0,0), new QuantityBo(2,"ml")));
 
-        MedicationBo resultMedication = result.get(0);
+        MedicationBo resultMedication = medicationServiceImpl.run(patientInfo, 1L, medication);
 
         Assertions.assertThat(resultMedication)
                 .isNotNull();

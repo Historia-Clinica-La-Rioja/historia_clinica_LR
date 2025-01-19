@@ -2,6 +2,8 @@ package net.pladema.emergencycare.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.IsolationAlertDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.Outp
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientProcedureDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientRiskFactorDto;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEvolutionNoteType;
 
 import java.util.List;
 
@@ -38,12 +41,16 @@ public class EmergencyCareEvolutionNoteDto {
 
 	private OutpatientRiskFactorDto riskFactors;
 
-	private List<OutpatientFamilyHistoryDto> familyHistories;
+	private ReferableItemDto<OutpatientFamilyHistoryDto> familyHistories;
 
 	private List<OutpatientMedicationDto> medications;
 
-	private List<OutpatientAllergyConditionDto> allergies;
+	private ReferableItemDto<OutpatientAllergyConditionDto> allergies;
 
 	private List<OutpatientProcedureDto> procedures;
+
+	private EEmergencyCareEvolutionNoteType type;
+
+	private List<IsolationAlertDto> isolationAlerts;
 
 }

@@ -129,10 +129,10 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 	}
 
 	private List<AvailabilityBo> createListOfSlots(DiaryListBo diary, List<AppointmentDiaryBo> activeAppointments) {
-
+		LocalDate dayAfterEndDate = diary.getEndDate().plusDays(1L);
 		var validDates = diary.getStartDate().isBefore(LocalDate.now())  ?
-				LocalDate.now().datesUntil(diary.getEndDate()) :
-				diary.getStartDate().datesUntil(diary.getEndDate());
+				LocalDate.now().datesUntil(dayAfterEndDate) :
+				diary.getStartDate().datesUntil(dayAfterEndDate);
 
 		return validDates
 				.map(day -> constructAvailabilityBo(diary, day, activeAppointments))
@@ -209,8 +209,8 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				"JOIN v_booking_appointment_assn AS aa ON (a.id = aa.appointment_id) " +
 				"JOIN v_booking_diary d ON (d.id = aa.diary_id) " +
 				"JOIN v_booking_diary_opening_hours AS doh ON (doh.diary_id = d.id AND doh.opening_hours_id = aa.opening_hours_id) " +
-				"WHERE aa.diary_id IN (:diaryIds) AND (d.deleted = false OR d.deleted IS NULL) " +
-				"AND NOT a.appointment_state_id = 4 " +
+				"WHERE aa.diary_id IN (:diaryIds) AND NOT d.deleted = true " +
+				"AND NOT a.appointment_state_id = 4 AND NOT a.deleted = true " +
 				"AND a.date_type_id >= CURRENT_DATE " +
 				"ORDER BY d.id, a.is_overturn";
 
@@ -247,9 +247,18 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.collect(Collectors.toList());
+		result.forEach(professionalAvailability -> setHasCoverage(professionalAvailability, professionals));
 		log.debug("Find availability -> {}", result);
 		return Optional.of(result);
 
+	}
+
+	private void setHasCoverage(ProfessionalAvailabilityBo professionalAvailability, List<BookingProfessionalBo> professionals) {
+		professionalAvailability.getProfessional().setCoverage(professionals.stream().filter(professional -> isSameProfessional(professionalAvailability, professional)).findFirst().get().getCoverage());
+	}
+
+	private boolean isSameProfessional(ProfessionalAvailabilityBo professionalAvailability, BookingProfessionalBo professional) {
+		return professional.getId().equals(professionalAvailability.getProfessional().getId());
 	}
 
 	private List<BookingProfessionalBo> findProfessionals(Integer institutionId, Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId) {

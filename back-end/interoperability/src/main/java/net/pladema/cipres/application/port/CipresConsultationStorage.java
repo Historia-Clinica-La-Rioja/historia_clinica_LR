@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CipresConsultationStorage {
 
-	void createOutpatientConsultations(List<OutpatientConsultationBo> consultations);
+	Integer sendOutpatientConsultations(List<OutpatientConsultationBo> consultations);
 
+	void forwardOutpatientConsultation(OutpatientConsultationBo consultationBo, Integer cipresEncounterId);
 }

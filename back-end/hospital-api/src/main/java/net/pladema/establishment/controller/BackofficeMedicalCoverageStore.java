@@ -44,17 +44,17 @@ public class BackofficeMedicalCoverageStore implements BackofficeStore<Backoffic
     public Page<BackofficeCoverageDto> findAll(BackofficeCoverageDto coverage, Pageable pageable) {
         ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit(), coverage.getType()), customExampleMatcher), PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort())).stream()
+        List<BackofficeCoverageDto> result = medicalCoverageRepository.findAll(Example.of(new MedicalCoverage(coverage.getId(), coverage.getName(),coverage.getCuit(), coverage.getType()), customExampleMatcher), PageRequest.of(0, Integer.MAX_VALUE, pageable.getSort())).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         if(coverage.getType()!=null)
             result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getType().equals(coverage.getType())).collect(Collectors.toList());
         if(coverage.getEnabled()!=null)
             result = result.stream().filter(backofficeCoverage -> backofficeCoverage.getEnabled().equals(coverage.getEnabled())).collect(Collectors.toList());
-
+		int totalElements = result.size();
         int minIndex = pageable.getPageNumber() * pageable.getPageSize();
         int maxIndex = minIndex + pageable.getPageSize();
-        return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.size());
+        return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.isEmpty() ? 0 : totalElements);
     }
 
     @Override

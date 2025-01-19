@@ -1,0 +1,17 @@
+<div id="dialog-header" fxLayout="row" fxLayoutAlign="space-between">
+    <div mat-dialog-title class="dialog-title">
+        <mat-icon fontIcon="warning_amber"></mat-icon>
+        <span>{{ 'historia-clinica.details-of-patient-isolation-alerts.TITLE' | translate }}</span>
+    </div>
+    <button id="close" mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<mat-dialog-content id="dialog-content">
+    <mat-list>
+        <mat-list-item *ngFor="let isolationAlertDetail of data.isolationAlerts; last as isLast">
+            <app-isolation-alert-detail matLine [isolationAlertDetail]="isolationAlertDetail" [endDateColor]="END_DATE_COLOR"></app-isolation-alert-detail>
+            <mat-divider *ngIf="!isLast"></mat-divider>
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>

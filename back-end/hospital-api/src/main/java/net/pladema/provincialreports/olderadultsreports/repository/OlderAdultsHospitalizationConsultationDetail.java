@@ -11,9 +11,9 @@ public class OlderAdultsHospitalizationConsultationDetail {
 
 	private String institution;
 
-	private String lastName;
+	private String patientLastNames;
 
-	private String name;
+	private String patientNames;
 
 	private String gender;
 
@@ -27,9 +27,9 @@ public class OlderAdultsHospitalizationConsultationDetail {
 
 	private String phone;
 
-	private String entrance;
+	private String entryDate;
 
-	private String probableEnablement;
+	private String probableDischargeDate;
 
 	private String bed;
 
@@ -39,8 +39,8 @@ public class OlderAdultsHospitalizationConsultationDetail {
 
 	private String sector;
 
-	private String medicalClearance;
+	private String dischargeDate;
 
-	private String problem;
+	private String problems;
 
 }

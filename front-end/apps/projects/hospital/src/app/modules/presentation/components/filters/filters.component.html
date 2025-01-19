@@ -1,0 +1,21 @@
+<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start" fxLayout.lt-md="column">
+	<ng-content select="[date-picker]"></ng-content>
+	<app-filter-button (isExpandedEmitter)="isFilterExpanded = $event"></app-filter-button>
+</div>
+
+<div [hidden]="!isFilterExpanded">
+	<div id="filters" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+		<ng-content select="[filters]"></ng-content>
+		<div fxLayout="row">
+			<app-filters-select-v2 *ngIf="filters?.selects?.length" [setFilters]="filters.selects"
+				(selectedFilters)="setSelectResults($event)"></app-filters-select-v2>
+		</div>
+		<app-filters-typeahead *ngIf="filters?.typeaheads?.length" [filters]="filters.typeaheads"
+			(selectedFilters)="setTypeaheadResults($event)"></app-filters-typeahead>
+
+		<div id="button-filter">
+			<button mat-raised-button color="primary" (click)="emitResult()">{{'buttons.APPLY_FILTERS' | translate}}
+			</button>
+		</div>
+	</div>
+</div>

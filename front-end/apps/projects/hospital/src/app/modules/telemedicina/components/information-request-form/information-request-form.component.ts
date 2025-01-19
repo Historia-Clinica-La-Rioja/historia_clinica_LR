@@ -5,8 +5,9 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
 import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { AmbulatoryConsultationProblem } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { Observable } from 'rxjs';
 
 const REASON_LIMIT = 1;
 const VALID = "VALID";
@@ -20,11 +21,18 @@ export class InformationRequestFormComponent implements OnInit {
 	informationForm: UntypedFormGroup;
 	@Input() patient: PatientBasicData;
 	@Input() patientPhoto: PersonPhotoDto;
-	@Input() set confirmAndValidateForm(isConfirmAndValidateForm: boolean) {
-		if (isConfirmAndValidateForm) {
-				this.validateAndDisplayErrors();
+	@Input() set confirmAndValidateForm(isConfirmAndValidateForm: Observable<boolean>) {
+		isConfirmAndValidateForm.subscribe(change => {
+			this.validateAndDisplayErrors();
+		})
+	}
+	@Input() set resetForm(reset: boolean) {
+		if (reset) {
+			this.showCareLineError = false;
+			this.showMotiveError = false;
+			this.showPriorityError = false;
+			this.showSpecialtyError = false;
 		}
-
 	}
 	@Output() requestInformationData = new EventEmitter<any>();
 
@@ -48,8 +56,10 @@ export class InformationRequestFormComponent implements OnInit {
 			this.careLinesTypeahead = this.careLines.map(c => this.toCareLinesDtoTypeahead(c));
 		})
 		this.informationForm.statusChanges.subscribe((isValid: FormControlStatus) => {
-			if(isValid === VALID){
-				this.requestInformationData.emit(this.informationForm.value)
+			if (isValid === VALID) {
+				this.requestInformationData.emit(this.informationForm.value);
+			} else {
+				this.requestInformationData.emit(null);
 			}
 		})
 	}
@@ -88,7 +98,7 @@ export class InformationRequestFormComponent implements OnInit {
 
 	setMotive(motive: MotivoConsulta) {
 		this.informationForm.controls.motive.setValue(motive);
-		this.showMotiveError = false;
+		this.showMotiveError = motive ? false : true;
 	}
 
 	setProblem(problem: AmbulatoryConsultationProblem) {

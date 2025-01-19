@@ -1,0 +1,9 @@
+package net.pladema.establishment.sanitaryresponsibilityarea.saveinstitutionglobalcoordinates.application.port;
+
+import net.pladema.establishment.sanitaryresponsibilityarea.saveinstitutionglobalcoordinates.domain.SaveInstitutionGlobalCoordinatesBo;
+
+public interface SaveInstitutionGlobalCoordinatesPort {
+
+	void run(SaveInstitutionGlobalCoordinatesBo saveInstitutionGlobalCoordinates);
+
+}

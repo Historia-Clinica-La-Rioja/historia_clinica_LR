@@ -1,0 +1,22 @@
+<h2 class="subtitle">
+	{{'access-management.reference-edition.RECEIVER' | translate}}
+</h2>
+<form [formGroup]="form">
+	<div class="typeahead-field">
+		<app-typeahead id="department" [options]="departments$ | async" [externalSetValue]="defaultDepartment"
+			[titleInput]="'access-management.reference-edition.DEPARTMENT' | translate"
+			(selectionChange)="setInstitutionsByDepartment($event)">
+		</app-typeahead>
+	</div>
+
+	<div class="typeahead-field">
+		<app-typeahead id="institution" [disabled]="institutionsDisable" [options]="institutions$ | async"
+			[externalSetValue]="defaultInstitution"
+			[titleInput]="'access-management.reference-edition.PLACEHOLDER_INSTITUTION' | translate"
+			(selectionChange)="setInstitutionAndLoadAvailableAppointments($event)">
+		</app-typeahead>
+	</div>
+
+	<app-available-appointment-count-information *ngIf="form.value.institution" [destinationInstitutionInformation]="_destinationInstitutionInfo"></app-available-appointment-count-information>
+	
+</form>

@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
-
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snowstorm.repository.SnomedCacheLogRepository;
@@ -28,8 +25,6 @@ import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
-import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsException;
-import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsExceptionEnum;
 
 @Slf4j
 @Service
@@ -47,21 +42,6 @@ public class UpdateSnomedConceptsByCsv {
     private final SharedSnomedPort sharedSnomedPort;
 	private final SnomedCacheLogRepository snomedCacheLogRepository;
 
-	private final Semaphore semaphore = new Semaphore(1);
-
-    public UpdateConceptsResultBo run(MultipartFile csvFile, String eclKey) {
-		log.debug("Update SnomedConcepts By CSV File");
-		if (!this.semaphore.tryAcquire()) {
-			log.error("There is another Snomed update in progress");
-			throw new UpdateSnomedConceptsException(UpdateSnomedConceptsExceptionEnum.UPDATE_ALREADY_IN_PROGRESS,
-					"Hay otra actualización en marcha. Intente nuevamente más tarde");
-		}
-		SnomedConceptsCsvReader.hasCsvFormat(csvFile);
-		UpdateConceptsResultBo result = updateSnomedConcepts(csvFile, eclKey);
-		this.semaphore.release();
-		return result;
-    }
-
 	public UpdateConceptsResultBo updateSnomedConcepts(
 			InputStreamSource csvFile,
 			String eclKey
@@ -76,6 +56,7 @@ public class UpdateSnomedConceptsByCsv {
 		Integer snomedGroupId = saveSnomedGroup(eclKey, today);
 		List<SnomedConceptBo> conceptBatch = null;
 
+		log.debug("Total concepts to process -> {}", totalConcepts);
 		while (conceptsProcessed < totalConcepts) {
 			try {
 				conceptBatch = getNextBatch(batchSize, conceptsProcessed, totalConcepts, csvFile);
@@ -83,7 +64,7 @@ public class UpdateSnomedConceptsByCsv {
 				// if the batch size had decreased before due to an error, it will increase again
 				batchSize = Math.min(batchSize * BATCH_SIZE_MULTIPLIER, batchMaxSize);
 				log.debug("Concepts processed -> {}", conceptsProcessed);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// If the batch size is equal to 1, it means that that element is the one that can't be saved.
 				// So, it should be skipped to try to save the rest
 				if (batchSize.equals(1)) {
@@ -94,19 +75,22 @@ public class UpdateSnomedConceptsByCsv {
 				} else {
 					batchSize = Math.max(batchSize / BATCH_SIZE_DIVIDER, 1);
 				}
+				log.error("Capturing Update Snomed exception -> {}", e.getMessage());
 			}
 
 		}
-		UpdateConceptsResultBo result = new UpdateConceptsResultBo(eclKey,
+		UpdateConceptsResultBo result = new UpdateConceptsResultBo(
 				conceptsProcessed - erroneousConcepts,
 				erroneousConcepts,
-				errorMessages);
+				errorMessages,
+				-1
+		);
 		log.debug("Finished loading snomed concepts");
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private void saveError(Exception e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
+	private void saveError(Throwable e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
 		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), e.getCause().getCause().getMessage());
 		errorMessages.add(message);
 		snomedCacheLogRepository.save(new SnomedCacheLog(message, dateTimeProvider.nowDateTime()));
@@ -118,11 +102,6 @@ public class UpdateSnomedConceptsByCsv {
 		return conceptsProcessed;
 	}
 
-	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, List<SnomedConceptBo> allConcepts) {
-		int batchFinishIndex = Math.min(conceptsProcessed + batchSize, totalConcepts);
-		return allConcepts.subList(conceptsProcessed, batchFinishIndex);
-	}
-
 	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, InputStreamSource csvFile) {
 		int batchFinishIndex = Math.min(conceptsProcessed + batchSize, totalConcepts);
 		return getConcepts(csvFile, conceptsProcessed, batchFinishIndex);
@@ -132,20 +111,6 @@ public class UpdateSnomedConceptsByCsv {
         return concepts.stream()
                 .map(c -> new SharedSnomedDto(c.getSctid(), c.getPt(), null, null))
                 .collect(Collectors.toList());
-    }
-
-    private List<SnomedConceptBo> getAllConcepts(MultipartFile csvFile) {
-		log.debug("Input parameter -> csvFile {}", csvFile.getOriginalFilename());
-        List<SnomedConceptBo> result = new ArrayList<>();
-        if (SnomedConceptsCsvReader.hasCsvFormat(csvFile)) {
-            try {
-                result = SnomedConceptsCsvReader.csvToSnomedConceptsBo(csvFile.getInputStream());
-            } catch (IOException e) {
-				log.error(e.getMessage());
-            }
-        }
-		log.debug("Output size -> {}", result.size());
-		return result;
     }
 
 	private List<SnomedConceptBo> getConcepts(InputStreamSource csvFile, int start, int end) {
@@ -184,7 +149,6 @@ public class UpdateSnomedConceptsByCsv {
 		try {
 			ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
 		} catch (NotFoundException e){
-			this.semaphore.release();
 			throw e;
 		}
 		Integer snomedGroupId = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);

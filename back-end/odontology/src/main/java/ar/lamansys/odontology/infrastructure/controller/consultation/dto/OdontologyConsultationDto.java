@@ -1,6 +1,8 @@
 package ar.lamansys.odontology.infrastructure.controller.consultation.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Validated
-public class OdontologyConsultationDto implements Serializable {
+public class OdontologyConsultationDto {
 
     @NotNull(message = "{value.mandatory}")
     private Integer clinicalSpecialtyId;
@@ -30,7 +31,7 @@ public class OdontologyConsultationDto implements Serializable {
     private List<@Valid OdontologyDentalActionDto> dentalActions = new ArrayList<>();
 
     @Nullable
-    private List<@Valid OdontologyAllergyConditionDto> allergies = new ArrayList<>();
+    private ReferableItemDto<@Valid OdontologyAllergyConditionDto> allergies;
 
     @Nullable
     private List<@Valid OdontologyReasonDto> reasons = new ArrayList<>();
@@ -41,8 +42,11 @@ public class OdontologyConsultationDto implements Serializable {
     @Nullable
     private List<@Valid OdontologyProcedureDto> procedures = new ArrayList<>();
 
+	@Nullable
+	private List<@Valid CreateOutpatientServiceRequestDto> serviceRequests = new ArrayList<>();
+
     @Nullable
-    private List<@Valid OdontologyPersonalHistoryDto> personalHistories = new ArrayList<>();
+    private ReferableItemDto<@Valid OdontologyPersonalHistoryDto> personalHistories;
 
     @Nullable
     private List<@Valid OdontologyMedicationDto> medications = new ArrayList<>();

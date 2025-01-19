@@ -35,3 +35,35 @@ export const DATOS_ANTROPOMETRICOS = {
         weight: 1000,
     },
 }
+
+export const CLINICAL_EVALUATION = {
+    MIN: {
+        bloodPressure: 0,
+        hematocrit: 0,
+    },
+    MAX: {
+        bloodPressure: 999,
+        hematocrit: 100,
+    },
+}
+
+export const PREMEDICATION = {
+    MIN: {
+        dosis: 0,
+    }
+}
+
+export const VITAL_SIGNS = {
+    MIN: {
+        bloodPressure: 20,
+        pulse: 70,
+        saturation: 0,
+        endTidal: 0,
+    },
+    MAX: {
+        bloodPressure: 140,
+        pulse: 100,
+        saturation: 100,
+        endTidal: 240,
+    },
+}

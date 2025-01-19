@@ -73,17 +73,26 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 	}
 
 	@Override
-	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(Short provinceId) {
-		LOG.debug("Input parameters => provinceId {}", provinceId);
-		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyRepository.getClinicalSpecialtiesByProvinceId(provinceId);
-		LOG.trace(OUTPUT, clinicalSpecialties);
+	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesInAllInstitutions() {
+		LOG.debug("Fetch all clinical specialties in all institutions");
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyRepository.getClinicalSpecialtiesInAllInstitutions();
+		LOG.debug(OUTPUT, clinicalSpecialties);
 		return clinicalSpecialties;
 	}
 
 	@Override
 	public String getClinicalSpecialtyNameByDiaryId(Integer diaryId) {
 		LOG.debug("Input parameters -> diaryId {}", diaryId);
-		String result = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(diaryId).getName();
+		ClinicalSpecialty cs = clinicalSpecialtyRepository.getClinicalSpecialtyByDiary(diaryId);
+		String result = cs != null ? cs.getName() : null;
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesByDepartmentId(Short departmentId) {
+		LOG.debug("Input parameters -> departmentId {}", departmentId);
+		List<ClinicalSpecialtyBo> result = clinicalSpecialtyRepository.getClinicalSpecialtiesByDepartmentId(departmentId);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

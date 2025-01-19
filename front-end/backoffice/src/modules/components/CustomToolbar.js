@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     }
 });
 
-const CustomToolbar = ({isEdit, deleteRedirect, ...props}) => {
+const CustomToolbar = ({isEdit, deleteRedirect, canSave, ...props}) => {
     const classes = useStyles();
 
     const goBack = () => {
@@ -42,7 +42,7 @@ const CustomToolbar = ({isEdit, deleteRedirect, ...props}) => {
                 onClick={goBack}>
                     <ArrowBackIcon />
             </Button>
-            <SaveButton />
+            <SaveButton disabled={canSave === false} />
             {isEdit ? deleteButton() : null}
         </Toolbar>
     )

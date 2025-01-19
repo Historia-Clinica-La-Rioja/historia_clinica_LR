@@ -29,3 +29,25 @@
 .padding-bottom{
 	padding-bottom: 10px
 }
+
+.booking-by-container {
+	background-color: rgba(246, 250, 251, 1);
+	border: 1px solid rgba(224, 238, 247, 1);
+	padding: 1rem;
+	display: flex;
+	margin: 1rem 0 1rem 0;
+	
+	mat-icon {
+		margin-right: .5rem;
+	}
+	
+	mat-icon, .booking-by-title {
+		color: rgba(26, 115, 232, 1);
+	}
+
+	.booking-by {
+		font-weight: 500;
+		display: flex;
+		flex-direction: column;
+	}
+}

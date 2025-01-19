@@ -67,6 +67,9 @@ public class ExcelCell implements ICell {
                 case CALENDAR:
                     this.cell.setCellValue((Calendar) content.getValue());
                     break;
+				case INTEGER:
+					this.cell.setCellValue((Integer) content.getValue());
+					break;
                 default:
             }
         }

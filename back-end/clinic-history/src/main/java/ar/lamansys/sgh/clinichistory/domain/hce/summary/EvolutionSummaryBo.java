@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.hce.summary;
 
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompletedFormSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class EvolutionSummaryBo {
 
     private List<HealthConditionSummaryBo> healthConditions;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     private List<ReasonBo> reasons;
 
@@ -37,7 +38,11 @@ public class EvolutionSummaryBo {
 
 	private String institutionName;
 
-    public EvolutionSummaryBo(Integer id, LocalDate startDate, HealthcareProfessionalBo professional, String evolutionNote){
+	private ElectronicJointSignatureProfessionalsBo electronicJointSignatureProfessionals;
+
+	private List<CompletedFormSummaryBo> completedForms;
+
+    public EvolutionSummaryBo(Integer id, LocalDateTime startDate, HealthcareProfessionalBo professional, String evolutionNote){
         this.consultationID = id;
         this.startDate = startDate;
         this.professional = professional;

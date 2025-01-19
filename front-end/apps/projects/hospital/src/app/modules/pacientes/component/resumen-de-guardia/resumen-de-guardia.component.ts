@@ -1,32 +1,43 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ERole } from '@api-rest/api-model.d';
+import { AppFeature, ERole, ApiErrorMessageDto } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
+import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TriageService } from '@api-rest/services/triage.service';
 import { ContextService } from '@core/services/context.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
-import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { GUARDIA, PatientType } from '@historia-clinica/constants/summaries';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
-import { RiskFactorFull, Triage } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
+import { TriageDetails } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
-import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
-import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
+import { EmergencyCareStatusLabels } from '@hsi-components/emergency-care-status-labels/emergency-care-status-labels.component';
+import { TranslateService } from '@ngx-translate/core';
+import { ButtonType } from '@presentation/components/button/button.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
+import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
+const MIN_ACTIONS = 3;
+const BACK_TO_WAITING_STATES = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
+const STATES_TO_CALL_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
+const STATES_TO_ATTEND_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
+const STATES_TO_EDIT_EPISODE = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE];
 
 @Component({
 	selector: 'app-resumen-de-guardia',
@@ -34,17 +45,21 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 	styleUrls: ['./resumen-de-guardia.component.scss'],
 	providers: [TriageDefinitionsService]
 })
-export class ResumenDeGuardiaComponent implements OnInit {
+export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 
 	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
-	@Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
 	@Input() showNewTriage: boolean = false;
+	@Input() isEmergencyCareTemporalPatient: boolean = false;
+
+	private subscriptionToAvailableActions: Subscription;
 
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
 	episodeState: EstadosEpisodio;
 	withoutMedicalDischarge: boolean;
+
+	hasMedicalDischarge = false;
 
 	responseEmergencyCare: ResponseEmergencyCareDto;
 	emergencyCareType: EmergencyCareTypes;
@@ -54,12 +69,20 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	triagesHistory: TriageReduced[];
 	fullNamesHistoryTriage: string[];
-	lastTriage: Triage;
+	lastTriage: TriageDetails;
 
+	private canBeAbsent: boolean;
 	private hasEmergencyCareRelatedRole: boolean;
 	private hasRoleAdministrative: boolean;
+	private hasRoleAbleToSeeTriage: boolean;
 
 	availableActions: ActionInfo[] = [];
+	sliceActions: ActionInfo[] = [];
+	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
+	ButtonType = ButtonType;
+
+	isAdministrativeAndHasTriageFFInFalse: boolean;
+	statusLabel: EmergencyCareStatusLabels;
 
 	constructor(
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
@@ -74,28 +97,25 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly permissionsService: PermissionsService,
 		private readonly newTriageService: NewTriageService,
-		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
+		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeCallOrAttendService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
-	) {
-
-	}
+		private readonly emergencyCareEpisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
+		private readonly translate: TranslateService,
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly dialogService: DialogService<ConfirmDialogV2Component>,
+	) {}
 
 
 	ngOnInit(): void {
-		this.permissionsService.contextAssignments$().subscribe(
-			(userRoles: ERole[]) => {
-				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
-				this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
+		this.setRolesAndEpisodeState();
 
-				this.setEpisodeState();
-			}
-		);
+		this.checkAdministrativeFF();
 
 		this.newEmergencyCareEvolutionNoteService.new$.subscribe(() => this.calculateAvailableActions());
 
-		this.loadEpisode()
+		this.loadEpisode();
 
 		this.newTriageService.newTriage$.subscribe(
 			_ => this.loadTriages()
@@ -107,12 +127,45 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			this.loadEpisode();
 			this.setEpisodeState();
 		});
+
+		this.emergencyCareEpisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
+			if (hasMedicalDischarge) {
+				this.hasMedicalDischarge = true;
+			}
+		});
+	}
+
+	ngOnDestroy() {
+		if (this.subscriptionToAvailableActions) {
+			this.subscriptionToAvailableActions.unsubscribe();
+		}
+	}
+
+	private setRolesAndEpisodeState(){
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO]);
+			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
+			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+       		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
+		});
+	}
+
+	private checkAdministrativeFF(){
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
+			this.hasRoleAbleToSeeTriage
+			? this.isAdministrativeAndHasTriageFFInFalse = false
+			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasRoleAdministrative)
+		)
 	}
 
 	newTriage() {
 		this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
 			.subscribe(({ component }) => {
-				const dialogRef = this.dialog.open(component, { data: this.episodeId });
+				const dialogRef = this.dialog.open(component, {
+					autoFocus: false,
+					disableClose: true,
+					data: this.episodeId,
+				});
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
 						this.loadTriages();
@@ -122,33 +175,39 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	}
 
 	toEnEspera(): void {
-		const ref = this.dialog.open(ConfirmDialogComponent, {
-			data: {
-				title: `${TRANSLATE_KEY_PREFIX}.en_espera.TITLE`,
-				content: `${TRANSLATE_KEY_PREFIX}.en_espera.CONFIRM`,
-				okButtonLabel: 'Aceptar'
-			}
-		})
+		const dialogData: ConfirmDialogData = {
+			title: `${TRANSLATE_KEY_PREFIX}.en_espera.TITLE`,
+			hasIcon: false,
+			content: `${TRANSLATE_KEY_PREFIX}.en_espera.CONFIRM`,
+			okButtonLabel: `${TRANSLATE_KEY_PREFIX}.en_espera.buttons.CONFIRM`,
+			cancelButtonLabel: 'buttons.NO_CANCEL',
+			buttonClose: true,
+		}
+		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL }
+		const ref = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
 
 		ref.afterClosed().subscribe(
 			closed => {
 				if (closed) {
-					this.episodeStateService.pasarAEspera(this.episodeId).subscribe(
-						changed => {
+					this.episodeStateService.pasarAEspera(this.episodeId).subscribe({
+						next: (changed) => {
 							if (changed) {
 								this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.en_espera.SUCCESS`);
-								this.episodeState = EstadosEpisodio.EN_ESPERA;
 								this.doctorsOfficeDescription = null;
 								this.shockroomDescription = null;
 								this.bedDescription = null;
 								this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ESPERA)
-								this.calculateAvailableActions();
+								this.setEpisodeState();
 							}
 							else {
 								this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.en_espera.ERROR`);
 							}
+						},
+						error: (err: ApiErrorMessageDto) => {
+							this.snackBarService.showError(err.text);
 						}
-					)
+					})
+					
 				}
 			}
 		)
@@ -167,44 +226,61 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	}
 
 	goToEditEpisode() {
-		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/edit`]);
-	}
-
-	atender(): void {
-
-		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
-			width: '25%',
-			data: { title: 'guardia.select_consultorio.ATENDER' }
-		});
-
-		dialogRef.afterClosed().subscribe(consultorio => {
-			if (consultorio) {
-				this.doctorsOfficeDescription = consultorio?.description;
-				this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
-					if (changed) {
-						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.episodeState = EstadosEpisodio.EN_ATENCION;
-						this.calculateAvailableActions();
-					}
-					else {
-						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-					}
-				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
-				);
-			}
-		});
+		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/paciente/edit`]);
 	}
 
 	attend() {
-		this.emergencyCareEpisodeAttend.attend(this.episodeId, false);
+		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episodeId, false, false);
+		this.setEpisodeState();
+	}
+
+	call(){
+		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episodeId, false, true);
+		this.setEpisodeState();
+	}
+
+	markAsAbsent(){
+		const dialogData: ConfirmDialogData = {
+			title: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
+			hasIcon: false,
+			content: 'guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM',
+			okButtonLabel: 'guardia.home.episodes.episode.actions.mark_as_absent.buttons.CONFIRM',
+			cancelButtonLabel: 'buttons.NO_CANCEL',
+			buttonClose: true
+		};
+		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL };
+        const dialog = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
+        dialog.afterClosed().pipe(
+            take(1),
+            switchMap(closed => {
+                if (closed) {
+                    return this.episodeStateService.markAsAbsent(this.episodeId);
+                }
+            }))
+            .subscribe({
+				next: (changed) => {
+					if (changed) {
+						this.snackBarService.showSuccess(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.SUCCESS'));
+						this.episodeState = EstadosEpisodio.AUSENTE;
+						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.AUSENTE);
+						this.setEpisodeState();
+					}
+					else {
+						this.snackBarService.showError(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.ERROR'));
+					}
+				},
+				error: () => {}
+            }
+        );
 	}
 
 	private setEpisodeState() {
 		this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
 			state => {
 				this.episodeState = state.id;
-				this.calculateAvailableActions();
 				this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
+				this.buildStatusLabel(state.description);
+				this.calculateAvailableActions();
 			}
 		);
 	}
@@ -217,30 +293,32 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
 				this.shockroomDescription = responseEmergencyCare.shockroom?.description;
 				this.bedDescription = responseEmergencyCare.bed?.bedNumber;
+				this.canBeAbsent = responseEmergencyCare.canBeAbsent;
 			});
 
 		this.loadTriages();
 	}
 
 	private calculateAvailableActions() {
-
-
-		this.emergencyCareEpisodeService.hasEvolutionNote(this.episodeId).subscribe(
-			hasEvolutionNote => {
+		this.subscriptionToAvailableActions = this.loadCanBeAbsentCondition().pipe(
+			switchMap(() => this.emergencyCareEpisodeService.hasEvolutionNote(this.episodeId)),
+			tap(hasEvolutionNote => {
 				this.availableActions = [];
+				this.sliceActions = [];
 				// Following code within this function must be in this order
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote) {
-					let action: ActionInfo = {
-						label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
+				const canDoMedicalDischarge = this.hasEmergencyCareRelatedRole && hasEvolutionNote && !this.isEmergencyCareTemporalPatient && this.episodeState === EstadosEpisodio.EN_ATENCION
+				if (canDoMedicalDischarge) {
+					const action: ActionInfo = {
+						label: 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE',
 						id: 'medical_discharge',
 						callback: this.goToMedicalDischarge.bind(this)
 					}
 					this.availableActions.push(action);
 				}
 
-				if (this.hasRoleAdministrative && (this.episodeState === this.STATES.CON_ALTA_MEDICA || (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote)) && this.responseEmergencyCare.patient.typeId !== 8) {
-					let action: ActionInfo = {
+				if (this.showAdministrativeDischargeButton(hasEvolutionNote)) {
+					const action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
 						id: 'administrative_discharge',
 						callback: this.goToAdministrativeDischarge.bind(this)
@@ -248,8 +326,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA) {
-					let action: ActionInfo = {
+				if (STATES_TO_EDIT_EPISODE.includes(this.episodeState)) {
+					const action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.EDIT_BUTTON',
 						id: 'edit_episode',
 						callback: this.goToEditEpisode.bind(this).bind(this)
@@ -257,7 +335,16 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if ((this.hasEmergencyCareRelatedRole) && this.episodeState === this.STATES.EN_ESPERA) {
+				if (this.hasEmergencyCareRelatedRole && STATES_TO_CALL_EPISODE.includes(this.episodeState)) {
+					let action: ActionInfo = {
+					   label: 'guardia.home.episodes.episode.actions.call.TITLE',
+					   id: 'call',
+					   callback: this.call.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				if (this.hasEmergencyCareRelatedRole && STATES_TO_ATTEND_EPISODE.includes(this.episodeState)) {
 					let action: ActionInfo = {
 						label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 						id: 'attend',
@@ -266,16 +353,52 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
-					let action: ActionInfo = {
+				if (this.hasEmergencyCareRelatedRole && BACK_TO_WAITING_STATES.includes(this.episodeState)) {
+					const action: ActionInfo = {
 						label: 'Pasar a espera',
 						id: 'a-en-espera',
 						callback: this.toEnEspera.bind(this)
 					}
 					this.availableActions.push(action);
 				}
-			}
+
+				if (this.canBeAbsent) {
+					const action: ActionInfo = {
+						label: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
+						id: 'markAsAbsent',
+						callback: this.markAsAbsent.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
+				if (this.availableActions.length > MIN_ACTIONS) {
+					const max = this.availableActions.length;
+					this.sliceActions = this.availableActions.splice(3, max);
+				}
+			})
+		).subscribe();
+	}
+
+	private showAdministrativeDischargeButton(hasEvolutionNote: boolean): boolean{
+		return (
+			this.hasRoleAdministrative
+			&& ((this.episodeState === this.STATES.AUSENTE && !hasEvolutionNote )
+				|| ((this.episodeState === this.STATES.CON_ALTA_MEDICA
+					|| (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote))
+					&& this.responseEmergencyCare.patient.typeId !== 8
+				)
+			)
 		)
+	}
+
+	private loadCanBeAbsentCondition(): Observable<boolean> {
+		return this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
+			.pipe(
+				tap((responseEmergencyCare) => {
+					this.canBeAbsent = responseEmergencyCare.canBeAbsent;
+				}),
+				map(() => this.canBeAbsent)
+			);
 	}
 
 	private loadFullNames() {
@@ -293,20 +416,31 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	private loadTriages() {
 		this.triageService.getAll(this.episodeId).subscribe((triages: TriageListDto[]) => {
-			this.lastTriage = this.guardiaMapperService.triageListDtoToTriage(triages[0]);
 			if (hasHistory(triages)) {
+				this.lastTriage = this.guardiaMapperService.triageListDtoToTriage(triages[0]);
 				this.triagesHistory = triages.map(this.guardiaMapperService.triageListDtoToTriageReduced);
 				this.triagesHistory.shift();
 				this.loadFullNames();
+				this.setEpisodeState();
 			}
 		});
 
 		function hasHistory(triages: TriageListDto[]) {
-			return triages?.length > 1;
+			return triages?.length > 0;
 		}
 	}
 
+	private buildStatusLabel(stateDescription: string) {
+		const description = {
+			[EstadosEpisodio.EN_ESPERA]: 'guardia.home.episodes.episode.status.WAITING',
+			[EstadosEpisodio.EN_ATENCION]: 'guardia.home.episodes.episode.status.IN_ATTETION',
+			[EstadosEpisodio.AUSENTE]: 'guardia.home.episodes.episode.status.ABSENT',
+			[EstadosEpisodio.LLAMADO]: stateDescription,
+			[EstadosEpisodio.CON_ALTA_MEDICA]: 'guardia.home.episodes.episode.status.PATIENT_DISCHARGE'
+		}
 
+		this.statusLabel = {stateId: this.episodeState, description: description[this.episodeState]}
+	}
 }
 
 export interface TriageReduced {

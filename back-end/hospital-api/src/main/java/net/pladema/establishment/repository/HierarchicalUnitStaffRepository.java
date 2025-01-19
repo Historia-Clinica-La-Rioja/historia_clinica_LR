@@ -3,10 +3,6 @@ package net.pladema.establishment.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 
-import net.pladema.establishment.service.domain.HierarchicalUnitStaffBo;
-
-import net.pladema.permissions.repository.entity.UserRole;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

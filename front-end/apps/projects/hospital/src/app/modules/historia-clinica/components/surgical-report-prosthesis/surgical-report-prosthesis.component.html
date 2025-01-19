@@ -1,0 +1,20 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="'ambulatoria.paciente.surgical-report.prosthesis.TITLE' | translate" [icon]="'accessibility'"
+	[collapsed]="collapsed" [hideBorder]="false" [isEmpty]="isEmpty()">
+	<form [formGroup]="form" fxLayoutGap="20px">
+		<label [translate]="'ambulatoria.paciente.surgical-report.prosthesis.TITLE'"></label>
+		<mat-radio-group aria-label="Select an option" fxLayout="column" fxLayoutGap="10px" formControlName="prosthesis" class="radio-group">
+			<mat-radio-button color="primary" [value]="true">{{ 'ambulatoria.paciente.surgical-report.prosthesis.YES' |
+				translate }}</mat-radio-button>
+			<mat-radio-button color="primary" [value]="false">{{ 'ambulatoria.paciente.surgical-report.prosthesis.NO' |
+				translate }}</mat-radio-button>
+		</mat-radio-group>
+
+		<mat-form-field appearance="outline" class="description">
+			<mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>
+			<textarea matInput formControlName="description"></textarea>
+			<mat-error *ngIf="form.get('description').hasError('required')">Campo requerido</mat-error>
+		</mat-form-field>
+	</form>
+</app-new-consultation-expansion-section>

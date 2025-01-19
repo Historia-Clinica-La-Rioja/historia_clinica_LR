@@ -8,6 +8,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryPractice;
 import net.pladema.medicalconsultation.diary.service.DiaryPracticeService;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class DiaryPracticeServiceImpl implements DiaryPracticeService {
 	private final DiaryPracticeRepository diaryPracticeRepository;
 
 	@Override
+	@Transactional
 	public void updateDiaryPractices(List<Integer> practicesId, Integer diaryId) {
 		List<DiaryPractice> diaryPracticesHistory = diaryPracticeRepository.findAllByDiaryId(diaryId);
 
@@ -56,6 +58,12 @@ public class DiaryPracticeServiceImpl implements DiaryPracticeService {
 	public List<SnomedBo> getPracticesByActiveDiaries(Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		return diaryPracticeRepository.getActiveDiariesPractices(institutionId);
+	}
+
+	@Override
+	public boolean hasPractice(Integer diaryId) {
+		log.debug("Input parameters -> diaryId {},", diaryId);
+		return diaryPracticeRepository.hasPractices(diaryId);
 	}
 
 	private void addDiaryPractice(Integer practiceId, Integer diaryId) {

@@ -47,12 +47,19 @@ public class EmergencyCareDischarge {
     @Column(name = "ambulance_company_id", length = 15)
     private String ambulanceCompanyId;
 
-    public EmergencyCareDischarge(Integer emergencyCareEpisodeId, LocalDateTime medicalDischargeOn, Integer medicalDischargeByUser, Boolean autopsy, Short dischargeTypeId) {
+	@Column(name = "document_id")
+	private Long documentId;
+
+	@Column(name = "observation", columnDefinition = "TEXT")
+	private String observation;
+
+    public EmergencyCareDischarge(Integer emergencyCareEpisodeId, LocalDateTime medicalDischargeOn, Integer medicalDischargeByUser, Boolean autopsy, Short dischargeTypeId, String observation) {
         this.emergencyCareEpisodeId = emergencyCareEpisodeId;
         this.medicalDischargeOn = medicalDischargeOn;
         this.medicalDischargeByProfessional = medicalDischargeByUser;
         this.autopsy = autopsy;
         this.dischargeTypeId = dischargeTypeId;
+		this.observation = observation;
     }
 
 	public EmergencyCareDischarge(Short dischargeTypeId) {

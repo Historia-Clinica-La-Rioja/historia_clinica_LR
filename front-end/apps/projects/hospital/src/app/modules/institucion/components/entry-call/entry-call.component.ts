@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CallDetails } from '@presentation/components/call-details/call-details.component';
 import { EntryCallStompService } from '../../../api-web-socket/entry-call-stomp.service';
+import { CallDetails } from '../../../telemedicina/components/call-details/call-details.component';
 
 @Component({
 	selector: 'app-entry-call',

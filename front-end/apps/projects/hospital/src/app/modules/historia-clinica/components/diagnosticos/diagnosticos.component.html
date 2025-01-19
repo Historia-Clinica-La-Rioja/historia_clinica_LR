@@ -3,7 +3,7 @@
 		<br>
 		<app-elemento-diagnostico [diagnosis]="mainDiagnosis" [isMain]="true" (removeDiagnosis)="removeMainDiagnosis()"
 			[type]="type"></app-elemento-diagnostico>
-		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']">
+		<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
 			<br>
 			<button id="modify-main-diagnosis" class="change-main-diagnosis" *ngIf="mainDiagnosis"
 				class="diagnoses-action-button" mat-button color="primary" [disabled]="!diagnosticos?.length"
@@ -15,7 +15,7 @@
 
 </ng-container>
 
-<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" fxLayout="column" fxLayoutAlign="start start">
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']" fxLayout="column" fxLayoutAlign="start start">
 	<button id="add-main-diagnosis" *ngIf="!mainDiagnosis && type === 'ANAMNESIS'" class="diagnoses-action-button"
 		mat-button color="primary" (click)="openCreationDialog(true); $event.preventDefault()">
 		{{ 'internaciones.anamnesis.diagnosticos.ADD_MAIN_DIAGNOSIS' | translate }}
@@ -27,10 +27,9 @@
 	<app-titled-content-card [title]="'internaciones.anamnesis.diagnosticos.TITLE'">
 		<div *ngFor="let diagnosis of diagnosticos">
 			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false" [type]="type"
-				(removeDiagnosis)="removeDiagnosis($event)" (checkDiagnosis)="updateAll()"></app-elemento-diagnostico>
-			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
+				(removeDiagnosis)="removeDiagnosis($event)" (checkDiagnosis)="updateAll()" (editedDiagnosis)="updateDiagnosis($event)"></app-elemento-diagnostico>
+			<hr *ngIf="diagnosticos.length > 1">
 		</div>
-		<br>
 		<div *ngIf="mainDiagnosis && diagnosticos?.length> 1">
 			<br>
 			<mat-checkbox id="all-selected" [checked]="allChecked"
@@ -39,7 +38,7 @@
 		</div>
 	</app-titled-content-card>
 </ng-container>
-<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD']" fxLayout="column" fxLayoutAlign="start start">
+<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']" fxLayout="column" fxLayoutAlign="start start">
 	<br>
 	<button id="add-diagnosis" class="diagnoses-action-button" mat-button color="primary"
 		(click)="openCreationDialog(false); $event.preventDefault()">

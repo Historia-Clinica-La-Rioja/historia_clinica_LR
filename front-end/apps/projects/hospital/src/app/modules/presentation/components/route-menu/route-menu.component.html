@@ -1,0 +1,19 @@
+
+<app-content width="full-back" *ngIf="!childActive">
+	<app-route-back ></app-route-back>
+	<mat-card class="routes">
+		<mat-card-content>
+			<ng-container *ngFor="let routeItem of routeItems">
+				<app-route-menu-item
+					[route]="routeItem.route"
+					(click)="navigate(routeItem.route)"
+				>
+					<mat-divider bottom></mat-divider>
+				</app-route-menu-item>
+
+			</ng-container>
+		</mat-card-content>
+	</mat-card>
+</app-content>
+<router-outlet (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+</router-outlet>

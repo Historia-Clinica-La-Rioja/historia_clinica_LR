@@ -12,13 +12,15 @@ import { HistoriaClinicaModule } from '@historia-clinica/historia-clinica.module
 import { CoreModule } from '@core/core.module';
 import { ButtonAndMotiveListComponent } from './components/button-and-motive-list/button-and-motive-list.component';
 import { ButtonAndProblemListComponent } from './components/button-and-problem-list/button-and-problem-list.component';
-import { ToggleAvaiabilityComponent } from './components/toggle-avaiability/toggle-avaiability.component';
+import { ToggleAvailabilityComponent } from './components/toggle-availability/toggle-availability.component';
 import { RequestAttentionComponent } from './components/request-attention/request-attention.component';
 import { RequestInfoCardComponent } from './components/request-info-card/request-info-card.component';
 import { AvailableLabelComponent } from './components/available-label/available-label.component';
 import { InProgressCallComponent } from './components/in-progress-call/in-progress-call.component';
 import { VirtualConsultationsFacadeService } from './virtual-consultations-facade.service';
 import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
+import { TransferRequestComponent } from './dialogs/transfer-request/transfer-request.component';
+import { CallDetailsComponent } from './components/call-details/call-details.component';
 
 
 
@@ -31,11 +33,12 @@ import { EntryCallRendererComponent } from './components/entry-call-renderer/ent
 		ButtonAndMotiveListComponent,
 		ButtonAndProblemListComponent,
 		RequestAttentionComponent,
-		ToggleAvaiabilityComponent,
+		ToggleAvailabilityComponent,
 		RequestInfoCardComponent,
 		AvailableLabelComponent,
 		InProgressCallComponent,
-		EntryCallRendererComponent
+		EntryCallRendererComponent,
+ 		TransferRequestComponent,
 	],
 	imports: [
 		CommonModule,
@@ -45,6 +48,8 @@ import { EntryCallRendererComponent } from './components/entry-call-renderer/ent
 		PacientesModule,
 		HistoriaClinicaModule,
 		CoreModule,
+		//Standalone
+		CallDetailsComponent,
 	],
 	providers: [VirtualConsultationsFacadeService,]
 })

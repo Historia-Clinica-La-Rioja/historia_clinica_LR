@@ -13,6 +13,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Setter
@@ -40,6 +41,12 @@ public class MedicalDischargeBo implements IDocumentBo {
     private Boolean autopsy;
 
     private Short dischargeTypeId;
+
+	private String otherDischargeDescription;
+
+	private String observation;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public short getDocumentType() {

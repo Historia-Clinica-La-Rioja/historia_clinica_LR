@@ -2,7 +2,7 @@ package net.pladema.staff.controller.mapper;
 
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.staff.controller.dto.LicenseNumberTypeDto;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

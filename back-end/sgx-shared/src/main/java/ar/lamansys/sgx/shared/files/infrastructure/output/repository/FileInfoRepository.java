@@ -1,5 +1,7 @@
 package ar.lamansys.sgx.shared.files.infrastructure.output.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +22,7 @@ public interface FileInfoRepository extends SGXAuditableEntityJPARepository<File
 			+ "WHERE e.relativePath = :relativePath ")
 	void deleteByRelativePath(@Param("relativePath") String relativePath);
 
+	@Query("SELECT e from FileInfo e "
+			+ " WHERE e.relativePath = :relativePath ")
+	Optional<FileInfo> findByRelativePath(@Param("relativePath") String relativePath);
 }

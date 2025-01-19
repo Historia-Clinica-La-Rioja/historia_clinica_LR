@@ -1,0 +1,15 @@
+.configuration-main-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.width-configuration-input {
+    width: 23%;
+}
+
+.column-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1px
+}

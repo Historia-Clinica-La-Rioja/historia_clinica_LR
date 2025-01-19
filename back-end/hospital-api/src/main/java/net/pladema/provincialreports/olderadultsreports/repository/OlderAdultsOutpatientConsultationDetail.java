@@ -19,7 +19,7 @@ public class OlderAdultsOutpatientConsultationDetail {
 
 	private String attentionDate;
 
-	private String hour;
+	private String attentionHour;
 
 	private String consultationNumber;
 
@@ -37,9 +37,9 @@ public class OlderAdultsOutpatientConsultationDetail {
 
 	private String medicalCoverage;
 
-	private String address;
+	private String direction;
 
-	private String locationPatient;
+	private String patientLocation;
 
 	private String phoneNumber;
 

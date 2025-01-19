@@ -1,10 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.anamnesis;
 
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.InternmentDocumentValidator;
@@ -13,11 +13,15 @@ import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 
 @Component
-@RequiredArgsConstructor
 public class AnamnesisValidator extends InternmentDocumentValidator {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	public AnamnesisValidator(FeatureFlagsService featureFlagsService,
+							  GeneralDocumentValidator generalDocumentValidator) {
+		super(generalDocumentValidator);
+		this.featureFlagsService = featureFlagsService;
+	}
 
 	public void assertAnamnesisValid(AnamnesisBo anamnesis) {
 		anamnesis.validateSelf();

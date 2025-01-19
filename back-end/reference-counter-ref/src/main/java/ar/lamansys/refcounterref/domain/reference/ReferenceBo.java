@@ -1,5 +1,7 @@
 package ar.lamansys.refcounterref.domain.reference;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +35,10 @@ public class ReferenceBo {
     private Integer careLineId;
 
     @NotNull(message = "{value.mandatory}")
-    private Integer clinicalSpecialtyId;
+    private List<Integer> clinicalSpecialtyIds;
 
     private List<Integer> fileIds;
 
-	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
 	private String phoneNumber;
@@ -49,5 +50,9 @@ public class ReferenceBo {
 	private Integer priority;
 
 	private ReferenceStudyBo study;
+
+	private EReferenceRegulationState regulationState;
+
+	private EReferenceAdministrativeState administrativeState;
 
 }

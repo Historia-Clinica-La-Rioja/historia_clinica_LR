@@ -13,7 +13,8 @@ public enum EEmergencyCareType {
 
     ADULTO(1, "Adulto"),
     PEDIATRIA(2, "Pediatría"),
-    GINECOLOGICA(3, "Ginecológica y obstetricia");
+    GINECOLOGICA(3, "Ginecológica y obstetricia"),
+	NO_DEFINIDO(-1, "No definido");
 
     private final Short id;
     private final String description;

@@ -1,0 +1,40 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <div mat-dialog-title>
+        <ng-container *ngIf="data.amountSignatures === 1 ; else many">
+            <h2 class="mat-h2 page-title"> {{'firma-conjunta.reject-signature.form.TITLE' | translate}}</h2>
+        </ng-container>
+        <ng-template #many>
+            <h2 class="mat-h2 page-title" translate="firma-conjunta.reject-signature.form.TITLE2" [translateParams]="{amount: data.amountSignatures}"> </h2>
+        </ng-template>   
+    </div>
+
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div mat-dialog-content>
+    <div fxLayout="column" [formGroup]="rejectForm">
+        <mat-label class="mat-body">{{'firma-conjunta.reject-signature.form.MOTIVE' | translate}}*</mat-label>
+        <mat-form-field appearance="outline" fxFlex>
+            <mat-select id="motive" name="motive" formControlName="motive"
+                placeholder="{{'firma-conjunta.reject-signature.form.PLACEHOLDER_MOTIVE' | translate}}">
+                <mat-option *ngFor="let motive of motives" [value]="motive.id">
+                    <span class="mat-body">{{motive.text | translate}}</span>
+                </mat-option>
+            </mat-select>
+            <mat-error [translate]="'firma-conjunta.reject-signature.form.ERROR_MOTIVE'"></mat-error>
+        </mat-form-field>
+        <mat-label class="mat-body">{{'firma-conjunta.reject-signature.form.OBSERVATIONS' | translate}}*</mat-label>
+        <mat-form-field appearance="outline">
+            <textarea matInput name="observations" formControlName="observations" id="observations" type="text"
+                placeholder="{{'firma-conjunta.reject-signature.form.PLACEHOLDER_OBSERVATIONS' | translate}}"></textarea>
+            <mat-error [translate]="'firma-conjunta.reject-signature.form.ERROR_OBSERVATIONS'"></mat-error>
+        </mat-form-field>
+    </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+    <app-button mat-dialog-close [color]="'warn'" [isLoading]="false" [text]="'buttons.CANCEL'"
+        [buttonType]="'mat-stroked-button'" [disabled]="false"></app-button>
+    <app-button [color]="'warn'" [isLoading]="false" [text]="'buttons.REJECT'" [buttonType]="'mat-raised-button'"
+        [disabled]="false" (clicked)="emitReasonRejection()"></app-button>
+</div>

@@ -17,7 +17,7 @@ public class CareLineProblemDto {
 
 	private Integer snomedId;
 
-	private String conceptSctid;
+	private Long conceptId;
 
 	public CareLineProblemDto(Integer id, Integer careLineId, Integer snomedId) {
 		this.id = id;

@@ -1,15 +1,27 @@
 @import "../../../../../assets/styles/variables";
 
-.mat-raised-button{
-    color: white;
-    margin: 5px;
+.mat-raised-button {
+    color: $occupied-bed;
+    border: 1px solid $occupied-bed;
     padding: 0 5px;
-    background-color: $occupied-bed;
+    box-shadow: none;
 }
 
-.free{
+.sector-container {
+    margin-bottom: 2rem;
+}
+
+.free {
     background-color: $free-bed;
-    text-decoration: underline;
+    color: white;
+    border: 1px solid $free-bed;
+}
+
+
+.blocked {
+    background-color: white;
+    color: #6D6D6D;
+    border: 1px solid #6D6D6D;
 }
 
 #mat-divider{
@@ -34,5 +46,108 @@
 
 .header {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+
+    span, h3 {
+        font-weight: 500;
+    }
+
+    span {
+        margin: 0 .5rem 1rem .5rem;
+    }
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "services services hierarchical hierarchical"
+      "divider divider divider divider"
+      "permanence care-type organization age-group";
+
+    .services {
+        grid-area: services;
+    }
+
+    .hierarchical-units {
+        grid-area: hierarchical;
+    }
+
+    .permanence {
+        grid-area: permanence;
+    }
+
+    .care-type {
+        grid-area: care-type;
+    }
+
+    .organization {
+        grid-area: organization;
+    }
+
+    .age-group {
+        grid-area: age-group;
+    }
+
+    small {
+        color: $grey;
+    }
+
+    mat-divider {
+        grid-area: divider;
+    }
+}
+
+.margin-right {
+    margin-right: .5rem;
+}
+
+.grid-beds-container {
+    margin: 1rem 0 1rem 0;
+    display: grid;
+    place-items: center;
+    grid-template-columns: repeat(7, 1fr);
+    gap: .5rem;
+
+    button {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .selected-bed-border {
+        border: 2px solid $selected-bed-border;
+        border-radius: 4px;
+        padding: 2px;
+    }
+}
+
+@media (max-width: 1500px) {
+    .grid-beds-container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 1366px) {
+    .grid-beds-container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .grid-beds-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        grid-template-areas:
+          "services hierarchical"
+          "divider divider"
+          "permanence care-type"
+          "organization age-group";
+    }
 }

@@ -4,10 +4,19 @@ import ar.lamansys.sgh.clinichistory.application.calculatecie10.CalculateCie10Fa
 import ar.lamansys.sgh.clinichistory.application.calculatecie10.Cie10FacadeRuleFeature;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.PersonalHistoryRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.PersonalHistory;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionClinicalStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionVerificationStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
@@ -16,21 +25,28 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class HealthConditionService {
 
     public static final String OUTPUT = "Output -> {}";
-
-    private static final Logger LOG = LoggerFactory.getLogger(HealthConditionService.class);
-    public static final String INPUT_PARAMETERS_PATIENT_ID_INFO = "Input parameters -> patientId {}, info {}";
 
     private final HealthConditionRepository healthConditionRepository;
 
@@ -50,38 +66,23 @@ public class HealthConditionService {
 
     private final GetLastHealthConditionRepository getLastHealthConditionRepository;
 
+    private final PersonalHistoryRepository personalHistoryRepository;
 
-    public HealthConditionService(HealthConditionRepository healthConditionRepository,
-                                  ConditionVerificationStatusRepository conditionVerificationStatusRepository,
-                                  ConditionClinicalStatusRepository conditionClinicalStatusRepository,
-                                  SnomedService snomedService,
-                                  CalculateCie10Facade calculateCie10Facade,
-                                  DocumentService documentService,
-                                  NoteService noteService, DateTimeProvider dateTimeProvider, GetLastHealthConditionRepository getLastHealthConditionRepository){
-        this.healthConditionRepository = healthConditionRepository;
-        this.conditionVerificationStatusRepository = conditionVerificationStatusRepository;
-        this.conditionClinicalStatusRepository = conditionClinicalStatusRepository;
-        this.snomedService = snomedService;
-        this.calculateCie10Facade = calculateCie10Facade;
-        this.documentService = documentService;
-        this.noteService = noteService;
-        this.dateTimeProvider = dateTimeProvider;
-        this.getLastHealthConditionRepository = getLastHealthConditionRepository;
-    }
+
 
     private HealthCondition save(HealthCondition healthCondition){
-        LOG.debug("Input parameters -> healthCondition {}", healthCondition);
+        log.debug("Input parameters -> healthCondition {}", healthCondition);
         healthCondition = healthConditionRepository.save(healthCondition);
-        LOG.debug(OUTPUT, healthCondition);
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
     public HealthConditionBo loadMainDiagnosis(PatientInfoBo patientInfo, Long documentId, Optional<HealthConditionBo> mainDiagnosis) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, mainDiagnosis {}", patientInfo, documentId, mainDiagnosis);
+        log.debug("Input parameters -> patientInfo {}, documentId {}, mainDiagnosis {}", patientInfo, documentId, mainDiagnosis);
         mainDiagnosis.ifPresent(md -> {
             HealthCondition healthCondition = buildMainDiagnoses(patientInfo, md);
-            if(healthCondition.getId()==null)
-				healthCondition = save(healthCondition);
+			healthCondition.setId(null);
+			healthCondition = save(healthCondition);
             md.setId(healthCondition.getId());
             md.setVerificationId(healthCondition.getVerificationStatusId());
             md.setStatusId(healthCondition.getStatusId());
@@ -91,130 +92,157 @@ public class HealthConditionService {
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
         HealthConditionBo result = mainDiagnosis.orElse(null);
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 
     private HealthCondition buildMainDiagnoses(PatientInfoBo patientInfo, HealthConditionBo info) {
-        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.DIAGNOSIS);
         healthCondition.setMain(true);
         updateStatusAndVerification(healthCondition, info);
-        LOG.debug(OUTPUT, healthCondition);
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
     public List<DiagnosisBo> loadDiagnosis(PatientInfoBo patientInfo, Long documentId, List<DiagnosisBo> diagnosis) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, diagnosis {}", patientInfo, documentId, diagnosis);
-        diagnosis.forEach(d -> {
-            HealthCondition healthCondition = buildDiagnoses(patientInfo, d);
-			if(healthCondition.getId() == null)
-            	healthCondition = save(healthCondition);
-
-            d.setId(healthCondition.getId());
-            d.setVerificationId(healthCondition.getVerificationStatusId());
-            d.setStatusId(healthCondition.getStatusId());
-            d.setVerification(getVerification(d.getVerificationId()));
-            d.setStatus(getStatus(d.getStatusId()));
-			healthConditionRepository.setMain(healthCondition.getId(), false);
-            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
-        });
-
-        LOG.debug(OUTPUT, diagnosis);
+        log.debug("Input parameters -> patientInfo {}, documentId {}, diagnosis {}", patientInfo, documentId, diagnosis);
+        diagnosis.forEach(d -> loadDiagnosis(patientInfo, documentId, d));
+        log.debug(OUTPUT, diagnosis);
         return diagnosis;
     }
 
+    public void loadDiagnosis(PatientInfoBo patientInfo, Long documentId, DiagnosisBo diagnosisBo) {
+        HealthCondition healthCondition = buildDiagnoses(patientInfo, diagnosisBo);
+        healthCondition.setId(null);
+        healthCondition = save(healthCondition);
+
+        diagnosisBo.setId(healthCondition.getId());
+        diagnosisBo.setVerificationId(healthCondition.getVerificationStatusId());
+        diagnosisBo.setStatusId(healthCondition.getStatusId());
+        diagnosisBo.setVerification(getVerification(diagnosisBo.getVerificationId()));
+        diagnosisBo.setStatus(getStatus(diagnosisBo.getStatusId()));
+        healthConditionRepository.setMain(healthCondition.getId(), false);
+        documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+    }
+
     private HealthCondition buildDiagnoses(PatientInfoBo patientInfo, DiagnosisBo info) {
-        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
-        healthCondition.setProblemId(ProblemType.DIAGNOSIS);
+        healthCondition.setProblemId(info.getType().getId());
         if (info.isPresumptive())
             healthCondition.setVerificationStatusId(ConditionVerificationStatus.PRESUMPTIVE);
 		else
 			healthCondition.setVerificationStatusId(ConditionVerificationStatus.CONFIRMED);
         updateStatusAndVerification(healthCondition, info);
-        LOG.debug(OUTPUT, healthCondition);
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
-    private <T extends HealthConditionBo> HealthCondition updateStatusAndVerification(HealthCondition healthCondition, T newDiagnosis) {
-        if (newDiagnosis.isError()) {
+    private <T extends HealthConditionBo> void updateStatusAndVerification(HealthCondition healthCondition, T newHealthCondition) {
+        if (newHealthCondition.isError()) {
             healthCondition.setStatusId(ConditionClinicalStatus.INACTIVE);
-            healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+            healthCondition.setVerificationStatusId(newHealthCondition.getVerificationId());
             healthCondition.setInactivationDate(dateTimeProvider.nowDate());
         }
-        if (newDiagnosis.isDiscarded()) {
-            healthCondition.setStatusId(newDiagnosis.getStatusId());
-            healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+        if (newHealthCondition.isDiscarded()) {
+            healthCondition.setStatusId(newHealthCondition.getStatusId());
+            healthCondition.setVerificationStatusId(newHealthCondition.getVerificationId());
             healthCondition.setInactivationDate(dateTimeProvider.nowDate());
         }
+    }
+
+    public List<PersonalHistoryBo> loadPersonalHistories(PatientInfoBo patientInfo, Long documentId, ReferableItemBo<PersonalHistoryBo> personalHistories) {
+        log.debug("Input parameters -> patientInfo {}, documentId {}, personalHistories {}", patientInfo, documentId, personalHistories);
+		if (personalHistories != null)
+			return getPersonalHistory(patientInfo, documentId, personalHistories);
+		return new ArrayList<>();
+    }
+
+	private List<@Valid PersonalHistoryBo> getPersonalHistory(PatientInfoBo patientInfo, Long documentId, ReferableItemBo<PersonalHistoryBo> personalHistories) {
+		documentService.createDocumentRefersPersonalHistory(documentId, personalHistories.getIsReferred());
+		if (personalHistories.getContent() != null)
+			personalHistories.getContent().forEach(ph -> processPersonalHistory(patientInfo, documentId, ph));
+		log.debug(OUTPUT, personalHistories);
+		return personalHistories.getContent();
+	}
+
+	private void processPersonalHistory(PatientInfoBo patientInfo, Long documentId, PersonalHistoryBo ph) {
+		HealthCondition healthCondition = buildPersonalHistory(patientInfo, ph);
+		if (ph.getId() == null)
+			healthCondition = getHealthCondition(ph, healthCondition);
+
+		ph.setId(healthCondition.getId());
+		ph.setVerificationId(healthCondition.getVerificationStatusId());
+		ph.setVerification(getVerification(ph.getVerificationId()));
+		ph.setStatusId(healthCondition.getStatusId());
+		ph.setStatus(getStatus(ph.getStatusId()));
+		ph.setType(nonNull(ph.getTypeId()) ? EPersonalHistoryType.map(ph.getTypeId()).getDescription() : null);
+
+		documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+	}
+
+	private HealthCondition getHealthCondition(PersonalHistoryBo ph, HealthCondition healthCondition) {
+		healthCondition = save(healthCondition);
+		if (nonNull(ph.getTypeId()))
+			personalHistoryRepository.save(new PersonalHistory(healthCondition.getId(), ph.getTypeId()));
+		return healthCondition;
+	}
+
+	private HealthCondition buildPersonalHistory(PatientInfoBo patientInfo, PersonalHistoryBo info) {
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
+        healthCondition.setProblemId(ProblemType.PERSONAL_HISTORY);
+        healthCondition.setStartDate(info.getStartDate());
+        healthCondition.setInactivationDate(info.getInactivationDate());
+        healthCondition.setNoteId(noteService.createNote(info.getNote()));
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
-    public List<HealthHistoryConditionBo> loadPersonalHistories(PatientInfoBo patientInfo, Long documentId, List<HealthHistoryConditionBo> personalHistories) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, personalHistories {}", patientInfo, documentId, personalHistories);
-        personalHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildPersonalHistory(patientInfo, ph);
-			if(ph.getId()==null)
-	            healthCondition = save(healthCondition);
-
-            ph.setId(healthCondition.getId());
-            ph.setVerificationId(healthCondition.getVerificationStatusId());
-            ph.setVerification(getVerification(ph.getVerificationId()));
-            ph.setStatusId(healthCondition.getStatusId());
-            ph.setStatus(getStatus(ph.getStatusId()));
-
-            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
-        });
-        LOG.debug(OUTPUT, personalHistories);
-        return personalHistories;
+    public List<FamilyHistoryBo> loadFamilyHistories(PatientInfoBo patientInfo, Long documentId, ReferableItemBo<FamilyHistoryBo> familyHistories) {
+        log.debug("Input parameters -> patientInfo {}, documentId {}, familyHistories {}", patientInfo, documentId, familyHistories);
+		if (familyHistories != null)
+			return getFamilyHistory(patientInfo, documentId, familyHistories);
+		return new ArrayList<>();
     }
 
-    private HealthCondition buildPersonalHistory(PatientInfoBo patientInfo, HealthHistoryConditionBo info) {
-        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+	private List<@Valid FamilyHistoryBo> getFamilyHistory(PatientInfoBo patientInfo, Long documentId, ReferableItemBo<FamilyHistoryBo> familyHistories) {
+		documentService.createDocumentRefersFamilyHistory(documentId, familyHistories.getIsReferred());
+		if (familyHistories.getContent() != null)
+			familyHistories.getContent().forEach(ph -> processFamilyHistory(patientInfo, documentId, ph));
+		log.debug(OUTPUT, familyHistories);
+		return familyHistories.getContent();
+	}
+
+	private void processFamilyHistory(PatientInfoBo patientInfo, Long documentId, FamilyHistoryBo ph) {
+		HealthCondition healthCondition = buildFamilyHistory(patientInfo, ph);
+		if(ph.getId()==null)
+			healthCondition = healthConditionRepository.save(healthCondition);
+
+		ph.setId(healthCondition.getId());
+		ph.setVerificationId(healthCondition.getVerificationStatusId());
+		ph.setVerification(getVerification(ph.getVerificationId()));
+		ph.setStatusId(healthCondition.getStatusId());
+		ph.setStatus(getStatus(ph.getStatusId()));
+
+		documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+	}
+
+	private HealthCondition buildFamilyHistory(PatientInfoBo patientInfo, FamilyHistoryBo info) {
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
-        healthCondition.setProblemId(ProblemType.PROBLEM);
+        healthCondition.setProblemId(ProblemType.FAMILY_HISTORY);
         LocalDate date = info.getStartDate();
         healthCondition.setStartDate(date);
         healthCondition.setNoteId(noteService.createNote(info.getNote()));
-        LOG.debug(OUTPUT, healthCondition);
-        return healthCondition;
-    }
-
-    public List<HealthHistoryConditionBo> loadFamilyHistories(PatientInfoBo patientInfo, Long documentId, List<HealthHistoryConditionBo> familyHistories) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, familyHistories {}", patientInfo, documentId, familyHistories);
-        familyHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildFamilyHistory(patientInfo, ph);
-			if(ph.getId()==null)
-	            healthCondition = healthConditionRepository.save(healthCondition);
-
-            ph.setId(healthCondition.getId());
-            ph.setVerificationId(healthCondition.getVerificationStatusId());
-            ph.setVerification(getVerification(ph.getVerificationId()));
-            ph.setStatusId(healthCondition.getStatusId());
-            ph.setStatus(getStatus(ph.getStatusId()));
-
-            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
-        });
-
-        LOG.debug(OUTPUT, familyHistories);
-        return familyHistories;
-    }
-
-    private HealthCondition buildFamilyHistory(PatientInfoBo patientInfo, HealthHistoryConditionBo info) {
-        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
-        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
-        healthCondition.setProblemId(ProblemType.HISTORY);
-        LocalDate date = info.getStartDate();
-        healthCondition.setStartDate(date);
-        healthCondition.setNoteId(noteService.createNote(info.getNote()));
-        LOG.debug(OUTPUT, healthCondition);
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
 	public List<HealthConditionBo> loadOtherProblems(PatientInfoBo patientInfo, Long documentId, List<HealthConditionBo> otherProblems){
-		LOG.debug("Input parameters -> patientInfo {}, documentId {}, otherProblems {}", patientInfo, documentId, otherProblems);
+		log.debug("Input parameters -> patientInfo {}, documentId {}, otherProblems {}", patientInfo, documentId, otherProblems);
 		otherProblems.forEach(op -> {
 			HealthCondition healthCondition = buildOtherProblem(patientInfo, op);
 			if (op.getId() == null)
@@ -229,20 +257,50 @@ public class HealthConditionService {
 			documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
 		});
 
-		LOG.debug(OUTPUT, otherProblems);
+		log.debug(OUTPUT, otherProblems);
 		return otherProblems;
 	}
 
 	private HealthCondition buildOtherProblem (PatientInfoBo patientInfo, HealthConditionBo info){
-		LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
-		HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
+		log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+		HealthCondition healthCondition = this.buildBasicHealthCondition(patientInfo, info);
 		healthCondition.setProblemId(ProblemType.OTHER);
-		LOG.debug(OUTPUT, healthCondition);
+        this.updateStatusAndVerification(healthCondition, info);
+		log.debug(OUTPUT, healthCondition);
 		return healthCondition;
 	}
 
+    public List<HealthConditionBo> loadOtherHistories(PatientInfoBo patientInfo, Long documentId, List<HealthConditionBo> otherHistories) {
+        log.debug("Input parameters -> patientInfo {}, documentId {}, otherHistories {}", patientInfo, documentId, otherHistories);
+        otherHistories.forEach(healthConditionBo -> loadOtherHistory(patientInfo, documentId, healthConditionBo));
+        log.debug(OUTPUT, otherHistories);
+        return otherHistories;
+    }
+
+    public void loadOtherHistory(PatientInfoBo patientInfo, Long documentId, HealthConditionBo otherHistory) {
+        HealthCondition healthCondition = buildOtherHistory(patientInfo, otherHistory);
+        if (otherHistory.getId() == null)
+            healthCondition = healthConditionRepository.save(healthCondition);
+
+        otherHistory.setId(healthCondition.getId());
+        otherHistory.setVerificationId(healthCondition.getVerificationStatusId());
+        otherHistory.setVerification(getVerification(otherHistory.getVerificationId()));
+        otherHistory.setStatusId(healthCondition.getStatusId());
+        otherHistory.setStatus(getStatus(otherHistory.getStatusId()));
+
+        documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+    }
+
+    private HealthCondition buildOtherHistory(PatientInfoBo patientInfo, HealthConditionBo info){
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
+        healthCondition.setProblemId(ProblemType.OTHER_HISTORY);
+        log.debug(OUTPUT, healthCondition);
+        return healthCondition;
+    }
+
     private HealthCondition buildBasicHealthCondition(PatientInfoBo patientInfo, HealthConditionBo info) {
-        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         Integer snomedId = snomedService.getSnomedId(info.getSnomed())
                 .orElseGet(() -> snomedService.createSnomedTerm(info.getSnomed()));
         String cie10Codes = calculateCie10Facade.execute(info.getSnomed().getSctid(),
@@ -255,12 +313,12 @@ public class HealthConditionService {
         healthCondition.setVerificationStatusId(info.getVerificationId());
         healthCondition.setStartDate(dateTimeProvider.nowDate());
 		healthCondition.setId(info.getId());
-        LOG.debug(OUTPUT, healthCondition);
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
     public List<Integer> copyDiagnoses(List<Integer> diagnosesId) {
-        LOG.debug("Input parameters -> diagnosesId {}", diagnosesId);
+        log.debug("Input parameters -> diagnosesId {}", diagnosesId);
         List<HealthCondition> resultQuery = new ArrayList<>();
         if (!diagnosesId.isEmpty())
             resultQuery = healthConditionRepository.findByIds(diagnosesId);
@@ -273,12 +331,12 @@ public class HealthConditionService {
         clonedHc = healthConditionRepository.saveAll(clonedHc);
 
         List<Integer> result = clonedHc.stream().map(HealthCondition::getId).collect(Collectors.toList());
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 
     public List<ProblemBo> loadProblems(PatientInfoBo patientInfo, Long documentId, List<ProblemBo> problems) {
-        LOG.debug("Input parameters -> patientInfo {}, documentId {}, problems {}", patientInfo, documentId, problems);
+        log.debug("Input parameters -> patientInfo {}, documentId {}, problems {}", patientInfo, documentId, problems);
         problems.forEach(ph -> {
             HealthCondition healthCondition = buildProblem(patientInfo, ph);
             healthCondition = save(healthCondition);
@@ -292,12 +350,12 @@ public class HealthConditionService {
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
 
-        LOG.debug(OUTPUT, problems);
+        log.debug(OUTPUT, problems);
         return problems;
     }
 
     private HealthCondition buildProblem(PatientInfoBo patientInfo, ProblemBo info) {
-        LOG.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(info.isChronic() ? ProblemType.CHRONIC : ProblemType.PROBLEM);
         healthCondition.setStartDate(info.getStartDate());
@@ -306,7 +364,7 @@ public class HealthConditionService {
             healthCondition.setStatusId(ConditionClinicalStatus.SOLVED);
         }
         healthCondition.setSeverity(info.getSeverity());
-        LOG.debug(OUTPUT, healthCondition);
+        log.debug(OUTPUT, healthCondition);
         return healthCondition;
     }
 
@@ -328,7 +386,7 @@ public class HealthConditionService {
     }
 
     public Map<Integer, HealthConditionBo> getLastHealthCondition(Integer patientId, List<Integer> hcIds) {
-        LOG.debug("Input -> patientId {} hcIds {}", patientId, hcIds);
+        log.debug("Input -> patientId {} hcIds {}", patientId, hcIds);
 
         Map<Integer, HealthConditionBo> result = new HashMap<>();
 
@@ -340,19 +398,25 @@ public class HealthConditionService {
             result.put(originalHcId, updatedHc);
         });
 
-        LOG.trace(OUTPUT, result);
+        log.trace(OUTPUT, result);
         return result;
     }
 
     public HealthConditionBo buildHealthConditionBo(Object[] row){
-        LOG.debug("Input parameters -> row {}", row);
+        log.debug("Input parameters -> row {}", row);
 
         HealthConditionBo result = new HealthConditionBo();
         result.setId((Integer) row[1]);
         result.setStatusId((String) row[2]);
 
-        LOG.trace(OUTPUT, result);
+        log.trace(OUTPUT, result);
         return result;
     }
+
+	private HealthCondition getById(Integer healthConditionId){
+		return this.healthConditionRepository.findById(healthConditionId)
+				.orElseThrow(()->new NotFoundException("healthcondition-not-found", "Healthcondition not found"));
+	}
+
 
 }

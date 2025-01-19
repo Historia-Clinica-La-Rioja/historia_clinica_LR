@@ -5,17 +5,17 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 public enum ERole {
 
 	ROOT(1, "ROOT", ERoleLevel.LEVEL0),
-    ADMINISTRADOR(2, "ADMINISTRADOR", ERoleLevel.LEVEL0),
-    ESPECIALISTA_MEDICO(3, "ESPECIALISTA_MEDICO", ERoleLevel.LEVEL1),
-    PROFESIONAL_DE_SALUD(4, "PROFESIONAL_DE_SALUD", ERoleLevel.LEVEL1),
-    ADMINISTRATIVO(5, "ADMINISTRATIVO", ERoleLevel.LEVEL1),
-    ENFERMERO_ADULTO_MAYOR(6, "ENFERMERO_ADULTO_MAYOR", ERoleLevel.LEVEL1),
-    ENFERMERO(7,"ENFERMERO",ERoleLevel.LEVEL1),
+	ADMINISTRADOR(2, "ADMINISTRADOR", ERoleLevel.LEVEL0),
+	ESPECIALISTA_MEDICO(3, "ESPECIALISTA_MEDICO", ERoleLevel.LEVEL1),
+	PROFESIONAL_DE_SALUD(4, "PROFESIONAL_DE_SALUD", ERoleLevel.LEVEL1),
+	ADMINISTRATIVO(5, "ADMINISTRATIVO", ERoleLevel.LEVEL1),
+	ENFERMERO_ADULTO_MAYOR(6, "ENFERMERO_ADULTO_MAYOR", ERoleLevel.LEVEL1),
+	ENFERMERO(7,"ENFERMERO",ERoleLevel.LEVEL1),
 	ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE(8,"ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE", ERoleLevel.LEVEL1),
-    ADMINISTRADOR_AGENDA(9,"ADMINISTRADOR_AGENDA", ERoleLevel.LEVEL1),
-    API_CONSUMER(10, "API_CONSUMER", ERoleLevel.LEVEL0),
-    ESPECIALISTA_EN_ODONTOLOGIA(11, "ESPECIALISTA_EN_ODONTOLOGIA", ERoleLevel.LEVEL1),
-    ADMINISTRADOR_DE_CAMAS(12, "ADMINISTRADOR_DE_CAMAS", ERoleLevel.LEVEL1),
+	ADMINISTRADOR_AGENDA(9,"ADMINISTRADOR_AGENDA", ERoleLevel.LEVEL1),
+	API_CONSUMER(10, "API_CONSUMER", ERoleLevel.LEVEL0),
+	ESPECIALISTA_EN_ODONTOLOGIA(11, "ESPECIALISTA_EN_ODONTOLOGIA", ERoleLevel.LEVEL1),
+	ADMINISTRADOR_DE_CAMAS(12, "ADMINISTRADOR_DE_CAMAS", ERoleLevel.LEVEL1),
 	PERSONAL_DE_IMAGENES(13, "PERSONAL_DE_IMAGENES", ERoleLevel.LEVEL1),
 	PERSONAL_DE_LABORATORIO(14, "PERSONAL_DE_LABORATORIO", ERoleLevel.LEVEL1),
 	PERSONAL_DE_FARMACIA(15, "PERSONAL_DE_FARMACIA", ERoleLevel.LEVEL1),
@@ -41,33 +41,55 @@ public enum ERole {
 	VIRTUAL_CONSULTATION_RESPONSIBLE(34, "VIRTUAL_CONSULTATION_RESPONSIBLE", ERoleLevel.LEVEL1),
 	API_IMAGENES(35, "API_IMAGENES", ERoleLevel.LEVEL0),
 	API_ORQUESTADOR(36, "API_ORQUESTADOR", ERoleLevel.LEVEL1),
-	ADMINISTRADOR_DE_ACCESO_DOMINIO(37, "ADMINISTRADOR_DE_ACCESO_DOMINIO", ERoleLevel.LEVEL0)
+	ADMINISTRADOR_DE_ACCESO_DOMINIO(37, "ADMINISTRADOR_DE_ACCESO_DOMINIO", ERoleLevel.LEVEL0),
+	GESTOR_DE_ACCESO_DE_DOMINIO(38, "GESTOR_DE_ACCESO_DE_DOMINIO", ERoleLevel.LEVEL0),
+	GESTOR_DE_ACCESO_LOCAL(39, "GESTOR_DE_ACCESO_LOCAL", ERoleLevel.LEVEL0),
+	GESTOR_DE_ACCESO_REGIONAL(40, "GESTOR_DE_ACCESO_REGIONAL", ERoleLevel.LEVEL0),
+	ABORDAJE_VIOLENCIAS(41, "ABORDAJE_VIOLENCIAS", ERoleLevel.LEVEL1),
+	AUDITORIA_DE_ACCESO(42,"AUDITORIA_DE_ACCESO",ERoleLevel.LEVEL0),
+	GESTOR_CENTRO_LLAMADO(43, "GESTOR_CENTRO_LLAMADO", ERoleLevel.LEVEL0),
+	ADMINISTRADOR_DE_DATOS_PERSONALES(44, "ADMINISTRADOR_DE_DATOS_PERSONALES", ERoleLevel.LEVEL0),
+	FHIR_POST_DIAGNOSTIC_REPORT(45, "FHIR_POST_DIAGNOSTIC_REPORT", ERoleLevel.LEVEL0),
+	FHIR_ACCESS_ALL_RESOURCES(46, "FHIR_ACCESS_ALL", ERoleLevel.LEVEL0),
+	API_ANEXO(47, "API_ANEXO", ERoleLevel.LEVEL0),
+	API_REPORTES(48, "API REPORTES", ERoleLevel.LEVEL0),
+	INDEXADOR(49, "INDEXADOR", ERoleLevel.LEVEL1),
+	GESTOR_DE_ACCESO_INSTITUCIONAL(50, "GESTOR_DE_ACCESO_INSTITUCIONAL", ERoleLevel.LEVEL1)
+
 	;
 
-    private Short id;
-    private String value;
-    private ERoleLevel level;
+	private Short id;
+	private String value;
+	private ERoleLevel level;
  
-    ERole(Number id, String value, ERoleLevel level) {
-        this.id = id.shortValue();
-        this.value = value;
-        this.level = level;
-    }
+	ERole(Number id, String value, ERoleLevel level) {
+		this.id = id.shortValue();
+		this.value = value;
+		this.level = level;
+	}
  
-    public String getValue() {
-        return value;
-    }
-    public Short getId() {
-        return id;
-    }
-    public ERoleLevel getLevel() {
+	public String getValue() {
+		return value;
+	}
+	public Short getId() {
+		return id;
+	}
+	public ERoleLevel getLevel() {
 		return level;
 	}
 
 	public static ERole map(java.lang.Short id) {
-        for(ERole e : values()) {
-            if(e.id.equals(id)) return e;
-        }
-        throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", id));
-    }
+		for(ERole e : values()) {
+			if(e.id.equals(id)) return e;
+		}
+		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", id));
+	}
+
+	public static ERole map(java.lang.String value) {
+		for(ERole e : values()) {
+			if(e.value.equals(value)) return e;
+		}
+		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", value));
+	}
+
 }

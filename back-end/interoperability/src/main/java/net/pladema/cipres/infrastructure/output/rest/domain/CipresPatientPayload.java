@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.cipres.infrastructure.output.rest.domain.patient.CipresPatientAddressPayload;
 
 @ToString
 @Getter
@@ -22,5 +23,9 @@ public class CipresPatientPayload {
 	private String sexo;
 
 	private String fechaNacimiento;
+
+	private CipresPatientAddressPayload domicilio;
+
+	private String nacionalidad;
 
 }

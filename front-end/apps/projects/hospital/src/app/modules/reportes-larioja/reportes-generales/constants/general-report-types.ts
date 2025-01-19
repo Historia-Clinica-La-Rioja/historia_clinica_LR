@@ -15,5 +15,9 @@ export const GENERAL_REPORT_TYPES = [
     {
         description: 'Estudios Complementarios',
         id: 4,
+    },
+    {
+        description: 'Prescripciones de medicamentos',
+        id: 5,
     }
 ]

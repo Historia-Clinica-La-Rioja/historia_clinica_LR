@@ -7,14 +7,14 @@ import net.pladema.clinichistory.hospitalization.controller.dto.InternmentSummar
 import net.pladema.clinichistory.hospitalization.controller.dto.summary.InternmentEpisodeBMDto;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
+import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class})
+@Mapper(uses = {LocalDateMapper.class, ResponsibleContactMapper.class})
 public interface InternmentEpisodeMapper {
 
 
@@ -26,13 +26,12 @@ public interface InternmentEpisodeMapper {
     @Mapping(target = "bed.room.sector.description", source = "sectorDescription")
     InternmentSummaryDto toInternmentSummaryDto(InternmentSummaryBo internmentSummaryBo);
 
-    @Named("toInternmentEpisode")
-    InternmentEpisode toInternmentEpisode(InternmentEpisodeADto internmentEpisodeDto);
-
-    @Named("toInternmentEpisodeDto")
+    @Named("toInternmentEpisodeBo")
     @Mapping(target = "patient.id", source = "patientId")
     @Mapping(target = "bed.id", source = "bedId")
-    InternmentEpisodeDto toInternmentEpisodeDto(InternmentEpisode internmentEpisode);
+    @Mapping(target = "doctor.id", source = "responsibleDoctorId")
+    @Mapping(target = "responsibleContact", source = "responsibleContact", qualifiedByName = "toResponsibleContactBo")
+    InternmentEpisodeBo toInternmentEpisodeBo(InternmentEpisodeADto internmentEpisodeDto);
 
     @Named("toInternmentPatientDto")
     InternmentPatientDto toInternmentPatientDto(BasicListedPatientBo basicListedPatientBo);

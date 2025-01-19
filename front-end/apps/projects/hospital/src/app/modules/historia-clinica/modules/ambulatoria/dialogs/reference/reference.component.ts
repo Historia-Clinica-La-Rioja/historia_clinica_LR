@@ -1,13 +1,17 @@
 import { Component, Inject, OnInit, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddressDto, CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEHealthConditionDto, ReferenceProblemDto, MasterDataDto, ReferenceStudyDto } from '@api-rest/api-model';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { ReferenceProblemsService } from '../../services/reference-problems.service';
 import { Observable, tap } from 'rxjs';
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { PRIORITY } from '../../constants/reference-masterdata';
-import { NUMBER_PATTERN } from '@core/utils/form.utils';
+import { VALIDATIONS } from '@core/utils/form.utils';
+import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { TranslateService } from '@ngx-translate/core';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 
 @Component({
 	selector: 'app-reference',
@@ -25,9 +29,11 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	updateSpecialtiesAndCarelineFields = false;
 	clearCarelinesAndSpecialties = false;
 	priorities$: Observable<MasterDataDto[]>;
+	regulationRequired = false;
+	boxMessageInfo: BoxMessageInformation;
 
 	PRIORITY = PRIORITY;
-	provinceId: number;
+	readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,13 +42,10 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
 		private readonly referenceMasterData: ReferenceMasterDataService,
-		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
+		private readonly translateService: TranslateService
 	) { }
 
 	ngOnInit(): void {
-		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe((info: AddressDto) => {
-			this.provinceId = info?.provinceId
-		});
 
 		this.createReferenceForm();
 
@@ -53,6 +56,13 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 				const lowPriority = priorities.find(priority => priority.id === PRIORITY.LOW);
 				this.formReference.controls.priority.setValue(lowPriority);
 			}));
+
+		this.boxMessageInfo = {
+			message: '',
+			showButtons: false
+		}
+		this.translateService.get('ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGULATION_REQUIRED')
+			.subscribe( message => this.boxMessageInfo.message = message );
 	}
 
 	ngAfterContentChecked(): void {
@@ -70,20 +80,20 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 
 	private markInputsAsTouched() {
 		this.formReference.controls.careLine.markAllAsTouched();
-		this.formReference.controls.clinicalSpecialtyId.markAllAsTouched();
+		this.formReference.controls.clinicalSpecialties.markAllAsTouched();
 		this.formReference.controls.problems.markAsTouched();
 	}
 
 	private buildReference(): Reference {
 		return {
 			careLine: this.formReference.controls.careLine.value,
-			clinicalSpecialty: this.formReference.controls.clinicalSpecialtyId.value,
+			clinicalSpecialties: this.formReference.controls.clinicalSpecialties.value,
 			consultation: this.formReference.controls.consultation.value,
 			note: this.formReference.value.summary,
 			problems: this.referenceProblemsService.mapProblems(),
 			procedure: false,
 			fileIds: [],
-			destinationInstitutionId: this.formReference.value.institutionDestinationId,
+			destinationInstitutionId: this.formReference.value.institutionDestinationId? this.formReference.value.institutionDestinationId : null,
 			phonePrefix: this.formReference.value.phonePrefix,
 			phoneNumber: this.formReference.value.phoneNumber,
 			priority: this.formReference.value.priority.id,
@@ -113,11 +123,6 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		this.selectedFilesShow.splice(index, 1);
 	}
 
-	onProvinceSelectionChange(province: number) {
-		this.formReference.controls.provinceId.setValue(province);
-		this.clearCarelinesAndSpecialties = true;
-	}
-
 	onDepartmentSelectionChange(department: number) {
 		this.formReference.controls.departmentId.setValue(department);
 	}
@@ -126,6 +131,15 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		this.formReference.controls.institutionDestinationId.setValue(institutionId);
 		this.activateSpecialtiesAndCarelineFields();
 		this.activateDepartamentsAndInstitution();
+	}
+
+	onProvinceSelectionChange(province: number) {
+		this.formReference.controls.provinceId.setValue(province);
+		this.clearCarelinesAndSpecialties = true;
+	}
+
+	onRegulationRequiredChange(value : boolean){
+		this.regulationRequired = value;
 	}
 
 	activateDepartamentsAndInstitution() {
@@ -151,14 +165,14 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 			consultation: [true],
 			procedure: [null],
 			careLine: [null, [Validators.required]],
-			clinicalSpecialtyId: [null, [Validators.required]],
-			institutionDestinationId: [null, [Validators.required]],
-			summary: [null],
+			clinicalSpecialties: [null, [Validators.required]],
+			institutionDestinationId: [null],
+			summary: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			provinceOrigin: [null],
 			departmentOrigin: [null],
 			institutionOrigin: [null],
-			phoneNumber: [null, [Validators.required, Validators.maxLength(20), Validators.pattern(NUMBER_PATTERN)]],
-			phonePrefix: [null, [Validators.required, Validators.maxLength(10), Validators.pattern(NUMBER_PATTERN)]],
+			phoneNumber: [null, [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]],
+			phonePrefix: [null, [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]],
 			priority: [null],
 			studyCategory: [null],
 			practiceOrProcedure: [null],
@@ -166,19 +180,19 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	}
 
 	private disableInputs() {
-		this.formReference.controls.clinicalSpecialtyId.disable();
+		this.formReference.controls.clinicalSpecialties.disable();
 	}
 
 }
 
 export interface HCEPersonalHistory {
-	hcePersonalHistoryDto: HCEPersonalHistoryDto;
+	HCEHealthConditionDto: HCEHealthConditionDto;
 	chronic: boolean
 }
 
 export interface Reference {
 	careLine: CareLineDto,
-	clinicalSpecialty: ClinicalSpecialtyDto,
+	clinicalSpecialties: ClinicalSpecialtyDto[],
 	consultation: boolean;
 	destinationInstitutionId: number;
 	fileIds: number[];

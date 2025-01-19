@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import { ParenteralPlanDto } from '@api-rest/api-model';
-import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PARENTERAL_PLAN, showTimeElapsed } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
+import { IndicationStatus, IndicationStatusScss, INDICATION_TYPE, PARENTERAL_PLAN } from "@historia-clinica/modules/ambulatoria/modules/indicacion/constants/internment-indications";
 import { Content } from "@presentation/components/indication/indication.component";
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
 import { loadExtraInfoParenteralPlan } from '../../constants/load-information';
@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { InternmentIndicationDetailComponent } from '../../dialogs/internment-indication-detail/internment-indication-detail.component';
 import { IndicationService } from '@api-rest/services/indication.service';
 import { Subject } from 'rxjs';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { ShowTimeElapsedPipe } from '@presentation/pipes/show-time-elapsed.pipe';
 
 const DIALOG_SIZE = '35%';
 @Component({
@@ -43,6 +45,8 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 
 	mapToIndicationContent(): Content[] {
 		return this.parenteralPlans?.map((parenteralPlan: ParenteralPlanDto) => {
+			const createdOn = dateTimeDtotoLocalDate(parenteralPlan.createdOn);
+			const showTimeElapsedPipe = new ShowTimeElapsedPipe();
 			return {
 				status: {
 					description: IndicationStatus[parenteralPlan.status],
@@ -53,7 +57,7 @@ export class InternmentParenteralPlanCardComponent implements OnChanges {
 				description: parenteralPlan.snomed.pt,
 				extra_info: loadExtraInfoParenteralPlan(parenteralPlan, this.vias),
 				createdBy: parenteralPlan.createdBy,
-				timeElapsed: showTimeElapsed(parenteralPlan.createdOn),
+				timeElapsed: showTimeElapsedPipe.transform(createdOn),
 			}
 		});
 	}

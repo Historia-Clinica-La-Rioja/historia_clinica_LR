@@ -6,10 +6,12 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadDiagnosticReports;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportTreeRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
@@ -24,8 +26,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
+import java.util.Optional;
 
 class LoadDiagnosticReportsTest extends UnitRepository {
 
@@ -37,16 +41,23 @@ class LoadDiagnosticReportsTest extends UnitRepository {
     @Autowired
     private DiagnosticReportRepository diagnosticReportRepository;
 
+	@Autowired
+	private DiagnosticReportTreeRepository diagnosticReportTreeRepository;
+
     @Mock
     private DocumentService documentService;
 
     @Mock
     private SnomedService snomedService;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+
     @BeforeEach
     void setUp() {
         loadDiagnosticReports = new LoadDiagnosticReports(
                 diagnosticReportRepository,
+				diagnosticReportTreeRepository,
                 documentService,
                 noteService,
                 snomedService
@@ -79,6 +90,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
         Integer drId = loadDiagnosticReports.run(
                 order1_doc_id,
 				patientId,
+				Optional.empty(),
                 List.of(drDeleteUseCase)
                 ).get(0);
 
@@ -93,6 +105,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
         drId = loadDiagnosticReports.run(
                 order1_doc_id,
 				patientId,
+				Optional.empty(),
                 List.of(drDeleteUseCaseWithoutNote)
         ).get(0);
 
@@ -125,6 +138,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
         Integer drId = loadDiagnosticReports.run(
                 order1_doc_id,
 				patientId,
+				Optional.empty(),
                 List.of(drCompleteOrCreateUseCase)
         ).get(0);
 
@@ -138,6 +152,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
         drId = loadDiagnosticReports.run(
                 order1_doc_id,
 				patientId,
+				Optional.empty(),
                 List.of(drCompleteOrCreateUseCaseWithoutObservations)
         ).get(0);
 
@@ -167,6 +182,7 @@ class LoadDiagnosticReportsTest extends UnitRepository {
         Integer drId = loadDiagnosticReports.run(
                 order1_doc_id,
 				patientId,
+				Optional.empty(),
                 List.of(drBo)
         ).get(0);
 

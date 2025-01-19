@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
-import { VALIDATIONS, processErrors, hasError, updateControlValidator } from '@core/utils/form.utils';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroup, FormControl } from '@angular/forms';
+import { VALIDATIONS, processErrors, hasError, updateControlValidator, NON_WHITESPACE_REGEX } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -16,11 +16,12 @@ import {
 	BasicPersonalDataDto,
 	ReducedPatientDto,
 	PatientMedicalCoverageDto,
-	DiaryAvailableProtectedAppointmentsDto,
 	ReferenceSummaryDto,
 	DiagnosticReportInfoDto,
-	TranscribedDiagnosticReportInfoDto,
+	TranscribedServiceRequestSummaryDto,
 	EAppointmentModality,
+	AppFeature,
+	SnomedDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -31,20 +32,27 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
-import { DatePipeFormat } from "@core/utils/date.utils";
-import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
-import { ReferenceAppointmentService } from '@turnos/services/reference-appointment.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EquipmentAppointmentsFacadeService } from '@turnos/services/equipment-appointments-facade.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { differenceInDays } from 'date-fns';
+import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
+import { MODALITYS_TYPES } from '@turnos/constants/appointment';
+import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
+import { getStudiesNames } from '@turnos/utils/appointment.utils';
+import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
-const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_SEARCH = 'pacientes';
 const TEMPORARY_PATIENT_ID = 3;
 const MEDICAL_ORDER_PENDING_STATUS = '1';
 const MEDICAL_ORDER_CATEGORY_ID = '363679005'
@@ -57,13 +65,14 @@ const ORDER_EXPIRED_DAYS = 30;
 	providers: [EquipmentAppointmentsFacadeService]
 })
 export class NewAppointmentComponent implements OnInit {
-
+	indexStep = Steps;
 	@ViewChild('stepper', { static: false }) stepper: MatStepper;
-	initialIndex = 0;
+	initialIndex = this.indexStep.MODALITY;
 	preselectedPatient = false;
 	public formSearch: UntypedFormGroup;
 	public appointmentInfoForm: UntypedFormGroup;
 	public associateReferenceForm: UntypedFormGroup;
+	public modalityForm: UntypedFormGroup;
 	referenceList: ReferenceSummaryDto[] = [];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
@@ -78,23 +87,27 @@ export class NewAppointmentComponent implements OnInit {
 	readonly TEMPORARY_PATIENT_ID = TEMPORARY_PATIENT_ID;
 	private readonly routePrefix;
 	isFormSubmitted = false;
-	public isSubmitButtonDisabled = false;
+	isLoadingRequest = false;
 	VALIDATIONS = VALIDATIONS;
-	referenceDateViewList: string[];
 	lastAppointmentId = -1;
-	readonly dateFormats = DatePipeFormat;
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
 	transcribedOrder = null;
+	editableStep1 = true;
+	editableStepModality = true;
+	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
-    readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+	readonly MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
+	viewModalityLabel$: Observable<boolean> = of(false);
+	modalitys = MODALITYS_TYPES.slice(0, 2);
+	isEnableTelemedicina: boolean = false;
+	boxMessageInfo: BoxMessageInformation;
+	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
+	fullDate: Date;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean, patientId?: number,
-			protectedAppointment?: DiaryAvailableProtectedAppointmentsDto, careLineId?: number, isEquipmentAppointment?: boolean,
-			modalityAttention:EAppointmentModality
-		},
+		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
@@ -108,16 +121,39 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientNameService: PatientNameService,
 		private readonly referenceService: ReferenceService,
-		private readonly referenceAppointmentService: ReferenceAppointmentService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
+		private readonly transcribedOrderService: TranscribedOrderService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
+		this.setFeatureFlags();
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 	}
 
 	ngOnInit(): void {
+		if (this.data.modalityAttention || !this.isEnableTelemedicina) {
+			if (!this.data.modalityAttention)
+				this.data.modalityAttention = EAppointmentModality.ON_SITE_ATTENTION;
+			this.modalitySelected = this.data.modalityAttention;
+			this.editableStepModality = false;
+			this.initialIndex = this.indexStep.SEARCH;
+			this.viewModalityLabel$ = of(true);
+		}
+		if(this.data.isEquipmentAppointment) {
+			this.editableStepModality = false;
+			this.initialIndex = this.indexStep.SEARCH;
+		}
+		if(!this.isEnableTelemedicina){
+			this.editableStepModality = false;
+			this.initialIndex = this.indexStep.SEARCH;
+			this.viewModalityLabel$ = of(true);
+		}
+
+		this.modalityForm = this.formBuilder.group({
+			modality: [this.modalitySelected, Validators.required],
+		})
 
 		this.formSearch = this.formBuilder.group({
 			identifType: [null, Validators.required],
@@ -134,13 +170,13 @@ export class NewAppointmentComponent implements OnInit {
 			medicalOrder: this.formBuilder.group({
 				appointmentMedicalOrder: [null]
 			}),
-			patientEmail:[null, [Validators.email]]
+			patientEmail: [null, [Validators.email]]
 		});
 
 
 		this.associateReferenceForm = this.formBuilder.group({
 			reference: [null, Validators.required],
-			professionalEmail: [null,Validators.email]
+			professionalEmail: [null, Validators.email]
 		});
 
 
@@ -166,22 +202,59 @@ export class NewAppointmentComponent implements OnInit {
 				updateControlValidator(this.formSearch, 'identifNumber', [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]);
 				updateControlValidator(this.formSearch, 'gender', [Validators.required]);
 			});
-			if(this.data.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION){
-				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
-				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
-			}else if(this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION){
-				this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required,Validators.email]));
-				this.associateReferenceForm.controls.patientEmail.updateValueAndValidity();
-			}
-			this.appointmentInfoForm.markAllAsTouched();
+		this.appointmentInfoForm.markAllAsTouched();
 
 		this.formSearch.controls.patientId.patchValue(this.data.patientId);
 		if (this.data.patientId) {
 			this.preselectedPatient = true;
-			this.initialIndex = 1;
+			this.initialIndex = this.indexStep.INFO;
 			this.patientId = this.data.patientId;
 			this.isFormSubmitted = true;
 			this.patientSearch(this.data.patientId);
+			this.editableStep1 = false;
+		}
+		this.setModalityValidation(this.modalitySelected);
+
+		this.transcribedOrderService.transcribedOrder$.subscribe(transcribedOrder => {
+			this.transcribedOrder = transcribedOrder;
+		})
+
+		this.translateService.get("turnos.new-appointment.expired-appointment.SUBTITLE").subscribe(message => this.boxMessageInfo = { ...this.boxMessageInfo, message });
+
+		this.expiredAppointmentForm = new FormGroup<ExpiredAppointmentForm>({
+			id: new FormControl(EAppointmentExpiredReasons.OTHER, [Validators.required]),
+			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)])
+		});
+
+		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date));
+	}
+
+	setModalityValidation(modality) {
+		this.modalitySelected = modality;
+
+		switch (this.modalitySelected) {
+			case this.MODALITY_PATIENT_VIRTUAL_ATTENTION:
+				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
+				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+				break;
+
+			case this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION:
+				this.associateReferenceForm.setControl('professionalEmail', new UntypedFormControl(null, [Validators.required, Validators.email]));
+				this.associateReferenceForm.controls.professionalEmail.updateValueAndValidity();
+				break;
+
+			case this.MODALITY_ON_SITE_ATTENTION:
+				this.appointmentInfoForm.setControl('patientEmail', new UntypedFormControl(null, [Validators.email]));
+				this.appointmentInfoForm.controls.patientEmail.updateValueAndValidity();
+				break;
+		}
+	}
+
+	onStepChange(stepper: MatStepper) {
+		if (stepper.selectedIndex > this.indexStep.MODALITY && !this.data.isEquipmentAppointment) {
+			this.viewModalityLabel$ = of(true);
+		} else {
+			this.viewModalityLabel$ = of(false);
 		}
 	}
 
@@ -232,14 +305,8 @@ export class NewAppointmentComponent implements OnInit {
 		this.patientService.getBasicPersonalData(patientId)
 			.subscribe((reducedPatientDto: ReducedPatientDto) => {
 				this.patientFound();
-				if (this.data?.protectedAppointment) {
-					this.referenceService.getReferencesSummary(patientId, this.data.protectedAppointment.clinicalSpecialty.id, this.data.careLineId).subscribe(
-						references => {
-							this.referenceList = references ? references : [];
-							this.createReferenceDateViewList();
-						}
-					);
-				}
+				if (this.data.protectedAppointment)
+					this.setReferenceInformation();
 				this.patient = reducedPatientDto;
 				this.appointmentInfoForm.controls.phonePrefix.setValue(reducedPatientDto.personalDataDto.phonePrefix);
 				this.appointmentInfoForm.controls.phoneNumber.setValue(reducedPatientDto.personalDataDto.phoneNumber);
@@ -255,16 +322,6 @@ export class NewAppointmentComponent implements OnInit {
 
 	}
 
-	private createReferenceDateViewList(): void {
-		let resultList = [];
-		this.referenceList.forEach(
-			(reference) => {
-				resultList.push(this.datePipe.transform(dateDtoToDate(reference.date), DatePipeFormat.SHORT_DATE));
-			}
-		);
-		this.referenceDateViewList = resultList;
-	}
-
 	mapToPersonIdentification(personalDataDto: BasicPersonalDataDto): PersonIdentification {
 		return {
 			firstName: this.patientNameService.getPatientName(personalDataDto.firstName, personalDataDto.nameSelfDetermination),
@@ -273,12 +330,16 @@ export class NewAppointmentComponent implements OnInit {
 		};
 	}
 
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isOn => this.isEnableTelemedicina = isOn);
+	}
+
 	private patientFound() {
 		this.formSearch.controls.completed.setValue(true);
 		this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
-		if (this.initialIndex !== 1)
+		if (this.initialIndex !== this.indexStep.INFO)
 			this.stepper.next();
-	}
+		}
 
 	private patientNotFound() {
 		this.snackBarService.showError('turnos.new-appointment.messages.ERROR');
@@ -287,12 +348,18 @@ export class NewAppointmentComponent implements OnInit {
 
 	submit(itComesFromStep3?: boolean): void {
 		if (this.isAppointmentFormValid()) {
-			this.isSubmitButtonDisabled = true;
+			this.isLoadingRequest = true;
+
+			if (this.data.expiredAppointment) {
+				this.createExpiredAppointment();
+				return;
+			}
+
 			this.verifyExistingAppointment().subscribe((appointmentShortSummary) => {
 				if (appointmentShortSummary) {
 					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
-					const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
-					const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
+					const date = this.dateFormatPipe.transform(dateDtoToDate(appointmentShortSummary.date), 'date')
+					const hour = this.dateFormatPipe.transform(timeDtoToDate(appointmentShortSummary.hour), 'time')
 					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentFor} en ${appointmentShortSummary.institution}`
 
 					const warnignComponent = this.dialog.open(DiscardWarningComponent,
@@ -319,7 +386,7 @@ export class NewAppointmentComponent implements OnInit {
 				}
 			}, error => {
 				this.dialogRef.close();
-				this.isSubmitButtonDisabled = false;
+				this.isLoadingRequest = false;
 				processErrors(error, (msg) => this.snackBarService.showError(msg));
 			})
 		}
@@ -327,77 +394,51 @@ export class NewAppointmentComponent implements OnInit {
 
 	private createAppointment(itComesFromStep3?: boolean) {
 		this.clearQueryParams();
-		const phonePrefix = this.setPhonePrefix(itComesFromStep3);
-		const phoneNumber = this.setPhoneNumber(itComesFromStep3);
-		const newAppointment: CreateAppointmentDto = {
-			date: this.data.date,
-			diaryId: this.data.diaryId,
-			hour: this.data.hour,
-			openingHoursId: this.data.openingHoursId,
-			overturn: this.data.overturnMode,
-			patientId: this.patientId,
-			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
-			phonePrefix,
-			phoneNumber,
-			modality:this.data.modalityAttention ? this.data.modalityAttention : EAppointmentModality.ON_SITE_ATTENTION,
-			patientEmail:this.appointmentInfoForm.controls.patientEmail.value,
-			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
-		};
+		const newAppointment: CreateAppointmentDto = this.buildCreateAppointmentDto();
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
 			if (itComesFromStep3) {
-				this.assignAppointment();
+				const valueEmail = this.getEmail();
+				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
+				this.dialogRef.close({ id: this.lastAppointmentId, email: valueEmail });
 			}
 			else {
 				this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-				this.dialogRef.close({id:appointmentId,email:this.appointmentInfoForm.controls.patientEmail.value});
+				this.dialogRef.close({ id: appointmentId, email: this.appointmentInfoForm.controls.patientEmail.value });
 			}
 		}, error => {
-			this.isSubmitButtonDisabled = false;
+			this.isLoadingRequest = false;
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
 	}
 
+	private getEmail(): string {
+		return this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION ? this.associateReferenceForm.controls.professionalEmail.value : this.appointmentInfoForm.controls.patientEmail.value;
+	}
+
 	goCreatePatient() {
+		const paramsToSearchPerson: ParamsToSearchPerson = {
+			identificationTypeId: this.formSearch.controls.identifType.value,
+			identificationNumber: this.formSearch.controls.identifNumber.value,
+			genderId: this.formSearch.controls.gender.value
+		}
+		this.dialogRef.close(-1);
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
-				queryParams: {
-					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: this.formSearch.controls.identifNumber.value,
-					genderId: this.formSearch.controls.gender.value
-				}
+				queryParams: paramsToSearchPerson
 			});
 	}
 
 	showConfirmButton(): boolean {
-		return this.formSearch.controls.completed.value && !this.data.protectedAppointment;
+		return this.formSearch.controls.completed.value && !this.data.protectedAppointment && !this.data.expiredAppointment && this.stepper.selectedIndex === this.indexStep.INFO;
 	}
 
 	disableConfirmButtonStep3(): boolean {
-		return !(this.formSearch.controls.completed.value && this.isAppointmentFormValid() && this.data.protectedAppointment && this.associateReferenceForm.valid);
-	}
-
-	private assignAppointment(): void {
-		if(this.data.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION){
-			var valueEmail = this.associateReferenceForm.controls.professionalEmail.value;
-		}else{
-			valueEmail = this.appointmentInfoForm.controls.patientEmail.value;
-		}
-		this.referenceAppointmentService.associateReferenceAppointment(this.associateReferenceForm.controls.reference.value.referenceId, this.lastAppointmentId).subscribe(
-			successfullyAssociated => {
-				if (successfullyAssociated) {
-					this.snackBarService.showSuccess('turnos.new-appointment.messages.APPOINTMENT_SUCCESS');
-					this.dialogRef.close({id:this.lastAppointmentId,email:valueEmail});
-				}
-				else {
-					this.snackBarService.showError('turnos.new-appointment.messages.COULD_NOT_ASSOCIATE')
-				}
-			}
-		);
+		return !(this.formSearch.controls.completed.value && this.isAppointmentFormValid() && (this.data.protectedAppointment && this.associateReferenceForm.valid) || (this.data.expiredAppointment && this.expiredAppointmentForm.valid));
 	}
 
 	disablePreviuosStep(stepperParam: MatStepper) {
-		if (stepperParam.selectedIndex === 0) {
+		if (stepperParam.selectedIndex === this.indexStep.MODALITY) {
 			this.editable = false;
 		}
 	}
@@ -409,17 +450,20 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private isAppointmentFormValid() {
+		this.appointmentInfoForm.markAllAsTouched();
 		return this.appointmentInfoForm.valid;
 	}
 
-	toFirstStep(stepper: MatStepper) {
-		this.formSearch.controls.completed.reset();
-		this.appointmentInfoForm.reset();
-		this.patientMedicalOrders = [];
-		if (this.transcribedOrder){
-			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
-				this.transcribedOrder = null;
-				this.patientMedicalOrderTooltipDescription = '' });
+	back(stepper: MatStepper) {
+		if (stepper.selectedIndex === this.indexStep.INFO) {
+			this.formSearch.controls.completed.reset();
+			this.appointmentInfoForm.reset();
+			this.patientMedicalOrders = [];
+			if (this.transcribedOrder) {
+				this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
+					this.transcribedOrderService.resetTranscribedOrder();
+				});
+			}
 		}
 		this.goBack(stepper);
 	}
@@ -470,8 +514,11 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	cancelBtnActions() {
-		if (this.transcribedOrder){
-			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe();
+		if (this.transcribedOrder) {
+			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
+				this.transcribedOrderService.resetTranscribedOrder();
+			});
+
 		}
 		this.clearQueryParams();
 	}
@@ -485,71 +532,50 @@ export class NewAppointmentComponent implements OnInit {
 		});
 	}
 
-	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]){
+	mapDiagnosticReportInfoDtoToMedicalOrderInfo(patientMedicalOrders: DiagnosticReportInfoDto[]) {
 		let text = 'image-network.appointments.medical-order.ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {
 			patientMedicalOrders.map(diagnosticReportInfo => {
-				if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS){
+				if (differenceInDays(new Date(), new Date(diagnosticReportInfo.creationDate)) <= ORDER_EXPIRED_DAYS) {
 					this.patientMedicalOrders.push({
 						serviceRequestId: diagnosticReportInfo.serviceRequestId,
 						studyName: diagnosticReportInfo.snomed.pt,
 						studyId: diagnosticReportInfo.id,
 						displayText: `${translatedText} # ${diagnosticReportInfo.serviceRequestId} - ${diagnosticReportInfo.snomed.pt}`,
 						isTranscribed: false
-					})}
+					})
+				}
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
 
-	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]){
+	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedServiceRequestSummaryDto[]) {
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {
 			transcribedOrders.map(medicalOrder => {
 				this.patientMedicalOrders.push({
 					serviceRequestId: medicalOrder.serviceRequestId,
-					studyName: medicalOrder.studyName,
-					displayText: `${translatedText} - ${medicalOrder.studyName}`,
+					studyName: null,
+					displayText: getStudiesNames(medicalOrder.diagnosticReports.map(study => study.pt) , translatedText),
 					isTranscribed: true
 				})
 			}).filter(value => value !== null && value !== undefined);
 		});
 	}
 
-	goBack(stepper: MatStepper){
+	goBack(stepper: MatStepper) {
 		stepper.previous();
 		this.showAddPatient = false;
 	}
 
-	private setPhonePrefix(itComesFromStep3: boolean): string {
-		if (!this.appointmentInfoForm.controls.phonePrefix.value && !itComesFromStep3)
-			return "";
-		if (this.appointmentInfoForm.controls.phonePrefix.value)
-			return this.appointmentInfoForm.controls.phonePrefix.value;
-		if (itComesFromStep3)
-			return this.associateReferenceForm.controls.reference.value.phonePrefix;
-	}
-
-	private setPhoneNumber(itComesFromStep3: boolean): string {
-		if (!this.appointmentInfoForm.controls.phoneNumber.value && !itComesFromStep3)
-			return "";
-		if (this.appointmentInfoForm.controls.phoneNumber.value)
-			return this.appointmentInfoForm.controls.phoneNumber.value;
-		if (itComesFromStep3)
-			return this.associateReferenceForm.controls.reference.value.phoneNumber;
-	}
-
 	private verifyExistingAppointment(): Observable<any> {
-		if (this.data.isEquipmentAppointment) {
-			return this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date)
-		}
-		else {
-			return this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour)
-		}
+		return this.data.isEquipmentAppointment ? this.equipmentAppointmentFacade.verifyExistingEquipmentAppointment(this.patientId, this.data.date) : this.appointmentFacade.verifyExistingAppointment(this.patientId, this.data.date, this.data.hour, this.data.institutionId)
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
+		this.transcribedOrderService.resetTranscribedOrder();
 		if (this.data.isEquipmentAppointment) {
 			let medicalOrder = this.appointmentInfoForm.get('medicalOrder').get('appointmentMedicalOrder').value;
 			let orderId = medicalOrder?.serviceRequestId;
@@ -562,6 +588,67 @@ export class NewAppointmentComponent implements OnInit {
 		else
 			return this.appointmentFacade.addAppointment(newAppointment);
 	}
+
+	private setReferenceInformation() {
+		if (this.data.referenceSummary) {
+			const referenceSummary = this.data.referenceSummary;
+			this.referenceList = [referenceSummary];
+			this.associateReferenceForm.controls.reference.setValue(referenceSummary);
+			this.associateReferenceForm.controls.reference.disable();
+		}
+		else
+			this.referenceService.getReferencesSummary(this.patientId, this.data.searchAppointmentCriteria).subscribe(references => this.referenceList = references);
+	}
+
+	private createExpiredAppointment() {
+		const newExpiredAppointment: CreateAppointmentDto = this.buildCreateAppointmentDto();
+		this.appointmentFacade.createExpiredAppointment(newExpiredAppointment).subscribe({
+			next: (newExpiredAppointmentId) => {
+				this.snackBarService.showSuccess("turnos.new-appointment.expired-appointment.MESSAGE_SUCCESS");
+				this.dialogRef.close({ id: newExpiredAppointmentId, email: this.appointmentInfoForm.controls.patientEmail.value });
+			},
+			error: () => {
+				this.isLoadingRequest = false;
+				this.snackBarService.showError("turnos.new-appointment.expired-appointment.MESSAGE_ERROR");
+			}
+		});
+	}
+
+	private buildCreateAppointmentDto(): CreateAppointmentDto {
+		return {
+			date: this.data.date,
+			diaryId: this.data.diaryId,
+			hour: this.data.hour,
+			openingHoursId: this.data.openingHoursId,
+			overturn: this.data.overturnMode,
+			patientId: this.patientId,
+			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
+			phonePrefix: this.appointmentInfoForm.value.phonePrefix,
+			phoneNumber: this.appointmentInfoForm.value.phoneNumber,
+			modality: this.modalitySelected != null ? this.modalitySelected : MODALITYS_TYPES[0].value,
+			patientEmail: this.appointmentInfoForm.controls.patientEmail.value,
+			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
+			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id,
+			...(this.data.expiredAppointment && { expiredReasonId: this.expiredAppointmentForm.value.id }),
+			...(this.data.expiredAppointment && { expiredReasonText: this.expiredAppointmentForm.value.motive }),
+		};
+	}
+}
+
+export interface NewAppointmentData {
+	date: string,
+	diaryId: number,
+	hour: string,
+	openingHoursId: number,
+	overturnMode: boolean,
+	patientId?: number,
+	protectedAppointment?: boolean,
+	isEquipmentAppointment?: boolean,
+	modalityAttention: EAppointmentModality,
+	searchAppointmentCriteria?: SearchAppointmentCriteria,
+	referenceSummary?: ReferenceSummaryDto,
+	institutionId?: number,
+	expiredAppointment?: boolean,
 }
 
 export interface medicalOrderInfo {
@@ -571,4 +658,16 @@ export interface medicalOrderInfo {
 	displayText: string,
 	isTranscribed: boolean,
 	coverageDto?: PatientMedicalCoverageDto,
+	associatedStudies?: SnomedDto[]
+}
+enum Steps {
+	MODALITY = 0,
+	SEARCH = 1,
+	INFO = 2,
+	PROTECTED_MOTIVE = 3,
+}
+
+export interface ExpiredAppointmentForm {
+	motive: FormControl<string>;
+	id: FormControl<number>;
 }

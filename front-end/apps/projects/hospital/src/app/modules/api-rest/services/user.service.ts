@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ContextService } from "@core/services/context.service";
-import { UserDataDto } from "@api-rest/api-model";
+import { PersonDataDto, UserDataDto } from "@api-rest/api-model";
 import { Observable } from "rxjs";
 import { environment } from "@environments/environment";
 
@@ -27,5 +27,11 @@ export class UserService {
 		return this.http.put<boolean>(url, enable);
 	}
 
+	getUsersByInstitutionRoles(rolesId: number[]): Observable<PersonDataDto[]> {
+		const url = `${environment.apiBase}/institution-users-by-roles/institution/${this.contextService.institutionId}`;
+		return this.http.get<PersonDataDto[]>(url, {
+			params: { rolesId: `${rolesId.join(',')}` }
+		});
+	}
 }
 

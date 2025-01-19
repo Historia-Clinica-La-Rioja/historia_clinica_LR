@@ -1,5 +1,6 @@
 package net.pladema.hsi.extensions.infrastructure.controller;
 
+import net.pladema.hsi.extensions.infrastructure.controller.constraint.BackofficeWcDefinitionPathValidator;
 import net.pladema.hsi.extensions.infrastructure.repository.WcDefinitionPathsRepository;
 import net.pladema.hsi.extensions.infrastructure.repository.entities.ExtensionDefinitionPath;
 
@@ -19,12 +20,13 @@ import static net.pladema.sgx.backoffice.permissions.NewBackofficePermissionBuil
 public class BackofficeWcDefinitionPathController extends NewAbstractBackofficeController<ExtensionDefinitionPath, Short> {
 
 	public BackofficeWcDefinitionPathController(
-			WcDefinitionPathsRepository repository
+			WcDefinitionPathsRepository repository,
+			BackofficeWcDefinitionPathValidator backofficeWcDefinitionPathValidator
 	) {
 		super(
 				fromJpa(repository),
 				permitAll(),
-				new BackofficeEntityValidatorAdapter<>()
+				backofficeWcDefinitionPathValidator
 		);
 	}
 

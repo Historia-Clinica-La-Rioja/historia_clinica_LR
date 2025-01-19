@@ -1,7 +1,30 @@
 <section class="page">
     <mat-card id="bed_card">
-        <mat-card-title>
-            <h2 class="mat-h2 page-title"  [translate]="'gestion-camas.detail.TITLE'"></h2>
+        <mat-card-title *ngIf="bedInfo">
+            <h2 class="mat-h2" [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
+            
+           <ng-container *ngIf="!bedInfo.bed.isBlocked">
+                <button *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="bed_nurse_assign_actions" mat-icon-button [matMenuTriggerFor]="actions">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </ng-container>
+
+            <mat-menu #actions="matMenu">
+                <div *ngIf="bedInfo.bedNurse else assignNurseTemplate">
+                    <button mat-menu-item (click)="openNurseAssign()">
+                        <span [translate]="'gestion-camas.detail.more-actions.NURSE_EDIT_ASSIGN'"></span>
+                    </button>
+                    <button mat-menu-item (click)="deleteAssignedNurse()">
+                        <span [translate]="'gestion-camas.detail.more-actions.DELETE_NURSE'"></span>
+                    </button>
+                </div>
+
+                <ng-template #assignNurseTemplate>
+                    <button mat-menu-item (click)="openNurseAssign()">
+                        <span [translate]="'gestion-camas.detail.more-actions.NURSE_ASSIGN'"></span>
+                    </button>
+                </ng-template>
+            </mat-menu>
         </mat-card-title>
         <section *ngIf="!bedInfo">
             <mat-card-content>
@@ -10,75 +33,100 @@
                 </mat-card-subtitle>
             </mat-card-content>
         </section>
-        <mat-list content *ngIf="bedInfo">
-            <div fxLayout="row" fxLayoutAlign="space-between">
-                <h2 class="mat-h2" [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: bedInfo.bed.bedNumber }"></h2>
-                <mat-chip-list >
-	                <mat-chip class="default" id="error-text" [selectable]="false" [ngClass]="{'error': !bedInfo.bed.free}">
-                        {{ (bedInfo.bed.free ? 'gestion-camas.detail.FREE' : 'gestion-camas.detail.NOT_FREE') | translate}}
-                    </mat-chip>
-                </mat-chip-list>
-            </div>
-            <mat-list-item>
-                <div mat-line>
-                    <span class="mat-body-1" [translate]="'gestion-camas.detail.SECTOR'"></span>
+        <ng-container *ngIf="bedInfo">
+            <ng-container *ngIf="bedInfo.bed.isBlocked else occupiedBedInfo" class="blockead-attention-palce-width">
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <mat-chip-list>
+                        <mat-chip class="default error" id="block-state" [selectable]="false">
+                            {{ 'gestion-camas.detail.BLOCK' | translate }}
+                        </mat-chip>
+                    </mat-chip-list>
+                    <app-blocked-attention-place-details [blockedAttentionPlaceDetails]="blockedAttentionPlaceDetails"></app-blocked-attention-place-details>
                 </div>
-                <div mat-line>
-                    <span class="mat-body-2">
-                        {{bedInfo.bed.room.sector.description}}
-                    </span>
-                </div>
-            </mat-list-item>
-            <mat-list-item id="days">
-                <div mat-line>
-                    <span class="mat-body-1" [translate]="'gestion-camas.detail.ROOM'"></span>
-                    <span class="mat-body-2">
-                        {{bedInfo.bed.room.description}}
-                    </span>
-                </div>
-            </mat-list-item>
-            <mat-list-item *ngIf="bedInfo.patient">
-                <div mat-line>
-                    <h2 [translate]="'gestion-camas.detail.PATIENT'"></h2>
-                </div>
-                <div mat-line>
-                    <span class="mat-body-1">ID: {{bedInfo.patient.id}}</span>
-                </div>
-                <div mat-line>
-                    <span class="mat-body-2">
-                        {{bedInfo.patient.person.firstName}} {{bedInfo.patient.person.lastName}}
-                    </span>
-                </div>
-                <div mat-line>
-                    <span *ngIf="bedInfo.patient.person.identificationType" class="mat-body-2">
-                        {{bedInfo.patient.person.identificationType}}:
-                    </span>
-                    <span class="mat-body-2">
-                        {{bedInfo.patient.person.identificationNumber}}
-                    </span>
-                </div>
-            </mat-list-item>
-            <mat-list-item  *ngIf="bedInfo.patient" id="probable-discharge">
-                <div mat-line >
-                    <span class="mat-body-1" [translate]="'gestion-camas.detail.PROBABLE_DISCHARGE_DATE'"></span>
-                    <span class="mat-body-2" *ngIf="bedInfo.probableDischargeDate">
-                        {{bedInfo.probableDischargeDate | date : 'dd/MM/yyyy'}}
-                    </span>
-                    <span *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
-                </div>
-            </mat-list-item>
-			<mat-list-item>
-				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis">
-					<button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="physical-discharge">
-						<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
-					</button>
-				</div>
-				<div mat-line>
-					<button mat-raised-button color="primary" (click)="assignBed()" *ngIf="bedAssign && bedInfo && bedInfo.bed.free">
-						<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
-					</button>
-				</div>
-			</mat-list-item>
-		</mat-list>
+            </ng-container>
+            <ng-template #occupiedBedInfo>
+                <mat-list content>
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                        <mat-chip-list >
+                            <mat-chip class="default" id="error-text" [selectable]="false" [ngClass]="{'error': !bedInfo.bed.free}">
+                                {{ (bedInfo.bed.free ? 'gestion-camas.detail.FREE' : 'gestion-camas.detail.NOT_FREE') | translate}}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                    <mat-list-item>
+                        <div mat-line>
+                            <span class="mat-body-1" [translate]="'gestion-camas.detail.SECTOR'"></span>
+                        </div>
+                        <div mat-line>
+                            <span class="mat-body-2">
+                                {{bedInfo.bed.room.sector.description}}
+                            </span>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item id="days">
+                        <div mat-line>
+                            <span class="mat-body-1" [translate]="'gestion-camas.detail.ROOM'"></span>
+                            <span class="mat-body-2">
+                                {{bedInfo.bed.room.description}}
+                            </span>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="bedInfo.patient">
+                        <div mat-line>
+                            <h2 [translate]="'gestion-camas.detail.PATIENT'"></h2>
+                        </div>
+                        <div mat-line>
+                            <span class="mat-body-1">ID: {{bedInfo.patient.id}}</span>
+                        </div>
+                        <div mat-line>
+                            <span class="mat-body-2">
+                                {{bedInfo.patient.person?.firstName}} {{bedInfo.patient.person?.lastName}}
+                            </span>
+                        </div>
+                        <div mat-line>
+                            <span *ngIf="bedInfo.patient.person?.identificationType" class="mat-body-2">
+                                {{bedInfo.patient.person.identificationType}}:
+                            </span>
+                            <span class="mat-body-2">
+                                {{bedInfo.patient.person?.identificationNumber}}
+                            </span>
+                        </div>
+                        <div mat-line>
+                            <span *ngIf="bedInfo.patient.person?.gender" class="mat-body-3">
+                                Sexo: {{bedInfo.patient.person.gender.description}}
+                            </span>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item  *ngIf="bedInfo.patient" id="probable-discharge">
+                        <div mat-line >
+                            <span class="mat-body-1" [translate]="'gestion-camas.detail.PROBABLE_DISCHARGE_DATE'"></span>
+                            <span class="mat-body-2" *ngIf="bedInfo.probableDischargeDate">
+                                {{bedInfo.probableDischargeDate | isoToDate | dateFormat : 'date'}}
+                            </span>
+                            <span mat-line *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
+                        </div>
+                    </mat-list-item>
+                    <mat-list-item *ngIf="bedInfo.bedNurse" id="nurse-info">
+                        <header mat-line>
+                            <h2 [translate]="'gestion-camas.detail.INCHARGE_NURSE'"></h2>
+                        </header>
+                        <span mat-line>{{bedInfo.bedNurse.fullName}}</span>
+                        <span mat-line [translate]="'gestion-camas.detail.NURSE_DNI'" [translateParams]="{nurseDni: bedInfo.bedNurse.identificationNumber}"></span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis && INTERNMENT_SECTOR_TYPE === bedInfo.bed.room.sector.type">
+                            <button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="physical-discharge">
+                                <span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
+                            </button>
+                        </div>
+                        <div mat-line>
+                            <button mat-raised-button color="primary" (click)="assignBed()" *ngIf="bedAssign && bedInfo && bedInfo.bed.free">
+                                <span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </ng-template>
+        </ng-container>
     </mat-card>
 </section>

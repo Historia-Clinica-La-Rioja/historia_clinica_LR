@@ -1,0 +1,22 @@
+<app-content width="full-back">
+	<app-route-back></app-route-back>
+	<mat-accordion class="mails" multi *ngIf="templates">
+		<mat-expansion-panel *ngFor="let template of templates">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					{{template.description}}
+				</mat-panel-title>
+				<mat-panel-description>
+					<app-colored-label description="Habilitado" color="green" *ngIf="template.sendingEnabled"></app-colored-label>
+					<app-colored-label description="Deshabilitado" color="grey" *ngIf="!template.sendingEnabled"></app-colored-label>
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+			<p>
+				El código de la plantilla es <code>{{template.id}}</code> y el siguiente es un ejemplo de cómo se ve:
+			</p>
+			<div class="mail-body">
+				<app-ui-component [uiComponent]="{type: 'html', args: {value: template.body}}"></app-ui-component>
+			</div>
+		</mat-expansion-panel>
+	</mat-accordion>
+</app-content>

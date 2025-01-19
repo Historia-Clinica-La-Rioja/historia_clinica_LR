@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.snowstorm.domain.SnomedSearchItemBo;
 
 import java.util.List;
 

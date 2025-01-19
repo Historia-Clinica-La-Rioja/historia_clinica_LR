@@ -1,0 +1,14 @@
+<div [ngSwitch]="tabLabel">
+    <app-seach-appointments-by-professional
+        *ngSwitchCase="TabsLabel.PROFESSIONAL"></app-seach-appointments-by-professional>
+
+    <app-search-appointments-by-specialty *ngSwitchCase="TabsLabel.INSTITUTION"></app-search-appointments-by-specialty>
+
+    <app-search-appointments-in-care-network
+        *ngSwitchCase="TabsLabel.CARE_NETWORK"></app-search-appointments-in-care-network>
+
+    <app-reference-report *ngSwitchCase="TabsLabel.REQUESTS"></app-reference-report>
+
+    <app-search-appointments-by-equipment *ngSwitchCase="TabsLabel.IMAGE_NETWORK">
+    </app-search-appointments-by-equipment>
+</div>

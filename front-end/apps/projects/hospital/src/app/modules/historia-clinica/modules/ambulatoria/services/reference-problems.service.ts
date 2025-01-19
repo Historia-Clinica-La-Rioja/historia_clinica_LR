@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HCEPersonalHistoryDto, ReferenceProblemDto, SharedSnomedDto } from "@api-rest/api-model";
+import { HCEHealthConditionDto, ReferenceProblemDto, SharedSnomedDto } from "@api-rest/api-model";
 import { mapToString } from "@api-rest/mapper/date-dto.mapper";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { BehaviorSubject, forkJoin, Observable } from "rxjs";
@@ -29,7 +29,7 @@ export class ReferenceProblemsService {
     getReferenceProblems(): HCEPersonalHistory[] {
         let problems: HCEPersonalHistory[] = [];
         this.referenceProblems.forEach(referenceProblemDto => {
-            const problemToAdd = this.problemsList.find(problem => problem.hcePersonalHistoryDto.snomed.sctid === referenceProblemDto.snomed.sctid)
+            const problemToAdd = this.problemsList.find(problem => problem.HCEHealthConditionDto.snomed.sctid === referenceProblemDto.snomed.sctid)
             problems.push(problemToAdd);
 
         });
@@ -39,8 +39,8 @@ export class ReferenceProblemsService {
     setReferenceProblems(problemsArray: string[]) {
         if (problemsArray.length) {
             this.referenceProblems = (problemsArray.map(problem => ({
-                id: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem)?.hcePersonalHistoryDto.id,
-                snomed: this.problemsList.find(p => p.hcePersonalHistoryDto.snomed.pt === problem)?.hcePersonalHistoryDto.snomed,
+                id: this.problemsList.find(p => p.HCEHealthConditionDto.snomed.pt === problem)?.HCEHealthConditionDto.id,
+                snomed: this.problemsList.find(p => p.HCEHealthConditionDto.snomed.pt === problem)?.HCEHealthConditionDto.snomed,
             })));
         }
         else {
@@ -57,7 +57,7 @@ export class ReferenceProblemsService {
 
         this.problemsList = data.consultationProblems.map(consultationProblem => {
             return {
-                hcePersonalHistoryDto: this.buildPersonalHistoryDto(consultationProblem),
+                HCEHealthConditionDto: this.buildPersonalHistoryDto(consultationProblem),
                 chronic: consultationProblem.cronico,
             }
         });
@@ -69,21 +69,21 @@ export class ReferenceProblemsService {
         forkJoin([activeProblems$, chronicProblems$]).subscribe(([activeProblems, chronicProblems]) => {
             const chronicProblemsHCEPersonalHistory = chronicProblems.map(chronicProblem => {
                 return {
-                    hcePersonalHistoryDto: chronicProblem,
+                    HCEHealthConditionDto: chronicProblem,
                     chronic: true,
                 }
             });
 
             const activeProblemsHCEPersonalHistory = activeProblems.map(activeProblem => {
                 return {
-                    hcePersonalHistoryDto: activeProblem,
+                    HCEHealthConditionDto: activeProblem,
                     chronic: null,
                 }
             });
 
             const problems = [...activeProblemsHCEPersonalHistory, ...chronicProblemsHCEPersonalHistory];
             problems.forEach((problem: HCEPersonalHistory) => {
-                const existProblem = this.problemsList.find(consultationProblem => consultationProblem.hcePersonalHistoryDto.snomed.sctid === problem.hcePersonalHistoryDto.snomed.sctid);
+                const existProblem = this.problemsList.find(consultationProblem => consultationProblem.HCEHealthConditionDto.snomed.sctid === problem.HCEHealthConditionDto.snomed.sctid);
                 if (!existProblem) {
                     this.problemsList.push(problem);
                 }
@@ -93,7 +93,7 @@ export class ReferenceProblemsService {
         return this.problemsList;
     }
 
-    private buildPersonalHistoryDto(problem): HCEPersonalHistoryDto {
+    private buildPersonalHistoryDto(problem): HCEHealthConditionDto {
         return {
             hasPendingReference: false,
             inactivationDate: null,

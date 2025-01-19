@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import net.pladema.permissions.RoleUtils;
-import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
-import net.pladema.staff.repository.ProfessionalProfessionRepository;
+import net.pladema.permissions.repository.enums.ERole;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +24,7 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalEnumException;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalException;
+import static java.util.List.of;
 
 @Service
 public class HealthcareProfessionalServiceImpl implements  HealthcareProfessionalService {
@@ -35,18 +36,14 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 
     private final HealthcareProfessionalRepository healthcareProfessionalRepository;
 
-	private final ProfessionalProfessionRepository professionalProfessionRepository;
-
-	private final HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository;
+	private final SharedPersonPort sharedPersonPort;
 
     public HealthcareProfessionalServiceImpl(HealthcareProfessionalGroupRepository healthcareProfessionalGroupRepository,
                                              HealthcareProfessionalRepository healthcareProfessionalRepository,
-											 ProfessionalProfessionRepository professionalProfessionRepository,
-											 HealthcareProfessionalSpecialtyRepository healthcareProfessionalSpecialtyRepository) {
+											 SharedPersonPort sharedPersonPort) {
         this.healthcareProfessionalGroupRepository = healthcareProfessionalGroupRepository;
         this.healthcareProfessionalRepository = healthcareProfessionalRepository;
-		this.professionalProfessionRepository = professionalProfessionRepository;
-		this.healthcareProfessionalSpecialtyRepository = healthcareProfessionalSpecialtyRepository;
+		this.sharedPersonPort = sharedPersonPort;
     }
 
     @Override
@@ -63,7 +60,7 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
     @Override
     public List<HealthcarePersonBo> getAllDoctorsByInstitution(Integer institutionId) {
         LOG.debug("Input parameters -> institutionId {}", institutionId);
-        List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId);
+        List<HealthcarePersonBo> result = healthcareProfessionalRepository.getAllDoctors(institutionId, List.of(ERole.ESPECIALISTA_MEDICO.getId(), ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId()));
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -74,10 +71,9 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         List<Short> professionalERolIds = RoleUtils.getProfessionalERoleIds();
         List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
                 .findAllByInstitution(institutionId, professionalERolIds);
-        List<HealthcareProfessionalBo> result = new ArrayList<>();
-        queryResults.forEach(hcp ->
-                result.add(new HealthcareProfessionalBo(hcp))
-        );
+		List<HealthcareProfessionalBo> result = queryResults.stream()
+				.map(this::mapToHealthcareProfessionalBo)
+				.collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -135,6 +131,16 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
                 .orElse(null);
     }
 
+	@Override
+	public HealthcareProfessionalBo findProfessionalByUserId(Integer userId){
+		LOG.debug("Input parameters -> personId {}", userId);
+		Integer professionalId = healthcareProfessionalRepository.getProfessionalId(userId);
+		HealthcareProfessionalBo result = healthcareProfessionalRepository.findActiveProfessionalById(professionalId)
+						.map(HealthcareProfessionalBo::new).orElse(null);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
     @Override
     public Integer saveProfessional(HealthcareProfessionalCompleteBo professionalBo){
         LOG.debug("Input parameters -> professionalBo {}", professionalBo);
@@ -159,6 +165,32 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 		return result;
 	}
 
+	@Override
+	public List<HealthcareProfessionalBo> getVirtualConsultationResponsiblesByInstitutionId(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<Short> professionalERolIds = of(ERole.VIRTUAL_CONSULTATION_RESPONSIBLE.getId());
+		List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
+				.findAllByInstitution(institutionId, professionalERolIds);
+		List<HealthcareProfessionalBo> result = new ArrayList<>();
+		queryResults.forEach(hcp ->
+				result.add(new HealthcareProfessionalBo(hcp))
+		);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<HealthcareProfessionalBo> getAllProfessionalsByDepartment(Short departmentId) {
+		LOG.debug("Input parameters -> departmentId {}", departmentId);
+		List<Short> professionalERolIds = RoleUtils.getProfessionalERoleIds();
+		List<HealthcareProfessionalVo> professionals = healthcareProfessionalRepository.getAllProfessionalsByDepartment(departmentId, professionalERolIds);
+		List<HealthcareProfessionalBo> result = professionals.stream()
+				.map(this::mapToHealthcareProfessionalBo)
+				.collect(Collectors.toList());
+		LOG.debug("Output result -> {} ", result);
+		return result;
+	}
+
 	private Integer update(HealthcareProfessionalCompleteBo professionalCompleteBo){
         HealthcareProfessional result = healthcareProfessionalRepository.findById(professionalCompleteBo.getId())
                 .map(healthcareProfessionalRepository::save).orElseThrow(()->new HealthcareProfessionalException(HealthcareProfessionalEnumException.HEALTHCARE_PROFESSIONAL_NOT_FOUND,"El profesional no existe"));
@@ -171,4 +203,16 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
         Integer result = saved.getId();
         return result;
     }
+
+	private HealthcareProfessionalBo mapToHealthcareProfessionalBo(HealthcareProfessionalVo hcp) {
+		String completePersonName = sharedPersonPort.parseCompletePersonName(
+				hcp.getFirstName(),
+				hcp.getMiddleNames(),
+				hcp.getLastName(),
+				hcp.getOtherLastNames(),
+				hcp.getNameSelfDetermination()
+		);
+		return new HealthcareProfessionalBo(hcp, completePersonName);
+	}
+
 }

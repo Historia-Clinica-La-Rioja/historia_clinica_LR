@@ -3,7 +3,7 @@ package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapp
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.service.domain.DocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentResponseBo;

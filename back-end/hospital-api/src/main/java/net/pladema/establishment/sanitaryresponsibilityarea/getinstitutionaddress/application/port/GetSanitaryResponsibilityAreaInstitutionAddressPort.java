@@ -1,0 +1,9 @@
+package net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.application.port;
+
+import net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.domain.GetSanitaryResponsibilityAreaInstitutionAddressBo;
+
+public interface GetSanitaryResponsibilityAreaInstitutionAddressPort {
+
+	GetSanitaryResponsibilityAreaInstitutionAddressBo run(Integer institutionId);
+
+}

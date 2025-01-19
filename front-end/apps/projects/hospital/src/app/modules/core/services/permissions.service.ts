@@ -6,11 +6,11 @@ import { ContextService } from './context.service';
 import { ERole, RoleAssignmentDto } from '@api-rest/api-model';
 import { anyMatch } from '@core/utils/array.utils';
 
-const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
+export const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
 
 const filterRoleAssignment = (institutionId: number) =>
 	(assignments: RoleAssignmentDto[]) =>
-	assignments.filter(assignment => assignment.institutionId === institutionId);
+		assignments.filter(assignment => assignment.institutionId === institutionId);
 
 const mapToRole = (assignments: RoleAssignmentDto[]) => assignments.map(assignment => assignment.role);
 
@@ -70,6 +70,15 @@ export class PermissionsService {
 	public hasContextAssignments$(assignments: ERole[]): Observable<boolean> {
 		return this.contextAssignments$().pipe(
 			map((userRoles: ERole[]) => anyMatch<ERole>(userRoles, assignments))
+		);
+	}
+
+	/**
+	 * Permite obtener las asignaciones del usuario logueado sin filtrar por insitution.
+	 */
+	public assignmentsWithoutContext$(): Observable<ERole[]> {
+		return this.loggedUserService.assignments$.pipe(
+			map(mapToRole)
 		);
 	}
 }

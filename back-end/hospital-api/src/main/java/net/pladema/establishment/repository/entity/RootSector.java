@@ -1,5 +1,6 @@
 package net.pladema.establishment.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ import javax.persistence.Table;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class RootSector {
+public class RootSector extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@Column(name = "id")
@@ -50,9 +51,6 @@ public class RootSector {
 	@Column(name = "hospitalization_type_id")
 	private Short hospitalizationTypeId;
 
-	@Column(name = "deleted")
-	private Boolean deleted;
-	
 	@Column(name = "informer")
 	private Boolean informer;
 

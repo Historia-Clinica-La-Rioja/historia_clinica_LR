@@ -1,0 +1,23 @@
+<div *ngIf="appointments.length else noAppointmentsFound">
+
+    <h2>
+        {{ 'turnos.search-appointments-in-care-network.AVAILABLE_APPOINTMENTS_TITLE' | translate }}
+    </h2>
+
+    <mat-card>
+        <div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
+            <app-available-appointment-data [availableAppointment]="appointment | toAvailableAppointmentData">
+                <button id="assign-appointment" mat-flat-button color="primary" (click)="checkHolidayAndAssign(appointment)">
+                    <span class="uppercase" [translate]="'turnos.home.ASSIGN_APPOINTMENT'"></span>
+                </button>
+            </app-available-appointment-data>
+            <mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
+        </div>
+        <mat-paginator [length]="appointments.length" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
+            (page)="onPageChange($event)">
+        </mat-paginator>
+    </mat-card>
+</div>
+<ng-template #noAppointmentsFound>
+    <app-no-data *ngIf="showResults" [message]="'turnos.search-appointments-in-care-network.NOT_FOUND_APPOINTMENTS'"></app-no-data>
+</ng-template>

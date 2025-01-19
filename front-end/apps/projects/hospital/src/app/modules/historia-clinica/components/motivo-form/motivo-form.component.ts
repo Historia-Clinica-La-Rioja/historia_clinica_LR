@@ -1,5 +1,5 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class MotivoFormComponent {
+export class MotivoFormComponent implements ControlValueAccessor {
 
 
 	formMotivo = this.formBuilder.group({
@@ -62,8 +62,10 @@ export class MotivoFormComponent {
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.formMotivo.setValue(obj);
+			this.motivoNuevaConsultaService.setMotives(obj.motivo);
+		}
 	}
 
 	registerOnChange(fn: any): void {

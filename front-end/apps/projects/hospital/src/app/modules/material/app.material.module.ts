@@ -12,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MAT_DATE_LOCALE, MatOptionModule } from '@angular/material/core';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -25,13 +26,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { MAT_APP_DATE_FORMATS } from '@core/utils/moment.utils';
 import { MatPaginatorIntlAR } from '@presentation/components/table/table.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DEFAULT_LANG } from '../../app.component';
+import { MatDateFnsModule } from '@angular/material-date-fns-adapter';
+import { es } from 'date-fns/locale';
 
 @NgModule({
 	imports: [
@@ -49,8 +49,6 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatInputModule,
 		MatListModule,
 		MatMenuModule,
-		MatMomentDateModule,
-		MatNativeDateModule,
 		MatOptionModule,
 		MatPaginatorModule,
 		MatSortModule,
@@ -64,6 +62,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatTabsModule,
 		MatToolbarModule,
 		MatSlideToggleModule,
+		MatDateFnsModule
 	],
 	exports: [
 		MatAutocompleteModule,
@@ -81,8 +80,6 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatInputModule,
 		MatListModule,
 		MatMenuModule,
-		MatMomentDateModule,
-		MatNativeDateModule,
 		MatOptionModule,
 		MatPaginatorModule,
 		MatSortModule,
@@ -91,6 +88,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatRadioModule,
 		MatSidenavModule,
 		MatSliderModule,
+		MatStepperModule,
 		MatSnackBarModule,
 		MatTableModule,
 		MatTabsModule,
@@ -100,21 +98,12 @@ import { DEFAULT_LANG } from '../../app.component';
 	providers: [
 		{
 			provide: MAT_DATE_LOCALE,
-			useValue: DEFAULT_LANG
-		},
-		{
-			provide: DateAdapter,
-			useClass: MomentDateAdapter,
-			deps: [MAT_DATE_LOCALE]
-		},
-		{
-			provide: MAT_DATE_FORMATS,
-			useValue: MAT_APP_DATE_FORMATS
+			useValue: es
 		},
 		{
 			provide: MatPaginatorIntl,
 			useClass: MatPaginatorIntlAR
-		}
+		},
 	],
 })
 export class AppMaterialModule { }

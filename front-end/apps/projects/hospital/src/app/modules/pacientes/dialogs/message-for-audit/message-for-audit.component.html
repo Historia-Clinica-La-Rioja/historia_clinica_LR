@@ -2,7 +2,7 @@
 
     <div fxLayout="row" fxLayoutAlign="space-between center">
         <h1 mat-dialog-title id="title">{{ 'pacientes.message-for-audit.TITLE' | translate }}</h1>
-        <button id="close-button" mat-button mat-icon-button aria-label="close" [mat-dialog-close]="null">
+        <button id="close-button"  mat-icon-button aria-label="close" [mat-dialog-close]="null">
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -24,7 +24,7 @@
             <button mat-stroked-button color="primary" fxFlexFill.xs [mat-dialog-close]="null">
                 {{ 'buttons.CANCEL' | translate | uppercase }}
             </button>
-            <button mat-flat-button color="primary" fxFlexFill.xs (click)="close()">
+            <button mat-flat-button color="primary" fxFlexFill.xs [disabled]="!form.valid" (click)="close()">
                 {{ 'buttons.SAVE' | translate | uppercase }}
             </button>
         </mat-dialog-actions>

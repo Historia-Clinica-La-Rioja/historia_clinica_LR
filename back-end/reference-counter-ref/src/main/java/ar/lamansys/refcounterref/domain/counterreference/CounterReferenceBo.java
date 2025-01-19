@@ -3,6 +3,7 @@ package ar.lamansys.refcounterref.domain.counterreference;
 import ar.lamansys.refcounterref.domain.allergy.CounterReferenceAllergyBo;
 import ar.lamansys.refcounterref.domain.medication.CounterReferenceMedicationBo;
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -37,7 +38,7 @@ public class CounterReferenceBo {
 
     private List<@Valid CounterReferenceMedicationBo> medications = new ArrayList<>();
 
-    private List<@Valid CounterReferenceAllergyBo> allergies = new ArrayList<>();
+    private ReferableItemBo<@Valid CounterReferenceAllergyBo> allergies = new ReferableItemBo<>();
 
     private List<Integer> fileIds;
 

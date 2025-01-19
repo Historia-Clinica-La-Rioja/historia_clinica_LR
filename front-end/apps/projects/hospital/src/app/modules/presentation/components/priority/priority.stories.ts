@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/angular';
 import { Priority, PriorityComponent } from './priority.component';
 
 const meta: Meta<PriorityComponent> = {
-    title: 'Example/PriorityComponent',
+    title: 'hsi/PriorityComponent',
     component: PriorityComponent,
     tags: ['autodocs'],
     argTypes: {

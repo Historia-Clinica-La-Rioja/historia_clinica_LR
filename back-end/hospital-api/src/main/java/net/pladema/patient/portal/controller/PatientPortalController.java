@@ -2,9 +2,9 @@ package net.pladema.patient.portal.controller;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAllergyDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEAnthropometricDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCELast2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEMedicationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEAllergyExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEClinicalObservationExternalService;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service.HCEHealthConditionsExternalService;
@@ -14,6 +14,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
@@ -29,8 +31,6 @@ import net.pladema.person.controller.dto.PersonPhotoDto;
 import net.pladema.person.controller.dto.PersonalInformationDto;
 import net.pladema.person.controller.service.PersonExternalService;
 import org.apache.http.MethodNotSupportedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,10 +43,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/patientportal")
 @Tag(name = "Patient Portal", description = "Patient Portal")
+@Slf4j
+@RequiredArgsConstructor
 @Validated
 public class PatientPortalController {
-
-	private static final Logger LOG = LoggerFactory.getLogger(PatientPortalController.class);
 
 	private static final String LOGGING_OUTPUT = "Output -> {}";
 
@@ -74,37 +74,13 @@ public class PatientPortalController {
 
 	private final FeatureFlagsService featureFlagsService;
 
-	public PatientPortalController(HCEHealthConditionsExternalService hceHealthConditionsExternalService,
-								   HCEMedicationExternalService hceMedicationExternalService,
-								   HCEAllergyExternalService hceAllergyExternalService,
-								   HCEClinicalObservationExternalService hceClinicalObservationExternalService,
-								   PatientPortalService patientPortalService,
-								   PersonExternalService personExternalService,
-								   PatientService patientService,
-								   AdditionalDoctorService additionalDoctorService,
-								   PatientTypeRepository patientTypeRepository,
-								   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-								   FeatureFlagsService featureFlagsService){
-		this.hceHealthConditionsExternalService = hceHealthConditionsExternalService;
-		this.hceMedicationExternalService = hceMedicationExternalService;
-		this.hceAllergyExternalService = hceAllergyExternalService;
-		this.hceClinicalObservationExternalService = hceClinicalObservationExternalService;
-		this.patientPortalService = patientPortalService;
-		this.personExternalService = personExternalService;
-		this.patientService = patientService;
-		this.additionalDoctorService = additionalDoctorService;
-		this.patientTypeRepository = patientTypeRepository;
-		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
-		this.featureFlagsService = featureFlagsService;
-	}
-
 	@GetMapping("/medications")
 	public ResponseEntity<List<HCEMedicationDto>> getMedications() throws MethodNotSupportedException {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
 		List<HCEMedicationDto> result = hceMedicationExternalService.getMedication(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -114,7 +90,7 @@ public class PatientPortalController {
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
 		List<HCEAllergyDto> result = hceAllergyExternalService.getAllergies(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -124,7 +100,7 @@ public class PatientPortalController {
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
 		List<HCEAnthropometricDataDto> result = hceClinicalObservationExternalService.getLast2AnthropometricDataGeneralState(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -134,27 +110,27 @@ public class PatientPortalController {
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
 		HCELast2RiskFactorsDto result = hceClinicalObservationExternalService.getLast2RiskFactorsGeneralState(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping("/familyHistories")
-	public ResponseEntity<List<HCEPersonalHistoryDto>> getFamilyHistories() throws MethodNotSupportedException {
+	public ResponseEntity<List<HCEHealthConditionDto>> getFamilyHistories() throws MethodNotSupportedException {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		List<HCEPersonalHistoryDto> result = hceHealthConditionsExternalService.getFamilyHistories(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		List<HCEHealthConditionDto> result = hceHealthConditionsExternalService.getFamilyHistories(patientId);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping("/personalHistories")
-	public ResponseEntity<List<HCEPersonalHistoryDto>> getPersonalHistories() throws MethodNotSupportedException {
+	public ResponseEntity<List<HCEHealthConditionDto>> getPersonalHistories() throws MethodNotSupportedException {
 		if (!this.featureFlagsService.isOn(AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE))
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
-		List<HCEPersonalHistoryDto> result = hceHealthConditionsExternalService.getActivePersonalHistories(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		List<HCEHealthConditionDto> result = hceHealthConditionsExternalService.getSummaryProblems(patientId);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -164,7 +140,7 @@ public class PatientPortalController {
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer personId = patientPortalService.getPersonId();
 		PersonalInformationDto result = personExternalService.getPersonalInformation(personId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return  ResponseEntity.ok().body(result);
 	}
 
@@ -177,7 +153,7 @@ public class PatientPortalController {
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		BasicDataPersonDto personData = personExternalService.getBasicDataPerson(patient.getPersonId());
 		BasicPatientDto result = new BasicPatientDto(patient.getId(), personData, patient.getTypeId());
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -189,7 +165,7 @@ public class PatientPortalController {
 		Patient patient = patientService.getActivePatient(patientId)
 				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
 		PersonPhotoDto personPhotoDto = personExternalService.getPersonPhoto(patient.getPersonId());
-		LOG.debug(LOGGING_OUTPUT, personPhotoDto);
+		log.debug(LOGGING_OUTPUT, personPhotoDto);
 		return ResponseEntity.ok().body(personPhotoDto);
 	}
 
@@ -208,7 +184,7 @@ public class PatientPortalController {
 						? new AAdditionalDoctorDto(doctorsBo.getGeneralPractitionerBo())
 						: null,
 				doctorsBo.getPamiDoctorBo() != null ? new AAdditionalDoctorDto(doctorsBo.getPamiDoctorBo()) : null);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 	
@@ -218,7 +194,7 @@ public class PatientPortalController {
 			throw new MethodNotSupportedException("Funcionalidad no soportada");
 		Integer patientId = patientPortalService.getPatientId();
 		List<PatientMedicalCoverageDto> result = patientExternalMedicalCoverageService.getActivePrivateMedicalCoverages(patientId);
-		LOG.debug(LOGGING_OUTPUT, result);
+		log.debug(LOGGING_OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 }

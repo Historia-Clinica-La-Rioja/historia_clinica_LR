@@ -34,7 +34,7 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 	@Override
 	@Transactional
 	public AppointmentBo execute(AppointmentBo appointmentBo, Integer orderId, Integer studyId, Integer institutionId) {
-		log.debug("Input parameters -> appointmentBo {}", appointmentBo);
+		log.debug("Input parameters -> appointmentBo id {}", appointmentBo.getId());
 		Appointment appointment = Appointment.newFromAppointmentBo(appointmentBo);
 		appointment = appointmentRepository.save(appointment);
 		AppointmentBo result = AppointmentBo.newFromAppointment(appointment);
@@ -57,7 +57,8 @@ public class CreateEquipmentAppointmentServiceImpl implements CreateEquipmentApp
 		AppointmentOrderImageBo appointmentOrderImageBO = new AppointmentOrderImageBo(appointment.getId(), orderId, studyId, false, null, institutionId);
 		appointmentOrderImageService.save(appointmentOrderImageBO);
 
-		log.debug("Output -> {}", result);
+		log.debug("Output -> new AppointmentBo {}", (result != null) ? result.getId() : "null result");
+
 		return result;
 	}
 }

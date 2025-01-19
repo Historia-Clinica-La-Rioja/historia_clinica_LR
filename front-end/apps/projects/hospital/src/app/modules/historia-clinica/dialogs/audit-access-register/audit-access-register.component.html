@@ -1,0 +1,51 @@
+<div fxLayout="row" fxLayoutAlign="end">
+    <button mat-icon-button (click)="cancel()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<div mat-dialog-content fxLayout="column" fxLayoutGap="24px">
+    <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+        <span class="material-symbols-outlined icon-warn">
+            warning
+        </span>
+        <div>
+            {{'historia-clinica.audit-access.TITLE' | translate}}
+        </div>
+        <div class="text-center">
+            {{'historia-clinica.audit-access.RESUME' | translate}}
+        </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="8px">
+        <span>
+            {{'historia-clinica.audit-access.MOTIVE' | translate}}
+        </span>
+        <form [formGroup]="auditAccessForm" fxLayout="column" fxLayoutAlign="space-between">
+            <mat-form-field appearance="outline">
+                <mat-select id="motive" name="motive" formControlName="motive"
+                    placeholder="{{'historia-clinica.audit-access.SELECT' | translate}}">
+                    <mat-option *ngFor="let identificationMotive of identificationMotiveList"
+                        [value]="identificationMotive.id">
+                        {{identificationMotive.description}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError(auditAccessForm,'required','motive')"
+                    [translate]="'forms.REQUIRED'"></mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <textarea matInput type="text" id="observations" name="observaciones" formControlName="observations"
+                    placeholder="{{'historia-clinica.audit-access.OBSERVATIONS' | translate}}">
+                    </textarea>
+                <mat-error *ngIf="hasError(auditAccessForm,'required','observations')"
+                    [translate]="'forms.REQUIRED'"></mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end" class="confirm-btn">
+    <button id="cancel" mat-stroked-button color="primary" (click)="cancel()">
+        <span [translate]="'buttons.CANCEL'"></span>
+    </button>
+    <button id="saveAudit" mat-raised-button color="primary" [disabled]="!isFormValid()" (click)="saveAuditAccess()">
+        <span [translate]="'historia-clinica.audit-access.GO_TO_PATIENT'"></span>
+    </button>
+</div>

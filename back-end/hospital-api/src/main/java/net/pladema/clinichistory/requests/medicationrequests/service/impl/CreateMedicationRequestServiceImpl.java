@@ -1,22 +1,27 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.CommonDocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.DosageValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.DosageValidator;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
+import net.pladema.clinichistory.requests.medicationrequests.application.SendMedicationRequestValidation;
+import net.pladema.clinichistory.requests.medicationrequests.application.port.output.ValidatedMedicationRequestPort;
+import net.pladema.clinichistory.requests.medicationrequests.domain.ValidatedMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.entity.MedicationRequest;
 import net.pladema.clinichistory.requests.medicationrequests.service.CreateMedicationRequestService;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.DigitalRecipeMedicationRequestBo;
 import net.pladema.clinichistory.requests.medicationrequests.service.domain.DocumentRequestBo;
-import net.pladema.clinichistory.requests.medicationrequests.service.domain.MedicationRequestBo;
+import ar.lamansys.sgh.clinichistory.domain.document.impl.MedicationRequestBo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -26,34 +31,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CreateMedicationRequestServiceImpl implements CreateMedicationRequestService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateMedicationRequestServiceImpl.class);
-
     private final MedicationRequestRepository medicationRequestRepository;
 
-    private final DocumentFactory documentFactory;
+    private final CommonDocumentFactory documentFactory;
 
     private final HealthConditionService healthConditionService;
 
 	private final FeatureFlagsService featureFlagsService;
 
-    public CreateMedicationRequestServiceImpl(MedicationRequestRepository medicationRequestRepository,
-                                              DocumentFactory documentFactory,
-                                              HealthConditionService healthConditionService,
-											  FeatureFlagsService featureFlagsService) {
-        this.medicationRequestRepository = medicationRequestRepository;
-        this.documentFactory = documentFactory;
-        this.healthConditionService = healthConditionService;
-		this.featureFlagsService = featureFlagsService;
-    }
+	private final int MONTH_DAY_DURATION = 30;
+
+	private final SendMedicationRequestValidation sendMedicationRequestValidation;
+
+	private final ValidatedMedicationRequestPort validatedMedicationRequestPort;
 
     @Override
     public List<DocumentRequestBo> execute(MedicationRequestBo medicationRequest) {
-        LOG.debug("Input parameters -> medicationRequest {} ", medicationRequest);
+        log.debug("Input parameters -> medicationRequest {} ", medicationRequest);
         assertRequiredFields(medicationRequest);
         assertNoDuplicatedMedications(medicationRequest);
 
@@ -71,24 +75,83 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
                 Assert.isTrue(md.getHealthCondition().isActive(),
                         "El problema asociado tiene que estar activo"));
 
-        Map<Integer, LocalDate> newMRIds = createMedicationRequest(medicationRequest);
-		List<DocumentRequestBo> result = new ArrayList<>();
-		newMRIds.forEach((key, value) -> {
-			medicationRequest.setEncounterId(key);
-			medicationRequest.setRequestDate(value);
-			medicationRequest.getMedications().forEach(medication -> {
-				medication.setPrescriptionDate(value);
-				medication.setDueDate(value.plusDays(30));
-				medication.setId(null);
-				medication.getHealthCondition().setSnomed(healthConditionService.getHealthCondition(medication.getHealthCondition().getId()).getSnomed());
-			});
-			Long documentId = documentFactory.run(medicationRequest, true);
-			result.add(new DocumentRequestBo(key,documentId));
-		});
-        return result;
+		medicationRequest.getMedications().forEach(this::getMedicationSnomed);
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL))
+			return List.of(saveNonDigitalMedicationRequest(medicationRequest));
+		return saveDigitalMedicationRequests(medicationRequest);
     }
 
-    private void assertRequiredFields(MedicationRequestBo medicationRequest) {
+	private List<DocumentRequestBo> saveDigitalMedicationRequests(MedicationRequestBo medicationRequest) {
+		Optional<List<String>> validatedMedicationRequests = Optional.ofNullable(handleDigitalPrescriptionValidation(medicationRequest));
+		Map<Integer, LocalDate> newMRIds = createDigitalMedicationRequests(medicationRequest);
+		List<DocumentRequestBo> result = new ArrayList<>();
+		newMRIds.forEach((key, value) -> {
+			MedicationRequestBo newMedicationRequest = parseToNewMedicationRequestBo(medicationRequest, key, value);
+			Long documentId = documentFactory.run(newMedicationRequest, true);
+			result.add(new DocumentRequestBo(key,documentId));
+		});
+		validatedMedicationRequests.ifPresent(validatedRequests -> saveValidatedMedicationRequests(new ArrayList<>(newMRIds.keySet()), validatedRequests));
+		return result;
+	}
+
+	private void saveValidatedMedicationRequests(List<Integer> medicationRequestIds, List<String> validatedRequests) {
+		List<ValidatedMedicationRequestBo> parsedRequests = IntStream.range(0, medicationRequestIds.size())
+				.mapToObj(index -> new ValidatedMedicationRequestBo(medicationRequestIds.get(index), validatedRequests.get(index)))
+				.collect(Collectors.toList());
+		validatedMedicationRequestPort.saveAll(parsedRequests);
+	}
+
+	private List<String> handleDigitalPrescriptionValidation(MedicationRequestBo medicationRequest) {
+		if (mustValidateDigitalPrescription(medicationRequest))
+			return sendMedicationRequestValidation.run(medicationRequest);
+		return null;
+	}
+
+	private boolean mustValidateDigitalPrescription(MedicationRequestBo medicationRequest) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_VALIDAR_RECETA_MEDIANTE_INTEGRADOR) &&
+				featureFlagsService.isOn(AppFeature.HABILITAR_SERVICIO_INFO_COMERCIAL_MEDICAMENTOS) &&
+				featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL_ACTUALIZADA) &&
+				medicationRequest.getMedicalCoverageId() != null;
+	}
+
+	private DocumentRequestBo saveNonDigitalMedicationRequest(MedicationRequestBo medicationRequest) {
+		LocalDate currentDate = LocalDate.now();
+		Integer medicationRequestEntityId = saveNonDigitalMedicationRequestEntity(medicationRequest);
+		medicationRequest.setEncounterId(medicationRequestEntityId);
+		medicationRequest.setRequestDate(currentDate);
+		medicationRequest.getMedications().forEach(medication -> {
+			medication.setPrescriptionDate(currentDate);
+			medication.setDueDate(currentDate.plusDays(MONTH_DAY_DURATION));
+			medication.setId(null);
+		});
+		Long documentId = documentFactory.run(medicationRequest, true);
+		return new DocumentRequestBo(medicationRequestEntityId, documentId);
+	}
+
+	private Integer saveNonDigitalMedicationRequestEntity(MedicationRequestBo medicationRequest) {
+		MedicationRequest medicationRequestEntity = generateBasicMedicationrequest(medicationRequest);
+		medicationRequestEntity.setRequestDate(LocalDate.now());
+		UUID randomUuid = UUID.randomUUID();
+		medicationRequestEntity.setUuid(randomUuid);
+		medicationRequest.setUuid(randomUuid);
+		return medicationRequestRepository.save(medicationRequestEntity).getId();
+	}
+
+	private DigitalRecipeMedicationRequestBo parseToNewMedicationRequestBo(MedicationRequestBo medicationRequest, Integer key, LocalDate value) {
+		DigitalRecipeMedicationRequestBo result = new DigitalRecipeMedicationRequestBo(medicationRequest, key, value);
+		result.getMedications().forEach(medication -> {
+			medication.setPrescriptionDate(value);
+			medication.setDueDate(value.plusDays(MONTH_DAY_DURATION));
+			medication.setId(null);
+		});
+		return result;
+	}
+
+	private void getMedicationSnomed(MedicationBo medication) {
+		medication.getHealthCondition().setSnomed(healthConditionService.getHealthCondition(medication.getHealthCondition().getId()).getSnomed());
+	}
+
+	private void assertRequiredFields(MedicationRequestBo medicationRequest) {
         Assert.notNull(medicationRequest, "La receta es obligatoria");
         Assert.notNull(medicationRequest.getInstitutionId(), "El identificador de la institución es obligatorio");
         PatientInfoValidator patientInfoValidator = new PatientInfoValidator();
@@ -113,35 +176,26 @@ public class CreateMedicationRequestServiceImpl implements CreateMedicationReque
         result.forEach((k,v) -> Assert.isTrue(v.size() == 1, "La receta no puede contener más de un medicamento con el mismo problema y el mismo concepto snomed"));
     }
 
-    private Map<Integer, LocalDate> createMedicationRequest(MedicationRequestBo medicationRequest) {
+    private Map<Integer, LocalDate> createDigitalMedicationRequests(MedicationRequestBo medicationRequest) {
 		Map<Integer, LocalDate> medicationRequestIds = new HashMap<>();
 		LocalDate iterationDate = LocalDate.now();
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL)) {
-			generateMultipleMedicationRequests(medicationRequest, medicationRequestIds, iterationDate);
-		}
-		else {
-			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
-			result.setRequestDate(LocalDate.now());
-			result = medicationRequestRepository.save(result);
-			medicationRequestIds.put(result.getId(), medicationRequest.getRequestDate());
-		}
-        return medicationRequestIds;
-    }
-
-	private void generateMultipleMedicationRequests(MedicationRequestBo medicationRequest, Map<Integer, LocalDate> originalMedicationRequestId, LocalDate iterationDate) {
 		for (int currentRequest = 0; currentRequest < medicationRequest.getRepetitions() + 1; currentRequest++) {
 			MedicationRequest result = generateBasicMedicationrequest(medicationRequest);
 			result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
 			result.setRepetitions(currentRequest == 0 ? medicationRequest.getRepetitions() : 0);
 			result.setIsPostDated(currentRequest == 0);
 			result.setRequestDate(iterationDate);
+			UUID randomUuid = UUID.randomUUID();
+			result.setUuid(randomUuid);
+			medicationRequest.setUuid(randomUuid);
 			result = medicationRequestRepository.save(result);
-			originalMedicationRequestId.put(result.getId(), iterationDate);
-			iterationDate = iterationDate.plusDays(30);
+			medicationRequestIds.put(result.getId(), iterationDate);
+			iterationDate = iterationDate.plusDays(MONTH_DAY_DURATION);
 		}
-	}
+        return medicationRequestIds;
+    }
 
-	private static MedicationRequest generateBasicMedicationrequest(MedicationRequestBo medicationRequest) {
+	private MedicationRequest generateBasicMedicationrequest(MedicationRequestBo medicationRequest) {
 		MedicationRequest result = new MedicationRequest();
 		result.setPatientId(medicationRequest.getPatientId());
 		result.setInstitutionId(medicationRequest.getInstitutionId());

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
@@ -110,6 +112,10 @@ public class Document extends SGXAuditableEntity<Long> {
 		return this.statusId.equals(statusId);
 	}
 
+	public boolean isConfirmed() {
+		return statusId != null && statusId.equals(DocumentStatus.FINAL);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -124,5 +130,9 @@ public class Document extends SGXAuditableEntity<Long> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, sourceId, typeId, sourceTypeId);
+	}
+
+	public EDocumentType getTypeEnum() {
+		return EDocumentType.map(this.getTypeId());
 	}
 }

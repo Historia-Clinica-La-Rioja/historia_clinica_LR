@@ -1,0 +1,23 @@
+<div *ngFor="let premedication of premedicationList; index as i; last as isLastElement">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <span class="bold-text">{{ premedication.snomed.pt | titlecase }}</span>
+            <span *ngIf="premedication.via">Via {{ premedication.via.description }}</span>
+            <span *ngIf="premedication.dosis">
+                {{ 'internaciones.anesthesic-report.premedication-and-food-intake.DOSIS' | translate }} {{
+                premedication.dosis }} </span>
+            <span *ngIf="premedication.unit">
+                {{ 'internaciones.anesthesic-report.premedication-and-food-intake.UNIT' | translate }} {{
+                premedication.unit }}</span>
+            <span class="mat-caption" *ngIf="premedication.time">{{ premedication.time | viewDateDto:'time' | dateFormat:'time' }}</span>
+        </div>
+
+        <ng-container>
+            <button mat-icon-button color="warn" (click)="service.remove(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </ng-container>
+
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLastElement"></mat-divider>
+</div>

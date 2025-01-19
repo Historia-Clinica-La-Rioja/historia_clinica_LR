@@ -7,9 +7,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateMedicationDto;
@@ -17,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PrescriptionStatusValidator implements ConstraintValidator<ValidPrescriptionStatus, ChangePrescriptionStateDto> {
-
-	private static final Logger LOG = LoggerFactory.getLogger(PrescriptionStatusValidator.class);
 
 	@Override
 	public void initialize(ValidPrescriptionStatus constraintAnnotation) {

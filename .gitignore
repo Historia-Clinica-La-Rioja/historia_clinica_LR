@@ -75,3 +75,5 @@ back-end/.docker/
 *.msg
 
 cubejs/node_modules/
+# Módulo de relaciones
+SnomedCT_Argentina-EditionRelease

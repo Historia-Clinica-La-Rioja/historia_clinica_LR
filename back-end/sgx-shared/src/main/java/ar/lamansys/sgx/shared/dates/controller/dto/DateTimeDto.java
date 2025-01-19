@@ -3,8 +3,12 @@ package ar.lamansys.sgx.shared.dates.controller.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
+
+import java.util.Objects;
 
 @Getter
+@ToString
 public class DateTimeDto implements Comparable<DateTimeDto>{
 
     private final DateDto date;
@@ -20,33 +24,49 @@ public class DateTimeDto implements Comparable<DateTimeDto>{
 
 	@Override
 	public int compareTo(DateTimeDto dateTimeDto) {
-		Integer dateComparisonResult = dateComparator(dateTimeDto.date);
-		Integer timeComparisonResult = timeComparator(dateTimeDto.time);
-		if (dateComparisonResult.equals(1) || dateComparisonResult.equals(-1))
+		int dateComparisonResult = dateComparator(dateTimeDto.date);
+		if (dateComparisonResult != 0) {
 			return dateComparisonResult;
-		if (timeComparisonResult.equals(1) || timeComparisonResult.equals(-1))
-			return timeComparisonResult;
-		return dateComparisonResult;
+		}
+		return timeComparator(dateTimeDto.time);
 	}
 
-	private Integer dateComparator(DateDto date) {
-		if (this.date.getYear() < date.getYear()) return -1;
-		if (this.date.getMonth() < date.getMonth()) return -1;
-		if (this.date.getDay() < date.getDay()) return -1;
-		if (this.date.getYear() > date.getYear()) return 1;
-		if (this.date.getMonth() > date.getMonth()) return 1;
-		if (this.date.getDay() > date.getDay()) return 1;
+	private int dateComparator(DateDto date) {
+		if (!Objects.equals(this.date.getYear(), date.getYear())) {
+			return Integer.compare(this.date.getYear(), date.getYear());
+		} else if (!Objects.equals(this.date.getMonth(), date.getMonth())) {
+			return Integer.compare(this.date.getMonth(), date.getMonth());
+		} else {
+			return Integer.compare(this.date.getDay(), date.getDay());
+		}
+	}
+
+	private int timeComparator(TimeDto time) {
+		if (!Objects.equals(this.time.getHours(), time.getHours())) {
+			return Integer.compare(this.time.getHours(), time.getHours());
+		} else if (!Objects.equals(this.time.getMinutes(), time.getMinutes())) {
+			return Integer.compare(this.time.getMinutes(), time.getMinutes());
+		} else if (this.time.getSeconds() != null) {
+			return Integer.compare(this.time.getSeconds(), time.getSeconds());
+		}
 		return 0;
 	}
 
-	private Integer timeComparator(TimeDto time) {
-		if (this.time.getHours() < time.getHours()) return -1;
-		if (this.time.getMinutes() < time.getMinutes()) return -1;
-		if (this.time.getSeconds() < time.getSeconds()) return -1;
-		if (this.time.getHours() > time.getHours()) return 1;
-		if (this.time.getMinutes() > time.getMinutes()) return 1;
-		if (this.time.getSeconds() > time.getSeconds()) return 1;
-		return 0;
+	@Override
+	public String toString() {
+		return String.format("%sT%s", date, time);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DateTimeDto that = (DateTimeDto) o;
+		return Objects.equals(date, that.date) && Objects.equals(time, that.time);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(date, time);
+	}
 }

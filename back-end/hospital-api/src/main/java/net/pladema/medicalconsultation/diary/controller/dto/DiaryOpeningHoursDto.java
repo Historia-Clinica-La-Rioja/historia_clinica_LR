@@ -39,6 +39,9 @@ public class DiaryOpeningHoursDto implements Overlapping<DiaryOpeningHoursDto> {
 	@Nullable
 	private Boolean secondOpinionVirtualAttentionAllowed;
 
+	@Nullable
+	private Boolean regulationProtectedAppointmentsAllowed;
+
 	@Override
     public boolean overlap(DiaryOpeningHoursDto other) {
         return !(this.medicalAttentionTypeId.equals(other.getMedicalAttentionTypeId())) &&

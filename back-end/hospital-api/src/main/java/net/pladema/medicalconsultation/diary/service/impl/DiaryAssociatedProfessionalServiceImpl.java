@@ -8,17 +8,19 @@ import net.pladema.medicalconsultation.diary.service.DiaryAssociatedProfessional
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class DiaryAssociatedProfessionalServiceImpl implements DiaryAssociatedProfessionalService {
 
 	private final DiaryAssociatedProfessionalRepository diaryAssociatedProfessionalsRepository;
 
 	@Override
+	@Transactional
 	public void updateDiaryAssociatedProfessionals(List<Integer> associatedProfessionalsId, Integer diaryId) {
 		List<DiaryAssociatedProfessional> diaryAssociatedProfessionals = diaryAssociatedProfessionalsRepository.getDiaryAssociatedProfessionalsByDiary(diaryId);
 		associatedProfessionalsId.forEach(associatedProfessionalId -> {

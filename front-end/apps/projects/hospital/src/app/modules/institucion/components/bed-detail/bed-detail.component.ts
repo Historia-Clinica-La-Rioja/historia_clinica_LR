@@ -1,12 +1,16 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { BedService } from '@api-rest/services/bed.service';
-import { BedInfoDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, BedInfoDto } from '@api-rest/api-model';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { NurseAssignComponent } from '@institucion/dialogs/nurse-assign/nurse-assign.component';
+import { BlockedAttentionPlaceDetails } from '@historia-clinica/modules/guardia/standalone/blocked-attention-place-details/blocked-attention-place-details.component';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { PatientNameService } from '@core/services/patient-name.service';
 
 @Component({
 	selector: 'app-bed-detail',
@@ -23,6 +27,8 @@ export class BedDetailComponent implements OnInit, OnChanges {
 	bedInfo: BedInfoDto;
 	patientHasAnamnesis = false;
 	patientInternmentId: number;
+	INTERNMENT_SECTOR_TYPE = 2;
+	blockedAttentionPlaceDetails: BlockedAttentionPlaceDetails;
 
 	constructor(
 		private readonly bedService: BedService,
@@ -31,6 +37,7 @@ export class BedDetailComponent implements OnInit, OnChanges {
 		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
+		private readonly patientNameService: PatientNameService,
 	) { }
 
 	ngOnInit(): void {
@@ -44,12 +51,14 @@ export class BedDetailComponent implements OnInit, OnChanges {
 			this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => {
 				this.bedInfo = bedInfo;
 				this.setPatientData();
+				if (this.bedInfo.bed.isBlocked)
+					this.blockedAttentionPlaceDetails = this.getBlockedAttentionPlaceDetails(bedInfo);
 			});
 		}
 	}
 
 	private setPatientData() {
-		if (this.bedInfo.patient)
+		if (this.bedInfo.patient) {
 			this.internmentPatientService.internmentEpisodeIdInProcess(this.bedInfo.patient.id).subscribe(internmentEpisode => {
 				if (internmentEpisode.inProgress) {
 					this.patientInternmentId = internmentEpisode.id
@@ -57,6 +66,12 @@ export class BedDetailComponent implements OnInit, OnChanges {
 						this.patientHasAnamnesis = !!internmentSummaryDto.documents?.anamnesis)
 				}
 			});
+			if (!this.bedInfo.patient.person)
+				this.bedInfo.patient.person  = {
+					firstName: 'Paciente temporal',
+					...this.bedInfo.patient.person
+				};
+		}
 	}
 
 	assignBed() {
@@ -89,5 +104,42 @@ export class BedDetailComponent implements OnInit, OnChanges {
 				);
 			}
 		})
+	}
+
+	openNurseAssign() {
+		this.dialog.open(NurseAssignComponent, {
+			data: {
+				bed: this.bedInfo
+			}
+		})
+		.afterClosed()
+		.subscribe((result: boolean) => {
+			if (result)
+				this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
+		});
+	}
+
+	deleteAssignedNurse() {
+		this.bedService.updateBedNurse(this.bedInfo.bed.id)
+		.subscribe({
+			next: (_) => {
+				this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
+				this.snackBarService.showSuccess('gestion-camas.detail.more-actions.DELETED_NURSE');
+			},
+			error: (err: ApiErrorMessageDto) => {
+				this.snackBarService.showError(err.text);
+			}
+		})
+	}
+
+	private getBlockedAttentionPlaceDetails(bedInfo: BedInfoDto): BlockedAttentionPlaceDetails {
+		const bedStatusInfo = bedInfo.status;
+		const { firstName, nameSelfDetermination, lastName } = bedStatusInfo.blockedBy;
+		return {
+			createdOn: dateTimeDtoToDate(bedStatusInfo.createdOn),
+			reason: bedStatusInfo.reasonEnumDescription,
+			observations: bedStatusInfo.reason,
+			createdBy: this.patientNameService.completeName(firstName, nameSelfDetermination, lastName)
+		}
 	}
 }

@@ -42,10 +42,11 @@ public class DiaryCareLineController {
 
 	@GetMapping("/practices")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
-	public ResponseEntity<List<CareLineDto>> getPossibleCareLinesForDiaryByPractices(@PathVariable(name = "institutionId") Integer institutionId,
-																					 @RequestParam(name = "practicesId") List<Integer> practicesId) {
-		log.debug("Input parameters -> institutionId {}, practicesId {} ", institutionId, practicesId);
-		List<CareLineBo> careLinesBo = diaryCareLineService.getPossibleCareLinesForDiaryByPractices(institutionId, practicesId);
+	public ResponseEntity<List<CareLineDto>> getPossibleCareLinesForDiaryByPracticesAndSpecialty(@PathVariable(name = "institutionId") Integer institutionId,
+																					 @RequestParam(name = "practicesId") List<Integer> practicesId,
+																					 @RequestParam(value="clinicalSpecialtyId" , required = false) Integer clinicalSpecialtyId) {
+		log.debug("Input parameters -> institutionId {}, practicesId {}, clinicalSpecialty {} ", institutionId, practicesId, clinicalSpecialtyId);
+		List<CareLineBo> careLinesBo = diaryCareLineService.getPossibleCareLinesForDiaryByPracticesAndSpecialty(institutionId, practicesId, clinicalSpecialtyId);
 		log.debug("Get all care lines  => {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}

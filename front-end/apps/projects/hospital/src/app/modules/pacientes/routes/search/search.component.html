@@ -46,6 +46,9 @@
 							<mat-error *ngIf="hasError(formSearch, 'maxlength', 'identificationNumber')">
 								<span [translate]="'pacientes.form.MAX_CHARACTER'"></span>
 							</mat-error>
+							<mat-error *ngIf="hasError(formSearch, 'pattern', 'identificationNumber')">
+								<span [translate]="'forms.FORMAT_WHITOUT_BLANK_SPACES'"></span>
+							</mat-error>
 						</mat-form-field>
 					</div>
 				</div>
@@ -153,13 +156,9 @@
 			<h2 class="mat-body-2">{{ 'pacientes.search.TITLE' | translate | patientToPerson}}</h2>
 			<h3 class="mat-body-2" [translate]="'Se encontraron posibles coincidencias.'"></h3>
 
-		<div *ngIf="!ffOfCardsIsOn else patientCard">
-			<app-table id="resultTable" [model]="matchingPatient"  *ngIf="matchingPatient?.data.length > 0 else noInfo"></app-table>
-		</div>
-
-		<ng-template #patientCard>
-			<app-card-patient [patientData]="patientData"  [genderTableView]="genders" [identificationTypes]="identificationTypes" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
-		</ng-template>
+			<div>
+				<app-card-patient [patientData]="patientData"  [genderTableView]="genderOptions" [identificationTypes]="identifyTypeArray" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
+			</div>
 
 			<div class="new-patient-button" fxLayoutAlign="end none" >
 				<button *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" mat-raised-button id="new_patient_button" color="primary" (click)="goToNewPatient()">

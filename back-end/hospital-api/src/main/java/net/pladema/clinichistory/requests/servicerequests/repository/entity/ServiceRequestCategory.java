@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "service_request_category")
 @Getter
@@ -19,7 +21,7 @@ import javax.persistence.Table;
 public class ServiceRequestCategory {
 
 	public static final String LABORATORY_PROCEDURE = "108252007";
-	public static final String PROCEDURE = "363679005";
+	public static final String DIAGNOSTIC_IMAGING = "363679005";
 	public static final String COUNSELLING = "409063005";
 	public static final String EDUCATION = "409073007";
 	public static final String SURGICAL_PROCEDURE = "387713003";
@@ -34,4 +36,7 @@ public class ServiceRequestCategory {
 	@Column(name = "orden")
 	private Short orden;
 
+	public boolean isDiagnosticImaging() {
+		return Objects.equals(this.id, DIAGNOSTIC_IMAGING);
+	}
 }

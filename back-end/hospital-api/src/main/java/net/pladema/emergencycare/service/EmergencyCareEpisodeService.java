@@ -5,13 +5,15 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface  EmergencyCareEpisodeService {
 
-    List<EmergencyCareBo> getAll(Integer institutionId);
+    EmergencyCareEpisodeInProgressBo getEmergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId);
 
-    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
+	EmergencyCareEpisodeInProgressBo getEmergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
 
 	EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId);
 
@@ -36,5 +38,17 @@ public interface  EmergencyCareEpisodeService {
 	boolean isBedOccupiedByEmergencyEpisode(Integer bedId);
 	
 	Boolean hasEvolutionNote(Integer episodeId);
+
+	Integer getEmergencyEpisodeEpisodeIdByDate(Integer institutionId, Integer patientId, LocalDateTime date);
+	
+	Optional<Integer> getRoomId(Integer emergencyCareEpisodeId);
+
+	Optional<Integer> getDoctorsOfficeId(Integer emergencyCareEpisodeId);
+
+	Optional<Integer> getShockRoomId(Integer emergencyCareEpisodeId);
+
+	Optional<LocalDateTime> getCreatedOn(Integer episodeId);
+
+	Boolean updatePatientDescription(Integer episodeId, String patientDescription);
 
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto, AppFeature, AnestheticReportSummaryDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -29,6 +29,8 @@ import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/mas
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { EmergencyCareStateChangedService } from '../../services/emergency-care-state-changed.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { EvolutionNoteDockPopupByNurseComponent } from '@historia-clinica/components/evolution-note-dock-popup-by-nurse/evolution-note-dock-popup-by-nurse.component';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -50,15 +52,23 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 	anamnesisDoc: AnamnesisSummaryDto;
 	epicrisisDoc: EpicrisisSummaryDto;
+	anestheticDoc: AnestheticReportSummaryDto;
 	lastEvolutionNoteDoc: EvaluationNoteSummaryDto;
 	hasMedicalDischarge: boolean;
 	hasInternmentEpisodeInThisInstitution = false;
 	hasMedicalRole = false;
+	hasAdministrativeRole = false;
+	hasRoleAbleToSeeTriage: boolean;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
+	documentAnestheticPartDraft: DocumentSearchDto;
+	enableReports = false
 
 	isEmergencyCareTemporaryPatient = false;
+	isAnestheticReportEnabledFF: boolean;
+	isAdministrativeAndHasTriageFFInFalse: boolean;
+
 	@Input() patientId: number;
 	@Input()
 	set internmentEpisodeProcess(episode: InternmentEpisodeProcessDto) {
@@ -111,7 +121,12 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly documentActions: DocumentActionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
-	) { }
+		private readonly featureFlagService: FeatureFlagService,
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
+			this.isAnestheticReportEnabledFF = isEnabled
+		);
+	}
 
 	ngOnInit(): void {
 
@@ -131,6 +146,16 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			if (medicalDischarge)
 				this.internmentSummaryFacadeService.updateInternmentEpisode();
 		});
+
+		this.internmentActions.dialogRef$.subscribe(dialogRef => this.popUpOpen.next(dialogRef));
+
+		this.checkAdministrativeFF();
+	}
+
+	private checkAdministrativeFF() {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
+			this.isAdministrativeAndHasTriageFFInFalse = this.hasRoleAbleToSeeTriage ? false : (!isEnabled && this.hasAdministrativeRole)
+		)
 	}
 
 	setInternmentInformation(internmentId: number) {
@@ -139,17 +164,23 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		const anamnesis$ = this.internmentSummaryFacadeService.anamnesis$;
 		const evolutionNote$ = this.internmentSummaryFacadeService.evolutionNote$;
 		const epicrisis$ = this.internmentSummaryFacadeService.epicrisis$;
+		const anestheticPart$ = this.internmentSummaryFacadeService.anestheticPart$;
 		const hasMedicalDischarge$ = this.internmentSummaryFacadeService.hasMedicalDischarge$;
 
-		combineLatest([anamnesis$, evolutionNote$, epicrisis$, hasMedicalDischarge$]).subscribe(
-			([anamnesis, evolutionNote, epicrisis, medicalDischarge]) => {
+		combineLatest([anamnesis$, evolutionNote$, epicrisis$, hasMedicalDischarge$, anestheticPart$]).subscribe(
+			([anamnesis, evolutionNote, epicrisis, medicalDischarge, anestheticPart]) => {
 				this.anamnesisDoc = anamnesis;
 				this.lastEvolutionNoteDoc = evolutionNote;
 				this.epicrisisDoc = epicrisis;
+				this.anestheticDoc = anestheticPart
 				this.hasMedicalDischarge = medicalDischarge;
+				this.hasInternmentActionsToDo = true;
+				this.enableReports = false;
 				this.hasToDoInternmentAction();
 				if (this.epicrisisDoc?.confirmed === false)
 					this.getEpicrisisDraft();
+				if (this.anestheticDoc?.confirmed === false)
+					this.getAnestheticPartDraft()
 			});
 	}
 
@@ -157,7 +188,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.currentUserIsAllowedToMakeBothConsultation = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
-			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
+			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
+			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
+			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+			this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
 		});
 	}
 
@@ -272,13 +306,73 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
 	}
 
+	openAnestheticReportDraft() {
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.documentActions.editAnestheticPartDraft(this.documentAnestheticPartDraft)
+			this.internmentActions.anestheticReport$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
+	}
+
+	openAnestheticReport() {
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.internmentActions.openAnestheticReport()
+			this.internmentActions.anestheticReport$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
+	}
+
+	openSurgicalReport() {
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.internmentActions.openSurgicalReport();
+			this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
+	}
+
 	newTriage() {
-		this.dialog.open(this.triageComponent, { data: this.episode.id })
+		this.dialog.open(this.triageComponent, { autoFocus: false, disableClose: true, data: this.episode.id })
+	}
+
+	openEvolutionNoteByNurse() {
+		if (!this.notaDeEvolucionDialogRef) {
+			this.notaDeEvolucionDialogRef = this.dockPopupService.open(EvolutionNoteDockPopupByNurseComponent, { patientId: this.patientId, episodeId: this.episode.id });
+			this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			this.notaDeEvolucionDialogRef.afterClosed().subscribe(_ => {
+				delete this.notaDeEvolucionDialogRef;
+				this.popUpOpen.next(this.notaDeEvolucionDialogRef);
+			})
+		} else {
+			if (this.notaDeEvolucionDialogRef.isMinimized())
+				this.notaDeEvolucionDialogRef.maximize();
+		}
 	}
 
 	private hasToDoInternmentAction() {
 		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
+			this.enableReports = true
 			return;
 		}
 		if (this.epicrisisDoc?.confirmed && !this.hasMedicalRole) {
@@ -286,6 +380,14 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			return;
 		}
 		if (!this.epicrisisDoc?.confirmed && !this.hasMedicalRole) {
+			this.hasInternmentActionsToDo = true;
+			return;
+		}
+		if (this.anestheticDoc?.confirmed && !this.hasMedicalRole) {
+			this.hasInternmentActionsToDo = false;
+			return;
+		}
+		if (!this.anestheticDoc?.confirmed && !this.hasMedicalRole) {
 			this.hasInternmentActionsToDo = true;
 			return;
 		}
@@ -320,4 +422,13 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.documentEpicrisisDraft = documentHistoric.documents.find(document => document.documentType === "Epicrisis" && !document.confirmed);
 		});
 	}
+
+	private getAnestheticPartDraft() {
+		this.internmentSummaryFacadeService.clinicalEvaluation$.subscribe((documentHistoric: DocumentHistoricDto) => {
+			if (documentHistoric?.documents?.length)
+				this.documentAnestheticPartDraft = documentHistoric.documents.find(document => document.documentType === "Parte anestésico" && !document.confirmed);
+		});
+	}
+
+
 }

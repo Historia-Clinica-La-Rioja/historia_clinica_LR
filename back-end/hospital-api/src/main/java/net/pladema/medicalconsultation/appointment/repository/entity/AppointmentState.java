@@ -33,6 +33,7 @@ public class AppointmentState implements Serializable {
     public static final String CANCELLED_STR = "4";
 	public static final String OUT_OF_DIARY_STR = "8";
 	public static final String BOOKED_STR = "6";
+	public static final String BLOCKED_STR = "7";
 
     @Id
     @Column(name = "id")

@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
 import java.util.List;
 
+import ar.lamansys.sgh.clinichistory.domain.GetCommercialStatementCommercialPrescriptionBo;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -51,5 +53,12 @@ public interface DocumentMedicamentionStatementRepository extends JpaRepository<
             "WHERE dm.pk.medicationStatementId = :mid ")
     DocumentMedicamentionStatement findByMedicationId(@Param("mid")  Integer mid);
 
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.GetCommercialStatementCommercialPrescriptionBo(mscp.medicationStatementId, mscp.presentationUnitQuantity, mscp.medicationPackQuantity) " +
+			"FROM DocumentMedicamentionStatement dm " +
+			"JOIN MedicationStatementCommercialPrescription mscp ON (mscp.id = dm.pk.medicationStatementId) " +
+			"WHERE dm.pk.documentId = :documentId")
+	List<GetCommercialStatementCommercialPrescriptionBo> fetchCommercialStatementCommercialPrescriptionByDocumentId(@Param("documentId") Long documentId);
 
 }

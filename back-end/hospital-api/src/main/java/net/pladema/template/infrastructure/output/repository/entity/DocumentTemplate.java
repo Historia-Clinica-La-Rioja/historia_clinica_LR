@@ -39,4 +39,7 @@ public class DocumentTemplate {
 
 	@Column(name = "file_id", nullable = false)
 	private Long fileId;
+
+	@Column(name = "deleted", nullable = false)
+	private Boolean deleted;
 }

@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import {
 	AllergyConditionDto,
-	AnthropometricDataDto,
 	DiagnosesGeneralStateDto,
 	HealthConditionDto,
 	HealthHistoryConditionDto,
 	ImmunizationDto,
+	InternmentAnthropometricDataDto,
 	Last2RiskFactorsDto,
 	MedicationDto
 } from '@api-rest/api-model';
@@ -76,8 +76,8 @@ export class InternmentStateService {
 		return this.http.get<ImmunizationDto[]>(url);
 	}
 
-	getLast2AnthropometricData(internmentId: number): Observable<AnthropometricDataDto[]> {
+	getLast2AnthropometricData(internmentId: number): Observable<InternmentAnthropometricDataDto[]> {
 		const url = this.URL_BASE + `${internmentId}/general/last-2-anthropometric-data`;
-		return this.http.get<AnthropometricDataDto[]>(url);
+		return this.http.get<InternmentAnthropometricDataDto[]>(url);
 	}
 }

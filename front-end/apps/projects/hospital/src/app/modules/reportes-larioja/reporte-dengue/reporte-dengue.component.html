@@ -1,0 +1,35 @@
+<app-content>
+
+    <h2 [translate]="'reportes.form.TITLE'"></h2>
+    <form [formGroup]="form">
+        <div id="report-type" fxLayout="column">
+            <div>
+                <mat-label [translate]="'reportes.form.REPORT_TYPE'"></mat-label>
+            </div>
+            <div fxLayout="row">
+                <mat-form-field fxFlex.gt-xs="50%" appearance="outline">
+                    <mat-select id="report-type-select-group"
+                                name="reportTypeSelectGroup"
+                                formControlName="reportType"
+                                placeholder="{{'pacientes.form.SELECT' | translate}}">
+                        <mat-option *ngFor="let reportType of REPORT_TYPES"
+                                    [value]="reportType.id">
+                            {{reportType.description}} 
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="submitted && hasError(form, 'required', 'reportType')">
+                        <span translate="forms.REQUIRED"></span>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <span class="text"> LOS REPORTES SE GENERAN EN EL LAPSO TRANSCURRIDO DESDE LAS 00:00H A LAS 23:59H DEL DÍA EN CURSO </span>
+            <span class="observation">Se recomienda una lectura exhaustiva de las observaciones presentes en cada uno de los reportes generados. Asimismo, se sugiere elaborar ambos reportes para realizar una adecuada comparación de la información.</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end" style="margin-top: 20px">
+            <button class="uppercase" mat-raised-button color="primary" (click)="generateDengueReport()">
+                <span [translate]="'reportes.form.SUBMIT'"></span>
+            </button>
+        </div>
+    </form>
+
+</app-content>

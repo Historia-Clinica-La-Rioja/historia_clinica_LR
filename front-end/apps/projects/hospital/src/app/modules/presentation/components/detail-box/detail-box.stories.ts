@@ -1,11 +1,18 @@
-import { type Meta, type StoryObj } from '@storybook/angular';
+import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 
 import { DetailBoxComponent } from './detail-box.component';
+import { DatePipe } from '@angular/common';
 
 const meta: Meta<DetailBoxComponent> = {
-	title: 'Example/DetailBoxComponent',
+	title: 'Presentation/DetailBoxComponent',
 	component: DetailBoxComponent,
 	tags: ['autodocs'],
+	decorators: [
+		moduleMetadata({
+			providers: [DatePipe]
+		}),
+	],
+
 };
 
 export default meta;
@@ -19,11 +26,11 @@ export const Full: Story = {
 			description: 'Input description ',
 			registeredValues: [
 				{
-					date: '13/12/2022',
+					date: '2022-12-13',
 					value: 2
 				},
 				{
-					date: '12/12/2022',
+					date: '2022-12-12',
 					value: 1
 				}
 			]
@@ -37,11 +44,11 @@ export const NullTitle: Story = {
 			description: null,
 			registeredValues: [
 				{
-					date: '13/12/2022',
+					date: '2022-12-13',
 					value: 2
 				},
 				{
-					date: '12/12/2022',
+					date: '2022-12-12',
 					value: 1
 				}
 			]
@@ -55,7 +62,7 @@ export const OneValue: Story = {
 			description: 'Input description ',
 			registeredValues: [
 				{
-					date: '13/12/2022',
+					date: '2022-12-13',
 					value: 2
 				},
 
@@ -71,11 +78,11 @@ export const TwoValues: Story = {
 			description: 'Input description ',
 			registeredValues: [
 				{
-					date: '13/12/2022',
+					date: '2022-12-13',
 					value: 2
 				},
 				{
-					date: '12/12/2022',
+					date: '2022-12-12',
 					value: 1
 				},
 
@@ -91,15 +98,15 @@ export const ThreeValues: Story = {
 			description: 'Input description ',
 			registeredValues: [
 				{
-					date: '13/12/2022',
+					date: '2022-12-13',
 					value: 3
 				},
 				{
-					date: '12/12/2022',
+					date: '2022-12-12',
 					value: 2
 				},
 				{
-					date: '11/12/2022',
+					date: '2022-12-11',
 					value: 1
 				},
 
@@ -114,11 +121,11 @@ export const RandomDateFormat: Story = {
 			description: 'Input description ',
 			registeredValues: [
 				{
-					date: '13/12/2022',
+					date: '2022-12-13',
 					value: 3
 				},
 				{
-					date: '2022-02-02',
+					date: '13/12/2022',
 					value: 2
 				},
 
@@ -132,10 +139,6 @@ export const NoDateInString: Story = {
 		detail: {
 			description: 'Input description ',
 			registeredValues: [
-				{
-					date: '13/12/2022',
-					value: 3
-				},
 				{
 					date: 'this is not a date',
 					value: 2

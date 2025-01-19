@@ -1,0 +1,23 @@
+<div fxLayoutAlign="end">
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<h2 mat-dialog-title class="capitalize-first-letter">{{ data.title | translate}}</h2>
+<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+	<span class="capitalize-first-letter">{{ data.subtitle | translate }}</span>
+	<form [formGroup]="form">
+		<mat-form-field appearance="outline">
+			<textarea id="motive" matInput type="text" formControlName="motive"
+				placeholder="{{ data.placeholder | translate }}"></textarea>
+			<mat-error *ngIf="form.hasError('required', 'motive')" [translate]="'forms.REQUIRED'"></mat-error>
+			<mat-error *ngIf="form.hasError('pattern', 'motive')" [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+	</form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button mat-raised-button color="primary" id="okButton-button"
+		(click)="confirm()">
+		{{ 'buttons.SAVE' | translate | uppercase}}
+	</button>
+</mat-dialog-actions>

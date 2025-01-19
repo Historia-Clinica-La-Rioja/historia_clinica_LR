@@ -1,0 +1,22 @@
+<div class="container">
+    <p class="title">{{title}}</p>
+
+    <div class="calendar-event info" *ngIf="calendarEventProperties.medicalAttentionType && showInformation">
+        <div fxLayout="row">
+            <mat-icon class="material-icons-outlined modality" *ngIf="calendarEventProperties.onSiteAttentionAllowed">meeting_room</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="calendarEventProperties.patientVirtualAttentionAllowed">video_call</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="calendarEventProperties.secondOpinionVirtualAttentionAllowed">switch_video</mat-icon>
+        </div>
+
+        <div fxLayout="row" class="text" [ngClass]="calendarEventProperties.overturnCount ? '' : 'grey'">
+            <mat-icon>more_time</mat-icon>
+            <p [translate]="calendarEventProperties.overturnCount | showAppointmentOverTurn"
+                [translateParams]="{overturnCount: calendarEventProperties.overturnCount}">
+            </p>
+        </div>
+        <div fxLayout="row" class="text" [ngClass]="calendarEventProperties.anyDetails ? '' : 'grey'">
+            <mat-icon class="material-icons-outlined">verified_user</mat-icon>
+            <p>{{ calendarEventProperties | showTimeSlotDetails }}</p>
+        </div>
+    </div>
+</div>

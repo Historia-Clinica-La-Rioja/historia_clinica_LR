@@ -12,4 +12,5 @@ import lombok.ToString;
 public class DetailsOrderImageDto {
 	private String observations;
 	private Boolean isReportRequired;
+	private Integer patientId;
 }

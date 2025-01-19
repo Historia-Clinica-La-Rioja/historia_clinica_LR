@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +32,8 @@ public class ObservationRiskFactor extends ClinicalObservation {
 	private String loincCode;
 
 	public ObservationRiskFactor(Integer patientId, String value, Integer snomedId,
-								 ERiskFactor eRiskFactor, LocalDateTime effectiveTime){
-		super(patientId, value, snomedId, RISK_FACTOR, effectiveTime);
+								 ERiskFactor eRiskFactor, LocalDateTime effectiveTime, String statusId){
+		super(patientId, value, snomedId, RISK_FACTOR, effectiveTime, statusId);
 		this.loincCode = eRiskFactor.getLoincCode();
 	}
 

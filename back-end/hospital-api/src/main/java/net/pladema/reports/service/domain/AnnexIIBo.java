@@ -1,6 +1,8 @@
 package net.pladema.reports.service.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +17,8 @@ public class AnnexIIBo {
 
     private String completePatientName;
 
+	private String formalPatientName;
+
     private String documentType;
 
     private String documentNumber;
@@ -28,6 +32,7 @@ public class AnnexIIBo {
     private LocalDate attentionDate;
 
     private String medicalCoverage;
+	private String medicalCoverageCuit;
 
     private String affiliateNumber;
 
@@ -37,7 +42,7 @@ public class AnnexIIBo {
 
     private String specialty;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDate;
 
     private String sisaCode;
 
@@ -49,9 +54,25 @@ public class AnnexIIBo {
 
 	private LocalDate medicalCoverageEndDate;
 
+	private List<AnnexIIProcedureBo> procedures;
+
+	private LocalDateTime proceduresIngressDate;
+
+	private LocalDateTime proceduresEgressDate;
+
+	private Float proceduresTotal;
+
+	private Boolean showProcedures;
+	private Integer missingProcedures;
+
+	private Short patientIdentityAccreditationStatusId;
+
+	private AnnexIIProfessionalBo professional;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
+		this.formalPatientName = annexIIOutpatientVo.getFormalPatientName();
         this.documentType = annexIIOutpatientVo.getDocumentType ();
         this.documentNumber = annexIIOutpatientVo.getDocumentNumber();
         this.patientGender = annexIIOutpatientVo.getPatientGender();
@@ -61,16 +82,18 @@ public class AnnexIIBo {
         this.existsConsultation = annexIIOutpatientVo.getExistsConsultation();
         this.hasProcedures = annexIIOutpatientVo.getHasProcedures();
         this.specialty = annexIIOutpatientVo.getSpecialty();
-        this.consultationDate = annexIIOutpatientVo.getConsultationDate();
+        this.consultationDate = annexIIOutpatientVo.getCreatedOn();
         this.problems = annexIIOutpatientVo.getProblems();
 
 		this.medicalCoverage = annexIIOutpatientVo.getMedicalCoverage();
+		this.medicalCoverageCuit = annexIIOutpatientVo.getMedicalCoverageCuit();
 		this.rnos = annexIIOutpatientVo.getRnos();
     }
 
     public AnnexIIBo(AnnexIIAppointmentVo annexIIAppointmentVo){
         this.establishment = annexIIAppointmentVo.getEstablishment();
         this.completePatientName = annexIIAppointmentVo.getCompletePatientName();
+		this.formalPatientName = annexIIAppointmentVo.getFormalPatientName();
         this.documentType = annexIIAppointmentVo.getDocumentType ();
         this.documentNumber = annexIIAppointmentVo.getDocumentNumber();
         this.patientGender = annexIIAppointmentVo.getPatientGender();
@@ -80,7 +103,9 @@ public class AnnexIIBo {
         this.attentionDate = annexIIAppointmentVo.getAttentionDate();
         this.appointmentState = annexIIAppointmentVo.getAppointmentState();
         this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
+        this.medicalCoverageCuit = annexIIAppointmentVo.getMedicalCoverageCuit();
 		this.rnos = annexIIAppointmentVo.getRnos();
+		this.patientIdentityAccreditationStatusId = annexIIAppointmentVo.getPatientIdentityAccreditationStatusId();
     }
 
 }

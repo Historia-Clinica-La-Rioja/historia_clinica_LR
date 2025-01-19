@@ -1,0 +1,16 @@
+<ng-container *ngIf="chartService.chart.chartType === 'pie' || chartService.chart.chartType === 'doughnut'">
+	<div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="chartService.grouping?.showGroupSmallData" class="toggle">
+		<mat-label>Agrupar datos</mat-label>
+		<mat-slide-toggle (change)="chartService.grouping.toggleGroupSmallData()"></mat-slide-toggle>
+	</div>
+</ng-container>
+<div class="chart-container">
+	<canvas baseChart
+		[type]="chartService.chart.chartType"
+		[datasets]="chartService.chartData"
+		[labels]="chartService.chartLabels"
+		[options]="chartService.chartOptions"
+	>
+	</canvas>
+
+</div>

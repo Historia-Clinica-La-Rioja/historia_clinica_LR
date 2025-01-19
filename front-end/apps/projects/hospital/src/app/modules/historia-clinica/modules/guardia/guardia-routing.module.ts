@@ -27,7 +27,7 @@ const routes: Routes = [{
 			component: NewEpisodeAdmissionComponent
 		},
 		{
-			path: 'episodio/:id/edit',
+			path: 'episodio/:id/:from/edit',
 			component: EditEmergencyCareEpisodeComponent
 		},
 		{
@@ -55,7 +55,7 @@ const routes: Routes = [{
 	canActivate: [RoleGuard, FeatureFlagGuard],
 	data: {
 		allowedRoles: [ERole.ADMINISTRADOR, ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ESPECIALISTA_MEDICO,
-			ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ADMINISTRATIVO_RED_DE_IMAGENES],
+			ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ESPECIALISTA_EN_ODONTOLOGIA],
 		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
 	}
 }];

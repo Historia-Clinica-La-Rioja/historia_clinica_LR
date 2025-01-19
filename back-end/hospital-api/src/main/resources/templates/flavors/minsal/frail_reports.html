@@ -12,6 +12,14 @@
            padding: 10px;
            font-family: Tahoma, Verdana, sans-serif;
         }
+
+        h5 {
+           font-weight: bold;
+           font-size: 15px;
+           margin: 15px 0px;
+           border-top: 1px solid black;
+        }
+
         h4 {
            margin: 15px 0px;
            color: #2687c5;
@@ -31,12 +39,31 @@
            margin: 2px 0px;
         }
 
+        span {
+           font-weight: normal;
+        }
+
+        .bold-text {
+           font-weight: bold;
+        }
 
     </style>
 </head>
 <body th:fragment="frail">
     <div class="container">
-        <h3>Prueba de Frail (fragilidad) - Resultados de informe</h3>
+        <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
+        <p>Institución: <span th:text="${institutionName}"></span></p>
+        <hr></hr>
+        <h5>Datos del paciente</h5>
+        <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
+        <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
+        <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
+        <hr></hr>
+        <h5>Datos del profesional</h5>
+        <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
+        <p>M.P.: <span th:text="${professional.licenseNumber}"></span></p>
+
+        <h3>Escala de Frail (fragilidad) - Informe de resultados</h3>
 
         <hr></hr>
 
@@ -95,18 +122,29 @@
             </label><br></br>
         </div>
 
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <p style="text-align:right;">1/2</p>
+
         <hr></hr>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
             <h4>Comorbilidad</h4>
-            <p>¿Alguna vez un médico le dijo que usted tiene: hipertensión, diabetes, cáncer (que no sea un cáncer de piel de menor importancia), enfermedad pulmonar crónica, ataque cardíaco, insuficiencia cardíaca congestiva, angina de pecho, asma, artritis, ictus y enfermedad renal? (cant. menor a 5 = 'No', cant. mayor o igual 5 = 'Sí')</p>
+            <p>¿Cuántas de las siguientes patologías le ha indicado un médico que usted tiene: hipertensión, diabetes, cáncer (que no sea un cáncer de piel de menor importancia), enfermedad pulmonar crónica, ataque cardíaco, insuficiencia cardíaca congestiva, angina de pecho, asma, artritis, ictus y enfermedad renal?</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt10" th:checked="${respuesta.answerId == 20}"></input>
-                Sí
+                Tiene 5 o más patologías
             </label><br></br>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt11" th:checked="${respuesta.answerId == 19}"></input>
-                No
+                Tiene menos de 5 patologías
             </label><br></br>
         </div>
 
@@ -128,17 +166,24 @@
         <hr></hr>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
-            <h4>Interpretación de puntaje</h4>
-            <p>La sumatoria da como resultado</p>
-            <label>
+            <h4>Resultado de evaluación</h4>
+            <p>
+                <span class="bold-text">El puntaje final de la prueba es: </span>
+                <span style="font-weight: normal;" th:text="${respuesta.value + ' puntos'}">[PUNTUACIÓN]</span>
+            </p>
+            <p>Que se interpreta como:</p>
+            <label th:class="${respuesta.answerId == 49} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt14" th:checked="${respuesta.answerId == 49}"></input>
-                0 a 2 - persona pre-frágil
+                0 - 2: persona pre-frágil
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 50} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt15" th:checked="${respuesta.answerId == 50}"></input>
-                3 a 5 - persona frágil
+                3 - 5: persona frágil
             </label><br></br>
         </div>
+        <br></br>
+
+        <p style="text-align:right;">2/2</p>
 
     </div>
     <!-- Bootstrap's script -->

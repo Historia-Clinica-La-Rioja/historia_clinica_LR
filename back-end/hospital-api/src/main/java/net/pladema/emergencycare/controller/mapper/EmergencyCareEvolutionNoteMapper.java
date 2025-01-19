@@ -1,5 +1,8 @@
 package net.pladema.emergencycare.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.isolationalert.mapper.IsolationAlertMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDocumentDto;
@@ -14,13 +17,13 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, HealthcareProfessionalMapper.class, SnomedMapper.class})
+@Mapper(uses = {LocalDateMapper.class, HealthcareProfessionalMapper.class, SnomedMapper.class, IsolationAlertMapper.class})
 public interface EmergencyCareEvolutionNoteMapper {
 
 	@Named("fromEmergencyCareEvolutionNoteDto")
 	EmergencyCareEvolutionNoteDocumentBo fromEmergencyCareEvolutionNoteDto(EmergencyCareEvolutionNoteDto emergencyCareEvolutionNote);
 
-	@Named("toEmergencyCareEvolutionNoteDto")
+	@Named("toEmergencyCareEvolutionNoteDocumentDto")
 	@Mapping(target = "documentId", source = "id")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.mainDiagnosis", source = "mainDiagnosis")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.diagnosis", source = "diagnosis")
@@ -32,10 +35,20 @@ public interface EmergencyCareEvolutionNoteMapper {
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.allergies", source = "allergies")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.procedures", source = "procedures")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.evolutionNote", source = "evolutionNote")
+	@Mapping(target = "professional", source = "professional", qualifiedByName = "fromHealthcareProfessionalBo")
+	@Mapping(target = "editor", source = "editor", qualifiedByName = "fromHealthcareProfessionalBo")
+	@Mapping(target = "type", source = "type")
+	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.isolationAlerts", source = "isolationAlerts")
 	EmergencyCareEvolutionNoteDocumentDto toEmergencyCareEvolutionNoteDocumentDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNote);
 
-	@Named("toEmergencyCareEvolutionNoteListDto")
-	@IterableMapping(qualifiedByName = "toEmergencyCareEvolutionNoteDto")
+	@Named("toEmergencyCareEvolutionNoteDocumentListDto")
+	@IterableMapping(qualifiedByName = "toEmergencyCareEvolutionNoteDocumentDto")
 	List<EmergencyCareEvolutionNoteDocumentDto> toEmergencyCareEvolutionNoteDocumentListDto(List<EmergencyCareEvolutionNoteDocumentBo> emergencyCareEvolutionNotes);
+
+	@Named("toEmergencyCareEvolutionNoteDto")
+	EmergencyCareEvolutionNoteDto toEmergencyCareEvolutionNoteDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocumentBo);
+
+	@Mapping(target = "isAdded", expression = "java(true)")
+	DiagnosisDto diagnosisBoToDiagnosisDto(DiagnosisBo diagnosisBo);
 
 }

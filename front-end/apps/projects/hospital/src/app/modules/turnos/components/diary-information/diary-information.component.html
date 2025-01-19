@@ -1,0 +1,48 @@
+<div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
+	<div fxLayout="column" fxLayoutGap="10px">
+
+		<div fxLayout="row" fxLayoutGap="10px">
+			<app-identifier-cases [identifierCase]="identiferCases.ROOM" showLegend="true"
+				[description]="diaryDto?.doctorsOfficeDescription">
+			</app-identifier-cases>
+
+			<app-identifier-cases [identifierCase]="identiferCases.SECTOR" showLegend="true"
+				[description]="diaryDto?.sectorDescription">
+			</app-identifier-cases>
+
+		</div>
+
+		<div fxLayout="row" fxLayoutGap="10px">
+			<div id="care_lines" *ngIf="diaryDto?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center"
+				fxLayoutGap="5px">
+				<app-identifier-cases [identifierCase]="identiferCases.CARE_LINE" showLegend="true"
+					[description]="careLinesToShow">
+				</app-identifier-cases>
+			</div>
+
+			<div id="hierarchical_unit" *ngIf="diaryDto?.hierarchicalUnitAlias" fxLayout="row"
+				fxLayoutAlign="start center" fxLayoutGap="5px">
+				<app-identifier-cases [identifierCase]="identiferCases.HIERARCHICAL_UNIT" showLegend="true"
+					[description]="diaryDto.hierarchicalUnitAlias">
+				</app-identifier-cases>
+			</div>
+		</div>
+
+		<ng-container *ngIf="diaryDto?.practicesInfo.length">
+			<app-identifier-cases [identifierCase]="identiferCases.PRACTICE" showLegend="true"
+				[description]="practices | practiceList">
+			</app-identifier-cases>
+		</ng-container>
+	</div>
+
+	<div id="professionals" fxLayout="row" fxLayoutGap="5px" *ngIf="diaryDto?.associatedProfessionalsInfo.length">
+		<app-identifier-cases [identifierCase]="identiferCases.PROFESSIONAL" showLegend="true"
+			[description]="associatedProfessionalsToShow">
+		</app-identifier-cases>
+	</div>
+
+	<div fxLayout="row" fxLayoutGap="10px" *ngIf="enableConfigurationDescription">
+		<app-colored-icon-text [coloredIconText]="{icon: 'event', color: 'grey', text: ConfigurationDescription }"></app-colored-icon-text>
+	</div>
+
+</div>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DateTimeDto, DocumentSearchDto, LoggedUserDto, PatientDischargeDto } from "@api-rest/api-model";
+import { DocumentSearchDto, LoggedUserDto, PatientDischargeDto } from "@api-rest/api-model";
 import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
-import { dateTimeDtoToDate, dateTimeDtoToStringDate, dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
+import { dateTimeDtoToDate, dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
 import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
 import { EditDocumentActionService } from './edit-document-action.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
@@ -17,13 +17,14 @@ export class DocumentActionsService {
 	userId: number;
 	hasMedicalDischarge = false;
 	hasPhysicalDischarge = false;
+    hasAdministrativeDischarge = false;
 
 	constructor(
 		private readonly accountService: AccountService,
 		private readonly deleteDocumentAction: DeleteDocumentActionService,
 		private readonly editDocumentAction: EditDocumentActionService,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
-		readonly internmentActions: InternmentActionsService
+		readonly internmentActions: InternmentActionsService,
 	) {
 		this.internmentActions.medicalDischarge$.subscribe(medicalDischarge => {
 			if (medicalDischarge)
@@ -37,6 +38,7 @@ export class DocumentActionsService {
 			.subscribe((patientDischarge: PatientDischargeDto) => {
 				this.hasMedicalDischarge = !!patientDischarge.medicalDischargeDate;
 				this.hasPhysicalDischarge = !!patientDischarge.physicalDischargeDate;
+                this.hasAdministrativeDischarge = !!patientDischarge.administrativeDischargeDate;
 			});
 		this.editDocumentAction.setInformation(patientId, internmentEpisodeId);
 	}
@@ -45,7 +47,8 @@ export class DocumentActionsService {
 		this.patientDocument = {
 			hasAnamnesis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Anamnesis"),
 			evolutionNotes: documents.filter((document: DocumentSearchDto) => document.documentType === "Nota de evolución" || document.documentType === "Nota de evolución de enfermería"),
-			hasEpicrisis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Epicrisis")
+			hasEpicrisis: !!documents.find((document: DocumentSearchDto) => document.documentType === "Epicrisis"),
+			hasAnestheticPart: !!documents.find((document: DocumentSearchDto) => document.documentType === "Parte anestésico"),
 		}
 	}
 
@@ -55,6 +58,11 @@ export class DocumentActionsService {
 		const createdOn = dateTimeDtotoLocalDate(document.createdOn);
 		if (differenceInHours(new Date(), (new Date(createdOn))) > 24)
 			return false;
+        if(document.documentType === "Parte anestésico" || document.documentType === "Parte quirúrgico de internación" ) {
+            if(this.hasMedicalDischarge && !this.hasAdministrativeDischarge){
+                return true;
+            }
+        }
 		if (this.hasMedicalDischarge)
 			return false;
 		return true;
@@ -84,16 +92,6 @@ export class DocumentActionsService {
 		return true;
 	}
 
-	loadTime(creteadOn: DateTimeDto): string {
-		const date = new Date(dateTimeDtoToStringDate(creteadOn));
-		let minutes: number | string = date.getMinutes();
-		if (minutes < 10) {
-			minutes = minutes.toString();
-			minutes = `0${minutes}`;
-		}
-		return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${minutes}hs`;
-	}
-
 	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number): Observable<InternmentFields> {
 		this.deleteDocumentAction.delete(document, internmentEpisodeId);
 		return this.deleteDocumentAction.updateFields$;
@@ -107,13 +105,14 @@ export class DocumentActionsService {
 		this.editDocumentAction.editDraftEpicrisis(document, this.isCreatorDocumnt(document));
 	}
 
+	editAnestheticPartDraft(document: DocumentSearchDto) {
+		this.editDocumentAction.editDraftAnesthetic(document, this.isCreatorDocumnt(document));
+	}
 }
 
 export interface DocumentSearch {
 	document: DocumentSearchDto;
 	canDoAction?: DocumentAction;
-	createdOn: string;
-	editedOn?: string;
 }
 
 interface DocumentAction {
@@ -125,4 +124,5 @@ interface PatientDocument {
 	hasAnamnesis: boolean;
 	evolutionNotes: DocumentSearchDto[];
 	hasEpicrisis: boolean;
+	hasAnestheticPart: boolean;
 }

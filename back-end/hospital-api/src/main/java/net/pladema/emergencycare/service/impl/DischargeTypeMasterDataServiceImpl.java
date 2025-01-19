@@ -1,6 +1,7 @@
 package net.pladema.emergencycare.service.impl;
 
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
+import net.pladema.clinichistory.hospitalization.repository.domain.enums.EDischargeType;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
 import net.pladema.emergencycare.service.DischargeTypeMasterDataService;
 import net.pladema.emergencycare.service.domain.DischargeTypeBo;
@@ -31,10 +32,18 @@ public class DischargeTypeMasterDataServiceImpl implements DischargeTypeMasterDa
     @Override
     public List<DischargeTypeBo> getAllEmergencyCareDischargeTypes() {
         LOG.debug("No input parameters");
-        return mapToDischargeTypeBos(dischargeTypeRepository.getAllEmergencyCareTypes());
+        return EDischargeType.getAllDoctorEmergencyCareDischargeTypes().stream()
+				.map(DischargeTypeBo::new).collect(Collectors.toList());
     }
 
-    private List<DischargeTypeBo> mapToDischargeTypeBos(List<DischargeType> data) {
+	@Override
+	public List<DischargeTypeBo> getAllNursingEmergencyCareDischargeTypes() {
+		LOG.debug("No input parameters");
+		return EDischargeType.getAllNurseEmergencyCareDischargeTypes().stream()
+				.map(DischargeTypeBo::new).collect(Collectors.toList());
+	}
+
+	private List<DischargeTypeBo> mapToDischargeTypeBos(List<DischargeType> data) {
         List<DischargeTypeBo> result = data
                 .stream()
                 .map(DischargeTypeBo::new)

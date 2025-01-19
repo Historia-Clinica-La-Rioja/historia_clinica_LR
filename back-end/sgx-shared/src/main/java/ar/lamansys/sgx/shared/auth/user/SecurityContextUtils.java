@@ -27,7 +27,7 @@ public class SecurityContextUtils {
 		var userDetails = getUserDetails();
 		log.warn(
 				// Envia un WARN al log con la información recolectada
-				"Security warning. User [{}] {}: {}",
+				"Security warning. User id={} ({}): {}",
 				userDetails.userId,
 				userDetails.getUsername(),
 				message

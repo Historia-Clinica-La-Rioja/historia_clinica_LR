@@ -1,9 +1,11 @@
 package net.pladema.medicalconsultation.diary.controller.mapper;
 
-import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import net.pladema.medicalconsultation.diary.domain.UpdateDiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableAppointmentsBo;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryAvailableProtectedAppointmentsDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryAvailableAppointmentsDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OccupationDto;
@@ -20,7 +22,7 @@ import org.mapstruct.Named;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, DiaryOpeningHoursMapper.class})
+@Mapper(uses = {LocalDateMapper.class, DiaryOpeningHoursMapper.class, SnomedMapper.class})
 public interface DiaryMapper {
 
     @Named("toOccupationDto")
@@ -32,7 +34,14 @@ public interface DiaryMapper {
 
     @Named("toDiaryBo")
     @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours")
+	@Mapping(target = "diaryLabelBo", source = "diaryLabelDto")
     DiaryBo toDiaryBo(DiaryADto diaryADto);
+
+    @Named("toUpdateDiaryBo")
+    @Mapping(target = "updateDiaryOpeningHours", source = "diaryOpeningHours")
+    @Mapping(target = "diaryOpeningHours", ignore = true)
+    @Mapping(target = "diaryLabelBo", source = "diaryLabelDto")
+    UpdateDiaryBo toUpdateDiaryBo(DiaryADto diaryADto);
 
     @Named("toDiaryListDto")
     DiaryListDto toDiaryListDto(DiaryBo diaryBo);
@@ -48,7 +57,10 @@ public interface DiaryMapper {
     @Mapping(target = "diaryOpeningHours", source = "diaryOpeningHours")
     CompleteDiaryDto toCompleteDiaryDto(CompleteDiaryBo completeDiaryBo);
 
-	@Named("toDiaryAvailableProtectedAppointmentsDto")
-	DiaryAvailableProtectedAppointmentsDto toDiaryAvailableProtectedAppointmentsDto(DiaryAvailableProtectedAppointmentsBo diaryAvailableProtectedAppointmentsBo);
+	@Named("toDiaryAvailableAppointmentsDto")
+	DiaryAvailableAppointmentsDto toDiaryAvailableAppointmentsDto(DiaryAvailableAppointmentsBo diaryAvailableAppointmentsBo);
+
+	@Named("toListDiaryAvailableAppointmentsDto")
+	List<DiaryAvailableAppointmentsDto> toListDiaryAvailableAppointmentsDto(List<DiaryAvailableAppointmentsBo> diaryAvailableAppointmentsBoList);
 
 }

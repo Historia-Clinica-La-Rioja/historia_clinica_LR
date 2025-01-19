@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentExceptionEnum;
 import net.pladema.emergencycare.service.CreateEmergencyCareEvolutionNoteDocumentService;
+import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
 
 import org.slf4j.Logger;
@@ -32,12 +33,15 @@ public class CreateEmergencyCareEvolutionNoteDocumentServiceImpl implements Crea
 
 	private final UpdateEmergencyCareEvolutionNoteService updateEmergencyCareEvolutionNoteService;
 
+	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
+
 	@Override
 	public EmergencyCareEvolutionNoteDocumentBo execute(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocument, Integer emergencyCareEvolutionNoteId) {
 		LOG.debug("Input parameters -> emergencyCareEvolutionNoteDocument {}", emergencyCareEvolutionNoteDocument);
 		assertContextValid(emergencyCareEvolutionNoteDocument);
-		LocalDateTime now = dateTimeProvider.nowDateTime();
-		emergencyCareEvolutionNoteDocument.setPerformedDate(now);
+		LocalDateTime performedDate =  emergencyCareEpisodeService.getCreatedOn(emergencyCareEvolutionNoteDocument.getEncounterId())
+				.orElse(dateTimeProvider.nowDateTime());
+		emergencyCareEvolutionNoteDocument.setPerformedDate(performedDate);
 		emergencyCareEvolutionNoteDocument.setId(documentFactory.run(emergencyCareEvolutionNoteDocument, true));
 		updateEmergencyCareEvolutionNoteService.updateDocumentId(emergencyCareEvolutionNoteId, emergencyCareEvolutionNoteDocument.getId());
 		LOG.debug(OUTPUT, emergencyCareEvolutionNoteDocument);
@@ -57,10 +61,10 @@ public class CreateEmergencyCareEvolutionNoteDocumentServiceImpl implements Crea
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getProblems()))
 			repeatedErrors.addError("Problemas médicos repetidos");
 
-		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getFamilyHistories()))
+		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getFamilyHistories().getContent()))
 			repeatedErrors.addError("Antecedentes familiares repetidos");
 
-		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getAllergies()))
+		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getAllergies().getContent()))
 			repeatedErrors.addError("Alergias repetidas");
 
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getProcedures()))

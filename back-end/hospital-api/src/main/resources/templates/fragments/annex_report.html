@@ -182,174 +182,468 @@
             text-transform: uppercase;
         }
 
+        .atomic-block {
+            page-break-inside: avoid;
+        }
+
+        /* Procedure lines */
+        .table-section table,
+        .table-section td,
+        .table-section th {
+            border: 1px solid black;
+        }
+
+        .table-section td,
+        .table-section th {
+            padding: 1em;
+        }
+
+        /* Report title */
+        #report-title {
+            text-align: center;
+            font-size: 30px;
+            padding: 0.2em;
+        }
+
+
     </style>
 </head>
 
-<body th:fragment="data">
+<body th:fragment="data-pba">
 
-    <div class="table">
-        <div>
-            <div class="title">
-                COMPROBANTE DE ATENCIÓN DE BENEFICIARIOS DE AGENTES<br></br>
-                DEL SEGURO DE SALUD
+<div class="table">
+    <div>
+        <div class="title">
+            COMPROBANTE DE ATENCIÓN DE BENEFICIARIOS DE AGENTES<br></br>
+            DEL SEGURO DE SALUD
+        </div>
+        <div class="date">
+            <div class="border-bottom">FECHA</div>
+            <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
+            <label th:unless="${consultationDate != null}" th:text="${attentionDate}"></label>
+        </div>
+    </div>
+    <div>
+        <div class="designation">
+            <div class="border-bottom">Denominación HPdGD</div>
+            <div>&nbsp;</div>
+            <div th:text="${establishment}"></div>
+        </div>
+        <div class="code-hpdgd">
+            <div class="border-bottom">Código HPdGD-REFES</div>
+            <div>&nbsp;</div>
+            <div th:text="${sisaCode}"></div>
+        </div>
+    </div>
+    <div>
+        <div class="beneficiary-data">
+            <div>Datos del Beneficiario</div>
+        </div>
+    </div>
+    <div>
+        <div class="complete-name">
+            <div class="border-bottom">APELLIDOS Y NOMBRES</div>
+            <div th:text="${formalPatientName}"></div>
+        </div>
+        <div class="doc-type">
+            <div class="border-bottom">Tipo doc</div>
+            <div th:text="${documentType}"></div>
+        </div>
+        <div class="doc-number">
+            <div class="border-bottom">N° Documento</div>
+            <div th:text="${documentNumber}"></div>
+        </div>
+    </div>
+    <div>
+        <div class="beneficiary-type">Tipo de Beneficiario</div>
+        <div class="relationship-type">Parentesco</div>
+        <div class="gender">Sexo</div>
+        <div class="age">Edad</div>
+    </div>
+    <div>
+        <div class="beneficiary-type">
+            <div>
+                <div>Titular</div>
+                <div>Familiar</div>
+                <div>Adherente</div>
+                <div>Otro</div>
             </div>
-            <div class="date">
-                <div class="border-bottom">FECHA</div>
-                <!--<div th:text="${reportDate}"></div>-->
+        </div>
+        <div class="relationship-type">
+            <div>
+                <div>Cónyugue</div>
+                <div>Hijo</div>
+                <div>Otro</div>
+            </div>
+        </div>
+        <div class="gender" th:text="${patientGender}"></div>
+        <div class="age" th:text="${patientAge}"></div>
+    </div>
+    <div>
+        <div class="beneficiary-data">&nbsp;</div>
+    </div>
+    <div>
+        <div class="attention-type">TIPO DE ATENCION</div>
+        <div class="date">
+            <div class="border-bottom">Fecha de Prestación</div>
+            <div>
                 <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
-                <label th:unless="${consultationDate != null}" th:text="${attentionDate}"></label>
-            </div>
-        </div>
-        <div>
-            <!--<div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>-->
-            <div class="designation">Denominación HPdGD</div>
-            <div class="code-hpdgd">
-                <div class="border-bottom">Código HPdGD-REFES</div>
-                <div>&nbsp;</div>
-                <div th:text="${sisaCode}"></div>
-            </div>
-        </div>
-        <div>
-            <div class="beneficiary-data">
-                <div>Datos del Beneficiario</div>
-            </div>
-        </div>
-        <div>
-            <div class="complete-name">
-                <div class="border-bottom">APELLIDOS Y NOMBRES</div>
-                <div th:text="${completePatientName}"></div>
-            </div>
-            <div class="doc-type">
-                <div class="border-bottom">Tipo doc</div>
-                <div th:text="${documentType}"></div>
-            </div>
-            <div class="doc-number">
-                <div class="border-bottom">N° Documento</div>
-                <div th:text="${documentNumber}"></div>
-            </div>
-        </div>
-        <div>
-            <div class="beneficiary-type">Tipo de Beneficiario</div>
-            <div class="relationship-type">Parentesco</div>
-            <div class="gender">Sexo</div>
-            <div class="age">Edad</div>
-        </div>
-        <div>
-            <div class="beneficiary-type">
-                <div>
-                    <div>Titular</div>
-                    <div>Familiar</div>
-                    <div>Adherente</div>
-                    <div>Otro</div>
-                </div>
-            </div>
-            <div class="relationship-type">
-                <div>
-                    <div>Cónyugue</div>
-                    <div>Hijo</div>
-                    <div>Otro</div>
-                </div>
-            </div>
-            <div class="gender" th:text="${patientGender}"></div>
-            <div class="age" th:text="${patientAge}"></div>
-        </div>
-        <div>
-            <div class="beneficiary-data">&nbsp;</div>
-        </div>
-        <div>
-            <div class="attention-type">TIPO DE ATENCION</div>
-            <div class="date">
-                <div class="border-bottom">Fecha de Prestación</div>
-                <div>
-                    <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
-                    <label th:unless="${consultationDate != null}" th:text="${attentionDate}">&nbsp;</label>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div class="consultation">CONSULTA</div>
-            <div class="cell">
-                <label th:if="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">X</label>
-                <label th:unless="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">&nbsp;</label>
-            </div>
-            <div class="specialty">
-                <div class="border-bottom">ESPECIALIDAD</div>
-                <label th:if="${specialty != null}" th:text="${specialty}"></label>
-                <label th:unless="${specialty != null}" >&nbsp;</label>
-            </div>
-            <div class="diagnosis">
-                <div class="border-bottom">DIAGNÓSTICOS</div>
-                <div th:if="${problems != null}">
-                    <div th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:3px'}" >
-                        <div class="problem" th:text="${problem}"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div class="practice">PRÁCTICA</div>
-            <div class="cell">
-                <label th:if="${hasProcedures}">X</label>
-                <label th:unless="${hasProcedures}">&nbsp;</label>
-            </div>
-            <div class="code-nhpgd">Códigos NHPdGD:</div>
-        </div>
-        <div>
-            <div class="internment">INTERNACIÓN</div>
-            <div style="width: 23px;">&nbsp;</div>
-            <div class="diagnostics">Diagnóstico de egreso <br></br>CIE10</div>
-            <div class="principal-code">CÓDIGO PRINCIPAL:</div>
-            <div class="other-codes">OTROS CÓDIGOS:</div>
-        </div>
-        <div>
-            <div class="nhpdgd-data">
-                NHPdGD: Nomenclador Hospitales Públicos de Gestión Descentralizada - CIE 10: Clasificación Internacional de Enfermedades
-            </div>
-        </div>
-        <div>
-            <div class="signature-section">
-                <div>Firma del Médico y sello con N° de matrícula</div>
-            </div>
-            <div class="receipt">
-                <div>Último recibo de sueldo</div>
-            </div>
-            <div class="month">
-                <div class="border-bottom">MES</div>
-            </div>
-            <div class="year">
-                <div class="border-bottom">AÑO</div>
-            </div>
-        </div>
-        <div>
-            <div class="medical-coverage-title">
-                NOMBRE DEL AGENTE DEL SEGURO DE SALUD
-            </div>
-            <div class="rnos-title">
-                <div>RNOS</div>
-            </div>
-        </div>
-        <div>
-            <div class="medical-coverage">
-                <label th:if="${medicalCoverage != null}" th:text="${medicalCoverage}"></label>
-                <label th:unless="${medicalCoverage != null}">&nbsp;</label>
-            </div>
-            <div class="rnos">
-                <label th:if="${rnos != null}" th:text="${rnos}"></label>
-                <label th:unless="${rnos != null}">&nbsp;</label>
-            </div>
-        </div>
-        <div>
-            <div class="administrative-signature">
-                <div class="border-bottom">Firma del Responsable Administrativo/Contable</div>
-            </div>
-            <div class="signature-clarification">
-                <div class="border-bottom">Aclaración Firma</div>
-            </div>
-            <div class="beneficiaries-signature">
-                <div class="border-bottom">Firma del Beneficiario</div>
+                <label th:unless="${consultationDate != null}" th:text="${attentionDate}">&nbsp;</label>
             </div>
         </div>
     </div>
+    <div>
+        <div class="consultation">CONSULTA</div>
+        <div class="cell">
+            <label th:if="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">X</label>
+            <label th:unless="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">&nbsp;</label>
+        </div>
+        <div class="specialty">
+            <div class="border-bottom">ESPECIALIDAD</div>
+            <label th:if="${specialty != null}" th:text="${specialty}"></label>
+            <label th:unless="${specialty != null}" >&nbsp;</label>
+        </div>
+        <div class="diagnosis">
+            <div class="border-bottom">DIAGNÓSTICOS</div>
+            <div th:if="${problems != null}">
+                <div th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:3px'}" >
+                    <div class="problem" th:text="${problem}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="practice">PRÁCTICA</div>
+        <div class="cell">
+            <label th:if="${hasProcedures}">X</label>
+            <label th:unless="${hasProcedures}">&nbsp;</label>
+        </div>
+        <div class="code-nhpgd">Códigos NHPdGD:</div>
+    </div>
+    <div>
+        <div class="internment">INTERNACIÓN</div>
+        <div style="width: 23px;">&nbsp;</div>
+        <div class="diagnostics">Diagnóstico de egreso <br></br>CIE10</div>
+        <div class="principal-code">CÓDIGO PRINCIPAL:</div>
+        <div class="other-codes">OTROS CÓDIGOS:</div>
+    </div>
+    <div>
+        <div class="nhpdgd-data">
+            NHPdGD: Nomenclador Hospitales Públicos de Gestión Descentralizada - CIE 10: Clasificación Internacional de Enfermedades
+        </div>
+    </div>
+    <div>
+        <div class="signature-section">
+            <div>Firma del Médico y sello con N° de matrícula</div>
+        </div>
+        <div class="receipt">
+            <div>Último recibo de sueldo</div>
+        </div>
+        <div class="month">
+            <div class="border-bottom">MES</div>
+        </div>
+        <div class="year">
+            <div class="border-bottom">AÑO</div>
+        </div>
+    </div>
+    <div>
+        <div class="medical-coverage-title">
+            NOMBRE DEL AGENTE DEL SEGURO DE SALUD
+        </div>
+        <div class="rnos-title">
+            <div>RNOS</div>
+        </div>
+    </div>
+    <div>
+        <div class="medical-coverage">
+            <label th:if="${medicalCoverage != null}" th:text="${medicalCoverage}"></label>
+            <label th:unless="${medicalCoverage != null}">&nbsp;</label>
+        </div>
+        <div class="rnos">
+            <label th:if="${rnos != null}" th:text="${rnos}"></label>
+            <label th:unless="${rnos != null}">&nbsp;</label>
+        </div>
+    </div>
+    <div>
+        <div class="administrative-signature">
+            <div class="border-bottom">Firma del Responsable Administrativo/Contable</div>
+        </div>
+        <div class="signature-clarification">
+            <div class="border-bottom">Aclaración Firma</div>
+        </div>
+        <div class="beneficiaries-signature">
+            <div class="border-bottom">Firma del Beneficiario</div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+
+
+
+
+<body th:fragment="data-mdz">
+
+<div class="table">
+
+    <div class="table-section atomic-block">
+        <table>
+            <colgroup>
+                <col style="width: 78%;"/>
+                <col style="width: 12%;"/>
+                <col style="width: 10%;"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <td id="report-title">ANEXO II</td>
+                <td>N° Atención</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>COMPROBANTE DE ATENCIÓN DE BENEFICIARIOS DE AGENTES DEL SEGURO DE SALUD</td>
+                <td class="date" colspan="2">
+                    <div class="border-bottom">FECHA</div>
+                    <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
+                    <label th:unless="${consultationDate != null}" th:text="${attentionDate}"></label>
+                </td>
+            </tr>
+            <tr>
+                <td class="designation">
+                    <div class="border-bottom">Denominación HPdGD</div>
+                    <div>&nbsp;</div>
+                    <div th:text="${establishment}"></div>
+                </td>
+                <td class="code-hpdgd" colspan="2">
+                    <div class="border-bottom">Código HPdGD-REFES</div>
+                    <div>&nbsp;</div>
+                    <div th:text="${sisaCode}"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <div class="beneficiary-data">
+            <div>Datos del Beneficiario</div>
+        </div>
+    </div>
+    <div>
+        <div class="complete-name">
+            <div class="border-bottom">APELLIDOS Y NOMBRES</div>
+            <div th:text="${formalPatientName}"></div>
+        </div>
+        <div class="doc-type">
+            <div class="border-bottom">Tipo doc</div>
+            <div th:text="${documentType}"></div>
+        </div>
+        <div class="doc-number">
+            <div class="border-bottom">N° Documento</div>
+            <div th:text="${documentNumber}"></div>
+        </div>
+    </div>
+
+    <div class="table-section atomic-block">
+        <table>
+            <colgroup>
+                <col style="width: 40%;"/>
+                <col style="width: 30%;"/>
+                <col style="width: 25%;"/>
+                <col style="width: 5%;"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <td class="beneficiary-type">Tipo de Beneficiario</td>
+                <td class="beneficiary-type">Parentesco</td>
+                <td class="gender">Sexo</td>
+                <td class="age">Edad</td>
+            </tr>
+            <tr>
+                <td class="beneficiary-type">
+                    <div>
+                        <div>Titular</div>
+                        <div>Familiar</div>
+                        <div>Adherente</div>
+                        <div>Otro</div>
+                    </div>
+                </td>
+
+                <td class="beneficiary-type">
+                    <div>
+                        <div>Cónyugue</div>
+                        <div>Hijo</div>
+                        <div>Otro</div>
+                    </div>
+                </td>
+                <td class="gender" th:text="${patientGender}"></td>
+                <td class="age" th:text="${patientAge}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div>
+        <div class="beneficiary-data">&nbsp;</div>
+    </div>
+
+
+    <div>
+        <div class="attention-type">TIPO DE ATENCIÓN</div>
+        <div class="date">
+            <div class="border-bottom">Fecha de Prestación</div>
+            <div>
+                <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
+                <label th:unless="${consultationDate != null}" th:text="${attentionDate}">&nbsp;</label>
+            </div>
+        </div>
+    </div>
+    <div class="table-section atomic-block">
+        <table>
+            <colgroup>
+                <col style="width: 25%;"/>
+                <col style="width: 5%;"/>
+                <col style="width: 35%;"/>
+                <col style="width: 35%;"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <td class="consultation">CONSULTA</td>
+                <td>
+                    <label th:if="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">X</label>
+                    <label th:unless="${appointmentState == 'Atendido' || (existsConsultation != null && existsConsultation)}">&nbsp;</label>
+                </td>
+                <td class="specialty">
+                    <div class="border-bottom">ESPECIALIDAD</div>
+                    <label th:if="${specialty != null}" th:text="${specialty}"></label>
+                    <label th:unless="${specialty != null}" >&nbsp;</label>
+                </td>
+                <td class="diagnosis">
+                    <div class="border-bottom">DIAGNÓSTICOS</div>
+                    <div th:if="${problems != null}">
+                        <div th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:3px'}" >
+                            <div class="problem" th:text="${problem}"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="practice">PRÁCTICA</td>
+                <td class="cell">
+                    <label th:if="${hasProcedures}">X</label>
+                    <label th:unless="${hasProcedures}">&nbsp;</label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Procedure lines-->
+    <div th:if="${showProcedureLines}" class="table-section atomic-block">
+        <table>
+            <colgroup>
+                <col style="width: 10%;"/>
+                <col style="width: 50%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 5%;"/>
+                <col style="width: 25%;"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th class="thead-light"> CÓDIGO </th>
+                <th class="thead-light"> PRESTACIÓN </th>
+                <th class="thead-light"> $ UNITARIO </th>
+                <th class="thead-light"> CANTIDAD </th>
+                <th class="thead-light"> IMPORTE </th>
+            </tr>
+            <tr th:each="procedureLine, iter: ${procedureLines}">
+                <td th:text="${procedureLine.codeNomenclator}"></td>
+                <td th:text="${procedureLine.descriptionNomenclator}"></td>
+                <td th:text="${#numbers.formatDecimal(procedureLine.rate, 1, 2)}"></td>
+                <td th:text="${procedureLine.amount}"></td>
+                <td th:text="${#numbers.formatDecimal(procedureLine.patientRate, 1, 2)}"></td>
+            </tr>
+            <tr th:if="${missingProcedures} > 0" th:each="i: ${#numbers.sequence(0, missingProcedures-1)}">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <strong>Fecha ingreso:</strong> <span th:text="${#temporals.format(procedureLinesIngressDate, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                    <strong>Fecha egreso:</strong> <span th:text="${#temporals.format(procedureLinesEgressDate, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                </td>
+                <td><strong>TOTAL</strong></td>
+                <td th:text="${#numbers.formatDecimal(procedureLinesTotal, 1, 2)}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${showProcedureLines}" style="page-break-before: always;">
+    </div>
+    <div class="atomic-block">
+        <div class="internment">INTERNACIÓN</div>
+        <div style="width: 23px;">&nbsp;</div>
+        <div class="diagnostics">Diagnóstico de egreso <br></br>CIE10</div>
+        <div class="principal-code">CÓDIGO PRINCIPAL:</div>
+        <div class="other-codes">OTROS CÓDIGOS:</div>
+    </div>
+    <div class="atomic-block">
+        <div class="nhpdgd-data">
+            NHPdGD: Nomenclador Hospitales Públicos de Gestión Descentralizada - CIE 10: Clasificación Internacional de Enfermedades
+        </div>
+    </div>
+    <div class="atomic-block">
+        <div class="signature-section">
+            <div>Firma del Médico y sello con N° de matrícula</div>
+            <div th:if="${ professional != null }">
+                <div>
+                    <div th:text="${ professional.completeProfessionalName }"></div>
+                    <div th:text="${ specialty }"></div>
+                    <div th:text="${ professional.getLicensesString }"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="atomic-block">
+        <div class="medical-coverage-title">
+            NOMBRE DEL AGENTE DEL SEGURO DE SALUD
+        </div>
+        <div class="rnos-title">
+            <div>RNOS</div>
+        </div>
+    </div>
+    <div class="atomic-block">
+        <div class="medical-coverage">
+            <label th:if="${medicalCoverage != null}" th:text="${medicalCoverage}"></label>
+            <label th:unless="${medicalCoverage != null}">&nbsp;</label>
+        </div>
+        <div class="rnos">
+            <label th:if="${rnos != null}" th:text="${rnos}"></label>
+            <label th:unless="${rnos != null}">&nbsp;</label>
+        </div>
+    </div>
+    <div class="atomic-block">
+        <div class="administrative-signature">
+            <div class="border-bottom">Firma del Responsable Administrativo/Contable</div>
+        </div>
+        <div class="signature-clarification">
+            <div class="border-bottom">Aclaración Firma</div>
+        </div>
+        <div class="beneficiaries-signature">
+            <div class="border-bottom">Firma del Beneficiario</div>
+            <div th:if="${ patientIdentityAccreditationStatus != null }">
+                <div>
+                    <div th:if="${ patientIdentityAccreditationStatus == 1 }">Validación digital presencial mediante acreditación de identidad</div>
+                    <div th:if="${ patientIdentityAccreditationStatus == 2 }">No se ha validado presencialidad en forma digital</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 

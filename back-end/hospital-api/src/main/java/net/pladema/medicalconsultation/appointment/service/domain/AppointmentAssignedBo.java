@@ -9,7 +9,6 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -18,13 +17,15 @@ import java.util.List;
 @NoArgsConstructor
 public class AppointmentAssignedBo {
 
+	private Integer id;
+
 	private String professionalName;
 
 	private String license;
 
 	private Integer professionalId;
 
-	private List<String> specialties;
+	private String clinicalSpecialtyName;
 
 	private LocalDate date;
 
@@ -32,7 +33,13 @@ public class AppointmentAssignedBo {
 
 	private String office;
 
+	private boolean hasAssociatedReference;
+
+	private Short associatedReferenceClosureTypeId;
+
 	public AppointmentAssignedBo(AppointmentAssignedForPatientVo appointmentAssignedForPatientVo) {
+
+		this.id = appointmentAssignedForPatientVo.getId();
 
 		this.license = appointmentAssignedForPatientVo.getLicense();
 
@@ -43,6 +50,8 @@ public class AppointmentAssignedBo {
 		this.hour = appointmentAssignedForPatientVo.getHour();
 
 		this.office = appointmentAssignedForPatientVo.getOffice();
+
+		this.clinicalSpecialtyName = appointmentAssignedForPatientVo.getClinicalSpecialtyName();
 	}
 
 	public void setRespectiveProfessionalName(String firstName, String middleNames, String lastName, String otherLastNames, String nameSelfDetermination, boolean includeNameSelfDetermination) {

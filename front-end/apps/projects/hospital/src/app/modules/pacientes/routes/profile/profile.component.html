@@ -12,26 +12,27 @@
 			<span class="uppercase"> {{ 'pacientes.profile.SEE_CLINICAL_HISTORY' | translate }} </span>
 		</button>
 	</div>
-	<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
-		<button *ngIf="(!internmentEpisode?.patientHospitalized && !internmentEpisode?.id)" mat-raised-button
-			color="primary" (click)="goNewInternment()">
-			<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
-		</button>
-	</div>
+	<ng-container *ngIf="isHabilitarInternacionOn">
+		<div *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']">
+			<button *ngIf="(!internmentEpisode?.patientHospitalized && !internmentEpisode?.id)" mat-raised-button
+				color="primary" (click)="goNewInternment()">
+				<span class="uppercase"> {{ 'pacientes.profile.INITIATE_INTERNMENT' | translate }} </span>
+			</button>
+		</div>
+	</ng-container>
 	<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 		<div fxFlex="50" fxFlex.lt-md="100">
 			<div>
 				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-					[internmentEpisodeProcess]="internmentEpisode"
+					[internmentEpisodeInProgress]="internmentEpisode?.id && internmentEpisode?.inProgress"
 					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
-						<ng-container>
-							<button mat-icon-button color="primary" *appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']"
-								(click)="goToEditProfile()">
-								<mat-icon>edit</mat-icon>
-							</button>
-						</ng-container>
+						<button mat-icon-button color="primary"
+							*appHasRole="['ADMINISTRATIVO', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']"
+							(click)="goToEditProfile()">
+							<mat-icon>edit</mat-icon>
+						</button>
 					</div>
 					<div content *ngIf="auditablePatientInfo">
 						<app-message-flagged-for-audit [auditablePatientInfo]="auditablePatientInfo"></app-message-flagged-for-audit>
@@ -54,9 +55,9 @@
 			</em>
 		</div>
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
-			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
-				<div *ngIf="createUsersIsEnable">
-					<mat-card class="box user-data">
+			<div >
+				<div >
+					<mat-card class="box user-data" *ngIf="hasRoleToViewUserData">
 						<mat-card-header>
 							<mat-card-title>
 								<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
@@ -92,7 +93,7 @@
 									<div fxLayout="row" fxLayoutGap="5px">
 										<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
 										<span *ngIf="userData.lastLogin else noInformation">
-											{{userData.lastLogin | date: 'dd/MM/yyyy - HH:mm'}} hs
+											{{userData.lastLogin.toString() | isoToDate | dateFormat: 'datetime'}}
 										</span>
 									</div>
 									<div fxLayout="row">
@@ -195,8 +196,23 @@
 				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId" showNewTriage="true">
 				</app-resumen-de-guardia>
 
-				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId" (newAppointmentRequired)="newAppointment()">
+				<app-booking-appointments *appHasRole="['ADMINISTRATIVO']"
+					[identificationNumber]="personalInformation?.identificationNumber">
+				</app-booking-appointments>
+
+				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId"
+					(newAppointmentRequired)="newAppointment()">
 				</app-assigned-appointments>
+
+				<mat-card *ngFor="let extension of extensions$ | async">
+					<mat-card-header>
+						<mat-card-title>{{extension.title}}</mat-card-title>
+					</mat-card-header>
+					<mat-card-content>
+						<app-ui-external-component type="external_component" [params]="extension">
+						</app-ui-external-component>
+					</mat-card-content>
+				</mat-card>
 			</div>
 		</div>
 	</div>

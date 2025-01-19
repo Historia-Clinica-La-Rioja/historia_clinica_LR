@@ -6,16 +6,15 @@ import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.*;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
@@ -25,19 +24,21 @@ public interface AppointmentService {
 
 	Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId);
 
+	List<AppointmentBookingBo> getCompleteBookingAppointmentInfo(String identificationNumber);
+
 	Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId);
 
 	Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to);
 
 	Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to);
 
-
 	Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentDiaryId, Integer institutionId, LocalDate from, LocalDate to);
 
 	Collection<AppointmentBo> getAppointmentsByProfessionalInInstitution(Integer healthcareProfessionalId, Integer institutionId, LocalDate from, LocalDate to);
 
 	boolean existAppointment(Integer diaryId, Integer openingHoursId, LocalDate date, LocalTime hour);
-	boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour);
+
+	boolean existAppointment(Integer diaryId, LocalDate date, LocalTime hour, Integer appointmentId);
 
 	Optional<AppointmentBo> findBlockedAppointmentBy(Integer diaryId, LocalDate date, LocalTime hour);
 
@@ -57,7 +58,7 @@ public interface AppointmentService {
 
 	boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
 
-	boolean updateDate(Integer appointmentId,  LocalDate date, LocalTime time, Integer openingHoursId);
+	boolean updateDate(Integer appointmentId,  LocalDate date, LocalTime time, Integer openingHoursId, Short recurringAppointmentTypeId);
 
 	boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 
@@ -91,4 +92,34 @@ public interface AppointmentService {
 
 	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
 
+	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
+
+	List<AppointmentDateHourBo> getAppointmentDateAndHourByIds(Set<Integer> appointmentIds);
+
+	Boolean openingHourAllowedProtectedAppointment(Integer openingHoursId, Integer diaryId);
+
+	void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids);
+
+	PatientMedicalCoverageBo getMedicalCoverageFromAppointment(Integer appointmentId);
+	
+	Boolean hasOldAppointmentWithMinDateLimit(Integer patientId, Integer healthcareProfessionalId, Short minDateLimit);
+
+	Boolean hasFutureAppointmentByPatientId(Integer patientId, Integer healthcareProfessionalId);
+	void checkAppointmentEveryWeek(Integer diaryId, LocalTime hour, LocalDate date, Short dayWeekId, Integer appointmentId);
+
+	void updateAppointmentByOptionId(AppointmentBo currentAppointment, AppointmentBo newAppointment);
+
+	CustomRecurringAppointmentBo getCustomAppointment(Integer appointmentId);
+
+	void checkRemainingChildAppointments(Integer appointmentId);
+
+	void deleteCustomAppointment(Integer appointmentId);
+
+	void deleteParentId(Integer appointmentId);
+
+	Boolean isAppointmentOverturn(Integer appointmentId);
+
+	void verifyRecurringAppointmentsOverturn(Integer diaryId);
+
+	Collection<AppointmentBo> hasAppointment(String dni, Integer id);
 }

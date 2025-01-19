@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.DailyAppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
@@ -16,6 +17,7 @@ import net.pladema.person.repository.entity.HealthInsurance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -30,6 +32,9 @@ class DailyAppointmentRepositoryTest extends UnitRepository {
     private EntityManager entityManager;
 
     private DailyAppointmentRepositoryImpl dailyAppointmentRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp(){

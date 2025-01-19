@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EquipmentDiaryDto, EquipmentDto, ModalityDto } from '@api-rest/api-model';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { ModalityService } from '@api-rest/services/modality.service';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { isAfter, startOfToday, parseISO } from 'date-fns';
 import { Observable } from 'rxjs';
@@ -20,24 +20,22 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 })
 export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
-	@Input() selectedEquipment: EquipmentDto;
-	@Input() editedDiary: EquipmentDiaryDto;
-	
+	selectedEquipment: EquipmentDto;
+	selectedDiary: EquipmentDiaryDto;
+
 	modalities$: Observable<TypeaheadOption<ModalityDto>[]>;
 
 	equipmentsTypeaheadList: TypeaheadOption<EquipmentDto>[];
 	equipments: EquipmentDto[] = [];
 
-	diarySelected: EquipmentDiaryDto;
+	diarySelected: DiaryList;
 	equipmentSelected: EquipmentDto;
 
 	diaries: EquipmentDiaryDto[];
-	activeDiaries: EquipmentDiaryDto[] = [];
-	expiredDiaries: EquipmentDiaryDto[] = [];
+	activeDiaries: DiaryList[] = [];
+	expiredDiaries: DiaryList[] = [];
 
 	externalSelectedEquipment: TypeaheadOption<EquipmentDto>;
-
-	readonly dateFormats = DatePipeFormat;
 
 	constructor(
 		private readonly modalityService: ModalityService,
@@ -49,17 +47,19 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.selectedEquipment = window.history.state.selectedEquipment;
+		this.selectedDiary = window.history.state.selectedDiary;
 		this.modalities$ = this.setModalityTypeaheadOptions();
 		this.setEquipments();
 		this.searchEquipmentService.getAgendas$().subscribe((data: EquipmentDiaryOptionsData) => {
 			if (data) {
-				this.loadAgendas(data.diaries, data.idAgendaSelected);
-				if (this.editedDiary) this.diarySelected = this.editedDiary;
+				let idAgendaSelected = this.selectedDiary ? this.selectedDiary.id : data.idAgendaSelected;
+				this.loadAgendas(data.diaries, idAgendaSelected);
 			}
 		});
 	}
 
-	changeDiarySelected(event: MatOptionSelectionChange, diary: EquipmentDiaryDto) {
+	changeDiarySelected(event: MatOptionSelectionChange, diary: DiaryList) {
 		if (event.isUserInput) {
 			this.diarySelected = diary;
 		}
@@ -71,7 +71,7 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	clear() {
 		this.diarySelected = null;
-		this.editedDiary = null;
+		this.selectedDiary = null;
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -90,15 +90,15 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	loadDiaryByEquipment(e: EquipmentDto) {
 		if (!e) {
 			this.selectedEquipment = null;
-			this.editedDiary = null;
+			this.selectedDiary = null;
 		}
 		this.equipmentSelected = e;
 		this.searchEquipmentService.search(e?.id);
 	}
 
-	compareDiaries(diaryOne: EquipmentDiaryDto, diaryTwo: EquipmentDiaryDto): boolean {
+	compareDiaries(diaryOne: DiaryList, diaryTwo: DiaryList): boolean {
 		if (diaryOne && diaryTwo) {
-			return diaryOne.id === diaryTwo.id;
+			return diaryOne.diaryList.id === diaryTwo.diaryList.id;
 		}
 		return false;
 	}
@@ -113,6 +113,9 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
 	private setSelectedEquipmentIfDiaryWasEdited() {
 		if (this.selectedEquipment) {
+			if (!this.selectedEquipment.name) {
+				this.selectedEquipment = this.equipments.find(e => e.id == this.selectedEquipment.id)
+			}
 			this.externalSelectedEquipment = this.toEquipmentTypeaheadOptions(this.selectedEquipment);
 			this.loadDiaryByEquipment(this.selectedEquipment);
 		}
@@ -146,7 +149,8 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.diaries = diaries;
 		this.categorizeAgendas(diaries);
 		if (diarySelectedId) {
-			this.diarySelected = this.diaries.find(agenda => agenda.id === diarySelectedId);
+			const diariesList: DiaryList[] = this.activeDiaries.concat(this.expiredDiaries);
+			this.diarySelected = diariesList.find(agenda => agenda.diaryList.id === diarySelectedId);
 		}
 	}
 
@@ -154,12 +158,26 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 		this.expiredDiaries = [];
 		this.activeDiaries = [];
 		if (diaries?.length)
-			diaries.forEach(diary =>
-				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredDiaries.push(diary) : this.activeDiaries.push(diary)
-			);
+			diaries.forEach(diary =>{
+				const newDiary: DiaryList = {
+					diaryList: diary,
+					endDate: fromStringToDateByDelimeter(diary.endDate, '-'),
+					startDate: fromStringToDateByDelimeter(diary.startDate, '-')
+				}
+				isAfter(startOfToday(), parseISO(diary.endDate)) ?
+				this.expiredDiaries.push(newDiary) : this.activeDiaries.push(newDiary)
+			});
 	}
 
 	goToEditAgenda(){
-		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${this.diarySelected.id}/editar`], { state : { selectedEquipment: this.equipmentSelected, selectedDiary: this.diarySelected}});
+		const currenteDiarySelected: EquipmentDiaryDto = this.diarySelected.diaryList;
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/imagenes/agenda/${currenteDiarySelected.id}/editar`],
+		{ state : { selectedEquipment: this.equipmentSelected, selectedDiary: currenteDiarySelected}});
 	}
+}
+
+export interface DiaryList {
+	diaryList: EquipmentDiaryDto;
+    endDate: Date;
+    startDate: Date;
 }

@@ -12,7 +12,7 @@
 					{{ riskFactor?.value || '-' }}
 				</span>
 				<mat-icon *ngIf="riskFactor?.effectiveTime" inline color="accent"
-					matTooltip="{{ riskFactor?.effectiveTime | date: 'dd/MM/yy - HH:mm' }} hs">
+					matTooltip="{{ riskFactor?.effectiveTime | dateFormat: 'datetime' }}">
 					info_outline
 				</mat-icon>
 			</div>

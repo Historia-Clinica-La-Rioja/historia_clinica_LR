@@ -4,10 +4,14 @@ import net.pladema.hl7.dataexchange.model.adaptor.FhirAddress;
 import net.pladema.hl7.dataexchange.model.domain.AllergyIntoleranceVo;
 import net.pladema.hl7.dataexchange.model.domain.BundleVo;
 import net.pladema.hl7.dataexchange.model.domain.ConditionVo;
+import net.pladema.hl7.dataexchange.model.domain.CoverageVo;
 import net.pladema.hl7.dataexchange.model.domain.ImmunizationVo;
+import net.pladema.hl7.dataexchange.model.domain.MedicationRequestVo;
 import net.pladema.hl7.dataexchange.model.domain.MedicationVo;
 import net.pladema.hl7.dataexchange.model.domain.OrganizationVo;
 import net.pladema.hl7.dataexchange.model.domain.PatientVo;
+import net.pladema.hl7.dataexchange.model.domain.PractitionerVo;
+import net.pladema.hl7.dataexchange.model.domain.ServiceRequestVo;
 import net.pladema.hl7.foundation.lifecycle.ResourceStatus;
 import net.pladema.hl7.supporting.terminology.coding.CodingCode;
 import org.hl7.fhir.r4.model.Address;
@@ -20,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class FhirPersistentStore {
@@ -137,4 +142,150 @@ public class FhirPersistentStore {
             return new OrganizationVo();
         }
     }
+
+	@Transactional(readOnly = true)
+	public MedicationVo getMedication(@NotNull Integer medicationStatementId) {
+		try {
+			return (MedicationVo) entityManager.createNamedQuery("HCE.getMedication")
+					.setParameter("medicationStatementId",medicationStatementId)
+					.getSingleResult();
+		}
+		catch (NoResultException ex) {
+			return new MedicationVo();
+		}
+	}
+
+	@Transactional(readOnly = true)
+	public OrganizationVo getOrganizationFromId(@NotNull Integer institutionId) {
+		try {
+			OrganizationVo data = (OrganizationVo) entityManager.createNamedQuery("HCE.getOrganizationFromId")
+					.setParameter("institutionId",institutionId)
+					.getSingleResult();
+			data.setFullAddress(getAddress(data.getAddressId(), Address.AddressUse.WORK));
+			return data;
+		}
+		catch (NoResultException ex) {
+			return new OrganizationVo();
+        }
+    }
+
+    @Transactional(readOnly = true)
+	public PractitionerVo getPractitioner(@NotNull String healthcareProfessionalId) {
+		try {
+			PractitionerVo data = (PractitionerVo) entityManager.createNamedQuery("HCE.getPractitioner")
+					.setParameter("doctorId", Integer.valueOf(healthcareProfessionalId))
+					.getSingleResult();
+			data.setFullAddress(getAddress(data.getAddressId(), Address.AddressUse.HOME));
+			return data;
+		}
+		catch (NoResultException ex) {
+			return new PractitionerVo();
+		}
+	}
+
+	@Transactional(readOnly = true)
+	public CoverageVo getCoverage(@NotNull String patientMedicalCoverageId) {
+		try {
+			CoverageVo data = (CoverageVo) entityManager.createNamedQuery("HCE.getCoverage")
+					.setParameter("patientMedicalCoverageId", Integer.valueOf(patientMedicalCoverageId))
+					.getSingleResult();
+			return data;
+		}
+		catch (NoResultException ex) {
+			return new CoverageVo();
+		}
+	}
+
+	@Transactional(readOnly = true)
+	public List<MedicationRequestVo> getMedicationRequest(@NotNull UUID requestUuid, @NotNull String identificationNumber) {
+		return entityManager.createNamedQuery("HCE.getMedicationRequest")
+				.setParameter("medicationRequestUuid", requestUuid)
+				.setParameter("identificationNumber", identificationNumber)
+				.getResultList();
+	}
+
+	@Transactional
+	public void setMedicationRequestDispensed(@NotNull List<Integer> ids, @NotNull Integer lineState) {
+		entityManager.createNamedQuery("HCE.setLineStateMedication")
+				.setParameter("medicationStatementIds", ids)
+				.setParameter("lineStateId", lineState)
+				.executeUpdate();
+	}
+
+	@Transactional(readOnly = true)
+	public MedicationRequestVo getMedicationDataForValidation(@NotNull UUID medicationRequestUuid, @NotNull UUID lineUuid) {
+		try {
+			return (MedicationRequestVo) entityManager.createNamedQuery("HCE.getMedicationDataForValidation")
+					.setParameter("medicationRequestUuid", medicationRequestUuid)
+				    .setParameter("lineUuid", lineUuid)
+				    .getSingleResult();
+		}
+		catch (NoResultException ex) {
+			return null;
+		}
+	}
+
+	@Transactional
+	public boolean isMedicationRequestCompleted(@NotNull Integer medicationRequestId) {
+		return (boolean) entityManager.createNamedQuery("HCE.isMedicationRequestCompleted")
+				.setParameter("medicationRequestId", medicationRequestId)
+				.getSingleResult();
+	}
+
+	@Transactional
+	public void updateMedicationRequestCompleted(@NotNull Integer medicationRequestId) {
+		entityManager.createNamedQuery("HCE.setMedicationRequestCompleted")
+				.setParameter("medicationRequestId", medicationRequestId)
+				.executeUpdate();
+    }
+    
+	@Transactional(readOnly = true)
+	public List<ServiceRequestVo> getServiceRequestByIdAndPatientIdentificationNumber(@NotNull Integer serviceRequestId, @NotNull String patientIdentificationNumber) {
+		return entityManager.createNamedQuery("HCE.getServiceRequestByIdAndPatientIdentificationNumber")
+				.setParameter("serviceRequestId", serviceRequestId)
+				.setParameter("identificationNumber", patientIdentificationNumber)
+				.getResultList();
+	}
+
+	@Transactional(readOnly = true)
+	public List<ServiceRequestVo> getServiceRequestByPatientIdentificationNumber(@NotNull String patientIdentificationNumber) {
+		return entityManager.createNamedQuery("HCE.getServiceRequestByPatientIdentificationNumber")
+				.setParameter("identificationNumber", patientIdentificationNumber)
+				.getResultList();
+	}
+
+	@Transactional(readOnly = true)
+	public ServiceRequestVo getServiceRequestDataForValidation(@NotNull UUID serviceRequestUuid, @NotNull UUID diagnosticReportUuid) {
+		try {
+		return (ServiceRequestVo) entityManager.createNamedQuery("HCE.getServiceRequestDataForValidation")
+				.setParameter("serviceRequestUuid", serviceRequestUuid)
+				.setParameter("diagnosticReportUuid", diagnosticReportUuid)
+				.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
+	}
+
+	@Transactional
+	public void setDiagnosticReportStatus(@NotNull UUID diagnosticReportUuid, @NotNull String statusId) {
+		entityManager.createNamedQuery("HCE.setDiagnosticReportStatus")
+				.setParameter("diagnosticReportUuid", diagnosticReportUuid)
+				.setParameter("statusId", statusId)
+				.executeUpdate();
+	}
+
+	@Transactional(readOnly = true)
+	public boolean isServiceRequestCompleted(@NotNull Integer serviceRequestId) {
+		return (boolean) entityManager.createNamedQuery("HCE.isServiceRequestCompleted")
+				.setParameter("serviceRequestId", serviceRequestId)
+				.getSingleResult();
+	}
+
+	@Transactional
+	public void setServiceRequestCompleted(@NotNull Integer serviceRequestId) {
+		entityManager.createNamedQuery("HCE.setServiceRequestCompleted")
+				.setParameter("serviceRequestId", serviceRequestId)
+				.executeUpdate();
+	}
+
 }

@@ -1,0 +1,8 @@
+<button id="isolation-alert-actions" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item id="isolation-alert-detail-button" (click)="openViewDetail()">{{'historia-clinica.general.VIEW_DETAIL' | translate}}</button>
+    <button mat-menu-item id="edit-isolation-alert-button" *ngIf="isIsolationAlertActive" (click)="openEditAlert()">{{'historia-clinica.isolation-alert-action.edit-alert.BUTTON_EDIT_ALERT' | translate}}</button>
+    <button mat-menu-item id="end-isolation-alert-button" *ngIf="isIsolationAlertActive" (click)="openEndAlert()">{{'historia-clinica.isolation-alert-action.finish-alert.BUTTON_END_ALERT' | translate}}</button>
+</mat-menu>

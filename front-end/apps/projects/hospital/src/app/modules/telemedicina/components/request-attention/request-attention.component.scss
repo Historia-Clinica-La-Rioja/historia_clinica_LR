@@ -1,3 +1,4 @@
+@import "../../../../../assets/styles/mat-mixins";
 app-toggle-avaiability{
 	width: max-content;
 }
@@ -6,4 +7,11 @@ app-toggle-avaiability{
 }
 a{
 	cursor: pointer;
+}
+.content-patient-filter{
+	@include mat-form-field-background-white;
+}
+
+#search-patient{
+	width: 360px;;
 }

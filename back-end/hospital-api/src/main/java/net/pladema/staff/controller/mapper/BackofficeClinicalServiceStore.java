@@ -32,6 +32,7 @@ public class BackofficeClinicalServiceStore implements BackofficeStore<ClinicalS
 		clinicalSpecialty.setClinicalSpecialtyTypeId(ClinicalSpecialtyType.Service);
 		if(clinicalSpecialty.withoutName())
 			clinicalSpecialty.setName(null);
+		clinicalSpecialty.setDeleted(false);
 		return repository.findAll(
 				buildExample(clinicalSpecialty),
 				PageRequest.of(
@@ -45,6 +46,7 @@ public class BackofficeClinicalServiceStore implements BackofficeStore<ClinicalS
 	@Override
 	public List<ClinicalSpecialty> findAll() {
 		ClinicalSpecialty specialties = new ClinicalSpecialty();
+		specialties.setDeleted(false);
 		specialties.setClinicalSpecialtyTypeId(ClinicalSpecialtyType.Service);
 		return repository.findAll(Example.of(specialties), Sort.by(Sort.Direction.ASC, "name"));
 	}

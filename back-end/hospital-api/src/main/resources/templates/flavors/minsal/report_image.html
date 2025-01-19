@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <th:block th:include="fragments/report_image.html :: headerfiles"></th:block>
+</head>
+
+<body>
+<table>
+    <thead><tr><td>
+        <div class="header-space">&nbsp;</div>
+    </td></tr></thead>
+    <tbody><tr><td>
+        <div>
+            <div th:replace="fragments/report_image.html :: header"></div>
+            <div th:replace="fragments/report_image.html :: imageData"></div>
+            <div th:replace="fragments/report_image.html :: professionalData"></div>
+            <div th:replace="fragments/report_image.html :: DetailData"></div>
+            <div th:replace="fragments/report_image.html :: conclusionsData"></div>
+            <div th:replace="fragments/report_image.html :: signProfessional"></div>
+        </div>
+    </td></tr></tbody>
+    <tfoot><tr><td>
+        <div class="page-footer">&nbsp;</div>
+    </td></tr></tfoot>
+</table>
+</body>
+
+</html>

@@ -71,6 +71,12 @@
 			<version>${revision}</version>
         </dependency>
 
+		<dependency>
+			<groupId>ar.lamansys.hsi</groupId>
+			<artifactId>sgx-dashboards</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -175,7 +181,8 @@
                         <pattern>net.pladema.hl7.**.dto.**Dto</pattern>
                         <pattern>ar.lamansys.**.**Dto</pattern>
                         <pattern>net.pladema.**.infrastructure.**.dto.**Dto</pattern>
-                    </classPatterns>
+						<pattern>snomed.relations.cache.**.dto.**Dto</pattern>
+					</classPatterns>
                     <excludeClassPatterns>
                         <pattern>ar.lamansys.sgh.publicapi.**.dto.**Dto</pattern>
                         <pattern>net.pladema.hsi.extensions.infrastructure.controller.dto.**Dto</pattern>

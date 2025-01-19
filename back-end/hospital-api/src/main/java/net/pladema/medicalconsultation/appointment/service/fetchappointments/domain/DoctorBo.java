@@ -18,10 +18,14 @@ public class DoctorBo {
 	@ToString.Include
 	private final String identificationNumber;
 
-	public DoctorBo(String licenseNumber, String firstName, String lastName, String identificationNumber) {
+	@ToString.Include
+	private final Short genderId;
+
+	public DoctorBo(String licenseNumber, String firstName, String lastName, String identificationNumber, Short genderId) {
 		this.licenseNumber = licenseNumber;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.identificationNumber = identificationNumber;
+		this.genderId = genderId;
 	}
 }

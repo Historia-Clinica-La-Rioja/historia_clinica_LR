@@ -1,0 +1,25 @@
+<div *ngFor="let key of parameterSectionKeys">
+	<ng-container *ngIf="parameterSectionMap.get(key) as parameter">
+
+		<div [ngSwitch]="parameter.type">
+			<app-free-text-parameter *ngSwitchCase="PARAMETER_TYPES.freeText" [title]="key"
+				(freeText)="setFreeTextParameterData($event, parameter.id)"></app-free-text-parameter>
+
+			<div *ngSwitchCase="PARAMETER_TYPES.snomedECL">
+				<span>{{key | translate}}</span>
+				<app-concept-typeahead-search [ecl]="parameter.ecl" [appearanceOutline]="true" [showSearchIcon]="true"
+					[clearButton]="true" (conceptSelected)="setSnomedData($event, parameter.id)">
+				</app-concept-typeahead-search>
+			</div>
+
+			<app-option-list-parameter *ngSwitchCase="PARAMETER_TYPES.optionList" [title]="key"
+				[options]="parameter.options" (optionSelected)="setOptionListParameterData($event, parameter.id)">
+			</app-option-list-parameter>
+
+			<app-numerical-parameter *ngSwitchCase="PARAMETER_TYPES.numerical" [title]="key"
+				[parameters]="parameter.numericals"
+				(numericalValues)="setNumericParameter($event)"></app-numerical-parameter>
+		</div>
+	</ng-container>
+
+</div>

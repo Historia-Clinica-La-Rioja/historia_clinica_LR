@@ -22,11 +22,17 @@ public class BedVo implements Serializable {
 	Integer id;
 	String bedNumber;
 	Boolean free;
+	Boolean isBlocked;
 
 	public BedVo(Bed bed) {
 		id = bed.getId();
 		bedNumber = bed.getBedNumber();
 		free = bed.getFree();
+	}
+
+	public BedVo(Bed bed, Boolean isBlocked) {
+		this(bed);
+		this.isBlocked = isBlocked;
 	}
 
 }

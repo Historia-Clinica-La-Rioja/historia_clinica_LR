@@ -1,0 +1,46 @@
+<div class="m-top">
+    <app-title-description-list 
+        [title]="'gis.address.INSTITUTION'"
+        [descriptionData]="[{description: institutionDescription.institution}]">
+    </app-title-description-list>
+    
+    <div class="space-between m-top">
+        <app-title-description-list 
+            [title]="'gis.address.STREET'"
+            [descriptionData]="[{description: institutionDescription.address.streetName}]">
+        </app-title-description-list>
+    
+        <app-title-description-list 
+            [title]="'gis.address.HOUSE_NUMBER'"
+            [descriptionData]="[{description: institutionDescription.address.houseNumber}]">
+        </app-title-description-list>
+    </div>
+    
+    <div class="m-top">
+        <app-title-description-list
+            [title]="'gis.address.CITY'"
+            [descriptionData]="[{description: institutionDescription.address.city.description}]">
+        </app-title-description-list>
+    </div>
+
+    <div class="m-top">
+        <app-title-description-list
+            [title]="'gis.address.DEPARTMENT'"
+            [descriptionData]="[{description: institutionDescription.address.department.description}]">
+        </app-title-description-list>
+    </div>
+    
+    <div class="m-top">
+        <app-title-description-list
+            [title]="'gis.address.STATE'"
+            [descriptionData]="[{description: institutionDescription.address.state.description}]">
+        </app-title-description-list>
+    </div>
+        
+    <div class="m-top">
+        <app-title-description-list
+            [title]="'gis.map-position.COORDINATES'"
+            [descriptionData]="[{description: coordinatesToShow}]">
+        </app-title-description-list>
+    </div>
+</div>

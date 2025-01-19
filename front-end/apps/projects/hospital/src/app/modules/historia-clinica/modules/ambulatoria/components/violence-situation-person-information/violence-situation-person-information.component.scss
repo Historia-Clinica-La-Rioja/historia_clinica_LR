@@ -1,0 +1,7 @@
+@import '../../ambulatoria-mixins.scss';
+@include violence-mixins();
+
+.care-reference-person-information {
+    margin-bottom: 10px;
+    display:inline-block;
+}

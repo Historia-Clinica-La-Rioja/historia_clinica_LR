@@ -11,6 +11,7 @@
 			"BUTTON_ADD":"+ Agregar nuevo paciente",
 			"TITLE_ADD_REQUEST":"Solicitud de consulta online",
 			"PROFESSIONAL_ATTENDING": "Profesionales atendiendo",
+			"TRANSFER_REQUEST": "Transferir solicitud",
 			"form": {
 				"PATIENT":"Paciente",
 				"CARELINE": "Línea de cuidado",
@@ -18,11 +19,13 @@
 				"PRIORIZATION": "Criterio de priorización",
 				"REASONS_CONSULTATION": "Motivos de consulta",
 				"PROBLEM": "Problema (Opcional)",
-				"APPLICANT_PROFESSIONAL":"profesional solicitante",
+				"APPLICANT_PROFESSIONAL":"Profesional solicitante",
 				"PRIORITY":"Prioridad",
 				"AVAILABILITY":"Disponibilidad",
 				"STATE": "Estado",
-				"INSTITUTION":"Institución"
+				"INSTITUTION":"Institución",
+				"PATIENT_SEARCH":"Buscar paciente",
+				"ASSIGN_TO":"Asignar a "
 			}
 		},
 		"attention": {

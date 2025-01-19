@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <title>Prueba de desempeño físico de adulto mayor</title>
+    <!-- Bootstrap's .css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"></link>
+    <style>
+        body {
+           border: 1px solid black;
+           padding: 10px;
+           font-family: Tahoma, Verdana, sans-serif;
+        }
+
+        h5 {
+           font-weight: bold;
+           font-size: 15px;
+           margin: 15px 0px;
+           border-top: 1px solid black;
+        }
+
+        h4 {
+           margin: 15px 0px;
+           color: #2687c5;
+           background-color: #f0f8ff;
+           border-top: 1px solid black;
+           font-weight: normal;
+        }
+
+        p {
+           font-weight: bold;
+           font-size: 15px;
+        }
+
+        label {
+           width: 70%;
+           page-break-inside: avoid;
+           margin: 2px 0px;
+        }
+
+        span {
+           font-weight: normal;
+        }
+
+        .bold-text {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body th:fragment="physicalperformance">
+    <div class="container">
+        <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
+        <p>Institución: <span th:text="${institutionName}"></span></p>
+        <hr></hr>
+        <h5>Datos del paciente</h5>
+        <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
+        <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
+        <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
+        <hr></hr>
+        <h5>Datos del profesional</h5>
+        <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
+        <p>M.P.: <span th:text="${professional.licenseNumber}"></span></p>
+
+        <h3>Prueba de desempeño físico de adulto mayor - Informe de resultados</h3>
+
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[0]}">
+            <h4>Prueba de balance</h4>
+            <p>· Párese con los pies uno al lado del otro: ¿mantuvo la posición al menos 10 segundos? Si el participante no logró completarlo, finaliza la prueba de balance.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[1]}">
+            <p>Tiempo registrado (segundos)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
+            </label>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
+            <p>· Párese en posición semi tándem: ¿mantuvo la posición al menos 10 segundos? Si el participante no logró completarlo, finaliza la prueba de balance.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
+            <p>Tiempo registrado (segundos)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
+            </label>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
+            <p>· Párese en posición tándem: si el paciente accede a realizar la prueba, el tiempo registrado se ve posteriormente. </p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId != 51}"></input>
+                Accede a la prueba
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
+            <p>Tiempo registrado (segundos)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
+            </label>
+        </div>
+
+        <p style="text-align: right; margin-top: 1em;">1/2</p>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[6]}">
+            <h4>Velocidad de marcha</h4>
+            <p>La prueba requiere medir el tiempo en segundos para la realización de la prueba de velocidad de marcha en una distancia de 4 metros.</p>
+            <p>· Primera medición: tiempo requerido para recorrer la distancia. Si el participante no logra completarla, finaliza la prueba.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId != 51}"></input>
+                Accede a la prueba
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[7]}">
+            <p>Tiempo registrado (segundos)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
+            </label>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
+            <p>· Segunda medición: tiempo requerido para recorrer la distancia.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId != 51}"></input>
+                Accede a la prueba
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[9]}">
+            <p>Tiempo registrado (segundos)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
+            </label>
+        </div>
+        
+        <hr></hr>
+
+        <div class="itemcontainer" th:each="respuesta : ${answers[10]}">
+            <h4>Prueba de levantarse cinco veces de un asiento</h4>
+            <p>· Prueba previa (no se califica): ¿el paciente se levanta sin apoyarse en sus brazos? Si el participante no logra completarlo, finaliza la prueba.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[11]}">
+            <p>· Prueba de levantarse cinco veces repetidamente de una silla: ¿el participante puede levantarse cinco veces de la silla sin usar sus brazos?</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
+                Sí
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 19}"></input>
+                No
+            </label><br></br>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
+                Se niega
+            </label><br></br>
+        </div>
+        <hr></hr>
+        <div class="itemcontainer" th:each="respuesta : ${answers[12]}">
+            <p>Tiempo registrado (segundos)</p>
+            <label>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
+            </label>
+        </div>
+
+        <div class="itemcontainer" style="margin-top: 13em;" th:each="respuesta : ${answers[13]}">
+            <h4>Resultado de evaluación</h4>
+            <p>
+                <span class="bold-text">El puntaje final de la prueba es: </span>
+                <span style="font-weight: normal;" th:text="${respuesta.value + ' puntos'}">[PUNTUACIÓN]</span>
+            </p>
+            <p>Que se interpreta como:</p>
+            <label th:class="${respuesta.answerId == 52} ? 'bold-text' : ''">
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 52}"></input>
+                0 - 7: Desempeño físico bajo
+            </label><br></br>
+            <label th:class="${respuesta.answerId == 53} ? 'bold-text' : ''">
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 53}"></input>
+                8 - 12: Desempeño físico alto
+            </label><br></br>
+        </div>
+
+        <hr></hr>
+
+        <p style="text-align: right;">2/2</p>
+
+    </div>
+    <!-- Bootstrap's script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>

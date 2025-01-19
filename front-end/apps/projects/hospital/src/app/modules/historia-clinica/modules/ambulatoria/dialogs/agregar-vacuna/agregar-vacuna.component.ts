@@ -1,8 +1,7 @@
 import { AfterContentInit, Component, ElementRef, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Moment } from 'moment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DateFormat, momentParseDate, newMoment } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import {
 	ImmunizationDto,
 	SnomedDto,
@@ -18,6 +17,7 @@ import { scrollIntoError } from '@core/utils/form.utils';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { VaccineSearchComponent } from '../vaccine-search/vaccine-search.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-agregar-vacuna',
@@ -29,14 +29,20 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 	readonly HALF_COLUMN_WIDTH: number = 47.5;
 	readonly DISABLED_LABEL_COLOR: string = 'rgba(0, 0, 0, 0.38)';
-	selectedTab: number = 0;
+	readonly APPLY_VACCINE_TAB_VALUE: number = 0;
+	readonly REGISTER_PREVIOUS_VACCINE_TAB_VALUE: number = 1;
+
+	selectedTab: number = this.REGISTER_PREVIOUS_VACCINE_TAB_VALUE;
 	doses: VaccineDoseInfoDto[];
 	schemes: VaccineSchemeDto[];
 	conditions: VaccineConditionsDto[];
-	today: Moment = newMoment();
+	today: Date = newDate();
 	minDate = MIN_DATE;
 	searchConceptsLocallyFF: boolean;
 	ecl = SnomedECL.VACCINE;
+
+	initNewVaccineDate = this.today;
+	initPrevVaccineDate = this.today;
 
 	// billable form attributes (new vaccine application)
 	billableForm: UntypedFormGroup;
@@ -79,7 +85,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 	ngAfterContentInit(): void {
 		if (this.data?.edit)
 			if (!this.data.immunization?.billable)
-				this.setSelectedTab(1);
+				this.setSelectedTab(this.REGISTER_PREVIOUS_VACCINE_TAB_VALUE);
 	}
 
 	ngOnInit(): void {
@@ -118,7 +124,10 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 			if (this.data.immunization?.billable) { // then load data to billable form and its attributes
 
-				this.billableForm.controls.date.setValue(momentParseDate(this.data.immunization.administrationDate));
+
+				const initValue = dateISOParseDate(this.data.immunization.administrationDate);
+				this.initNewVaccineDate = initValue
+				this.billableForm.controls.date.setValue(initValue);
 
 				this.newVaccineSnomedConcept = this.data.immunization.snomed;
 				this.billableForm.controls.snomed.setValue(this.newVaccineSnomedConcept.pt);
@@ -130,9 +139,8 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 				this.vaccineService.vaccineInformation(this.newVaccineSnomedConcept.sctid).subscribe(
 					(vaccineInformation: VaccineInformationDto) => {
-
 						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
-						if (vaccineInformation.conditions.length > 0) {
+						if (vaccineInformation?.conditions.length > 0) {
 							this.conditions = vaccineInformation.conditions;
 							this.billableForm.get("condition").enable();
 							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
@@ -160,7 +168,9 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 
 			}
 			else { // then load data to previous form and its attributes
-				this.previousForm.controls.date.setValue(momentParseDate(this.data.immunization.administrationDate));
+				const initValue = dateISOParseDate(this.data.immunization.administrationDate);
+				this.initPrevVaccineDate = initValue
+				this.previousForm.controls.date.setValue(this.initPrevVaccineDate);
 
 				this.previousVaccineSnomedConcept = this.data.immunization.snomed;
 				this.previousForm.controls.snomed.setValue(this.previousVaccineSnomedConcept.pt);
@@ -178,7 +188,7 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 					(vaccineInformation: VaccineInformationDto) => {
 
 						// If the vaccine has conditions, then we should load the pre-selected data for condition/scheme/dose
-						if (vaccineInformation.conditions.length > 0) {
+						if (vaccineInformation?.conditions.length > 0) {
 							this.conditions = vaccineInformation.conditions;
 							this.previousForm.get("condition").enable();
 							const conditionIndex: number = this.conditions.findIndex(condition => condition.id === this.data.immunization.conditionId);
@@ -212,32 +222,21 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 		this.selectedTab = value;
 	}
 
-	public chosenYearHandler(newDate: Moment, form: UntypedFormGroup): void {
-		if (form.controls.date.value !== null) {
-			const ctrlDate: Moment = form.controls.date.value;
-			ctrlDate.year(newDate.year());
-			form.controls.date.setValue(ctrlDate);
-		} else {
-			form.controls.date.setValue(newDate);
-		}
+	prevDateChanged(date: Date) {
+		this.previousForm.controls.date.setValue(date)
 	}
 
-	public chosenMonthHandler(newDate: Moment, form: UntypedFormGroup): void {
-		if (form.controls.date.value !== null) {
-			const ctrlDate: Moment = form.controls.date.value;
-			ctrlDate.month(newDate.month());
-			form.controls.date.setValue(ctrlDate);
-		} else {
-			form.controls.date.setValue(newDate);
-		}
+	newDateChanged(date: Date) {
+		this.billableForm.controls.date.setValue(date)
 	}
 
-	public submit(vaccineInputContainer: HTMLElement): void {
+
+	public submit(): void {
 		if (this.billableForm.valid) {
 			this.tryToSubmit = false;
 			const appliedVaccine: ImmunizationDto = {
 				snomed: this.newVaccineSnomedConcept,
-				administrationDate: this.billableForm.value.date.format(DateFormat.API_DATE),
+				administrationDate: toApiFormat(this.billableForm.value.date),
 				billable: true,
 				note: this.billableForm.value.note ? this.billableForm.value.note : "",
 			};
@@ -250,24 +249,23 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 				appliedVaccine.schemeId = this.schemes[this.billableForm.value.scheme].id;
 				appliedVaccine.dose = this.doses[this.billableForm.value.dose];
 			}
-
 			this.dialogRef.close(appliedVaccine);
 		}
 		else {
 			this.tryToSubmit = true;
 			if (this.billableForm.controls.snomed.invalid)
-				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				document.getElementById('vaccineInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
 			else
 				scrollIntoError(this.billableForm, this.el);
 		}
 	}
 
-	public submitPreviousForm(vaccineInputContainer: HTMLElement): void {
+	public submitPreviousForm(): void {
 		if (this.previousForm.valid) {
 			this.tryToSubmitPrevious = false;
 			const appliedVaccine: ImmunizationDto = {
 				snomed: this.previousVaccineSnomedConcept,
-				administrationDate: this.previousForm.value.date.format(DateFormat.API_DATE),
+				administrationDate: toApiFormat(this.previousForm.value.date),
 				note: "",
 			};
 
@@ -285,13 +283,12 @@ export class AgregarVacunaComponent implements OnInit, AfterContentInit {
 				appliedVaccine.schemeId = this.schemes[this.previousForm.value.scheme].id;
 				appliedVaccine.dose = this.doses[this.previousForm.value.dose];
 			}
-
 			this.dialogRef.close(appliedVaccine);
 		}
 		else {
 			this.tryToSubmitPrevious = true;
 			if (this.previousForm.controls.snomed.invalid)
-				vaccineInputContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				document.getElementById('previousVaccineInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
 			else
 				scrollIntoError(this.previousForm, this.el);
 		}

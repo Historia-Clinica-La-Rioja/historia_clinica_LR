@@ -11,7 +11,7 @@
 
 		<div fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-				<div fxFlex="50%">
+				<div class="summary-card">
 					<app-summary-card id="active_problems" [header]="activos" [editable]="false">
 						<mat-list id="lista-problemas-activos"
 							*ngIf="(activeProblems$ | async )?.length > 0 else noInfo">
@@ -29,17 +29,15 @@
 								</mat-list-item>
 							</div>
 							<div fxLayout="row" *ngFor="let problem of (activeProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item>
 									<div fxFlex="50%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
 										</span>
 										<div *ngIf="problem.hasPendingReference" class="pending-reference-label">
 											<ng-container>
-												<app-colored-label
-													[description]="'ambulatoria.paciente.problemas.PENDING_REFERENCE' | translate | uppercase"
-													[color]="Color.RED">
-												</app-colored-label>
+												<app-reference-state-label fxLayoutAlign="start" class="reference-label">
+												</app-reference-state-label>
 											</ng-container>
 										</div>
 									</div>
@@ -52,21 +50,8 @@
 									</div>
 
 									<div fxFlex="5%">
-										<button
-											*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-											mat-icon-button [matMenuTriggerFor]="menu">
-											<mat-icon>more_vert</mat-icon>
-										</button>
-										<mat-menu #menu="matMenu">
-											<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
-												(click)="openNuevaConsulta(problem)">
-												<span
-													[translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
-											</button>
-											<button mat-menu-item (click)="solveProblemPopUp(problem)">
-												<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-											</button>
-										</mat-menu>
+										<app-problems-options-menu [problem]="problem" [nuevaConsultaRef]="nuevaConsultaRef" [patientId]="patientId"
+											(setProblemOnHistoric)="scrollToHistoric()"></app-problems-options-menu>
 									</div>
 
 								</mat-list-item>
@@ -75,7 +60,7 @@
 						</mat-list>
 					</app-summary-card>
 				</div>
-				<div fxFlex="50%">
+				<div class="summary-card">
 					<app-summary-card id="chronic_problems" [header]="cronicos" [editable]="false">
 						<mat-list id="lista-problemas-cronicos"
 							*ngIf="(chronicProblems$ | async)?.length > 0 else noInfo">
@@ -93,7 +78,7 @@
 								</mat-list-item>
 							</div>
 							<div fxLayout="row" *ngFor="let problem of (chronicProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item>
 									<div fxFlex="50%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt}}
@@ -116,21 +101,8 @@
 									</div>
 
 									<div fxFlex="5%">
-										<button
-											*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-											mat-icon-button [matMenuTriggerFor]="menu">
-											<mat-icon>more_vert</mat-icon>
-										</button>
-										<mat-menu #menu="matMenu">
-											<button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
-												(click)="openNuevaConsulta(problem)">
-												<span
-													[translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
-											</button>
-											<button mat-menu-item (click)="solveProblemPopUp(problem)">
-												<span [translate]="'ambulatoria.paciente.problemas.END'"></span>
-											</button>
-										</mat-menu>
+										<app-problems-options-menu [problem]="problem" [nuevaConsultaRef]="nuevaConsultaRef" [patientId]="patientId"
+											(setProblemOnHistoric)="scrollToHistoric()"></app-problems-options-menu>
 									</div>
 								</mat-list-item>
 								<mat-divider></mat-divider>
@@ -141,7 +113,7 @@
 			</div>
 
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
-				<div fxFlex="50%">
+				<div class="summary-card">
 					<app-summary-card id="solved_problems" [header]="resueltos" [editable]="false">
 						<mat-list id="lista-problemas-resueltos"
 							*ngIf="(solvedProblems$ | async)?.length > 0 else noInfo">
@@ -163,7 +135,7 @@
 							</div>
 
 							<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)">
+								<mat-list-item (click)="filterByProblemOnProblemClick(problem)" class="problem-description">
 									<div fxFlex="35%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
@@ -199,42 +171,51 @@
 						</mat-list>
 					</app-summary-card>
 				</div>
-				<div fxFlex="50%">
-					<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false">
-						<mat-list id="lista-problemas-hospitalization"
-							*ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
-							<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
-								<mat-list-item>
-									<div fxFlex="100%">
-										<span mat-line class="capitalize-first-letter">
-											{{ problem.mainDiagnose.snomed.pt }}
-										</span>
-										<span mat-line>
-											{{ problem.entryDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy') :
-											"actualmente internado" }}
-										</span>
-									</div>
-									<ng-container
-										*ngIf="this.internmentInProcess.inProgress == false || (this.internmentInProcess.inProgress && this.internmentInProcess.id !== problem.sourceId)">
-										<button
-											*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-											mat-icon-button [matMenuTriggerFor]="menu">
-											<mat-icon>more_vert</mat-icon>
-										</button>
-										<mat-menu #menu="matMenu">
-											<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
-												<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+				<ng-container *ngIf="isHabilitarInternacionOn">
+					<div class="summary-card">
+						<app-summary-card id="hospitalization_problems" [header]="internacion" [editable]="false">
+							<mat-list id="lista-problemas-hospitalization"
+								*ngIf="(hospitalizationProblems$ | async)?.length > 0 else noInfo">
+								<div fxLayout="row" *ngFor="let problem of (hospitalizationProblems$ | async)">
+									<mat-list-item>
+										<div fxFlex="100%">
+											<span mat-line class="capitalize-first-letter">
+												{{ problem.mainDiagnose.snomed.pt }}
+											</span>
+											<span mat-line>
+												{{ problem.entryDate | viewDateDto : 'datetime' | dateFormat: 'date' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | dateFormat: 'date') :
+												"actualmente internado" }}
+											</span>
+										</div>
+										<ng-container
+											*ngIf="this.internmentInProcess.inProgress == false || (this.internmentInProcess.inProgress && this.internmentInProcess.id !== problem.sourceId)">
+											<button
+												*appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+												mat-icon-button [matMenuTriggerFor]="menu">
+												<mat-icon>more_vert</mat-icon>
 											</button>
-										</mat-menu>
-									</ng-container>
-								</mat-list-item>
-								<mat-divider></mat-divider>
-							</div>
-						</mat-list>
-					</app-summary-card>
-				</div>
+											<mat-menu #menu="matMenu">
+												<button mat-menu-item (click)="goToHospitalizationEpisode(problem)">
+													<span [translate]="'ambulatoria.paciente.problemas.ACCEDER'"></span>
+												</button>
+											</mat-menu>
+										</ng-container>
+									</mat-list-item>
+									<mat-divider></mat-divider>
+								</div>
+							</mat-list>
+						</app-summary-card>
+					</div>
+				</ng-container>
 			</div>
-			<app-emergency-care-problems [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
+			<ng-container *ngIf="isHabilitarGuardiaOn">
+				<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
+					<app-emergency-care-problems id="emergency-care-problems-summary-card" class="summary-card" [patientId]="patientId" (goToEpisode)="goToEpisode($event)"></app-emergency-care-problems>
+					<app-isolation-alerts-summary-card id="isolation-alerts-summary-card" class="summary-card" *appFeatureFlag="HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO" [patientId]="patientId"></app-isolation-alerts-summary-card>
+				</div>
+			</ng-container>
+
+			<app-amended-problems (setProblemOnHistoric)="scrollToHistoric()"></app-amended-problems>
 		</div>
 	</section>
 
@@ -273,11 +254,11 @@
 							<div fxLayout="column" fxFlex.gt-sm="70" class="historical-list"
 								id="historical-problem-mapping" *ngIf="historicalProblemsList?.length">
 								<div *ngFor="let historicalProblem of historicalProblemsList">
-									<div class="historical-item">
+									<div class="historical-item {{ historicalProblem.markedAsError ? historicalProblem.color : ''}}">
 										<div fxLayout="row" fxLayoutGap="15px">
 											<div fxFlex="7" fxLayout="row" fxLayoutAlign="end">
 												<mat-icon mat-list-icon fontSet="material-icons-outlined"
-													color="primary">
+													class="problem-icon {{ historicalProblem.color }}">
 													assignment
 												</mat-icon>
 											</div>
@@ -286,10 +267,19 @@
 												<div fxLayout="row" fxLayout.lt-md="column"
 													fxLayoutAlign="space-between" fxLayoutGap="10px">
 
-													<div fxLayout="column" fxFlex="65" fxFlex.lt-md="100"
+													<div fxLayout="column" fxFlex="100" fxFlex.lt-md="100"
 														fxLayoutGap="10px">
-														<h2 class="mat-h2 page-title primary capitalize-first-letter">
-															{{historicalProblem.problemPt}}</h2>
+														<div fxLayout="row wrap" class="problem-title">
+															<h2 class="mat-h2 page-title {{ historicalProblem.color }} capitalize-first-letter" style="margin: 0;">
+																{{historicalProblem.problemPt}}</h2>
+															<ng-container *ngIf="historicalProblem.markedAsError">
+																<app-colored-label
+																	[description]="'ambulatoria.paciente.problemas.amend_problems.INCORRECT_PROBLEM' | translate | uppercase"
+																	[color]="Color.RED">
+																</app-colored-label>
+															</ng-container>
+														</div>
+														<app-details-section-custom class="content-details" [details]="historicalProblem.headerInfoDetails" [layout]="Position.ROW_WRAP"></app-details-section-custom>
 														<div *ngIf="historicalProblem.specialityPt">
 															<div class="mat-body-strong"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'">
@@ -322,46 +312,17 @@
 														</div>
 
 														<div *ngIf="historicalProblem.consultationEvolutionNote">
-															<h3 class="mat-h2 primary"
+															<h3 class="mat-h2 {{ historicalProblem.color }}"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.EVOLUTION_NOTE'">
 															</h3>
 															<p class="mat-body capitalize-first-letter evolution-space">
 																{{historicalProblem.consultationEvolutionNote}}</p>
 														</div>
-													</div>
-													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(30% - 10px)"
-														fxFlex.lt-md="100">
 
-														<div>
-															<h3 class="mat-h2 primary"
-																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'">
-															</h3>
-															{{historicalProblem.consultationDate | date : 'dd/MM/yyyy'}}
-														</div>
-														<div>
-															<h3 class="mat-h2 primary"
-																[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
-															</h3>
-															{{historicalProblem.professionalFullName}}
-														</div>
-														<div>
-															<h3 class="mat-h2 primary"
-																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_INSTITUTION'">
-															</h3>
-															{{historicalProblem.institutionName}}
-														</div>
+														<app-amended-problems-information *ngIf="historicalProblem.markedAsError"
+															[errorProblem]="historicalProblem.errorProblem"></app-amended-problems-information>
 													</div>
-													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(10% - 10px)"
-														fxFlex.lt-md="100" fxLayoutAlign="start end">
-														<div>
-															<button mat-icon-button color="primary"
-																id="download_document" name="download_document"
-																(click)="downloadDocument(historicalProblem.document)">
-																<mat-icon fontSet="material-icons-outlined">
-																	download_icon</mat-icon>
-															</button>
-														</div>
-													</div>
+																						
 												</div>
 
 												<div id="reference_information"
@@ -372,8 +333,10 @@
 														fxLayout="column" fxFlex.lt-md="100" fxLayoutGap="10px">
 
 														<ng-container>
-															<app-colored-label
-																[description]="'ambulatoria.paciente.problemas.historical-problems.REFERENCE_REQUEST' | translate | uppercase"
+															<app-reference-state-label *ngIf="!reference.cancelled" fxLayoutAlign="start" class="reference-label">
+															</app-reference-state-label>
+															<app-colored-label *ngIf="reference.cancelled"
+																[description]="'ambulatoria.paciente.problemas.historical-problems.CANCELLED_REFERENCE' | translate | uppercase"
 																[color]="Color.RED">
 															</app-colored-label>
 														</ng-container>
@@ -391,10 +354,10 @@
 															<span>{{reference.careLine}}</span>
 														</div>
 
-														<div fxLayout="row" fxLayoutGap="10px">
+														<div fxLayout="column" fxLayoutGap="10px" *ngIf="reference.clinicalSpecialties.length">
 															<strong
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.SPECIALTY'"></strong>
-															<span>{{reference.clinicalSpecialty}}</span>
+															<span *ngFor="let clinicalSpecialty of reference.clinicalSpecialties">{{clinicalSpecialty}}</span>
 														</div>
 
 														<div *ngIf="reference.note" fxLayout="column"
@@ -427,10 +390,7 @@
 																	<mat-icon>subdirectory_arrow_right</mat-icon>
 
 																	<ng-container>
-																		<app-colored-label
-																			[description]="reference.counterReference.closureType | translate | uppercase"
-																			[color]="Color.BLUE">
-																		</app-colored-label>
+																		<app-reference-state-label [referenceClosureDescription]="reference.counterReference.closureType"></app-reference-state-label>
 																	</ng-container>
 
 																</div>
@@ -498,7 +458,7 @@
 																		[translate]="'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL'">
 																	</h3>
 																	<span>
-																		{{reference.counterReference.professional?.fullName}}
+																		{{reference.counterReference.authorFullName}}
 																	</span>
 																</div>
 
@@ -509,10 +469,22 @@
 
 												</div>
 
+												<section *ngIf="historicalProblem.parameterizedForm">
+													<app-associated-parameterized-form-list id="parameterized_form_list" [parameterizedFormList]="historicalProblem.parameterizedForm"></app-associated-parameterized-form-list>
+												</section>
+												
 											</div>
-
+											<div>
+												<button mat-icon-button color="primary"
+													id="download_document" name="download_document"
+													(click)="downloadDocument(historicalProblem.document)">
+													<mat-icon fontSet="material-icons-outlined">
+														download_icon</mat-icon>
+												</button>
+											</div>
 										</div>
 									</div>
+									<mat-divider insert class="divider"></mat-divider>
 								</div>
 								<mat-divider inset></mat-divider>
 							</div>

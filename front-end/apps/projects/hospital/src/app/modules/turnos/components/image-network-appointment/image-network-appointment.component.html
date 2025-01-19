@@ -12,26 +12,8 @@
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
-				<div class="header-content" fxLayout="row" fxLayoutAlign="start " fxLayoutGap="20px">
-					<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
-						onerror="this.src='../../../../../../../assets/images/empty-profile.png'">
-					<div fxLayout="column" fxLayoutAlign="center start">
-						<span class="mat-body-strong capitalize title-size"
-							*ngIf="data.appointmentData.patient.fullName">
-							{{ viewPatientName(data.appointmentData) | uppercase }}
-						</span>
-						<div>
-							<span id="patient_id" class="mat-body-strong subtitle-size">ID
-								{{data.appointmentData.patient.id}}
-							</span>•
-							<span class="mat-body-strong subtitle-size"
-								*ngIf="data.appointmentData.patient.identificationNumber">
-								{{identificationType?.description}}
-								{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
-							</span>
-						</div>
-					</div>
-				</div>
+				<app-patient-summary data-id="patient-summary" *ngIf="patientSummary"
+					[person]="patientSummary"></app-patient-summary>
 				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
 					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
 						(click)="getAppointmentTicketReport()">
@@ -49,9 +31,11 @@
 					<span class="mat-caption normal-size">{{'image-network.appointments.MEDICAL_ORDER' |
 						translate}}</span>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
-						<span class="mat-body subtitle-size medical-order-description"
-							*ngIf="medicalOrder else noInfo" matTooltip="{{medicalOrder.displayText | titlecase}}">
-							{{medicalOrder.displayText | titlecase}}</span>
+						<span class="mat-body subtitle-size medical-order-description" *ngIf="medicalOrder else noInfo"
+							matTooltip="{{medicalOrder.displayText | titlecase}}">
+							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)"
+								class="download-link">{{transcribedLabelOrder | titlecase}}</a>
+						</span>
 					</div>
 				</div>
 				<div class="info-card" fxLayout="column" fxLayoutGap="5px">
@@ -87,12 +71,16 @@
 
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
+
+					
 					<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
-						[patientId]="data.appointmentData.patient.id" [disabled]="!canOrderBeEdited" (selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
+						[patientId]="data.appointmentData.patient.id" [disabled]="!canOrderBeEdited"
+						(selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
 
 					<mat-form-field appearance="outline">
-						<button type="button" mat-button matSuffix color="warn" mat-icon-button
-							*ngIf="formEdit.value.newCoverageData" (click)="clearCoverageData(); $event.stopPropagation()">
+						<button type="button"  matSuffix color="warn" mat-icon-button
+							*ngIf="formEdit.value.newCoverageData"
+							(click)="clearCoverageData(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
 						<mat-label>{{'pacientes.form.MEDICAL_COVERAGE' | translate}}</mat-label>
@@ -109,6 +97,7 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
+
 					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 						<mat-form-field fxFlex="30%" appearance="outline">
 							<mat-label>{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate}}</mat-label>
@@ -160,16 +149,22 @@
 			<div>
 				<div fxLayout="column" fxLayoutGap="10px">
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-date">
-						<app-iconed-text icon="calendar_today" text="{{selectedDate | date:'EEEE, d ' | titlecase }} de {{selectedDate | date:'MMMM ' | titlecase}} de {{selectedDate | date:'y ' | titlecase}}"></app-iconed-text>
+						<app-iconed-text icon="calendar_today"
+							text="{{selectedDate | dateFormat: 'fulldate' | titlecase}}"></app-iconed-text>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-time">
-						<app-iconed-text icon="access_time" text="{{selectedDate | date:'H:mm'}} hs"></app-iconed-text>
+						<app-iconed-text icon="access_time"
+							text="{{selectedDate | dateFormat:'time'}}"></app-iconed-text>
 					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
-					<div fxLayout="column" class="assigned-by normal-size" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment" data-id="assignment-professional">
-						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}} {{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
+					<div fxLayout="column" class="assigned-by normal-size"
+						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment"
+						data-id="assignment-professional">
+						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}
+							{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn.toString() | isoToDate |
+							dateFormat:'datetime'}}</span>
 					</div>
 				</div>
 			</div>
@@ -216,7 +211,8 @@
 						</mat-icon>
 					</button>
 
-					<button type="button" disabled
+					<button type="button"
+						[disabled]="(hasRoleToChangeState$ | async) === false || !HABILITAR_ATENDER_TURNO_MANUAL"
 						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }"
 						mat-stroked-button>
 						<mat-icon color="primary" svgIcon="person_check_outlined"
@@ -225,27 +221,49 @@
 
 				</div>
 
-				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired()"
-					fxLayout="column">
-					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
-					<mat-form-field appearance="outline">
-						<textarea formControlName="motive"
-							placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
-							id="motive"></textarea>
-						<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
-						</mat-error>
-						<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
-							[translate]="'forms.MAX_LENGTH_ERROR'"
-							[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
-						</mat-error>
-					</mat-form-field>
-					<div fxLayoutAlign="end">
-						<button mat-flat-button color="primary" id="save">
-							<span> {{'turnos.appointment.SAVE' | translate}}</span>
+
+
+				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
+					<span class="mat-body-strong strong-size"
+						*ngIf="absentMotive || !hideAbsentMotiveForm">
+						{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}
+					</span>
+					<div *ngIf="absentMotive && hideAbsentMotiveForm" fxLayout="row"
+						fxLayoutAlign="space-between" fxLayoutGap="20px">
+						<p class="mat-body strong-size">
+							{{absentMotive}}
+						</p>
+						<button type="button" mat-icon-button color="primary"
+							(click)="setHideAbsentMotiveForm(false)">
+							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
 					</div>
-
-				</form>
+					<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired() && !hideAbsentMotiveForm"
+						fxLayout="column">
+						<mat-form-field appearance="outline">
+							<textarea formControlName="motive"
+								placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
+								id="motive"></textarea>
+							<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
+								[translate]="'forms.MAX_LENGTH_ERROR'"
+								[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
+							</mat-error>
+						</mat-form-field>
+						<div fxLayoutAlign="end">
+							<div data-id="absent-motive-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+								<button mat-stroked-button color="primary" btn-block type="button"
+									*ngIf="absentMotive" (click)="cancelEditMotive()">
+									<span> {{'turnos.appointment.CANCEL' | translate}}</span>
+								</button>
+								<button mat-flat-button color="primary" id="save">
+									<span> {{'turnos.appointment.SAVE' | translate}}</span>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
 			</section>
 		</section>
 
@@ -270,6 +288,8 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn |
+			dateFormat:'datetime'}}</span>
 	</div>
 </ng-template>
+

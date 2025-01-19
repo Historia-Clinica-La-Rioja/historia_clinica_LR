@@ -2,13 +2,13 @@
 	<div fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon" fontSet="material-icons-outlined"> event </mat-icon>
 		<span class="mat-body capitalize-first-letter text">
-			{{ getViewDate() }}
+			{{ appointmentDate | dateFormat: 'fulldate' }}
 		</span>
 	</div>
 	<div fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon"> query_builder </mat-icon>
 		<span class="mat-body text">
-			{{ getViewTime() }} hs
+			{{ appointmentHour | dateFormat: 'time' }}
 		</span>
 	</div>
 	<div fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
@@ -20,13 +20,16 @@
 	<div fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon" fontSet="material-icons-outlined"> add_box </mat-icon>
 		<div fxLayout="column">
-			<span *ngFor="let specialty of appointment.specialties" class="mat-body text">
-				{{ specialty }}
+			<span class="mat-body text">
+				{{ appointment.clinicalSpecialtyName }}
 			</span>
 		</div>
 	</div>
 	<div fxFlex.gt-xs="100%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon" fontSet="material-icons-outlined"> meeting_room </mat-icon>
 		<span class="mat-body text"> {{ appointment.office }} </span>
+	</div>
+	<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="10px">
+		<app-reference-state-label [referenceClosureDescription]="appointment.associatedReferenceClosureType?.description"></app-reference-state-label>
 	</div>
 </div>

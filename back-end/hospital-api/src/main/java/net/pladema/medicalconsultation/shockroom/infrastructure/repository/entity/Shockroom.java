@@ -37,4 +37,10 @@ public class Shockroom extends SGXAuditableEntity<Integer> implements Serializab
 
 	@Column(name = "description", nullable = false)
 	private String description;
+
+	@Column(name = "topic")
+	private String topic;
+
+	@Column(name = "status_id", nullable = true)
+	private Integer statusId;
 }

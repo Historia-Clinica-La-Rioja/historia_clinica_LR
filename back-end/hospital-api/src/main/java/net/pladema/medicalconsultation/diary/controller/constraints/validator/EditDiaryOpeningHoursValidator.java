@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -69,15 +70,29 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
             return Boolean.FALSE;
         }
 
-        boolean overlap = diaryOpeningHoursValidatorService.overlapDiaryOpeningHours(diaryBo, openingHours);
+		boolean overlapBetweenDiaryOpeningHours = diaryOpeningHoursValidatorService.overlapBetweenDiaryOpeningHours(openingHours);
 
-        if (overlap) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{diary.attention.invalid.overlap}")
-                    .addConstraintViolation();
-            LOG.debug(OUTPUT, Boolean.FALSE);
-            return false;
-        }
+		if (overlapBetweenDiaryOpeningHours) {
+			context.disableDefaultConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{diary.attention.invalid.overlap}")
+					.addConstraintViolation();
+			LOG.debug(OUTPUT, Boolean.FALSE);
+			return false;
+		}
+
+		if (diaryBo.getDiaryAssociatedProfessionalsId().isEmpty()) {
+			List<DiaryBo> diariesOverlaps = diaryOpeningHoursValidatorService.overlapWithOthersDiaries(diaryBo, openingHours);
+			if (!diariesOverlaps.isEmpty()) {
+				diariesOverlaps.forEach( dov -> {
+					context.disableDefaultConstraintViolation();
+					context.buildConstraintViolationWithTemplate(overlapDiariesValidationMessage(dov))
+							.addConstraintViolation();
+				});
+				LOG.debug(OUTPUT, Boolean.FALSE);
+				return false;
+			}
+		}
+
         LOG.debug(OUTPUT, Boolean.TRUE);
         return true;
     }
@@ -113,7 +128,16 @@ public class EditDiaryOpeningHoursValidator implements ConstraintValidator<EditD
 
 	private boolean validateProtectedAppointmentsForSpontaneousOpeningHours(List<DiaryOpeningHoursBo> openingHours) {
 		return openingHours.stream()
-				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) && oh.getProtectedAppointmentsAllowed() != null && oh.getProtectedAppointmentsAllowed());
+				.anyMatch(oh -> oh.getMedicalAttentionTypeId().equals(MedicalAttentionType.SPONTANEOUS) &&
+						((oh.getProtectedAppointmentsAllowed() != null && oh.getProtectedAppointmentsAllowed()) || (oh.getRegulationProtectedAppointmentsAllowed() != null && oh.getRegulationProtectedAppointmentsAllowed())));
+	}
+
+	private String overlapDiariesValidationMessage(DiaryBo diaryBo) {
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		StringBuilder message = new StringBuilder("Verifique los datos ingresados, la agenda que intenta configurar se superpone con la siguiente - Fecha inicio %s - Fecha de fin %s");
+		if (diaryBo.getAlias() != null)
+			message.append(" - Alias ").append(diaryBo.getAlias());
+		return String.format(message.toString(), diaryBo.getStartDate().format(dateTimeFormatter), diaryBo.getEndDate().format(dateTimeFormatter));
 	}
 
 }

@@ -14,6 +14,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Snomed implements Serializable {
 
+	private static final String NURSING_PROCEDURE_PT = "Atención de enfermería";
+	private static final String NURSING_PROCEDURE_SCTID = "9632001";
+
 	/**
 	 * 
 	 */
@@ -53,6 +56,11 @@ public class Snomed implements Serializable {
 		this.parentId = parentId;
 		this.parentFsn = parentFsn;
 		this.synonym = synonym;
+	}
+
+	public boolean isNursingProcedure() {
+		return NURSING_PROCEDURE_PT.equals(this.getPt()) &&
+			NURSING_PROCEDURE_SCTID.equals(this.getSctid());
 	}
 
 }

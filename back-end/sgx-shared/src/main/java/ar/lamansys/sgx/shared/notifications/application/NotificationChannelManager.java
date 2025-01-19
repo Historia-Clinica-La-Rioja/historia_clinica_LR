@@ -1,8 +1,8 @@
 package ar.lamansys.sgx.shared.notifications.application;
 
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
-import ar.lamansys.sgx.shared.templating.INotificationTemplateEngine;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.INotificationTemplateEngine;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

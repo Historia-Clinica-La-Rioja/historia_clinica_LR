@@ -18,7 +18,7 @@
                 <span class="grey" *ngIf="!informerObservations.confirmed">
                     {{ 'image-network.worklist.details_study.DRAFT_REPORT' | translate }}
                 </span>
-                <span>{{ informerObservations.actionTime | viewDateDto: 'localdatetime' | date : 'short'}} hs</span>
+                <span>{{ informerObservations.actionTime | viewDateDto: 'localdatetime' | dateFormat : 'datetime'}}</span>
             </div>
         </div>
         <ng-container *ngIf="!informerObservations.confirmed">

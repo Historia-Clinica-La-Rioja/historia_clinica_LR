@@ -27,4 +27,8 @@ public class SectorBO {
 
 	private Short hospitalizationTypeId;
 
+	private Boolean informer;
+
+	private Boolean hasDoctorsOffice;
+
 }

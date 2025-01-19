@@ -1,55 +1,69 @@
 <section id="select-agenda" *ngIf="agendas?.length" fxLayout="row" fxLayoutAlign="space-between center"
 	fxLayout.xs="column" fxLayoutAlign.xs="space-between center">
-	<mat-form-field fxFlex.gt-xs="35%" appearance="outline">
+	<mat-form-field fxFlex.gt-xs="47%" appearance="outline">
 		<mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
-		<mat-select id="agenda-select" [(value)]="agendaSelected">
+		<mat-select id="agenda-select" [(value)]="currentAgenda">
 			<mat-optgroup id="active-agendas" *ngIf="activeAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.ACTIVES_AGENDAS_LABEL' | translate }}</strong></mat-label>
-				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda"
-					(onSelectionChange)="changeAgendaSelected($event, agenda)">
-					<span class="mat-body-strong">
-						{{agenda.alias === undefined || agenda.alias == "" ? agenda?.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda?.clinicalSpecialtyName)}}
-					</span>
-					<span class="mat-body">
-						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
-					</span>
+				<mat-option *ngFor="let agenda of activeAgendas" [value]="agenda.diaryList"
+					(onSelectionChange)="changeAgendaSelected($event, agenda.diaryList)"
+					matTooltip="{{agenda.diaryList.practices | practiceList }}">
+						<div fxFlex="60%" class="text-container">
+							<span *ngIf="agenda?.diaryList.alias">{{agenda.diaryList.alias }} </span>
+
+							<ng-container *ngIf="agenda.diaryList.practices?.length">
+								<span *ngIf="agenda?.diaryList.alias else withOutAliasPractices">
+									({{agenda.diaryList.practices | practiceList}})
+								</span>
+								<ng-template #withOutAliasPractices>
+									<span>
+										{{agenda.diaryList.practices | practiceList}}
+									</span>
+								</ng-template>
+							</ng-container>
+
+							<ng-container *ngIf="!agenda.diaryList.practices?.length">
+								<span *ngIf="agenda?.diaryList.alias else withOutAlias">
+									({{agenda.diaryList.clinicalSpecialtyName}})
+								</span>
+								<ng-template #withOutAlias>
+									<span>
+										{{agenda.diaryList.clinicalSpecialtyName}}
+									</span>
+								</ng-template>
+							</ng-container>
+						</div>
+						<div fxFlex="40%">
+							<span >
+								{{agenda.startDate | dateFormat: 'date' }} - {{agenda.endDate | dateFormat: 'date' }}
+							</span>
+						</div>
 				</mat-option>
 			</mat-optgroup>
 			<mat-optgroup id="expired-agendas" *ngIf="expiredAgendas?.length">
 				<mat-label><strong>{{ 'turnos.home.EXPIRED_AGENDAS_LABEL' | translate }}</strong></mat-label>
 				<mat-option *ngFor="let agenda of expiredAgendas" [value]="agenda"
-					(onSelectionChange)="changeAgendaSelected($event, agenda)">
+					(onSelectionChange)="changeAgendaSelected($event, agenda.diaryList)">
 					<span class="mat-body-strong">
-						{{agenda.alias === undefined || agenda.alias == "" ? agenda?.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.alias, agenda?.clinicalSpecialtyName)}}
+						{{agenda.diaryList.alias === undefined || agenda.diaryList.alias == "" ? agenda?.diaryList.clinicalSpecialtyName : getAliasAndSpecialtyText(agenda.diaryList.alias, agenda?.diaryList.clinicalSpecialtyName)}}
 					</span>
 					<span class="mat-body">
-						{{agenda.startDate | date:dateFormats.SHORT_DATE }} - {{agenda.endDate | date:dateFormats.SHORT_DATE}}
+						{{agenda.startDate | dateFormat: 'date' }} - {{agenda.endDate | dateFormat: 'date' }}
 					</span>
 				</mat-option>
 			</mat-optgroup>
 		</mat-select>
-		<button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected" matSuffix color="warn"
+		<button id="clear_agenda_selected" type="button"  *ngIf="agendaSelected" matSuffix color="warn"
 			mat-icon-button (click)="clear(agendaSelected); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
 	</mat-form-field>
 
 	<div class="actions" *ngIf="agendaSelected" fxLayout="row" fxLayoutGap="3px">
-		<button mat-flat-button color="primary" id="print_agenda" name="print_agenda" (click)="printAgenda()">
-			<mat-icon>print</mat-icon>
-		</button>
-		<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda"
-			name="edit_agenda" (click)="goToEditAgenda()">
-			<mat-icon>edit</mat-icon>
-		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA', 'ADMINISTRATIVO']" id="block_agenda"
-			(click)="blockAgenda()">
-			<mat-icon>block</mat-icon>
-		</button>
-		<button mat-flat-button color="warn" *appHasRole="['ADMINISTRADOR_AGENDA']" id="delete_agenda" name="delete_agenda"
-		        (click)="deleteAgenda()">
-			<mat-icon>delete</mat-icon>
-		</button>
+		<app-button text="imprimir" color="primary" id="print_agenda" name="print_agenda" (clicked)="printAgenda()" ></app-button>
+		<app-button text="editar" color="primary" id="edit_agenda" name="edit_agenda" (clicked)="goToEditAgenda()" *appHasRole="['ADMINISTRADOR_AGENDA']"></app-button>
+		<app-button text="bloquear" color="warn" id="block_agenda" (clicked)="blockAgenda()" *appHasRole="['ADMINISTRADOR_AGENDA', 'ADMINISTRATIVO']"></app-button>
+		<app-button text="eliminar" color="warn" id="delete_agenda" name="delete_agenda" (clicked)="deleteAgenda()" *appHasRole="['ADMINISTRADOR_AGENDA']"></app-button>
 	</div>
 
 </section>
@@ -72,3 +86,4 @@
 </ng-container>
 
 <router-outlet></router-outlet>
+

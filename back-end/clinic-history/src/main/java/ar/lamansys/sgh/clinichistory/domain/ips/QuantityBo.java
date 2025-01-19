@@ -15,4 +15,8 @@ public class QuantityBo {
 
 	private String unit;
 
+	public boolean hasAnyNullValues() {
+		return value == null || unit == null;
+	}
+
 }

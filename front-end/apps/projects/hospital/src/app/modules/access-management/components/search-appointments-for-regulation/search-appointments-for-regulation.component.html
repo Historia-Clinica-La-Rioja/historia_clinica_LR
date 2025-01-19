@@ -1,0 +1,167 @@
+<app-content>
+    <div id="container" fxLayout="column" fxLayoutGap="5px" [formGroup]="searchForm">
+
+        <span [translate]="'access-management.regulation_offer.SEARCH_IN_REGULATION_OFFER_CRITERIA'"
+            class="bottom-separation"></span>
+        <div class="max-width" fxLayout="column" fxLayoutGap="5px">
+            <div fxLayout="row" fxLayoutGap="5px">
+                <strong>
+                    {{ 'access-management.regulation_offer.CARELINE' | translate }}
+                </strong>
+                <span> {{ 'access-management.regulation_offer.OPTIONAL' | translate }}</span>
+            </div>
+            <app-typeahead id="careline" [titleInput]="'access-management.regulation_offer.CARELINE' | translate"
+                [externalSetValue]="externalInformation?.formInformation?.careLine"
+                [disabled]="externalInformation?.disabledInput" [options]="careLineTypeaheadOptions$ | async"
+                (selectionChange)="setCareLine($event)">
+            </app-typeahead>
+        </div>
+
+        <app-regulation-search-criteria class="padding-bottom" [label]="'turnos.TYPE_ATTENTION'"
+            [searchCriteryStyle]="'bold'" [defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput.others"
+            (selectedOption)="setCriteria($event)"></app-regulation-search-criteria>
+
+        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column" *ngIf="isEnableTelemedicina">
+            <div fxLayout="column" fxLayoutGap="5px" fxFlex="100">
+                <strong [translate]="'access-management.regulation_offer.MODALITY_ATTENTION'"></strong>
+                <mat-radio-group formControlName="modality" (change)="resetResults()">
+                    <mat-radio-button color="primary"
+                        [value]="appointmentModality.onSiteAttetion">{{'access-management.regulation_offer.ON_SITE_ATTENTION'
+                        |
+                        translate}}</mat-radio-button>
+                    <mat-radio-button color="primary" [value]="appointmentModality.vitualAttention"
+                        >{{'access-management.regulation_offer.PATIENT_VIRTUAL_ATTENTION'
+                        |
+                        translate}}</mat-radio-button>
+                </mat-radio-group>
+                <div class="error-space">
+                    <mat-error *ngIf="showModalityError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+                </div>
+            </div>
+
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxLayout="column" fxLayoutGap="5px">
+                <div fxLayout="row" fxLayoutGap="5px">
+                    <strong>{{ 'access-management.regulation_offer.SPECIALTY' | translate }}</strong>
+                    <span *ngIf="selectedTypeAttention == searchCriteria.PRACTICES">{{ 'turnos.OPTIONAL' | translate
+                        }}</span>
+                </div>
+                <app-typeahead id="specialty" [titleInput]="'access-management.regulation_offer.SPECIALTY' | translate"
+                    [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"
+                    [externalSetValue]="externalSpecialty" [disabled]="externalInformation?.disabledInput.specialty">
+                </app-typeahead>
+                <div class="error-space">
+                    <mat-error *ngIf="showTypeaheadErrors.specialty">{{ 'forms.REQUIRED' | translate }}</mat-error>
+                </div>
+            </div>
+            <div>
+                <app-typeahead-practices *ngIf="selectedTypeAttention == searchCriteria.PRACTICES"
+                    [practices]="practices$ | async" [externalValue]="externalInformation?.formInformation?.practice"
+                    [disabled]="externalInformation?.disabledInput.others" (selectedOption)="setPractice($event)">
+                </app-typeahead-practices>
+                <div class="error-space">
+                    <mat-error *ngIf="showTypeaheadErrors.practice">{{ 'forms.REQUIRED' | translate }}</mat-error>
+                </div>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
+            fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
+            <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+                <strong>{{ 'access-management.regulation_offer.PROVINCE' | translate }}</strong>
+                <app-typeahead id="province" [titleInput]="'access-management.regulation_offer.PROVINCE' | translate"
+                    [options]="provinceTypeaheadOptions$ | async" (selectionChange)="setProvince($event)"
+                    [externalSetValue]="initialProvinceTypeaheadOptionSelected">
+                </app-typeahead>
+                <div class="error-space">
+                    <mat-error *ngIf="showTypeaheadErrors.province">{{ 'forms.REQUIRED' | translate }}</mat-error>
+                </div>
+            </div>
+
+            <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+                <strong> {{ 'access-management.regulation_offer.DEPARTMENT' | translate }} </strong>
+                <app-typeahead id="department"
+                    [titleInput]="'access-management.regulation_offer.DEPARTMENT' | translate"
+                    [options]="departmentTypeaheadOptions$ | async" (selectionChange)="setDepartment($event)"
+                    [externalSetValue]="initialDepartmentTypeaheadOptionSelected">
+                </app-typeahead>
+                <div class="error-space">
+                    <mat-error *ngIf="showTypeaheadErrors.department">{{ 'forms.REQUIRED' | translate }}</mat-error>
+                </div>
+            </div>
+
+            <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
+                <span>
+                    <strong>{{ 'access-management.regulation_offer.INSTITUTION' | translate }}</strong>
+                    {{ 'turnos.OPTIONAL' | translate }}
+                </span>
+                <app-typeahead id="institution"
+                    [titleInput]="'access-management.regulation_offer.INSTITUTION' | translate"
+                    [options]="institutionTypeaheadOptions$ | async" (selectionChange)="setInstitution($event)"
+                    [externalSetValue]="initialInstitutionTypeaheadOptionSelected">
+                </app-typeahead>
+                <div class="error-space"></div>
+            </div>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="10px">
+            <strong> {{ 'access-management.regulation_offer.SEARCH_START_DATE' | translate }} </strong>
+            <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="5px">
+
+                <mat-form-field appearance="outline" fxFlex="25">
+                    <mat-label [translate]="'access-management.regulation_offer.START_DATE'"></mat-label>
+                    <input formControlName="startDate" matInput [matDatepicker]="startDatePicker" [min]="today"
+                        (dateChange)="updateEndDate($event.value)">
+                    <mat-error [translate]="'forms.REQUIRED'"></mat-error>
+                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex="25">
+                    <mat-label [translate]="'access-management.regulation_offer.END_DATE'"></mat-label>
+                    <input formControlName="endDate" matInput [matDatepicker]="endDatePicker">
+                    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <mat-hint> {{ 'access-management.regulation_offer.DATE_PERIOD_NOTE' | translate }} </mat-hint>
+        </div>
+
+        <div fxLayout="row">
+            <button mat-flat-button type="button" id="search-appointments" color="primary"
+                (click)="searchAppointments()">
+                {{ 'access-management.regulation_offer.SEARCH_APPOINTMENTS' | translate | uppercase }}
+            </button>
+        </div>
+
+        <span *ngIf="showAppointmentsNotFoundMessage" class="mat-h2">
+            {{ 'turnos.search-appointments-in-care-network.NOT_FOUND_APPOINTMENTS' | translate }}
+        </span>
+
+        <span *ngIf="showInvalidFormMessage" class="mat-h3 color-warn">
+            {{ 'turnos.search-appointments-in-care-network.INVALID_FORM_MESSAGE' | translate }}
+        </span>
+
+        <div *ngIf="showAppointmentResults">
+            <h1 class="mat-h1">
+                {{ 'turnos.search-appointments-in-care-network.AVAILABLE_APPOINTMENTS_TITLE' | translate }}
+            </h1>
+
+            <mat-card>
+                <div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
+                    <app-regulation-appointment-result-view [appointment]="appointment" (resetInformation)="clearForm()"
+                        [modalityAttention]="searchForm.controls.modality.value"
+                        [searchAppointmentCriteria]="searchAppointmentCriteria"
+                        [patientId]="externalInformation?.patientId"
+                        [referenceSummary]="externalInformation?.referenceSummary">
+                    </app-regulation-appointment-result-view>
+                    <mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
+                </div>
+                <mat-paginator [length]="protectedAvaibleAppointments?.length" [pageSizeOptions]="pageSizeOptions"
+                    [pageSize]="pageSize" (page)="onPageChange($event)">
+                </mat-paginator>
+            </mat-card>
+        </div>
+
+    </div>
+</app-content>

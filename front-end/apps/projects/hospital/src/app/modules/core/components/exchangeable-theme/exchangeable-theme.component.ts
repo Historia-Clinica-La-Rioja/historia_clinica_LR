@@ -1,5 +1,5 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { AppThemeService } from '@core/services/app-theme.service';
 
 @Component({
 	selector: 'app-exchangeable-theme',
@@ -9,11 +9,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class ExchangeableThemeComponent {
 
 	constructor(
-		private overlayContainer: OverlayContainer
-	) { // This is intentional 
+		private readonly appThemeService: AppThemeService
+	) { // This is intentional
 	}
 
-	themesOptions: Theme[] = [{
+	readonly themesOptions: Theme[] = [{
 		name: 'Indigo y Rosa',
 		class: 'candy-app-theme'
 	},
@@ -24,18 +24,11 @@ export class ExchangeableThemeComponent {
 	{
 		name: 'Defecto'
 	}];
-	selectedTheme: Theme;
-
-	@Output() themeChanged: EventEmitter<Theme> = new EventEmitter();
 
  	setTheme(theme: Theme) {
-		this.selectedTheme = theme;
-		this.themeChanged.next(theme);
-		this.overlayContainer.getContainerElement().classList.remove(... this.themesOptions.map(a => a.class));
-		this.overlayContainer.getContainerElement().classList.add(theme.class);
-	} 
+		this.appThemeService.themeChanged(theme);
+	}
 }
-
 
 export interface Theme {
 	class?: string;

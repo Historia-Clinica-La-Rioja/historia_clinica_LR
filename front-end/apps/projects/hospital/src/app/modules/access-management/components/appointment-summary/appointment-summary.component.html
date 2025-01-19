@@ -1,0 +1,24 @@
+<div fxLayout="column" fxLayoutGap="10px">
+	<span class="title">{{'access-management.search_references.reference.APPOINTMENT_DATA' | translate}}</span>
+
+	<app-colored-label [description]="appointmentSummary.state.description" [color]="appointmentSummary.state.color"></app-colored-label>
+
+	<app-identifier-cases *ngIf="appointmentSummary.date" [identifierCase]="identiferCases.DATE"
+		[description]="appointmentSummary.date.date | viewDateDto: 'date' | dateFormat: 'fulldate'">
+	</app-identifier-cases>
+
+	<div fxLayout="row" *ngIf="appointmentSummary.date">
+		<app-identifier-cases [identifierCase]="identiferCases.HOUR"
+			[description]="appointmentSummary.date.time | viewDateDto: 'time' | dateFormat: 'time'">
+		</app-identifier-cases>
+	</div>
+
+	<app-identifier-cases *ngIf="appointmentSummary.professionalFullName" [identifierCase]="identiferCases.PROFESSIONAL"
+		[description]="appointmentSummary.professionalFullName">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="appointmentSummary.institution" [identifierCase]="identiferCases.INSTITUTION"
+		[description]="appointmentSummary.institution">
+	</app-identifier-cases>
+
+</div>

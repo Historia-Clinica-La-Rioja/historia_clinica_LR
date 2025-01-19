@@ -1,10 +1,9 @@
 import { Component, OnDestroy, ChangeDetectorRef, Input } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-
-import { AuthenticationService } from '../../../auth/services/authentication.service';
 import { MenuItem } from '../menu/menu.component';
-import { OauthAuthenticationService } from "../../../auth/services/oauth-authentication.service";
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+import { LogoutService } from '@core/services/logout.service';
 
 const MARGIN_LEFT_COLLAPSED = 94;
 const MARGIN_LEFT_NOT_COLLAPSED = 194;
@@ -25,13 +24,18 @@ export class MainLayoutComponent implements OnDestroy {
 
 
 	constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-		private authenticationService: AuthenticationService,
-		private oauthAuthenticationService: OauthAuthenticationService,
+		private readonly logoutService: LogoutService,
 		private readonly router: Router,
 	) {
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
 		this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+
+		this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+			if (event.urlAfterRedirects === '/auth/login') {
+				this.logoutService.run();
+			}
+		});
 	}
 
 	@Input() set menuItems(items: MenuItem[]) {
@@ -48,10 +52,7 @@ export class MainLayoutComponent implements OnDestroy {
 	}
 
 	logout(): void {
-		this.authenticationService.logout().subscribe(finished => {
-			this.router.navigate(['/auth/login']);
-		});
-		this.oauthAuthenticationService.logout();
+		this.logoutService.run();
 	};
 
 	toggleSidebarBlock() {

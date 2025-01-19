@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { filter } from 'rxjs';
 
@@ -7,20 +7,18 @@ import { filter } from 'rxjs';
 	templateUrl: './filters-select.component.html',
 	styleUrls: ['./filters-select.component.scss']
 })
-export class FiltersSelectComponent implements OnInit {
+export class FiltersSelectComponent {
 	@Input() set setFilters(filters: filter[]) {
 		this.filters = filters;
 		this.filterForm = this.toFormGroup(this.filters);
 	}
+	@Input() filtersSelectStyle?: string;
 	@Output() searchCriteria = new EventEmitter();
 	filterForm: FormGroup;
 	filters: filter[];
 	isFilterExpanded: boolean = false;
 
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 	toggleFilter(value: boolean) {
 		this.isFilterExpanded = value;

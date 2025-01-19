@@ -9,6 +9,7 @@
 			"START_DATE_PLACEHOLDER": "Seleccionar fecha de inicio",
 			"END_DATE": "Fecha de fin",
 			"END_DATE_PLACEHOLDER": "Seleccionar fecha de fin",
+			"DAYS_RANGE": "Seleccionar rango de fechas",
 			"SPECIALTY": "Especialidad",
 			"SPECIALTY_PLACEHOLDER": "Especialidades",
 			"PROFESSIONAL": "Profesional",
@@ -20,11 +21,29 @@
 			"HIERARCHICAL_UNIT": "Unidad jerárquica",
 			"HIERARCHICAL_UNIT_PLACEHOLDER": "Unidades jerárquicas",
 			"INCLUDE_DESCENDANTS": "Incluir descendientes",
+			"APPOINTMENT_STATE": "Estado de turno",
+			"APPOINTMENT_STATE_PLACEHOLDER": "Estados de turno",
 			"errors": {
 				"FECHA_INICIO_POSTERIOR_FECHA_FIN": "La fecha de inicio debe ser menor o igual a la fecha de fin",
 				"FECHA_INICIO_POSTERIOR_HOY": "La fecha de inicio debe ser anterior o igual a la fecha actual",
 				"FECHA_FIN_MIN": "La fecha de fin debe ser posterior o igual a la fecha de inicio"
 			}
+		},
+		"monthly-report": {
+			"TITLE": "Mensuales descargables",
+			"PREPARING_MESSAGE": "Estamos generando su reporte, este proceso puede demorar unos minutos. Si lo desea, puede regresar más tarde para visualizarlo. Además, si tiene un correo electrónico registrado en el sistema, le notificaremos cuando el reporte esté disponible para su descarga."
+		},
+		"reportes-estadisticos": {
+			"TITLE": "Reportes estadísticos"
+		},
+		"diabetic-patients": {
+			"TITLE": "Pacientes diabéticos"
+		},
+		"hypertensive-patients": {
+			"TITLE": "Pacientes hipertensos"
+		},
+		"weekly-epidemiological-report": {
+			"TITLE": "Reporte epidemiológico semanal"
 		}
 	}
 }

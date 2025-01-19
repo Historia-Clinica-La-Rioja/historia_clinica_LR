@@ -1,0 +1,19 @@
+<mat-toolbar>
+	<mat-toolbar-row *ngIf="(status$ | async) as status; else loading">
+		<button mat-icon-button class="status-icon" (click)="ngOnInit()">
+			<mat-icon *ngIf="status.isAllowedToSend">cloud</mat-icon>
+			<mat-icon *ngIf="!status.isAllowedToSend">cloud_off</mat-icon>
+		</button>
+		<span>Reporte de uso</span>
+		<span class="spacer"></span>
+		<button mat-icon-button class="share-icon" [disabled]="!status.isAllowedToSend" (click)="sendReport()">
+			<mat-icon>share</mat-icon>
+		</button>
+	</mat-toolbar-row>
+</mat-toolbar>
+
+<ng-template #loading>
+	<mat-toolbar-row>
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</mat-toolbar-row>
+</ng-template>

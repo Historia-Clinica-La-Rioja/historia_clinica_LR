@@ -21,6 +21,8 @@ public class DoctorsOfficeVo {
 
     private LocalTime closingTime;
 
+    private Boolean isBlocked;
+
     public DoctorsOfficeVo(Integer id, String description){
         this.id = id;
         this.description = description;

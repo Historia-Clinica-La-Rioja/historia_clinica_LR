@@ -1,6 +1,6 @@
 <app-summary-card [header]="alergiasSummary"
                   [tooltip]="'historia-clinica.summary-card.alergias.TOOLTIP'"
-                  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO']"
+                  [canEdit]="['ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
                   [editable]="editable"
                   (openInNew)="openDialog()">
     <mat-list id="allergies-list" *ngIf="allergies.length > 0 else noInfo">

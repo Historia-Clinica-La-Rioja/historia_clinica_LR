@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +51,8 @@ public class AssetsServiceImpl implements AssetsService {
 
 	private static final Assets DIGITAL_PRESCRIPTION_LOGO = new Assets("image/png", "pdf/digital_recipe_logo.png");
 
+	private static final Assets HSI_HEADER_250x72 =  new Assets("image/png", "pdf/hsi-header-250x72.png");
+	private static final Assets HSI_FOOTER_118x21 =  new Assets("image/png", "pdf/hsi-footer-118x21.png");
 
 	private final FileService fileService;
     private final BlobStorage blobStorage;
@@ -57,7 +61,7 @@ public class AssetsServiceImpl implements AssetsService {
             SPONSOR_LOGO, FAVICON,
             ICON_72, ICON_96, ICON_128, ICON_144, ICON_152, ICON_192, ICON_384, ICON_512,
             FOOTER_LEFT, FOOTER_CENTER, FOOTER_RIGHT, APP_LOGO, DIGITAL_PRESCRIPTION_HEADER,
-			DIGITAL_PRESCRIPTION_LOGO));
+			DIGITAL_PRESCRIPTION_LOGO, HSI_HEADER_250x72, HSI_FOOTER_118x21));
 
     @Override
     public Optional<Assets> findByName(String name) {
@@ -69,7 +73,7 @@ public class AssetsServiceImpl implements AssetsService {
     public StoredFileBo getFile(String fileName) {
         log.debug(INPUT_LOG, fileName);
 
-        Assets newAsset = this.findByName(fileName).get();
+        Assets newAsset = this.findByName(fileName).orElseThrow(() -> new NotFoundException("asset-not-exists", String.format("El archivo %s no existe", fileName)));
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
         var path = fileService.buildCompletePath(partialPath);
         

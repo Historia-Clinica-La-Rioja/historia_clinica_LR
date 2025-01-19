@@ -1,5 +1,7 @@
 package net.pladema.person.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.PersonAgeDto;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -90,5 +92,8 @@ public class APersonDto {
 	private Short departmentId;
 
 	private List<Integer> fileIds;
+
+	@Nullable
+	private PersonAgeDto personAge;
 
 }

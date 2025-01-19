@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { Color, ColoredLabelComponent } from './colored-label.component';
 
 const meta: Meta<ColoredLabelComponent> = {
-	title: 'Example/ColoredLabelComponent',
+	title: 'Presentation/ColoredLabelComponent',
 	component: ColoredLabelComponent,
 	tags: ['autodocs'],
 	argTypes: {

@@ -24,10 +24,15 @@ public class IdentificationType implements Serializable {
 	public static final short CI = 2;
 	public static final short LC = 3;
 	public static final short LE = 4;
-	public static final short CUIT = 5;
-	public static final short CUIL = 6;
-	public static final short OTHER = 10;
-	
+	public static final short CEDULA_MERCOSUR = 5;
+	public static final short CUIT = 6;
+	public static final short CUIL = 7;
+	public static final short PASAPORTE_EXTRANJERO = 8;
+	public static final short CEDULA_IDENTIDAD_EXTRANJERA = 9;
+	public static final short OTRO_DOCUMENT_EXTRANJERO = 10;
+	public static final short NO_POSEE = 11;
+	public static final short EN_TRAMITE = 12;
+
     private static final long serialVersionUID = 6073121006647178082L;
 
     @Id

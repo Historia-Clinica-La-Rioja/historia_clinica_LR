@@ -1,0 +1,35 @@
+.new-violence-situation {
+    margin-bottom: 1.5rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+app-summary-card {
+    margin-bottom: 1rem;
+    width: 100%;
+
+    .see-all {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.scrollable {
+    max-height: 45rem;
+    overflow-y: auto;
+}
+
+.no-info {
+	padding: 20px 5px;
+	text-align: center;
+	font-weight: bold;
+	color: #a8a8a8;
+}
+
+app-violence-situation-history-filters {
+    padding: 1rem;
+}

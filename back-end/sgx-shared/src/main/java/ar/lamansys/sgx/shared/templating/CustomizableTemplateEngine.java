@@ -1,6 +1,6 @@
 package ar.lamansys.sgx.shared.templating;
 
-import static ar.lamansys.sgx.shared.templating.SpringTemplateUtils.createHtmlTemplateEngine;
+import static ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils.createHtmlTemplateEngine;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;

@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title class="mat-h2">{{'historia-clinica.isolation-alert.ADD_ISOLATION_ALERT' | translate }}</span>
+    <button id="close" mat-icon-button mat-dialog-close>
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<app-isolation-alert-form mat-dialog-content ></app-isolation-alert-form>
+<mat-dialog-actions align="end" class="space">
+    <app-button id="cancel" text="{{'buttons.CANCEL'}}" (clicked)="closeDialog()">
+    </app-button>
+    <app-button id="confirm" buttonType="{{RAISED}}"
+        text="{{'historia-clinica.isolation-alert.CONFIRM_BUTTON'}}" (clicked)="submit()">
+    </app-button>
+</mat-dialog-actions>

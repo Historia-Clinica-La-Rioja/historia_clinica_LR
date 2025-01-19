@@ -1,0 +1,11 @@
+<app-content width="full-back">
+	<app-route-back></app-route-back>
+	<section fxLayout="column" fxLayoutGap="20px">
+		<div fxLayout="column" fxLayoutGap="10px">
+			<span mat-line class="mat-body" [translate]="'configuracion.document-images.DESCRIPTION'"></span>
+			<div *ngFor="let image of images" >
+				<app-asset-form [icon]="image" basePath="api/assets/"></app-asset-form>
+			</div>
+		</div>
+	</section>
+</app-content>

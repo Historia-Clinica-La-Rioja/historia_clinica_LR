@@ -2,8 +2,9 @@
     "gestion-camas": {
         "home": {
             "TITLE": "Gestión de camas",
-            "SUBTITLE": "Disponibilidad de camas",
-            "NO_FILTERED_BEDS": "No hay resultados para la búsqueda seleccionada"
+            "SUBTITLE": "Filtrar por",
+            "NO_FILTERED_BEDS": "No hay resultados para la búsqueda seleccionada",
+            "RESULTS": "Resultado: {{bedsAmount}} camas encontradas"
         },
         "detail": {
             "TITLE": "Detalle de cama",
@@ -17,14 +18,38 @@
             "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable: ",
             "NO_DISCHARGE_DATE": "Sin información",
             "FREE": "Libre",
-            "NOT_FREE": "Ocupada"
+            "NOT_FREE": "Ocupada",
+            "BLOCK": "Bloqueado",
+            "INCHARGE_NURSE": "Enfermero a cargo:",
+            "NURSE_DNI": "DNI: {{nurseDni}}",
+            "more-actions": {
+                "NURSE_ASSIGN": "Asignar enfermero a cargo",
+                "NURSE_EDIT_ASSIGN": "Editar enfermero a cargo", 
+                "DELETE_NURSE": "Eliminar enfermero a cargo",
+                "INCHARGE_NURSE": "Enfermero a cargo",
+                "SUBTITLE": "Ingrese los siguientes datos para asignar un enfermero a la cama {{bed}}",
+                "CANCEL": "Cancelar",
+                "SAVE": "Guardar",
+                "ASSIGN_SUCCESS": "Enfermero asignado existosamente",
+                "NO_NURSES_AVAILABLE": "No hay enfermeros habilitados",
+                "DELETED_NURSE": "Se ha eliminado exitosamente la asignación de  enfermero a cargo"
+            }
         },
         "filters": {
-            "FREE_BEDS": "Ver camas ocupadas",
             "SECTOR": "Sector",
             "SERVICE": "Servicio",
             "BED_CATEGORY": "Categoría",
-            "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable"
+            "PROBABLE_DISCHARGE_DATE": "Fecha de alta probable",
+            "HIERARCHICAL_UNITS": "Unidades jerárquicas"
+        },
+        "sector": {
+            "NO_INFORMATION": "Sin información",
+            "HIERARCHICAL_UNITS": "Unidad jerárquica",
+            "SERVICES": "Servicios",
+            "ORGANIZATION": "Organización",
+            "AGE_GROUP": "Grupo de edad",
+            "CARE_TYPE": "Tipo de cuidados",
+            "PERMANENCE": "Permanencia"
         }
     }
 }

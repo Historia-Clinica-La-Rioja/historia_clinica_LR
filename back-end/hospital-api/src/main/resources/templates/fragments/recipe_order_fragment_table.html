@@ -62,6 +62,11 @@
             position: relative;
             display: block;
         }
+        @media print {
+            table {
+                page-break-inside: avoid;
+            }
+        }
 	</style>
 </head>
 <body th:fragment="data">
@@ -86,12 +91,19 @@
                 <strong> Fecha de emisión: </strong>
                 <label th:text="${requestDate}"></label>
                 <strong> N° de Orden: </strong>
-                <label th:text="${request.serviceRequestId}"></label>
+                <label th:text="${request.getServiceRequestId()}"></label>
                 <br/>
-                <strong> Institución: </strong>
-                <label th:text="${institution.name}"></label>
-                <strong> REFES: </strong>
-                <label th:text="${institution.sisaCode}"></label>
+                <div th:if="${!request.isTranscribed()}">
+                    <strong> Institución: </strong>
+                    <label th:text="${institution.name}"></label>
+                    <strong> REFES: </strong>
+                    <label th:text="${institution.sisaCode}"></label>
+                </div>
+                <div th:if="${request.isTranscribed()}">
+                    <strong> Institución: </strong>
+                    <label th:text="${#strings.length(institutionName) > 30 ? #strings.substring(institutionName, 0, 30) + '...' : institutionName}"></label>
+                    <strong> REFES: </strong><label> </label>
+                </div>
             </div>
         </div>
         <br/>
@@ -104,9 +116,9 @@
                     <label th:text="${patient.person.identificationNumber}"></label>
                 </div>
             </div>
-            <div th:with="nameIsPresent = ${patient.person != null && patient.person.completeName() != null}">
+            <div th:with="nameIsPresent = ${patient.person != null && patient.person.completeName(selfPerceivedFF) != null}">
                 <strong> Apellido y nombre: </strong>
-                <label th:if="${nameIsPresent}" th:text="${patient.person.completeName()}"></label>
+                <label th:if="${nameIsPresent}" th:text="${patient.person.completeName(selfPerceivedFF)}"></label>
                 <label th:unless="${nameIsPresent}"> Sin información </label>
             </div>
             <br/>
@@ -121,59 +133,89 @@
                 </div>
                 <br/>
             </div>
+            <div th:if="${contactInfo != null}">
+                <strong>Dirección del paciente: </strong>
+                <label th:text="${#strings.defaultString(contactInfo.address.completeAddress, '-')}"></label>
+                <br/>
+                <strong>Teléfono: </strong>
+                <label th:text="${#strings.defaultString(contactInfo.phone.completePhone, '-')}"></label>
+            </div>
         </div>
     </header>
     <div>
         <div class="ml-2 mr-2">
-            <table class="table ">
-                <colgroup>
-                    <col span="1" style="width: 5%;"/>
-                    <col span="1" style="width: 10%;"/>
-                    <col span="1" style="width: 15%;"/>
-                    <col span="1" style="width: 30%;"/>
-                    <col span="1" style="width: 40%;"/>
-                </colgroup>
-                <thead class="thead-light">
-                <tr>
-                    <th scope="col">N° </th>
-                    <th scope="col">CIE10 </th>
-                    <th scope="col">Diagnóstico </th>
-                    <th scope="col" th:if="${recipe}" > Medicación </th>
-                    <th scope="col" th:if="${order}" > Estudio </th>
-                    <th scope="col" >Observaciones </th>
-                </tr>
-                </thead>
-                <tbody th:if="${recipe}">
-                    <tr th:each="medication,iter: ${request.medications}">
-                        <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
-                        <td th:text="${#strings.defaultString(medication.healthCondition.cie10codes, '-')}"></td>
-                        <td th:text="${medication.healthCondition.snomed.pt}"></td>
-                        <td th:text="${medication.snomed.pt}"></td>
-                        <td th:text="${#strings.defaultString(medication.note, '-')}"></td>
+            <div th:if="${recipe}">
+                <table th:each="medication,iter: ${request.medications}" class="table">
+                    <colgroup>
+                        <col style="width: 5%;"/>
+                        <col style="width: 10%;"/>
+                        <col style="width: 15%;"/>
+                        <col style="width: 30%;"/>
+                        <col style="width: 15%;"/>
+                        <col style="width: 25%;"/>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th class="thead-light"> N° </th>
+                            <th class="thead-light"> CIE10 </th>
+                            <th class="thead-light"> Diagnóstico </th>
+                            <th class="thead-light"> Medicación </th>
+                            <th class="thead-light"> Intervalo </th>
+                            <th class="thead-light"> Tiempo de administración </th>
+                        </tr>
+                        <tr>
+                            <td th:text="${(iter.index + 1)}"></td>
+                            <td th:text="${#strings.defaultString(medication.healthCondition.cie10codes, '-')}"></td>
+                            <td th:text="${medication.healthCondition.snomed.pt}"></td>
+                            <td th:text="${medication.snomed.pt}"></td>
+                            <td th:text="${medication.dosage.periodUnit != 'd' ? 'Cada ' + medication.dosage.frequency + ' hs.' : 'Diariamente'}"></td>
+                            <td th:text="${medication.dosage.duration != 0 ? 'Durante ' + #numbers.formatDecimal(medication.dosage.duration, 0, 0) + ' días' : 'Habitualmente'}"></td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light" colspan="6"> Observaciones </th>
+                        </tr>
+                        <tr>
+                            <td colspan="6" th:text="${#strings.defaultString(medication.note, '-')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${order}">
+                <table class="table">
+                    <colgroup>
+                        <col span="1" style="width: 5%;"/>
+                        <col span="1" style="width: 10%;"/>
+                        <col span="1" style="width: 15%;"/>
+                        <col span="1" style="width: 30%;"/>
+                        <col span="1" style="width: 40%;"/>
+                    </colgroup>
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">N° </th>
+                        <th scope="col">CIE10 </th>
+                        <th scope="col">Diagnóstico </th>
+                        <th scope="col"> Estudio </th>
+                        <th scope="col">Observaciones </th>
                     </tr>
-                </tbody>
-                <tbody th:if="${order}">
-                    <tr th:each="order,iter: ${request.diagnosticReports}">
-                        <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
-                        <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
-                        <td th:text="${order.healthCondition.snomed.pt}"></td>
-                        <td th:text="${order.snomed.pt}"></td>
-                        <td th:text="${#strings.defaultString(order.observations, '-')}"></td>
-                    </tr>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order,iter: ${request.diagnosticReports}">
+                            <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
+                            <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
+                            <td th:text="${order.healthCondition.snomed.pt}"></td>
+                            <td th:text="${order.snomed.pt}"></td>
+                            <td th:text="${#strings.defaultString(request.observations, '-')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <br/>
-    <footer>
+    <footer style="page-break-inside: avoid;">
         <div class="footer-left">
-            <div th:if="${nameSelfDeterminationFF && professional.getNameSelfDetermination() != null && !professional.getNameSelfDetermination().isEmpty()}">
-                <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getNameSelfDetermination())}"></label>
-            </div>
-            <div th:if="${!nameSelfDeterminationFF || professional.getNameSelfDetermination() == null || professional.getNameSelfDetermination().isEmpty()}">
-                <strong >Profesional: </strong><label th:text="${professional.getCompleteName(professional.getFirstName())}"></label>
-            </div>
-            <p><strong>Matrículas: </strong><label th:text="${professional.getCompleteLicenseInfo()}"></label></p>
+            <strong>Profesional: </strong><label th:text="${#strings.length(professionalName) > 52 ? #strings.substring(professionalName, 0, 52) + '...' : professionalName}"></label>
+            <p><strong>Matrículas: </strong><label th:text="${!request.isTranscribed()} ? ${professional.getCompleteLicenseInfo()} : ''"></label></p>
         </div>
         <div class="footer-right">
             <hr/>

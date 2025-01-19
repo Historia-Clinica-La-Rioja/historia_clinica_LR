@@ -1,0 +1,50 @@
+<div *ngIf="details$ | async as details">
+	<div *ngIf="spaceTypeDetails" class="flex-container">
+		<app-emergency-care-detail-place-type
+			[spaceType]="_selectedSpace.spaceType"
+			[spaceTypeDetails]="spaceTypeDetails">
+		</app-emergency-care-detail-place-type>
+
+		<div *ngIf="spaceTypeDetails.state === SpaceState.NOT_AVAILABLE" class="more-details">
+            <div *ngIf="details.moreDetails?.patient">
+                <mat-divider></mat-divider>
+                <app-emergency-care-attention-place-patient [patient]="details.moreDetails?.patient"></app-emergency-care-attention-place-patient>
+            </div>
+
+			<mat-divider></mat-divider>
+
+			<div fxLayout="column" fxLayoutGap="25px">
+				<app-emergency-care-attention-place-attention-state
+					[state]="details.moreDetails.state"
+					[professional]="details.moreDetails.professional"
+					[date]="details.moreDetails.updatedOn">
+				</app-emergency-care-attention-place-attention-state>
+
+				<app-emergency-care-attention-place-entry-details *ngIf="details.moreDetails?.reason || details.moreDetails?.type"
+					[reason]="details.moreDetails.reason"
+					[type]="details.moreDetails.type">
+				</app-emergency-care-attention-place-entry-details>
+
+				<app-emergency-care-attention-place-last-triage *ngIf="details.moreDetails?.lastTriage"
+					[lastTriage]="details.moreDetails.lastTriage">
+				</app-emergency-care-attention-place-last-triage>
+
+				<app-emergency-care-change-attention-place-button
+					[patient]="details.moreDetails?.patient"
+					[episodeId]="details.moreDetails?.episodeId"
+					[lastPlacePreview]="lastPlacePreview">
+				</app-emergency-care-change-attention-place-button>
+			</div>
+		</div>
+		
+		<ng-container *ngIf="spaceTypeDetails.state === SpaceState.BLOCKED">
+			<mat-divider></mat-divider>
+			<app-blocked-attention-place-details [blockedAttentionPlaceDetails]="blockedAttentionPlaceDetails"></app-blocked-attention-place-details>
+		</ng-container>
+		
+		<app-block-unblock-attention-place *ngIf="spaceTypeDetails.state !== SpaceState.NOT_AVAILABLE"
+			[emergencyCareDetails]="details" [selectedSpace]="selectedSpace"
+		></app-block-unblock-attention-place>
+		
+	</div>
+</div>

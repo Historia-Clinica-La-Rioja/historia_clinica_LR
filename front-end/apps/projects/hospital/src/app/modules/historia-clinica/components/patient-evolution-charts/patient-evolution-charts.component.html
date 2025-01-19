@@ -1,0 +1,16 @@
+<app-evolution-chart-options [patientId]="patientId" (selectedEvolutionChartOptions)="buildChart($event)"></app-evolution-chart-options>
+
+<app-box-message [boxMessageInfo]="boxMessageInfo"></app-box-message>
+
+<div *ngIf="chart else loadingInfo">
+    <app-chart  [chart]="chart"></app-chart>
+</div>
+
+<ng-template #loadingInfo>
+    <div *ngIf="!loadChart else buildingChart">
+        <app-no-data [message]="'historia-clinica.evolution-charts-popup.MESSAGE'"></app-no-data>
+    </div>
+    <ng-template #buildingChart>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </ng-template>
+</ng-template>

@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.equipmentdiary.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.equipmentdiary.domain.UpdateEquipmentDiaryAppointmentBo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.domain.CompleteEquipmentDiaryListVo;
 import net.pladema.medicalconsultation.equipmentdiary.repository.entity.EquipmentDiary;
 
@@ -92,4 +93,18 @@ public interface EquipmentDiaryRepository extends SGXAuditableEntityJPARepositor
 			"WHERE aa.pk.appointmentId = :appointmentId ")
 	Optional<EquipmentDiary> getDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.medicalconsultation.equipmentdiary.domain.UpdateEquipmentDiaryAppointmentBo(a.id, a.dateTypeId, a.hour, " +
+			"a.appointmentStateId, edoh.medicalAttentionTypeId) " +
+			"FROM EquipmentDiary ed " +
+			"JOIN EquipmentAppointmentAssn eaa ON (eaa.pk.equipmentDiaryId = ed.id) " +
+			"JOIN Appointment a ON (a.id = eaa.pk.appointmentId) " +
+			"JOIN EquipmentDiaryOpeningHours edoh ON (edoh.pk.equipmentDiaryId = ed.id AND edoh.pk.openingHoursId = eaa.pk.openingHoursId) " +
+			"WHERE ed.id = :equipmentDiaryId " +
+			"AND a.appointmentStateId != :appointmentStateId " +
+			"AND a.deleteable.deleted = FALSE " +
+			"AND ed.deleteable.deleted = FALSE " +
+			"AND a.dateTypeId >= CURRENT_DATE")
+	List<UpdateEquipmentDiaryAppointmentBo> fetchUpdateEquipmentDiaryAppointments(@Param("equipmentDiaryId") Integer equipmentDiaryId,
+																				  @Param("appointmentStateId") Short appointmentStateId);
 }

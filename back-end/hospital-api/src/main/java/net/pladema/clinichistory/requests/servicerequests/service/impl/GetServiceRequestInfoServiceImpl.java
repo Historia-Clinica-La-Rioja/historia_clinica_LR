@@ -48,6 +48,9 @@ public class GetServiceRequestInfoServiceImpl implements GetServiceRequestInfoSe
                 resultQuery.stream()
                         .map(this::createDiagnosticReportBo)
                         .collect(Collectors.toList()));
+		result.setAssociatedSourceTypeId((Short) resultQuery.get(0)[14]);
+		result.setInstitutionId((Integer) resultQuery.get(0)[15]);
+		result.setObservations((String) resultQuery.get(0)[16]);
         return result;
     }
 

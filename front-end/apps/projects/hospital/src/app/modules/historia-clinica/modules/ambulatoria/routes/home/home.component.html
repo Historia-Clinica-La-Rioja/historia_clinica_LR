@@ -8,7 +8,7 @@
 			<em class="text-danger" *ngIf="requiringValues" translate="forms.REQUIRING_FIELD_FOR_SEARCH"></em>
 			<em class="text-danger" *ngIf="requiringAtLeastOneMoreValue"
 				translate="forms.REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH"></em>
-			<form id="personalInformationForm" [formGroup]="personalInformationForm" (ngSubmit)="save()"
+			<form id="personalInformationForm" [formGroup]="personalInformationForm"
 				fxLayout="column" fxLayoutGap="20px">
 				<div fxLayout="row" fxLayoutGap="10px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0">
 					<div fxFlex="30" fxFlex.lt-md="100">
@@ -110,21 +110,18 @@
 					</div>
 				</div>
 
-				<div fxLayout="row">
-					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
-						<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
-						<input formControlName="birthDate" id="birthDate" matInput [min]="minDate" [max]="today"
-							[matDatepicker]="picker2">
-						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-						<mat-datepicker #picker2></mat-datepicker>
-						<mat-error translate="forms.INVALID_DATE"></mat-error>
-					</mat-form-field>
+				<div fxLayout="column">
+					<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+					<app-datepicker
+						[minDate]="minDate" [maxDate]="today"
+						(selectDate)="setSelectedDate($event)">
+					</app-datepicker>
 				</div>
 
 				<div>
-					<button mat-raised-button color="primary" type="submit">
-						<span [translate]="'buttons.SEARCH'"></span>
-					</button>
+					<app-button buttonType="mat-raised-button" color="primary" 
+						text="buttons.SEARCH" (clicked)="save()" [isLoading]="isLoadingRequest">
+					</app-button>
 				</div>
 
 			</form>
@@ -142,16 +139,11 @@
 			</span>
 		</mat-card>
 
-		<div *ngIf="!ffOfCardsIsOn else patientCard">
-			<app-table id="resultTable" [model]="tableModel"
-				*ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
-		</div>
-
-		<ng-template #patientCard>
-			<app-card-patient [patientData]="patientData" [genderTableView]="genderTableView"
-				*ngIf="patientData?.length > 0 else noInfo">
+		<div>
+			<app-card-patient *ngIf="patientData?.length > 0 else noInfo" [patientResultsLength]="patientResultsLength"
+				[patientData]="patientData" [genderTableView]="genderTableView" (page)="onPageChange($event)">
 			</app-card-patient>
-		</ng-template>
+		</div>
 
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>

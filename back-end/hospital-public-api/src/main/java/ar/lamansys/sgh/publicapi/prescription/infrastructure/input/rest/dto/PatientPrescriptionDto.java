@@ -4,13 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDate;
 @Getter
-@Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,4 +23,10 @@ public class PatientPrescriptionDto {
 	String medicalCoverageCuit;
 	String medicalCoveragePlan;
 	String affiliateNumber;
+	String country;
+	String province;
+	String department;
+	String city;
+	String street;
+	String streetNumber;
 }

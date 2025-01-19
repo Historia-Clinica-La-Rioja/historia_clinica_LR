@@ -1,0 +1,27 @@
+<div id="main-container" fxLayout="column" fxLayoutGap="15px">
+    <h2> {{ 'image-network.worklist.details_study.DETAIL_ORDER' | translate | titlecase }}</h2>
+    <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="12px">
+        <span class="grey">
+            {{detailOrder.patient | titlecase}}
+        </span>
+        <ng-container *ngIf="detailOrder.hasOrder">
+            <span class="grey">Orden#{{detailOrder.idServiceRequest}}</span>
+        </ng-container>
+        <app-image-order-coloredIconText-cases *ngIf="!detailOrder.hasOrder" id="colored-type-order" class="hide-overflow" [descriptionCases]="currentTypeOrder">
+        </app-image-order-coloredIconText-cases>
+    </div>
+    <div *ngIf="this.detailOrder.idServiceRequest && this.detailOrder.studiesNames.length > 0" fxLayout="column" fxLayoutGap="12px" id="order-info-studies">
+        <app-identifier-cases [position]="position" [showLegend]="false" [description]="detailOrder.studiesNames| titlecase"
+            [identifierCase]="identifierCases.PRACTICE" id="studies"></app-identifier-cases>
+    </div>
+    <div  *ngIf="detailOrder.healthCondition" fxLayout="column" fxLayoutGap="12px" id="order-info-problem">
+        <app-identifier-cases [position]="position" [showLegend]="true" [description]="detailOrder.healthCondition"
+            [identifierCase]="identifierCases.PROBLEM" id="problem"></app-identifier-cases>
+    </div>
+    <span id="observation">{{ detailOrder.observations }}</span>
+    <div class="row-container" fxLayoutAlign="space-between" id="detail-info-professional">
+        <span *ngIf="detailOrder.professionalOrderTranscribed" class="grey" id="professional-name">{{detailOrder.professionalOrderTranscribed}} </span>
+        <span *ngIf="detailOrder.professional" class="grey" id="professional-name">{{detailOrder.professional | professionalFullName:selfDeterminationName }} </span>
+        <span *ngIf="detailOrder.creationDate" class="grey" id="date">{{detailOrder.creationDate | dateFormat: 'datetime'}}</span>
+    </div>
+</div>

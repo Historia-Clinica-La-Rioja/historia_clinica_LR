@@ -10,6 +10,10 @@ public interface DiaryOpeningHoursValidatorService {
 
     boolean allowNewOverturn(Integer diaryId, Integer openingHoursId, LocalDate newApmtDate);
 
-    boolean overlapDiaryOpeningHours(DiaryBo diaryBo, List<DiaryOpeningHoursBo> openingHours);
+	boolean overlapBetweenDiaryOpeningHours(List<DiaryOpeningHoursBo> openingHours);
+
+	List<DiaryBo> overlapWithOthersDiaries(DiaryBo diaryBo, List<DiaryOpeningHoursBo> openingHours);
+
+
 }
 

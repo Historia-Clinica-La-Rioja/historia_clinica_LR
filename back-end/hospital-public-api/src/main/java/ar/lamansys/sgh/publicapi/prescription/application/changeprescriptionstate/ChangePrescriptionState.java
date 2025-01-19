@@ -2,8 +2,12 @@ package ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionsta
 
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
+import lombok.AllArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
@@ -17,25 +21,22 @@ import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.Chan
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.DispensedMedicationDto;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class ChangePrescriptionState {
-	private final Logger logger;
 	private final PrescriptionStorage prescriptionStorage;
-
-	public ChangePrescriptionState(PrescriptionStorage prescriptionStorage) {
-		this.prescriptionStorage = prescriptionStorage;
-		this.logger = LoggerFactory.getLogger(ChangePrescriptionState.class);
-	}
+	private final LocalDateMapper localDateMapper;
 
 	public void run(ChangePrescriptionStateDto changePrescriptionLineStateDto, PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) throws PrescriptionNotFoundException {
-		logger.debug("Input parameters -> changePrescriptionLineStateDto {}", changePrescriptionLineStateDto);
+		log.debug("Input parameters -> changePrescriptionLineStateDto {}", changePrescriptionLineStateDto);
 		prescriptionStorage.changePrescriptionState(mapTo(changePrescriptionLineStateDto), prescriptionIdentifier, identificationNumber);
-		logger.debug("Output -> success");
+		log.debug("Output -> success");
 	}
 
 	private ChangePrescriptionStateBo mapTo(ChangePrescriptionStateDto changePrescriptionStateDto) {
 		var returnBo = ChangePrescriptionStateBo.builder()
 				.prescriptionId(changePrescriptionStateDto.getPrescriptionId())
-				.changeDate(changePrescriptionStateDto.getChangeDate())
+				.changeDate(localDateMapper.fromStringToLocalDateTime(changePrescriptionStateDto.getChangeDate()))
 				.pharmacistName(changePrescriptionStateDto.getPharmacistName())
 				.pharmacyName(changePrescriptionStateDto.getPharmacyName())
 				.pharmacistRegistration(changePrescriptionStateDto.getPharmacistRegistration())

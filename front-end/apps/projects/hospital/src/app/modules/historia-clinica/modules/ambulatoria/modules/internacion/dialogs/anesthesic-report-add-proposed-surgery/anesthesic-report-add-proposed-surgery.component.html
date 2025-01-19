@@ -1,0 +1,43 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'internaciones.anesthesic-report.proposed-surgery.ADD_SURGERY'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.proposedSurgeryService.snomedConcept else proposedSurgery">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else proposedSurgeryTypeaheadSearch"
+            [label]="'internaciones.anesthesic-report.proposed-surgery.PROPOSED_SURGERY'"
+            (search)="data.proposedSurgeryService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #proposedSurgeryTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.proposedSurgeryService.getECL()"
+                [placeholder]="'internaciones.anesthesic-report.proposed-surgery.PROPOSED_SURGERY'"
+                (conceptSelected)="data.proposedSurgeryService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #proposedSurgery>
+    <form [formGroup]="data.proposedSurgeryService.getForm()" (ngSubmit)="addProposedSurgery()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline">
+                <input id="proposed-surgery-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.proposedSurgeryService.snomedConcept.pt }}">
+                <button id="clear-proposed-surgery"  matSuffix color="warn" mat-icon-button
+                    (click)="data.proposedSurgeryService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div align="end">
+                <button id="submit_proposed-surgery" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase"
+                        [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

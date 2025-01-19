@@ -12,16 +12,15 @@ import { MenuItem, defToMenuItem } from '@presentation/components/menu/menu.comp
 import { UserInfo } from '@presentation/components/user-badge/user-badge.component';
 import { mapToUserInfo } from '@api-presentation/mappers/user-person-dto.mapper';
 
-import { MenuService } from '@extensions/services/menu.service';
-
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants/menu';
 
-import { HomeRoutes } from '../home/home-routing.module';
+import { HomeRoutes } from './constants/menu';
 import { AppRoutes } from '../../app-routing.module';
 import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { MenuItemDef } from '@core/core-model';
 import { ContextService } from '@core/services/context.service';
+import { PwaUpdateService } from '@core/services/pwa-update.service';
 
 export const NO_INSTITUTION: number = -1;
 
@@ -38,12 +37,12 @@ export class HomeComponent implements OnInit {
 
 	homeExtensions$: Observable<MenuItem[]>;
 	constructor(
-		private extensionMenuService: MenuService,
 		private accountService: AccountService,
 		private featureFlagService: FeatureFlagService,
 		private loggedUserService: LoggedUserService,
 		private readonly wcExtensionsService: WCExtensionsService,
-		private contextService: ContextService
+		private contextService: ContextService,
+		private readonly pwaUpdateService: PwaUpdateService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
@@ -54,6 +53,7 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		this.pwaUpdateService.checkForUpdate()
 		this.loggedUserService.assignments$.subscribe(roleAssignment => {
 			const menuItemDefs: MenuItemDef[] = this.userHasAnyRole(roleAssignment) ? ROLES_USER_SIDEBAR_MENU : NO_ROLES_USER_SIDEBAR_MENU;
 
@@ -61,9 +61,6 @@ export class HomeComponent implements OnInit {
 				.pipe(
 					map(menu => filterItems<MenuItemDef>(menu, roleAssignment.map(r => r.role))),
 					map((menu: MenuItemDef[]) => menu.map(defToMenuItem)),
-					switchMap(items => this.extensionMenuService.getSystemMenuItems().pipe(
-						map((extesionItems: MenuItem[]) => [...items, ...extesionItems]),
-					)),
 					switchMap(items => this.homeExtensions$.pipe(
 						map((wcExtensionesMenu: MenuItem[]) => [...items, ...wcExtensionesMenu,]),
 					)),
@@ -80,5 +77,4 @@ export class HomeComponent implements OnInit {
 	private userHasAnyRole(roleAssignments: RoleAssignmentDto[]): boolean {
 		return (roleAssignments.length > 0);
 	}
-
 }

@@ -1,0 +1,4 @@
+<div class="counter" >
+    <label for="counter">Tiempo en segundos:</label>
+    <input id="counter" type="number" name="Num" [(ngModel)]="counterValue" min="10" class="chart" (change)="onCounterChange()" (keypress)="onKeyPress($event)" />
+  </div>

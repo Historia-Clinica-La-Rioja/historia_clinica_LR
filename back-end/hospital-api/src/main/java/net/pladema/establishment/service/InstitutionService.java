@@ -16,10 +16,16 @@ public interface InstitutionService {
 
 	AddressBo getAddress(Integer institutionId);
 
-	List<InstitutionBasicInfoBo> getFromInstitutionDestinationReference(Short departmentId, Integer clinicalSpecialtyId, Integer careLineId);
+	ar.lamansys.sgh.shared.domain.general.AddressBo getInstitutionAddress(Integer institutionId);
+
+	List<InstitutionBasicInfoBo> getInstitutionsByReferenceByClinicalSpecialtyFilter(Short departmentId, List<Integer> clinicalSpecialtyIds, Integer careLineId);
 
 	List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions();
 	
-	List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId, Integer clinicalSpecialtyId, Integer careLineId);
+	List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId, List<Integer> clinicalSpecialtyIds, Integer careLineId);
 
+	List<InstitutionBasicInfoBo> getInstitutionsByManagerUser();
+
+	List<InstitutionBo> getAll();
+	
 }

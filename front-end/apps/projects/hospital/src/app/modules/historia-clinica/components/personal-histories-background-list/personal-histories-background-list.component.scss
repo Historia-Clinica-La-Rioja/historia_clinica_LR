@@ -1,0 +1,19 @@
+.bold-text {
+    font-weight: bold;
+}
+
+.italic-text {
+    font-style: italic;
+}
+
+.observations {
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
+    margin: 10px 0;
+}

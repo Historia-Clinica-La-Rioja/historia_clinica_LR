@@ -1,69 +1,83 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { ButtonType } from "@presentation/components/button/button.component";
 import { StudyStatusPopupComponent } from '../study-status-popup/study-status-popup.component';
 import { AppointmentsService } from "@api-rest/services/appointments.service";
-import { ApiErrorMessageDto, DetailsOrderImageDto } from "@api-rest/api-model";
+import { DetailsOrderImageDto } from "@api-rest/api-model";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
 
-import {catchError, concatMap, tap} from 'rxjs/operators';
-import { EMPTY } from "rxjs";
+import {catchError, map, tap} from 'rxjs/operators';
+import { Observable, of } from "rxjs";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { processErrors } from "@core/utils/form.utils";
-import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { DetailOrderImage } from '../../components/order-image-detail/order-image-detail.component';
 
 @Component({
 	selector: 'app-finish-study',
 	templateUrl: './finish-study.component.html',
 	styleUrls: ['./finish-study.component.scss']
 })
-export class FinishStudyComponent {
+export class FinishStudyComponent implements OnInit {
 
 	observations: string;
 	reportNotRequired = false;
+	detailOrderInfo$: Observable<DetailOrderImage>
+	private served =  APPOINTMENT_STATES_ID.SERVED;
+	private confirmed =  APPOINTMENT_STATES_ID.CONFIRMED;
+	ButtonType = ButtonType;
+	isLoading = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: StudyInfo,
 		public dialogRef: MatDialogRef<FinishStudyComponent>,
 		public translateService: TranslateService,
-		private readonly appointmentsService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
-		private readonly prescriptionService: PrescripcionesService,
+		private readonly appointmentsService: AppointmentsService,
 		public dialog: MatDialog) {
 	}
 
-	confirm() {
+	ngOnInit(): void {
+		this.detailOrderInfo$ = this.appointmentsService.getAppoinmentOrderDetail(this.data.appointmentId, this.data.isTranscribed)
+		.pipe(
+			map(orderDetail =>{ return { ...orderDetail ,
+				studyName: this.data.studyName,
+				hasOrder: this.data.hasOrder,
+				studiesNames: this.data.studies,
+				creationDate:  orderDetail.creationDate ? new Date(orderDetail.creationDate) : null,
+				patient:this.data.patient
+			}}))
+	}
+
+	confirmFinishStudy() {
 		const detailsOrderImage: DetailsOrderImageDto = {
 			observations: this.observations,
 			isReportRequired: !this.reportNotRequired,
+			patientId: this.data.patientId,
 		};
 		const appointmentId = this.data.appointmentId;
-		const served = APPOINTMENT_STATES_ID.SERVED;
+		this.isLoading = true;
 
-        this.appointmentsService.addStudyObservations(appointmentId, detailsOrderImage)
+        this.appointmentsService.finishStudy(appointmentId, detailsOrderImage)
             .pipe(
                 tap(() => this.openStatusDialog('check_circle', 'green', 'image-network.appointments.STUDY_COMPLETED')),
-                concatMap(
-                    () => this.appointmentsService.changeStateAppointmentEquipment(appointmentId, served)
-                            .pipe(
-                                catchError((error: ApiErrorMessageDto) => {
-                                    processErrors(error, (msg) => this.snackBarService.showError(msg));
-                                    return EMPTY;
-                                })
-                            ),
-					result => {
-						if(result) this.prescriptionService.completeStudyByRdi(this.data.patientId, this.data.appointmentId).subscribe()
-					}
-                ),
-                catchError((error: ApiErrorMessageDto) => {
-                    processErrors(error, (msg) => this.snackBarService.showError(msg));
+                catchError((error) => {
+					processErrors(error, (msg: string) => this.snackBarService.showError(msg));
                     this.openStatusDialog('cancel', 'red', 'image-network.appointments.STUDY_ERROR');
-                    return EMPTY;
+                    return of(false);
                 })
             )
-            .subscribe((_) => {
-                this.dialogRef.close({ updateState: served, reportRequired: !this.reportNotRequired });
+            .subscribe((result) => {
+				this.isLoading = false;
+                this.dialogRef.close({
+					updateState: result
+						? this.served
+						: this.confirmed,
+					reportRequired: result
+						? !this.reportNotRequired
+						: this.reportNotRequired
+				});
             });
     }
 
@@ -83,13 +97,14 @@ export class FinishStudyComponent {
 		});
 		dialogRef.afterClosed().subscribe();
 	}
-
-	closeDialog() {
-		this.dialogRef.close()
-	}
 }
 
 export interface StudyInfo {
+	hasOrder?: boolean;
+	isTranscribed?: boolean;
+	studyName?: string;
 	appointmentId: number,
 	patientId: number,
+	patient?: string
+	studies?: string;
 }

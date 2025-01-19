@@ -1,0 +1,47 @@
+section {
+    padding: 2rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    color: #192038;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+
+    mat-icon {
+        margin-right: .5rem;
+    }
+
+    span {
+        font-size: 1.1rem;
+    }
+}
+
+.bold {
+    font-weight: 500;
+}
+
+.one-column {
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: repeat(2, fit-content(300px));
+    grid-gap: 0 2rem;
+}
+
+.three-columns {
+    display: grid;
+    grid-template-columns: repeat(3, fit-content(300px));
+    grid-gap: 0 2rem;
+}
+
+.column-container {
+    margin-bottom: 1rem;
+}

@@ -32,17 +32,6 @@
 			<version>${revision}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>ar.lamansys.hsi</groupId>
-			<artifactId>sgx-dashboards</artifactId>
-			<version>${revision}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ar.lamansys.hsi</groupId>
-			<artifactId>extensions</artifactId>
-			<version>${revision}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>ar.lamansys.hsi</groupId>
@@ -128,9 +117,9 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.ibm.db2</groupId>
-				<artifactId>jcc</artifactId>
-				<version>11.5.0.0</version>
+			<groupId>com.ibm.db2</groupId>
+			<artifactId>jcc</artifactId>
+			<version>11.5.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>

@@ -31,4 +31,4 @@ EXPOSE 8280
 EXPOSE 8080
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD ["java","-javaagent:/glowroot/glowroot.jar","-jar","/app/app.jar","--spring.config.additional-location=file:./env.properties"]   
+CMD ["java","-XX:+UseSerialGC","-verbose:gc","-javaagent:/glowroot/glowroot.jar","-jar","/app/app.jar","--spring.config.additional-location=file:./env.properties"]   

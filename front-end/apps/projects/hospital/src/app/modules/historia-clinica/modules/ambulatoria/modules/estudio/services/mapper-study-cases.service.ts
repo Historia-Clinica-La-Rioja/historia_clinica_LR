@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { DiagnosticReportInfoDto, StudyWithoutOrderReportInfoDto, TranscribedOrderReportInfoDto } from '@api-rest/api-model';
-import { CATEGORY_IMAGE, DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewTypeOrderDto } from '../model/ImageModel';
+import { DiagnosticReportInfoDto, StudyOrderReportInfoDto, StudyWithoutOrderReportInfoDto, StudyTranscribedOrderReportInfoDto } from '@api-rest/api-model';
+import { CATEGORY_IMAGE, DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto, InfoNewTypeOrderDto } from '../model/ImageModel';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 
 @Injectable({
@@ -14,7 +14,52 @@ constructor() { }
 		return diagnosticsReport.map(diagnostic => {return {...diagnostic,typeOrder: typeOrderSlected, infoOrderInstances: null}})
 	}
 
-	mapDiagnosticTranscriptaToDiagnosticWithTypeReportInfoDto(diagnosticsReport: TranscribedOrderReportInfoDto[] ): DiagnosticWithTypeReportInfoDto[] {
+	mapToInfoNewTypeOrderDto(source: StudyTranscribedOrderReportInfoDto | StudyWithoutOrderReportInfoDto | StudyOrderReportInfoDto): InfoNewTypeOrderDto {
+		return {
+			imageId: source.imageId,
+			hceDocumentDataDto: source.hceDocumentDataDto,
+			status: source.status,
+			isAvailableInPACS: source.isAvailableInPACS,
+			viewReport: source.viewReport,
+			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
+			localViewerUrl: source.localViewerUrl,
+			reportStatus: source.reportStatus,
+			deriveTo: source.deriveTo
+		}
+	}
+
+	mapToInfoNewTypeOrderTranscribedDto(source: StudyTranscribedOrderReportInfoDto): InfoNewTypeOrderDto {
+		return {
+			imageId: source.imageId,
+			hceDocumentDataDto: source.hceDocumentDataDto,
+			status: source.status,
+			isAvailableInPACS: source.isAvailableInPACS,
+			viewReport: source.viewReport,
+			associatedStudies: source.diagnosticReports,
+			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
+			localViewerUrl: source.localViewerUrl,
+			reportStatus: source.reportStatus,
+			deriveTo: source.deriveTo
+		}
+	}
+
+	mapToInfoStudyTypeOrderDto(source: StudyOrderReportInfoDto): InfoNewStudyOrderDto {
+		return {
+			imageId: source.imageId,
+			hceDocumentDataDto: source.hceDocumentDataDto,
+			status: source.status,
+			isAvailableInPACS: source.isAvailableInPACS,
+			viewReport: source.viewReport,
+			hasActiveAppointment: source.hasActiveAppointment,
+			dateAppoinment: { appointmentDate: source.appointmentDate , appointmentHour: source.appointmentHour},
+			localViewerUrl: source.localViewerUrl,
+			reportStatus: source.reportStatus,
+			deriveTo: source.deriveTo
+		}
+	}
+
+
+	mapDiagnosticTranscriptaToDiagnosticWithTypeReportInfoDto(diagnosticsReport: StudyTranscribedOrderReportInfoDto[] ): DiagnosticWithTypeReportInfoDto[] {
 		return diagnosticsReport.map(transcripta =>
 			{
 			return {
@@ -30,7 +75,7 @@ constructor() { }
 			sourceId: null,
 			statusId: transcripta.status ? STUDY_STATUS.FINAL.id : STUDY_STATUS.REGISTERED.id,
 			typeOrder: E_TYPE_ORDER.TRANSCRIPTA,
-			infoOrderInstances: this.mapToInfoNewTypeOrderDto(transcripta)
+			infoOrderInstances: this.mapToInfoNewTypeOrderTranscribedDto(transcripta)
 	}})
 	}
 
@@ -56,49 +101,24 @@ constructor() { }
 	}
 
 
-	mapToInfoNewTypeOrderDto(source: TranscribedOrderReportInfoDto | StudyWithoutOrderReportInfoDto ): InfoNewTypeOrderDto {
-		return {
-			imageId: source.imageId,
-			hceDocumentDataDto: source.hceDocumentDataDto,
-			status: source.status,
-			seeStudy: source.seeStudy,
-			viewReport: source.viewReport,
-		}
-	}
-
-	mapDiagnosticSinOrdenToDiagnosticReportInfoDto(diagnosticsReport: StudyWithoutOrderReportInfoDto[]): DiagnosticReportInfoDto[] {
-		return diagnosticsReport.map(sinOrden =>
+	mapStudyOrderToDiagnosticWithTypeReportInfoDto(diagnosticsReport: StudyOrderReportInfoDto[]): DiagnosticWithTypeReportInfoDto[]{
+		return diagnosticsReport.map(studyOrder =>
 			{
 			return {
 			category: CATEGORY_IMAGE ,
-			creationDate: null,
-			doctor: null,
-			healthCondition: null,
-			id: null,
+			creationDate: new Date(studyOrder.creationDate),
+			doctor: studyOrder.doctor,
+			healthCondition: {id: null , snomed:{sctid: null , pt:studyOrder.healthCondition}},
+			id: studyOrder.diagnosticReportId,
 			observations: null,
-			serviceRequestId: null,
-			snomed: {id: null, sctid: null, pt: sinOrden.snomed},
-			source: null,
+            observationsFromServiceRequest: studyOrder.observationsFromServiceRequest,
+			serviceRequestId: studyOrder.serviceRequestId,
+			snomed: {id: null, sctid: null, pt: studyOrder.snomed},
+			source: studyOrder.source,
 			sourceId: null,
-			statusId: sinOrden.status ? STUDY_STATUS.FINAL.id : STUDY_STATUS.REGISTERED.id,
-	}})
-	}
-
-	mapDiagnosticTranscriptaToDiagnosticReportInfoDto(diagnosticsReport: TranscribedOrderReportInfoDto[]): DiagnosticReportInfoDto[] {
-		return diagnosticsReport.map(transcripta =>
-			{
-			return {
-			category: CATEGORY_IMAGE ,
-			creationDate: transcripta.creationDate,
-			doctor: null,
-			healthCondition: null,
-			id: null,
-			observations: null,
-			serviceRequestId: null,
-			snomed: {id: null, sctid: null, pt: transcripta.snomed},
-			source: null,
-			sourceId: null,
-			statusId: transcripta.status ? STUDY_STATUS.FINAL.id : STUDY_STATUS.REGISTERED.id,
+			statusId: studyOrder.status ? STUDY_STATUS.FINAL.id : STUDY_STATUS.REGISTERED.id,
+			typeOrder: E_TYPE_ORDER.COMPLETA,
+			infoOrderInstances: this.mapToInfoStudyTypeOrderDto(studyOrder)
 	}})
 	}
 

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.mocks;
 
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 
 public class DocumentFileTestMocks {
@@ -14,6 +15,7 @@ public class DocumentFileTestMocks {
 		result.setFilename(filename);
 		result.setFilepath(filepath);
 		result.setUuidfile(uuidFile);
+		result.setSignatureStatusId(ESignatureStatus.PENDING.getId());
 		return result;
 	}
 

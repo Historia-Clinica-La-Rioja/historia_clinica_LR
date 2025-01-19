@@ -1,15 +1,27 @@
-import { Component, Input } from '@angular/core';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import { AntecedentesFamiliaresNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service';
-import { PersonalHistoriesNewConsultationService } from '@historia-clinica/modules/ambulatoria/services/personal-histories-new-consultation.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { fixDate } from '@core/utils/date/format';
+import { AntecedenteFamiliar } from '@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service';
 
 @Component({
-  selector: 'app-background-list',
-  templateUrl: './background-list.component.html',
-  styleUrls: ['./background-list.component.scss']
+	selector: 'app-background-list',
+	templateUrl: './background-list.component.html',
+	styleUrls: ['./background-list.component.scss']
 })
 export class BackgroundListComponent {
-  @Input() service: AntecedentesFamiliaresNuevaConsultaService | PersonalHistoriesNewConsultationService;
-  momentFormat = momentFormat;
-  readonly DateFormat = DateFormat;
+	antecedentes;
+	@Output() remove = new EventEmitter;
+	@Input() set familyHistory(ant: AntecedenteFamiliar[]) {
+		this.antecedentes = ant.map(
+			a => {
+				return {
+					...a,
+					date: fixDate(a.fecha)
+				}
+			}
+		)
+	};
+
+	onClick(index) {
+		this.remove.emit(index);
+	}
 }

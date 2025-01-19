@@ -22,7 +22,7 @@
 						{{status.description | translate}}
 					</mat-option>
 				</mat-select>
-				<button id="clear-status" type="button" mat-button *ngIf="formFilter.controls.statusId.value" matSuffix
+				<button id="clear-status" type="button"  *ngIf="formFilter.controls.statusId.value" matSuffix
 						color="warn"
 						mat-icon-button
 						(click)="clearFilterField(formFilter.controls.statusId); $event.stopPropagation()">
@@ -36,7 +36,7 @@
 					   id="medicationStatement"
 					   name="medicationStatement"
 					   formControlName="medicationStatement">
-				<button id="clear-medication" type="button" mat-button
+				<button id="clear-medication" type="button" 
 						*ngIf="formFilter.controls.medicationStatement.value" matSuffix color="warn"
 						mat-icon-button
 						(click)="clearFilterField(formFilter.controls.medicationStatement); $event.stopPropagation()">
@@ -51,7 +51,7 @@
 					   id="healthCondition"
 					   name="healthCondition"
 					   formControlName="healthCondition">
-				<button id="clear-healthCondition" type="button" mat-button
+				<button id="clear-healthCondition" type="button" 
 						*ngIf="formFilter.controls.healthCondition.value" matSuffix color="warn"
 						mat-icon-button
 						(click)="clearFilterField(formFilter.controls.healthCondition); $event.stopPropagation()">
@@ -155,6 +155,7 @@
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.cancel.CANCEL_BUTTON'"></span>
 										</button>
 									</ng-container>
+									<app-dispense-button [medicationInfo]="medicationInfo" [canDispense]="canDispense" (confirmed)="getMedication()"></app-dispense-button>
                                 </mat-menu>
                             </div>
 
@@ -172,7 +173,7 @@
                             <div dosage>
                                 <div fxLayout="column">
                                     <div>
-                                        <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'h' && medicationInfo.healthCondition.id !== undefined">
+                                        <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'h' && medicationInfo.healthCondition.id !== undefined && medicationInfo.dosage?.frequency">
                                             Una aplicación cada {{medicationInfo.dosage.frequency}} hs
                                         </span>
                                         <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.periodUnit == 'd'"
@@ -181,7 +182,7 @@
                                     </div>
 
                                     <div>
-                                        <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.duration != undefined">
+                                        <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.duration != undefined && medicationInfo.dosage?.duration > 0">
                                             Durante {{medicationInfo.dosage.duration}} días
                                         </span>
                                         <span mat-line class="mat-body capitalize-first-letter element-light-color" *ngIf="medicationInfo.dosage?.chronic"
@@ -199,3 +200,4 @@
     </form>
 </app-summary-card>
 </app-content>
+

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DiaryOpeningHoursDto, EquipmentDiaryOpeningHoursDto } from '@api-rest/api-model';
-import { momentParseTime, dateToMoment, momentParseDate, dateToMomentTimeZone, DateFormat } from '@core/utils/moment.utils';
+import { toHourMinuteSecond } from '@core/utils/date.utils';
+import { dateParseTime, isBetweenDates, dateISOParseDate } from '@core/utils/moment.utils';
 import { MEDICAL_ATTENTION } from '@turnos/constants/descriptions';
 import { CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
-import { Moment } from 'moment';
 import { WeekViewHourSegment } from 'calendar-utils';
 
 const ASSIGNABLE_CLASS = 'cursor-pointer';
@@ -34,8 +34,8 @@ export class OpeningHoursDiaryService {
 				hourColumn.hours.forEach((hour) => {
 					hour.segments.forEach((segment) => {
 						openingHours.forEach(openingHour => {
-							const from: Moment = momentParseTime(openingHour.openingHours.from);
-							const to: Moment = momentParseTime(openingHour.openingHours.to);
+							const from = dateParseTime(openingHour.openingHours.from);
+							const to = dateParseTime(openingHour.openingHours.to);
 							if (isBetween(segment, from, to)) {
 								segment.cssClass = this.getOpeningHoursCssClass(openingHour);
 							}
@@ -45,23 +45,21 @@ export class OpeningHoursDiaryService {
 			}
 		});
 
-		function isBetween(segment: WeekViewHourSegment, from: Moment, to: Moment) {
-			return ((segment.date.getHours() > from.hours()) ||
-				(segment.date.getHours() === from.hours() && segment.date.getMinutes() >= from.minutes()))
-				&& ((segment.date.getHours() < to.hours()) ||
-					(segment.date.getHours() === to.hours() && segment.date.getMinutes() < to.minutes()));
+		function isBetween(segment: WeekViewHourSegment, from: Date, to: Date) {
+			return ((segment.date.getHours() > from.getHours()) ||
+				(segment.date.getHours() === from.getHours() && segment.date.getMinutes() >= from.getMinutes()))
+				&& ((segment.date.getHours() < to.getHours()) ||
+					(segment.date.getHours() === to.getHours() && segment.date.getMinutes() < to.getMinutes()));
 		}
 	}
 
 	private _getOpeningHoursFor(startDate: string, endDate: string, date: Date): DiaryOpeningHoursDto[] {
-		const dateMoment = dateToMoment(date);
-		const start = momentParseDate(startDate);
-		const end = momentParseDate(endDate);
+		const start = dateISOParseDate(startDate);
+		const end = dateISOParseDate(endDate);
+		end.setHours(23,59,59,59);
 
-		if (dateMoment.isBetween(start, end, 'date', '[]')) {
-			return this.equipmentDiaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
-		}
-		return [];
+		return !isBetweenDates(date, start, end, '[]') ? [] :
+			this.equipmentDiaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay())
 	}
 
 	private getOpeningHoursCssClass(openingHour: DiaryOpeningHoursDto): string {
@@ -76,11 +74,11 @@ export class OpeningHoursDiaryService {
 		const openingHoursSelectedDay = this._getOpeningHoursFor(startDate, endDate, date);
 
 		const selectedOpeningHour = openingHoursSelectedDay.find(oh => {
-			const hourFrom = momentParseTime(oh.openingHours.from);
-			const hourTo = momentParseTime(oh.openingHours.to);
-			const selectedHour = dateToMomentTimeZone(date).format(DateFormat.HOUR_MINUTE_SECONDS);
+			const hourFrom = dateParseTime(oh.openingHours.from);
+			const hourTo = dateParseTime(oh.openingHours.to);
+			const selectedHour = toHourMinuteSecond(date);
 
-			return momentParseTime(selectedHour).isBetween(hourFrom, hourTo, null, '[)');
+			return isBetweenDates(dateParseTime(selectedHour), hourFrom, hourTo, '[)');
 		});
 
 		return selectedOpeningHour?.openingHours.id;
@@ -88,11 +86,11 @@ export class OpeningHoursDiaryService {
 
 	setDayStartHourAndEndHour() {
 		this.equipmentDiaryOpeningHours.forEach(oh => {
-			const from = momentParseTime(oh.openingHours.from).hour();
+			const from = dateParseTime(oh.openingHours.from).getHours();
 			if (this.dayStartHour === undefined || from <= this.dayStartHour) {
 				this.dayStartHour = (from > 0) ? from - 1 : from;
 			}
-			const to = momentParseTime(oh.openingHours.to).hour();
+			const to = dateParseTime(oh.openingHours.to).getHours();
 			if (this.dayEndHour === undefined || to >= this.dayEndHour) {
 				this.dayEndHour = (to < 23) ? to + 1 : to;
 			}

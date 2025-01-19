@@ -1,0 +1,9 @@
+@mixin app-emergency-care-episode-filters($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    app-emergency-care-episode-filters {
+        .span-color {
+            color: mat-color($palette-primary, 400);
+        }
+    }
+}

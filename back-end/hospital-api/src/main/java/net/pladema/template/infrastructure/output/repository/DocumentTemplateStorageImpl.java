@@ -40,6 +40,10 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
         return documentTemplateRepository.getFileId(id);
     }
 
+    @Override
+    public void delete(Long id) {
+        documentTemplateRepository.deleteById(id);
+    }
 
     private DocumentTemplate mapTo(DocumentTemplateBo documentTemplateBo) {
         DocumentTemplate documentTemplate = new DocumentTemplate();
@@ -47,6 +51,7 @@ public class DocumentTemplateStorageImpl implements DocumentTemplateStorage {
         documentTemplate.setUserId(documentTemplateBo.getUserId());
         documentTemplate.setTypeId(documentTemplateBo.getTypeId());
         documentTemplate.setInstitutionId(documentTemplateBo.getInstitutionId());
+        documentTemplate.setDeleted(false);
         return documentTemplate;
     }
 

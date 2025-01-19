@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,4 +20,8 @@ public class CompleteRequestDto {
 
     @Nullable
     private List<Integer> fileIds;
+
+	@Nullable
+	private ReferenceClosureDto referenceClosure;
+
 }

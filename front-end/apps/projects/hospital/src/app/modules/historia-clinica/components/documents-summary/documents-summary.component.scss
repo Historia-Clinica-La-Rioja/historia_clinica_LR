@@ -8,7 +8,11 @@ form {
 
 mat-selection-list {
 	overflow: auto;
-	width: 45%;
+	width: 24vw;
+
+	.mat-list-single-selected-option {
+		background-color: #E9F3F9;
+	}
 }
 
 .content {
@@ -22,11 +26,15 @@ mat-selection-list {
 }
 
 .selection-documents {
-	min-width: 30vw;
+	min-width: 24vw;
 }
 
 .selection-documents mat-list-option {
 	height: auto;
+}
+
+.padding-left {
+	padding-left: 1rem;
 }
 
 .no-notes {
@@ -54,7 +62,7 @@ mat-selection-list {
 	color: #A8A8A8;
 }
 
-.empicrisis-draft{
+.elements-draft{
 	font-weight: 500;
 	color: #a8a8a8;
 }
@@ -78,4 +86,18 @@ mat-selection-list {
 :host ::ng-deep button {
 	min-width: 54px;
 	padding: 0;
+}
+
+.document-summary {
+	width: 100%;
+}
+
+@media (max-width: 1000px) {
+    mat-selection-list {
+        width: 30vw;
+    }
+
+    .selection-documents {
+        min-width: 30vw;
+    }
 }

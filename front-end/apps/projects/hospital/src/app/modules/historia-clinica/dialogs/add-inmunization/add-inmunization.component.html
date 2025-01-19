@@ -32,31 +32,24 @@
 				<mat-form-field appearance="outline">
 					<mat-label [translate]="'internaciones.internacion-paciente.vacunas-summary.INMUNIZATION'"></mat-label>
 					<input matInput type="text" formControlName="snomed" name="snomed" readonly>
-					<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+					<button id="clear"  matSuffix color="warn" mat-icon-button
 							(click)="resetForm()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
 
-				<mat-form-field appearance="outline">
-					<mat-label [translate]="'internaciones.internacion-paciente.vacunas-summary.REGISTRY_DATE'">
-					</mat-label>
-					<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="date"
-						   [min]="minDate" [max]="this.today">
-					<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-					<mat-datepicker #myDatepicker (yearSelected)="chosenYearHandler($event)"
-									(monthSelected)="chosenMonthHandler($event)">
-					</mat-datepicker>
-					<mat-error *ngIf="!selectedDateIsTodayOrBefore()" translate="internaciones.internacion-paciente.vacunas-summary.INVALID_DATE"></mat-error>
-				</mat-form-field>
+				<app-datepicker id="date"
+					[minDate]="minDate" [maxDate]="this.today" (selectDate)="dateChanged($event)">
+				</app-datepicker>
 			</form>
 		</ng-template>
 	</div>
 	<mat-dialog-actions align="end">
 		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
 		</button>
-		<button *ngIf="snomedConcept && this.selectedDateIsTodayOrBefore()" mat-raised-button color="primary" (click)="submit()">
+		<button *ngIf="snomedConcept && form.valid" mat-raised-button color="primary" (click)="submit()">
 			<span [translate]="'buttons.ADD'"></span>
 		</button>
 	</mat-dialog-actions>
 </ng-template>
+

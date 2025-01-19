@@ -1,0 +1,22 @@
+package net.pladema.clinichistory.requests.medicationrequests.infrastructure.output;
+
+import lombok.RequiredArgsConstructor;
+import net.pladema.clinichistory.requests.medicationrequests.application.port.output.MedicationRequestValidationMedicalCoveragePort;
+
+import net.pladema.clinichistory.requests.medicationrequests.infrastructure.output.repository.MedicationRequestValidationMedicalCoverageRepository;
+
+import net.pladema.patient.domain.GetMedicalCoverageHealthInsuranceValidationDataBo;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class MedicationRequestValidationMedicalCoveragePortImpl implements MedicationRequestValidationMedicalCoveragePort {
+
+	private final MedicationRequestValidationMedicalCoverageRepository medicationRequestValidationMedicalCoverageRepository;
+
+	@Override
+	public Short getFunderNumberByMedicalCoverageNameCuitAndAcronym(GetMedicalCoverageHealthInsuranceValidationDataBo medicalCoverage) {
+		return medicationRequestValidationMedicalCoverageRepository.fetchFundingNumberByMedicalCoverageName(medicalCoverage);
+	}
+
+}

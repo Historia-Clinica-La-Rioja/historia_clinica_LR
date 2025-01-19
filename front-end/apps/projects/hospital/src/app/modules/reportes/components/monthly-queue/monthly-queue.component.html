@@ -1,0 +1,39 @@
+<app-dialog-presentation>
+    <div header mat-dialog-title class="dialog-header">
+        <div class="icon-title">
+            <h1 class="title" mat-dialog-title>{{ dialogTitle }}</h1>
+        </div>
+        <button class="dialog-close-icon"mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div content mat-dialog-content class="dialog-content">
+		<div *ngIf="showStatus.stage === 'RELOAD' || showStatus.stage === 'EMPTY'">
+			<div class="spinner" >
+				<mat-spinner color="primary"></mat-spinner>
+			</div>
+			<p class="spinner primary">Generando reporte...</p>
+			<p class="mat-body" translate="reportes.monthly-report.PREPARING_MESSAGE">
+			</p>
+			<p class="mat-caption" *ngIf="showStatus.toDownload?.report">
+				También puede ver el reporte generado <app-datetime-relative [datetime]="showStatus.toDownload.report.createdOn"></app-datetime-relative>.
+			</p>
+		</div>
+		<div *ngIf="showStatus.stage === 'ASK'">
+			<p>
+				Último reporte generado <app-datetime-relative [datetime]="showStatus.toDownload.report.createdOn"></app-datetime-relative>.
+			</p>
+		</div>
+    </div>
+
+    <div actions mat-dialog-actions class="actions-section"  align="end">
+		<button (click)="queueReport()" *ngIf="showStatus.stage === 'ASK'" mat-stroked-button class="uppercase">
+			Generar nuevo reporte
+		</button>
+        <button *ngIf="downloadButtonText" [mat-dialog-close]="showStatus.toDownload" class="uppercase" mat-flat-button color="primary" >
+			{{downloadButtonText}}
+        </button>
+    </div>
+</app-dialog-presentation>
+

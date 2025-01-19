@@ -44,4 +44,5 @@ mat-expansion-panel-header {
 
 .info-content {
 	@include info-primary;
+	word-break: break-word;
 }

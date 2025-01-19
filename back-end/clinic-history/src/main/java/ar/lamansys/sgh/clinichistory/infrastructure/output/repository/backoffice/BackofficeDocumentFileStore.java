@@ -46,7 +46,7 @@ public class BackofficeDocumentFileStore implements BackofficeStore<DocumentFile
 		documentFile.setFilename(dto.getFilename());
 		documentFile.setSourceId(dto.getSourceId());
 		documentFile.setTypeId(dto.getTypeId());
-
+		documentFile.setSignatureStatusId(dto.getSignatureStatusId());
 		ExampleMatcher matcher = ExampleMatcher
 				.matching()
 				.withMatcher("filename", x -> x.ignoreCase().contains());
@@ -92,6 +92,7 @@ public class BackofficeDocumentFileStore implements BackofficeStore<DocumentFile
 				entity.getSourceTypeId(),
 				entity.getTypeId(),
 				entity.getFilename(),
-				localDateMapper.fromLocalDateTimeToZonedDateTime(entity.getCreatedOn()));
+				localDateMapper.fromLocalDateTimeToZonedDateTime(entity.getCreatedOn()),
+				entity.getSignatureStatusId());
 	}
 }

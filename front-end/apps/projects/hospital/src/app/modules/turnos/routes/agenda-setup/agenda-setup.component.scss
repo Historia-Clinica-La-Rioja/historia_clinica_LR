@@ -81,10 +81,15 @@ input[type="number"]::-webkit-inner-spin-button {
 	margin: 0;
 }
 
-.color-grey {
-	color: #a8a8a8;
-}
-
 .padding {
 	padding-top: 20px;
+}
+
+app-chips-autocomplete {
+	width: 35%;
+}
+
+.confirm-button {
+	display: flex;
+	justify-content: flex-end;
 }

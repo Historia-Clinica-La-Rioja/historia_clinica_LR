@@ -15,11 +15,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Embeddable
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Embeddable
 public class StudyPacAssociationPK implements Serializable {
+
+	private static final long serialVersionUID = -5575450403238844545L;
 
 	@Column(name = "image_id", nullable = false)
 	private String studyInstanceUID;

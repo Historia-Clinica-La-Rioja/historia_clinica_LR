@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.annotation.Nullable;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,9 @@ import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class DiagnosticReportInfoDto {
     private Integer id;
     private SnomedDto snomed;
@@ -29,19 +30,25 @@ public class DiagnosticReportInfoDto {
 
     @Nullable
     private String link;
+
     private String statusId;
     private DoctorInfoDto doctor;
     private Integer serviceRequestId;
     private LocalDateTime creationDate;
-	private String category;
-	private String source;
+    private String category;
+    private String source;
+    private Integer sourceId;
 
-	private Integer sourceId;
+    @Nullable
+    private PatientMedicalCoverageDto coverageDto;
 
-	@Nullable
-	private PatientMedicalCoverageDto coverageDto;
+    @Nullable
+    private ReferenceRequestDto referenceRequestDto;
 
-    public DiagnosticReportInfoDto( DiagnosticReportInfoDto diagnosticReportInfoDto) {
+    @Nullable
+    private String observationsFromServiceRequest;
+
+    public DiagnosticReportInfoDto(DiagnosticReportInfoDto diagnosticReportInfoDto) {
         this.snomed = diagnosticReportInfoDto.getSnomed();
         this.healthCondition = diagnosticReportInfoDto.getHealthCondition();
         this.observations = diagnosticReportInfoDto.getObservations();
@@ -50,6 +57,8 @@ public class DiagnosticReportInfoDto {
         this.doctor = diagnosticReportInfoDto.getDoctor();
         this.serviceRequestId = diagnosticReportInfoDto.getServiceRequestId();
         this.creationDate = diagnosticReportInfoDto.creationDate;
-		this.category = diagnosticReportInfoDto.getCategory();
+        this.category = diagnosticReportInfoDto.getCategory();
+        this.referenceRequestDto = diagnosticReportInfoDto.getReferenceRequestDto();
+        this.observationsFromServiceRequest = diagnosticReportInfoDto.getObservationsFromServiceRequest();
     }
 }

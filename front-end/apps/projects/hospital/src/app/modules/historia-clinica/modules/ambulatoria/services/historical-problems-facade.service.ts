@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
 import {
 	ClinicalSpecialtyDto,
+	HCEErrorProblemDto,
 	HCEEvolutionSummaryDto,
 	HCEReferenceDto
 } from '@api-rest/api-model';
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { pushIfNotExists } from '@core/utils/array.utils';
-import { momentParseDate } from '@core/utils/moment.utils';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
-import { MapperService } from './../../../../presentation/services/mapper.service';
+import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
+import { isSameDay } from 'date-fns';
+import { AssociatedParameterizedFormInformation } from '../components/associated-parameterized-form-information/associated-parameterized-form-information.component';
+import { toHistoricalProblems } from '@historia-clinica/mappers/problems.mapper';
 
-@Injectable({providedIn: 'root'})
+
+@Injectable({ providedIn: 'root' })
 export class HistoricalProblemsFacadeService {
 
 	public specialties: ClinicalSpecialtyDto[] = [];
@@ -25,27 +29,31 @@ export class HistoricalProblemsFacadeService {
 	private historicalProblems$: Observable<HistoricalProblems[]>;
 	private historicalProblemsFilterSubject = new ReplaySubject<HistoricalProblemsFilter>(1);
 	private historicalProblemsFilter$: Observable<HistoricalProblemsFilter>;
+	private filterOptionsSubject = new ReplaySubject<FilterOptions>(1);
+	private filterOptions$: Observable<FilterOptions>;
 	private originalHistoricalProblems: HistoricalProblems[] = [];
 
 	constructor(
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private readonly mapperService: MapperService,
 	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
 		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();
+		this.filterOptions$ = this.filterOptionsSubject.asObservable();
 	}
 
 	setPatientId(patientId: number): void {
+		this.resetProblemsFilter();
 		this.loadEvolutionSummaryList(patientId);
 	}
 
 	public loadEvolutionSummaryList(patientId: number) {
 		this.hceGeneralStateService.getEvolutionSummaryList(patientId).pipe(
 			tap((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => this.filterOptions(hceEvolutionSummaryDto)),
-			map((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => hceEvolutionSummaryDto.length ? this.mapperService.toHistoricalProblems(hceEvolutionSummaryDto) : null)
+			map((hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => hceEvolutionSummaryDto.length ? toHistoricalProblems(hceEvolutionSummaryDto) : null)
 		).subscribe(data => {
 			this.originalHistoricalProblems = data;
 			this.sendHistoricalProblems(this.originalHistoricalProblems);
+			this.updateFilterOptions();
 		});
 	}
 
@@ -87,13 +95,13 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
-		return (filter.consultationDate ? problem.consultationDate ? momentParseDate(problem.consultationDate).isSame(momentParseDate(filter.consultationDate)) : false : true);
+		return (filter.consultationDate ? problem.consultationDate ? isSameDay(filter.consultationDate,problem.consultationDate,)  : false : true);
 	}
 
 	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
 		switch (filter.referenceStateId) {
 			case REFERENCE_STATES.WITH_REFERENCES:
-				return problem.reference !== null;
+				return ((problem.reference !== null) && (!problem.reference.filter(ref => ref.cancelled).length));
 
 			case REFERENCE_STATES.WITHOUT_REFERENCES:
 				return problem.reference === null;
@@ -112,13 +120,22 @@ export class HistoricalProblemsFacadeService {
 		}
 	}
 
-	public getFilterOptions() {
-		return {
+	public updateFilterOptions() {
+		this.filterOptionsSubject.next({
 			specialties: this.specialties,
 			professionals: this.professionals,
 			problems: this.problems,
 			referenceStates: this.referenceStates,
-		};
+		});
+	}
+
+	private resetProblemsFilter() {
+		this.historicalProblemsFilterSubject.next(null);
+		this.problems = [];
+	}
+
+	public getFilterOptions(): Observable<FilterOptions> {
+		return this.filterOptions$;
 	}
 
 	private filterOptions(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): void {
@@ -167,13 +184,13 @@ export class Problem {
 }
 
 export class HistoricalProblems {
-	consultationDate: string;
+	consultationDate: Date;
 	consultationEvolutionNote: string;
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
 	professionalFullName: string;
 	institutionName: string;
-	document:{
+	document: {
 		id: number;
 		filename: string;
 	};
@@ -193,5 +210,18 @@ export class HistoricalProblems {
 			procedurePt: string;
 		}[];
 	reference: HCEReferenceDto[];
+	markedAsError?: boolean;
+	color?: string;
+	errorProblem?: HCEErrorProblemDto;
+	headerInfoDetails?: Detail[];
+	professionalsThatDidNotSignAmount: number;
+	professionalsThatSignedNames: string[];
+	parameterizedForms: AssociatedParameterizedFormInformation[];
 }
 
+export interface FilterOptions {
+	specialties: ClinicalSpecialtyDto[],
+	professionals: Professional[],
+	problems: Problem[],
+	referenceStates: REFERENCE_STATES[],
+}

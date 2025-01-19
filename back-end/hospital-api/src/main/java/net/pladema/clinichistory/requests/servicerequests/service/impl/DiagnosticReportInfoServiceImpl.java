@@ -2,62 +2,39 @@ package net.pladema.clinichistory.requests.servicerequests.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepository;
-import net.pladema.clinichistory.requests.servicerequests.repository.domain.FileVo;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FileBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class DiagnosticReportInfoServiceImpl implements DiagnosticReportInfoService {
 
-    private final GetDiagnosticReportInfoRepository getDiagnosticReportInfoRepository;
-    private final DiagnosticReportFileRepository diagnosticReportFileRepository;
-    private static final Logger LOG = LoggerFactory.getLogger(DiagnosticReportInfoServiceImpl.class);
     public static final String OUTPUT = "Output -> {}";
-
-    public DiagnosticReportInfoServiceImpl(GetDiagnosticReportInfoRepository getDiagnosticReportInfoRepository,
-                                           DiagnosticReportFileRepository diagnosticReportFileRepository) {
-        this.getDiagnosticReportInfoRepository = getDiagnosticReportInfoRepository;
-        this.diagnosticReportFileRepository = diagnosticReportFileRepository;
-    }
-
-    @Override
-    public DiagnosticReportBo run(Integer diagnosticReportId) {
-        LOG.debug("input -> diagnosticReportId {}", diagnosticReportId);
-        var result = createDiagnosticReportBo(
-                getDiagnosticReportInfoRepository.execute(diagnosticReportId),
-                diagnosticReportFileRepository.getFilesByDiagnosticReport(diagnosticReportId).stream()
-                        .map(this::mapFile)
-                        .collect(Collectors.toList())
-                );
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+    private final GetDiagnosticReportInfoRepository getDiagnosticReportInfoRepository;
 
 	@Override
 	public DiagnosticReportBo getByAppointmentId(Integer appointmentId) {
-		LOG.debug("input -> appointmentId {}", appointmentId);
+		log.debug("input -> appointmentId {}", appointmentId);
 		Object[] queryResult = getDiagnosticReportInfoRepository.getDiagnosticReportByAppointmentId(appointmentId);
 		var result = queryResult != null ? createDiagnosticReportBo(queryResult, null) : null;
-		LOG.debug(OUTPUT, result);
+		log.debug("Output -> {}", result);
 		return result;
 	}
 
-
     private DiagnosticReportBo createDiagnosticReportBo(Object[] row, List<FileBo> filesBo) {
-        LOG.debug("Input parameters -> row {}", row);
+        log.debug("Input parameters -> row {}", row);
         DiagnosticReportBo result = new DiagnosticReportBo();
         result.setId((Integer) row[0]);
         result.setSnomed(new SnomedBo((Integer) row[1], (String)  row[2], (String) row[3]));
+		result.setHealthConditionId((Integer) row[4]);
 
 
         HealthConditionBo healthConditionBo = new HealthConditionBo();
@@ -78,12 +55,6 @@ public class DiagnosticReportInfoServiceImpl implements DiagnosticReportInfoServ
 		if (filesBo != null)
         	result.setFiles(filesBo);
 
-        LOG.trace(OUTPUT, result);
-
         return result;
-    }
-
-    public FileBo mapFile(FileVo fileVo){
-        return new FileBo(fileVo.getFileId(), fileVo.getFileName());
     }
 }

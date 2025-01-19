@@ -1,0 +1,43 @@
+<div fxLayout="row" fxLayoutAlign="space-between" mat-dialog-title>
+    <span [translate]="'historia-clinica.anesthesia-form.ADD_ANESTHESIA'"></span>
+    <button mat-icon-button mat-dialog-close (click)="resetForm()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<mat-dialog-content>
+    <ng-container *ngIf="!data.anesthesiaService.getSnomedConcept() else anesthesiaForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else anesthesiaTypeaheadSearch"
+            [label]="'historia-clinica.anesthesia-form.ANESTHESIA'"
+            (search)="data.anesthesiaService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #anesthesiaTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.anesthesiaService.getECL()"
+                [placeholder]="'historia-clinica.anesthesia-form.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.anesthesiaService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+
+    <ng-template #anesthesiaForm>
+        <form [formGroup]="data.anesthesiaService.getForm()" (ngSubmit)="addAnesthesia()">
+            <div fxLayout="column">
+                <mat-form-field appearance="outline">
+                    <input id="anesthesia-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                        matTooltip="{{data.anesthesiaService.getSnomedConcept().pt }}">
+                    <button id="clear-anesthesia"  matSuffix color="warn" mat-icon-button
+                        (click)="data.anesthesiaService.resetForm()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <div align="end">
+                    <button id="submit_anesthesia" mat-raised-button color="primary" type="submit">
+                        <span [translate]="'historia-clinica.anesthesia-form.ADD_ANESTHESIA'"
+                            class="uppercase"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+</mat-dialog-content>

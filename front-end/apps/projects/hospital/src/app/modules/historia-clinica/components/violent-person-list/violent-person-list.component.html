@@ -1,0 +1,84 @@
+<div *ngFor="let person of aggressorsList; index as i; last as isLast" fxLayout="column" class="violent-person-information">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <p><strong>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.PERSON_LABEL' | translate}}
+            {{i+1}}</strong></p>
+        <button type="button" mat-icon-button color="warn" (click)="removeAggressor(i)" [disabled]="!person.canBeDeleted">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LASTNAME' |
+            translate}}: &nbsp;</span>
+        <span> {{ person.aggressorData.actorPersonalData.lastName }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.NAME' |
+            translate}}: &nbsp;</span>
+        <span> {{ person.aggressorData.actorPersonalData.firstName }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.AGE' |
+            translate}}: &nbsp;</span>
+        <span> {{ person.aggressorData.actorPersonalData.age }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.ADDRESS' |
+            translate}}: &nbsp;</span>
+        <span>{{ person.aggressorData.actorPersonalData.address.homeAddress }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.MUNICIPALITY' |
+            translate}}: &nbsp;</span>
+        <span>{{person.descriptionMunicipality}}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.LOCALITY' |
+            translate}}: &nbsp;</span>
+        <span>{{person.descriptionLocality}}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_1' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionBasicOptions(person.hasGuns) }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_2' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionBasicOptions(person.hasBeenTreated) }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_3' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionBasicOptions(person.securityForceRelatedData?.belongsToSecurityForces) }} {{ person.securityForceRelatedData.inDuty === true ? 'Activo' : (person.securityForceRelatedData.inDuty === false ? 'Retirado' : '') }} {{ person.securityForceRelatedData?.securityForceTypes? getDescriptionSecurityForceType(person.securityForceRelatedData?.securityForceTypes) : ''}} </span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_5' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionAggressorRelationship(person.aggressorData) }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_7' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionLivesWithVictim(person.livesWithVictim) }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_8' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionRelationshipLength(person.relationshipLength)}}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_9' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionViolenceFrequency(person.violenceViolenceFrequency) }}</span>
+    </div>
+    <div fxLayout="row">
+        <span>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.questions.QUESTION_10' |
+            translate}}: &nbsp;</span>
+        <span> {{ getDescriptionHasPreviousEpisodes(person.hasPreviousEpisodes) }}</span>
+    </div>
+
+    <mat-divider class="separation" *ngIf="!isLast"></mat-divider>
+</div>
+<div *ngIf="!aggressorsList.length">
+    <p class="grey">{{'ambulatoria.medical-coverage-summary-view.NO_INFO' | translate}}</p>
+ </div>

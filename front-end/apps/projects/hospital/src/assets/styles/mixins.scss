@@ -3,6 +3,7 @@
 @import "./../../app/modules/presentation/presentation-mixins.scss";
 @import "./../../app/modules/turnos/turnos-mixins.scss";
 @import "./../../app/modules/historia-clinica/historia-clinica-mixins.scss";
+@import "./../../app/modules/shared-appointment-access-management/shared-appointment-access-management-mixins.scss";
 
 @mixin form-row {
 	display: flex;
@@ -82,6 +83,7 @@
 	@include presentation-mixins($theme);
 	@include turnos-mixins($theme);
 	@include historia-clinica-mixins($theme);
+	@include shared-appointment-access-management-mixins($theme);
 
 	$palette-primary: map-get($theme, primary);
 	$palette-warn: map-get($theme, warn);
@@ -91,28 +93,28 @@
     }
 
 	.warn-background {
-        background-color: mat-color($palette-warn,100);
+        background-color: mat-color($palette-warn,200);
 		color: mat-color($palette-warn);
 	}
 
 	.headers-card-background {
-		background-color: mat-color($palette-primary, 50);
+		background-color: mat-color($palette-primary, 100);
 	}
 	.warn {
 		color: mat-color($palette-warn);
 	}
 
 	.black {
-		color: mat-contrast($palette-primary, 50);
+		color: mat-contrast($palette-primary, 100);
 	}
 
 	.grey {
 		color: grey;
 	}
-	.color-green{
+	.color-green {
 		color:#32C25B;
 	}
-	.color-orange{
+	.color-orange {
 		color:#FF8A00;
 	}
 }

@@ -144,6 +144,7 @@
 								</mat-form-field>
 							</div>
 						</div>
+						<app-patient-evolution-charts-button [patientId]="data.patientInfo.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
 					</ng-container>
 				</app-document-section>
 			</div>
@@ -156,20 +157,20 @@
 			</app-factores-de-riesgo-form>
 		</app-new-consultation-expansion-section>
 
-		<app-alergias id="allergies" [(allergies)]="allergies"></app-alergias>
+		<app-alergias id="allergies" [(allergies)]="allergies" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias>
 
 		<app-vacunas id="immunizations" [(immunizations)]="immunizations"></app-vacunas>
 
-		<app-antecedentes-personales id="personal-histories" [(personalHistories)]="personalHistories"></app-antecedentes-personales>
+		<app-antecedentes-personales id="personal-histories" [(personalHistories)]="personalHistories" (isPersonalHistoriesNoRefer)="setIsPersonalHistoriesNoRefer($event)"></app-antecedentes-personales>
 
-		<app-antecedentes-familiares id="family-histories" [(familyHistories)]="familyHistories"></app-antecedentes-familiares>
+		<app-antecedentes-familiares id="family-histories" [(familyHistories)]="familyHistories" (isFamilyHistoriesNoRefer)="setIsFamilyHistoriesNoRefer($event)"></app-antecedentes-familiares>
 
 		<app-medication id="medications" [(medications)]="medications" [title]="'internaciones.anamnesis.medicacion.TITLE' | translate"></app-medication>
 
 	</form>
 	<div actions id="buttons" align="end">
 		<button id="sign-confirm" mat-raised-button type="submit" color="primary"
-			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR']" (click)="save()"
+			*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="save()"
 			[disabled]="isDisableConfirmButton">
 			<span class="uppercase" [translate]="'internaciones.anamnesis.buttons.CONFIRM'"></span>
 		</button>

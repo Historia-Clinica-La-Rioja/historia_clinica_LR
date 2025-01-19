@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import lombok.SneakyThrows;
 import net.pladema.establishment.service.domain.OrchestratorBO;
@@ -126,31 +127,45 @@ public class MoveStudiesJob {
 			}
 		});
 	}
+	private void setPriority(MoveStudiesBO moveStudyBO, OrchestratorBO orchestrator){
+		Double weightSize = orchestrator.getWeightSize();
+		Double weightDays = orchestrator.getWeightDays();
+		Double weightPriority = orchestrator.getWeightPriority();
 
+		Double priority = moveStudyBO.getPriority() * weightPriority;
+
+		Double megabytes = (moveStudyBO.getSizeImage() != null ? moveStudyBO.getSizeImage() : 1) / MEGA;
+		Double size = megabytes * weightSize;
+
+		LocalDate dateMove = moveStudyBO.getDerivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate currentDate = LocalDate.now();
+		long differenceDays = ChronoUnit.DAYS.between(dateMove, currentDate);
+		Double old = differenceDays * weightDays ;
+
+		moveStudyBO.setCalculatedPriority(priority + size + old);
+	}
 	private void calculatedPriority(MoveStudiesBO moveStudyBO, OrchestratorBO orchestrator){
 
 		String status = moveStudyBO.getStatus();
 		if (MOVING.equals(status)){
-			moveStudyBO.setCalculatedPriority(Double.MAX_VALUE -1);
+			Date now = new Date();
+			Date beginOfMove = moveStudyBO.getBeginOfMove();
+			long diffS = now.getTime() - ((beginOfMove != null)? beginOfMove.getTime():0);
+			long diffH = TimeUnit.MILLISECONDS.toHours(diffS);
+			if (diffH  > 1 || beginOfMove == null){
+				moveStudyBO.setStatus("FAILED");
+				moveStudyBO.setAttempsNumber(moveStudyBO.getAttempsNumber()+1);
+				moveStudiesService.updateStatusAndResult(moveStudyBO.getId(), "FAILED", "Perdida de conexión durante el movimiento del estudio.");
+				moveStudiesService.updateAttemps(moveStudyBO.getId(), moveStudyBO.getAttempsNumber());
+				setPriority(moveStudyBO, orchestrator);
+			}else {
+				moveStudyBO.setCalculatedPriority(Double.MAX_VALUE -1);
+			}
 		} else {
 			if(moveStudyBO.getPriorityMax() > 0){
 				moveStudyBO.setCalculatedPriority(Double.MAX_VALUE);
 			} else{
-				Double weightSize = orchestrator.getWeightSize();
-				Double weightDays = orchestrator.getWeightDays();
-				Double weightPriority = orchestrator.getWeightPriority();
-
-				Double priority = moveStudyBO.getPriority() * weightPriority;
-
-				Double megabytes = (moveStudyBO.getSizeImage() != null ? moveStudyBO.getSizeImage() : 1) / MEGA;
-				Double size = megabytes * weightSize;
-
-				LocalDate dateMove = moveStudyBO.getDerivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-				LocalDate currentDate = LocalDate.now();
-				long differenceDays = ChronoUnit.DAYS.between(dateMove, currentDate);
-				Double old = differenceDays * weightDays ;
-
-				moveStudyBO.setCalculatedPriority(priority + size + old);
+				setPriority(moveStudyBO, orchestrator);
 			}
 		}
 

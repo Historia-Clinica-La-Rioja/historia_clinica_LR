@@ -4,9 +4,11 @@
 		[title]="'internaciones.epicrisis.diagnosticos.TITLE' | translate" icon="error_outlined" [collapsed]="false"
 		[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosis()  | async" [hideBorder]="true">
 
-		<app-diagnosticos (mainDiagnosisChange)="mainDiagnosisChange($event)"
-			(diagnosisChange)="diagnosisChange($event)" [type]="'ANAMNESIS'" [mainDiagnosis]="diagnosis?.mainDiagnosis"
-			[listDiagnosis]="diagnosis?.diagnosticos || []">
-		</app-diagnosticos>
+		<app-emergency-care-diagnoses (mainDiagnosisChange)="mainDiagnosisChange($event)"
+			(diagnosisChange)="diagnosisChange($event)" type="ANAMNESIS" [mainDiagnosis]="formDiagnosticos.value.mainDiagnostico"
+			[listDiagnosis]="formDiagnosticos.value.otrosDiagnosticos">
+		</app-emergency-care-diagnoses>
+
+		<app-box-message *ngIf="existsADiagnosisAssociatedToIsolationAlerts" [boxMessageInfo]="boxMesaggeInfo"></app-box-message>
 	</app-new-consultation-expansion-section>
 </div>

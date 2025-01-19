@@ -2,16 +2,35 @@ package net.pladema.medicalconsultation.appointment.controller.service.impl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.RequiredArgsConstructor;
+import net.pladema.medicalconsultation.appointment.repository.entity.BookingPerson;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
+
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+
+import net.pladema.person.repository.domain.CompletePersonNameBo;
+import net.pladema.person.service.PersonService;
 
 import org.springframework.stereotype.Service;
 
@@ -53,12 +72,16 @@ import net.pladema.medicalconsultation.appointment.service.fetchappointments.dom
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.PatientBo;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class AppointmentExternalServiceImpl implements AppointmentExternalService, SharedAppointmentPort {
 
 	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentService appointmentService;
+
+	private final DiaryService diaryService;
+
 	private final AppointmentValidatorService appointmentValidatorService;
 	private final CreateAppointmentService createAppointmentService;
 	private final BookingPersonService bookingPersonService;
@@ -66,17 +89,9 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final DocumentAppointmentService documentAppointmentService;
 	private final FetchAppointments fetchAppointments;
 	private final LocalDateMapper localDateMapper;
-
-	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService, CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService, CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService, FetchAppointments fetchAppointments, LocalDateMapper localDateMapper) {
-		this.appointmentService = appointmentService;
-		this.appointmentValidatorService = appointmentValidatorService;
-		this.createAppointmentService = createAppointmentService;
-		this.bookingPersonService = bookingPersonService;
-		this.createBookingAppointmentService = createBookingAppointmentService;
-		this.documentAppointmentService = documentAppointmentService;
-		this.fetchAppointments = fetchAppointments;
-		this.localDateMapper = localDateMapper;
-	}
+	private final SharedPersonPort sharedPersonPort;
+	private final PersonService personService;
+	private final FeatureFlagsService featureFlagsService;
 
 	@Override
 	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
@@ -128,28 +143,29 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
+	public void cancelAbsentAppointment(Integer appointmentId, String reason) {
+		log.debug("CancelAppointment ->  appointmentId {}, reason {}",  appointmentId, reason);
+		appointmentValidatorService.validateReason(AppointmentState.CANCELLED, reason);
+		appointmentService.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), reason);
+	}
+
+	@Override
 	public SavedBookingAppointmentDto saveBooking(
 			BookingAppointmentDto bookingAppointmentDto,
 			BookingPersonDto bookingPersonDto,
 			String email
-	) {
-		log.debug("Appointment Service -> method: {}", "saveBooking");
-		log.debug("Input parameters -> bookingAppointmentDto {}, bookingPersonDto {}", bookingAppointmentDto, bookingPersonDto);
-		Integer bookingPersonId;
-		if(bookingPersonDto == null) {
-			var b = bookingPersonService.findByEmail(email);
-			if(b.isPresent())
-				bookingPersonId = b.get().getId();
-			else
-				throw new ConstraintViolationException("El mail no existe", Collections.emptySet());
-		}
-		else bookingPersonId = bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
-
+	) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
+		log.debug("saveBooking -> bookingAppointmentDto {}, bookingPersonDto {}", bookingAppointmentDto, bookingPersonDto);
+		BookingPerson bookingPerson = getBookingPerson(bookingPersonDto, email);
+		assertProfessionalNotAlreadyBooked(bookingPerson, bookingAppointmentDto);
 		AppointmentBo newAppointmentBo = mapTo(bookingAppointmentDto);
+		newAppointmentBo.setPhoneNumber(bookingAppointmentDto.getPhoneNumber());
+		newAppointmentBo.setPhonePrefix(bookingAppointmentDto.getPhonePrefix());
+
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer appointmentId = newAppointmentBo.getId();
 
-		BookingAppointmentBo bookingAppointmentBo = getBookingAppointmentBo(appointmentId, bookingPersonId);
+		BookingAppointmentBo bookingAppointmentBo = getBookingAppointmentBo(appointmentId, bookingPerson.getId());
 		createBookingAppointmentService.execute(bookingAppointmentBo);
 
 		log.debug(OUTPUT,bookingAppointmentBo);
@@ -157,6 +173,40 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				bookingAppointmentBo.getBookingPersonId(),
 				bookingAppointmentBo.getAppointmentId(),
 				bookingAppointmentBo.getUuid());
+	}
+
+	private void assertProfessionalNotAlreadyBooked(BookingPerson bookingPerson, BookingAppointmentDto bookingAppointmentDto) throws ProfessionalAlreadyBookedException {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL)) {
+			Optional<CompletePersonNameBo> completePersonNameBo = personService.findByHealthcareProfessionalPersonDataByDiaryId(bookingAppointmentDto.getDiaryId());
+			if (completePersonNameBo.isPresent()) {
+				Collection<AppointmentBo> appointments = appointmentService.hasAppointment(
+						bookingPerson.getIdentificationNumber(),
+						completePersonNameBo.get().getHealthcareProfessionalId()
+				);
+				if ( ! appointments.isEmpty())
+					throw new ProfessionalAlreadyBookedException();
+			}
+		}
+	}
+
+	private BookingPerson getBookingPerson(BookingPersonDto bookingPersonDto, String requestingBookingPersonEmail) throws BookingPersonMailNotExistsException {
+		BookingPerson bookingPerson;
+		if(bookingPersonDto == null)
+			bookingPerson = bookingPersonService.findByEmail(requestingBookingPersonEmail)
+					.orElseThrow(BookingPersonMailNotExistsException::new);
+		else
+			bookingPerson = searchOrSaveBookingPerson(bookingPersonDto);
+		return bookingPerson;
+	}
+
+	private BookingPerson searchOrSaveBookingPerson(BookingPersonDto bookingPersonDto) {
+		BookingPerson bookingPerson = null;
+		if(bookingPersonDto.getEmail() != null && bookingPersonDto.getIdNumber() != null)
+			bookingPerson = bookingPersonService.findByEmailAndIdentificationNumber(bookingPersonDto.getEmail(), bookingPersonDto.getIdNumber())
+					.stream().findFirst().orElse(null);
+		if(bookingPerson == null)
+			return bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
+		return bookingPerson;
 	}
 
 	@Override
@@ -199,6 +249,79 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		this.documentAppointmentService.delete(DocumentAppointmentBo.makeTo(documentAppointmentDto));
 	}
 
+	@Override
+	public List<ReferenceAppointmentStateDto> getReferencesAppointmentState(Map<Integer, List<Integer>> referenceAppointments) {
+		List<ReferenceAppointmentStateDto> result = new ArrayList<>();
+		for (Map.Entry<Integer, List<Integer>> e : referenceAppointments.entrySet()) {
+			Optional<AppointmentSummaryBo> appointment = getNearestAppointment(e.getValue());
+            appointment.ifPresent(appointmentSummaryBo -> result.add(new ReferenceAppointmentStateDto(e.getKey(), appointmentSummaryBo.getStateId())));
+		}
+		return result;
+	}
+
+	@Override
+	public Optional<AppointmentDataDto> getNearestAppointmentData(List<Integer> appointments) {
+		log.debug("Get nearest appointment by appointmentsIds {}", appointments);
+		Optional<AppointmentSummaryBo> appointment = getNearestAppointment(appointments);
+		return appointment.map(this::mapFromAppointmentSummaryBo);
+	}
+
+	@Override
+	public Integer getDiaryId(Integer appointmentId) {
+		return diaryService.getDiaryIdByAppointment(appointmentId);
+	}
+
+	@Override
+	public Integer getInstitutionId(Integer diaryId){
+		log.debug("Input parameters -> diaryId {}", diaryId);
+		Integer result = diaryService.getInstitution(diaryId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public boolean appointmentDateAndTimeAlreadyUsed(Integer diaryId, Integer openingHoursId, LocalDate appointmentDate, LocalTime appointmentTime) {
+		log.debug("Input parameters -> diaryId {}, openingHoursId {}, appointmentDate {}, appointmentTime {}", diaryId, openingHoursId, appointmentDate, appointmentTime);
+		boolean result = appointmentService.existAppointment(diaryId, openingHoursId, appointmentDate, appointmentTime);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {
+		List<AppointmentSummaryBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(appointmentIds);
+		List<AppointmentSummaryBo> futureAppointments = appointments.stream()
+				.filter(a -> a.getDate().equals(LocalDate.now()) || a.getDate().isAfter(LocalDate.now()))
+				.sorted(Comparator.comparing(AppointmentSummaryBo::getDate).thenComparing(AppointmentSummaryBo::getHour))
+				.collect(Collectors.toList());
+		return !futureAppointments.isEmpty() ? determineNearestAppointmentByStateId(futureAppointments) : !appointments.isEmpty() ? determineNearestAppointmentByStateId(appointments) : Optional.empty();
+	}
+
+	private Optional<AppointmentSummaryBo> determineNearestAppointmentByStateId(List<AppointmentSummaryBo> appointments) {
+		var appointmentsNonCancelled = appointments.stream()
+				.filter(a -> !a.getStateId().equals(AppointmentState.CANCELLED))
+				.collect(Collectors.toList());
+		if (!appointmentsNonCancelled.isEmpty())
+			return Optional.of(appointmentsNonCancelled.get(0));
+		return Optional.of(appointments.get(0));
+	}
+
+	private AppointmentDataDto mapFromAppointmentSummaryBo(AppointmentSummaryBo appointment) {
+		return AppointmentDataDto.builder()
+				.appointmentId(appointment.getId())
+				.state(appointment.getStateId())
+				.institution(new InstitutionInfoDto(appointment.getInstitution().getId(), appointment.getInstitution().getName()))
+				.date(localDateMapper.toDateDto(appointment.getDate()))
+				.hour(localDateMapper.toTimeDto(appointment.getHour()))
+				.phonePrefix(appointment.getPhonePrefix())
+				.phoneNumber(appointment.getPhoneNumber())
+				.professionalFullName(getCompletePersonNameByParams(appointment.getProfessionalFirstName(), appointment.getProfessionalMiddleNames(),
+						appointment.getProfessionalLastName(), appointment.getProfessionalOtherLastNames(), appointment.getProfessionalNameSelfDetermination()))
+				.patientEmail(appointment.getPatientEmail())
+				.authorFullName(getCompletePersonNameById(appointment.getAuthorPersonId()))
+				.createdOn(localDateMapper.toDateTimeDto(appointment.getCreatedOn()))
+				.build();
+	}
+
 	private PublicAppointmentListDto mapToFromAppointmentInfoBo(AppointmentInfoBo appointmentInfoBo) {
 		return new PublicAppointmentListDto(appointmentInfoBo.getId(),
 				localDateMapper.fromLocalDateToString(appointmentInfoBo.getDateTypeId()),
@@ -219,6 +342,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 						.firstName(doctor.getFirstName())
 						.lastName(doctor.getLastName())
 						.identificationNumber(doctor.getIdentificationNumber())
+						.genderId(doctor.getGenderId())
 						.build()
 		);
 	}
@@ -266,6 +390,8 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				.genderId(bookingPersonDto.getGenderId())
 				.idNumber(bookingPersonDto.getIdNumber())
 				.lastName(bookingPersonDto.getLastName())
+				.phonePrefix(bookingPersonDto.getPhonePrefix())
+				.phoneNumber(bookingPersonDto.getPhoneNumber())
 				.build();
 	}
 
@@ -277,9 +403,19 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		appointmentBo.setAppointmentStateId(AppointmentState.BOOKED);
 		appointmentBo.setOverturn(false);
 		appointmentBo.setPhoneNumber(bookingAppointmentDto.getPhoneNumber());
+		appointmentBo.setPhonePrefix(bookingAppointmentDto.getPhonePrefix());
 		appointmentBo.setOpeningHoursId(bookingAppointmentDto.getOpeningHoursId());
 		appointmentBo.setSnomedId(bookingAppointmentDto.getSnomedId());
 		appointmentBo.setModalityId((short)1);
 		return appointmentBo;
 	}
+	private String getCompletePersonNameByParams(String firstName, String middleNames, String lastName,
+												 String otherLastNames, String nameSelfDetermination) {
+		return sharedPersonPort.parseCompletePersonName(firstName, middleNames, lastName, otherLastNames, nameSelfDetermination);
+	}
+
+	private String getCompletePersonNameById(Integer personId) {
+		return sharedPersonPort.getCompletePersonNameById(personId);
+	}
+
 }

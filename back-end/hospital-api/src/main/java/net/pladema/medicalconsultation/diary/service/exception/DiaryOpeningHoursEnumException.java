@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum DiaryOpeningHoursEnumException {
     NULL_DOCTOR_OFFICE_ID,
     DIARY_END_DATE_BEFORE_START_DATE,
+    OPENING_HOURS_ID_IS_NULL,
     ;
 
 }

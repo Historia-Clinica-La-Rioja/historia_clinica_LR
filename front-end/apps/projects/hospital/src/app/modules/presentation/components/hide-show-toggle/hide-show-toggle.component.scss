@@ -1,0 +1,40 @@
+mat-divider {
+    margin-bottom: 1.25rem;
+}
+
+.container {
+    width: 100%;
+
+    article {
+        display: flex;
+		font-weight: 500;
+        cursor: pointer;
+    }
+
+    header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        span {
+            margin-left: 0.3rem;
+        }
+    }
+}
+
+.unselected {
+    article {
+        font-size: 18px;
+        color: rgba(0, 0, 0, 0.38);
+    }
+}
+
+.selected {
+    article {
+        font-size: 20px;
+    }
+}
+
+.content {
+    padding: 1rem;
+}

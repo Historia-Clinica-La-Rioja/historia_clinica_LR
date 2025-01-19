@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+	<th:block th:include="fragments/general.html :: headerfiles"></th:block>
+</head>
+<body>
+    <table>
+        <thead><tr><td>
+            <div class="header-space">&nbsp;</div>
+        </td></tr></thead>
+        <tbody><tr><td>
+            <div>
+                <div th:replace="fragments/general.html :: header"></div>
+                <div th:replace="fragments/general.html :: encounterData(type='Parte quirúrgico (Internación)')"></div>
+                <div th:replace="fragments/general.html :: preoperativeDiagnosis(message='Diagnósticos Pre-Operatorios')"></div>
+                <div th:replace="fragments/general.html :: surgeryProcedures(message='Procedimientos quirúrgicos')"></div>
+                <div th:replace="fragments/general.html :: healthcareProfessionals(message='Equipo quirófano')"></div>
+                <div th:replace="fragments/general.html :: postoperativeDiagnosis(message='Diagnósticos Post-Operatorios')"></div>
+                <div th:replace="fragments/general.html :: procedures(message='Procedimientos')"></div>
+                <div th:replace="fragments/general.html :: anesthesia(message='Anestesias')"></div>
+                <div th:replace="fragments/general.html :: culture(message='Cultivo')"></div>
+                <div th:replace="fragments/general.html :: prosthesis(message='Prótesis')"></div>
+                <div th:replace="fragments/general.html :: frozenSectionBiopsy(message='Biopsia por congelación')"></div>
+                <div th:replace="fragments/general.html :: drainage(message='Drenaje')"></div>
+                <div th:replace="fragments/general.html :: surgicalDescription(message='Descripción de cirugía realizada')"></div>
+            </div>
+        </td></tr></tbody>
+        <tfoot><tr><td>
+            <div class="footer-space">&nbsp;</div>
+        </td></tr></tfoot>
+    </table>
+</body>
+<footer>
+	<div th:replace="fragments/general.html :: footer"></div>
+</footer>
+</html>

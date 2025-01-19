@@ -42,4 +42,9 @@ public class AddressServiceImpl implements AddressService {
 		return addressRepository.findByInstitutionId(institutionId).orElse(null);
 	}
 
+	@Override
+	public ar.lamansys.sgh.shared.domain.general.AddressBo getAddressDataByInstitution(Integer institutionId) {
+		return addressRepository.findAddressDataByInstitutionId(institutionId).orElse(null);
+	}
+
 }

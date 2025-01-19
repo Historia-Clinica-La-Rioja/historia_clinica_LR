@@ -1,0 +1,19 @@
+.dialog-information {
+	max-height: 50vh;
+}
+
+.columns {
+	width: 50%;
+}
+
+@media (max-width: 800px) {
+	.dialog-information {
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+
+	.columns {
+		width: 100%;
+		margin-bottom: 8px;
+	}
+}

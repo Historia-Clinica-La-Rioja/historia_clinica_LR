@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ClinicalSpecialtyDto, ReferenceDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, ReferenceDataDto, ReferenceDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { REFERENCE_CONSULTATION_TYPE } from '@historia-clinica/modules/ambulatoria/constants/reference-masterdata';
@@ -37,7 +37,7 @@ export class ReferenceNotificationService {
 			specialties.forEach((specialty: ClinicalSpecialtyDto) => {
 				this.specialtiesId.push(specialty.id);
 			});
-			this.referenceService.getReferences(this.data.patientId, this.specialtiesId).subscribe((references: ReferenceDto[]) => {
+			this.referenceService.getReferences(this.data.patientId, this.specialtiesId).subscribe((references: ReferenceDataDto[]) => {
 				if (references.length) {
 					this.openReferenceNotification(references);
 				}
@@ -48,7 +48,7 @@ export class ReferenceNotificationService {
 		});
 	}
 
-	openReferenceNotification(references: ReferenceDto[]) {
+	openReferenceNotification(references: ReferenceDataDto[]) {
 		const dialogRef = this.dialog.open(ReferenceNotificationComponent, {
 			data: references,
 			autoFocus: false,
@@ -58,11 +58,11 @@ export class ReferenceNotificationService {
 			if (counterreference === null) {
 				return;
 			}
-			
+
 			if (counterreference === false) {
 				this.openConsultation.next(this.data.consultationType);
 			}
-			
+
 			if (counterreference.isACountisACounterrefer === true) {
 				this.openCounterreference(counterreference.reference);
 			}
@@ -72,7 +72,7 @@ export class ReferenceNotificationService {
 	openCounterreference(reference: ReferenceDto) {
 		const dialogRef = this.dockPopupService.open(CounterreferenceDockPopupComponent,
 			{
-				reference: reference,
+				reference,
 				patientId: this.data.patientId
 			}
 		);

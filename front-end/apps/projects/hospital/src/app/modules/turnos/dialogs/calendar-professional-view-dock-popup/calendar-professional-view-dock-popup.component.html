@@ -16,25 +16,42 @@
                             <mat-label [translate]="'turnos.home.SELECT_AGENDA'"></mat-label>
                             <mat-select formControlName="diary" [(value)]="diarySelected">
                                 <mat-option *ngFor="let diary of diaries" [value]="diary"
-                                    (onSelectionChange)="changeDiarySelected($event, diary)">
+                                    (onSelectionChange)="changeDiarySelected($event, diary)"
+									matTooltip="{{diary.practices | practiceList }}" >
+									<div fxFlex="60%" class="text-container">
+										<span *ngIf="diary.alias">{{diary.alias }} </span>
 
-                                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-                                        <div *ngIf="diary.alias === undefined || diary.alias == '' else showAliasAndClinicalSpecialtyName">
-                                            <span class="mat-body-strong">{{diary.clinicalSpecialtyName}}</span>
-                                        </div>
-                                        <span class="mat-body">
-                                            {{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate | date:dateFormats.SHORT_DATE}}
-                                        </span>
-                                    </div>
+										<ng-container *ngIf="diary.practices?.length">
+											<span *ngIf="diary.alias else withOutAliasPractices">
+												({{diary.practices | practiceList}})
+											</span>
+											<ng-template #withOutAliasPractices>
+												<span>
+													{{diary.practices | practiceList}}
+												</span>
+											</ng-template>
+										</ng-container>
 
-                                    <ng-template #showAliasAndClinicalSpecialtyName>
-                                        <span class="mat-body-strong">
-                                            {{diary.alias}} ({{diary.clinicalSpecialtyName}})
-                                        </span>
-                                    </ng-template>
+										<ng-container *ngIf="!diary.practices?.length">
+											<span *ngIf="diary.alias else withOutAlias">
+												({{diary.clinicalSpecialtyName}})
+											</span>
+											<ng-template #withOutAlias>
+												<span>
+													{{diary.clinicalSpecialtyName}}
+												</span>
+											</ng-template>
+										</ng-container>
+
+									</div>
+									<div fxFlex="40%">
+										<span >
+											{{diary.startDate | isoToDate | dateFormat : 'date' }} - {{diary.endDate | isoToDate | dateFormat: 'date'}}
+										</span>
+									</div>
                                 </mat-option>
                             </mat-select>
-                            <button id="clear_agenda_selected" type="button" mat-button *ngIf="diarySelected && showButtonToClear"
+                            <button id="clear_agenda_selected" type="button"  *ngIf="diarySelected && showButtonToClear"
                                 matSuffix color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -56,5 +73,6 @@
                 </app-agenda>
             </div>
         </ng-template>
-    </div> 
+    </div>
 </app-dock-popup>
+

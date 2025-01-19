@@ -1,0 +1,165 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.studies.dialog.TITLE'"></span>
+	<button mat-icon-button (click)="close()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<mat-stepper linear #stepper>
+	<form [formGroup]="form" class="form">
+		<mat-step [completed]="this.form.controls.healthProblem.valid">
+			<ng-template matStepLabel> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.PATIENT_DATA' |
+				translate}}
+			</ng-template>
+
+			<mat-dialog-content>
+				<div fxLayoutGap="10px" fxLayout="column">
+
+					<div fxLayoutGap="10px">
+						<h2> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.PATIENT_DATA' |
+							translate}}</h2>
+						<app-patient-summary *ngIf="patient" [person]="patient" [size]="size">
+						</app-patient-summary>
+					</div>
+
+					<div>
+						<span>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.MEDICAL_COVERAGE'
+							| translate}}</span>
+						<mat-form-field appearance="outline" class="full-width">
+
+							<mat-select formControlName="patientMedicalCoverage"
+								placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.SELECT_MEDICAL_COVERAGE' | translate}}">
+								<mat-option id="medical-coverage" name="medicalCoverage"
+									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+									[value]="patientMedicalCoverage">
+									{{ patientMedicalCoverage | fullMedicalCoverage }}
+								</mat-option>
+								<mat-divider></mat-divider>
+								<mat-option (click)="openMedicalCoverageDialog()">
+									<span class="color-primary"
+										[translate]="'ambulatoria.paciente.nueva-consulta.studies.dialog.UPDATE_COVERAGE'"></span>
+								</mat-option>
+							</mat-select>
+							<button id="clear-medical-coverage" type="button" *ngIf="form.value.patientMedicalCoverage"
+								matSuffix color="warn" mat-icon-button
+								(click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+
+						<span> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.HEALTH_PROBLEM' |
+							translate}}
+						</span>
+						<mat-form-field appearance="outline" class="full-width">
+							<mat-select formControlName="healthProblem" id="healthproblem" placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.SELECT_PROBLEM' | translate}}">
+								<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem" (click)="setProblem(healthProblem)">
+									{{ healthProblem.pt | translate }}
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
+			</mat-dialog-content>
+
+			<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
+				<button mat-raised-button mat-button matStepperNext color="primary">
+					{{'ambulatoria.paciente.nueva-consulta.studies.dialog.NEXT'|translate}}
+				</button>
+			</mat-dialog-actions>
+		</mat-step>
+
+		<mat-step>
+			<ng-template matStepLabel>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' | translate}}</ng-template>
+
+			<mat-dialog-content>
+				<h2> {{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDIES_LABEL' |	translate}}</h2>
+				<app-create-order [data]="data"
+					[studyCategoryOptions]="studyCategoryOptions"
+					[problems]="data.problems">
+				</app-create-order>
+
+			</mat-dialog-content>
+
+			<mat-dialog-actions fxLayoutAlign="end center" fxLayoutAlign="space-between center">
+				<button mat-stroked-button color="primary" matStepperPrevious>
+					{{'ambulatoria.paciente.nueva-consulta.studies.dialog.BACK' | translate}}
+				</button>
+				<button [disabled]="!data.createOrderService.firstPartAreCompleted" id="next" mat-raised-button
+					matStepperNext color="primary">
+					<span> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
+				</button>
+			</mat-dialog-actions>
+		</mat-step>
+
+		<mat-step>
+			<ng-template matStepLabel>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.RESULT' | translate}}</ng-template>
+
+			<mat-dialog-content class="content">
+				<h2>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.LOAD_RESULT' | translate}} </h2>
+
+				<mat-radio-group [formControl]="radioControl.controls.controlButton" aria-label="Select an option" fxLayout="column"
+					fxLayoutGap="15px" (change)="setCreationStatus($event)">
+					<mat-radio-button [value]=study_status.REGISTERED color="primary">
+						{{'ambulatoria.paciente.nueva-consulta.studies.dialog.OPTION_NO' | translate}}
+					</mat-radio-button>
+					<mat-radio-button [value]=completeNow color="primary">
+						{{'ambulatoria.paciente.nueva-consulta.studies.dialog.OPTION_YES'|translate}}
+					</mat-radio-button>
+				</mat-radio-group>
+
+				<div *ngIf="radioControl.controls.controlButton.value === completeNow">
+
+					<h2 class="margin-top capitalize-first-letter">{{(data.createOrderService.procedure$ | async)?.pt}}</h2>
+
+					<app-custom-form class="margin-top" *ngIf="(data.createOrderService.hasTemplate$ | async)"
+						[templates]="data.createOrderService.templates"
+						[createOrderService]="data.createOrderService">
+					</app-custom-form>
+
+					<p class="margin-top">{{'ambulatoria.paciente.nueva-consulta.studies.dialog.OBSERVATIONS' | translate}}</p>
+					<mat-form-field appearance="outline" class="full-width">
+						<textarea matInput formControlName="observations" type="text" placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.OBSERVATIONS_DESCRIPTION' | translate}}"></textarea>
+						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+					</mat-form-field>
+
+					<div id="attach_files" fxLayout="column">
+						<div class="span-clickable primary" fxLayout="row">
+							<mat-icon>attachment_icon</mat-icon>
+							<span [translate]="'ambulatoria.paciente.nueva-consulta.studies.dialog.UPLOAD_FILE'"
+								(click)="fileInput.click()">
+							</span>
+							<span [hidden]="true">
+								<input type="file" #fileInput multiple (change)="onSelectFileFormData($event)" />
+							</span>
+						</div>
+
+						<div *ngIf="selectedFilesShow" class="selected-files">
+							<div *ngFor="let fileName of selectedFilesShow; let index = index">
+								<span class="mat-body element-light-color">
+									{{fileName}}
+								</span>
+								<button mat-icon-button color="warn"
+									(click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</mat-dialog-content>
+
+			<mat-dialog-actions fxLayoutAlign="end center" fxLayoutAlign="space-between center">
+				<button mat-stroked-button color="primary" matStepperPrevious>
+					{{'ambulatoria.paciente.nueva-consulta.studies.dialog.BACK' | translate}}
+				</button>
+
+				<div *ngIf="(radioControl.controls.controlButton.value !== null && data.createOrderService.hasConcept())">
+					<button id="add_order" mat-raised-button mat-button matStepperNext color="primary"
+							(click)="addOrder()" [disabled]="radioControl.controls.controlButton.value === completeNow && !form.valid">
+							<span>+ {{'ambulatoria.paciente.nueva-consulta.studies.dialog.ADD' | translate}}</span>
+					</button>
+				</div>
+			</mat-dialog-actions>
+		</mat-step>
+	</form>
+</mat-stepper>

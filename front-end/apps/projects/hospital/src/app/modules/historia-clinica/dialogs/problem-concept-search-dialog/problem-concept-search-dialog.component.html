@@ -6,16 +6,36 @@
 </div>
 
 <div mat-dialog-content>
-	<app-concepts-search *ngIf="!data.searchConceptsLocallyFF else problemTypeaheadSearch"
-		[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
-		(search)="data.ambulatoryConsultationProblemsService.openSearchDialog($event)">
-	</app-concepts-search>
+	<ng-container *ngIf="!data.ambulatoryConsultationProblemsService.getSnomedConcept() else problemForm">
+		<app-concepts-search *ngIf="!data.searchConceptsLocallyFF else problemTypeaheadSearch"
+			[label]="'ambulatoria.paciente.nueva-consulta.problemas.CONCEPT_LABEL'"
+			(search)="data.ambulatoryConsultationProblemsService.openSearchDialog($event)">
+		</app-concepts-search>
 
-	<ng-template #problemTypeaheadSearch>
-		<app-concept-typeahead-search [ecl]="data.ambulatoryConsultationProblemsService.getECL()"
-			[placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
-			(conceptSelected)="addProblem($event)" [enableSubmitButton]="enableSubmitButton"
-			[buttonMessage]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'">
-		</app-concept-typeahead-search>
+		<ng-template #problemTypeaheadSearch>
+			<app-concept-typeahead-search [ecl]="data.ambulatoryConsultationProblemsService.getECL()"
+				[placeholder]="'ambulatoria.paciente.nueva-consulta.problemas.SEARCH_PLACEHOLDER'"
+				(conceptSelected)="addProblem($event)" [enableSubmitButton]="enableSubmitButton"
+				[buttonMessage]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'">
+			</app-concept-typeahead-search>
+		</ng-template>
+	</ng-container>
+	<ng-template #problemForm>
+		<form [formGroup]="data.ambulatoryConsultationProblemsService.getForm()" (ngSubmit)="addProblem(null)">
+			<div fxLayout="column" fxLayoutGap="5px">
+				<mat-form-field appearance="outline">
+					<input id="problem-input" matInput type="text" formControlName="snomed" name="snomed">
+					<button id="clear-problem"  matSuffix color="warn" mat-icon-button
+						(click)="data.ambulatoryConsultationProblemsService.resetForm()">
+						<mat-icon>close</mat-icon>
+					</button>
+				</mat-form-field>
+				<div align="end">
+					<button id="submit_problema" class="uppercase" mat-raised-button color="primary" type="submit">
+						<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.buttons.ADD'"></span>
+					</button>
+				</div>
+			</div>
+		</form>
 	</ng-template>
 </div>

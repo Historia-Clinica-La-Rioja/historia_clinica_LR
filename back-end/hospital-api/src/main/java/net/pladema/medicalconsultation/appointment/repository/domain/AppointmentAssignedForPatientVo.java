@@ -12,6 +12,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class AppointmentAssignedForPatientVo {
 
+	private final Integer id;
+
 	private final String license;
 
 	private final Integer personId;
@@ -22,4 +24,5 @@ public class AppointmentAssignedForPatientVo {
 
 	private final String office;
 
+	private final String clinicalSpecialtyName;
 }

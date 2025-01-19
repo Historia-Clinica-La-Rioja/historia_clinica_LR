@@ -1,5 +1,3 @@
-@import '../../../../../assets/styles/mixins';
-
 .main-container {
 	text-align: center;
 	padding: 0 3em;
@@ -14,8 +12,12 @@
 }
 
 .icon {
+    width: 70px;
+    height: 70px;
 	font-size: 5em;
 	line-height: 4rem;
+    display: flex;
+    align-items: center;
 }
 
 .icon-border {
@@ -32,8 +34,23 @@
 	width: 65px;
 }
 
-.align-end {
-	text-align: end;
+.content-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.content-title {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.content-subtitle {
+    font-size: 14px;
+}
+
+.dialog-header {
+	display: flex;
+    justify-content: space-between;
 }
 
 .green {

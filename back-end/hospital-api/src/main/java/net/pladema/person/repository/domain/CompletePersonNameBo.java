@@ -16,10 +16,13 @@ public class CompletePersonNameBo {
 
 	private final Boolean includeNameSelfDetermination = AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive();
 
-	public CompletePersonNameBo(Person person, String nameSelfDetermination) {
+	private final Integer healthcareProfessionalId;
+
+	public CompletePersonNameBo(Person person, String nameSelfDetermination, Integer healthcareProfessionalId) {
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.person = person;
-		this.personFullName = this.getFullName(person.getLastName(), person.getOtherLastNames(), person.getFirstName(), person.getMiddleNames(), nameSelfDetermination);;
+		this.personFullName = this.getFullName(person.getLastName(), person.getOtherLastNames(), person.getFirstName(), person.getMiddleNames(), nameSelfDetermination);
+		this.healthcareProfessionalId = healthcareProfessionalId;
 	}
 
 	public String getFullName(String doctorLastName, String doctorOtherLastNames,

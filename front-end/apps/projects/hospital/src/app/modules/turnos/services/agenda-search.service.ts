@@ -10,7 +10,7 @@ export class AgendaSearchService {
 
 	private agendaFiltersSource = new BehaviorSubject<AgendaFilters>(undefined);
 	private agendasSource = new BehaviorSubject<AgendaOptionsData>(undefined);
-	private agendaSelected: CompleteDiaryDto;
+	private agendaSelected = new BehaviorSubject<CompleteDiaryDto>(undefined);
 
 	constructor(
 		private readonly diariesService: DiariesService,
@@ -25,6 +25,10 @@ export class AgendaSearchService {
 		return this.agendasSource.asObservable();
 	}
 
+	getAgendaSelected$(): Observable<CompleteDiaryDto> {
+		return this.agendaSelected?.asObservable();
+	}
+
 	search(idProfesional: number): void {
 		if (idProfesional) {
 			this.updateDiaries(idProfesional);
@@ -35,32 +39,32 @@ export class AgendaSearchService {
 
 	setAgendaSelected(agendaSelected: CompleteDiaryDto): void {
 		if (!agendaSelected) {
-			this.updateSelectAgenda();
+			this.updateSelectAgenda(agendaSelected);
 		}
 		if (this.newAgendaSelected(agendaSelected)) {
 			this.updateProfesionalSelected(agendaSelected);
 		}
-		this.agendaSelected = agendaSelected;
+		this.agendaSelected?.next(agendaSelected);
 	}
 
 	clearAll(): void {
-		this.agendaFiltersSource.next(undefined);
-		this.agendasSource.next(undefined);
-		this.agendaSelected = undefined;
+		this.agendaFiltersSource.next(null);
+		this.agendasSource.next(null);
+		this.agendaSelected?.next(null);
 	}
 
 	private updateDiaries(idProfesional: number): void {
 		this.diariesService.getDiaries(idProfesional).subscribe(agendas => {
 			this.agendasSource.next({
 				agendas,
-				idAgendaSelected: this.agendaSelected?.id,
+				idAgendaSelected: this.agendaSelected?.getValue()?.id,
 				filteredBy: { idProfesional }
 			});
 		});
 	}
 
 	private clearSearch(): void {
-		delete this.agendaSelected;
+		this.agendaSelected.next(null);
 		this.agendasSource.next({
 			agendas: undefined,
 			idAgendaSelected: undefined,
@@ -69,15 +73,15 @@ export class AgendaSearchService {
 	}
 
 	private newAgendaSelected(agendaSelected: CompleteDiaryDto): boolean {
-		return agendaSelected && agendaSelected.id !== this.agendaSelected?.id;
+		return agendaSelected && agendaSelected.id !== this.agendaSelected?.getValue()?.id;
 	}
 
 	private updateProfesionalSelected(agendaSelected: CompleteDiaryDto): void {
 		this.agendaFiltersSource.next({ idProfesional: agendaSelected.healthcareProfessionalId });
 	}
 
-	private updateSelectAgenda(): void {
-		const idProfesional = this.agendaSelected?.healthcareProfessionalId;
+	private updateSelectAgenda(agendaSelected: CompleteDiaryDto): void {
+		const idProfesional = agendaSelected?.healthcareProfessionalId;
 		if (idProfesional) {
 			this.diariesService.getDiaries(idProfesional).subscribe(agendas => {
 				this.agendasSource.next({

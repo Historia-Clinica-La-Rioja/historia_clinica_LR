@@ -140,10 +140,9 @@ public class ClinicalSpecialtyController {
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/clinicalspecialty/by-destination-institution")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<List<ClinicalSpecialtyDto>> getAllByInstitutionIdAndActiveDiaries(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@RequestParam Integer destinationInstitutionId) {
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public ResponseEntity<List<ClinicalSpecialtyDto>> getAllByInstitutionIdAndActiveDiaries(@PathVariable(name = "institutionId") Integer institutionId,
+																							@RequestParam Integer destinationInstitutionId) {
 		LOG.debug("Input parameters -> institutionId {} and destinationInstitutionId {}", institutionId, destinationInstitutionId);
 		List<ClinicalSpecialtyDto> clinicalSpecialties = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialtyService.getAllByInstitutionIdAndActiveDiaries(destinationInstitutionId));
 		LOG.debug("Get all Clinical Specialty by active diaries and institution {} => {}", destinationInstitutionId);
@@ -160,13 +159,11 @@ public class ClinicalSpecialtyController {
 		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
 	}
 
-	@GetMapping("/institution/{institutionId}/clinicalspecialty/by-province/{provinceId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<List<ClinicalSpecialtyDto>> getClinicalSpecialtiesByProvinceId(@PathVariable(name = "institutionId") Integer institutionId,
-																						 @PathVariable(name = "provinceId") Short provinceId){
-		LOG.debug("Input parameteres => provinceId {}", provinceId);
-		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesByProvinceId(provinceId);
-		LOG.debug("Get all Clinical Specialties by province {}", clinicalSpecialties);
+	@GetMapping("/institution/{institutionId}/clinicalspecialty")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO')")
+	public ResponseEntity<List<ClinicalSpecialtyDto>> getClinicalSpecialtiesInAllInstitutions(@PathVariable(name = "institutionId") Integer institutionId){
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesInAllInstitutions();
+		LOG.debug("Get all Clinical Specialties in institutions {}", clinicalSpecialties);
 		return ResponseEntity.ok(clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties));
 	}
 
@@ -178,5 +175,14 @@ public class ClinicalSpecialtyController {
 		return result;
 	}
 
+	@GetMapping("/clinical-specialty/department/{departmentId}")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public List<ClinicalSpecialtyDto> getClinicalSpecialtiesByDepartmentId(@PathVariable(name = "departmentId") Short departmentId) {
+		LOG.debug("Input parameters -> departmentId {}", departmentId);
+		List<ClinicalSpecialtyBo> clinicalSpecialties = clinicalSpecialtyService.getClinicalSpecialtiesByDepartmentId(departmentId);
+		List<ClinicalSpecialtyDto> result = clinicalSpecialtyMapper.fromListClinicalSpecialtyBo(clinicalSpecialties);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
 }
 

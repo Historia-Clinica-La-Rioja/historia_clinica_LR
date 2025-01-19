@@ -12,7 +12,7 @@
                                 {{modality.description}}
                             </mat-option>
                         </mat-select>
-                        <button *ngIf="filterForm.value.modalities" mat-button matSuffix color="warn" mat-icon-button
+                        <button *ngIf="filterForm.value.modalities"  matSuffix color="warn" mat-icon-button
                             (click)="cleanModalities(); $event.stopPropagation()">
                             <mat-icon>close</mat-icon>
                         </button>
@@ -59,7 +59,7 @@
                             {{status.description}}
                         </mat-option>
                     </mat-select>
-                    <button *ngIf="filterForm.value.status" mat-button matSuffix color="warn" mat-icon-button
+                    <button *ngIf="filterForm.value.status"  matSuffix color="warn" mat-icon-button
                         (click)="cleanStatuses(); $event.stopPropagation()">
                         <mat-icon>close</mat-icon>
                     </button>

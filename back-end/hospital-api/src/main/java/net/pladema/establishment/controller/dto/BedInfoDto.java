@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.establishment.infrastructure.input.rest.dto.FetchAttentionPlaceStatusDto;
 
 @Getter
 @Setter
@@ -28,5 +29,8 @@ public class BedInfoDto implements Serializable {
 
 	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
 	private String probableDischargeDate;
-    
+
+	private BedNurseDto bedNurse;
+
+	private FetchAttentionPlaceStatusDto status;
 }

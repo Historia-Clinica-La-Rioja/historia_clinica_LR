@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.reason;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -53,6 +54,24 @@ public class ReasonServiceImpl implements ReasonService {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public Optional<ReasonBo> getByReasonId(String reasonId) {
+		Optional<Reason> reasonOpt = reasonRepository.findById(reasonId);
+		if (reasonOpt.isPresent()){
+			Reason r = reasonOpt.get();
+			ReasonBo reasonBo = new ReasonBo();
+			reasonBo.setSnomed(new SnomedBo(r.getId(), r.getDescription()));
+			return Optional.of(reasonBo);
+		}
+		return Optional.empty();
+	}
+
+	@Override
+	public List<ReasonBo> fetchFromEmergencyCareEvolutionNoteId(Integer emergencyCareEvolutionNoteId) {
+		return reasonRepository.findAllByEmergencyCareEvolutionNoteId(emergencyCareEvolutionNoteId)
+				.stream().map(r -> new ReasonBo(new SnomedBo(r.getId(), r.getDescription())))
+				.collect(Collectors.toList());
+	}
 
 	private ReasonBo saveReason(ReasonBo reasonBo) {
         LOG.debug("Input parameters reasonBo {}", reasonBo);

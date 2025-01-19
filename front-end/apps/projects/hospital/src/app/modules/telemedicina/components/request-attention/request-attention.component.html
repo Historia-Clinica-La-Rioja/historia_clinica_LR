@@ -1,25 +1,37 @@
 <section>
 	<h3 class="page-title">{{'telemedicina.attention.SUBTITLE' | translate}}</h3>
 	<div fxLayout="row" fxLayoutAlign="space-between start">
-		<div>
-			<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)"></app-filters-select>
+		<div fxLayout="column">
+			<div class="content-patient-filter">
+				<mat-form-field id="search-patient" appearance="outline">
+					<mat-label>{{'telemedicina.requests.form.PATIENT_SEARCH' |
+						translate}}</mat-label>
+					<input matInput id="patient-filter" [(ngModel)]="patientFilter" (keyup)="applyFilter($event)">
+					<mat-icon matSuffix>search</mat-icon>
+				</mat-form-field>
+			</div>
+			<div>
+				<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)" filtersSelectStyle="filters-telemedicina"></app-filters-select>
+			</div>
 		</div>
 		<div fxLayout="column" fxLayoutGap="1em" fxLayoutAlign="end end">
-			<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)"
-				label="Atención online activada" [initialValue]="toggleEnabled"></app-toggle-avaiability>
+			<app-toggle-availability (availabilityChanged)="availabilityChanged($event)" label="Atención online activada"
+				[initialValue]="toggleEnabled"></app-toggle-availability>
 		</div>
 	</div>
 </section>
 <section>
-	<div *ngFor="let virtualConsultation of virtualConsultations$ | async">
+	<div *ngFor="let virtualConsultation of virtualConsultationsFiltered$ | async">
 		<app-request-info-card [setVirtualConsultation]="virtualConsultation">
 			<div view-clinical-history>
 				<a (click)="goToClinicalHistory(virtualConsultation.patientData.id)"
 					class="primary">{{'pacientes.profile.SEE_CLINICAL_HISTORY' | translate}}</a>
 			</div>
 			<div actions>
-				<button mat-raised-button [disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled || virtualConsultation.status === FINISHED_STATUS || virtualConsultation.status === CANCELLED_STATUS" color="primary"
-					(click)="call(virtualConsultation)">{{'telemedicina.attention.BUTTON_TAKE_TURN' | translate}}</button>
+				<button mat-raised-button
+					[disabled]="!virtualConsultation.responsibleData.available || !toggleEnabled || virtualConsultation.status === FINISHED_STATUS || virtualConsultation.status === CANCELLED_STATUS"
+					color="primary" (click)="call(virtualConsultation)">{{'telemedicina.attention.BUTTON_TAKE_TURN' |
+					translate}}</button>
 			</div>
 		</app-request-info-card>
 	</div>

@@ -1,0 +1,22 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'image-network.appointments.medical-order.STUDY_TITLE'"> </span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container>
+        <app-concepts-search *ngIf="!searchConceptsLocallyFFIsOn else injectTypeaheadSearch"
+            [label]="'image-network.appointments.medical-order.STUDY'"
+            (search)="openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #injectTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="transcribedEcl"
+                [placeholder]="'image-network.appointments.medical-order.STUDY'"
+                (conceptSelected)="setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>

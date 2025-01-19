@@ -1,22 +1,4 @@
-
-
-const sectorMessages = {
-    name: 'Sector |||| Sectores',
-    fields: {
-        institutionId: 'Institución',
-        description: 'Nombre',
-        clinicalspecialtysectors: 'Especialidad | Sector',
-        childSectors: 'Sectores Hijos',
-        ageGroupId: 'Grupo de edad',
-        sectorTypeId: 'Tipo de sector',
-        sectorOrganizationId: 'Organización',
-        careTypeId: 'Tipo de cuidado',
-        hospitalizationTypeId: 'Permanencia',
-        sectorId: 'Sector padre',
-        informer: 'Realiza informes para todo el dominio.'
-    },
-    createRelated: 'Crear Sector'
-}
+import resources from '../../modules/resources.es';
 
 const messages = {
     app: {
@@ -25,7 +7,9 @@ const messages = {
             facilities: 'Instalaciones',
             debug: 'Inspeccionar',
             masterData: 'Datos maestros',
+            terminology: 'Terminología',
             booking: 'Reservas online',
+            imageNetwork: 'Red de Imágenes',
             more: 'Mas',
 
         },
@@ -97,6 +81,11 @@ const messages = {
             "invalid-cuit": "El CUIT debe ser numérico",
             "plan-exists": "El plan ya se encuentra asociado a la cobertura médica",
         },
+        "loinc-code": {
+            "create-disallowed" : "La creación de códigos LOINC esta deshabilitada",
+            "editable-fields-disallowed" : "Solo se puede editar el campo 'Nombre en sistema'",
+            "delete-disallowed" : "La eliminación de códigos LOINC esta deshabilitada"
+        }
     },
     files: {
         cant_download: 'No se pudo descargar el archivo'
@@ -107,6 +96,7 @@ const messages = {
         dialog_title: 'Unificar coberturas médicas',
     },
     resources: {
+        ...resources,
         wcDefinitionPath: {
             name: 'Extension |||| Extensiones',
             fields: {
@@ -128,20 +118,6 @@ const messages = {
             },
             createRelated: 'Crear Cama'
         },
-        rooms: {
-            name: 'Habitación |||| Habitaciones',
-            fields: {
-                description: 'Nombre',
-                type: 'Tipo',
-                specialityId: 'Especialidad',
-                dischargeDate: 'Fecha de alta',
-                sectorId: 'Sector',
-                clinicalSpecialtySectorId: 'Especialidad | Sector',
-                roomNumber: 'Nro. habitación',
-                beds: 'Camas'
-            },
-            createRelated: 'Crear Habitación'
-        },
         cities: {
             name: 'Ciudad |||| Ciudades',
             fields: {
@@ -154,25 +130,6 @@ const messages = {
             fields: {
                 description: 'Nombre',
             },
-        },
-        doctorsoffices: {
-            name: 'Consultorio |||| Consultorios',
-            fields: {
-                description: 'Nombre',
-                openingTime: 'Horario de apertura',
-                closingTime: 'Horario de cierre',
-                sectorId: 'Sector',
-                institutionId: 'Institución',
-                topic: 'Tópico'
-            },
-            createRelated: 'Crear Consultorio',
-        },
-        shockroom: {
-            name: "Shockrooms",
-            createRelated: 'Crear Shockroom',
-            fields: {
-                description: 'Nombre',
-            }
         },
         addresses: {
             name: 'Dirección |||| Direcciones',
@@ -201,7 +158,10 @@ const messages = {
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
                 provinceCode: 'Código de provincia',
-                hierarchicalUnits: 'Unidades jerárquicas'
+                hierarchicalUnits: 'Unidades jerárquicas',
+                parameterizedForm: 'Formularios configurables',
+                institutionalParameterizedForm: 'Formularios configurables institucionales',
+                pharmacos: 'Fármacos y grupos de fármacos'
             },
         },
         "booking-institution": {
@@ -229,8 +189,6 @@ const messages = {
             patient: 'Nombre y apellido Paciente',
             professional: 'Nombre y apellido Profesional'
         },
-        sectors: sectorMessages,
-        rootsectors: sectorMessages,
 
         clinicalspecialties: {
             name: 'Especialidad |||| Especialidades',
@@ -367,7 +325,8 @@ const messages = {
                 roleId: 'Rol',
                 email: "E-mail",
                 roles: 'Roles',
-                hierarchicalUnits: 'Unidades jerárquicas'
+                hierarchicalUnits: 'Unidades jerárquicas',
+                institutionalGroups: 'Grupos institucionales'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
@@ -385,18 +344,6 @@ const messages = {
                 addHierarchicalUnit: 'Asociar unidad jerárquica'
             }
         },
-        admin: {
-            name: 'Admin |||| Admins',
-            fields: {
-                username: 'Nombre de usuario',
-                enable: 'Habilitado',
-                lastLogin: 'Último ingreso',
-                institutionId: 'Institución',
-                roleId: 'Rol',
-                email: "E-mail"
-            },
-            noEmail: "Sin información",
-        },
         userroles: {
             name: 'Roles de usuario |||| Roles de usuario',
             fields: {
@@ -411,26 +358,6 @@ const messages = {
                 entryDate: 'Fecha de entrada'
             }
         },
-        person: {
-            name: 'Persona |||| Personas',
-            fields: {
-                firstName: 'Nombre',
-                middleNames: 'Segundo nombre',
-                lastName: 'Apellido',
-                otherLastNames: 'Segundo apellido',
-                genderId: 'Género',
-                identificationTypeId: 'Tipo de documento',
-                identificationNumber: 'Nº de documento',
-                birthDate: 'Fecha de nacimiento'
-            },
-            tabs: {
-                details: 'Datos personales',
-                users: 'Usuario'
-            },
-            buttons: {
-                linkProfession: 'Asociar profesión'
-            }
-        },
         carelines: {
             name: 'Línea de cuidado |||| Líneas de cuidado',
             fields: {
@@ -438,6 +365,7 @@ const messages = {
                 atentionType: 'Tipo de atención',
                 consultation: 'Consulta',
                 procedure: 'Procedimiento',
+                classified: 'Confidencial'
             }
         },
         clinicalspecialtycarelines: {
@@ -532,6 +460,25 @@ const messages = {
             },
             addRelated: 'Agregar plan',
         },
+        vclinichistoryaudit: {
+            name: 'Auditoria de Acceso',
+            medicalEmergency: 'Urgencia médica',
+	        professinalConsultation : 'Consulta profesional',
+	        patientConsultation: 'Consulta de paciente',
+	        audit: 'Auditoría',
+            fields: {
+                firstName:'Nombre',
+                lastName:'Apellido',
+                description:'Tipo',
+                identificationNumber:'Nº de documento',
+                username:'Usuario',
+                date:'Fecha',
+                reasonId:'Motivo',
+                institutionName:'Institución',
+                observations:'observaciones',
+                scope:'Motivo'
+            }
+        },
         snomedgroups: {
             name: 'Grupo de terminología |||| Grupos de terminología',
             fields: {
@@ -579,7 +526,7 @@ const messages = {
             },
         },
         "properties": {
-            name: 'Propiedades del sistema |||| Propiedades del sistema',
+            name: 'Propiedad del sistema |||| Propiedades del sistema',
             fields: {
                 property: 'Propiedad',
                 value: 'Valor',
@@ -587,6 +534,15 @@ const messages = {
                 nodeId: 'Nodo',
                 updatedOn: 'Última actualización',
                 description: 'Descripción',
+            }
+        },
+        'report-queue': {
+            name: 'Reporte generado |||| Reportes generados',
+            fields: {
+                createdOn: 'Creación',
+                generatedOn: 'Generación',
+                generatedError: 'Mensaje de generación',
+                fileId: 'Archivo',
             }
         },
         "healthinsurances": {
@@ -635,12 +591,20 @@ const messages = {
                 description: 'Descripción',
             }
         },
+        carelinerole: {
+            name: 'Roles confidenciales',
+            addRelated: 'Agregar rol',
+            fields: {
+                careLineId: 'Línea de cuidado',
+                roleId: 'Rol',
+            }
+        },
         carelineproblems: {
             name: 'Problemas',
             fields: {
                 careLineId: 'Línea de cuidado',
                 snomedId: 'Problema',
-                conceptSctid: 'sctid',
+                conceptId: 'Id concepto',
                 pt: 'pt',
             },
             addRelated: 'Agregar problema',
@@ -703,8 +667,8 @@ const messages = {
                 snomedId: 'Práctica'
             },
         },
-        snowstormproblems: {
-            name: 'Concepto Snowstorm',
+        snomedproblems: {
+            name: 'Concepto Snomed',
             fields: {
                 conceptSctid: 'Id Concepto',
                 term: 'Descripción',
@@ -718,9 +682,9 @@ const messages = {
             }
         },
         pacservers: {
-            name: 'PAC Global',
+            name: 'PACS Global',
             fields: {
-                name: 'Nombre de servidor PAC',
+                name: 'Nombre de servidor PACS',
                 aetitle: 'AETITLE',
                 domain: 'Dominio',
                 pacServerType: 'Tipo de Servidor',
@@ -734,15 +698,16 @@ const messages = {
             },
         },
         pacserversimagelvl: {
-            name: 'Servidor PAC a nivel servicio',
+            name: 'Servidor PACS a nivel servicio',
             fields: {
-                name: 'Nombre de servidor PAC',
+                name: 'Nombre de servidor PACS',
                 aetitle: 'AETITLE',
                 domain: 'Dominio',
                 port: 'Puerto',
                 sectorId: 'Sector',
+                localViewerUrl: 'URL del visualizador local'
             },
-            createRelated: 'Crear Servidor PAC'
+            createRelated: 'Crear Servidor PACS'
         },
         orchestrator: {
             name: 'Orquestador',
@@ -756,7 +721,9 @@ const messages = {
                 executionEndTime:'Hora de fin de ejecución',
                 weightDays:'Peso asignado a la cantidad dias',
                 weightSize:'Peso asignado al tamaño',
-                weightPriority:'Peso asignado a la prioridad'
+                weightPriority:'Peso asignado a la prioridad',
+                massiveRetry: 'Reintentar movimiento masivo',
+                findStudies:'Buscar posibles estudios'
 
             },
             parameter:'Parámetros de configuración ',
@@ -771,7 +738,7 @@ const messages = {
                 aeTitle: 'AE Title',
                 orchestratorId: 'Orquestador asociado',
                 sectorId: 'Sector',
-                pacServerId: 'Nombre del servidor PAC',
+                pacServerId: 'Nombre del servidor PACS',
                 modalityId: 'Modalidad',
                 createId:'El equipo genera el ID del estudio'
             },
@@ -783,19 +750,54 @@ const messages = {
             pending:'Pendiente',
             moving:'Moviendo',
             finished:'Finalizado',
+            failed:'Movimiento Fallido',
             errorPriority:'La prioridad puede ser 0 o 1',
             fields: {
-                institutionId: 'Intitución',
+                institutionId: 'Institución',
                 imageId: 'Id del estudio',
                 sizeImage: 'Tamaño en bytes del estudio',
                 orchestratorId: 'Orquestador asociado',
                 attempsNumber: 'Número de fallos',
-                pacServerId: 'PAC Destino',
+                pacServerId: 'PACS Destino',
                 result: 'Resultado',
                 status:'Estado',
-                priorityMax:'Prioridad Máxima'
+                priorityMax:'Prioridad Máxima',
+                beginOfMove: 'Fecha de inicio de movimiento'
             }
         },
+
+        allmovestudies: {
+            name: 'Lista de Estudios',
+            pending:'Pendiente',
+            moving:'Moviendo',
+            finished:'Finalizado',
+            failed:'Movimiento Fallido',
+            fields: {
+                institutionId: 'Institución',
+                imageId: 'Id del estudio',
+                identificationNumber: 'Documento',
+                firstName: 'Nombre',
+                lastName: 'Apellido',
+                appoinmentDate: 'Fecha del turno',
+                appoinmentTime: 'Hora del turno',
+                result: 'Resultado',
+                status:'Estado',
+                acronym:'Modalidad'
+            }
+        },
+
+        resultstudies: {
+            name: 'Posibles  Estudios',
+            fields: {
+                patientId: 'DNI',
+                patientName: 'Apellido y Nombre',
+                studyDate: 'Fecha del estudio',
+                studyTime: 'Hora del estudio',
+                studyInstanceUid: 'Id estudios',
+                modality: 'Modalidad'
+            }
+        },
+
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
             fields: {
@@ -805,6 +807,7 @@ const messages = {
         },
         hierarchicalunits: {
             name: 'Unidad jerárquica |||| Unidades jerárquicas',
+            closestServiceId: 'Tu vieja',
             fields: {
                 id: 'Id',
                 institutionId: 'Institución',
@@ -812,7 +815,9 @@ const messages = {
                 typeId: 'Tipo',
                 alias: 'Alias',
                 clinicalSpecialtyId: 'Servicio',
-                hierarchicalUnitIdToReport: 'Productividad asociada a'
+                hierarchicalUnitIdToReport: 'Productividad asociada a',
+                closestServiceId: 'Servicio inmediato superior',
+                closestService: 'Servicio inmediato superior'
             },
             createRelated: 'Crear Unidad jerárquica'
         },
@@ -820,7 +825,7 @@ const messages = {
             name: 'Relación entre unidades jerárquicas',
             fields : {
                 hierarchicalUnitChildId: 'Unidad jerárquica hija',
-                hierarchicalUnitParentId: 'Unidad jerárquica padre',
+                hierarchicalUnitParentId: 'Unidad jerárquica padre'
             },
             parents : {
                 name: 'Unidades jerárquicas padres',
@@ -830,7 +835,11 @@ const messages = {
                 name: 'Unidades jerárquicas hijas',
                 createRelated: 'Crear unidad hija'
             },
-            createRelated: 'Asociar Unidad jeárquica'
+            closestService: {
+                name: 'Servicio inmediato superior',
+                addRelated: 'Asociar servicio inmediato superior'
+            },
+            createRelated: 'Asociar Unidad jerárquica'
         },
         hierarchicalunitstaff: {
             name: 'Usuarios',
@@ -867,7 +876,7 @@ const messages = {
                 sctidCode: 'Código SNOMED',
             },
         },
-        practiceprocedurerules: {
+        snomedprocedurerules: {
             fields: {
                 orden: 'Orden',
                 lastUpdate: 'Última actualización',
@@ -876,6 +885,256 @@ const messages = {
                 conceptSctid: 'Snomed CT ID',
                 conceptPt: 'Término'
             },
+        },
+        institutionalgroups: {
+            name: 'Grupo de instituciones |||| Grupos de instituciones',
+            fields: {
+                name: 'Nombre',
+                typeId: 'Tipo',
+                institutions: 'Instituciones'
+            },
+            tabs: {
+                institutions: 'Instituciones',
+                users: 'Usuarios'
+            },
+            createRelated: 'Crear Grupo de instituciones'
+        },
+        institutionalgroupinstitutions: {
+            name: 'Asociación de institución a Grupo',
+            fields: {
+                institutionId: 'Institución',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Agregar institución'
+        },
+        institutionalgroupusers: {
+            name: 'Asociación de usuario a Grupo',
+            fields: {
+                userId: 'Usuario',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Agregar usuario'
+        },
+        institutionalgrouprules: {
+            name: 'Regla local',
+            fields: {
+                ruleId: 'Regla',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Crear regla local'
+        },
+        proceduretemplates: {
+            name: 'Resultados de estudios',
+            fields: {
+                description: 'Nombre de estudio',
+                associatedPractices: 'Prácticas asociadas',
+                associatedParameters: 'Parámetros asociados',
+                statusId: 'Estado'
+            },
+            statusId: {
+                draft: 'Borrador',
+                active: 'Activo',
+                inactive: 'Inactivo',
+                activate: 'Activar',
+                deactivate: 'Desactivar'
+            },
+            excludeInactive: 'Excluir inactivos'
+        },
+        proceduretemplatesnomeds: {
+            name: 'Prácticas asociadas',
+            fields: {
+            },
+            addRelated: 'Asociar práctica',
+            deleteRelated: 'Desasociar práctica',
+        },
+        'loinc-codes': {
+            name: 'LOINC',
+            fields: {
+                code: 'Código LOINC',
+                description: 'Component',
+                statusId: 'Status',
+                systemId: 'System',
+                displayName: 'DisplayName',
+                customDisplayName: 'Nombre en sistema'
+            }
+        },
+        "units-of-measure": {
+            name: 'Unidades de estudios',
+            fields: {
+                code: 'Unidad',
+                enabled: 'Disponible en sistema'
+            },
+            title: 'Estándar UCOM'
+        },
+        proceduretemplateparameters: {
+            name: 'Parametros asociados',
+            fields: {
+                loincId: 'Código LOINC',
+                description: 'Descripción',
+                typeId: 'Tipo de parámetro',
+                order: 'Orden',
+                unitsOfMeasureIds: 'Unidades de medida',
+                inputCount: 'Cantidad de valores a ingresar',
+                eclId: 'ECL',
+                snomedGroupId: 'ECL',
+                option: 'Opción',
+                textOptions: 'Opciones'
+            },
+            typeChoices: {
+                numeric: 'Numérico',
+                options: 'Lista de opciones',
+                snomed: 'SNOMED (ECL)',
+                text: 'Texto libre'
+            },
+            errors: {
+                inputCountLte0: 'El número de valores a ingresar debe ser mayor a 0',
+                inputCountGtUomCount: 'La cantidad de valores a ingresar debe ser menor o igual al número de unidades de medida',
+                optionsMinLength: 'El número de opciones debe ser mayor o igual a 2',
+                uniqueUoms: 'Las unidades de medida no pueden repetirse'
+            },
+            addRelated: 'Asociar parámetro',
+            deleteRelated: 'Desasociar parámetro',
+            editRelated: 'Editar parámetro'
+        },
+        cipresencounters: {
+            name: 'Monitoreo de Cipres',
+            fields: {
+                encounterId: 'Id de consulta en HSI',
+                encounterApiId: 'Id de consulta en Cipres',
+                status:'Estado',
+                responseCode:'Código de respuesta',
+                date:'Fecha'
+            }
+        },
+        parameters: {
+            name: 'Parametros de formularios',
+            fields: {
+                loincRadioButton: {
+                    title: "Código LOINC asociado",
+                    option_1: "Si",
+                    option_2: "No",
+                },
+                loincId: 'Código LOINC',
+                loincDescription: 'Descripción código LOINC',
+                description: 'Descripción',
+                type: 'Tipo',
+                units: 'Unidades',
+                unitsOfMeasureIds: 'Unidades de medida',
+                inputCount: 'Cantidad de valores a ingresar',
+                eclId: 'ECL',
+                snomedGroupId: 'ECL',
+                option: 'Opción',
+                textOptions: 'Opciones'
+            },
+            typeChoices: {
+                numeric: 'Numérico',
+                options: 'Lista de opciones',
+                snomed: 'SNOMED (ECL)',
+                text: 'Texto libre'
+            },
+            errors: {
+                inputCountLte0: 'El número de valores a ingresar debe ser mayor a 0',
+                inputCountGtUomCount: 'La cantidad de valores a ingresar debe ser menor o igual al número de unidades de medida',
+                optionsMinLength: 'El número de opciones debe ser mayor o igual a 2',
+                uniqueUoms: 'Las unidades de medida no pueden repetirse'
+            },
+        },
+        medicinefinancingstatus: {
+            name: "Fármaco |||| Fármacos",
+            fields: {
+                conceptPt: "Fármaco de uso clínico",
+                conceptSctid: "COD Snomed",
+                financed: "Financiado"
+            }
+        },
+        medicinegroups: {
+            name: 'Grupo de fármacos |||| Grupos de fármacos',
+            fields: {
+                name: 'Nombre del grupo',
+                requiresAudit: 'Requiere auditoría',
+                outpatient: 'Ambulatoria',
+                emergencyCare: 'Guardia', 
+                internment: 'Internación',
+                addpharmaco: 'Agregar fármaco',
+                addproblem: 'Agregar problema',
+                allDiagnoses: 'Incluir todos',
+                message: 'Mensaje',
+                requiredDocumentation: 'Documentación requerida'
+            },
+            tabs: {
+                pharmacos: 'Fármacos',
+                diagnoses: 'Diagnósticos/Problemas'
+            },
+            createRelated: 'Crear Grupo de fármacos'
+        },
+        parameterizedform: {
+            name: "Formulario Configurable |||| Formularios Configurables",
+            statusId: {
+                draft: 'Borrador',
+                active: 'Activo',
+                inactive: 'Inactivo',
+                activate: 'Activar',
+                deactivate: 'Desactivar'
+            },
+            formName: 'Nombre del formulario',
+            scope: 'Ámbito',
+            status: 'Estado',
+            excludeInactive: 'Excluir inactivos',
+            description: 'Descripción',
+            outpatient: 'Ambulatorio',
+            emergencyCare: 'Guardia',
+            internment: 'Internación',
+            createRelated: 'Crear formulario'
+        },
+        parameterizedformparameter: {
+            name: '',
+            button: 'Asociar parámetro',
+            associatedParameters: 'Parámetros asociados',
+            order: 'Orden',
+            formName: 'Nombre de formulario'
+        },
+        medicinegroupmedicines: {
+            name: 'asociación de fármaco a grupo de fármacos'
+        },
+        medicinegroupproblems: {
+            name: 'asociación de problema/diagnósticos a grupo de fármacos',
+            fields: {
+                conceptPt: 'Nombre'
+            }
+        },
+        'institutions-prescription': {
+            name: 'Establecimiento para prescripción  |||| Establecimientos para prescripción',
+            fields: {
+                name: 'Nombre',
+                sisaCode: 'Código SISA',
+                addressId: 'Dirección',
+                dependencyId: 'Dependencia',
+                provinceId: 'Provincia'
+            }
+        },
+        institutionmedicinesfinancingstatus: {
+            name: "Fármaco",
+            fields: {
+                conceptPt: "Fármaco de uso clínico",
+                conceptSctid: "COD Snomed",
+                financedByDomain: "Financiado por dominio",
+                financedByInstitution: "Financiado por institución"
+            }
+        },
+        institutionmedicinegroups: {
+            name: "Grupo de fármacos de institución",
+            fields: {
+                name: 'Nombre del grupo',
+                requiresAudit: 'Requiere auditoría',
+                outpatient: 'Ambulatoria',
+                emergencyCare: 'Guardia', 
+                internment: 'Internación',
+                allDiagnoses: 'Incluir todos',
+                message: 'Mensaje',
+                enabled: 'Habilitado por la institución',
+                requiredDocumentation: 'Documentación requerida'
+            },
+            addRelated: 'Agregar grupo de fármacos'
         }
     }
 };

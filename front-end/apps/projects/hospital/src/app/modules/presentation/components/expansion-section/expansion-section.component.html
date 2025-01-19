@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutGap="20px">
+
+	<div fxLayout="column" fxLayoutGap="20px" (click)="toggle()" [ngClass]="{'pointer' : !collapsed}">
+		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+			<mat-icon *ngIf="collapsed else expandLess">expand_more</mat-icon>
+			
+			<ng-template #expandLess>
+				<mat-icon>expand_less</mat-icon>
+			</ng-template>
+			<span class="title">{{ title | translate}}</span>
+		</div>
+	</div>
+
+	<ng-container *ngIf="!collapsed">
+		<ng-content></ng-content>
+	</ng-container>
+</div>

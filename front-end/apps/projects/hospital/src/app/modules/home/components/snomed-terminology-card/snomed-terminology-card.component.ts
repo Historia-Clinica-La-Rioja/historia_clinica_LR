@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TerminologyQueueItemDto } from '@api-rest/api-model';
-import { LoadStatus, SnomedCacheService } from '../snomed-cache/snomed-cache.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { LoadStatus } from '../snomed-cache/snomed-cache.service';
 import { TERMINOLOGYLOADSTATUS } from '../snomed-cache/snomed-cache.component';
 
 @Component({
@@ -10,14 +9,15 @@ import { TERMINOLOGYLOADSTATUS } from '../snomed-cache/snomed-cache.component';
     styleUrls: ['./snomed-terminology-card.component.scss']
 })
 export class SnomedTerminologyCardComponent implements OnInit {
-
     @Input() uploadedTerminology: TerminologyQueueItemDto;
     @Input() successful: boolean;
-    readonly dateFormats = DatePipeFormat;
+	@Output() onDelete = new EventEmitter<void>();
+
+
     uploadedTerminologyData: TerminologyQueueItemData;
     terminologyLoadStatus = TERMINOLOGYLOADSTATUS;
 
-    constructor(private snomedCacheService: SnomedCacheService) { }
+    constructor() { }
 
     ngOnInit(): void {
     }
@@ -39,10 +39,6 @@ export class SnomedTerminologyCardComponent implements OnInit {
         if (this.successful) return TERMINOLOGYLOADSTATUS.LOADED;
         if ((uploadedTerminology.createdOn && !uploadedTerminology.ingestedOn) && !uploadedTerminology.downloadedError) return TERMINOLOGYLOADSTATUS.PENDING;
 		return TERMINOLOGYLOADSTATUS.NOT_LOADED;
-    }
-
-    delete(terminologyId: number) {
-        this.snomedCacheService.delete(terminologyId);
     }
 }
 

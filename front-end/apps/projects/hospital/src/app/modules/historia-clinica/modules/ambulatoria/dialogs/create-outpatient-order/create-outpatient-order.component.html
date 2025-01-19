@@ -1,155 +1,222 @@
-<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<div class="mat-h2"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.TITLE' | translate}} </div>
-	<button mat-icon-button (click)="dialogRef.close();">
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<h1 mat-dialog-title> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.TITLE' | translate}} </h1>
+	<button mat-icon-button mat-dialog-close>
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
 
-<form [formGroup]="form" class="form">
+<mat-stepper linear #stepper>
+	<form [formGroup]="form" class="form">
 
-	<ng-container *ngIf="!this.firstStepCompleted else confirmStep">
-
-			<!-- CATEGORY SELECTION -->
-
-			<mat-form-field appearance="outline" class="full-width">
-				<mat-label>{{'ambulatoria.paciente.outpatient-order.create-order-dialog.CATEGORY' | translate}}</mat-label>
-				<mat-select formControlName="studyCategory">
-					<mat-option *ngFor="let studyCategory of studyCategoryOptions" [value]="studyCategory.id">
-						{{studyCategory.description | translate}}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
-
-			<!-- STUDY SELECTION -->
-
-			<app-template-concept-typeahead-search
-				*ngIf="!selectedStudy else studySelectedField"
-				placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY' | translate}}"
-				[debounceTime]="0"
-				[ecl]="this.ecl"
-				(optionSelected)="handleStudySelected($event)">
-			</app-template-concept-typeahead-search>
-
-			<ng-template #studySelectedField>
-
-				<mat-form-field appearance="outline" class="full-width">
-					<mat-label>
-						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY' | translate}}
-					</mat-label>
-					<input formControlName="studySelection" matInput type="text" readonly matTooltip="{{ this.getStudyDisplayName() }}">
-					<button mat-button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
-
-				<div id="template-included-concepts" *ngIf="selectedStudyIsTemplate()">
-					<mat-label class="detail-text"
-							   translate="ambulatoria.paciente.outpatient-order.create-order-dialog.TEMPLATE_DETAIL"
-							   [translateParams]="{concepts: getTemplateIncludedConceptsDisplayText()}">
-					</mat-label>
-				</div>
-
+		<mat-step [completed]="this.form.controls.healthProblem.valid">
+			<ng-template matStepLabel> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.PATIENT_DATA' |
+				translate}}
 			</ng-template>
 
-			<!-- HEALTH PROBLEM SELECTION -->
+			<mat-dialog-content>
+				<div fxLayoutGap="10px" fxLayout="column">
 
-			<mat-form-field appearance="outline" class="full-width">
-				<mat-label> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.HEALTH_PROBLEM' | translate}} </mat-label>
-				<mat-select formControlName="healthProblem">
-					<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem">
-						{{ healthProblem.description | translate }}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
+					<div fxLayoutGap="10px">
+						<h2> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.PATIENT_DATA' |
+							translate}}</h2>
+						<app-patient-summary *ngIf="patient" [person]="patient" [size]="size">
+						</app-patient-summary>
+					</div>
 
-			<!-- NOTES TEXT FIELD -->
+					<div>
+						<span>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICAL_COVERAGE'
+							| translate}}</span>
+						<mat-form-field appearance="outline" class="full-width">
 
-			<div *ngIf="false">
-				<mat-form-field appearance="outline" class="full-width">
-					<mat-label> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.NOTES' | translate}} </mat-label>
-					<textarea matInput type="text" id="notes" formControlName="notes"></textarea>
-					<mat-error *ngIf="hasError(this.form, 'maxlength', 'notes')" translate="forms.MAX_LENGTH_ERROR"
-							   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-					</mat-error>
-				</mat-form-field>
-			</div>
+							<mat-select formControlName="patientMedicalCoverage"
+								placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.SELECT_MEDICAL_COVERAGE' | translate}}">
+								<mat-option id="medical-coverage" name="medicalCoverage"
+									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+									[value]="patientMedicalCoverage">
+									{{ patientMedicalCoverage | fullMedicalCoverage }}
+								</mat-option>
+								<mat-divider></mat-divider>
+								<mat-option (click)="openMedicalCoverageDialog()">
+									<span class="color-primary"
+										[translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
+								</mat-option>
+							</mat-select>
+							<button id="clear-medical-coverage" type="button" *ngIf="form.value.patientMedicalCoverage"
+								matSuffix color="warn" mat-icon-button
+								(click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
 
-			<!-- CONFIRM BUTTON -->
+						<span> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.HEALTH_PROBLEM' |
+							translate}}
+						</span>
+						<mat-form-field appearance="outline" class="full-width">
+							<mat-select formControlName="healthProblem" id="healthproblem"  placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.HEALTH_PROBLEM_PLACEHOLDER' | translate}}">
+								<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem">
+									{{ healthProblem.description | translate }}
+								</mat-option>
+							</mat-select>
+							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
+			</mat-dialog-content>
 
 			<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
-				<button mat-flat-button color="primary" [disabled]="!this.form.valid" (click)="goToConfirmationStep()">
-					<span class="uppercase"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT_BUTTON' | translate}} </span>
+				<button mat-raised-button mat-button matStepperNext color="primary">
+					{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT'|translate}}
 				</button>
 			</mat-dialog-actions>
+		</mat-step>
+	</form>
 
-	</ng-container>
+	<form [formGroup]="form" class="form">
 
-	<ng-template #confirmStep>
+		<mat-step [completed]="this.form.controls.studyCategory.valid && (orderStudiesService.data.length > 0)">
+			<ng-template matStepLabel>
+				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDIES_INCLUDED' |
+				translate}}
+			</ng-template>
 
-		<!-- MEDICAL COVERAGE SELECTION -->
+			<div *ngIf="this.form.controls.healthProblem.valid">
+				<mat-dialog-content>
+					<h2> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDIES_INCLUDED' |
+						translate}}</h2>
+					<div fxLayout="row" fxLayoutGap="16px">
+						<div fxFlex="50%">
+							<span>{{'ambulatoria.paciente.outpatient-order.create-order-dialog.CATEGORY' |
+								translate}}</span>
+							<mat-form-field appearance="outline" class="full-width">
+								<mat-select formControlName="studyCategory" id="study-category"
+									placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.SELECT_CATEGORY' | translate}}">
+									<mat-option *ngFor="let studyCategory of studyCategoryOptions"
+										[value]="studyCategory.id">
+										{{studyCategory.description | translate}}
+									</mat-option>
+								</mat-select>
+								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
+							</mat-form-field>
+							<span>
+								{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY' | translate}}
+							</span>
 
-		<mat-form-field appearance="outline" class="full-width">
-			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
-			<mat-select formControlName="patientMedicalCoverage">
-				<mat-option
-					id="medicalCoverage"
-					name="medicalCoverage"
-					*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
-					{{ patientMedicalCoverage | fullMedicalCoverage }}
-				</mat-option>
-				<mat-divider></mat-divider>
-				<mat-option (click)="openMedicalCoverageDialog()">
-					<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
-				</mat-option>
-			</mat-select>
-			<button id="clear-medical-coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverage" matSuffix
-					color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
-				<mat-icon>close</mat-icon>
-			</button>
-		</mat-form-field>
+							<app-template-concept-typeahead-search *ngIf="!selectedStudy else studySelectedField"
+								placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.SEARCH_STUDY' | translate}}"
+								[debounceTime]="0" [ecl]="this.ecl" (optionSelected)="handleStudySelected($event)" required="form.controls.studySelection.touched && orderStudiesService.data.length === 0">
+							</app-template-concept-typeahead-search>
 
-		<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
+							<ng-template #studySelectedField>
 
-		<div *ngFor="let study of orderStudiesService.getStudies(); let i = index">
-			<div id="selected-study-row" fxLayout="row">
-				<div id="selected-study-name" fxFlex="90%">
-				<span class="capitalize-first-letter">
-					{{ study.snomed.pt }}
-				</span>
-				</div>
-				<button fxFlex="10%" mat-icon-button color="warn" [disabled]="orderStudiesService.getStudies().length <= 1" (click)="removeStudy(i)">
-					<mat-icon>delete_outline</mat-icon>
-				</button>
+								<mat-form-field appearance="outline" class="full-width">
+
+									<input formControlName="studySelection" id="study-selection" matInput type="text"
+										readonly matTooltip="{{ this.getStudyDisplayName() }}">
+
+									<button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
+										<mat-icon>close</mat-icon>
+									</button>
+
+								</mat-form-field>
+
+							</ng-template>
+						</div>
+						<div fxFlex="50%">
+							<app-titled-content-card
+								[title]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ADDED_STUDIES'">
+								<div *ngIf="(orderStudiesService.data.length > 0); else withoutStudies">
+
+									<div *ngFor="let study of orderStudiesService.data; let i = index">
+										<div id="selected-study-row" fxLayout="row">
+											<div id="selected-study-name" fxFlex="90%">
+												<span class="capitalize-first-letter">
+													{{ study.snomed.pt }}
+												</span>
+											</div>
+											<button fxFlex="10%" mat-icon-button color="warn"
+												[disabled]="orderStudiesService.data.length < 1"
+												(click)="removeStudy(i)">
+												<mat-icon>delete_outline</mat-icon>
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<ng-template #withoutStudies>
+									<app-no-data
+										[message]="'ambulatoria.paciente.outpatient-order.create-order-dialog.NO_ADDED_STUDIES'|translate">
+									</app-no-data>
+								</ng-template>
+							</app-titled-content-card>
+							<mat-error class="error"
+							*ngIf="form.controls.studySelection.touched && orderStudiesService.data.length === 0"
+							[translate]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ERROR_STUDIES'"></mat-error>
+						</div>
+
+					</div>
+				</mat-dialog-content>
+
+				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
+					<button mat-stroked-button color="primary" matStepperPrevious>
+						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' |
+						translate}}</button>
+
+					<button mat-raised-button mat-button color="primary" matStepperNext (click)="validateForm()">
+						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT'|translate}}
+					</button>
+				</mat-dialog-actions>
 			</div>
-		</div>
+		</mat-step>
+	</form>
 
+	<form [formGroup]="form" class="form">
+		<mat-step [completed]="form.controls.valid">
+			<ng-template matStepLabel>
+				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ORDER_DETAIL'|translate}}
+			</ng-template>
 
-		<div>
-			<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
-				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ADD_STUDY' | translate}}
-			</button>
-		</div>
+			<div *ngIf="orderStudiesService.data.length > 0">
 
-		<div id="order-detail">
+				<mat-dialog-content fxLayout="column" fxLayoutGap="16px">
+					<h2>{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ORDER_DETAIL'|translate}}</h2>
+					<div fxLayout="column" fxLayoutGap="5px">
+						<span> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.TYPE-OF-STUDY' |
+							translate}}</span>
 
-			<div id="order-detail-category" class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
+						<mat-radio-group id="study-type" fxLayoutGap="16px" color="primary" formControlName="studyType">
+							<mat-radio-button [value]="ROUTINE">
+								{{'ambulatoria.paciente.outpatient-order.create-order-dialog.RUTINE' | translate}}
+							</mat-radio-button>
+							<mat-radio-button [value]="URGENT">
+								{{'ambulatoria.paciente.outpatient-order.create-order-dialog.URGENT' | translate}}
+							</mat-radio-button>
+						</mat-radio-group>
+					</div>
 
-			<div id="order-detail-health-problem" class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
+					<div fxLayout="column" fxLayoutGap="5px">
+						<span>
+							{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NOTES' | translate}}
+						</span>
+						<mat-form-field appearance="outline">
+							<textarea matInput type="text" id="note-input" formControlName="notes"></textarea>
+						</mat-form-field>
+					</div>
 
-			<div class="detail-text"> {{ getNotesDisplayText() }} </div>
+				</mat-dialog-content>
+				<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
+					<button id="back" mat-stroked-button color="primary" matStepperPrevious>
+						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' | translate}}
+					</button>
 
-		</div>
+					<button id="create-order" mat-raised-button mat-button color="primary" matStepperNext
+						(click)="confirmOrder()">
+						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.CREATE_ORDER' | translate}}
+					</button>
+				</mat-dialog-actions>
+			</div>
 
-		<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
-
-			<button mat-flat-button color="primary" (click)="confirmOrder()">
-				<span class="uppercase"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
-			</button>
-
-		</mat-dialog-actions>
-
-	</ng-template>
-
-
-</form>
+		</mat-step>
+	</form>
+</mat-stepper>

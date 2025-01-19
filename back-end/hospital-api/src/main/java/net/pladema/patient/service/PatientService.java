@@ -8,11 +8,14 @@ import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
-import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.domain.PersonSearchResultVo;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +26,7 @@ public interface PatientService {
 
 	List<PatientSearch> searchPatient(PatientSearchFilter searchFilter);
 
-    LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter);
+    Page<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter, Pageable pageable);
 
     Optional<Patient> getActivePatient(Integer patientId);
 
@@ -60,5 +63,7 @@ public interface PatientService {
 	void assertHasActiveEncountersByPatientId(Integer patientId);
 
 	List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit);
+
+	Optional<PatientGenderAgeBo> getPatientGenderAge(Integer patientId);
 
 }

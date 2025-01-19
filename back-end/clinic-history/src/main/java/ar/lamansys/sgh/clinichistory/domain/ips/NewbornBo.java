@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EBirthCondition;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Newborn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -110,3 +110,32 @@
 .evolution-space {
 	white-space: pre-wrap;
 }
+
+.problem-title {
+	height: fit-content; 
+	align-items: center;
+	gap: 10px;
+	font-weight: 400;
+}
+
+.problem-icon {
+	margin-top: 3px;
+}
+
+.grey-text {
+	color: grey;
+}
+
+.reference-label {
+	margin-bottom: 10px;
+}
+
+.problem-description {
+	min-height: 40px;
+	height: fit-content; 
+}
+
+.summary-card {
+	flex: 0 0 50%;
+	max-width: 50%;
+}

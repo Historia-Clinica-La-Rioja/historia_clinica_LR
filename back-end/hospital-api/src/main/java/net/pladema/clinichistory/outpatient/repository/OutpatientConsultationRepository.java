@@ -26,4 +26,12 @@ public interface OutpatientConsultationRepository extends SGXAuditableEntityJPAR
 			"WHERE oc.id = :id")
 	Optional<Integer> getPatientMedicalCoverageId (@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT oc.documentId " +
+			"FROM DocumentHealthCondition dhc " +
+			"JOIN Document d ON (dhc.pk.documentId = d.id) " +
+			"JOIN OutpatientConsultation oc ON (d.sourceId = oc.id AND d.patientId = oc.patientId) " +
+			"WHERE dhc.pk.healthConditionId = :healthConditionId")
+	Optional<Long> getOutpatientConsultationDocument(@Param("healthConditionId") Integer healthConditionId);
+
 }

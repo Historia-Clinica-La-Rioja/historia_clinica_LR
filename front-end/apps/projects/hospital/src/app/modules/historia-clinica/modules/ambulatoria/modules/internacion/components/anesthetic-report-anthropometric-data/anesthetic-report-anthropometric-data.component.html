@@ -1,0 +1,39 @@
+<form [formGroup]="form">
+    <div fxLayout="column" fxLayoutAlign="space-between start">
+        <mat-label [translate]="'internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE'">
+        </mat-label>
+        <mat-form-field appearance="outline">
+            <mat-select placeholder="{{'internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE_PLACEHOLDER' | translate }}" formControlName="bloodType">
+                <mat-option
+                    *ngFor="let bloodType of service.anesthesicReportAnthropometricDataService.getBloodTypes()"
+                    [value]="bloodType">
+                    {{ bloodType.description }}
+                </mat-option>
+            </mat-select>
+            <button id="clear_blood_type" type="button" 
+                *ngIf="form.value.bloodType"
+                matSuffix color="warn" mat-icon-button
+                (click)="form.controls.bloodType.reset(); $event.stopPropagation()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-between start">
+        <mat-label [translate]="'internaciones.anesthesic-report.anthropometric-data.HEIGHT'">
+        </mat-label>
+        <mat-form-field appearance="outline">
+            <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput
+                (keypress)="isNumberOrDot($event.key)">
+            <mat-error> {{ service.anesthesicReportAnthropometricDataService.heightError$ | async }} </mat-error>
+        </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-between start">
+        <mat-label [translate]="'internaciones.anesthesic-report.anthropometric-data.WEIGHT'">
+        </mat-label>
+        <mat-form-field appearance="outline">
+            <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput
+                (keypress)="isNumberOrDot($event.key)">
+            <mat-error> {{ service.anesthesicReportAnthropometricDataService.weightError$ | async }} </mat-error>
+        </mat-form-field>
+    </div>
+</form>

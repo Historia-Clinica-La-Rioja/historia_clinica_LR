@@ -1,0 +1,26 @@
+<div fxFlex fxLayout="column" style="color: black; gap: 10px;">
+    <div>
+        <div class="mat-body-strong"
+            [translate]="'ambulatoria.paciente.problemas.amend_problems.information.MOTIVE'">
+        </div>
+        <div class="mat-body capitalize-first-letter">
+            {{ errorProblem.reason }}
+        </div>
+    </div>
+    <div>
+        <div class="mat-body-strong"
+            [translate]="'ambulatoria.paciente.problemas.amend_problems.information.OBSERVATIONS'">
+        </div>
+        <div class="mat-body capitalize-first-letter">
+            {{ errorProblem.observations }}
+        </div>
+    </div>
+    <div>
+        <div class="mat-body-strong"
+            [translate]="'ambulatoria.paciente.problemas.amend_problems.information.EDITED_DATE'">
+        </div>
+        <div class="mat-body capitalize-first-letter">
+            {{ errorProblem.timePerformed | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}
+        </div>
+    </div>
+</div>

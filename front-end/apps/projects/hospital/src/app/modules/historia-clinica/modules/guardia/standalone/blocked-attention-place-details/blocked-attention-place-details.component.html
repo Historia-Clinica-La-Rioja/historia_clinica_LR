@@ -1,0 +1,15 @@
+<div class="flex-container-column" *ngIf="details">
+    <span class="subtitle">{{ details.createdOn | showTimeElapsed }} {{ 'guardia.home.attention_places.space.BLOCKED' | translate }}</span>
+    <div>
+        <div class="flex-container-row">
+            <span class="subtitle">{{ 'guardia.block_unblock_attention_place.dialog.block_reason.REASONS' | translate }}:</span>
+            <span>{{ details.reason }}</span>
+        </div>
+        <div class="flex-container-row">
+            <span *ngIf="details.observations" class="subtitle">{{ 'guardia.block_unblock_attention_place.dialog.block_reason.OBSERVATIONS' | translate }}:</span>
+            <span class="break-word">{{ details.observations }}</span>
+        </div>
+        <app-register-editor-info [registerEditor]="registerEditorInfo"
+            [registerEditorCase]="REGISTER_EDITOR_DATE_HOUR"></app-register-editor-info>
+    </div>
+</div>

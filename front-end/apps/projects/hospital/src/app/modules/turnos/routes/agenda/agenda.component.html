@@ -1,37 +1,15 @@
-<div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
-	<div fxLayout="row" fxLayoutGap="20px">
-		<div id="sector" fxLayoutAlign="start center" fxLayoutGap="5px">
-			<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
-				matTooltip="{{'turnos.home.SECTOR_CONSULTORY_TOOLTIP' | translate}}">meeting_room</mat-icon>
-			<ng-container *ngIf="!agenda?.hierarchicalUnitAlias else hierarchicalUnitAlias" >
-				<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}}</span>
-			</ng-container>
-			<ng-template #hierarchicalUnitAlias>
-				<span>{{agenda?.doctorsOfficeDescription}} | {{agenda?.sectorDescription}} | {{agenda?.hierarchicalUnitAlias}}</span>
-			</ng-template>
-		</div>
-	</div>
+<ng-container *ngIf="idAgenda">
+	<app-diary-information [diary]="agenda" ></app-diary-information>
 
-	<div id="care_lines" *ngIf="agenda?.careLinesInfo.length" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-		<mat-icon class="svg-icon" svgIcon="clean_hands" matTooltip="{{'turnos.home.CARE_LINE_TOOLTIP' | translate}}">
-		</mat-icon>
-		<span>{{careLinesToShow}}</span>
+	<div class="spinner" *ngIf="loading else calendar">
+		<mat-spinner color="primary"></mat-spinner>
 	</div>
-
-	<div id="professionals" fxLayout="row" fxLayoutGap="5px" *ngIf="agenda?.associatedProfessionalsInfo.length">
-		<mat-icon class="icon-color" mat-list-icon fontSet="material-icons-outlined" [inline]="true"
-			matTooltip="{{'turnos.home.PROFESSIONALS_TOOLTIP' | translate}}">group</mat-icon>
-		<span>{{associatedProfessionalsToShow}}</span>
-	</div>
-</div>
-
-<div class="spinner" *ngIf="loading else calendar">
-	<mat-spinner color="primary"></mat-spinner>
-</div>
+</ng-container>
 
 <ng-template #calendar>
 	<section class="turnos" id="calendar">
-		<div class="header" id="header" *ngIf="showAll else loadDaysAndTitle" fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayout.xs="column">
+		<div class="header" id="header" *ngIf="showAll else loadDaysAndTitle" fxLayout="row wrap"
+			fxLayoutAlign="space-between center" fxLayout.xs="column">
 			<div *ngTemplateOutlet="navigation"></div>
 			<div id="view_date">
 				<span class="mat-h2">
@@ -41,65 +19,47 @@
 			<div>
 				<mat-button-toggle-group class="toggle-view" [(value)]="view">
 					<mat-button-toggle value="{{calendarViewEnum.Month}}">Mes</mat-button-toggle>
-					<mat-button-toggle value="{{calendarViewEnum.Week}}" (click)="changeViewDate(viewDate)">Semana</mat-button-toggle>
-					<mat-button-toggle value="{{calendarViewEnum.Day}}" (click)="changeViewDate(viewDate)">Día</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Week}}"
+						(click)="changeViewDate(viewDate)">Semana</mat-button-toggle>
+					<mat-button-toggle value="{{calendarViewEnum.Day}}"
+						(click)="changeViewDate(viewDate)">Día</mat-button-toggle>
 				</mat-button-toggle-group>
 			</div>
 		</div>
 
 		<div [ngSwitch]="view">
 
-			<mwl-calendar-month-view class="title-black"
-									 *ngSwitchCase="calendarViewEnum.Month"
-									 [viewDate]="viewDate"
-									 [events]="appointments"
-									 [refresh]= "refreshCalendar"
-									 [weekStartsOn]="MONDAY"
-									 [cellTemplate]="customCellTemplate"
-									 (beforeViewRender)="loadDailyAmounts($event)"
-									 (dayClicked)="goToDayViewOn($event.day.date)"
-			>
+			<mwl-calendar-month-view class="title-black" *ngSwitchCase="calendarViewEnum.Month" [viewDate]="viewDate"
+				[events]="appointments" [refresh]="refreshCalendar" [weekStartsOn]="MONDAY"
+				[cellTemplate]="customCellTemplate" (beforeViewRender)="loadDailyAmounts($event)"
+				(dayClicked)="goToDayViewOn($event.day.date)">
 			</mwl-calendar-month-view>
 
-			<mwl-calendar-week-view class="title-black"
-									*ngSwitchCase="calendarViewEnum.Week"
-									[viewDate]="viewDate"
-									[events]="appointments"
-									[refresh]= "refreshCalendar"
-									[dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
-									[hourSegmentTemplate]="hourSegmentTemplate"
-									[headerTemplate]="headerTemplate"
-									[hourSegments]="hourSegments"
-									[weekStartsOn]="MONDAY"
-									(beforeViewRender)="loadCalendar($event)"
-									(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
-									(eventClicked)="viewAppointment($event.event)"
-			>
+			<mwl-calendar-week-view class="title-black" *ngSwitchCase="calendarViewEnum.Week" [viewDate]="viewDate"
+				[events]="appointments" [refresh]="refreshCalendar" [dayStartHour]="dayStartHour"
+				[dayEndHour]="dayEndHour" [hourSegmentTemplate]="hourSegmentTemplate" [headerTemplate]="headerTemplate"
+				[hourSegments]="hourSegments" [weekStartsOn]="MONDAY" (beforeViewRender)="loadCalendar($event)"
+				(hourSegmentClicked)="hasRoleToCreate ? onClickedSegment($event) : null"
+				(eventClicked)="viewAppointment($event.event)">
 			</mwl-calendar-week-view>
 
-			<mwl-calendar-day-view class="title-black"
-								   *ngSwitchCase="calendarViewEnum.Day"
-								   [viewDate]="viewDate"
-								   [events]="appointments"
-								   [refresh]= "refreshCalendar"
-								   [hourSegments]="hourSegments"
-								   [hourSegmentTemplate]="hourSegmentTemplate"
-								   [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
-								   (beforeViewRender)="loadCalendar($event)"
-								   (hourSegmentClicked)="hasRoleToCreate && canCreateAppoinment ? onClickedSegment($event) : null"
-								   (eventClicked)="viewAppointment($event.event)"
-			>
+			<mwl-calendar-day-view class="title-black" *ngSwitchCase="calendarViewEnum.Day" [viewDate]="viewDate"
+				[events]="appointments" [refresh]="refreshCalendar" [hourSegments]="hourSegments"
+				[hourSegmentTemplate]="hourSegmentTemplate" [dayStartHour]="dayStartHour" [dayEndHour]="dayEndHour"
+				(beforeViewRender)="loadCalendar($event)"
+				(hourSegmentClicked)="hasRoleToCreate && canCreateAppoinment ? onClickedSegment($event) : null"
+				(eventClicked)="viewAppointment($event.event)">
 			</mwl-calendar-day-view>
 		</div>
 
 
-		<ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale"
-					 let-segmentHeight="segmentHeight" let-isTimeLabel="isTimeLabel">
+		<ng-template #hourSegmentTemplate let-segment="segment" let-locale="locale" let-segmentHeight="segmentHeight"
+			let-isTimeLabel="isTimeLabel">
 			<div #segmentElement class="cal-hour-segment" [style.height.px]="segmentHeight"
-				 [class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
-				 [ngClass]="segment.cssClass">
+				[class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart"
+				[ngClass]="segment.cssClass">
 				<div class="cal-time" *ngIf="isTimeLabel">
-					{{ segment.date | date: 'HH:mm' }}
+					{{ segment.date | dateFormat: 'time' }}
 				</div>
 			</div>
 		</ng-template>
@@ -107,7 +67,7 @@
 		<ng-template #headerTemplate let-days="days" let-locale="locale">
 			<div class="cal-day-headers fixed-header">
 				<div style="cursor: pointer" class="cal-header" (click)="goToDayViewOn(day.date)"
-					 *ngFor="let day of days">
+					*ngFor="let day of days">
 					<strong>
 						{{ day.date | calendarDate:'weekViewColumnHeader':locale | titlecase}}
 					</strong>
@@ -128,38 +88,39 @@
 				<div fxLayout="column" fxLayoutGap="2px">
 
 					<div *ngIf="day.meta?.amount?.spontaneous || day.meta?.amount?.spontaneous === 0" class="espontanea"
-						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+						fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
 							<span>{{day.meta?.amount?.spontaneous}}</span>
 						</div>
 						<span>Turnos asignados</span>
 					</div>
 
-					<div *ngIf="day.meta?.amount?.programmed || day.meta?.amount?.programmed === 0" class="programada-asignados"
-						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+					<div *ngIf="day.meta?.amount?.programmed || day.meta?.amount?.programmed === 0"
+						class="programada-asignados" fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
 							<span>{{day.meta?.amount?.programmed}}</span>
 						</div>
 						<span>Turnos asignados</span>
 					</div>
 
-					<div *ngIf="day.meta?.amount?.programmedAvailable" class="programada-disponibles"
-						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+					<div *ngIf="day.meta?.amount?.programmedAvailable" class="programada-disponibles" fxLayout="row"
+						fxLayoutGap="3px" fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
 							<span>{{day.meta?.amount?.programmedAvailable}}</span>
 						</div>
 						<span>Turnos disponibles</span>
 					</div>
 
-					<div *ngIf="day.meta?.amount?.holiday" class="holiday"
-						 fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="start center">
+					<div *ngIf="day.meta?.amount?.holiday" class="holiday" fxLayout="row" fxLayoutGap="3px"
+						fxLayoutAlign="start center">
 						<div class="count-border" fxLayoutAlign="center center">
 							<span>{{day.meta?.amount?.holiday}}</span>
 						</div>
 						<span>Feriados</span>
 					</div>
 
-					<div *ngIf="day.meta?.amount?.programmedAvailable === 0" class="no-disponibles">No existen turnos disponibles</div>
+					<div *ngIf="day.meta?.amount?.programmedAvailable === 0" class="no-disponibles">No existen turnos
+						disponibles</div>
 				</div>
 			</div>
 		</ng-template>
@@ -170,7 +131,7 @@
 				<div fxLayout="row" fxLayoutAlign="space-between center" class="title">
 					<div id="view_date">
 						<span class="mat-h2">
-							{{ viewDate | date:dateFormats.LONG_DATE }}
+							{{ viewDate | dateFormat: 'fulldate' }}
 						</span>
 					</div>
 					<button mat-button color="primary" onclick="this.blur()" (click)="goToDiary()">
@@ -182,27 +143,16 @@
 
 		<ng-template #navigation>
 			<mat-button-toggle-group>
-				<mat-button-toggle id="previous" class="navigation"
-								mwlCalendarPreviousView
-								[view]=view
-								[(viewDate)]="viewDate"
-								(viewDateChange)="changeViewDate($event)"
-				>
+				<mat-button-toggle id="previous" class="navigation" mwlCalendarPreviousView [view]=view
+					[(viewDate)]="viewDate" (viewDateChange)="changeViewDate($event)">
 					Anterior
 				</mat-button-toggle>
-				<mat-button-toggle id="today" class="today"
-								mwlCalendarToday
-								[(viewDate)]="viewDate"
-								(viewDateChange)="changeViewDate($event)"
-				>
+				<mat-button-toggle id="today" class="today" mwlCalendarToday [(viewDate)]="viewDate"
+					(viewDateChange)="changeViewDate($event)">
 					Hoy
 				</mat-button-toggle>
-				<mat-button-toggle id="next" class="navigation"
-								mwlCalendarNextView
-								[view]=view
-								[(viewDate)]="viewDate"
-								(viewDateChange)="changeViewDate($event)"
-				>
+				<mat-button-toggle id="next" class="navigation" mwlCalendarNextView [view]=view [(viewDate)]="viewDate"
+					(viewDateChange)="changeViewDate($event)">
 					Próximo
 				</mat-button-toggle>
 			</mat-button-toggle-group>

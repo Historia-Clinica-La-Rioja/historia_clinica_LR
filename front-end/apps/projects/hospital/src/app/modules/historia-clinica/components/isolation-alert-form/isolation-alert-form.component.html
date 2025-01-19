@@ -1,0 +1,33 @@
+<form [formGroup]="form">
+    <div class="form-column">
+        <span class="font-weight-bold">{{'historia-clinica.isolation-alert.ASSOCIATED_DIAGNOSIS' | translate}}</span>
+        <mat-form-field appearance="outline">
+            <mat-select id="diagnosis" formControlName="diagnosis"
+                [placeholder]="'historia-clinica.general.SELECT' | translate">
+                <mat-option *ngFor="let diagnosis of diagnoses" [value]="diagnosis">
+                    <span>{{diagnosis.snomed.pt}}</span>
+                </mat-option>
+            </mat-select>
+            <mat-error>{{ 'forms.REQUIRED' | translate }}</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="form-column">
+        <span class="font-weight-bold">{{'historia-clinica.isolation-alert.ISOLATION_TYPE' | translate}}</span>
+        <mat-form-field appearance="outline">
+            <mat-select id="isolationTypes" formControlName="types" multiple
+                [placeholder]="'historia-clinica.general.SELECT' | translate" (selectionChange)="verifyValidations()">
+                <mat-option *ngFor="let type of isolationTypes" [value]="type">
+                    <span>{{type.description}}</span>
+                </mat-option>
+            </mat-select>
+            <mat-error>{{ 'forms.REQUIRED' | translate }}</mat-error>
+        </mat-form-field>
+    </div>
+    <app-criticality-picker formControlName="criticality" [submitParentFormEvent]="submitFormEvent"
+        [isRequired]="true"></app-criticality-picker>
+    <app-datepicker [title]="'historia-clinica.isolation-alert.END_OF_ALERT'" requiredText="forms.REQUIRED" [dateToSetInDatepicker]="form.value.endDate" 
+        [minDate]="today" [markAsTouched]="markAsTouched"
+        (selectDate)="form.controls.endDate.setValue($event)"></app-datepicker>
+    <app-observations-custom-form formControlName="observations" [isRequired]="form.controls.observations.hasValidator(Validators.required)"
+        [submitParentFormEvent]="submitFormEvent"></app-observations-custom-form>
+</form>

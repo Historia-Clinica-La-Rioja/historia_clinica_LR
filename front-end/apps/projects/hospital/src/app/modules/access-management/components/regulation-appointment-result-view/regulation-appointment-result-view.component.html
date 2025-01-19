@@ -1,0 +1,9 @@
+<div *ngIf="appointment">
+
+    <app-available-appointment-data [availableAppointment]="appointment | toAvailableAppointmentData">
+        <button mat-flat-button type="button" id="assign-appointment" color="primary" (click)="assign()">
+            {{ 'access-management.appointment_result_view.ASSIGN_APPOINTMENT' | translate | uppercase }}
+        </button>
+    </app-available-appointment-data>
+
+</div>

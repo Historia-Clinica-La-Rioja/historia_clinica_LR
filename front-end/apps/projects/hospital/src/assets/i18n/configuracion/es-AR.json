@@ -1,19 +1,20 @@
 {
 	"configuracion": {
+		"appearance": {
+			"TITLE": "Apariencia"
+		},
 		"logos": {
-			"TITLE": "Customización de logos",
+			"TITLE": "Íconos de la aplicación",
 			"SUBTITLE_1": "Logotipo auspiciante",
 			"SUBTITLE_2": "Icono de página",
 			"SUBTITLE_3": "Iconos de escritorio",
 			"UPLOAD_FILE": "Adjuntar archivo",
 			"RESTORE": "Restablecer",
 			"logotipo": {
-				"DESCRIPTION": "El logotipo de auspiciante se ubicará en el encabezado alineado a la derecha en el mismo nivel de jerarquia que la marca de HSI.",
-				"IMAGE_FORMAT": "La imagen debe estar en formato .PNG y tener un tamaño de 512 x 128 pixeles."
+				"DESCRIPTION": "El logotipo de auspiciante se ubicará en el encabezado alineado a la derecha en el mismo nivel de jerarquia que la marca de HSI."
 			},
 			"icono_pagina": {
-				"DESCRIPTION": "El ícono de página o favicon es la imagen que aparece antecediendo al título de la pestaña.",
-				"IMAGE_FORMAT": "La imagen deberá estar en formato .ICO y tener un tamaño cuadrado de 16 x 16 pixeles."
+				"DESCRIPTION": "El ícono de página o favicon es la imagen que aparece antecediendo al título de la pestaña."
 			},
 			"icono_escritorio": {
 				"DESCRIPTION": "El ícono de escritorio es la imagen que tendrá el acceso directo de la aplicación una vez que se instale en cualquier dispositivo."
@@ -30,6 +31,14 @@
 		"features": {
 			"TITLE": "Funcionalidad"
 		},
+		"document-images": {
+			"TITLE": "Logos de documentos",
+			"DESCRIPTION": "Imágenes a usar en los PDFs"
+		},
+		"notification-templates": {
+			"TITLE": "Plantilla de mails",
+			"DESCRIPTION": "Texto a usar en los correos electrónicos"
+		},
 		"snomed-cache": {
 			"TITLE": "Caché SNOMED",
 			"form": {
@@ -45,6 +54,7 @@
 				"TITLE": "Agregar terminología a importar"
 			},
 			"TERMINOLOGIES_LIST": "Lista de terminologías",
+			"SYNONYMS_LIST": "Lista de sinónimos",
 			"DOWNLOADED_FILE": "Archivo descargado",
 			"NO_FILE": "Archivo no existe",
 			"UPDATE": "Actualizar",

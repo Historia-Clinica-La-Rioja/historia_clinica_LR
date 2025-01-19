@@ -1,23 +1,44 @@
+export enum REPORT_TYPES_DESCRIPTION {
+	MONTHLY = 'Detalle Nominal de Consultorios Externos - Hoja 2',
+	OUTPATIENT_SUMMARY_REPORT = 'Resumen Mensual de Consultorios Externos - Hoja 2.1',
+	MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS = "Resumen Mensual de Turnos en Consultorios Externos",
+	NOMINAL_APPOINTMENTS_DETAIL = 'Detalle Nominal de Turnos',
+	NOMINAL_DIAGNOSTIC_IMAGING = 'Detalle nominal de prestaciones imágenes diagnósticas',
+	GUARD_ATTENTION_DETAIL_REPORT = 'Reporte detalle nominal atenciones de guardia',
+}
+
+export enum REPORT_TYPES_ID {
+	MONTHLY,
+	OUTPATIENT_SUMMARY_REPORT,
+	MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS,
+	NOMINAL_APPOINTMENTS_DETAIL,
+	NOMINAL_DIAGNOSTIC_IMAGING,
+	GUARD_ATTENTION_DETAIL_REPORT,
+}
 
 export const REPORT_TYPES = [
 	{
-		description: 'Detalle Nominal de Consultorios Externos - Hoja 2',
-		id: 1,
+		description: REPORT_TYPES_DESCRIPTION.MONTHLY,
+		id: REPORT_TYPES_ID.MONTHLY
 	},
 	{
-		description: 'Resumen Mensual de Consultorios Externos - Hoja 2.1',
-		id: 2,
+		description: REPORT_TYPES_DESCRIPTION.OUTPATIENT_SUMMARY_REPORT,
+		id: REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT
 	},
 	{
-		description: 'Pacientes diabéticos',
-		id: 3
+		description: REPORT_TYPES_DESCRIPTION.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS,
+		id: REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS
 	},
 	{
-		description: 'Pacientes hipertensos',
-		id: 4
+		description: REPORT_TYPES_DESCRIPTION.NOMINAL_APPOINTMENTS_DETAIL,
+		id: REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL
 	},
 	{
-		description: 'Reporte epidemiológico semanal',
-		id: 5
-	}
+		description: REPORT_TYPES_DESCRIPTION.NOMINAL_DIAGNOSTIC_IMAGING,
+		id: REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING
+	},
+	{
+		description: REPORT_TYPES_DESCRIPTION.GUARD_ATTENTION_DETAIL_REPORT,
+		id: REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT
+	},
 ];

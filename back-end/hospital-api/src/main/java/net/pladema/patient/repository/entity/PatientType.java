@@ -23,6 +23,7 @@ public class PatientType implements Serializable {
     public static final Short VALIDATED = 2;
     public static final Short TEMPORARY = 3;
     public static final Short PERMANENT_NOT_VALIDATED = 7;
+	public static final Short REJECTED = 6;
 
     /*
      */

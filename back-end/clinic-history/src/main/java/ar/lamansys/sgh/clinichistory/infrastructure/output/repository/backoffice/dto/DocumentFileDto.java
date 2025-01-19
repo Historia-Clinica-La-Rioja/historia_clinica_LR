@@ -25,14 +25,17 @@ public class DocumentFileDto {
 
 	private CreationableDto creationable;
 
+	private Short signatureStatusId;
+
 	public DocumentFileDto(Long documentId, Integer sourceId, Short sourceTypeId, Short documentType,
-                           String filename, ZonedDateTime createdOn){
+                           String filename, ZonedDateTime createdOn, Short signatureStatusId){
 		this.id = documentId;
 		this.sourceId = sourceId;
 		this.sourceTypeId = sourceTypeId;
 		this.typeId = documentType;
 		this.filename = filename;
 		this.creationable = new CreationableDto(createdOn);
+		this.signatureStatusId = signatureStatusId;
 	}
 
 	public ZonedDateTime getCreatedOn() {

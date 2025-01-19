@@ -29,6 +29,10 @@ public class UpdateAppointmentDto {
     @Nullable
     Integer patientMedicalCoverageId;
 
+	@Nullable
+	@Length(max = 10, message = "{appointment.new.phonePrefix.invalid}")
+	private String phonePrefix;
+
     @Nullable
     @Length(max = 20, message = "{appointment.new.phoneNumber.invalid}")
     private String phoneNumber;

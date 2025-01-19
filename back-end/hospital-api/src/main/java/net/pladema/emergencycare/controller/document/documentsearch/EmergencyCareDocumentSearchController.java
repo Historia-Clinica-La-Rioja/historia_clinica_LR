@@ -15,7 +15,7 @@ import net.pladema.emergencycare.triage.controller.dto.TriageDocumentDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageListMapper;
 import net.pladema.emergencycare.triage.service.TriageService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,9 @@ public class EmergencyCareDocumentSearchController {
 			if (downloadData.getId() != null)
 				triageAndDocument.add(new TriageDocumentDto(triage, downloadData));
 		});
-		List<EmergencyCareEvolutionNoteDocumentDto> evolutionNotes = emergencyCareEvolutionNoteMapper.toEmergencyCareEvolutionNoteDocumentListDto(emergencyCareEvolutionNoteDocumentService.getAllDocumentsByEpisodeId(emergencyCareEpisodeId));
+		var notes = emergencyCareEvolutionNoteDocumentService.getAllDocumentsByEpisodeId(emergencyCareEpisodeId);
+		List<EmergencyCareEvolutionNoteDocumentDto> evolutionNotes = emergencyCareEvolutionNoteMapper
+			.toEmergencyCareEvolutionNoteDocumentListDto(notes);
 		EmergencyCareHistoricDocumentDto result = new EmergencyCareHistoricDocumentDto(triageAndDocument, evolutionNotes);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);

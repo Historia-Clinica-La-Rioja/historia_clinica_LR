@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.Column;
@@ -17,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "emergency_care_episode")
@@ -73,6 +74,12 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 	@Column(name = "bed_id")
 	private Integer bedId;
 
+	@Column(name = "reason", columnDefinition = "TEXT")
+	private String reason;
+
+	@Column(name = "patient_description", columnDefinition = "TEXT")
+	private String patientDescription;
+
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo) {
 		this.id = emergencyCareBo.getId();
@@ -86,6 +93,8 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 		this.institutionId = emergencyCareBo.getInstitutionId();
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
 		this.hasPoliceIntervention = emergencyCareBo.getHasPoliceIntervention();
+		this.reason = emergencyCareBo.getReason();
+		this.patientDescription = emergencyCareBo.getPatient().getPatientDescription();
 	}
 
 	@PrePersist
@@ -94,5 +103,16 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 			this.emergencyCareStateId = EmergencyCareState.EN_ESPERA;
 		}
 	}
+
+	public String getMinimalInformationToLog() {
+        return "EmergencyCareEpisode{" + "id=" + id +
+                ", patientId=" + patientId +
+                ", emergencyCareTypeId=" + emergencyCareTypeId +
+                ", emergencyCareStateId=" + emergencyCareStateId +
+                ", emergencyCareEntranceTypeId=" + emergencyCareEntranceTypeId +
+                ", institutionId=" + institutionId +
+                '}';
+	}
+
 }
 

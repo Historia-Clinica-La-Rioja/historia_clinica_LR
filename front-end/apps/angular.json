@@ -21,13 +21,9 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/hospital",
-            "customWebpackConfig": {
-              "path": "./custom-webpack.config.js",
-              "replaceDuplicatePlugins": true
-            },
             "index": "projects/hospital/src/index.html",
             "main": "projects/hospital/src/main.ts",
             "polyfills": "projects/hospital/src/polyfills.ts",
@@ -45,7 +41,8 @@
               "./node_modules/quill/dist/quill.core.css",
               "./node_modules/quill/dist/quill.bubble.css",
               "./node_modules/quill/dist/quill.snow.css",
-              "./node_modules/quill-mention/dist/quill.mention.min.css"
+              "./node_modules/quill-mention/dist/quill.mention.min.css",
+              "./node_modules/ol/ol.css"
             ],
             "scripts": [],
             "serviceWorker": true,
@@ -86,9 +83,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "AngularCustomWebpackConfig:build"
-          },
           "configurations": {
             "production": {
               "browserTarget": "hospital:build:production"

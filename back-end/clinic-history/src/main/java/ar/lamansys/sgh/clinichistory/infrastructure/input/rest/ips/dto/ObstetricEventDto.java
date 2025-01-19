@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EPregnancyTermination;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPregnancyTermination;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.Setter;

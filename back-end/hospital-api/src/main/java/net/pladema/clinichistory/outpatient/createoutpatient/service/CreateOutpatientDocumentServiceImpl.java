@@ -3,6 +3,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentExceptionEnum;
@@ -15,7 +16,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-
+@RequiredArgsConstructor
 @Service
 public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocumentService {
 
@@ -28,15 +29,6 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
     private final UpdateOutpatientConsultationService updateOutpatientConsultationService;
 
     private final DateTimeProvider dateTimeProvider;
-
-    public CreateOutpatientDocumentServiceImpl(DocumentFactory documentFactory,
-                                               UpdateOutpatientConsultationService updateOutpatientConsultationService,
-                                               DateTimeProvider dateTimeProvider) {
-        this.documentFactory = documentFactory;
-        this.updateOutpatientConsultationService = updateOutpatientConsultationService;
-        this.dateTimeProvider = dateTimeProvider;
-    }
-
 
     @Override
     public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient, Boolean createFile) {
@@ -66,10 +58,10 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getProblems()))
             repeatedErrors.addError("Problemas médicos repetidos");
 
-        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getFamilyHistories()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getFamilyHistories().getContent()))
             repeatedErrors.addError("Antecedentes familiares repetidos");
 
-        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getAllergies()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getAllergies().getContent()))
             repeatedErrors.addError("Alergias repetidas");
 
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getProcedures()))

@@ -1,6 +1,5 @@
 package net.pladema.person.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.Period;
 
 @Entity
 @Table(name = "person")
@@ -74,13 +72,20 @@ public class Person implements Serializable {
         this.birthDate = patientPersonVo.getBirthDate();
     }
 
-    @JsonIgnore
+	public Person(String firstName, String lastName, Short identificationTypeId, String identificationNumber){
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.identificationTypeId = identificationTypeId;
+		this.identificationNumber = identificationNumber;
+	}
+
+    /*@JsonIgnore
     public Short getAge(){
         if (birthDate == null)
             return null;
         LocalDate today = LocalDate.now();
         Period p = Period.between(birthDate, today);
         return (short) p.getYears();
-    }
+    }*/
 
 }

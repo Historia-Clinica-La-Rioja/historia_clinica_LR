@@ -3,7 +3,7 @@ package net.pladema.medicalconsultation.equipmentdiary.service;
 import net.pladema.medicalconsultation.diary.repository.entity.OpeningHours;
 import net.pladema.medicalconsultation.equipmentdiary.controller.dto.EquipmentDiaryDto;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentDiaryBo;
-import net.pladema.medicalconsultation.equipmentdiary.service.domain.OpeningHoursBo;
+import net.pladema.medicalconsultation.equipmentdiary.service.domain.EquipmentOpeningHoursBo;
 
 
 
@@ -16,7 +16,7 @@ import java.util.List;
 public interface EquipmentDiaryBoMapper {
 
     @Named("toOpeningHours")
-    OpeningHours toOpeningHours(OpeningHoursBo openingHoursBo);
+    OpeningHours toOpeningHours(EquipmentOpeningHoursBo equipmentOpeningHoursBo);
 
 
 	@Named("toEquipmentDiaryDto")

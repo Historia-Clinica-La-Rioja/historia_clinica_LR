@@ -8,14 +8,27 @@
 }
 
 .buttons {
-    width: min-content;
+    min-width: fit-content;
 }
 
 .bold {
 	font-weight: 500;
 }
 
+.patient-name {
+    font-size: 16px;
+}
+
 h3 {
     font-weight: 500;
     font-size: 26px;
+}
+
+.btn-margin {
+    margin-bottom: 10px;
+}
+
+.observations {
+	word-break: break-word;
+	white-space: pre-wrap;
 }

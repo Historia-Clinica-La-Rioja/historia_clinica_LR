@@ -10,9 +10,8 @@ form {
 	max-width: 85%;
 }
 
-#clear-probable-discharge-date {
-	position: relative;
-	float: right;
-	top: -6px;
-	cursor: pointer;
+.beds-form {
+    ::ng-deep .mat-form-field-wrapper {
+        padding: 0;
+    }
 }

@@ -1,0 +1,21 @@
+.smaller-font {
+    font-size: 14px;
+}
+
+:host ::ng-deep .mat-list-item-content {
+    gap: 5px;
+}
+
+.mat-list-base .mat-list-item.mat-2-line {
+    height: 48px;
+}
+
+.wrap-text {
+    word-wrap: break-word;
+}
+
+@media (max-width: 1279px) {
+    .hide-date {
+        display: none;
+    }
+}

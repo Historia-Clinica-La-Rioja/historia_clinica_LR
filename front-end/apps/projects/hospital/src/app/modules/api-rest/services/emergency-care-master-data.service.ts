@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MasterDataInterface } from '@api-rest/api-model';
+import { MasterDataDto, MasterDataInterface } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -33,6 +33,31 @@ export class EmergencyCareMasterDataService {
 	getEmergencyEpisodeSectorType(): Observable<MasterDataInterface<number>[]> {
 		const url = `${environment.apiBase}${PREFIX}/emergency-episode-sector-type`;
 		return this.http.get<MasterDataInterface<number>[]>(url);
+	}
+
+	getNursingDischargeType(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/dischargeType/nursing`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getEmergencyCareStates(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/emergency-episode-states`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getAttentionPlaceBlockReasons(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/attention-place-block-reasons`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getCriticalities(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/isolation-criticalities`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getIsolationTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}${PREFIX}/isolation-types`;
+		return this.http.get<MasterDataDto[]>(url);
 	}
 
 }

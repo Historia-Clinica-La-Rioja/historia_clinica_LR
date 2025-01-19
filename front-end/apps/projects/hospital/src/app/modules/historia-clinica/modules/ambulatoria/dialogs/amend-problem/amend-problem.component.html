@@ -1,0 +1,43 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <h1 mat-dialog-title class="title">{{'ambulatoria.paciente.problemas.amend_problems.MARK_AS_ERROR' | translate}}
+    </h1>
+
+    <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
+
+<mat-dialog-content>
+    <span class="header" [translate]="'ambulatoria.paciente.problemas.amend_problems.COMPLETE_DATA'"></span>
+
+    <div class="container" data-id="motive">
+        <app-typeahead id="motive" name="motive"
+            [options]="motives"
+            [titleInput]="'ambulatoria.paciente.problemas.amend_problems.ERROR_MOTIVE' | translate"
+            (selectionChange)="onMotiveSelectionChange($event)" [required]=true>
+        </app-typeahead>
+        <mat-hint class="hint">
+            {{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
+        </mat-hint>
+        <mat-error *ngIf="!form.controls.motive.value && form.controls.motive.touched" class="error-message" [translate]="'forms.REQUIRED'"></mat-error>
+    </div>
+
+    <form [formGroup]="form">
+        <div class="container" data-id="observations">
+            <mat-form-field appearance="outline">
+                <textarea class="observations" matInput type="text"  name="observations" formControlName="observations"
+                    placeholder="{{'ambulatoria.paciente.problemas.amend_problems.OBSERVATIONS' | translate}}" required></textarea>
+            </mat-form-field>
+            <mat-error *ngIf="!form.controls.observations.value && form.controls.observations.touched" class="error-message" [translate]="'forms.REQUIRED'"></mat-error>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="25px">
+    <button mat-stroked-button color="primary" class="uppercase" id="cancel-button" mat-dialog-close>
+        {{'buttons.CANCEL' | translate}}</button>
+    <button mat-raised-button color="primary" class="uppercase" id="okButton-button" (click)="save()">
+        {{'buttons.SAVE' | translate}}</button>
+</div>

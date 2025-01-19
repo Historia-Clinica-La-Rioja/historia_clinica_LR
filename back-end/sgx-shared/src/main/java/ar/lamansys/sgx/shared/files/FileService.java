@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfoRepository;
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
 import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BlobStorage;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.BucketObjectInfo;
 import lombok.AllArgsConstructor;
@@ -91,24 +93,65 @@ public class FileService {
 		}
 	}
 
-	public FileContentBo loadFile(Long fileId) {
-		var fileInfo = repository.findById(fileId);
-		if (fileInfo.isEmpty()) {
+	public StoredFileBo loadStoredFile(Long fileId) {
+		var fileInfoSaved = repository.findById(fileId);
+		if (fileInfoSaved.isEmpty()) {
 			throw new FileServiceException(
 					FileServiceEnumException.NON_EXIST,
 					String.format("El archivo con id %s no existe", fileId)
 			);
 		}
-		return this.loadFileRelativePath(fileInfo.get().getRelativePath());
+		FileInfo fileInfo = fileInfoSaved.get();
+		FileContentBo resource = this.loadFileRelativePath(fileInfo.getRelativePath());
+		return new StoredFileBo(
+				resource,
+				fileInfo.getContentType(),
+				fileInfo.getName()
+		);
+	}
+
+	public FileContentBo loadFile(Long fileId) {
+		return loadStoredFile(fileId).resource;
 	}
 
 	public FileInfo saveStreamInPath(FilePathBo path, String uuid, String generatedFrom, boolean override,
 									 FileContentBo content) {
+		return this.saveStreamInPath(
+				path,
+				uuid,
+				generatedFrom,
+				override,
+				content,
+				path.toFile().getName(),
+				parseToContentType(path.toFile().getName())
+		);
+	}
 
+	public FileInfo saveStreamInPath(FilePathBo path, String uuid, String generatedFrom, boolean override, StoredFileBo storedFile) {
+		return this.saveStreamInPath(
+				path,
+				uuid,
+				generatedFrom,
+				override,
+				storedFile.resource,
+				storedFile.filename,
+				storedFile.getContentType()
+		);
+	}
+
+	private FileInfo saveStreamInPath(
+			FilePathBo path,
+			String uuid,
+			String generatedFrom,
+			boolean override,
+			FileContentBo content,
+			String originalName,
+			String contentType
+	) {
 		File dirPath = path.toFile();
 		try {
 			var info = blobStorage.put(path, content, override);
-			var fileInfoDB = buildFileInfo(uuid, generatedFrom, info, dirPath.getName(), parseToContentType(dirPath.getName()));
+			var fileInfoDB = buildFileInfo(uuid, generatedFrom, info, originalName, contentType);
 			return saveFileInfo(fileInfoDB);
 		} catch (IOException e) {
 			saveFileError(new FileErrorInfo(dirPath.getPath(), String.format("saveStreamInPath error => %s", e), appNode.nodeId));
@@ -146,10 +189,10 @@ public class FileService {
 		return "application/octet-stream";
 	}
 
-	public String readFileAsString(FilePathBo path, Charset encoding) {
+	public Optional<String> readFileAsString(FilePathBo path, Charset encoding) {
 
 		try {
-			return blobStorage.readFileAsString(path, encoding);
+			return Optional.of(blobStorage.readFileAsString(path, encoding));
 		} catch (IOException e) {
 			log.error(e.getMessage());
 			saveFileError(new FileErrorInfo(
@@ -157,10 +200,7 @@ public class FileService {
 					String.format("readFileAsString error => %s", e),
 					appNode.nodeId
 			));
-			throw new FileServiceException(
-					FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", path.relativePath, e)
-			);
+			return Optional.empty();
 		}
 	}
 

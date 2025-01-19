@@ -83,7 +83,7 @@
 							*ngFor="let otherProfessional of getControl('otherProfessionals')?.controls;index as currentProfessional">
 							<div [formGroupName]="currentProfessional">
 								<mat-form-field class="mat-form-field-on-div" appearance="outline">
-									<button type="button" mat-button matSuffix color="warn" mat-icon-button
+									<button type="button"  matSuffix color="warn" mat-icon-button
 										(click)="clear(currentProfessional); $event.stopPropagation()">
 										<mat-icon>close</mat-icon>
 									</button>
@@ -157,7 +157,7 @@
 					</mat-error>
 				</div>
 
-				<div fxLayout="column" class="padding">
+				<div *ngIf="isHabilitarSolicitudReferenciaOn" fxLayout="column" class="padding">
 					<span [translate]="'turnos.agenda-setup.OPTIONAL_CARELINE'"></span>
 					<mat-form-field appearance="outline">
 						<mat-select id="care_lines" name="careLines" formControlName="careLines" multiple
@@ -221,25 +221,22 @@
 						<div fxLayout="row">
 							<span [translate]="'Fecha de inicio'"></span> *
 						</div>
-						<mat-form-field appearance="outline">
-							<input formControlName="startDate" id="startDate" matInput [matDatepicker]="initPicker"
-								(dateChange)="setAllWeeklyDoctorsOfficeOcupation()" [min]="minDate">
-							<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
-							<mat-datepicker #initPicker></mat-datepicker>
-						</mat-form-field>
+						<app-datepicker id="startDate"
+							[dateToSetInDatepicker]="diaryStartDate"
+							[minDate]="minDate"
+							(selectDate)="setSelectedStartDate($event)">
+						</app-datepicker>
 					</div>
 
 					<div fxLayout="column">
 						<div fxLayout="row">
 							<span [translate]="'Fecha de fin'"></span> *
 						</div>
-						<mat-form-field appearance="outline">
-							<input formControlName="endDate" id="endDate" matInput [matDatepicker]="endPicker"
-							       [min]="form.value.startDate" (dateChange)="setAllWeeklyDoctorsOfficeOcupation()">
-							<mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-							<mat-datepicker #endPicker></mat-datepicker>
-							<mat-error [translate]="'forms.INVALID_DATE'"></mat-error>
-						</mat-form-field>
+						<app-datepicker id="endDate"
+							[minDate]="form.value.startDate"
+							[dateToSetInDatepicker]="diaryEndDate"
+							(selectDate)="setSelectedEndDate($event)">
+						</app-datepicker>
 					</div>
 				</div>
 
@@ -259,7 +256,8 @@
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 					</mat-form-field>
 				</div>
-
+				<app-diary-configuration *ngIf="isHabilitarConfiguracionAgendasOn" formControlName="configurationDiary"></app-diary-configuration>
+				<app-diary-labels [diaryId]="editingDiaryId" (labelsArray)="setLabelsArray($event)"></app-diary-labels>
 			</section>
 			<section *ngIf="form.valid" fxLayout="column"
 				fxLayoutAlign="space-around" fxLayoutGap="15px">
@@ -291,6 +289,12 @@
 					</div>
 				</ng-template>
 
+				<ng-template #templatePlan let-event="event" class="calendar-event">
+					<app-calendar-event-view [appointmentDuration]="form.controls.appointmentDuration.value"
+						[title]="event.title" [startDateSlot]="event.start" [endDateSlot]="event.end" [metaCalendarEvent]="event.meta">
+					</app-calendar-event-view>
+				</ng-template>
+
 				<mwl-calendar-week-view [viewDate]="TODAY"
 					[events]="agendaHorarioService.getEvents()"
 					[hourSegmentTemplate]="weekViewHourSegmentTemplate"
@@ -298,6 +302,7 @@
 					[dayStartHour]="openingTime" [dayEndHour]="closingTime"
 					[hourSegments]="hourSegments"
 					[weekStartsOn]="MONDAY"
+					[eventTitleTemplate]="templatePlan"
 					(eventClicked)="agendaHorarioService.eventClicked($event, form.value.careLines?.length > 0)">
 				</mwl-calendar-week-view>
 
@@ -307,11 +312,11 @@
 			</section>
 
 
-			<div *ngIf="form.valid" align="end">
-				<button mat-flat-button color="primary" name="confirmAgenda" id="confirmAgenda">
-					<span [translate]="'buttons.CONFIRM'"></span>
-				</button>
+			<div *ngIf="form.valid" class="confirm-button">
+				<app-button id="confirmAgenda" [isLoading]="isSaving" name="confirmAgenda" [buttonType]="ButtonType.RAISED" [text]="'buttons.CONFIRM'">
+				</app-button>
 			</div>
 		</form>
 	</section>
 </app-content>
+

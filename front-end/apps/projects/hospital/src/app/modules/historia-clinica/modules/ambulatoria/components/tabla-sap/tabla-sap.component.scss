@@ -1,5 +1,5 @@
 section {
-	max-width: 85%; //ANCHO TABLA
+	max-width: 85%;
 	margin-left: 10%;
 	border: 1px solid #f7e0e0;
 	box-shadow: 0px 3px 3px 0px rgba(179, 177, 179, 1);
@@ -29,7 +29,7 @@ section {
 }
 
 .column-title {
-	margin-left: 45%; //SE ALINEA EL TITLE SEXO HACIA LA IZQUIERDA.
+	margin-left: 45%;
 	font-weight: normal;
 	font-size: medium;
 }
@@ -40,7 +40,7 @@ section {
 	font-size: medium;
 }
 
-.contenedor-title > span {
+.contenedor-title>span {
 	padding: 10px;
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
@@ -52,7 +52,7 @@ section {
 	margin-left: 67.8%;
 	position: absolute;
 	font-size: 15px;
-  color: #535252;
+	color: #535252;
 }
 
 .grafic {
@@ -63,14 +63,14 @@ section {
 }
 
 .container-orden {
-  color: #535252;
+	color: #535252;
 }
 
 .container-name {
 	position: absolute;
 	margin-left: 5%;
 	font-size: 15px;
-  color: #535252;
+	color: #535252;
 }
 
 .nombre-style {

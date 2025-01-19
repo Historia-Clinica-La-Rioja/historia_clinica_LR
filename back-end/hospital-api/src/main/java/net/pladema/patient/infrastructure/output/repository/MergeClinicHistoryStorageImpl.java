@@ -4,6 +4,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SurgicalReportRepository;
+import net.pladema.violencereport.infrastructure.output.repository.ViolenceReportRepository;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
@@ -57,6 +60,8 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	private final MigratableRepositoryMap repositoryMap;
 	private final OdontologyProcedureRepository odontologyProcedureRepository;
 	private final OdontologyDiagnosticRepository odontologyDiagnosticRepository;
+	private final ViolenceReportRepository violenceReportRepository;
+	private final SurgicalReportRepository surgicalReportRepository;
 
 
 	@Override
@@ -209,6 +214,20 @@ public class MergeClinicHistoryStorageImpl implements MergeClinicHistoryStorage 
 	public void modifyAppointment(List<Integer> oldPatientsIds, Integer newPatientId) {
 		appointmentRepository.getAppointmentsFromPatients(oldPatientsIds)
 				.forEach(item -> migratePatientStorage.migrateItem(item.getId(), item.getPatientId(), newPatientId, EMergeTable.APPOINTMENT));
+	}
+
+	@Override
+	public void modifyViolenceReport(List<Integer> oldPatientIds, Integer newPatientId) {
+		log.debug("Input parameters -> oldPatientIds {}, newPatientId {}", oldPatientIds, newPatientId);
+		violenceReportRepository.getAllPatientsSituationIds(oldPatientIds)
+				.forEach(violenceReport -> migratePatientStorage.migrateItem(violenceReport.getId(), violenceReport.getPatientId(), newPatientId, EMergeTable.VIOLENCE_REPORT));
+	}
+
+	@Override
+	public void modifySurgicalReport(List<Integer> oldPatientIds, Integer newPatientId) {
+		log.debug("Input parameters -> oldPatientIds {}, newPatientId {}", oldPatientIds, newPatientId);
+		surgicalReportRepository.getPatientsSurgicalReportIds(oldPatientIds)
+				.forEach(surgicalReport -> migratePatientStorage.migrateItem(surgicalReport.getId(), surgicalReport.getPatientId(), newPatientId, EMergeTable.SURGICAL_REPORT));
 	}
 
 	@Override

@@ -10,7 +10,12 @@ import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +38,8 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.UpdateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentDocumentModificationValidatorImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentDocumentException;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 class UpdateAnamnesisServiceImplTest extends UnitRepository {
@@ -66,9 +73,15 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 
 	private AnamnesisValidator anamnesisValidator;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+
+	@Mock
+	private GeneralDocumentValidator generalDocumentValidator;
+
 	@BeforeEach
 	public void setUp() {
-		anamnesisValidator = new AnamnesisValidator(featureFlagsService);
+		anamnesisValidator = new AnamnesisValidator(featureFlagsService, generalDocumentValidator);
 		documentModificationValidator = new InternmentDocumentModificationValidatorImpl(sharedDocumentPort, internmentEpisodeService);
 		updateAnamnesisService = new UpdateAnamnesisServiceImpl(documentModificationValidator, sharedDocumentPort, anamnesisValidator, internmentEpisodeService, dateTimeProvider, documentFactory, anamnesisService);
 	}
@@ -162,6 +175,17 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		assertEquals(actualMessage, expectedMessage);
 	}
 
+	@Test
+	void updateDocumentWithInvalidSignatureStatus() {
+		when(anamnesisService.getDocument(OLD_DOCUMENT_ID)).thenReturn(validUpdateAnamnesis(INSTITUTION_ID, INTERNMET_EPISODE_ID, OLD_DOCUMENT_ID));
+		when(sharedDocumentPort.getDocument(OLD_DOCUMENT_ID)).thenReturn(signedDocumentReduceInfoDto(-1, DOCUMENT_TYPE_ID));
+		Exception exception = Assertions.assertThrows(InternmentDocumentException.class, () -> updateAnamnesisService.execute(INTERNMET_EPISODE_ID, OLD_DOCUMENT_ID, validUpdateAnamnesis(INSTITUTION_ID, INTERNMET_EPISODE_ID, null)));
+		String expectedMessage = "No es posible llevar a cabo la acción dado que el documento fue firmado digitalmente";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage, expectedMessage);
+	}
+
+
 	private AnamnesisBo basicAnamnesisInfo(Integer institutionId, Integer encounterId, Long id) {
 		var anamnesis = new AnamnesisBo();
 		anamnesis.setId(id);
@@ -169,11 +193,11 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		anamnesis.setDiagnosis(Collections.emptyList());
-		anamnesis.setPersonalHistories(Collections.emptyList());
-		anamnesis.setFamilyHistories(Collections.emptyList());
+		anamnesis.setPersonalHistories(new ReferableItemBo<>());
+		anamnesis.setFamilyHistories(new ReferableItemBo<>());
 		anamnesis.setMedications(Collections.emptyList());
 		anamnesis.setImmunizations(Collections.emptyList());
-		anamnesis.setAllergies(Collections.emptyList());
+		anamnesis.setAllergies(new ReferableItemBo<>());
 		return anamnesis;
 	}
 
@@ -195,6 +219,8 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setTypeId(typeId);
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
+		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -204,6 +230,19 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setTypeId(typeId);
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now().minusDays(1).minusHours(1));
+		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
+		return result;
+	}
+
+	private DocumentReduceInfoDto signedDocumentReduceInfoDto(Integer userId, Short typeId) {
+		DocumentReduceInfoDto result = new DocumentReduceInfoDto();
+		result.setSourceId(INTERNMET_EPISODE_ID);
+		result.setTypeId(typeId);
+		result.setCreatedBy(userId);
+		result.setCreatedOn(LocalDateTime.now());
+		result.setSignatureStatus(ESignatureStatus.SIGNED);
+		result.setIsConfirmed(true);
 		return result;
 	}
 

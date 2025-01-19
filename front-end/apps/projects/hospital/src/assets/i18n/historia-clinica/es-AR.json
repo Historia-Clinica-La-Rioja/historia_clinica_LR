@@ -1,8 +1,19 @@
 {
 	"historia-clinica": {
+		"general": {
+			"SELECT": "Seleccione",
+			"CRITICALITY": "Criticidad",
+			"OBSERVATIONS": "Observaciones",
+			"ENTER_OBSERVATIONS": "Ingrese observaciones",
+			"TYPE": "Tipo",
+			"VIEW_DETAIL": "Ver detalle",
+			"START": "Inicio",
+			"EDITED": "Editado",
+			"SAVE_CHANGES": "Guardar cambios"
+		},
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
-			"SPECIALTY": "Especialidad",
+			"SPECIALTIES": "Especialidades",
 			"PROBLEMS": "Problemas"
 		},
 		"new-consultation-expansion-section": {
@@ -10,6 +21,9 @@
 		},
 		"concept-typeahead-search": {
 			"AT_LEAST_THREE_CHARACTERS_MESSAGE": "Ingrese al menos 3 caracteres"
+		},
+		"concept-typeahead-search-v2": {
+			"DISPLAYED_RESULTS": "Mostrando {{ maxResults }} de {{ totalResults }} conceptos coincidentes. Refine la búsqueda para obtener más resultados."
 		},
 		"summary-card": {
 			"evolution-notes-filter": {
@@ -21,7 +35,7 @@
 				"TOOLTIP": "Agregar alergia"
 			},
 			"factores-de-riesgo": {
-				"TOOLTIP": "Actualizar factores de riesgo"
+				"TOOLTIP": "Actualizar signos vitales y factores de riesgo"
 			},
 			"datos-antropometricos": {
 				"TOOLTIP": "Agregar información antropométrica"
@@ -40,8 +54,8 @@
 			"CONCEPTS_COULD_NOT_BE_OBTAINED": "Los conceptos de SNOMED no pudieron ser obtenidos."
 		},
 		"factores-de-riesgo-form": {
-			"TITLE": "Factores de Riesgo",
-			"NAME": "factores de riesgo",
+			"TITLE": "Signos vitales y factores de riesgo",
+			"NAME": "Signos vitales y factores de riesgo",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 			"TEMPERATURE": "Temperatura corporal",
@@ -53,14 +67,25 @@
 			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 		},
 		"include-previous-data-question": {
+			"TITLE": "Aviso",
 			"DESCRIPTION": "Últimos {{dataName}} cargados previamente el {{date}}",
 			"QUESTION": "¿Desea incluirlos en la consulta?",
-			"ADD": "SI, INCLUIRLOS",
-			"DISCARD": "NO, DESCARTARLOS"
+			"ADD": "Si, incluirlos",
+			"DISCARD": "No, descartarlos",
+			"ERROR": "Respuesta requerida",
+			"violence-situations": {
+				"DESCRIPTION": "Se incluyó el problema{{problem}}, se recomienda incluir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
+				"QUESTION": "¿Desea incluir una solicitud de referencia en la consulta?",
+				"ADD": "Si, incluir",
+				"DISCARD": "No, descartar"
+			}
 		},
 		"template-concept-search": {
-			"TEMPLATE_OPTION_GROUP": "Plantillas",
-			"CONCEPT_OPTION_GROUP": "Conceptos"
+			"TEMPLATE_OPTION_GROUP": "Conjunto de estudios",
+			"ALL_STUDIES": "Todos los estudios",
+			"MOST_FREQUENT_STUDIES": "Estudios más frecuentes...",
+			"INCLUDES_STUDIES": "Incluye {{count}} estudios",
+			"MOST_FREQUENT_TEMPLATES": "Conjunto de estudios más frecuentes..."
 		},
 		"new-consultation-add-reason-form": {
 			"ADD_REASON": "Agregar motivo",
@@ -88,10 +113,132 @@
 			"OBSERVACIONES": "Observaciones",
 			"SUSPENDIDO": "Suspendido"
 		},
+		"anesthesia-form": {
+			"ADD_ANESTHESIA": "Agregar anestesia",
+			"SEARCH_PLACEHOLDER": "Buscar anestesia",
+			"ANESTHESIA": "Anestesia"
+		},
 		"hierarhical-unit-section": {
 			"TITLE": "Unidad jerárquica",
 			"IS_A_REPLACEMENT": "Es un reemplazo",
 			"PLACEHOLDER": "Seleccione una unidad jerárquica"
+		},
+		"audit-access": {
+			"TITLE": "Alerta de acceso",
+			"RESUME": "Esta historia clínica es confidencial y tiene restricciones de acceso. Para verla, indicar motivo de consulta.",
+			"MOTIVE": "Motivo de ingreso",
+			"SELECT": "Seleccionar motivo",
+			"OBSERVATIONS": "Observaciones",
+			"GO_TO_PATIENT": "Ver historia clinica"
+		},
+		"evolution-charts": {
+			"SHOW_EVOLUTION_CHART_BUTTON": " ver graficos de evoluciones"
+		},
+		"evolution-charts-popup": {
+			"TITLE": "Información antropométrica | Gráficos de evolución {{gender}}",
+			"MESSAGE": "Seleccione un gráfico para visualizar su evolución",
+			"MESSAGE_GRAPHS_OF_ONLY_FULL_TERM_PATIENTS": "Los gráficos presentados están destinados a pacientes nacidos a término y no incluyen casos de nacimientos prematuros.",
+			"evolution-charts-select": {
+				"INPUT_TITLE": "Gráfico",
+				"PLACEHOLDER": "Ej: Talla para la edad"
+			},
+			"evolution-charts-type-select": {
+				"INPUT_TITLE": "Tipo",
+				"PLACEHOLDER": "Ej Gráficos en percentilos"
+			}
+		},
+		"anesthetic-report": {
+			"summary": {
+				"VIA": "Via ",
+				"DOSE": "Dosis: ",
+				"UNIT": "Unidad: ",
+				"TECHNIQUE": "Técnica: ",
+				"BREATHING": "Respiración: ",
+				"CIRCUIT": "Circuito: ",
+				"TRACHEAL_INTUBATION": "Intubación traqueal: ",
+				"QUANTITY_USED": "Cantidad utilizada: ",
+				"NO_INFORMATION": "Sin información",
+				"YES": "Si",
+				"NO": "No",
+				"SEE_CHARTS": "Ver gráficos",
+				"ANESTHESIA_START": "Comienzo Anestesia",
+				"ANESTHESIA_END": "Fin Anestesia",
+				"SURGERY_START": "Comienzo Cirugía",
+				"SURGERY_END": "Fin Cirugía",
+				"FLOOR": "En piso",
+				"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva",
+				"OBSERVATIONS": "Observaciones"
+			}
+		},
+		"create-order": {
+			"PROCEDURE": "Procedimiento",
+			"CATEGORY": "Categoría del estudio",
+			"HEALTH_PROBLEM": "Problema",
+			"DATE_OF_REALIZATION": "Fecha de realización"
+		},
+		"add_procedure": {
+			"TITLE_OPTIONS": "Resultados de estudio",
+			"PROCEDURE": "Procedimiento",
+			"RESULT": "Resultados",
+			"NEXT": "Siguiente",
+			"FINAL": "No requiere carga de resultados",
+			"REGISTERED": "Los resultados quedarán pendientes de carga",
+			"ADD_PROCEDURE": "Agregar procedimiento",
+			"LOAD_RESULTS_NOW": "Cargar resultados de procedimiento",
+			"COMPLETE": "Completar",
+			"CAME_BACK": "Volver",
+			"RESULTS_UPLOAD": "Carga de resultados"
+		},
+		"surgical-report": {
+			"summary": {
+				"DESCRIPTION": "Descripción",
+				"SURGERY_START": "Comienzo Cirugía",
+				"SURGERY_END": "Fin Cirugía",
+				"PROCEDURES": "Procedimientos",
+				"REGISTERED_PROCEDURES": "Procedimientos registrados",
+				"OTHER_MEMBERS": "Otros miembros",
+				"CULTURES": "Cultivos"
+			}
+		},
+		"isolation-alert": {
+			"add_alerts": {
+				"SINGULAR": "+ {{cant}} alerta",
+				"PLURAL":  "+ {{cant}} alertas"
+			},
+			"ISOLATION_ALERT": "Alerta de aislamiento",
+			"ADD_ISOLATION_ALERT": "Agregar alerta de aislamiento",
+			"ASSOCIATED_DIAGNOSIS": "Diagnóstico asociado",
+			"ISOLATION_TYPE": "Tipo de aislamiento",
+			"CONFIRM_BUTTON": "Confirmar alerta",
+			"END_OF_ALERT": "Fin de alerta",
+			"REGISTERED_ISOLATION_ALERTS": "Alertas de aislamiento registradas",
+			"DIAGNOSIS_ASSOCIATED_TO_ISOLATION_ALERT": "Existen diagnósticos asociados a alertas de aislamiento.",
+			"without_associated_diagnosis": {
+				"TITLE": "No es posible crear una alerta sin un diagnóstico médico asociado.",
+				"SUBTITLE": "Consulte con el/la profesional responsable"
+			},
+			"CARD_TITLE": "Alertas de aislamiento",
+			"ALERT_STATE": "Estado de alerta",
+			"ISOLATION_ALERT_DETAILS": "Detalle de alerta de aislamiento",
+			"UPDATED_ISOLATION_ALERT": "Se han realizado modificaciones sobre la alerta de aislamiento posteriores a la última versión del documento"
+		},
+		"details-of-patient-isolation-alerts": {
+			"TITLE": "Alertas de aislamiento activas"
+		},
+		"isolation-alert-action": {
+			"finish-alert": {
+				"BUTTON_END_ALERT": "Finalizar alerta",
+				"END_ALERT_TITLE": "¿Finalizar alerta?",
+				"CONFIRM_END_ALERT": "Si, finalizar la alerta",
+				"SNACKBAR_SUCCESS": "Alerta finalizada correctamente",
+				"SNACKBAR_ERROR": "Hubo un error al finalizar la alerta"
+			},
+			"edit-alert": {
+				"BUTTON_EDIT_ALERT": "Editar alerta",
+				"EDIT_ALERT_TITLE": "Editar alerta de aislamiento",
+				"SNACKBAR_SUCCESS": "La alerta se editó con éxito",
+				"SNACKBAR_ERROR": "Hubo un error al editar la alerta"
+			}
 		}
 	}
 }

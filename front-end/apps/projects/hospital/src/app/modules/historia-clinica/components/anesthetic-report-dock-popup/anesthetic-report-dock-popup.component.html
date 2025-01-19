@@ -1,0 +1,148 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Anestésico'} ">
+    <div body fxLayout="column" fxLayoutGap="20px">
+        <app-new-consultation-expansion-section id="diagnosis-expansion-section"
+            [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="assignment"
+            [collapsed]="!mainDiagnosis && !diagnosis" [isEmpty]="!mainDiagnosis && !diagnosis" [hideBorder]="true">
+            <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
+                [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
+            [title]="'internaciones.anesthesic-report.proposed-surgery.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isProposedSurgeryEmpty$ | async"
+            [hideBorder]="false">
+            <app-proposed-surgery></app-proposed-surgery>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anthropometric-data-expansion-section"
+            [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="assignment"
+            [collapsed]="anesthethicReportHandlerService.collapsedAnthropometricDataSection$ | async"
+            [isEmpty]="anesthethicReportHandlerService.isAnthropometricDataEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-anthropometric-data
+                [patientId]="data.patientId"></app-anesthetic-report-anthropometric-data>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthesic-clinical-evaluation-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate"
+            icon="assignment" [collapsed]="anesthethicReportHandlerService.collapsedClinicalEvaluationSection$ | async"
+            [isEmpty]="anesthethicReportHandlerService.isClinicalEvaluationEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-clinical-evaluation></app-anesthetic-report-clinical-evaluation>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthesic-history-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-history.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isAnestheticHistoryEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-report-anesthetic-history></app-anesthetic-report-anesthetic-history>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="usual-medication-expansion-section"
+            [title]="'internaciones.anesthesic-report.usual-medication.TITLE' | translate" icon="assignment"
+            [collapsed]="true"
+            [isEmpty]="anesthethicReportHandlerService.isMedicationEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-usual-medication></app-anesthetic-report-usual-medication>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="premedication-and-food-intake-expansion-section"
+            [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate"
+            icon="assignment" [collapsed]="true"
+            [isEmpty]="anesthethicReportHandlerService.isPremedicationAndFoodIntakeEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-premedication-and-food-intake
+			(timeSelected)="onLastFoodIntakeTimeSelected($event)"
+			(dateSelected)="onLastFoodIntakeDateSelected($event)">
+            </app-anesthetic-report-premedication-and-food-intake>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="record-expansion-section"
+            [title]="'internaciones.anesthesic-report.record.TITLE' | translate" icon="assignment" [collapsed]="true"
+            [isEmpty]="anesthethicReportHandlerService.isRecordEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-person-record>
+            </app-anesthetic-report-person-record>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthetic-plan-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-plan.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isAnestheticPlanEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-plan>
+            </app-anesthetic-plan>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="analgesic-technique-expansion-section"
+            [title]="'internaciones.anesthesic-report.analgesic-technique.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isAnalgesicTechniqueEmpty$ | async"
+            [hideBorder]="false">
+            <app-analgesic-technique></app-analgesic-technique>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthetic-technique-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-technique.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isAnestheticTechniqueEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-technique></app-anesthetic-technique>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="fluid-Administrations-expansion-section"
+            [title]="'internaciones.anesthesic-report.fluid-administration.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isFluidAdministrationEmpty$ | async"
+            [hideBorder]="false">
+            <app-fluid-administration></app-fluid-administration>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="anesthetic-agents-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-agents.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isAnestheticAgentEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-report-anesthetic-agents></app-anesthetic-report-anesthetic-agents>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="non-anesthetic-drugs-expansion-section"
+            [title]="'internaciones.anesthesic-report.non-anesthetic-drugs.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isNonAnestheticDrugsEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-report-non-anesthetic-drugs></app-anesthetic-report-non-anesthetic-drugs>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="intrasurgical-anesthetic-procedures-expansion-section"
+            [title]="'internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.TITLE' | translate"
+            icon="assignment" [collapsed]="true"
+            [isEmpty]="anesthethicReportHandlerService.isIntrasurgicalAnestheticProceduresEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-report-intrasurgical-anesthetic-procedures></app-anesthetic-report-intrasurgical-anesthetic-procedures>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="antibiotic-prophylaxis-expansion-section"
+            [title]="'internaciones.anesthesic-report.antibiotic-prophylaxis.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isAntibioticProphylaxisEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-report-antibiotic-prophylaxis></app-anesthetic-report-antibiotic-prophylaxis>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="vital-signs-expansion-section"
+            [title]="'internaciones.anesthesic-report.vital-signs.TITLE' | translate" icon="assignment"
+            [collapsed]="anesthethicReportHandlerService.collapsedVitalSignsSection$ | async" [isEmpty]="anesthethicReportHandlerService.isVitalSignsEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-vital-signs>
+            </app-anesthetic-report-vital-signs>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="end-of-anesthesia-status-expansion-section"
+            [title]="'internaciones.anesthesic-report.end-of-anesthesia-status.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anesthethicReportHandlerService.isEndOfAnesthesiaStatusEmpty$ | async"
+            [hideBorder]="false">
+            <app-anesthetic-report-end-of-anesthesia-status>
+            </app-anesthetic-report-end-of-anesthesia-status>
+        </app-new-consultation-expansion-section>
+    </div>
+
+
+	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
+		<app-button *ngIf="!isConfirmed" [color]="'primary'" [isLoading]="isLoadingDraft" [disabled]="isLoading"
+			[text]="'internaciones.anesthesic-report.buttons.SAVE_DRAFT' | translate | uppercase"
+			[buttonType]="'mat-stroked-button'" (clicked)="save(true)">
+		</app-button>
+		<app-button [color]="'primary'" [isLoading]="isLoading" [disabled]="isLoadingDraft"
+			[text]="'internaciones.anesthesic-report.buttons.CONFIRM' | translate | uppercase"
+			[buttonType]="'mat-raised-button'" (clicked)="save(false)">
+		</app-button>
+	</div>
+</app-dock-popup>

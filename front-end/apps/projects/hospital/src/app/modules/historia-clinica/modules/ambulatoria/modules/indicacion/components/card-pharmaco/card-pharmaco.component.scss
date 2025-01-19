@@ -2,7 +2,7 @@
 	$palette-primary: map-get($theme, primary);
 
 	.date {
-		color: mat-color($palette-primary, 50);
+		color: mat-color($palette-primary, 100);
 	}
 }
 

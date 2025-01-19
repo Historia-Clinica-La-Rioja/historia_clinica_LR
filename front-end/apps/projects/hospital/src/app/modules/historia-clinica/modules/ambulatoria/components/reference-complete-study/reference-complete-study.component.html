@@ -1,0 +1,59 @@
+<ng-container *ngIf="_reference$ | async as _reference else spinner">
+
+	<div fxLayout="row" fxLayoutAlign="space-between start">
+		<h1 class="capitalize-first-letter">{{_reference.dto.procedure.pt }}</h1>
+
+		<div>
+			<button id="close" mat-icon-button mat-dialog-close>
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
+	</div>
+
+	<mat-dialog-content fxLayout="column" fxLayoutGap="22px">
+		<div fxLayout="row" fxLayoutGap="22px">
+			<app-reference-request-data fxFlex="45%" [setReference]="_reference" [status]="data.status"
+				[order]="data.order">
+			</app-reference-request-data>
+
+			<mat-divider></mat-divider>
+			<mat-divider [vertical]="true"></mat-divider>
+
+			<ng-container *ngIf="destinationState === APPROVED || data.status.description === COMPLETED  else warningMessage ">
+				<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
+					[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference"
+					[studies]="data.studies" [resultsPractices]="data.resultsPractices">
+				</app-reference-study>
+			</ng-container>
+
+		</div>
+	</mat-dialog-content>
+
+	<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+
+		<app-button *ngIf="buttonService.activatePartialSaveButton$ | async" [buttonType]='buttonTypeFlat'
+			text='ambulatoria.reference-study-close.COMPLETE_PARTIAL_BUTTON'
+			[isLoading]="buttonService.isLoadingPartialSave$ | async" (clicked)="completePartialStudy()">
+		</app-button>
+
+		<app-button *ngIf="!data?.reportReference" [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
+			[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
+			(clicked)="completeStudy()">
+		</app-button>
+
+	</mat-dialog-actions>
+
+</ng-container>
+
+<ng-template #warningMessage>
+	<app-box-message [boxMessageInfo]="boxMessageInfo">
+
+	</app-box-message>
+</ng-template>
+
+
+<ng-template #spinner>
+	<div class="centered-spinner">
+		<mat-spinner diameter="70" color="primary"></mat-spinner>
+	</div>
+</ng-template>

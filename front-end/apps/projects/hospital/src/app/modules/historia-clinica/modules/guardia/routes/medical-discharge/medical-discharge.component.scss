@@ -1,6 +1,12 @@
 
 @import '../../../../../../../assets/styles/mat-mixins';
 @import '../../../../../../../assets/styles/mixins';
+
+.container {
+	padding: 24px;
+	max-width: 704px;
+}
+
 form{
 	@include mat-form-field-background-white;
 	mat-radio-button {

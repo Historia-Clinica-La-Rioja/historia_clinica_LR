@@ -2,7 +2,9 @@ package net.pladema.establishment.repository;
 
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
+import net.pladema.establishment.repository.domain.HierarchicalUnitVo;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.HierarchicalUnit;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.repository.entity.SectorType;
 import net.pladema.staff.repository.domain.ClinicalSpecialtyVo;
@@ -27,11 +29,13 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
         this.entityManager = entityManager;
     }
 
-    @Override
+	@Override
     @Transactional(readOnly = true)
     public List<BedSummaryVo> execute(Integer institutionId, Short[] sectorsType) {
         String sqlQuery =
-                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, so.description, ag.description, st "
+                " SELECT b, s, MAX(ie.probableDischargeDate), cs, ct.description, "
+                + " so.description, ag.description, st, hu, "
+                + " COALESCE(status.isBlocked, false) "
                 + " FROM Bed b "
                 + " JOIN Room r ON b.roomId = r.id "
                 + " JOIN Sector s ON r.sectorId = s.id "
@@ -42,11 +46,15 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
                 + " LEFT JOIN VClinicalServiceSector vcs ON s.id = vcs.sectorId "
                 + " LEFT JOIN ClinicalSpecialty cs ON vcs.clinicalSpecialtyId = cs.id "
                 + " LEFT JOIN InternmentEpisode ie ON b.id = ie.bedId "
+				+ " LEFT JOIN HierarchicalUnitSector hus ON (hus.sectorId = s.id) "
+				+ " LEFT JOIN HierarchicalUnit hu ON (hus.hierarchicalUnitId = hu.id) "
+				+ " LEFT JOIN AttentionPlaceStatus status ON b.statusId = status.id "
                 + " WHERE s.institutionId = :institutionId "
 				+ " AND s.sectorTypeId IN (:sectorsType) "
+				+ " AND s.deleteable.deleted = false "
                 + " AND (b.free=true OR ( b.free=false AND ie.statusId = :internmentEpisodeActiveStatus OR s.sectorTypeId = "+SectorType.EMERGENCY_CARE_ID+") ) "
-                + " GROUP BY b, s, cs, so, ct, ag, st "
-                + " ORDER BY s.id, cs.id ";
+                + " GROUP BY b, s, cs, so, ct, ag, st, hu, status.isBlocked "
+                + " ORDER BY s.id, cs.id, hu.id ";
 
         List<Object[]> result = entityManager.createQuery(sqlQuery)
                 .setParameter("institutionId", institutionId)
@@ -58,17 +66,24 @@ public class BedSummaryRepositoryImpl implements BedSummaryRepository{
         result.forEach(
                 r -> {
                     Bed bed = ((Bed) r[0]);
-                    if (bedSummaries.containsKey(bed)) {
-                        bedSummaries.get(bed).addSpecialty(new ClinicalSpecialtyVo( (ClinicalSpecialty) r[3]));
+					ClinicalSpecialty clinicalSpecialty = (ClinicalSpecialty) r[3];
+					HierarchicalUnit hierarchicalUnit = ((HierarchicalUnit) r[8]);
+					Boolean isBlocked = (Boolean) r[9];
+					if (bedSummaries.containsKey(bed)) {
+						if (hierarchicalUnit != null)
+							bedSummaries.get(bed).addHierarchicalUnit(new HierarchicalUnitVo(hierarchicalUnit));
+						if (clinicalSpecialty != null)
+							bedSummaries.get(bed).addSpecialty(new ClinicalSpecialtyVo( (ClinicalSpecialty) r[3]));
                     } else {
                         String careType = (String) r[4];
                         String sectorOrganization = (String) r[5];
                         String ageGroup = (String) r[6];
                         BedSummaryVo bedSummary = new BedSummaryVo(bed, (Sector) r[1], (LocalDateTime) r[2],
-                                careType, sectorOrganization, ageGroup, (SectorType) r[7]);
-                        ClinicalSpecialty clinicalSpecialty =  (ClinicalSpecialty) r[3];
+                                careType, sectorOrganization, ageGroup, (SectorType) r[7], isBlocked);
                         if (clinicalSpecialty != null)
                             bedSummary.addSpecialty(new ClinicalSpecialtyVo(clinicalSpecialty));
+						if (hierarchicalUnit != null)
+							bedSummary.addHierarchicalUnit(new HierarchicalUnitVo(hierarchicalUnit));
                         bedSummaries.put(bed, bedSummary);
                     }
                 }

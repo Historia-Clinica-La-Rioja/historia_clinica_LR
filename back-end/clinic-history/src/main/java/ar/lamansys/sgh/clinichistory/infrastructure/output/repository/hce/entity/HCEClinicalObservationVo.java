@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 import lombok.*;
 
@@ -23,6 +23,8 @@ public class HCEClinicalObservationVo {
 	private String value;
 
 	private LocalDateTime effectiveTime;
+
+	private Long documentId;
 
 	@Override
 	public boolean equals(Object o) {

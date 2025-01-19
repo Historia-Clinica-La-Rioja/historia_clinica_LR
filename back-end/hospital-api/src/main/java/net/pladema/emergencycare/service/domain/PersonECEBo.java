@@ -26,6 +26,8 @@ public class PersonECEBo {
 
 	private String nameSelfDetermination;
 
+	private String identificationType;
+
 	public PersonECEBo(PersonECEVo person){
 		this.id = person.getId();
 		this.firstName = person.getFirstName();
@@ -33,5 +35,6 @@ public class PersonECEBo {
 		this.identificationNumber = person.getIdentificationNumber();
 		this.photo = person.getPhoto();
 		this.nameSelfDetermination = person.getNameSelfDetermination();
+		this.identificationType = person.getIdentificationType();
 	}
 }

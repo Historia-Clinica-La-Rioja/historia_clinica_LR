@@ -22,7 +22,7 @@ public interface LocalDateMapper {
 		return localDateTime != null ? localDateTime.toLocalDate() : null;
 	}
 
-default LocalDateTime fromLocalDate(LocalDate localDate) {
+	default LocalDateTime fromLocalDate(LocalDate localDate) {
 		return localDate!= null ? LocalDateTime.of(localDate, LocalTime.now()) : null; 	
     }
 
@@ -108,6 +108,13 @@ default LocalDateTime fromLocalDate(LocalDate localDate) {
 		DateDto dateDto = toDateDto(localDateTime.toLocalDate());
 		TimeDto timeDto = toTimeDto(localDateTime.toLocalTime());
 		return new DateTimeDto(dateDto, timeDto);
+	}
+
+	default DateTimeDto zonedDateTimeToDateTimeDto(ZonedDateTime zonedDateTime) {
+		LocalDateTime localDateTime = zonedDateTime
+			.withZoneSameInstant(ZoneId.of(JacksonDateFormatConfig.ZONE_ID))
+			.toLocalDateTime();
+		return toDateTimeDto(localDateTime);
 	}
 
 }

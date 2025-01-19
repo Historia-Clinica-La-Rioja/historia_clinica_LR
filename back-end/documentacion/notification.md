@@ -24,32 +24,19 @@ Dado que se conoce que los canales de notificaciones pueden fallar, *se asume* q
 
 Los _casos de uso_ deben usar los _notification ports_ definidos para ofrecer las diferentes notificaciones disponibles. Para un ejemplo, ver [NewAppointmentNotification (1)](../hospital-api/src/main/java/net/pladema/medicalconsultation/appointment/application/port/NewAppointmentNotification.java).
 
-Los _notification ports_ tienen la responsabilidad de obtener toda la información necesaria para enviar en el mensaje de la notificación. Si los parámetros que el _caso de uso_ le puede pasar no son suficientes, se pueden usar otros servicios. Por ejemplo, si en el mensaje tiene que figurar el nombre de la institución y el caso de uso solo tiene el identificador, entonces el _notification port_ buscará el nombre de la institución a partir del identificador.
+Los _notification ports_ tienen la responsabilidad de obtener toda la información necesaria que se va a necesitar enviar en el mensaje de la notificación. Si los parámetros que el _caso de uso_ le puede pasar no son suficientes, se pueden usar otros servicios. Por ejemplo, si en el mensaje tiene que figurar el nombre de la institución y el caso de uso solo tiene el identificador, entonces el _notification port_ buscará el nombre de la institución a partir del identificador.
 
-Los _notification ports_ deberán elegir la implementación adecuada de [_Notification Template Input_](#notification-template-input) que indicará el identificador de la plantilla a usar y el DTO que estructura los argumentos que requiere esa plantilla.
-
- [//]: # (Notification Template Input era la primera vez que se nombraba, por eso se dejo el link en la misma palabra y no en un texto al final del párrafo.) 
-
-Por ejemplo, el _notification port_ _NewAppointmentNotification_ crea un _NewAppointmentTemplateInput_ para enviarlo al [_Recipient Notification Sender_ de _Paciente_](#recipient-notification-senders).
-
- [//]: # (Acá tambien agruegue el link a Recipient Notification Sender. Más allá de que esté en la siguiente sección, a futuro puede cambiar, o a primera vista se puede no notar) 
+Los _notification ports_ deberán elegir la implementación adecuada de _Notification Template Input_ que indicará el identificador de la plantilla a usar y el DTO que estructura los argumentos que requiere esa plantilla. Mas adelante se profundiza en [Notification Templates](#notification-template-input).
 
 ### Recipient Notification Senders
 
-Finalmente el _notification port_ podrá usar el _Recipient Notification Sender_ adecuado para su caso:
+Finalmente el _notification port_ podrá usar el _RecipientNotificationSender_ adecuado para su caso:
 
-- `PersonNotificationSender` ([código](../hospital-api/src/main/java/net/pladema/person/infraestructure/output/notification/PersonNotificationSender.java))
-  - se enviará la notificación al `personId` indicado.
-- `PatientNotificationSender` ([código](../hospital-api/src/main/java/net/pladema/patient/infraestructure/output/notification/PatientNotificationSender.java))
-  - se enviará la notificación al `patientId` indicado.
-- `UserNotificationSender`
-  - se enviará la notificación al `userId` indicado.
-- `BookingPersonNotificationSender`(código)
-  - se enviará la notificación al `bookingPersonId` indicado.
-- `ProfessionalNotificationSender`
-  - se enviará la notificación al `professionalId` indicado.
-
- [//]: # (Le quite los numeros a las calses y puse el código a parte para que sea más visual el resultado final, observandose de esta forma que lo unico que cambia es la entidad sobre la que opera cada Sender) 
+1. [PersonNotificationSender](../hospital-api/src/main/java/net/pladema/person/infraestructure/output/notification/PersonNotificationSender.java): se enviará la notificación al `personId` indicado.
+2. [PatientNotificationSender](../hospital-api/src/main/java/net/pladema/patient/infraestructure/output/notification/PatientNotificationSender.java): se enviará la notificación al `patientId` indicado.
+3. UserNotificationSender: se enviará la notificación al `userId` indicado.
+4. BookingPersonNotificationSender: se enviará la notificación al `bookingPersonId` indicado.
+5. ProfessionalNotificationSender: se enviará la notificación al `professionalId` indicado.
 
 Cada _RecipientNotificationSender_ tiene la responsabilidad de armar el [RecipientBo](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/domain/RecipientBo.java) completando el _Nombre_ y _Apellido_ del receptor para poder ser usado en la plantilla para la generación del mensaje final. Además completará el _e-mail_, _número de teléfono_ o cualquier información de contacto soportado por el _Notification Sender_.
 
@@ -57,7 +44,7 @@ Cada _RecipientNotificationSender_ tiene la responsabilidad de armar el [Recipie
 
 ```mermaid
 classDiagram
-
+    direction LR
     NewAppointmentNotification --> PatientNotificationSender : Mapea
     BookingConfirmationNotification --> BookingNotificationSender : Mapea
     ResetPasswordNotification --> UserNotificationSender : Mapea
@@ -97,13 +84,9 @@ classDiagram
 
 ```
 
-## Envío de la notificación
+## Notification Sender
 
-### Notification Sender
-
-El [NotificationSender](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/application/NotificationSender.java) tiene la responsabilidad de buscar el primer _NotificationChannelManager_ de su lista que acepte el _Recipient_ para poder generar una [NotificationTask](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/application/NotificationTask.java) (_implements Runnable_) que realizará el envío de manera asincrónica.
-
- [//]: # (Entiendo que NotificationChannelManager son los diferentes canales de comunicación, ya que veo EmailChannelManager) 
+El [NotificationSender](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/application/NotificationSender.java) tiene la responsabilidad de buscar el primer _NotificationChannelManager_ de su lista que acepte el _Recipient_ para poder generar una [NotificationTask](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/application/NotificationTask.java)
 
 > Nota: se usa un `newCachedThreadPool`: Creates a thread pool that creates new threads as needed, but will reuse previously constructed threads when they are available.
 
@@ -111,31 +94,24 @@ Cuando llega el turno de ejecutar la _NotificationTask_ se termina llamando al `
 
 ### NotificationChannelManager
 
-El [NotificationChannelManager](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/application/NotificationChannelManager.java) además de tener la responsabilidad de indicar si acepta el mensaje analizando el _Recipient_, debe poder enviar el mensaje que obtenga de la renderización de la plantilla. Se usa un _Notification Template Engine_ para renderizar y un _Notification Channel_ para el envío.
+El [NotificationChannelManager](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/notifications/application/NotificationChannelManager.java) además de tener la responsabilidad de indicar si acepta el mensaje analizando el _Recipient_, debe poder enviar el mensaje que obtenga de la renderización de la plantilla. Se usa un _Notification Template Engine_ para renderizar y un _Notification Channel_ para el envío. 
 
-```mermaid
-sequenceDiagram
-    NotificationChannelManager->>+NotificationTemplateEngine: process(recipient, message)
-    activate NotificationTemplateEngine
-    NotificationTemplateEngine-->>NotificationChannelManager: renderedMessage
-    deactivate NotificationTemplateEngine
-    NotificationChannelManager->>+NotificationChannel: send(recipient, renderedMessage)
-    activate NotificationChannel
-    NotificationChannel-->>NotificationChannelManager: (ok)
-    deactivate NotificationChannel
-```
+### Notification Template Engines
 
-La renderización de los mensajes se detalla [debajo](#renderizado-del-mensaje).
+Para el renderizado de los mensajes de cada canal se utiliza alguna implementación del [NotificationTemplateEngine](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/impl/NotificationTemplateEngine.java) que tiene la responsabilidad de generar el mensaje de acuerdo al canal  a partir del _Notification Template Input_, el idioma del usuario y los datos del _Recipient_ como su _Nombre_ de pila.
+
+Tomando de ejemplo el e-mail, dado que el mensaje está formado por un _Asunto_ y un _Cuerpo_ en [MailTemplateEngine](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/MailTemplateEngine.java) se utiliza un [TextTemplateEngine](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/TextTemplateEngine.java) para generar el _Asunto_ y un [HTMLTemplateEngine](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/HTMLTemplateEngine.java) para generar el _Cuerpo_.
 
 ### Notification Channels
 
-Una vez renderizado el mensaje para el canal, se envía por este utilizando los datos de contacto del _RecipientBo_, en el ejemplo del e-mail se llamaría a [EmailNotificationChannel](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/emails/application/EmailNotificationChannel.java).
+Una vez renderizado el mensaje para el canal, se envía por este utilizando los datos de contacto del _RecipientBo_, en el ejemplo del e-mail se llama a [EmailNotificationChannel](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/emails/application/EmailNotificationChannel.java).
 
-### Notification Sending Diagram
+## Full Diagram
+
 
 ```mermaid
 classDiagram
-    direction TD
+    direction LR
     
     NotificationSender "1" --> "n" NotificationChannelManager: accept?
     NotificationSender --> ExecutorService: queue(task)
@@ -146,7 +122,6 @@ classDiagram
     SmsChannelManager --|> NotificationChannelManager
 
     class NotificationSender{
-        +List<NotificationChannelManager> channelManagers
         +send(RecipientBo, NotificationTemplateInput)
     }
     class NotificationChannelManager{
@@ -209,7 +184,7 @@ Cada implementación de [NotificationTemplateEngine](../sgx-shared/src/main/java
 
 Sin dudas la implementación de _Notification Template Engine_ más importante es la que permite producir HTML renderizado en el back-end. Para esto Spring provee la **infraestructura** necesaria para utilizar diferentes _Template Engines_, como se explica en [Template Engines for Spring](https://www.baeldung.com/spring-template-engines). Se definió que este proyecto utilice Thymeleaf para producir el HTML de las notificaciones, ya que además es la herramienta utilizada también para la generación de PDFs (desde HTML).
 
-Se puede entender que el uso de Thymeleaf permitirá invocar `String org.thymeleaf.ITemplateEngine.process(final String template, final IContext context)` donde `template` identifica la plantilla (_Template_) y `context` contiene los datos (_Data_) a utilizar. Particularmente se deberá instanciar la clase `SpringTemplateEngine` que implementa este método, para esto se ofrece la clase utilitaria [ar.lamansys.sgx.shared.templating.SpringTemplateUtils](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/SpringTemplateUtils.java) donde el método `createHtmlTemplateEngine(String templatePrefix, ...)` obliga definir el prefijo que permitirá obtener la plantilla a partir del `templateId`.
+Se puede entender que el uso de Thymeleaf permitirá invocar `String org.thymeleaf.ITemplateEngine.process(final String template, final IContext context)` donde `template` identifica la plantilla (_Template_) y `context` contiene los datos (_Data_) a utilizar. Particularmente se deberá instanciar la clase `SpringTemplateEngine` que implementa este método, para esto se ofrece la clase utilitaria [ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/SpringTemplateUtils.java) donde el método `createHtmlTemplateEngine(String templatePrefix, ...)` obliga definir el prefijo que permitirá obtener la plantilla a partir del `templateId`.
 
 ##### HTML Template Engine Testing
 
@@ -270,5 +245,5 @@ El análisis de los posibles problemas y cómo deberían manejarse se puede real
 1. Notification Ports: puede haber un problema al recolectar los argumentos de la plantilla. Se debería manejar de acuerdo al lo que disponga el caso de uso.
 2. Recipient Notification Senders: aunque sería raro, puede no existir el receptor, en cuyo caso tiene sentido descartar la notificación.
 3. Notification Sender: es tan normal la ocurrencia de errores en esta etapa como insalvables por lo que simplemente se deberá registrar el error en el log.
-    1. Notification Template Engines: el uso de DTOs para estructurar los argumentos mitigaría la posibilidad de errores en esta etapa.
-    2. Notification Channels: podrían aparecer errores de conexión o de aplicación en este punto.
+   1. Notification Template Engines: el uso de DTOs para estructurar los argumentos mitigaría la posibilidad de errores en esta etapa. 
+   2. Notification Channels: podrían aparecer errores de conexión o de aplicación en este punto.

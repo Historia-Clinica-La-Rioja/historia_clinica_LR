@@ -25,11 +25,11 @@ public class NotifyPatient {
 
 		assertTopicIsSet(notifyData);
 
-		sendAppointmentNotification.run(notifyData);
+		sendAppointmentNotification.run(notifyData, institutionId);
 	}
 
 	private static void assertTopicIsSet(NotifyPatientBo notifyData) throws NotifyPatientException {
-		if (!notifyData.hasTopic()) {
+		if (!notifyData.hasTVMonitor()) {
 			throw  new NotifyPatientException(notifyData.getSectorId());
 		}
 	}

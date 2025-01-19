@@ -5,7 +5,8 @@
 			"SUB_TITLE": "Complete los datos solicitados para continuar",
 			"ADM_TRIAGE": "Triage",
 			"SUCCESS": "El episodio fue creado exitosamente",
-			"ERROR": "Ocurrió un error al crear el episodio"
+			"ERROR": "Ocurrió un error al crear el episodio",
+			"CONFIRM": "Confirmar episodio"
 		},
 		"triage": {
 			"APPEARANCE": "Apariencia",
@@ -13,7 +14,8 @@
 			"CIRCULATION": "Circulación",
 			"CONFIRM": "Confirmar triage",
 			"CRYING_EXCESSIVE": "Llanto sin consuelo",
-			"EVALUATION": "Evaluación",
+			"OBSERVATIONS": "Observaciones",
+			"SET_OBSERVATIONS": "Ingresar observaciones",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"LEVEL": "Nivel de urgencia",
 			"MUSCLE_HYPERTONIA": "Tono muscular",
@@ -27,28 +29,26 @@
 			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
 			"STRIDOR": "Respiración con estridor",
 			"TEMPERATURE": "Temperatura",
-			"TITLE": "Nuevo triage"
+			"TITLE": "Nuevo triage",
+			"REASON": "Motivo de consulta",
+			"SPECIALTY_SECTOR": "Servicio de guardia",
+			"SELECT_SPECIALTY_SECTOR": "Seleccione un servicio",
+			"LIST_CARD_TITLE": "Motivos registrados",
+			"ADD_REASON": "+ agregar motivo"
 		},
 		"administrative_admision": {
 			"TITLE": "Nuevo episodio",
-			"SUBTITLE": "Complete datos solicitados para continuar",
 			"PATIENT": "Paciente",
-			"SEARCH_PATIENT": "Buscar Paciente",
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
-			"motivo": {
-				"TITLE": "Detalle del episodio",
-				"MOTIVO": "motivo",
-				"ADD": "Agregar motivo",
-				"table": {
-					"TITLE": "Motivos registrados",
-					"columns": {
-						"MOTIVO": "Motivos"
-					}
-				},
-				"DIAGNOSIS": "Diagnóstico"
+			"EPISODE_DETAILS": "Detalle del episodio",
+			"TEMPORARY": "Temporal",
+			"reasons": {
+				"TITLE": "Motivo de ingreso",
+				"PLACEHOLDER": "Indicar motivo de ingreso"
 			},
 			"form": {
+				"SELECT": "Seleccionar",
 				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
 				"EMERGENCY_CARE_ENTRANCE_TYPE": "Forma de ingreso",
 				"AMBULANCE_COMPANY_ID": "ID Compañia ambulancia",
@@ -58,7 +58,6 @@
 				},
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
-					"DATE": "Fecha",
 					"TIME": "Hora",
 					"police_officer": {
 						"TITLE": "Detalle del oficial policial",
@@ -66,31 +65,71 @@
 						"NAME": "Nombre",
 						"LAST_NAME": "Apellido"
 					}
+				},
+				"temporary_patient_popup": {
+					"TITLE": "Paciente temporal",
+					"SUBTITLE": "Detalles identificatorios",
+					"PLACEHOLDER": "Agregar..."
 				}
 			}
 		},
 		"home": {
 			"episodes": {
 				"episode": {
+					"status": {
+						"WAITING": "En espera de atención",
+						"IN_ATTETION": "En atención",
+						"PATIENT_DISCHARGE": "Alta de paciente",
+						"ABSENT": "Ausente",
+						"CALLED": "Llamando ({{nro}})"
+					},
 					"actions": {
+						"call": {
+							"TITLE": "Llamar",
+							"SUCCESS": "El paciente fue llamado",
+							"ERROR": "Error al intentar llamar al paciente"
+						},
 						"atender": {
 							"TITLE": "Atender",
 							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
-							"ERROR": "Error al actualizar estado de episodio a En atención"
+							"ERROR": "Error al actualizar estado de episodio a En atención",
+							"NO_AVAILABLE_PLACES": "No existen lugares disponibles para realizar la atención"
+						},
+						"mark_as_absent":{
+							"TITLE": "Marcar como ausente",
+							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a AUSENTE?",
+							"SUCCESS": "Estado de episodio actualizado a AUSENTE exitosamente",
+							"ERROR": "Error al actualizar estado de episodio a AUSENTE",
+							"buttons": {
+								"CONFIRM": "Si, marcar como ausente"
+							}
 						},
 						"en_espera": {
 							"TITLE": "Pasar a en espera",
 							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a EN ESPERA?",
 							"SUCCESS": "Episodio con paciente en espera",
-							"ERROR": "Error al cambiar el estado del episodio"
+							"ERROR": "Error al cambiar el estado del episodio",
+							"buttons": {
+								"CONFIRM": "Si, pasar a espera"
+							}
+						},
+						"edit_patient_episode": {
+							"TITLE": "Editar episodio"
+						},
+						"edit_patient_description": {
+							"TITLE": "Editar identificación",
+							"SUCCESS": "Se actualizo la identificacion del paciente correctamente",
+							"ERROR": "Hubo un error al actualizar la identificacion del paciente"
 						},
 						"NUEVO_TRIAGE": "Nuevo triage"
 					},
 					"patient": {
 						"ID": "ID Paciente",
+						"REASON": "Motivo de ingreso",
 						"NO_INFO": "Sin información",
 						"TEMPORAL": "Paciente temporal",
-						"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia"
+						"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia",
+						"DETAILS": "Detalle"
 					}
 				},
 				"filters": {
@@ -105,22 +144,74 @@
 					"RESULT_ONE_EPISODE": "Resultado: 1 episodio",
 					"TEMPORAL_PATIENT": "Paciente temporal",
 					"TYPE": "Tipo de guardia",
-					"URGENCY": "Nivel de urgencia"
+					"URGENCY": "Nivel de urgencia",
+					"STATES": "Estados de atención",
+					"EMERGENCY_CARE_SERVICE": "Servicios de guardia",
+					"EMERGENCY_CARE_SERVICE_PLACEHOLDER": "Seleccione un servicio",
+					"CLEAN_FILTERS": "Limpiar filtros"
 				},
 				"NEW_EPISODE": "Nuevo episodio",
 				"NO_DATA": "No existen episodios activos",
 				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
-				"TITLE": "Episodios de guardia"
+				"TITLE": "Filtrar por"
 			},
-			"TITLE": "Guardia de emergencia"
+			"attention_places":{
+                "NO_DATA": "No hay lugares de atención para mostrar",
+                "NO_SELECTED_SPACE": "Seleccione un lugar para ver el detalle",
+				"sector": {
+					"NO_ASSOCIATED_SPECIALTY": "Sin servicio asociado"
+				},
+				"space": {
+					"DOCTOR_OFFICE": "Consultorio",
+					"SHOCKROOM": "Shockroom",
+					"BED": "Habitación",
+					"FREE": "Libre",
+					"NOT_FREE": "Ocupada",
+					"BLOCKED": "bloqueado"
+				},
+				"entry": {
+					"TITLE": "Ingreso"
+				},
+				"last_triage": {
+					"TITLE": "Último triage"
+				},
+				"change-attention-place":{
+					"TITLE": "Cambiar lugar de atención",
+					"NEW_ATTENTION_PLACE": "Nuevo lugar de atención",
+					"PREVIEW": "Vista previa",
+					"DETAIL": "Detalle de cambio de lugar de atención:",
+					"DETAIL_ORIGIN": "Origen:",
+					"DETAIL_DESTINATION": "Destino:",
+					"BUTTON_CONTINUE": "Continuar",
+					"BUTTON_BACK": "Volver",
+					"BUTTON_CONFIRM": "Confirmar cambio de lugar",
+					"ASSIGN_BED": "Asignar cama",
+					"SUCESS": "Cambio de lugar de atención realizado con éxito",
+					"ERROR": "No se pudo realizar el cambio de lugar de atención",
+					"SECTOR": "Sector",
+					"SELECT_SECTOR": "Seleccione sector",
+					"SELECT_DOCTOR_OFFICE": "Seleccione consultorio",
+					"SELECT_SHOCKROOM": "Seleccione shockroom",
+					"PREPOSITION_OF": " de ",
+					"TYPE": "Tipo",
+					"ALL_DOCTOR_OFFICES_OCCUPIED": "Consultarios ocupados",
+					"ALL_DOCTOR_OFFICES_OCCUPIED_SUGGESTION": "Le sugerimos buscar consultorios en otros sectores.",
+					"ALL_SHOCKROOMS_OCCUPIED": "Shockrooms ocupados",
+					"ALL_SHOCKROOMS_OCCUPIED_SUGGESTION": "Le sugerimos buscar shockrooms en otros sectores."
+				}
+            },
+			"tabs": {
+				"PATIENTS": "Pacientes",
+				"ATTENTION_PLACES": "Lugares de atención"
+			},
+			"TITLE": "Episodios de guardia",
+			"LAST": "Último"
 		},
 		"episode": {
-			"TITLE": "Episodio de guardia",
 			"EDIT_EPISODE": "Editar episodio",
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"administrative": {
 				"EPISODE": "Episodio",
-				"REASONS": "Motivos de consulta",
 				"ENTRANCE": "Ingreso",
 				"POLICE_INTERVENTION": "Intervención policial",
 				"UBICACION": "Ubicación"
@@ -151,35 +242,32 @@
 				}
 			},
 			"medical_discharge": {
-				"TITLE": "Alta Médica",
+				"TITLE": "Alta de paciente",
 				"PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
 				"form": {
 					"DATE": "Fecha",
 					"TIME": "Hora",
 					"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
-					"AUTOPSY": "Autopsia autorizada",
-					"DISCHARGE_TYPE": "Tipo de egreso",
+					"AUTOPSY": "Solicita autopsia",
+					"SELECT_AUTOPSY": "Seleccione una opcion",
+					"DISCHARGE_TYPE": "Tipo de egreso:",
+					"DISCHARGE_TYPE_INPUT": "Ingrese tipo de egreso",
 					"INVALID_TIME": "La hora debe ser posterior a la de creación del episodio"
 				},
 				"REQUIRED_PROBLEM": "Debe ingresar al menos un problema",
 				"messages": {
-					"SUCCESS": "El alta médica se guardó exitosamente",
-					"ERROR": "Ocurrió un error al intentar guardar el alta médica"
+					"SUCCESS": "El alta de paciente se creó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta de paciente"
 				},
 				"problems": {
-					"buttons": {
-						"ADD": "Agregar problema"
-					},
-					"CONCEPT_LABEL": "Problema",
-					"CRONICO": "Crónico",
-					"errors": {
-						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio"
-					},
-					"FECHA_FIN": "Fecha fin",
-					"FECHA_INICIO": "Fecha inicio",
-					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problema"
-				}
+					"TITLE": "Problema/s asociado al alta:",
+					"PRESUMPTIVE": "Presuntivo",
+					"CONFIRMED": "Confirmado",
+					"MAIN": "(Principal)"
+				},
+				"NURSING_PROBLEM_TITLE": "Diagnóstico o Problema",
+				"ADDITIONAL_OBSERVATIONS": "Observaciones adicionales",
+				"OBSERVATIONS_PLACEHOLDER": "Escriba aquí..."
 			},
 			"triage": {
 				"HISTORIAL": "Historial de triages",
@@ -188,6 +276,7 @@
 					"TITLE": "Último triage",
 					"NIVEL": "Nivel de urgencia",
 					"PROFESIONAL": "Profesional",
+					"SPECIALTY_SECTOR": "Servicio de guardia",
 					"UBICACION": "Zona de Triage",
 					"APARIENCIA_RESPIRACION_CIRCULACION": "Apariencia, respiración y circulación",
 					"TEMPERATURA": "Temperatura",
@@ -196,8 +285,8 @@
 					"RESPIRACION_TIRAJE": "Respiración con tiraje",
 					"RESPIRACION_ESTRIDOR": "Respiración con estridor",
 					"PERFUSION": "Perfusión",
-					"FACTORES_DE_RIESGO": "Factores de riesgo",
-					"EVALUACION": "Evaluación",
+					"FACTORES_DE_RIESGO": "Signos vitales y factores de riesgo",
+					"OBSERVATIONS": "Observaciones",
 					"SI": "Si",
 					"NO": "No"
 				}
@@ -229,7 +318,8 @@
 		},
 		"dialog": {
 			"attention_place": {
-				"TITLE": "Atender",
+				"TITLE_ATTEND": "Atender",
+				"TITLE_CALL": "Llamar",
 				"SUBTITLE": "Seleccione el destino donde se atenderá al paciente",
 				"PLACE": "Lugar de atencion",
 				"CONFIRM": "Confirmar",
@@ -245,6 +335,89 @@
 		},
 		"NO_INFO": "Sin información",
 		"NO": "No",
-		"SI": "Si"
+		"SI": "Si",
+		"no_refer": {
+			"ALLERGIES": "No refiere alergias",
+			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
+		},
+		"EDITED": "(Editado) -",
+		"documents-summary": {
+			"reasons": {
+				"TITLE": "Motivo de consulta",
+				"REGISTERED_REASONS": "Motivos de consulta registrados"
+			},
+			"clinical_specialty_sector": {
+                "TITLE": "Servicio de guardia"
+            },
+			"evolutions": {
+				"TITLE": "Evolución"
+			},
+			"specialty": {
+				"TITLE": "Especialidad"
+			},
+			"family-histories": {
+				"NOT_REFERRED": "No refiere antecedentes familiares"
+			},
+			"allergies": {
+				"NOT_REFERRED": "No refiere alergias"
+			},
+			"document-name": {
+				"EVOLUTION_NOTE": "Nota de evolución médica",
+				"TRIAGE": "Triage"
+			},
+			"triage-level": {
+				"TITLE": "Nivel de triage"
+			},
+			"observations": {
+				"TITLE": "Observaciones"
+			},
+			"appearance": {
+				"TITLE": "Apariencia",
+				"TEMPERATURE": "Temperatura",
+				"CRYING_EXCESSIVE": "Llanto sin consuelo",
+				"MUSCULAR_TONE": "Tono muscular"
+			},
+			"breathing": {
+				"TITLE": "Respiración",
+				"BLOOD_OXYGEN_SATURATION": "Saturación de oxígeno",
+				"RESPIRATORY_RATE": "Frecuencia respiratoria",
+				"RESPIRATORY_RETRACTION": "Respiración con tiraje",
+				"STRIDOR": "Respiración con estridor"
+			},
+			"circulation": {
+				"TITLE": "Circulación",
+				"PERFUSION": "Perfusión",
+				"HEART_RATE": "Frecuencia cardíaca"
+			}
+		},
+		"actions": {
+			"EVOLUTION_NOTE": "Nota de evolución",
+			"EVOLUTION_NOTE_BY_NURSE": "Nota de evolución de enfermería"
+		},
+		"nursing_evolution_note": {
+			"MAIN_DIAGNOSIS": "Diagnóstico principal",
+			"DIAGNOSIS": "Diagnóstico",
+			"SAVE_SUCCESS": "Nota de evolución de enfermería guardada correctamente",
+			"SAVE_ERROR": "Error al guardar la nota de evolución de enfermería"
+		},
+		"block_unblock_attention_place": {
+			"BLOCK_BUTTON": "Bloquear lugar",
+			"UNBLOCK_BUTTON": "Desbloquear lugar",
+			"dialog": {
+				"TITLE_BLOCK": "Motivo de bloqueo",
+				"TITLE_UNBLOCK": "¿Desbloquear lugar de atención?",
+				"CONFIRM_BUTTON_BLOCK": "Bloquear lugar",
+				"CONFIRM_BUTTON_UNBLOCK": "Desbloquear lugar",
+				"block_reason": {
+					"REASONS": "Motivo",
+					"OBSERVATIONS": "Observaciones",
+					"OBSERVATIONS_PLACEHOLDER": "Ingrese observaciones"
+				},
+				"SNACKBAR_SUCCESS_BLOCK": "Se bloqueó el lugar de atención correctamente",
+				"SNACKBAR_ERROR_BLOCK": "Hubo un error al bloquear el lugar de atención",
+				"SNACKBAR_SUCCESS_UNBLOCK": "Se desbloqueo el lugar de atención correctamente",
+				"SNACKBAR_ERROR_UNBLOCK": "Hubo un error al desbloquear el lugar de atención"
+			}
+		}
 	}
 }

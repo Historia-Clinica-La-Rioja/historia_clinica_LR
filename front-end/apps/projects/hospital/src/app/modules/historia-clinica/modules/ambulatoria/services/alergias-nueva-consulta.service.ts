@@ -19,7 +19,7 @@ export class AlergiasNuevaConsultaService {
 	private criticalityTypes: any[];
 	private readonly ECL = SnomedECL.ALLERGY;
 
-	private readonly emitter = new Subject();
+	private readonly emitter = new Subject<Alergia[]>();
 	alergias$ = this.emitter.asObservable()
 
 	constructor(
@@ -41,7 +41,7 @@ export class AlergiasNuevaConsultaService {
 	}
 
 	getDisplayName(criticalityId) {
-		return this.criticalityTypes.find(criticalityType => criticalityType.id === criticalityId)?.display;
+		return this.criticalityTypes?.find(criticalityType => criticalityType.id === criticalityId)?.display;
 	}
 
 	setCriticalityTypes(criticalityTypes): void {
@@ -126,6 +126,14 @@ export class AlergiasNuevaConsultaService {
 
 	isEmpty(): boolean {
 		return (!this.data || this.data.length === 0);
+	}
+
+	setAllergies(allergies: Alergia[]) {
+		allergies.forEach(allergy => {
+			this.form.controls.criticality.setValue(allergy.criticalityId);
+			this.setConcept(allergy.snomed);
+			this.addToList();
+		});
 	}
 
 }

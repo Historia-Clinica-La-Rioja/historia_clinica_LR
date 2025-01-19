@@ -1,0 +1,7 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="5px">
+    <span>{{ "call-center.new-appointment.custom-form.email.TITLE" | translate}}</span>
+    <mat-form-field appearance="outline">
+        <input matInput type="email" [placeholder]="'call-center.new-appointment.custom-form.email.TITLE' | translate" formControlName="email" (blur)="onTouched()">
+        <mat-error>{{ "forms.INVALID_EMAIL" | translate }}</mat-error>
+    </mat-form-field>
+</form>

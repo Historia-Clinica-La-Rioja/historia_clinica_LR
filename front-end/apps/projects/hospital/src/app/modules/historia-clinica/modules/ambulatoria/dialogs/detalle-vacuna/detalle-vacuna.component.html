@@ -1,74 +1,74 @@
-<div fxLayout="row" fxLayoutAlign="end">
-	<button matSuffix mat-icon-button [mat-dialog-close]>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="data.vaccineTitleName"></span>
+	<button mat-icon-button (click)="close()">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
-<div mat-dialog-title fxLayout="row">
-	<div class="title"	 class="capitalize-first-letter">{{data.vaccineTitleName}}</div>
-</div>
+<mat-dialog-content>
+	<div fxLayoutAlign="start" fxLayout="column">
 
-<div mat-dialog-content fxLayoutAlign="start" fxLayout="column">
+		<mat-list class="mat-list">
+			<div class="mat-list-item">
+				<span fxFlex="33%" [translate]="'ambulatoria.paciente.vacunas.details.DOSE'"></span>
+				<span fxFlex="33%" [translate]="'ambulatoria.paciente.vacunas.details.DATE'"></span>
+				<span fxFlex="33%" [translate]="'ambulatoria.paciente.vacunas.details.LOT_NUMBER'"></span>
+			</div>
+			<div  class="mat-values">
+				<div fxFlex="33%">
+					<app-colored-label *ngIf="data.appliedDoses else noInfo"
+						[description]="data.appliedDoses | translate | uppercase"
+						[color]="Color.BLUE">
+					</app-colored-label>
+				</div>
+				<div fxFlex="33%">
+					<ng-container *ngIf="data.applicationDate else noInfo"><span >{{data.applicationDate | isoToDate | dateFormat: 'date' }}</span>
+					</ng-container>
+				</div>
+				<div fxFlex="33%" class="capitalize-first-letter">
+					<ng-container *ngIf="data.lotNumber else noInfo">{{data.lotNumber}}</ng-container>
+				</div>
+			</div>
+		</mat-list>
 
-	<mat-list class="mat-list">
-		<div class="mat-list-item">
-			<span fxFlex="33%" [translate]="'ambulatoria.paciente.vacunas.details.DOSE'"></span>
-			<span fxFlex="33%" [translate]="'ambulatoria.paciente.vacunas.details.DATE'"></span>
-			<span fxFlex="33%" [translate]="'ambulatoria.paciente.vacunas.details.LOT_NUMBER'"></span>
+		<mat-divider></mat-divider>
+
+		<div class="inst-prof-container" fxLayout="column">
+			<span class="sub-title" [translate]="'ambulatoria.paciente.vacunas.details.INSTITUTION'"></span>
+			<ng-container *ngIf="data.institutionName else noInfo">{{data.institutionName}}</ng-container>
+			<span class="sub-title" [translate]="'ambulatoria.paciente.vacunas.details.PROFESSIONAL'"></span>
+			<ng-container *ngIf="data.ProfessionalCompleteName else noInfo" class="inst-prof-values"><div>{{data.ProfessionalCompleteName}}</div></ng-container>
 		</div>
-		<div  class="mat-values">
-			<div fxFlex="33%">
-				<app-colored-label *ngIf="data.appliedDoses else noInfo"
-					[description]="data.appliedDoses | translate | uppercase"
-					[color]="Color.BLUE">
-				</app-colored-label>
-			</div>
-			<div fxFlex="33%">
-				<ng-container *ngIf="data.applicationDate else noInfo"><span >{{data.applicationDate | viewDate }}</span>
-				</ng-container>
-			</div>
-			<div fxFlex="33%" class="capitalize-first-letter">
-				<ng-container *ngIf="data.lotNumber else noInfo">{{data.lotNumber}}</ng-container>
-			</div>
-		</div>
-	</mat-list>
 
-	<mat-divider></mat-divider>
+		<mat-divider></mat-divider>
 
-	<div class="inst-prof-container" fxLayout="column">
-		<span class="sub-title" [translate]="'ambulatoria.paciente.vacunas.details.INSTITUTION'"></span>
-		<ng-container *ngIf="data.institutionName else noInfo">{{data.institutionName}}</ng-container>
-		<span class="sub-title" [translate]="'ambulatoria.paciente.vacunas.details.PROFESSIONAL'"></span>
-		<ng-container *ngIf="data.ProfessionalCompleteName else noInfo" class="inst-prof-values"><div>{{data.ProfessionalCompleteName}}</div></ng-container>
-	</div>
-
-	<mat-divider></mat-divider>
-
-	<mat-list class="mat-list">
-		<div class="mat-list-item">
-			<span fxFlex="50%"  [translate]="'ambulatoria.paciente.vacunas.details.CONDITION_MOTIVE'"></span>
-			<span fxFlex="50%"  [translate]="'ambulatoria.paciente.vacunas.details.SCHEME'"></span>
-		</div>
-		<div class="mat-values">
-			<div fxFlex="50%" class="capitalize-first-letter">
-				<ng-container *ngIf="data.vaccineConditinDescription else noInfo">{{data.vaccineConditinDescription}}</ng-container>
+		<mat-list class="mat-list">
+			<div class="mat-list-item">
+				<span fxFlex="50%"  [translate]="'ambulatoria.paciente.vacunas.details.CONDITION_MOTIVE'"></span>
+				<span fxFlex="50%"  [translate]="'ambulatoria.paciente.vacunas.details.SCHEME'"></span>
 			</div>
-			<div fxFlex="50%" class="capitalize-first-letter">
-				<ng-container *ngIf="data.vaccinationSchemeDescription else noInfo">{{data.vaccinationSchemeDescription}}</ng-container>
+			<div class="mat-values">
+				<div fxFlex="50%" class="capitalize-first-letter">
+					<ng-container *ngIf="data.vaccineConditinDescription else noInfo">{{data.vaccineConditinDescription}}</ng-container>
+				</div>
+				<div fxFlex="50%" class="capitalize-first-letter">
+					<ng-container *ngIf="data.vaccinationSchemeDescription else noInfo">{{data.vaccinationSchemeDescription}}</ng-container>
+				</div>
 			</div>
-		</div>
-	</mat-list>
+		</mat-list>
 
-	<div class="observations">
-		<div fxFlex="100%" class="capitalize-first-letter">
-			<ng-container *ngIf="data.vaccineObservations else noObs">{{data.vaccineObservations}}</ng-container>
+		<div class="observations">
+			<div fxFlex="100%" class="capitalize-first-letter">
+				<ng-container *ngIf="data.vaccineObservations else noObs">{{data.vaccineObservations}}</ng-container>
+			</div>
 		</div>
 	</div>
-</div>
 
-<ng-template #noInfo>
-	<span class="no-info" [translate]="'ambulatoria.paciente.vacunas.details.NO-INFO'"></span>
-</ng-template>
-<ng-template #noObs>
-	<span class="no-info" [translate]="'ambulatoria.paciente.vacunas.details.NO-OBS'"></span>
-</ng-template>
+	<ng-template #noInfo>
+		<span class="no-info" [translate]="'ambulatoria.paciente.vacunas.details.NO-INFO'"></span>
+	</ng-template>
+	<ng-template #noObs>
+		<span class="no-info" [translate]="'ambulatoria.paciente.vacunas.details.NO-OBS'"></span>
+	</ng-template>
+
+</mat-dialog-content>

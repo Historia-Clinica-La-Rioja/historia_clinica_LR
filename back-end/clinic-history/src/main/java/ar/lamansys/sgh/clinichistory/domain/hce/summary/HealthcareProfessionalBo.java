@@ -15,13 +15,17 @@ public class HealthcareProfessionalBo {
 
     private CHPersonBo person;
 
-    private String licenceNumber;
+    private String licenseNumber;
 
-    public HealthcareProfessionalBo(Integer id, String licenceNumber,
+    public HealthcareProfessionalBo(Integer id, String licenseNumber,
                                     Integer personId, String firstName,
                                     String lastName, String identificationNumber, String nameSelfDetermination,String middleNames,String otherLastNames) {
         this.person = new CHPersonBo(personId, firstName, lastName, identificationNumber, nameSelfDetermination,middleNames,otherLastNames);
         this.id = id;
-        this.licenceNumber = licenceNumber;
+        this.licenseNumber = licenseNumber;
     }
+
+	public HealthcareProfessionalBo(Integer id){
+		this.id = id;
+	}
 }

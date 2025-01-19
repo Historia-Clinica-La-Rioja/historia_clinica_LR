@@ -1,12 +1,11 @@
-<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-	<div class="mat-h2" [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.TITLE'"></div>
-	<button mat-icon-button (click)="dialogRef.close();">
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.TITLE'"></span>
+	<button mat-icon-button (click)="dialogRef.close()">
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
 
-<div mat-dialog-content>
-
+<mat-dialog-content>
 	<mat-tab-group mat-align-tabs="start" [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
 		<ng-container *appHasRole="['ENFERMERO']">
 			<ng-container *ngIf="this.data.hasConfirmedAppointment">
@@ -18,24 +17,15 @@
 						</span>
 					</ng-template>
 
-					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)" id="billableForm">
+					<form [formGroup]="billableForm" (submit)="submit()" id="billableForm">
 						<div fxLayout="column">
-							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
-								translate }}
-							</mat-label>
-							<mat-form-field appearance="outline">
-								<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate
-									[max]="this.today" required>
-								<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
-								<mat-datepicker #newVaccineDatepicker
-									(yearSelected)="chosenYearHandler($event,this.billableForm)"
-									(monthSelected)="chosenMonthHandler($event,this.billableForm)">
-								</mat-datepicker>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-							</mat-form-field>
-							<div #vaccineInput>
+
+							<app-datepicker
+								title="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE"
+								[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initNewVaccineDate"
+								(selectDate)="newDateChanged($event)"></app-datepicker>
+
+							<div id="vaccineInput">
 								<div fxLayout="column" fxFlex="100%">
 									<mat-label>
 										{{
@@ -47,7 +37,7 @@
 										<mat-form-field appearance="outline">
 											<input matInput required readonly formControlName="snomed"
 												matTooltip="{{ newVaccineSnomedConcept.pt }}">
-											<button type="button" mat-button matSuffix color="warn" mat-icon-button
+											<button type="button" matSuffix color="warn" mat-icon-button
 												(click)="resetConceptBillableForm()">
 												<mat-icon>close</mat-icon>
 											</button>
@@ -100,7 +90,7 @@
 										{{ condition.description }}
 									</mat-option>
 								</mat-select>
-								<button id="clear_condition" type="button" mat-button
+								<button id="clear_condition" type="button"
 									*ngIf="billableForm.value.condition !== null && billableForm.value.condition !== undefined"
 									matSuffix color="warn" mat-icon-button
 									(click)="clear(billableForm.controls.condition, 'condition', billableForm); $event.stopPropagation()">
@@ -124,7 +114,7 @@
 												{{ scheme.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button
+										<button id="clear_scheme" type="button"
 											*ngIf="billableForm.value.scheme !== null && billableForm.value.scheme !== undefined"
 											matSuffix color="warn" mat-icon-button
 											(click)="clear(billableForm.controls.scheme, 'scheme', billableForm); $event.stopPropagation()">
@@ -147,7 +137,7 @@
 												{{ dose.description }}
 											</mat-option>
 										</mat-select>
-										<button id="clear_scheme" type="button" mat-button
+										<button id="clear_scheme" type="button"
 											*ngIf="billableForm.value.dose !== null && billableForm.value.dose !== undefined"
 											matSuffix color="warn" mat-icon-button
 											(click)="clear(billableForm.controls.dose, 'dose', billableForm); $event.stopPropagation()">
@@ -171,15 +161,8 @@
 								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.NOTE' | translate }}
 							</mat-label>
 							<mat-form-field appearance="outline">
-								<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5">
-						</textarea>
+								<textarea matInput formControlName="note" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5"></textarea>
 							</mat-form-field>
-
-							<div fxLayout="row" fxLayoutAlign="end">
-								<button type="submit" mat-flat-button color="primary">
-									{{ 'buttons.ADD' | translate | uppercase }}
-								</button>
-							</div>
 						</div>
 					</form>
 				</mat-tab>
@@ -196,25 +179,15 @@
 					</span>
 				</ng-template>
 
-				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)" id="previousForm">
+				<form [formGroup]="previousForm" (submit)="submitPreviousForm()" id="previousForm">
 					<div fxLayout="column">
-						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
-							translate }}
-						</mat-label>
-						<mat-form-field appearance="outline">
-							<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate
-								[max]="this.today" required>
-							<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
-							<mat-datepicker #previousVaccineDatepicker
-								(yearSelected)="chosenYearHandler($event,this.previousForm)"
-								(monthSelected)="chosenMonthHandler($event,this.previousForm)">
-							</mat-datepicker>
-							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-						</mat-form-field>
+						<app-datepicker
+							title="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE"
+							[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initPrevVaccineDate"
+							(selectDate)="prevDateChanged($event)">
+						</app-datepicker>
 
-						<div #previousVaccineInput>
+						<div id="previousVaccineInput">
 							<div fxLayout="column" fxFlex="100%">
 								<mat-label>
 									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.IMMUNIZATION' |
@@ -225,7 +198,7 @@
 									<mat-form-field appearance="outline">
 										<input matInput required readonly formControlName="snomed"
 											matTooltip="{{ previousVaccineSnomedConcept.pt }}">
-										<button type="button" mat-button matSuffix color="warn" mat-icon-button
+										<button type="button" matSuffix color="warn" mat-icon-button
 											(click)="resetConceptPreviousForm()">
 											<mat-icon>close</mat-icon>
 										</button>
@@ -263,7 +236,8 @@
 
 						<mat-label
 							[ngStyle]="{'color': this.previousForm.controls.condition.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate
+							}}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<mat-select formControlName="condition"
@@ -277,7 +251,7 @@
 									{{ condition.description }}
 								</mat-option>
 							</mat-select>
-							<button id="clear_condition" type="button" mat-button
+							<button id="clear_condition" type="button"
 								*ngIf="previousForm.value.condition !== null && previousForm.value.condition !== undefined"
 								matSuffix color="warn" mat-icon-button
 								(click)="clear(previousForm.controls.condition, 'condition', previousForm); $event.stopPropagation()">
@@ -289,7 +263,8 @@
 							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 								<mat-label
 									[ngStyle]="{'color': this.previousForm.controls.scheme.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
-									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' | translate
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' |
+									translate
 									}}
 								</mat-label>
 								<mat-form-field appearance="outline">
@@ -299,7 +274,7 @@
 											{{ scheme.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_scheme" type="button" mat-button
+									<button id="clear_scheme" type="button"
 										*ngIf="previousForm.value.scheme !== null && previousForm.value.scheme !== undefined"
 										matSuffix color="warn" mat-icon-button
 										(click)="clear(previousForm.controls.scheme, 'scheme', previousForm); $event.stopPropagation()">
@@ -313,7 +288,8 @@
 							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 								<mat-label
 									[ngStyle]="{'color': this.previousForm.controls.dose.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
-									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' |
+									translate }}
 								</mat-label>
 								<mat-form-field appearance="outline">
 									<mat-select formControlName="dose" [required]="this.previousForm.value.scheme">
@@ -321,7 +297,7 @@
 											{{ dose.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_dose" type="button" mat-button
+									<button id="clear_dose" type="button"
 										*ngIf="this.previousForm.value.dose !== null && this.previousForm.value.dose !== undefined"
 										matSuffix color="warn" mat-icon-button
 										(click)="clear(this.previousForm.controls.dose, 'dose', previousForm); $event.stopPropagation()">
@@ -343,29 +319,42 @@
 						</mat-form-field>
 
 						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate }}
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate
+							}}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input matInput formControlName="institution">
 						</mat-form-field>
 
 						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PROFESSIONAL' | translate }}
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PROFESSIONAL' |
+							translate }}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input matInput formControlName="professional">
 						</mat-form-field>
-
-						<div fxLayout="row" fxLayoutAlign="end">
-							<button type="submit" mat-flat-button color="primary">
-								{{ 'buttons.ADD' | translate | uppercase }}
-							</button>
-						</div>
 					</div>
 				</form>
 
 			</mat-tab>
 		</ng-container>
 	</mat-tab-group>
+</mat-dialog-content>
 
-</div>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
+	<ng-container *ngIf="selectedTab === APPLY_VACCINE_TAB_VALUE">
+		<div *appHasRole="['ENFERMERO']">
+			<button id="add-only-nurse" type="submit" (click)="submit()" mat-flat-button color="primary">
+				{{ 'buttons.ADD' | translate | uppercase }}
+			</button>
+		</div>
+	</ng-container>
+
+	<ng-container *ngIf="selectedTab === REGISTER_PREVIOUS_VACCINE_TAB_VALUE">
+		<div *appHasRole="['PROFESIONAL_DE_SALUD', 'ESPECIALISTA_MEDICO', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+			<button id="add" type="submit"  (click)="submitPreviousForm()" mat-flat-button color="primary">
+				{{ 'buttons.ADD' | translate | uppercase }}
+			</button>
+		</div>
+	</ng-container>
+</mat-dialog-actions>

@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.impl.exceptions;
 
 import lombok.Getter;
+import net.pladema.clinichistory.hospitalization.domain.exceptions.CreateInternmentEpisodeEnumException;
 
 @Getter
 public class CreateInternmentEpisodeException extends RuntimeException {

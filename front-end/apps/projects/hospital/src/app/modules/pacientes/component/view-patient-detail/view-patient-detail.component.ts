@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PersonPhotoDto } from '@api-rest/api-model';
@@ -16,6 +16,7 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class ViewPatientDetailComponent implements OnInit {
 
 	public personPhoto: PersonPhotoDto;
+	patientBirthDate: Date;
 
 	private readonly routePrefix;
 
@@ -30,6 +31,7 @@ export class ViewPatientDetailComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.patientBirthDate = new Date(this.patient.birthDate);
 		this.patientService.getPatientPhoto(this.patient.id)
 			.subscribe((personPhotoDto: PersonPhotoDto) => { this.personPhoto = personPhotoDto; });
 	}

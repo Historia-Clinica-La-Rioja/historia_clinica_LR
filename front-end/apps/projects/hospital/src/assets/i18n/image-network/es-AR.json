@@ -46,8 +46,12 @@
                 "ASSOCIATED_PROBLEM": "Problema asociado",
                 "PROFESSIONAL": "Profesional solicitante",
                 "INSTITUTION": "Institución",
+                "OBSERVATIONS": "Observaciones",
                 "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa",
-                "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF"
+                "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF",
+                "ADD_STUDY":"+ Agregar estudio",
+                "STUDY_TITLE":"Agregar estudio",
+                "STUDY_RECORDS": "Estudios a solicitar"
             },
             "confirm-dialog": {
 				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura ni la orden médica luego.",
@@ -56,6 +60,25 @@
 				"QUESTION": "¿Desea actualizarla ahora?"
 			}
 		},
+        "technical-section": {
+            "WORKLIST":"Lista de trabajo",
+            "QUEUE_IMAGE": "Cola de imágenes"
+        },
+        "queue_list": {
+        "TRY_AGAIN": "Reintentar",
+        "INDEX": "Indexar",
+        "DO_FILTER":"Aplicar filtros",
+		"image_indexing": {
+			"INDEX_IMAGE": "Indexar imagen",
+			"INDEX_IMAGE_DIALOG_TITLE": "Indexar imagen manualmente",
+			"INDEX_IMAGE_BUTTON": "Indexar manualmente",
+			"INDEX_IMAGE_MANUALLY_PLACEHOLDER": "Ingrese el UID del estudio a indexar",
+			"INDEX_IMAGE_MANUALLY_INPUT_TITLE": "UID estudio",
+			"INDEX_IMAGE_MANUALLY_VERIFY": "Verifica en algunos minutos si la imagen se movió correctamente.",
+			"INDEX_IMAGE_MANUALLY_VERIFY_INDEXED": "La imagen se ha indexado manualmente.",
+			"INDEX_IMAGE_MANUALLY_ERROR_INDEXING": "Ocurrió un error al indexar la imagen."
+		}
+        },
         "worklist": {
             "status": {
                 "PENDING": "pendiente",
@@ -64,6 +87,7 @@
             },
             "details_study": {
                 "DETAILS_STUDY": "Detalle de estudio",
+                "VIEW_LOCAL_STUDY": "Ver estudio local",
                 "BACK_TO_WORKLIST": "Volver al listado de informes",
                 "GO_TO_HC": "ver historia clinica",
                 "SAVE_DRAFT": "guardar como borrador",
@@ -76,7 +100,12 @@
                 "CONCLUTIONS": "Conclusiones:",
                 "OBSERVATIONS": "Detalle de informe:",
                 "VIEW_STUDY": "ver estudio",
-                "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio",
+                "VIEW_STUDY_LOCAL": "ver estudio local",
+                "DOWNLOAD_STUDY": "descargar estudio",
+                "TECHNICIAN_OBSERVATIONS": "Observaciones del técnico",
+                "IMAGE_SIZE": "Peso de la imagen:",
+                "ERROR_VIEW_STUDY": "No es posible visualizar el estudio",
+                "ERROR_DOWNLOAD_STUDY": "No es posible descargar el estudio",
                 "conclutions": {
                     "ADD_CONCLUTION": "Agregar conclusión",
                     "REGISTERED_CONCLUTIONS": "Conclusiones registradas",
@@ -88,6 +117,7 @@
                 "TEMPLATE": "Plantillas",
                 "SAVE_TEMPLATE_TITLE":"Guardar como plantilla",
                 "IMPORT_TEMPLATE":"Importar plantilla",
+                "DELETE_TEMPLATE":"Eliminar plantilla",
                 "NAME_TEMPLATE":"Nombre de la plantilla",
                 "NAME_EXISTS":"Ya existe una plantilla con ese nombre. Por favor, elija otro",
                 "SNACKBAR_SUCCESS_TEMPLATE": "Plantilla guardada exitosamente",
@@ -96,8 +126,18 @@
                 "TEMPLATE_CONFIRM_BUTTON_OK":"SI, SELECCIONAR PLANTILLA",
                 "TEMPLATE_CONFIRM_BUTTON_CANCEL":"NO, CANCELAR",
                 "SELECT_TEMPLATE_IMPORT": "Seleccione plantilla a importar",
-                "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente"
-
+                "SELECT_TEMPLATE_DELETE": "Seleccione plantilla a eliminar",
+                "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente",
+                "SNACKBAR_SUCCESS_DELETE_TEMPLATE": "Plantilla eliminada exitosamente",
+                "DETAIL_ORDER":"Detalle orden",
+                "asynchronous_download": {
+                    "REQUESTING_STUDY": "Solicitando estudio...",
+                    "SETTING_UP_STUDY": "Preparando el archivo...",
+                    "REQUEST_WAIT": "Esta solicitud puede demorar, una vez verificado el estudio se descargará automáticamente",
+                    "RETRY_DOWNLOAD": "Reintentar descarga",
+                    "DOWNLOAD_FAILED": "La preparación del archivo falló",
+                    "STUDY_NOT_AVAILABLE": "Estudio no disponible"
+                }
             },
             "filters": {
                 "MODALITY": "Seleccione modalidad",
@@ -115,6 +155,7 @@
             "PATIENT_DOCUMENT": "Documento de paciente",
             "INSTITUTION": "Institución",
             "STATUS": "Estado",
+            "STUDY":"Estudio",
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle",
 			"DERIVE_REPORT": "Derivar informe",
@@ -126,7 +167,8 @@
             "VIEW_REPORT": "Ver informe",
             "DOWNLOAD_REPORT": "Descargar informe",
             "REPORT_NOT_REQUIRED": "No requiere informe",
-            "REPORT_REQUIRED": "Informe solicitado"
+            "REPORT_REQUIRED": "Informe solicitado",
+            "ATTACHED_DOCUMENTS": "Documentos adjuntos"
 		}
 
 	}

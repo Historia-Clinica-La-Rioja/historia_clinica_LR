@@ -41,4 +41,7 @@ public class CareLine extends SGXAuditableEntity<Integer> implements Serializabl
     @Column(name = "procedure")
     private Boolean procedure;
 
+	@Column(name = "classified")
+	private Boolean classified;
+
 }

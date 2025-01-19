@@ -1,13 +1,11 @@
-<mat-dialog-content class="dialog">
-	<div fxLayout="row" fxLayoutAlign="end end">
-		<button matSuffix mat-icon-button [mat-dialog-close]>
-			<mat-icon>close</mat-icon>
-		</button>
-	</div>
-	<div mat-dialog-title fxLayout="row">
-		<div class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.diet.TITLE'"></div>
-	</div>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<div mat-dialog-title class="title" class="capitalize-first-letter" [translate]="'indicacion.internment-card.dialogs.diet.TITLE'"></div>
+	<button matSuffix mat-icon-button [mat-dialog-close]>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
 
+<mat-dialog-content class="dialog">
 	<div id="note">
 		<ng-container concept-form>
 			<form [formGroup]="form" (ngSubmit)="save()">
@@ -17,12 +15,13 @@
 					</textarea>
 				</mat-form-field>
 				<app-datepicker fxLayout="50%" [title]="'indicacion.internment-card.INDICATION_DATE'" [minDate]="this.data.entryDate" [dateToSetInDatepicker]="this.data.actualDate" (selectDate)="setIndicationDate($event)"></app-datepicker>
-				<div actions id="buttons" fxLayoutAlign="end end">
-					<button mat-raised-button color="primary" id="confirm_button">
-						<span [translate]="'buttons.CONFIRM'"></span>
-					</button>
-				</div>
 			</form>
 		</ng-container>
 	</div>
 </mat-dialog-content>
+
+<div mat-dialog-actions actions id="buttons" fxLayoutAlign="end end">
+	<button mat-raised-button color="primary" id="confirm_button" (click)=save()>
+		<span [translate]="'buttons.CONFIRM'"></span>
+	</button>
+</div>

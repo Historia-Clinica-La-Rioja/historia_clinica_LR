@@ -1,15 +1,14 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import net.pladema.establishment.repository.ClinicalServiceSectorRepository;
+import net.pladema.establishment.infrastructure.output.repository.ClinicalServiceSectorRepository;
 import net.pladema.establishment.repository.SectorRepository;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +23,8 @@ import java.util.stream.Collectors;
 public class BackofficeClinicalServiceSectorValidator implements BackofficePermissionValidator<ClinicalSpecialtySector, Integer> {
 
 	public static final String NO_CUENTA_CON_SUFICIENTES_PRIVILEGIOS = "No cuenta con suficientes privilegios";
+
+	public static final String ASOCIADO_A_UN_TRIAGE_DE_UN_EPISODIO_DE_GUARDIA_ACTIVO = "El servicio se encuentra asociado a un triage de un episodio de guardia activo.";
 	private final ClinicalServiceSectorRepository repository;
 
 	private final SectorRepository sectorRepository;
@@ -92,6 +93,8 @@ public class BackofficeClinicalServiceSectorValidator implements BackofficePermi
 
 	@Override
 	public void assertDelete(Integer id) {
+		if (repository.hasAnyActiveEmergencyCareEpisodeAssociated(id))
+			throw new PermissionDeniedException(ASOCIADO_A_UN_TRIAGE_DE_UN_EPISODIO_DE_GUARDIA_ACTIVO);
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return;
 		Integer institutionId = repository.getInstitutionId(id);
@@ -106,10 +109,9 @@ public class BackofficeClinicalServiceSectorValidator implements BackofficePermi
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<ClinicalSpecialtySector> entitiesByExample = repository.findAll(Example.of(entity));
+
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-		List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(ClinicalSpecialtySector::getId).collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	@Override

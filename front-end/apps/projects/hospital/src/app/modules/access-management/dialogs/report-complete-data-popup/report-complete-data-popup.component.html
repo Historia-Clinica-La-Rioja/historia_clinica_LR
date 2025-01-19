@@ -1,0 +1,82 @@
+<div *ngIf="referenceCompleteData">
+	<div fxLayoutAlign="space-between">
+		<h2 mat-dialog-title>{{'access-management.search_references.reference.TITLE' | translate}}</h2>
+		<button id="close" mat-icon-button mat-dialog-close>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<mat-dialog-content>
+		<app-patient-summary [person]="reportCompleteData.patient"></app-patient-summary>
+		<div *ngIf="!domainRole">
+			<app-view-medical-history-button *appHasRole="['ABORDAJE_VIOLENCIAS', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_LA_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+				mat-dialog-close
+				[patientId]="reportCompleteData.patient.id">
+			</app-view-medical-history-button>
+		</div>
+		<div fxLayoutAlign="start" fxLayoutGap="20px" class="dialog-information">
+			<div fxLayout="column" fxLayoutGap="10px" class="columns">
+				<app-expansion-section [title]="'access-management.search_references.reference.CONTACT_DATA'"
+					[collapsed]="colapseContactDetails">
+					<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
+				</app-expansion-section>
+	
+				<mat-divider></mat-divider>
+	
+				<app-expansion-section [title]="'access-management.search_references.reference.REFERENCE_DATA'" [collapsed]="referenceCompleteData.closure?.closureType? true : false">
+					<app-reference-complete-data [reference]="reportCompleteData.reference"></app-reference-complete-data>
+					<div fxLayout="column" fxLayoutAlign="start start" *ngIf="permissionService.visualPermissions.showEditReferenceButton">
+						<app-edit-reference [referenceCompleteData]="referenceCompleteData" [isButton]="false" (newReferenceDetail)="updateReference($event)"></app-edit-reference>
+					</div>
+				</app-expansion-section>
+
+				<mat-divider></mat-divider>
+
+				<app-expansion-section *ngIf="referenceCompleteData.closure?.closureType" [title]="'Cierre de referencia'">
+					<app-reference-closure [closure]="referenceCompleteData.closure"></app-reference-closure>
+				</app-expansion-section>
+				
+			</div>
+	
+			<div fxLayout="column" fxLayoutGap="10px" class="columns"
+				*ngIf="{referenceRegulationDto: referenceRegulationDto$ | async, referenceAdministrativeDto: referenceAdministrativeStateDto$ | async }as referenceDtos; else loading">
+				<div>
+					<app-reference-state [referenceRegulation]="referenceDtos.referenceRegulationDto" [appointment]="reportCompleteData.appointment"
+						[referenceAdministrativeStateDto]="referenceDtos.referenceAdministrativeDto" (closeDialog)="closeDialog()">
+					</app-reference-state>
+				</div>
+
+				<mat-divider></mat-divider>
+	
+				<app-add-observations [observation]="observation" [registerEditor]="registerEditor$ | async"
+					(observationEmmiter)="addObservation($event)">
+				</app-add-observations>
+	
+				<div fxLayout="column" fxLayoutGap="10px"
+				*ngIf="permissionService.visualPermissions.showDeriveRequestButton">
+					<mat-divider *ngIf="observation || derivation"></mat-divider>
+	
+					<div>
+						<app-derive-request
+							[derivation]="derivation" [registerDerivationEditor]="registerDeriveEditor$.getValue()" (derivationEmmiter)="performDerivationAction($event)">
+						</app-derive-request>
+					</div>
+				</div>
+
+				<div fxLayout="column" fxLayoutGap="10px" *ngIf="permissionService.visualPermissions.showAdministativeClosureButton">
+					<mat-divider *ngIf="observation || derivation"></mat-divider>
+
+					<app-administrative-reference-closure [referenceId]="referenceCompleteData.reference.id" [patientId]="this.reportCompleteData.patient.id"
+						(updateReference)="updateReference()">
+					</app-administrative-reference-closure>
+				</div>
+	
+			</div>
+		</div>
+	</mat-dialog-content>
+
+</div>
+
+<ng-template #loading>
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>

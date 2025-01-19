@@ -1,12 +1,14 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -36,6 +39,9 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
 
     @Mock
     private DateTimeProvider dateTimeProvider;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     public void setUp() {
@@ -68,8 +74,9 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
         var outpatientDocumentBo = validOutpatientConsultation(8, 5);
         outpatientDocumentBo.setReasons(List.of(new ReasonBo(new SnomedBo("SCTID", "PT")), new ReasonBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setProblems(List.of(new ProblemBo(new SnomedBo("SCTID", "PT")), new ProblemBo(new SnomedBo("SCTID", "PT"))));
-        outpatientDocumentBo.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("SCTID", "PT")), new HealthHistoryConditionBo(new SnomedBo("SCTID", "PT"))));
-        outpatientDocumentBo.setAllergies(List.of(new AllergyConditionBo(new SnomedBo("SCTID", "PT")), new AllergyConditionBo(new SnomedBo("SCTID", "PT"))));
+        outpatientDocumentBo.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("SCTID", "PT")), new FamilyHistoryBo(new SnomedBo("SCTID", "PT"))), true));
+		ReferableItemBo<AllergyConditionBo> referableAllergies = getAllergyConditionBoReferableItemBo();
+		outpatientDocumentBo.setAllergies(referableAllergies);
         outpatientDocumentBo.setProcedures(List.of(new ProcedureBo(new SnomedBo("SCTID", "PT")), new ProcedureBo(new SnomedBo("SCTID", "PT"))));
         CreateOutpatientDocumentException exception = Assertions.assertThrows(CreateOutpatientDocumentException.class, () ->
                 createOutpatientDocumentService.execute(outpatientDocumentBo, true)
@@ -81,7 +88,14 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
 
     }
 
-    private OutpatientDocumentBo validOutpatientConsultation(Integer institutionId, Integer encounterId){
+	private ReferableItemBo<AllergyConditionBo> getAllergyConditionBoReferableItemBo() {
+		ReferableItemBo<AllergyConditionBo> referableAllergies = new ReferableItemBo<>();
+		referableAllergies.setIsReferred(false);
+		referableAllergies.setContent(List.of(new AllergyConditionBo(new SnomedBo("SCTID", "PT")), new AllergyConditionBo(new SnomedBo("SCTID", "PT"))));
+		return referableAllergies;
+	}
+
+	private OutpatientDocumentBo validOutpatientConsultation(Integer institutionId, Integer encounterId){
         var result = new OutpatientDocumentBo();
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);

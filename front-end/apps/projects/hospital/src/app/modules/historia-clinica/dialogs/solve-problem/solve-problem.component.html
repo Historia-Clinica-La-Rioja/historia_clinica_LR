@@ -27,34 +27,24 @@
 					<mat-error translate="forms.REQUIRED"></mat-error>
 				</mat-form-field>
 
-				<mat-form-field appearance="outline" class="mat-form-field--no-underline">
-					<input class="input-checkbox-solve-problem" matInput placeholder="input">
-					<mat-checkbox id="cronico-checkbox" formControlName="cronico" class="checkbox" (click)="$event.preventDefault()">
-							<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CRONICO'"></span>
-					</mat-checkbox>
-				</mat-form-field>
+				<mat-checkbox id="cronico-checkbox" formControlName="cronico" class="checkbox" (click)="$event.preventDefault()">
+					<span [translate]="'ambulatoria.paciente.nueva-consulta.problemas.CRONICO'"></span>
+				</mat-checkbox>
 
-				<mat-form-field appearance="outline" >
-					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO'"></mat-label>
-					<input matInput id="fecha_inicio" [matDatepicker]="inicioDatePicker" [min]="minDate" [max]="today" formControlName="fechaInicio"
-						   (dateChange)="checkInactivationDate()" [disabled]="dateIsReadOnly">
-					<mat-datepicker-toggle matSuffix [for]="inicioDatePicker"></mat-datepicker-toggle>
-					<mat-datepicker #inicioDatePicker></mat-datepicker>
-				</mat-form-field>
+				<div fxLayout="row">
 
-				<mat-form-field appearance="outline">
-					<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN'">	</mat-label>
-					<input matInput id="fecha_fin" [matDatepicker]="finDatePicker" formControlName="fechaFin"
-						   (dateChange)="checkInactivationDate()">
-					<mat-datepicker-toggle matSuffix [for]="finDatePicker"></mat-datepicker-toggle>
-					<mat-datepicker #finDatePicker></mat-datepicker>
-					<mat-error *ngIf="this.hasError('min', 'fechaFin')"
-							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MIN'">
-					</mat-error>
-					<mat-error *ngIf="this.hasError('max', 'fechaFin')"
-							   [translate]="'ambulatoria.paciente.nueva-consulta.problemas.errors.FECHA_FIN_MAX'">
-					</mat-error>
-				</mat-form-field>
+					<app-datepicker title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO"
+						id="fecha_inicio" [minDate]="minDate" [maxDate]="maxDate"
+						(selectDate)="fechaInicioChanged($event)" [dateToSetInDatepicker]="dateToSet" 
+						>
+					</app-datepicker>
+	
+					<app-datepicker title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN"
+						id="fecha_fin" [minDate]="getForm().value.fechaInicio" [maxDate]="today"
+						(selectDate)="fechaFinChanged($event)" requiredText='Fecha Requerida'
+						[markAsTouched]="markAsTouched">
+					</app-datepicker>
+				</div>
 
 				<div class="buttons-solve-problem">
 					<button id="edit_problema" class="uppercase" mat-raised-button color="primary" type="submit" >

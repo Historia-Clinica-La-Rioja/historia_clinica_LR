@@ -87,8 +87,8 @@
 					<div fxLayoutAlign="start center" class="content" fxFlex="12%">
 						<mat-radio-button color="primary" name="birthdate" *ngIf="patient.selected"
 							(change)="setValuesPatientFusion(keyAttributes.BIRTHDATE,patient.birthdate,null,patient.patientId)"></mat-radio-button>
-						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy'
-							}}</span>
+						<span *ngIf="patient.birthdate else noData">{{patient?.birthdate | isoToDate | dateFormat:
+							'date' }}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<mat-radio-button color="primary" name="identificationType" *ngIf="patient.selected"
@@ -126,7 +126,8 @@
 			<div *ngIf="isLoadingRequestMerge" fxFlex="80%">
 				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
 			</div>
-			<button mat-raised-button color="primary" (click)="merge()" [disabled]="isLoadingRequestMerge">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
+			<button mat-raised-button color="primary" (click)="merge()"
+				[disabled]="isLoadingRequestMerge">{{'pacientes.audit.LABEL_BUTTON_MERGE' |
 				translate | uppercase}}</button>
 		</div>
 

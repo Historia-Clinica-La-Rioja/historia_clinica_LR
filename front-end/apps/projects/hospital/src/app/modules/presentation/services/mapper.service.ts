@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
-import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
 import {
 	BasicPatientDto,
+	BedSummaryDto,
 	CompletePatientDto,
+	InternmentEpisodeDto,
+	InternmentPatientDto,
 	InternmentSummaryDto,
 	PatientType,
 	PersonalInformationDto,
-	BedSummaryDto,
-	InternmentPatientDto,
-	HCEEvolutionSummaryDto,
-	InternmentEpisodeDto,
 } from '@api-rest/api-model';
-import { PatientBasicData } from '../components/patient-card/patient-card.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentParseDate, momentParseDateTime, momentFormat, dateToMoment } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
-import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
-import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
+import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
+import { dateISOParseDate } from '@core/utils/moment.utils';
+import { InternmentPatientTableData } from '@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-card/internment-patient-card.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,7 +28,7 @@ export class MapperService {
 	toPatientTypeData: (patientType: PatientType) => PatientTypeData = MapperService._toPatientTypeData;
 	toInternmentPatientTableData: (patient: InternmentPatientDto | InternmentEpisodeDto) => InternmentPatientTableData = MapperService._toInternmentPatientTableData;
 	toBedManagement: (bedSummary: BedSummaryDto[]) => BedManagement[] = MapperService._toBedManagement;
-	toHistoricalProblems: (hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]) => HistoricalProblems[] = MapperService._toHistoricalProblems;
+
 
 	constructor() {
 	}
@@ -43,8 +41,8 @@ export class MapperService {
 			sectorDescription: internmentSummary.bed.room.sector.description,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,
-			admissionDatetime: momentFormat(dateToMoment(internmentSummary.entryDate),DateFormat.VIEW_DATE),
-			probableDischargeDate: internmentSummary.probableDischargeDate ? momentParseDateTime(String(internmentSummary.probableDischargeDate)).format(DateFormat.VIEW_DATE) : 'Sin fecha definida',
+			admissionDatetime: dateISOParseDate(internmentSummary.entryDate.toString()),
+			probableDischargeDate: internmentSummary.probableDischargeDate ? dateISOParseDate(internmentSummary.probableDischargeDate.toString()) : null,
 			responsibleContact: null
 		};
 		if (internmentSummary.doctor) {
@@ -74,7 +72,8 @@ export class MapperService {
 			gender: patient.person?.gender?.description,
 			age: patient.person?.age,
 			nameSelfDetermination: patient.person?.nameSelfDetermination,
-			selfPerceivedGender: patient.person?.selfPerceivedGender
+			selfPerceivedGender: patient.person?.selfPerceivedGender,
+			personAge: patient.person?.personAge
 		};
 	}
 
@@ -84,7 +83,7 @@ export class MapperService {
 			identificationType: person.identificationType,
 			cuil: person.cuil,
 			address: person.address,
-			birthDate: person.birthDate ? momentParseDate(String(person.birthDate)).format(DateFormat.VIEW_DATE) : '',
+			birthDate: person.birthDate? dateISOParseDate(person.birthDate.toString()) : null,
 			email: person.email,
 			phonePrefix: person.phonePrefix,
 			phoneNumber: person.phoneNumber,
@@ -174,7 +173,7 @@ export class MapperService {
 	}
 
 	private static _toBedManagement(bedSummary: BedSummaryDto[]): BedManagement[] {
-		const bedManagement: BedManagement[] = [];
+		let bedManagement: BedManagement[] = [];
 		bedSummary.forEach(summary => {
 			const sector = bedManagement.find(e => e.sectorId === summary.sector.id);
 
@@ -182,7 +181,8 @@ export class MapperService {
 				const newBed = {
 					bedId: summary.bed.id,
 					bedNumber: summary.bed.bedNumber,
-					free: summary.bed.free
+					free: summary.bed.free,
+					isBlocked: summary.bed.isBlocked,
 				};
 				sector.beds.push(newBed);
 			} else {
@@ -203,56 +203,44 @@ export class MapperService {
 					beds: [{
 						bedId: summary.bed.id,
 						bedNumber: summary.bed.bedNumber,
-						free: summary.bed.free
+						free: summary.bed.free,
+						isBlocked: summary.bed.isBlocked
 					}],
-					sectorTypeDescription: summary.sectorType.description
+					sectorTypeDescription: summary.sectorType.description,
+					hierarchicalUnits: summary.sector.hierarchicalUnit
 				};
 				bedManagement.push(newSector);
 			}
 		});
+		bedManagement = MapperService.sortBeds(bedManagement);	
 		return bedManagement;
 	}
 
-	private static _toHistoricalProblems(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): HistoricalProblems[] {
+	private static sortBeds(bedManagement: BedManagement[]): BedManagement[] {
+		bedManagement.forEach(bd => {
+			bd.beds.sort((b1, b2)=> {
+				const bedNumberA = b1.bedNumber.toLowerCase();
+				const bedNumberB = b2.bedNumber.toLowerCase();
 
-		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
-			currentOutpatientEvolutionSummary.healthConditions.length ?
-				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
-					consultationDate: currentOutpatientEvolutionSummary.startDate,
-					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
-					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
-					document: currentOutpatientEvolutionSummary.document,
-					institutionName: currentOutpatientEvolutionSummary.institutionName,
-					problemId: problem.snomed.sctid,
-					problemPt: problem.snomed.pt,
-					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
-					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons?.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
-					reference: problem.references?.length > 0 ? problem.references : null
+				function isNumeric(str) {
+					return /^\d+(\.\d+)?$/.test(str);
+				}
 
-				}))] : historicalProblemsList = [...historicalProblemsList, {
-					consultationDate: currentOutpatientEvolutionSummary.startDate,
-					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
-					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
-					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
-					consultationProfessionalPersonId: currentOutpatientEvolutionSummary.professional.person.id,
-					document: currentOutpatientEvolutionSummary.document,
-					institutionName: currentOutpatientEvolutionSummary.institutionName,
-					problemId: 'Problema no informado',
-					problemPt: 'Problema no informado',
-					specialtyId: currentOutpatientEvolutionSummary.clinicalSpecialty?.id,
-					specialityPt: currentOutpatientEvolutionSummary.clinicalSpecialty?.name,
-					consultationReasons: currentOutpatientEvolutionSummary.reasons.map(r => ({ reasonId: r.snomed.sctid, reasonPt: r.snomed.pt })),
-					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
-					reference: null,
-				}];
-			return historicalProblemsList;
-		}, []);
+				const isNumberA = isNumeric(bedNumberA);
+				const isNumberB = isNumeric(bedNumberB);
 
-
+				if (isNumberA && isNumberB) {
+					return parseFloat(bedNumberA) - parseFloat(bedNumberB);
+				} else if (isNumberA) {
+					return -1;
+				} else if (isNumberB) {
+					return 1;
+				} else {
+					return bedNumberA.localeCompare(bedNumberB);
+				}
+			});
+		})
+		return bedManagement;
 	}
 
 }

@@ -1,7 +1,7 @@
 package ar.lamansys.refcounterref.domain.reference;
 
-import ar.lamansys.refcounterref.domain.InstitutionBo;
-
+import ar.lamansys.refcounterref.domain.enums.EReferenceAdministrativeState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 @Setter
 public class ReferenceSummaryBo {
 
-	private Integer referenceId;
+	private Integer id;
 
 	private Integer careLineId;
 
-	private InstitutionBo institution;
+	private String institution;
 
 	private LocalDate date;
 
@@ -34,16 +34,18 @@ public class ReferenceSummaryBo {
 
 	private boolean includeNameSelfDetermination;
 
-	private String phonePrefix;
+	private Integer destinationInstitutionId;
 
-	private String phoneNumber;
+	private EReferenceRegulationState regulationState;
 
-	public ReferenceSummaryBo(Integer referenceId, Integer institutionId, String institutionName,
+	private EReferenceAdministrativeState administrativeState;
+
+
+	public ReferenceSummaryBo(Integer id, String institutionName,
 							  LocalDate date, String firstName, String middleNames, String lastName,
-							  String otherLastNames, String nameSelfDetermination, Integer careLineId,
-							  String phonePrefix, String phoneNumber) {
-		this.referenceId = referenceId;
-		this.institution = new InstitutionBo(institutionId, institutionName);
+							  String otherLastNames, String nameSelfDetermination, Integer careLineId, Integer destinationInstitutionId) {
+		this.id = id;
+		this.institution = institutionName;
 		this.date = date;
 		this.firstName = firstName;
 		this.middleNames = middleNames;
@@ -51,8 +53,7 @@ public class ReferenceSummaryBo {
 		this.otherLastNames = otherLastNames;
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.careLineId = careLineId;
-		this.phonePrefix = phonePrefix;
-		this.phoneNumber = phoneNumber;
+		this.destinationInstitutionId = destinationInstitutionId;
 	}
 
 

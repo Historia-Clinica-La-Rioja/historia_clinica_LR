@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,12 @@ public class ExternalPatientCoverageDto {
 
 	@Nullable
 	private Short condition;
+
+    @JsonIgnore
+    public Integer getId() {
+        if (medicalCoverage != null) {
+            return medicalCoverage.getId();
+        }
+        return null;
+    }
 }

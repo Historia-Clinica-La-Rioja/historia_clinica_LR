@@ -17,4 +17,12 @@ public class VMedicalDischargeDto extends MedicalDischargeDto {
 
     private List<String> snomedPtProblems;
 
+	private String medicalDischargeProfessionalName;
+
+	private String medicalDischargeProfessionalLastName;
+
+	private String otherDischargeDescription;
+
+	private String observation;
+
 }

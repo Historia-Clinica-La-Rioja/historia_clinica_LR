@@ -5,7 +5,7 @@
 	$palette: map-get($theme, primary);
 	app-factor-de-riesgo {
 		mat-card.mat-card {
-			background-color:mat-color($palette, 25);
+			background-color:mat-color($palette, 50);
 			div.current-value {
 				color: mat-color($palette, default);
 			}

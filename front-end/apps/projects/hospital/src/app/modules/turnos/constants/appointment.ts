@@ -1,4 +1,6 @@
-import { EAppointmentModality } from "@api-rest/api-model";
+import { EAppointmentModality, EPatientIdentityAccreditationStatus } from "@api-rest/api-model";
+import { Color } from "@presentation/colored-label/colored-label.component";
+import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component";
 
 export const APPOINTMENT_DURATIONS = [
 	{
@@ -42,7 +44,7 @@ export enum APPOINTMENT_STATES_DESCRIPTION {
 	ABSENT = 'Ausente',
 	CANCELLED = 'Cancelado',
 	SERVED = 'Atendido',
-	BOOKED = 'Turno online',
+	BOOKED = 'Reserva',
 	OUT_OF_DIARY = 'Fuera de agenda',
 	CONFIRMED_WAITING_ROOM = 'En sala'
 }
@@ -133,11 +135,139 @@ export const enum COLORES {
 	RESERVA_ALTA = '#FFFFFF',
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000',
-	PROTECTED = '#AF26C5'
+	PROTECTED = '#AF26C5',
+	CANCELLED = '#F04848,'
 }
 
 export const MODALITYS = {
 		[EAppointmentModality.ON_SITE_ATTENTION]: 'turnos.ON_SITE_ATTENTION',
 		[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION]: 'turnos.PATIENT_VIRTUAL_ATTENTION',
 		[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]: 'turnos.SECOND_OPINION_VIRTUAL_ATTENTION'
+}
+
+export const stateColor = {
+    [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
+    [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
+    [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
+    [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
+    [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE,
+}
+export interface modality {
+	value: EAppointmentModality;
+	description: string;
+}
+
+export const MODALITYS_TYPES : modality [] = [
+	{
+		value: EAppointmentModality.ON_SITE_ATTENTION,
+		description: MODALITYS[EAppointmentModality.ON_SITE_ATTENTION]
+	},
+	{
+		value: EAppointmentModality.PATIENT_VIRTUAL_ATTENTION,
+		description: MODALITYS[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION]
+	},
+	{
+		value: EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION,
+		description: MODALITYS[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]
+	}
+]
+
+export const DIARY_LABEL_COLORS: COLOR[] = [
+	{
+		id: 1,
+		color: '#89ADFF'
+	},
+	{
+		id: 2,
+		color: '#D50000'
+	},
+	{
+		id: 3,
+		color: '#FFA29A'
+	},
+	{
+		id: 4,
+		color: '#F46B1E'
+	},
+	{
+		id: 5,
+		color: '#FFD55F'
+	},
+	{
+		id: 6,
+		color: '#009F4C'
+	},
+	{
+		id: 7,
+		color: '#A35AFF'
+	},
+	{
+		id: 8,
+		color: '#616161'
+	},
+	{
+		id: 9,
+		color: '#27BEFF'
+	},
+	{
+		id: 10,
+		color: '#08DDC3'
+	}
+];
+
+export function getDiaryLabel(id: number): COLOR {
+	return DIARY_LABEL_COLORS.find((diaryLabel: COLOR) => diaryLabel.id === id);
+}
+
+export interface COLOR {
+	id: number,
+	color: string,
+}
+export enum APPOINTMENT_CANCEL_OPTIONS {
+	CURRENT_TURN = 1,
+	CURRENT_AND_NEXTS_TURNS = 2,
+	ALL_TURNS = 3
+}
+
+export enum RECURRING_APPOINTMENT_OPTIONS {
+	NO_REPEAT = 1,
+	EVERY_WEEK = 2,
+	CUSTOM = 3
+}
+
+export const getAppointmentLabelColor = (appointmentStateId: number): string => {
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED)
+		return Color.BLUE;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ABSENT)
+		return Color.RED;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED)
+		return Color.YELLOW;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)
+		return Color.GREEN;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.BOOKED)
+		return Color.RED;
+}
+
+export function getScanStatusCustom(status: EPatientIdentityAccreditationStatus ): ColoredIconText {
+	if(status === EPatientIdentityAccreditationStatus.VALID){
+		return SCAN_COMPLETED;
+	}else{
+		return SCAN_PENDING;
+	}
+}
+
+export const SCAN_COMPLETED: ColoredIconText = {
+	text: 'turnos.appointment.scaned_identification.MESSAGE_SUCCESS',
+	color: Color.GREEN,
+	icon: "verified_user"
+}
+
+export const SCAN_PENDING: ColoredIconText = {
+	text: 'turnos.appointment.scaned_identification.MESSAGE_PENDING',
+	color: Color.YELLOW,
+	icon: "gpp_maybe"
 }

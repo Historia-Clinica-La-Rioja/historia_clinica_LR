@@ -1,9 +1,15 @@
 package net.pladema.clinichistory.hospitalization.service;
 
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import java.time.LocalDateTime;
@@ -21,8 +27,6 @@ public interface InternmentEpisodeService {
     void updateEpicrisisDocumentId(Integer intermentEpisodeId, Long id);
 
     EvolutionNoteDocument addEvolutionNote(Integer internmentEpisodeId, Long evolutionNoteId);
-
-    InternmentEpisode addInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId);
 
     boolean haveAnamnesis(Integer internmentEpisodeId);
 
@@ -67,5 +71,13 @@ public interface InternmentEpisodeService {
 	PatientDischargeBo savePatientPhysicalDischarge(Integer internmentEpisodeId);
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
+
+	GeneratedBlobBo generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
+
+	void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException;
+    
+	Integer getInternmentEpisodeSectorId(Integer internmentEpisodeId);
+
+	Integer getInternmentEpisodeRoomId(Integer internmentEpisodeId);
 
 }

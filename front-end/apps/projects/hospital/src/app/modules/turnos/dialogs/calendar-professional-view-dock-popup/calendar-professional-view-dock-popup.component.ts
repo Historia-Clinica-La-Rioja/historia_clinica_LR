@@ -3,7 +3,6 @@ import { HealthcareProfessionalService } from '@api-rest/services/healthcare-pro
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { DiaryListDto, ProfessionalDto } from '@api-rest/api-model';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '@turnos/services/agenda-search.service';
 import { isBefore, isToday, parseISO, startOfToday } from 'date-fns';
@@ -39,7 +38,6 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 	loading = true;
 	form: UntypedFormGroup;
 	readonly calendarViewEnum = CalendarView;
-	readonly dateFormats = DatePipeFormat;
 
 	constructor(
 		private readonly agendaSearchService: AgendaSearchService,
@@ -87,6 +85,8 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	setDiaries(professional: ProfessionalDto) {
 		if (professional) {
+			this.appointmentFacade.setProfessional(professional);
+			this.agendaSearchService.search(professional?.id);
 			this.professionalSelected = professional;
 			this.calendarProfessionalInfo.setProfessionalSelected(professional);
 			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
@@ -96,8 +96,12 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 				}
 			});
 		}
-		else
+		else{
+			this.agendaSearchService.search(null);
 			this.professionalSelected = null;
+			this.agendaSearchService.clearAll();
+		}
+			
 	}
 
 	private loadDiaries(diaries: DiaryListDto[], idDiarySelected?: number) {

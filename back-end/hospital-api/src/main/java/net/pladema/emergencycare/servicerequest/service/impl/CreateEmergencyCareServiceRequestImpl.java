@@ -3,6 +3,7 @@ package net.pladema.emergencycare.servicerequest.service.impl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.application.port.output.ServiceRequestTemplatePort;
 import net.pladema.clinichistory.requests.service.domain.ExtendedServiceRequestBo;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
@@ -17,11 +18,14 @@ public class CreateEmergencyCareServiceRequestImpl implements CreateEmergencyCar
 
 	private final CreateServiceRequestService createServiceRequestService;
 
+	private final ServiceRequestTemplatePort serviceRequestTemplatePort;
+
 	@Override
 	public Integer execute(ExtendedServiceRequestBo serviceRequest, Integer episodeId) {
 		log.debug("Input parameter -> serviceRequest {}, episodeId {}", serviceRequest, episodeId);
 		ServiceRequestBo serviceRequestBo = mapToServiceRequestBo(serviceRequest, episodeId);
 		Integer result = createServiceRequestService.execute(serviceRequestBo);
+		serviceRequestTemplatePort.saveAll(result, serviceRequest.getTemplateIds());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -38,6 +42,10 @@ public class CreateEmergencyCareServiceRequestImpl implements CreateEmergencyCar
 				.associatedSourceTypeId(SourceType.EMERGENCY_CARE)
 				.medicalCoverageId(extendedServiceRequestBo.getMedicalCoverageId())
 				.associatedSourceId(episodeId)
+				.observations(extendedServiceRequestBo.getObservations())
+				.studyTypeId(extendedServiceRequestBo.getStudyTypeId())
+				.requiresTransfer(extendedServiceRequestBo.getRequiresTransfer())
+				.deferredDate(extendedServiceRequestBo.getDeferredDate())
 				.build();
 	}
 

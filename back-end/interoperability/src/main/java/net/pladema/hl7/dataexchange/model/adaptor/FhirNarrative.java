@@ -23,7 +23,14 @@ public class FhirNarrative {
         return humanText;
     }
 
-    private static StringBuilder header(){
+	public static Narrative buildNarrativeAdditional(String div) {
+		Narrative humanText = new Narrative();
+		humanText.setStatus(Narrative.NarrativeStatus.ADDITIONAL);
+		humanText.setDivAsString(div);
+		return humanText;
+	}
+
+	private static StringBuilder header(){
         return new StringBuilder()
         .append("<div>")
         .append("<table>")

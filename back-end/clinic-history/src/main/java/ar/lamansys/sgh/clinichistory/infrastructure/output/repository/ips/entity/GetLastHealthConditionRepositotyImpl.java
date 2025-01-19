@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -31,15 +33,17 @@ public class GetLastHealthConditionRepositotyImpl implements GetLastHealthCondit
                 "FROM {h-schema}health_condition as hc " +
                 "JOIN {h-schema}health_condition hc2 ON (hc.snomed_id=hc2.snomed_id)" +
                 "WHERE hc.patient_id = :patientId " +
+				"AND NOT hc.verification_status_id = :verificationId " +
                 "AND hc2.id IN :hcIds" +
                 ") " +
                 "SELECT t.originalHc, t.updatedHc, t.statusId " +
                 "FROM temporal AS t " +
-                "WHERE rw = 1 ";
+                "WHERE rw = 1";
 
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("patientId", patientId)
-                .setParameter("hcIds", hcIds);
+                .setParameter("hcIds", hcIds)
+				.setParameter("verificationId", ConditionVerificationStatus.ERROR);
 
         List<Object[]> result = query.getResultList();
 

@@ -27,6 +27,8 @@ export class AlergiasSummaryComponent {
 	set allergiesDto(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
 		if (allergiesDto?.length) {
 			this.setCategoryAndCriticallyAndAllergies(allergiesDto);
+		}else{
+			this.allergies = [];
 		}
 	}
 
@@ -78,7 +80,7 @@ export class AlergiasSummaryComponent {
 	}
 
 	private getCategoryDisplayName(categoryId): string {
-		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId).display : '';
+		return (categoryId && this.categoryMasterData) ? this.categoryMasterData.find(c => c.id === categoryId)?.display : '';
 	}
 
 	private setCategoryAndCriticallyAndAllergies(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {

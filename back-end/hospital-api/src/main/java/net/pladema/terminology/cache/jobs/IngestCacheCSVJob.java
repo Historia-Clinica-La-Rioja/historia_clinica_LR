@@ -43,8 +43,8 @@ public class IngestCacheCSVJob {
 	private void ingest(SnomedCacheFile cacheFileToIngest) {
 		snowmedCacheFileIngestService.processing(cacheFileToIngest);
 		try {
-			var updateConceptsResultBo = snomedCacheFileIngestor.run(cacheFileToIngest.getFileId(), cacheFileToIngest.getEcl());
-			snowmedCacheFileIngestService.ingested(cacheFileToIngest, updateConceptsResultBo.getConceptsLoaded(), updateConceptsResultBo.getErroneousConcepts());
+			var updateConceptsResultBo = snomedCacheFileIngestor.run(cacheFileToIngest.getFileId(), cacheFileToIngest.getEcl(), cacheFileToIngest.getKind());
+			snowmedCacheFileIngestService.ingested(cacheFileToIngest, updateConceptsResultBo.conceptsLoaded, updateConceptsResultBo.erroneousConcepts);
 		} catch (Exception e) {
 			snowmedCacheFileIngestService.ingested(cacheFileToIngest, e.getMessage());
 		}

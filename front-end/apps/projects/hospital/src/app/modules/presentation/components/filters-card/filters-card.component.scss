@@ -1,19 +1,16 @@
-.filter-panel{
+.filter-panel {
 	min-width: 25%;
 	max-width: 30%;
-	background-color: #f3efef8e;
-}
-
-.results-panel {
-	width: 100%;
-}
-
-.padding {
-	padding: 15px;
+	flex: 1;
 }
 
 .filters-card {
-	min-width: 60%;
 	width: 100%;
+	flex: 3;
 	padding: 0;
+	overflow: hidden;
+}
+
+.results-panel {
+	overflow-y: auto;
 }

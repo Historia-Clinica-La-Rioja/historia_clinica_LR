@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EObservationLab;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import lombok.Getter;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import org.slf4j.Logger;
@@ -97,6 +99,9 @@ public class MapClinicalObservationVo {
 		getLastNClinicalObservationByCode(ERiskFactor.CARDIOVASCULAR_RISK.getSctidCode(),i).ifPresent(v ->
 				riskFactorBo.setCardiovascularRisk(new ClinicalObservationBo(v))
 		);
+        getLastNClinicalObservationByCode(ERiskFactor.HEMATOCRIT.getSctidCode(),i).ifPresent(v ->
+                riskFactorBo.setHematocrit(new ClinicalObservationBo(v))
+        );
         LOG.debug(OUTPUT, riskFactorBo);
         if (riskFactorBo.hasValues())
             return Optional.of(riskFactorBo);

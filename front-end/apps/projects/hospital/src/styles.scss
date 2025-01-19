@@ -1,6 +1,6 @@
 @import "./assets/styles/theme";
 @import "./assets/styles/variables.scss";
-@import '~quill/dist/quill.bubble.css'; 
+@import '~quill/dist/quill.bubble.css';
 @import '~quill/dist/quill.core.css';
 @import '~quill/dist/quill.snow.css';
 
@@ -56,6 +56,12 @@ section {
 	text-transform: lowercase;
 }
 
+.vanilla-mat-error {
+	color: #f44336;
+	font-size: 75%;
+	padding: 0 1em;
+}
+
 @media (max-width: $mobile-popups) {
 	div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 		width: 100% !important;
@@ -95,4 +101,24 @@ div.cdk-global-overlay-wrapper div.cdk-overlay-pane {
 		padding: 0;
 		margin: 0;
 	}
+}
+
+.background-color-input {
+	.mat-form-field-appearance-outline .mat-form-field-outline {
+		background-color: white;
+	}
+}
+
+.tooltip {
+    background-color: black !important;
+    color: #ffffff !important;
+	font-size: 12px;
+	&::first-letter {
+		text-transform: capitalize !important;
+	}
+}
+
+.tooltip-word-break {
+	word-break: break-word;
+	white-space: pre-line;
 }

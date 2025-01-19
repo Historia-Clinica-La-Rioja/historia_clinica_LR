@@ -1,0 +1,11 @@
+@import "../../../../../assets/styles/mat-mixins";
+
+.display {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+form {
+    @include mat-form-field-background-white;
+}

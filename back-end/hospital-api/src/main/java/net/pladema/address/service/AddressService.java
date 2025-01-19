@@ -12,4 +12,6 @@ public interface AddressService {
     List<AddressBo> getAddressesByIds(List<Integer> addressesIds);
 
     AddressBo getAddressByInstitution(Integer institutionId);
+
+	ar.lamansys.sgh.shared.domain.general.AddressBo getAddressDataByInstitution(Integer institutionId);
 }

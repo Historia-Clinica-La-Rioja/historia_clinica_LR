@@ -13,7 +13,7 @@ public class EpidemiologyTwoConsultationDetail {
 
 	private String diagnostic;
 
-	private String range;
+	private String grp;
 
 	private String counter;
 

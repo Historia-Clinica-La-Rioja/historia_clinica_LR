@@ -1,0 +1,13 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate" icon="error_outlined"
+	[collapsed]="false" [hideBorder]="true" [isEmpty]="isEmpty()">
+
+	<app-diagnosticos id="diagnosis" [showTitle]="false"
+		[(mainDiagnosis)]="mainDiagnosis"
+		[(listDiagnosis)]="diagnosis"
+		[type]="'PARTE QUIRURGICO'"
+		(mainDiagnosisChange)="changeDiagnosis()"
+		(diagnosisChange)="changeDiagnosis()">
+	</app-diagnosticos>
+</app-new-consultation-expansion-section>

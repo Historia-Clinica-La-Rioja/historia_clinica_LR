@@ -1,0 +1,24 @@
+<form class="row" fxLayoutGap="10px" [formGroup]="form">
+	<mat-form-field class="full-width" appearance="outline">
+		<input type="text"
+			placeholder="{{ 'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH' | translate }}"
+			matInput formControlName="searchControl" [matAutocomplete]="auto"
+			(focus)="inputFocused = true">
+		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleOptionSelected($event)" autoActiveFirstOption>
+			<mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+				<app-generic-pharmaco-item [pharmaco]="option"></app-generic-pharmaco-item>
+			</mat-option>
+		</mat-autocomplete>
+		<mat-hint *ngIf="!form.value.searchControl && inputFocused">
+			{{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
+		</mat-hint>
+		<button type="button" matSuffix mat-icon-button *ngIf="!form.value.searchControl">
+			<mat-icon>search</mat-icon>
+		</button>
+		<button *ngIf="form.value.searchControl" id="clear" type="button" matSuffix color="warn" mat-icon-button
+			(click)="clear()">
+			<mat-icon>close</mat-icon>
+		</button>
+		<mat-error>{{ 'forms.REQUIRED' | translate}}</mat-error>
+	</mat-form-field>
+</form>

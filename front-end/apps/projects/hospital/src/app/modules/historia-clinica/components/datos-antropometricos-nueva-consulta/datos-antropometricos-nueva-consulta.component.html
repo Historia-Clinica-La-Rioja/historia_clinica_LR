@@ -1,9 +1,9 @@
 <div>
-    <app-include-previous-data-question *ngIf="showPreloadData"
-        [dataName]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.NAME' | translate"
-        [date]="datosAntropometricosNuevaConsultaService.getDate()" (response)="savePreloadData($event)"
+    <app-box-message *ngIf="showPreloadData"
+        [boxMessageInfo]="boxMessageInfo"
+        (response)="savePreloadData($event)"
         id="anthropometric_data_question">
-    </app-include-previous-data-question>
+    </app-box-message>
     <app-document-section>
         <ng-container concept-form>
             <form [formGroup]="datosAntropometricosNuevaConsultaService.getForm()">
@@ -18,7 +18,7 @@
                                 {{ bloodType.description }}
                             </mat-option>
                         </mat-select>
-                        <button id="clear_blood_type" type="button" mat-button
+                        <button id="clear_blood_type" type="button" 
                             *ngIf="datosAntropometricosNuevaConsultaService.getForm().value.bloodType && !showPreloadData"
                             matSuffix color="warn" mat-icon-button
                             (click)="datosAntropometricosNuevaConsultaService.getForm().controls.bloodType.reset(); $event.stopPropagation()">
@@ -79,6 +79,8 @@
                     </div>
                 </div>
             </form>
+            <app-patient-evolution-charts-button [patientId]="patientId" [anthropometricData]="anthropometricData$ | async"></app-patient-evolution-charts-button>
         </ng-container>
     </app-document-section>
 </div>
+

@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class MedicacionesFormComponent implements OnInit {
+export class MedicacionesFormComponent implements OnInit, ControlValueAccessor {
 
 	searchConceptsLocallyFFIsOn = false;
 	onChangeSub: Subscription;
@@ -43,7 +43,7 @@ export class MedicacionesFormComponent implements OnInit {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.medicacionesNuevaConsultaService.medicaciones$.subscribe(r => this.writeValue({data: r}))
+		this.medicacionesNuevaConsultaService.medicaciones$.subscribe(medicaciones => this.medicaciones.controls.data.setValue(medicaciones));
 	}
 
 	addMedication(): void {
@@ -62,8 +62,10 @@ export class MedicacionesFormComponent implements OnInit {
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.medicaciones.setValue(obj);
+			this.medicacionesNuevaConsultaService.setMedications(obj.data);
+		}
 	}
 
 	registerOnChange(fn: any): void {

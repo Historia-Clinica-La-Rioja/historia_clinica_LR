@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { EmergencyCareTypes, Triages } from '../../constants/masterdata';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { PatientNameService } from "@core/services/patient-name.service";
+import { LABELS_RISK_FACTORS, LABELS_RISK_FACTORS_PEDIATRIC } from '../../utils/riskFactors.utils';
+import { EmergencyCareClinicalSpecialtySectorDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-triage-details',
@@ -12,10 +14,9 @@ import { PatientNameService } from "@core/services/patient-name.service";
 
 export class TriageDetailsComponent implements OnChanges {
 
-	@Input() triage: Triage;
+	@Input() triage: TriageDetails;
 	@Input() emergencyCareType: EmergencyCareTypes;
 	@Input() showRiskFactors = true;
-	@Output() triageRiskFactors = new EventEmitter<RiskFactorFull[]>();
 
 	readonly triages = Triages;
 	readonly emergencyCareTypes = EmergencyCareTypes;
@@ -27,32 +28,15 @@ export class TriageDetailsComponent implements OnChanges {
 
 	ngOnChanges() {
 		this.riskFactors = this.includesRiskFactors() ? this.mapToRiskFactor(this.triage) : undefined;
-		this.triageRiskFactors.emit(this.riskFactors);
 	}
 
 	private includesRiskFactors(): boolean {
 		return !!this.emergencyCareType && !!this.triage;
 	}
 
-	private mapToRiskFactor(triage: Triage): RiskFactorFull[] {
+	private mapToRiskFactor(triage: TriageDetails): RiskFactorFull[] {
 		const riskFactors = [];
-		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ?
-			{
-				respiratoryRate: { description: 'Frecuencia respiratoria', id: 'respiratory_rate' },
-				bloodOxygenSaturation: { description: 'Saturación de oxígeno', id: 'blood_oxygen_saturation' },
-				heartRate: { description: 'Frecuencia cardíaca', id: 'heart_rate' },
-			} :
-			{
-				systolicBloodPressure: { description: 'Tensión arterial sistólica', id: 'systolic_blood_pressure' },
-				diastolicBloodPressure: { description: 'Tensión arterial diastólica', id: 'diastolic_blood_pressure' },
-				heartRate: { description: 'Frecuencia cardíaca', id: 'heart_rate' },
-				respiratoryRate: { description: 'Frecuencia respiratoria', id: 'respiratory_rate' },
-				temperature: { description: 'Temperatura', id: 'temperature' },
-				bloodOxygenSaturation: { description: 'Saturación de oxígeno', id: 'blood_oxygen_saturation' },
-				bloodGlucose: { description: 'Glucemia (mg/dl)', id: 'blood_glucose' },
-				glycosylatedHemoglobin: { description: 'Hemoglobina glicosilada (%)', id: 'glycosylated_hemoglobin' },
-				cardiovascularRisk: { description: 'Riesgo cardiovascular (%)', id: 'cardiovascular_risk' },
-			};
+		const LABELS = this.emergencyCareType === EmergencyCareTypes.PEDIATRIA ? LABELS_RISK_FACTORS_PEDIATRIC : LABELS_RISK_FACTORS;
 
 		Object.keys(LABELS).forEach(key => {
 			const riskFactor = getRiskFactor(key);
@@ -64,8 +48,7 @@ export class TriageDetailsComponent implements OnChanges {
 					effectiveTime: riskFactor?.effectiveTime || undefined
 				}
 			});
-		}
-		);
+		});
 
 		return riskFactors;
 
@@ -83,13 +66,13 @@ export class TriageDetailsComponent implements OnChanges {
 		}
 	}
 
-	getFullName(triage: Triage): string {
+	getFullName(triage: TriageDetails): string {
 		return `${this.patientNameService.getPatientName(triage.createdBy.firstName, triage.createdBy.nameSelfDetermination)} ${triage.createdBy.lastName}`;
 	}
 
 }
 
-export interface Triage {
+export interface TriageDetails {
 	creationDate: Date;
 	category: TriageCategory;
 	createdBy: {
@@ -161,10 +144,17 @@ export interface Triage {
 		}
 	};
 	notes?: string;
+	reasons?: string[];
+	clinicalSpecialtySector?: EmergencyCareClinicalSpecialtySectorDto;
 }
 
 export interface RiskFactorFull {
 	id: string,
 	description: string,
 	value: RiskFactor
+}
+
+export interface RiskFactorValue {
+	value: string,
+	effectiveTime: Date
 }

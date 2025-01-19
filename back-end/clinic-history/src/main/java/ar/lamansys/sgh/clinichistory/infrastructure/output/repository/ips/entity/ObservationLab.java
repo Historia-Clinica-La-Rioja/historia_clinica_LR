@@ -20,15 +20,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ObservationLab extends ClinicalObservation {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3053291021636483828L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3053291021636483828L;
 
-	private static final String LAB = "lab";
+    private static final String LAB = "lab";
 
-	public ObservationLab(Integer patientId, String value, Integer snomedId, LocalDateTime effectiveTime){
-		super(patientId, value, snomedId, LAB, effectiveTime);
-	}
+    public ObservationLab(Integer patientId, String value, Integer snomedId, LocalDateTime effectiveTime, String statusId) {
+        super(patientId, value, snomedId, LAB, effectiveTime, statusId);
+    }
 
 }

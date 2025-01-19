@@ -14,13 +14,14 @@ import { map, Observable, of, Subscription, switchMap, take } from 'rxjs';
 import { StudyAppointment } from '../../models/models';
 import { toStudyAppointment } from '../../utils/mapper.utils';
 import { AddConclusionFormComponent } from '../../dialogs/add-conclusion-form/add-conclusion-form.component';
-import { ConceptTypeaheadSearchComponent } from '@historia-clinica/components/concept-typeahead-search/concept-typeahead-search.component';
+import { ConceptTypeaheadSearchComponent } from 'projects/hospital/src/app/modules/hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SaveTemplateComponent, TemplateData } from '../../dialogs/save-template/save-template.component';
 import { AccountService } from '@api-rest/services/account.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ImportTemplateComponent } from '../../dialogs/import-template/import-template.component';
 import { TemplateManagementService } from '../../services/template-management.service';
+import { DeleteTemplateComponent } from '../../dialogs/delete-template/delete-template.component';
 
 @Component({
 	selector: 'app-report-study',
@@ -28,7 +29,7 @@ import { TemplateManagementService } from '../../services/template-management.se
 	styleUrls: ['./report-study.component.scss']
 })
 export class ReportStudyComponent implements OnInit, OnDestroy {
-	
+
 	@ViewChild(ConceptTypeaheadSearchComponent) child:ConceptTypeaheadSearchComponent;
 	form: FormGroup;
 	submitted = false;
@@ -131,8 +132,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	saveDraft() {
 		this.submitted = true;
-		this.setTextEditorLength(this.form.controls.observations.value)
 		if (this.form.valid && this.textEditorLength) {
+			this.setTextEditorLength(this.form.controls.observations.value)
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
@@ -152,8 +153,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	save() {
 		this.submitted = true;
-		this.setTextEditorLength(this.form.controls.observations.value)
 		if (this.form.valid && this.textEditorLength) {
+			this.setTextEditorLength(this.form.controls.observations.value)
 			this.disableContinueEditing = true;
 			this.enabledEditing = false;
 			if (this.study.info.informerObservations?.id) {
@@ -178,7 +179,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 	private getInformerObservationsDto(confirmed: boolean): InformerObservationDto {
 		return {
 			id: this.study.info.informerObservations?.id,
-			evolutionNote: this.replaceTagBr(this.form.value.observations),
+			evolutionNote: this.replaceTagBr(this.form.value.observations, confirmed),
 			conclusions: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(p: ConclusionDto) => {
 					return { snomed: { pt: this.uppercaseFirstLetter(p.snomed.pt), sctid: p.snomed.sctid } };
@@ -193,8 +194,8 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 		return word.charAt(0).toUpperCase() + word.slice(1);
 	}
 
-	private replaceTagBr(observations: string): string {
-		return observations.replace(new RegExp("<br>", "g"), "<br></br>");
+	private replaceTagBr(observations: string, confirmed: boolean): string {
+		return confirmed ? observations.replace(new RegExp("<br>", "g"), "<br></br>") : observations;
 	}
 
 	private getStudy() {
@@ -230,6 +231,21 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 		this.disableContinueEditing = false;
 	}
 
+	openDeleteTemplate() {
+		this.dialog.open(DeleteTemplateComponent, {
+			autoFocus: false,
+			width: '45%',
+			disableClose: true,
+			restoreFocus: false,
+			height: '45%'
+		}).afterClosed().subscribe(
+			sucess => {
+				if (sucess)
+					this.snackBarService.showSuccess('image-network.worklist.details_study.SNACKBAR_SUCCESS_DELETE_TEMPLATE')
+			}
+		);
+	}
+
 	openSaveTemplate() {
 		const data: TemplateData = {
 			textReportInformer: this.form.get('observations').value,
@@ -246,7 +262,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 
 	openTemplateManagementByForm() {
 		let finalDialogRef: Observable<string>
-		finalDialogRef = this.form.valid ? this.openImportTemplate() : this.openDialogTemplateImportList()
+		finalDialogRef = this.form.valid ? this.openImportTemplateWithWarning() : this.openDialogTemplateImportList()
 		finalDialogRef.subscribe(
 			template => {
 				if (template) {
@@ -256,7 +272,7 @@ export class ReportStudyComponent implements OnInit, OnDestroy {
 			})
 	}
 
-	private openImportTemplate(): Observable<string>  {
+	private openImportTemplateWithWarning(): Observable<string>  {
 			const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent, {
 				data: {
 					title: 'image-network.worklist.details_study.TEMPLATE_CONFIRM_TITLE',

@@ -18,7 +18,7 @@
 	</div>
 
 
-	<form [formGroup]="form" (ngSubmit)="submit()">
+	<form [formGroup]="form" (ngSubmit)="submit()" *ngIf="this.form?.value?.medicalAttentionType">
 
 		<div fxLayout="column" fxLayoutAlign="center none">
 			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
@@ -33,20 +33,19 @@
 						<mat-option [value]="possibleScheduleHour"
 							*ngFor="let possibleScheduleHour of possibleStartingScheduleHours"
 							(click)="filterAppointmentEndingHours()">
-							{{ possibleScheduleHour | date:'shortTime' }}
+							{{ possibleScheduleHour | dateFormat:'time' }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<span>hs. a</span>
+				<span>a</span>
 				<mat-form-field appearance="outline" class="hour_selector">
 					<mat-select id="endingHour" formControlName="endingHour">
 						<mat-option [value]="possibleScheduleHour"
 							*ngFor="let possibleScheduleHour of possibleEndingScheduleHours">
-							{{ possibleScheduleHour | date:'shortTime' }}
+							{{ possibleScheduleHour | dateFormat:'time' }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<span>hs.</span>
 			</div>
 		</div>
 
@@ -67,7 +66,7 @@
 
 		</div>
 
-		<div fxLayout="column" *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS ">
+		<div fxLayout="column" *ngIf="!isSpontaneousMedicalAttention">
 			<div translate="turnos.agenda-setup.OVERTURN_COUNT"></div>
 			<div>
 				<mat-form-field floatLabel="never" appearance="outline">
@@ -78,22 +77,23 @@
 		</div>
 
 
-		<div *ngIf="form?.value?.medicalAttentionType?.description != SPONTANEOUS && data.diaryType == 0">
-			<div fxLayout="column">
-				<div mat-dialog-title>
-					{{'turnos.agenda-setup.dialog.MODALITY' | translate}}
+		<div *ngIf="!isSpontaneousMedicalAttention && data.diaryType == 0">
+			<div fxLayout="column" *ngIf="isEnableTelemedicina">
+				<div fxLayout="column" >
+					<p mat-dialog-title>{{'turnos.agenda-setup.dialog.MODALITY' | translate}}</p>
+					<mat-error *ngIf="showErrorModality" [translate]="'forms.REQUIRED'"></mat-error>
 				</div>
-				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="onSiteAttentionAllowed">
+				<mat-checkbox color="primary" formControlName="onSiteAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_FACE_TO_FACE' | translate}}
 					</span>
 				</mat-checkbox>
-				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="patientVirtualAttentionAllowed">
+				<mat-checkbox color="primary" formControlName="patientVirtualAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_BY_TELECONSULTATION_OF_PATIENT' | translate}}
 					</span>
 				</mat-checkbox>
-				<mat-checkbox color="primary" [disabled]="!data.hasSelectedLinesOfCare || !isEnableTelemedicina" formControlName="secondOpinionVirtualAttentionAllowed">
+				<mat-checkbox color="primary" [disabled]="!data.hasSelectedLinesOfCare" formControlName="secondOpinionVirtualAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_BY_TELECONSULTATION_OF_SECOND_OPINION' | translate}}
 					</span>
@@ -103,7 +103,7 @@
 				<div mat-dialog-title>
 					{{'turnos.agenda-setup.dialog.TAKE_SHIFTS_TITLE' | translate}}
 				</div>
-				<div>
+				<div *ngIf="isHabilitarSolicitudReferenciaOn">
 					<mat-checkbox (change)="changeAvailbleForCareLine()" [disabled]="!data.hasSelectedLinesOfCare"
 						[checked]="form.value.protectedAppointmentsAllowed">
 						<span>
@@ -111,10 +111,17 @@
 						</span>
 					</mat-checkbox>
 				</div>
+				<div *ngIf="isHabilitarSolicitudReferenciaOn">
+					<mat-checkbox (change)="changeAvailbleProtectedByRegulation()" [checked]="form.value.regulationProtectedAppointmentsAllowed">
+						<span>
+							{{'turnos.agenda-setup.dialog.SERVES_SHIFTS_PROTECTED_BY_REGULATION' | translate}}
+						</span>
+					</mat-checkbox>
+				</div>
 				<div>
 					<mat-checkbox (change)="changeAvailableForBooking()" [disabled]="!isEnableOnlineAppointments"
 						[checked]="form.value.availableForBooking">
-						<span [translate]="'turnos.agenda-setup.dialog.ATTEND_ONLINE'"></span>
+						<span [translate]="'turnos.agenda-setup.dialog.ONLINE_APPOINTMENTS'"></span>
 					</mat-checkbox>
 				</div>
 			</div>

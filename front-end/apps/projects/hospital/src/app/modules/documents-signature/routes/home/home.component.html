@@ -1,0 +1,21 @@
+<app-content width="full">
+    <div fxLayout="column">
+        <h2 class="page-title">{{'firmas.TITLE' | translate}}</h2>
+        <h3 class="subtitle">{{'firmas.SUBTITLE' | translate}}</h3>
+        <mat-card>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <span>{{'firmas.DIGITAL_SIGNATURE' | translate}}</span>
+                <button mat-stroked-button color="primary" (click)="redirecToDigitalSignature()">{{'buttons.SELECT' |
+                    translate}}</button>
+            </div>
+            <mat-divider class="separation" inset></mat-divider>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <span>{{'firmas.JOINT_SIGNATURE'
+                    | translate}}</span>
+                <button mat-stroked-button color="primary" (click)="redirecToJointSignature()">{{'buttons.SELECT'
+                    |
+                    translate}}</button>
+            </div>
+        </mat-card>
+    </div>
+</app-content>

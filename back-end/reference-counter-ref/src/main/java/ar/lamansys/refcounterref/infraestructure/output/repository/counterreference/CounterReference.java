@@ -63,6 +63,9 @@ public class CounterReference extends SGXAuditableEntity<Integer> {
 	@Column(name = "hierarchical_unit_id")
 	private Integer hierarchicalUnitId;
 
+	@Column(name = "note_id")
+	private Long noteId;
+
 	public CounterReference(CounterReferenceInfoBo counterReferenceInfoBo) {
         super();
         this.id = counterReferenceInfoBo.getId();
@@ -76,6 +79,7 @@ public class CounterReference extends SGXAuditableEntity<Integer> {
         this.performedDate = counterReferenceInfoBo.getPerformedDate();
 		this.closureTypeId = counterReferenceInfoBo.getClosureTypeId();
 		this.hierarchicalUnitId = counterReferenceInfoBo.getHierarchicalUnitId();
+		this.noteId = counterReferenceInfoBo.getNoteId();
     }
 
 }

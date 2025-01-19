@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
@@ -8,27 +9,35 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
+@ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class DocumentBo implements IDocumentBo {
 
@@ -41,6 +50,8 @@ public class DocumentBo implements IDocumentBo {
     private boolean confirmed = true;
 
     private Integer clinicalSpecialtyId;
+
+	private Integer clinicalSpecialtySectorId;
 
     private Integer medicalCoverageId;
 
@@ -60,13 +71,13 @@ public class DocumentBo implements IDocumentBo {
 
     private List<ProcedureBo> procedures = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> personalHistories = new ArrayList<>();
+    private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
-    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
+    private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
     private List<MedicationBo> medications = new ArrayList<>();
 
-    private List<AllergyConditionBo> allergies = new ArrayList<>();
+    private ReferableItemBo<AllergyConditionBo> allergies;
 
     private List<ImmunizationBo> immunizations = new ArrayList<>();
 
@@ -94,11 +105,24 @@ public class DocumentBo implements IDocumentBo {
 
     private List<ConclusionBo> conclusions = new ArrayList<>();
 
+	private List<Integer> involvedHealthcareProfessionalIds;
 
-    public String getDocumentStatusId(){
-        return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    private Map<String,Object> contextMap;
+
+    private Integer createdBy;
+
+    private Long initialDocumentId;
+
+    private String documentStatusId;
+
+    @Override
+    public String getDocumentStatusId() {
+        if (Objects.isNull(documentStatusId)) {
+            return IDocumentBo.super.getDocumentStatusId();
+        }
+        return documentStatusId;
+
     }
-
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)
@@ -106,5 +130,11 @@ public class DocumentBo implements IDocumentBo {
         return patientId;
     }
 
+    @Override
+    public String getEvolutionNote() {
+        return this.getNotes() != null
+                ? this.getNotes().getEvolutionNote()
+                : null;
+    }
 
 }

@@ -1,0 +1,26 @@
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+input[type=number] { -moz-appearance:textfield; }
+
+mat-option button {
+    width: 100%;
+    text-align: left;
+}
+
+.unit-day-dose-container, .administration-days-quantity-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    mat-form-field {
+        width: 45%;
+    }
+}
+
+.unit-day-dose-container {
+    margin-bottom: 1rem;
+}
+

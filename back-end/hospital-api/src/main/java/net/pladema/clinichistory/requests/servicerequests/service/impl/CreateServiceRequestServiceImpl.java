@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,6 +75,11 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
         );
 		newServiceRequest.setSourceTypeId(serviceRequestBo.getAssociatedSourceTypeId());
 		newServiceRequest.setSourceId(serviceRequestBo.getAssociatedSourceId());
+		newServiceRequest.setObservations(serviceRequestBo.getObservations());
+		newServiceRequest.setUuid(UUID.randomUUID());
+		newServiceRequest.setStudyType(serviceRequestBo.getStudyTypeId());
+		newServiceRequest.setRequiresTransfer(serviceRequestBo.getRequiresTransfer());
+		newServiceRequest.setDeferredDate(serviceRequestBo.getDeferredDate());
         return this.serviceRequestRepository.save(newServiceRequest);
     }
 }

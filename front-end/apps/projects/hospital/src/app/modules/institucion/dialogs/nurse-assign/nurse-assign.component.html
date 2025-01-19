@@ -1,0 +1,25 @@
+<header>
+    <h1 mat-dialog-title [translate]="'gestion-camas.detail.more-actions.INCHARGE_NURSE'"></h1>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</header>
+<mat-dialog-content>
+    <span class="subtitle" [translate]="'gestion-camas.detail.more-actions.SUBTITLE'" [translateParams]="{bed: data.bed.bed.bedNumber}"></span>
+
+    <div>
+        <app-typeahead
+            id="nurses-select-list"
+            titleInput="Nombre y apellido"
+            [options]="nurses"
+            (selectionChange)="setNurse($event)"
+            [externalSetValue]="preloadedNurse">
+        </app-typeahead>
+        <mat-error *ngIf="!nurses?.length">{{'gestion-camas.detail.more-actions.NO_NURSES_AVAILABLE' | translate}}</mat-error>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="primary" mat-dialog-close>{{'gestion-camas.detail.more-actions.CANCEL' | translate | uppercase}}</button>
+    <button mat-raised-button color="primary" (click)="saveAssignedNurse()" [disabled]="!selectedNurseId">{{'gestion-camas.detail.more-actions.SAVE' | translate | uppercase}}</button>
+</mat-dialog-actions>

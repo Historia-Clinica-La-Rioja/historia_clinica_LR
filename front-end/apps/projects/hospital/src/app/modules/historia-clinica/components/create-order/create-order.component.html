@@ -1,0 +1,23 @@
+<form [formGroup]="data.createOrderService.getForm()" fxLayout="column" fxLayoutGap="5px">
+	<span>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.CATEGORY' | translate}}</span>
+
+	<mat-form-field appearance="outline" class="full-width">
+		<mat-select [(value)]="DEFAULT_STUDY.id" id="study-category">
+			<mat-option *ngFor="let studyCategory of studyCategoryOptions" (click)="setStudyCategory(studyCategory.id)"
+				[value]="studyCategory.id">
+				{{studyCategory.description | translate}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<div>
+		<span>{{'ambulatoria.paciente.nueva-consulta.studies.dialog.STUDY' | translate}}</span>
+		<app-template-concept-typeahead-search
+			placeholder="{{'ambulatoria.paciente.nueva-consulta.studies.dialog.SEARCH_STUDY' | translate}}"
+			[clearButton]="true"
+			[hideTemplateOptions]="true"
+			[showSelectedOption]="true"
+			[debounceTime]="0" [ecl]="PROCEDURE" (optionSelected)="handleStudySelected($event)">
+		</app-template-concept-typeahead-search>
+	</div>
+</form>

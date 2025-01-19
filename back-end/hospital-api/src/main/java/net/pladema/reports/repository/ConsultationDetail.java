@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -47,7 +49,7 @@ public class ConsultationDetail {
 
 	private String affiliateNumber;
 
-	private String startDate;
+	private LocalDateTime startDate;
 
 	private Integer clinicalSpecialtyId;
 
@@ -91,11 +93,7 @@ public class ConsultationDetail {
 
 	private String hierarchicalUnitTypeDescription;
 
-	public ConsultationDetail(ConsultationDetailWithoutInstitution consultation, InstitutionInfo institutionInfo){
-		this.province = institutionInfo.getProvince();
-		this.department = institutionInfo.getDepartment();
-		this.sisaCode = institutionInfo.getSisaCode();
-		this.institution = institutionInfo.getInstitution();
+	public ConsultationDetail(ConsultationDetailWithoutInstitution consultation){
 		this.patientSurname = consultation.getPatientSurname();
 		this.patientFirstName = consultation.getPatientFirstName();
 		this.selfPerceivedName = consultation.getSelfPerceivedName();

@@ -1,15 +1,23 @@
 package ar.lamansys.sgh.clinichistory.application.createDocument;
 
+import ar.lamansys.sgh.clinichistory.application.saveCompletedParameterizedForms.SaveCompletedParameterizedForms;
+import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
+import ar.lamansys.sgh.clinichistory.application.isolationalerts.SaveDocumentIsolationAlerts;
+import ar.lamansys.sgh.clinichistory.application.saveanthropometricdatapercentiles.SaveAnthropometricDataPercentiles;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadHealthcareProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProsthesis;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +41,12 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.snvs.application.ports.patient.PatientStorage;
 
+@Primary
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class DocumentFactoryImpl implements DocumentFactory {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DocumentFactoryImpl.class);
+    
 
     private final DocumentService documentService;
 
@@ -68,37 +78,17 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final LoadObstetricEvent loadObstetricEvent;
 
-    public DocumentFactoryImpl(DocumentService documentService,
-                               CreateDocumentFile createDocumentFile,
-                               NoteService noteService,
-                               HealthConditionService healthConditionService,
-                               LoadAllergies loadAllergies,
-                               ClinicalObservationService clinicalObservationService,
-                               LoadImmunizations loadImmunizations,
-                               LoadProcedures loadProcedures,
-                               LoadMedications loadMedications,
-                               LoadDiagnosticReports loadDiagnosticReports,
-                               LoadDentalActions loadDentalActions,
-							   FeatureFlagsService featureFlagsService,
-							   PatientStorage patientStorage,
-							   LoadExternalCause loadExternalCause,
-							   LoadObstetricEvent loadObstetricEvent) {
-        this.documentService = documentService;
-        this.createDocumentFile = createDocumentFile;
-        this.noteService = noteService;
-        this.healthConditionService = healthConditionService;
-        this.loadAllergies = loadAllergies;
-        this.clinicalObservationService = clinicalObservationService;
-        this.loadImmunizations = loadImmunizations;
-        this.loadProcedures = loadProcedures;
-        this.loadMedications = loadMedications;
-        this.loadDiagnosticReports = loadDiagnosticReports;
-        this.loadDentalActions = loadDentalActions;
-		this.featureFlagsService = featureFlagsService;
-		this.patientStorage = patientStorage;
-		this.loadExternalCause = loadExternalCause;
-		this.loadObstetricEvent = loadObstetricEvent;
-    }
+	private final LoadHealthcareProfessionals loadHealthcareProfessionals;
+
+	private final LoadProsthesis loadProsthesis;
+
+	private final SaveDocumentInvolvedProfessionals saveDocumentInvolvedProfessionals;
+
+	private final SaveAnthropometricDataPercentiles saveAnthropometricDataPercentiles;
+
+	private final SaveCompletedParameterizedForms saveCompletedParameterizedForms;
+
+	private final SaveDocumentIsolationAlerts saveIsolationAlerts;
 
     @Override
 	@Transactional
@@ -132,19 +122,33 @@ public class DocumentFactoryImpl implements DocumentFactory {
         healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), documentBo.getFamilyHistories());
         healthConditionService.loadProblems(patientInfo, doc.getId(), documentBo.getProblems());
         healthConditionService.loadOtherProblems(patientInfo, doc.getId(), documentBo.getOtherProblems());
+		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPreoperativeDiagnosis());
+		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPostoperativeDiagnosis());
+
 		loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
         loadImmunizations.run(patientId, doc.getId(), documentBo.getImmunizations());
         loadMedications.run(patientId, doc.getId(), documentBo.getMedications());
         loadProcedures.run(patientId, doc.getId(), documentBo.getProcedures());
-        loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
+		loadSurgicalProcedures(patientId, doc.getId(), documentBo);
+		loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
 
         clinicalObservationService.loadRiskFactors(patientId, doc.getId(), Optional.ofNullable(documentBo.getRiskFactors()));
         clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
 
-        loadDiagnosticReports.run(doc.getId(), patientId, documentBo.getDiagnosticReports());
+        loadDiagnosticReports.run(doc.getId(), patientId, Optional.empty(), documentBo.getDiagnosticReports());
 
 		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
+		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
+		loadProsthesis.run(doc.getId(), documentBo.getProsthesisDescription());
+
+		saveDocumentInvolvedProfessionals.run(doc.getId(), documentBo.getInvolvedHealthcareProfessionalIds());
+
+		saveAnthropometricDataPercentiles.run(doc.getPatientId(), doc.getId(), documentBo.getAnthropometricData());
+
+		saveCompletedParameterizedForms.run(doc.getId(), documentBo.getCompleteForms());
+
+		saveIsolationAlerts.run(doc.getId(), documentBo.getIsolationAlerts());
 
         if (createFile)
             generateDocument(documentBo);
@@ -152,7 +156,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
     }
 
     private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
-        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
+        log.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
             document.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));
@@ -164,6 +168,14 @@ public class DocumentFactoryImpl implements DocumentFactory {
         });
         return document;
     }
+
+	private void loadSurgicalProcedures(Integer patientId, Long documentId, IDocumentBo documentBo){
+		loadProcedures.run(patientId,documentId, documentBo.getSurgeryProcedures());
+		loadProcedures.run(patientId,documentId, documentBo.getAnesthesia());
+		loadProcedures.run(patientId, documentId, documentBo.getCultures());
+		loadProcedures.run(patientId, documentId, documentBo.getFrozenSectionBiopsies());
+		loadProcedures.run(patientId, documentId, documentBo.getDrainages());
+	}
 
     private void generateDocument(IDocumentBo documentBo) {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);

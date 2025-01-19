@@ -1,29 +1,18 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ReferenceDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
-import { ReferenceFileService } from '@api-rest/services/reference-file.service';
-import { PatientNameService } from '@core/services/patient-name.service';
-import { Color } from '@presentation/colored-label/colored-label.component';
+import { ReferenceDataDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-reference-notification',
 	templateUrl: './reference-notification.component.html',
 	styleUrls: ['./reference-notification.component.scss']
 })
-export class ReferenceNotificationComponent implements OnInit {
-
-	Color = Color;
+export class ReferenceNotificationComponent {
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: ReferenceDto[],
+		@Inject(MAT_DIALOG_DATA) public data: ReferenceDataDto[],
 		private readonly dialogRef: MatDialogRef<ReferenceNotificationComponent>,
-		private readonly referenceFileService: ReferenceFileService,
-		private readonly patientNameService: PatientNameService,
 	) { }
-
-	ngOnInit(): void {
-
-	}
 
 	goToNewConsultation(): void {
 		this.dialogRef.close(false);
@@ -38,11 +27,4 @@ export class ReferenceNotificationComponent implements OnInit {
 		this.dialogRef.close(counterreference);
 	}
 
-	downloadReferenceFile(file: ReferenceCounterReferenceFileDto) {
-		this.referenceFileService.downloadReferenceFiles(file.fileId, file.fileName);
-	}
-
-	getFullName(firstName: string, nameSelfDetermination: string): string {
-		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
-	}
 }

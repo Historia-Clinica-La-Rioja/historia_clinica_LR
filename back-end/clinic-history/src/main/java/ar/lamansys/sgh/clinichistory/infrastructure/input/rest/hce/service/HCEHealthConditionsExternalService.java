@@ -1,12 +1,12 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.service;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEPersonalHistoryDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEHealthConditionDto;
 
 import java.util.List;
 
 public interface HCEHealthConditionsExternalService {
 
-	List<HCEPersonalHistoryDto> getFamilyHistories(Integer patientId);
+	List<HCEHealthConditionDto> getFamilyHistories(Integer patientId);
 
-	List<HCEPersonalHistoryDto> getActivePersonalHistories(Integer patientId);
+	List<HCEHealthConditionDto> getSummaryProblems(Integer patientId);
 }

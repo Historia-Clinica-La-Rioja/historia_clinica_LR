@@ -34,6 +34,7 @@ public class InternmentSummaryBo {
 	private LocalDateTime medicalDischargeDate;
 	private boolean active;
 	private int totalInternmentDays;
+	private String roomDescription;
 
     public InternmentSummaryBo(InternmentSummaryVo internmentSummaryVo) {
         this.id = internmentSummaryVo.getId();
@@ -55,6 +56,7 @@ public class InternmentSummaryBo {
 		this.physicalDischargeDate = internmentSummaryVo.getPhysicalDischargeDate();
 		this.active = internmentSummaryVo.getActive();
         this.totalInternmentDays = totalInternmentDays();
+		this.roomDescription = internmentSummaryVo.getRoomDescription();
     }
 
     private int totalInternmentDays(){
@@ -70,5 +72,9 @@ public class InternmentSummaryBo {
 	public boolean freeBed() {
 		return (physicalDischargeDate != null) || (administrativeDischargeDate != null);
 	}
+
+    public void setLastAnestheticReport(AnestheticReportSummaryBo anestheticReportSummaryBo) {
+        this.getDocuments().setLastAnestheticReport(anestheticReportSummaryBo);
+    }
 
 }

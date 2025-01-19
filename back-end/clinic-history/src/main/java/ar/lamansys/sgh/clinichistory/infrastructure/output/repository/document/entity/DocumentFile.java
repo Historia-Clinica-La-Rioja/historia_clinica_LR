@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -17,6 +19,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@Where(clause = "deleted=false")
 public class DocumentFile extends SGXAuditableEntity<Long> {
 
 	/**
@@ -40,7 +43,7 @@ public class DocumentFile extends SGXAuditableEntity<Long> {
 	@Column(name = "file_path", length = 200, nullable = false)
 	private String filepath;
 
-	@Column(name = "file_name", length = 40, nullable = false)
+	@Column(name = "file_name", length = 60, nullable = false)
 	private String filename;
 
 	@Column(name = "uuid_file", length = 36, nullable = false)
@@ -48,6 +51,12 @@ public class DocumentFile extends SGXAuditableEntity<Long> {
 
 	@Column(name = "checksum", length = 512)
 	private String checksum;
+
+	@Column(name = "signature_status_id", nullable = false)
+	private Short signatureStatusId;
+
+	@Column(name = "digital_signature_hash", length = 44)
+	private String digitalSignatureHash;
 
 	public DocumentFile(Long documentId, Integer sourceId, Short sourceTypeId, Short documentType,
 						String filepath, String filename, String uuidFile, String checksum){

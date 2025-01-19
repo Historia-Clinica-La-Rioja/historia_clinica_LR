@@ -7,16 +7,16 @@ import { ECHDocumentType } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import * as moment from 'moment';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { newDate } from '@core/utils/moment.utils';
+import { fixDate } from '@core/utils/date/format';
 import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, DocumentType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat, fromStringToDate } from '@core/utils/date.utils';
+import { fromStringToDate } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,8 +24,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PrintAmbulatoryService } from '@api-rest/services/print-ambulatory.service';
 import { dateTimeDtotoLocalDate, mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
-import { Observable, take } from 'rxjs';
+import { finalize, Observable, take } from 'rxjs';
 import { MatSort, MatSortable } from '@angular/material/sort';
+import { ButtonType } from '@presentation/components/button/button.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-print-ambulatoria',
@@ -34,7 +36,6 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 })
 export class PrintAmbulatoriaComponent implements OnInit {
 
-	datePipeFormat = DatePipeFormat;
 	nowDate: string;
 	userLastDownload: string;
 	dateLastDownload: Date;
@@ -51,7 +52,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		end: string,
 	}
 
-	maxDate = moment();
+	maxDate = newDate();
 
 	dateRangeForm = new FormGroup({
 		start: new FormControl(null, Validators.required),
@@ -63,6 +64,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	documentTypeForm: FormGroup;
 	documentTypes = DocumentTypes;
+    filteredDocumentTypes = DocumentTypes;
 	allChecked = true;
 	showDocuments = true;
 
@@ -76,6 +78,10 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	selection = new SelectionModel<CHDocumentSummaryDto>(true, []);
 
+	isDownloadingDocuments = false;
+	ButtonType = ButtonType.RAISED;
+	MAX_DOCUMENTS_TO_BE_SELECTED = 20;
+
 	constructor(
 		private readonly route: ActivatedRoute,
 		private readonly patientService: PatientService,
@@ -86,6 +92,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		readonly datePipe: DatePipe,
 		private featureFlagService: FeatureFlagService,
 		private readonly printAmbulatoryService: PrintAmbulatoryService,
+		private readonly snackBar: SnackBarService
 	) {
 		this.route.paramMap.pipe(take(1)).subscribe(
 			(params) => {
@@ -102,6 +109,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
 			this.nameSelfDeterminationFF = isOn
+		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).pipe(take(1)).subscribe(isOn => {
+			if (!isOn) {
+				this.documentTypes = this.documentTypes.filter(e => e.value !== ECHDocumentType.ANESTHETIC_REPORTS);
+                this.filteredDocumentTypes = this.documentTypes;
+			}
 		});
 	}
 
@@ -123,12 +137,23 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		const documentTypeControls = {};
 		documentTypeControls["all"] = this.formBuilder.control(true);
-		this.documentTypes.forEach(documentType => {
-			documentTypeControls[documentType.value] = this.formBuilder.control(true);
-		});
+
+        this.documentTypes.forEach(documentType => {
+            documentTypeControls[documentType.value] = this.formBuilder.control(true);
+        });
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
+	}
 
+	dateRangeChange(range): void {
+		this.dateRange = {
+			start: toApiFormat(fixDate(range.start)),
+			end: toApiFormat(fixDate(range.end)),
+		}
+		this.hideEncounterListSection();
+	}
+
+	private updateLastDownload(): void {
 		this.printAmbulatoryService.getPatientClinicHistoryLastDownload(this.patientId).subscribe(response => {
 			if (response.user && response.downloadDate) {
 				this.showLastPrinted = true;
@@ -136,14 +161,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 				this.dateLastDownload = dateTimeDtotoLocalDate(response.downloadDate);
 			}
 		});
-	}
-
-	dateRangeChange(range): void {
-		this.dateRange = {
-			start: momentFormat(range.start, DateFormat.API_DATE),
-			end: momentFormat(range.end, DateFormat.API_DATE),
-		}
-		this.hideEncounterListSection();
 	}
 
 	private atLeastOneChecked(formGroup: FormGroup) {
@@ -171,26 +188,12 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	encounterCheckedChange(): void {
 		this.documentTypes = [];
 		if (!this.atLeastOneChecked(this.encounterTypeForm)) {
-			this.documentTypes = DocumentTypes;
+			this.documentTypes = this.filteredDocumentTypes;
 			this.showDocuments = true;
 		}
 		else
 			this.showDocuments = false;
 		this.hideEncounterListSection();
-	}
-
-	isAllTableSelected(): boolean {
-		const numSelected = this.selection.selected.length;
-		const numRows = this.dataSource.data.length;
-		return numSelected === numRows;
-	}
-
-	toggleAllRows(): void {
-		if (this.isAllTableSelected()) {
-			this.selection.clear();
-			return;
-		}
-		this.selection.select(...this.dataSource.data);
 	}
 
 	goBack(): void {
@@ -227,6 +230,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 		this.loadingTable = true;
 		this.printAmbulatoryService.getPatientClinicHistory(this.patientId, this.dateRange.start, this.dateRange.end, searchFilterStr)
+			.pipe(finalize(() => this.loadingTable = false))
 			.subscribe(response => {
 				this.noInfo = response.length > 0 ? false : true;
 				const tableData = response.map(data => this.mapToDocumentSummary(data));
@@ -241,12 +245,11 @@ export class PrintAmbulatoriaComponent implements OnInit {
 						default: return item[property];
 					}
 				};
-				this.sort.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
+				this.sort?.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
-				this.toggleAllRows();
-				this.loadingTable = false;
+				this.updateLastDownload();
 			});
 	}
 
@@ -264,10 +267,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			}
 		}
 		return null;
-	}
-
-	download(document) {
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe();
 	}
 
 	downloadSelected() {
@@ -288,7 +287,19 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		const selectedIds = selectedItems.map(item => item.id);
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
+		this.isDownloadingDocuments = true;
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds)
+			.pipe(finalize(() => this.isDownloadingDocuments = false))
+			.subscribe(()=>this.updateLastDownload());
 	}
 
+	toggleCheck = (row) => {
+		this.selection.toggle(row);
+		this.checkMaxDocumentsQuantity();
+	}
+
+	private checkMaxDocumentsQuantity = () => {
+		if (this.selection.selected.length >= this.MAX_DOCUMENTS_TO_BE_SELECTED) 
+			this.snackBar.showError("ambulatoria.print.encounter-list.MAX_DOCUMENTS_SELECTED");
+	}
 }

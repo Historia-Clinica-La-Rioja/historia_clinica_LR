@@ -12,6 +12,14 @@
            padding: 10px;
            font-family: Tahoma, Verdana, sans-serif;
         }
+
+        h5 {
+           font-weight: bold;
+           font-size: 15px;
+           margin: 15px 0px;
+           border-top: 1px solid black;
+        }
+
         h4 {
            margin: 15px 0px;
            color: #2687c5;
@@ -21,6 +29,7 @@
         }
 
         p {
+           margin: 18px 0px 4px;
            font-weight: bold;
            font-size: 15px;
         }
@@ -31,11 +40,27 @@
            margin: 2px 0px;
         }
 
+        span {
+           font-weight: normal;
+        }
+
     </style>
 </head>
 <body th:fragment="familybg">
     <div class="container">
-        <h3>Cuestionario de antecedentes familiares - Resultados de informe</h3>
+        <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
+        <p>Institución: <span th:text="${institutionName}"></span></p>
+        <hr></hr>
+        <h5>Datos del paciente</h5>
+        <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
+        <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
+        <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
+        <hr></hr>
+        <h5>Datos del profesional</h5>
+        <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
+        <p>M.P.: <span th:text="${professional.licenseNumber}"></span></p>
+
+        <h3>Cuestionario de antecedentes familiares - Informe de resultados</h3>
 
         <hr></hr>
 
@@ -119,9 +144,11 @@
                 En el cuarto
             </label><br></br>
         </div>
-        <hr></hr>
+
+        <p style="text-align:right;margin-top: 77px;">1/4</p>
+
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
-            <p>Pareja</p>
+            <p style="margin-top: 5px">Pareja</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt16" th:checked="${respuesta.answerId == 19}"></input>
                 No
@@ -168,9 +195,6 @@
             </label><br></br>
         </div>
         <hr></hr>
-        <br></br>
-        <br></br>
-        <br></br>
         <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
             <p>Otros</p>
             <label>
@@ -238,10 +262,10 @@
             </label><br></br>
         </div>
 
-        <hr></hr>
+        <p style="text-align:right;margin-top: 218px">2/4</p>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[13]}">
-            <h4>Nivel de instrucción alcanzado</h4>
+            <h4 style="margin-top: 5px">Nivel de instrucción alcanzado</h4>
             <p>Padre o sustituto</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt42" th:checked="${respuesta.answerId == 28}"></input>
@@ -314,17 +338,11 @@
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[16]}">
-            <p>Horas diarias afuera de casa</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${answers[16].value}" name="opt50"></p>
-            </label><br></br>
+            <p>Horas diarias afuera de casa: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' horas' : 'No registrado'}" name="opt50"></span></p>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[17]}">
-            <p>Edad (años)</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${answers[17].value}" name="opt51"></p>
-            </label><br></br>
+            <p>Edad: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' años' : 'No registrado'}" name="opt51"></span></p>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[18]}">
@@ -360,24 +378,21 @@
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt57" th:checked="${respuesta.answerId == 20}"></input>
                 Sí
             </label><br></br>
+            <hr></hr>
+            <div class="itemcontainer" th:each="respuesta : ${answers[20]}">
+                <p>Horas diarias afuera de casa: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' horas' : 'No registrado'}" name="opt58"></span></p>
+            </div>
+            <hr></hr>
+            <div class="itemcontainer" th:each="respuesta : ${answers[21]}">
+                <p>Edad: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' años' : 'No registrado'}" name="opt59"></span></p>
+            </div>
         </div>
-        <hr></hr>
-        <div class="itemcontainer" th:each="respuesta : ${answers[20]}">
-            <p>Horas diarias afuera de casa</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${answers[20].value}" name="opt58"></p>
-            </label><br></br>
-        </div>
-        <hr></hr>
-        <div class="itemcontainer" th:each="respuesta : ${answers[21]}">
-            <p>Edad (años)</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value}" name="opt59"></p>
-            </label><br></br>
-        </div>
+
+        <p style="text-align:right; margin-top: 121px">3/4</p>
+
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[22]}">
-            <p>Estado civil</p>
+            <p style="margin-top: 5px">Estado civil</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt60" th:checked="${respuesta.answerId == 34}"></input>
                 Soltero
@@ -400,27 +415,18 @@
 
         <div class="itemcontainer" th:each="respuesta : ${answers[23]}">
             <h4>Hermanos</h4>
-            <p>Vivos</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${answers[23].value}" name="opt64"></p>
-            </label><br></br>
+            <p>Vivos: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value : 'No registrado'}" name="opt64"></span></p>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[24]}">
-            <p>Fallecidos</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${answers[24].value}" name="opt65"></p>
-            </label><br></br>
+            <p>Fallecidos: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value : 'No registrado'}" name="opt65"></span></p>
         </div>
 
         <hr></hr>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[25]}">
             <h4>Vivienda</h4>
-            <p>Número de cuartos</p>
-            <label>
-                <p style="font-weight: normal;" th:text="${answers[25].value}" name="opt66"></p>
-            </label><br></br>
+            <p>Número de cuartos: <span th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value : 'No registrado'}" name="opt66"></span></p>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[26]}">
@@ -469,6 +475,8 @@
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt75" th:checked="${respuesta.answerId == 41}"></input>
                 Letrina
             </label><br></br>
+            <br></br>
+            <p style="text-align:right; margin-top: 350px">4/4</p>
         </div>
 
     </div>

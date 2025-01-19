@@ -1,0 +1,35 @@
+mat-icon {
+    overflow: visible;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+}
+
+.grey {
+	color: #9A9A9A;
+}
+
+.display {
+    display: flex;
+    flex-direction: row;
+    align-items: center center;
+    gap: 5px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center center;
+    gap: 5px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center center;
+
+    .description {
+        margin-left: 3.5vh;
+        word-wrap: break-word;
+    }
+}

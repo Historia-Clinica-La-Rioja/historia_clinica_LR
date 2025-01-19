@@ -42,6 +42,9 @@
                     <button mat-menu-item (click)="openTemplateManagementByForm()" [disabled]="disableImportFiles">
                         <span [translate]="'image-network.worklist.details_study.IMPORT_TEMPLATE'"></span>
                     </button>
+                    <button mat-menu-item (click)="openDeleteTemplate()" [disabled]="disableImportFiles">
+                        <span [translate]="'image-network.worklist.details_study.DELETE_TEMPLATE'"></span>
+                    </button>
                 </ng-container>
             </mat-menu>
         </div>

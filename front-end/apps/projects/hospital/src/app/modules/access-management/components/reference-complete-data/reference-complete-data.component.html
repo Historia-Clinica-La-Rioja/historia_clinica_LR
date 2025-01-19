@@ -1,0 +1,87 @@
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start">
+	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+		<app-reference-state-label></app-reference-state-label>
+
+		<span class="grey">
+			{{referenceCompleteData.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}
+		</span>
+	</div>
+
+	<div fxLayout="row" fxLayoutGap="20px">
+		<div fxFlex="70" *ngIf="!referenceCompleteData.dto.procedure else showPractice">
+			<div *ngFor="let specialty of referenceCompleteData.dto.destinationClinicalSpecialties">
+				<span class="bold">{{specialty.name}}</span>
+			</div>
+		</div>
+		<ng-template #showPractice>
+			<span class="bold">{{referenceCompleteData.dto.procedure.pt}}</span>
+		</ng-template>
+		<app-priority fxFlex="40" [priority]="referenceCompleteData.priority"></app-priority>
+	</div>
+
+	<app-identifier-cases [identifierCase]="identiferCases.PROBLEM"
+        [description]="referenceCompleteData.problems"
+		[showLegend]="true">
+    </app-identifier-cases>
+
+	<span>{{ referenceCompleteData.dto.note }}</span>
+
+	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start start">
+		<div id="origin" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" fxFlex="50">
+			<span class="grey"> {{'access-management.search_references.ORIGIN' | translate | uppercase}}</span>
+
+			<app-identifier-cases [identifierCase]="identiferCases.PROFESSIONAL"
+				[description]="referenceCompleteData.dto.professionalFullName" [position]="Position.COLUMN"
+				[showLegend]="true">
+			</app-identifier-cases>
+
+			<app-identifier-cases [identifierCase]="identiferCases.SPECIALTY"
+				[description]="referenceCompleteData.dto.clinicalSpecialtyOrigin.name" [position]="Position.COLUMN"
+				[showLegend]="true">
+			</app-identifier-cases>
+
+			<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
+				[description]="referenceCompleteData.dto.institutionOrigin.description" [position]="Position.COLUMN"
+				[showLegend]="true">
+			</app-identifier-cases>
+
+		</div>
+
+		<div id="destination" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" fxFlex="50">
+			<span class="grey"> {{'access-management.search_references.DESTINATION' | translate | uppercase}}</span>
+
+			<app-identifier-cases *ngIf="referenceCompleteData.dto.procedure"
+                [identifierCase]="identiferCases.PRACTICE" [description]="referenceCompleteData.dto.procedure.pt"
+                [position]="Position.COLUMN" [showLegend]="true">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="clinicalSpecialtiesName.length"
+				[identifierCase]="identiferCases.SPECIALTY" [description]="clinicalSpecialtiesName | stringSeparator"
+				[position]="Position.COLUMN"
+				[showLegend]="true">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="referenceCompleteData.dto.careLine.id"
+                [identifierCase]="identiferCases.CARE_LINE"
+				[description]="referenceCompleteData.dto.careLine.description" [position]="Position.COLUMN"
+				[showLegend]="true">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="referenceCompleteData.dto.institutionDestination.id"
+				[identifierCase]="identiferCases.INSTITUTION"
+				[description]="referenceCompleteData.dto.institutionDestination.description"
+				[position]="Position.COLUMN" [showLegend]="true">
+			</app-identifier-cases>
+
+		</div>
+
+	</div>
+
+	<div class="primary" *ngFor="let file of referenceCompleteData.dto.files" fxLayout="row">
+		<mat-icon>attachment_icon</mat-icon>
+		<span class="span-clickable" (click)="downloadFile(file)">
+			{{file.fileName}}
+		</span>
+	</div>
+
+</div>

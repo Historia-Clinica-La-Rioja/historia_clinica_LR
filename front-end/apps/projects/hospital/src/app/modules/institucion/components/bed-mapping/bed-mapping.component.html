@@ -1,27 +1,73 @@
-<div fxLayout="column" *ngFor="let sector of bedManagementList">
+<div *ngFor="let sector of bedManagementList" class="sector-container">
     <div id="title" class="header">
         <h2 class="mat-h2 page-title">{{sector.sectorDescription}}</h2>
-		<h4>{{sector.sectorTypeDescription}}</h4>
+		<span>-</span>
+		<h3>{{sector.sectorTypeDescription}}</h3>
     </div>
 
-	<div class="sector-characteristic-block">
-		<h2 class="sector-characteristic-label mat-h2" id="organization-type-label">{{sector.organizationType}}</h2>
-		<h2 class="sector-characteristic-label mat-h2" id="care-type-label">{{sector.careType}}</h2>
-		<h2 class="sector-characteristic-label mat-h2" id="age-group-label">{{sector.ageGroup}}</h2>
+	<div class="grid-container">
+
+		<div class="services" fxLayout="column">
+			<small>{{'gestion-camas.sector.SERVICES' | translate}}</small>
+			<div *ngFor="let specialty of sector.specialties">
+				<span>{{specialty.specialtyName}}</span>
+			</div>
+			<div>
+				<span *ngIf="!sector.specialties.length">{{'gestion-camas.sector.NO_INFORMATION' | translate}}</span>
+			</div>
+		</div>
+
+		<div class="hierarchical-units">
+			<small id="hierarchical-units-label">{{'gestion-camas.sector.HIERARCHICAL_UNITS' | translate}}</small>
+			<div *ngFor="let hu of sector.hierarchicalUnits">
+				<span id="hierarchical-units-label">{{hu.name}}</span>
+			</div>
+			<div>
+				<span *ngIf="!sector.hierarchicalUnits.length">{{'gestion-camas.sector.NO_INFORMATION' | translate}}</span>
+			</div>
+		</div>
+
+		<mat-divider id="mat-divider" inset></mat-divider>
+
+		<div class="permanence" fxLayout="column">
+			<small>{{'gestion-camas.sector.PERMANENCE' | translate}}</small>
+			<div>
+				<span *ngIf="!sector.permanence">{{'gestion-camas.sector.NO_INFORMATION' | translate}}</span>
+			</div>
+		</div>
+		<div class="care-type" fxLayout="column">
+			<small>{{'gestion-camas.sector.CARE_TYPE' | translate}}</small>
+			<span id="care-type-label">{{sector.careType}}</span>
+			<div>
+				<span *ngIf="!sector.careType">{{'gestion-camas.sector.NO_INFORMATION' | translate}}</span>
+			</div>
+		</div>
+		<div class="organization" fxLayout="column">
+			<small>{{'gestion-camas.sector.ORGANIZATION' | translate}}</small>
+			<span id="organization-type-label">{{sector.organizationType}}</span>
+			<div>
+				<span *ngIf="!sector.organizationType">{{'gestion-camas.sector.NO_INFORMATION' | translate}}</span>
+			</div>
+		</div>
+		<div class="age-group" fxLayout="column">
+			<small>{{'gestion-camas.sector.AGE_GROUP' | translate}}</small>
+			<span id="age-group-label">{{sector.ageGroup}}</span>
+			<div>
+				<span *ngIf="!sector.ageGroup">{{'gestion-camas.sector.NO_INFORMATION' | translate}}</span>
+			</div>
+		</div>
+
+		<mat-divider id="mat-divider" inset></mat-divider>
 	</div>
 
-	<div fxLayout="row wrap" fxLayout.sm="column">
-		<span *ngFor="let specialty of sector.specialties" class="speciality-label">{{specialty.specialtyName}}</span>
-	</div>
-
-	<div fxLayout="row wrap">
-		<div *ngFor="let bed of sector.beds">
-			<button mat-raised-button [ngClass]="{'free': bed.free}"
-					(click)="selectBed(bed.bedId)">
+	<div class="grid-beds-container">
+		<div *ngFor="let bed of sector.beds; let i = index" [ngClass]="{'selected-bed-border': selectedBedIndex === i && selectedBedSectorId === sector.sectorId}">
+			<button class="active-bed" mat-raised-button [ngClass]="{'free': bed.free, 'blocked': bed.isBlocked }"
+					(click)="selectBed(bed.bedId, i, sector.sectorId)">
 				{{bed.bedNumber}}
 			</button>
 		</div>
 	</div>
 
-    <mat-divider id="mat-divider" inset></mat-divider>
+	<mat-divider id="mat-divider" inset></mat-divider>
 </div>

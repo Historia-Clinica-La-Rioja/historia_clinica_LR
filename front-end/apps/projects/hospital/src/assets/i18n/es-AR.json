@@ -4,7 +4,8 @@
 		"SHORT_NAME": "HSI",
 		"menu": {
 			"AMBULATORIA": "Historia Clínica",
-			"CAMAS": "Gestión de camas",
+			"API_KEYS": "API Keys",
+			"CAMAS": "Camas",
 			"CONFIGURACION": "Configuración",
 			"GUARDIA": "Guardia",
 			"INSTITUCIONES": "Instituciones",
@@ -13,18 +14,27 @@
 			"MIS_DATOS_PERSONALES": "Mis Datos Personales",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
-			"TURNOS": "Gestión de turnos",
+			"TURNOS": "Turnos",
+			"LISTA_DE_TRABAJO_DE_LABORATORIO": "Listado de trabajo de Laboratorio",
 			"LISTADO_DE_TRABAJO": "Listado de trabajo",
+			"LISTADO_DE_TRABAJO_DE_IMAGENES": "Listado de trabajo de imágenes",
 			"REPORTES": "Reportes",
 			"REPORTES_PROVINCIALES": "Reportes provinciales",
+			"RUTAS_PROVINCIALES": "Rutas provinciales",
 			"LOGOUT": "Cerrar sesión",
 			"AUDIT": "Auditoria",
-			"TELEMEDICINE":"TeleSalud"
+			"TELEMEDICINE":"TeleSalud",
+			"ACCESS_MANAGEMENT": "Gestión de accesos",
+			"CALL_CENTER": "Centro de llamadas",
+			"SIGNATURES": "Firmas",
+			"SANITARY_AREAS": "Áreas sanitarias",
+            "APPOINTMENTS_GIVEN": "Turnos otorgados"
 		}
 	},
 	"buttons": {
 		"ADD": "Agregar",
 		"NEXT": "Siguiente",
+		"PREVIOUS": "Anterior",
 		"BACK": "Volver",
 		"BACK_AND_COMPLETE": "Regresar y completar",
 		"CANCEL": "Cancelar",
@@ -46,13 +56,20 @@
 		"ACCEPT": "Aceptar",
 		"SAVE": "Guardar",
 		"CSV_DOWNLOAD": "DESCARGAR .CSV",
-		"ELECTRONIC_FIRM": "Firmar electrónicamente",
+		"FINISH": "Finalizar",
 		"ALL": "Todos",
 		"RETRY":"Reintentar",
 		"YES_CONTINUE":"Si, continuar",
+		"YES_REGISTER": "Si, registrar",
 		"NO_CANCEL":"No, cancelar",
 		"FILTER":"Filtrar",
-		"IMPORT":"Importar"
+		"IMPORT":"Importar",
+		"PDF_DOWNLOAD": "DESCARGAR .PDF",
+		"SIGN": "Firmar documento",
+		"APPLY_FILTERS": "Aplicar filtros",
+		"SHARE": "Compartir",
+		"DOWNLOAD": "Descargar",
+		"REJECT": "Rechazar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -68,13 +85,16 @@
 		"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
 		"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
+		"MIN_DATE": "La fecha no puede ser anterior a la fecha de inicio",
 		"REQUIRED_INIT_DATE": "Debe ingresar fecha de inicio",
 		"FORMAT_NUMERIC": "El valor debe ser numérico",
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",
 		"FORMAT_WHITOUT_BLANK_SPACES": "El valor no puede contener espacios en blanco",
 		"YES": "Si",
 		"NO": "No",
-		"REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH": "Debe ingresar al menos un campo más para realizar la búsqueda"
+		"REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH": "Debe ingresar al menos un campo más para realizar la búsqueda",
+		"INVALID_EMAIL": "Formato inválido de mail",
+		"FORMAT_STRING": "El formato debe ser con caracteres alfabéticos"
 	},
 	"logos": {
 		"footer_right": "Logo inferior derecho",
@@ -118,6 +138,19 @@
 	"messages": {
 		"NO_DATA": "No hay información para mostrar",
 		"COPIED": "¡Copiado!"
+	},
+	"download": {
+		"TITLE": "Acceso al documento",
+		"content": {
+			"IN_PROGRESS": "Obteniendo el archivo",
+			"READY": "Se obtuvo el archivo",
+			"CANT_PREVIEW": "Se obtuvo el archivo pero no se puede previsualizar",
+
+			"GENERIC_ERROR": "Ha ocurrido un problema descargando el archivo",
+			"SAVE_IOEXCEPTION": "No se pudo obtener el archivo",
+			"NON_EXIST": "No se pudo encontrar el archivo"
+		}
+
 	},
 	"profile": {
 		"PICTURE": "Foto de perfil"

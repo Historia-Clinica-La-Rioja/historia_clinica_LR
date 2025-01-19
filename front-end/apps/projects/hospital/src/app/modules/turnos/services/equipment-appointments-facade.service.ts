@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DateFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { CalendarEvent } from 'angular-calendar';
-import { toCalendarEvent } from '../utils/appointment.utils';
+import { getAppointmentEnd, getAppointmentStart, toCalendarEvent } from '../utils/appointment.utils';
 import { CreateAppointmentDto, BasicPersonalDataDto, AppointmentShortSummaryDto, AppointmentListDto, HolidayDto, UpdateAppointmentDto } from '@api-rest/api-model';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { PatientNameService } from '@core/services/patient-name.service';
@@ -173,14 +173,10 @@ export class EquipmentAppointmentsFacadeService {
 
 	private toAppointmentsCalendarEvent(appointments: AppointmentListDto[]): CalendarEvent[] {
 		return appointments.map(appointment => {
-			const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-			let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-			if (from > to) {
-				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
-			}
+			const from = getAppointmentStart(appointment.hour);
+			const to = getAppointmentEnd(appointment.hour, this.appointmentDuration);
 			const viewName = this.getViewName(appointment.patient?.person);
-			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName);
-			return calendarEvent;
+			return toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment, viewName);
 		});
 	}
 

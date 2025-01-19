@@ -1,22 +1,12 @@
 package net.pladema.medicalconsultation.virtualConsultation.infrastructure.output.notification;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Builder
 public class VirtualConsultationAppointmentTemplateArgs {
-
-	private String patientName;
-
-	private String date;
-
-	private String professionalName;
-
-	private String clinicalSpecialty;
-
-	private String callLink;
-
+	public final String patientName;
+	public final String date;
+	public final String professionalName;
+	public final String clinicalSpecialty;
+	public final String callLink;
 }

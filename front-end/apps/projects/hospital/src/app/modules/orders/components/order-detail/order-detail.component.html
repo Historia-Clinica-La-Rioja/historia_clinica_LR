@@ -1,0 +1,20 @@
+<div class="content" fxLayout="column">
+	<app-show-more-concepts [concepts]="orderDetails.snomed">
+	</app-show-more-concepts>
+
+	<app-colored-icon-text fxLayoutAlign="start center"  *ngIf="orderDetails?.EStudyType" [coloredIconText]="{icon: 'error', color: colorRed, text: 'orders.orders-detail.URGENT' | translate }">
+	</app-colored-icon-text>
+
+	<app-identifier-cases *ngIf="orderDetails.requiresTransfer" [identifierCase]="identiferCases.PIN_DROP"
+		[description]="'orders.orders-detail.REQUIRES_TRANSFER' | translate">
+	</app-identifier-cases>
+
+	<app-identifier-cases [identifierCase]="identiferCases.LOCAL_HOSPITAL" [description]="orderDetails.sourceTypeId">
+	</app-identifier-cases>
+
+	<div>
+		<span class="gray">
+			{{orderDetails.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}
+		</span>
+	</div>
+</div>

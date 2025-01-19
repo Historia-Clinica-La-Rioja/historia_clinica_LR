@@ -1,12 +1,11 @@
-import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CompleteEquipmentDiaryDto, DiaryOpeningHoursDto, ERole, MedicalCoverageDto } from '@api-rest/api-model';
 import { EquipmentDiaryService } from '@api-rest/services/equipment-diary.service';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { buildFullDate, DateFormat, dateToMoment, dateToMomentTimeZone, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { toHourMinuteSecond } from '@core/utils/date.utils';
+import { buildFullDateFromDate, dateISOParseDate, isBetweenDates, isSameOrBefore } from '@core/utils/moment.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -16,13 +15,15 @@ import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { CalendarEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 import { Subject } from 'rxjs';
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
 import { OpeningHoursDiaryService } from '../../services/opening-hours-diary.service';
 import { SearchEquipmentDiaryService } from '../../services/search-equipment-diary.service';
 import { ImageNetworkAppointmentComponent } from '../image-network-appointment/image-network-appointment.component';
+import { fixDate } from '@core/utils/date/format';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-equipment-diary',
@@ -49,7 +50,6 @@ export class EquipmentDiaryComponent implements OnInit {
 
 	readonly calendarViewEnum = CalendarView;
 	readonly MONDAY = DAYS_OF_WEEK.MONDAY;
-	readonly dateFormats = DatePipeFormat;
 
 	@Input()
 	set diaryId(diaryId: number) {
@@ -68,7 +68,8 @@ export class EquipmentDiaryComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
+		private readonly transcribedOrderService: TranscribedOrderService
 	) { }
 
 	ngOnInit() {
@@ -103,15 +104,16 @@ export class EquipmentDiaryComponent implements OnInit {
 		this.viewDate = date;
 		this.view = this.calendarViewEnum.Day;
 		this.setDateRange(date);
+		this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);
 	}
 
 	onClickedSegment(event) {
 		const openingHourId = this.openingHoursService.getOpeningHoursId(this.diary.startDate, this.diary.endDate, event.date);
 		if (openingHourId) {
-			const clickedDate: Moment = dateToMomentTimeZone(event.date);
+			const clickedDate = fixDate(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto = this.openingHoursService.getEquipmentDiaryOpeningHours().find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
 
-			const busySlot = this.getAppointmentAt(event.date)
+			const busySlot = this.getAppointmentAt(clickedDate);
 			const numberOfOverturnsAssigned = this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate)
 
 			const addingOverturn = !!busySlot;
@@ -120,7 +122,7 @@ export class EquipmentDiaryComponent implements OnInit {
 				return;
 			}
 
-			const isHoliday = this.holidays.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate());
+			const isHoliday = this.holidays.find(holiday => holiday.start.getDate() === clickedDate.getDate());
 
 			if (!isHoliday) {
 				this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
@@ -142,26 +144,26 @@ export class EquipmentDiaryComponent implements OnInit {
 		return this.appointments.find(appointment => appointment.start.getTime() === date.getTime());
 	}
 
-	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): number {
-		const openingHourStart = buildFullDate(diaryOpeningHourDto.openingHours.from, clickedDate);
-		const openingHourEnd = buildFullDate(diaryOpeningHourDto.openingHours.to, clickedDate);
+	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Date): number {
+		const openingHourStart = buildFullDateFromDate(diaryOpeningHourDto.openingHours.from, clickedDate);
+		const openingHourEnd = buildFullDateFromDate(diaryOpeningHourDto.openingHours.to, clickedDate);
 		return this.appointments.filter(event =>
-			event.meta?.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')
+			event.meta?.overturn && isBetweenDates(event.start, openingHourStart, openingHourEnd, '[)')
 		).length
 	}
 
 	private _getViewDate(): Date {
-		const momentStartDate = momentParseDate(this.diary.startDate);
-		const momentEndDate = momentParseDate(this.diary.endDate);
-		const lastSelectedDate = moment(this.viewDate);
+		const startDate = dateISOParseDate(this.diary.startDate);
+		const endDate = dateISOParseDate(this.diary.endDate);
+		const lastSelectedDate = this.viewDate;
 
-		if (lastSelectedDate.isBetween(momentStartDate, momentEndDate)) {
+		if (isBetweenDates(lastSelectedDate, startDate, endDate)) {
 			return this.viewDate;
 		}
-		if (lastSelectedDate.isSameOrBefore(momentStartDate)) {
-			return momentStartDate.toDate();
+		if (isSameOrBefore(lastSelectedDate, startDate)) {
+			return startDate;
 		}
-		return momentEndDate.toDate();
+		return endDate;
 	}
 
 	private getAgenda(diaryId: number) {
@@ -173,13 +175,14 @@ export class EquipmentDiaryComponent implements OnInit {
 		});
 	}
 
-	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+	private openNewAppointmentDialog(clickedDate: Date, openingHourId: number, addingOverturn: boolean) {
 		const dialogRef = this.dialog.open(NewAppointmentComponent, {
-			width: '35%',
+			width: '40%',
+			disableClose: true,
 			data: {
-				date: clickedDate.format(DateFormat.API_DATE),
+				date: toApiFormat(clickedDate),
 				diaryId: this.diary.id,
-				hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+				hour: toHourMinuteSecond(clickedDate),
 				openingHoursId: openingHourId,
 				overturnMode: addingOverturn,
 				patientId: null,
@@ -194,13 +197,13 @@ export class EquipmentDiaryComponent implements OnInit {
 			return;
 		}
 		if (!event.meta.patient?.id) {
+			const date = fixDate(event.meta.date);
 			this.dialog.open(ConfirmBookingComponent, {
 				width: '30%',
 				data: {
-					date: event.meta.date.format(DateFormat.API_DATE),
+					date: date,
 					diaryId: this.diary.id,
-					hour: event.meta.date.format(DateFormat.HOUR_MINUTE_SECONDS),
-					openingHoursId: this.openingHoursService.getOpeningHoursId(this.diary.startDate, this.diary.endDate, event.meta.date.toDate()),
+					openingHoursId: this.openingHoursService.getOpeningHoursId(this.diary.startDate, this.diary.endDate, date),
 					overturnMode: false,
 					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,
 					idNumber: event.meta.patient.identificationNumber,
@@ -234,6 +237,7 @@ export class EquipmentDiaryComponent implements OnInit {
 				});
 			}
 			dialogRef.afterClosed().subscribe((appointmentInformation) => {
+				this.transcribedOrderService.resetTranscribedOrder()
 				this.viewDate = appointmentInformation.date;
 				this.setDateRange(this.viewDate);
 				this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);
@@ -243,23 +247,22 @@ export class EquipmentDiaryComponent implements OnInit {
 
 	private setDateRange(date: Date) {
 		if (CalendarView.Day === this.view) {
-			const d = moment(date);
-			this.startDate = momentFormat(d, DateFormat.API_DATE);
-			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			this.startDate = toApiFormat(date);
+			this.endDate = toApiFormat(date);
 			return;
 		}
 		if (CalendarView.Month === this.view) {
 			const from = startOfMonth(date);
 			const to = endOfMonth(date);
-			this.startDate = momentFormat(moment(from), DateFormat.API_DATE);
-			this.endDate = momentFormat(moment(to), DateFormat.API_DATE);
+			this.startDate = toApiFormat(from);
+			this.endDate = toApiFormat(to);
 			return;
 		}
 		const start = startOfWeek(date, { weekStartsOn: 1 });
-		this.startDate = momentFormat(moment(start), DateFormat.API_DATE);
+		this.startDate = toApiFormat(start);
 
 		const end = endOfWeek(date, { weekStartsOn: 1 });
-		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+		this.endDate = toApiFormat(end);
 	}
 
 	private verifyOverturns(addingOverturn: boolean, numberOfOverturnsAssigned: number, diaryOpeningHourDto: DiaryOpeningHoursDto) {
@@ -273,9 +276,9 @@ export class EquipmentDiaryComponent implements OnInit {
 			return false;
 	}
 
-	private openWarningHoliday(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+	private openWarningHoliday(clickedDate: Date, openingHourId: number, addingOverturn: boolean) {
 		const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-		const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
+		const holidayDateText = this.dateFormatPipe.transform(clickedDate, 'fulldate');
 		const dialogRef = this.dialog.open(DiscardWarningComponent, {
 			data: {
 				title: 'turnos.holiday.TITLE',

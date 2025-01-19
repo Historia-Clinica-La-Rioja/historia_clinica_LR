@@ -1,0 +1,41 @@
+<div fxLayout="row wrap" fxLayoutGap="20px">
+    <div fxFlex fxLayout.gt-xs="row wrap" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="5px">
+        <div fxFlex fxLayout="column" fxLayoutGap="5px">
+            <app-identifier-cases *ngIf="appointment.dateTime.date" [identifierCase]="identiferCases.DATE"
+                description="{{ appointment.dateTime.date | viewDateDto: 'date' | dateFormat: 'fulldate' | titlecase }}" data-id="appoinmentDate">
+            </app-identifier-cases>
+            <app-identifier-cases *ngIf="appointment.dateTime.time" [identifierCase]="identiferCases.HOUR"
+                description="{{ appointment.dateTime.time | viewDateDto: 'time' | dateFormat: 'time' }}" data-id="appoinmentTime">
+            </app-identifier-cases>
+        </div>
+    
+        <div fxFlex fxLayout="column" fxLayoutGap="5px">
+            <app-identifier-cases *ngIf="appointment.doctorName" [identifierCase]="identiferCases.PROFESSIONAL"
+                [description]="appointment.doctorName" data-id="doctorName">
+            </app-identifier-cases>
+            <app-identifier-cases *ngIf="appointment.institution" [identifierCase]="identiferCases.INSTITUTION"
+                [description]="appointment.institution" data-id="institution">
+            </app-identifier-cases>
+            <app-identifier-cases *ngIf="appointment.city" [identifierCase]="identiferCases.DISTRICT"
+                [description]="appointment.city" data-id="city">
+            </app-identifier-cases>
+        </div>
+
+        <div fxFlex fxLayout="column" fxLayoutGap="5px">
+            <app-identifier-cases *ngIf="appointment.clinicalSpecialty" [identifierCase]="identiferCases.SPECIALTY"
+                [description]="appointment.clinicalSpecialty" data-id="clinicalSpecialty">
+            </app-identifier-cases>
+            <app-identifier-cases *ngIf="practicesList.length" [identifierCase]="identiferCases.PRACTICE"
+                description="{{ practicesList }}" data-id="practice">
+            </app-identifier-cases>
+            <app-identifier-cases *ngIf="appointment.service" [identifierCase]="identiferCases.SERVICE"
+                description="{{ appointment.service | titlecase }}" data-id="service">
+            </app-identifier-cases>
+        </div>
+    </div>
+
+    <div fxFlex="20" fxFlex.lt-sm="30">
+        <app-colored-label class="personalized-label uppercase" description={{appointmentState.description}}
+        color="{{appointmentState.color}}" data-id="appointmentState"></app-colored-label>
+    </div>
+</div>

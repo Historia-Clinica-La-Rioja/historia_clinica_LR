@@ -1,0 +1,15 @@
+<div data-id="histories-section">
+    <app-iconed-titled-section icon="assignment"
+        title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
+    <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+        <app-title-description-list *ngIf="histories.recordList?.length"
+            title="internaciones.anesthesic-report.record.REGISTERED_RECORDS"
+            [descriptionData]="histories.recordList"></app-title-description-list>
+        <app-title-description-list *ngIf="histories.observations"
+            title="historia-clinica.anesthetic-report.summary.OBSERVATIONS"
+            [descriptionData]="histories.observations"></app-title-description-list>
+        <app-title-description-list *ngIf="histories.asa"
+            title="internaciones.anesthesic-report.record.ASA"
+            [descriptionData]="histories.asa"></app-title-description-list>
+    </div>
+</div>

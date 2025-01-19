@@ -6,7 +6,7 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TableColumnConfig } from "@presentation/components/document-section-table/document-section-table.component";
 import { CellTemplates } from "@presentation/components/cell-templates/cell-templates.component";
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 export interface MotivoConsulta {
 	snomed: SnomedDto;
@@ -24,6 +24,8 @@ export class MotivoNuevaConsultaService {
 	private readonly motivosEmitter = new Subject<MotivoConsulta[]>();
 	motivosConsulta$: Observable<MotivoConsulta[]> = this.motivosEmitter.asObservable();
 
+	private isEmptyBehaviorSubject = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptyBehaviorSubject.asObservable();
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -123,6 +125,7 @@ export class MotivoNuevaConsultaService {
 			};
 			this.addControl(motivo);
 			this.resetForm();
+			this.isEmptyBehaviorSubject.next(false);
 		}
 	}
 
@@ -133,9 +136,17 @@ export class MotivoNuevaConsultaService {
 	remove(index: number): void {
 		this.motivoConsulta = removeFrom<MotivoConsulta>(this.motivoConsulta, index);
 		this.motivosEmitter.next(this.motivoConsulta);
+		this.isEmptyBehaviorSubject.next(this.motivoConsulta.length === 0);
 	}
 
 	isEmpty(): boolean {
 		return (!this.motivoConsulta || this.motivoConsulta.length === 0);
+	}
+
+	setMotives(motives: MotivoConsulta[]) {
+		motives.forEach(motive => {
+			this.setConcept(motive.snomed);
+			this.addToList();
+		});
 	}
 }

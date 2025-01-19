@@ -1,0 +1,28 @@
+@import '../../../../../assets/styles/mixins';
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.m-top {
+    margin-top: 1rem;
+}
+
+.map-action {
+    top: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hide {
+    display: none;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    @include font-weight-bold;
+}

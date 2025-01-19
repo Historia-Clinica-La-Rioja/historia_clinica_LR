@@ -23,8 +23,8 @@ export class SectorService {
 		return this.http.get<any[]>(url);
 	}
 
-	getDiagnosticImagingType(sectorId: number): Observable<SectorDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/sectoroftype/${sectorId}`;
+	getAllSectorByType(sectorType: number): Observable<SectorDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sector/sectoroftype/${sectorType}`;
 		return this.http.get<SectorDto[]>(url);
 	}
 
