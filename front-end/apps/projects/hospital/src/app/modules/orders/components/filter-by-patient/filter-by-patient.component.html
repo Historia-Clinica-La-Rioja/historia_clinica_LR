@@ -1,0 +1,8 @@
+<div class="filter-container">
+	<h3>{{'orders.filter-by-patient-component.FILTER_BY_PATIENT'| translate}}</h3>
+	<mat-slide-toggle
+	  [checked]="isTemporaryPatient"
+	  (change)="onToggleChange($event)">
+	  {{'orders.filter-by-patient-component.TEMPORARY_ON-GUARD_PATIENT'| translate}}
+	</mat-slide-toggle>
+</div>

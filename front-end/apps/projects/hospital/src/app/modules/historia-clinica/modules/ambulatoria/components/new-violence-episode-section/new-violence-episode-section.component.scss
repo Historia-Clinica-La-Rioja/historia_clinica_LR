@@ -1,0 +1,6 @@
+@import '../../ambulatoria-mixins.scss';
+@include violence-mixins();
+
+.violence-situation {
+	margin-bottom: 1rem;
+}

@@ -1,0 +1,19 @@
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.5em">
+
+	<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.5em">
+		<span style="color: grey;">PACIENTE</span>
+		<app-patient-summary [person]="callDetails.patient"></app-patient-summary>
+	</div>
+
+	<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap=".8em">
+		<app-priority [priority]="callDetails.priority"></app-priority>
+		<app-iconed-text icon='schedule' [text]="timeDifference(callDetails.createdOn)"></app-iconed-text>
+	</div>
+</div>
+
+<div id="profesional" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+	<span style="color: grey;">PROFESIONAL</span>
+	<app-iconed-text icon='person' [text]="callDetails.professionalFullName"></app-iconed-text>
+	<app-iconed-text icon='medical_services' [text]="callDetails.clinicalSpecialty"></app-iconed-text>
+	<app-iconed-text icon='domain' [text]="callDetails.institutionName"></app-iconed-text>
+</div>

@@ -1,0 +1,21 @@
+@import '../../../../../assets/styles/mixins';
+
+.display-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subtitle {
+    font-size: 15px;
+    @include font-weight-bold;
+}
+
+.text-overflow {
+    word-break: break-word;
+	white-space: pre-line;
+}
+
+.register-editor-info {
+    width: 80%;
+}

@@ -1,0 +1,8 @@
+<form [formGroup]="form" class="display-column">
+	<span class="font-bold">{{'historia-clinica.general.OBSERVATIONS' | translate}}</span>
+    <mat-form-field appearance="outline">
+        <textarea id="observations" formControlName="observations" [placeholder]="'historia-clinica.general.ENTER_OBSERVATIONS' | translate" matInput
+            type="text"></textarea>
+        <mat-error>{{ 'forms.REQUIRED' | translate }}</mat-error>
+    </mat-form-field>
+</form>

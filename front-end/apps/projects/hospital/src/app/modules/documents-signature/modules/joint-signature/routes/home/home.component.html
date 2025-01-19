@@ -1,0 +1,24 @@
+<button mat-button color="primary" *ngIf="buttonBack" (click)="goToBackDocumentsSignature()">
+	<mat-icon color="primary">arrow_back</mat-icon>
+	<span>{{ 'firmas.BACK_DOCUMENTS_SIGNATURE' | translate }}</span>
+</button>
+
+<app-content width="full">
+	<h2 class="page-title">{{'firmas.JOINT_SIGNATURE' | translate}}</h2>
+	<mat-tab-group>
+		<mat-tab>
+			<ng-template mat-tab-label>
+				<span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
+			</ng-template>
+			<ng-template matTabContent>
+				<app-joint-signature-documents></app-joint-signature-documents>
+			</ng-template>
+		</mat-tab>
+	</mat-tab-group>
+</app-content>
+
+<ng-template #loading>
+	<div class="spinner">
+		<mat-spinner color="primary" class="spinner"></mat-spinner>
+	</div>
+</ng-template>

@@ -1,0 +1,24 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef"
+    [header]="{ title:'ambulatoria.paciente.violence-situations.NEW_VIOLENCE_SITUATION' }">
+    <div body>
+        <app-violence-situation-person-information (personInformation)="setPersonInformation($event)" [confirmForm]="confirmForm"></app-violence-situation-person-information>
+
+        <app-new-violence-episode-section (violenceEpisodeInfo)="setViolenceEpisodeInfo($event)"  [confirmForm]="confirmForm"></app-new-violence-episode-section>
+
+        <app-violence-situation-violent-person-information (aggressorsListInfo)="setAggressorsListInfo($event)" [confirmForm]="confirmForm"></app-violence-situation-violent-person-information>
+
+        <app-violence-situation-implemented-actions (implementedActionsInfo)="setImplementedActionsInfo($event)" [confirmForm]="confirmForm"></app-violence-situation-implemented-actions>
+
+        <app-violence-situation-relevant-information-section (relevantInformation)="setRelevantInformation($event)" [confirmForm]="confirmForm"></app-violence-situation-relevant-information-section>
+    </div>
+    <div actions id="buttons">
+        <div *ngIf="viewError" ><mat-error>{{'ambulatoria.paciente.violence-situations.dialog.ERROR_FORM' | translate}}</mat-error></div>
+        <app-button [text]="'ambulatoria.paciente.violence-situations.dialog.CONFIRM'" 
+            [isLoading]="isSaving"
+            [disabled]="isSaving"
+            [color]="'primary'" 
+            [buttonType]="buttonRaised" 
+            (click)="confirmViolenceForm()">
+        </app-button>
+    </div>
+</app-dock-popup>

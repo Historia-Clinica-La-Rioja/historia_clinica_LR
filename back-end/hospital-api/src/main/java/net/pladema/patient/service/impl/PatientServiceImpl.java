@@ -11,10 +11,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.patient.repository.entity.PatientHistory;
+
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +61,6 @@ import net.pladema.patient.repository.entity.PatientAudit;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.AuditablePatientInfoBo;
-import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
@@ -140,13 +144,11 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public LimitedPatientSearchBo searchPatientOptionalFilters(PatientSearchFilter searchFilter) {
+	public Page<PatientSearch> searchPatientOptionalFilters(PatientSearchFilter searchFilter, Pageable pageable) {
 		LOG.debug(INPUT_DATA, searchFilter);
 		boolean filterByNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 		searchFilter.setFilterByNameSelfDetermination(filterByNameSelfDetermination);
-		Integer actualPatientListSize = patientRepository.getCountByOptionalFilter(searchFilter);
-		List<PatientSearch> patientList = patientRepository.getAllByOptionalFilter(searchFilter, MAX_RESULT_SIZE);
-		LimitedPatientSearchBo result = new LimitedPatientSearchBo(patientList, actualPatientListSize);
+		Page<PatientSearch> result = patientRepository.getAllByOptionalFilter(searchFilter, pageable);
 		LOG.trace(OUTPUT, result);
 		return result;
 	}
@@ -324,7 +326,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public void assertHasActiveEncountersByPatientId(Integer patientId) {
-		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
+		if(internmentEpisodeRepository.isPatientHospitalized(patientId) ||
+				emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId, EEmergencyCareState.getAllForEmergencyCareList()) ||
+				appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
 			throw new RejectedPatientException(RejectedPatientExceptionEnum.ENCOUNTER_ACTIVE_EXISTS, "El paciente posee un encuentro activo");
 	}
 	
@@ -340,6 +344,14 @@ public class PatientServiceImpl implements PatientService {
 		LOG.debug("Input parameters -> maxDate {}, limit {}", maxDate, limit);
 		List<Patient> result = patientRepositoryCustom.getLongTermTemporaryPatientIds(maxDate, limit);
 		LOG.debug("Output result -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<PatientGenderAgeBo> getPatientGenderAge(Integer patientId){
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		Optional<PatientGenderAgeBo> result = patientRepository.getPatientGenderAge(patientId);
+		LOG.debug("Output -> result {}", result);
 		return result;
 	}
 

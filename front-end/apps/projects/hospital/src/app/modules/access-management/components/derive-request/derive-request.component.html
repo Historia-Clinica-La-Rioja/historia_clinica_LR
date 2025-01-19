@@ -1,0 +1,55 @@
+<div *ngIf="showDeriveForm" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="derivation-form-title">
+            {{'access-management.derive_request.FORM_TITLE' | translate}}
+        </span>
+    </div>
+
+    <div>
+        <form [formGroup]="formDeriveRequest" fxLayout="column" fxLayoutGap="5px">
+            <mat-form-field appearance="outline">
+                <textarea formControlName="comment"
+                    placeholder="{{'access-management.derive_request.FORM_PLACEHOLDER' | translate }}"
+                    rows="4" matInput type="text">
+                </textarea>
+            </mat-form-field>
+
+            <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+                <button mat-stroked-button color="primary" btn-block type="button" (click)="closeDerivationForm()">
+                    <span> {{'turnos.appointment.CANCEL' | translate}}</span>
+                </button>
+                <button mat-flat-button color="primary" btn-block type="button" [disabled]="!formDeriveRequest.valid" (click)="performDerivation()">
+                    <span> {{'turnos.appointment.SAVE' | translate}}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div *ngIf="showDeriveRequest" class="derivation" fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="title-icon color-orange">error</mat-icon>
+            <span [translate]="'access-management.derive_request.DERIVATION_MESSAGE_TITLE'" 
+                [translateParams]="{forwardingType: derivationEditor?.derivationType}">
+            </span>
+        </div>
+        <button *ngIf="canEditDerivation" type="button" mat-icon-button color="primary"
+            (click)="enableEditDerivation()">
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+		</button>
+    </div>
+    <div>
+        <span>"{{_derivation}}"</span>
+        <app-register-editor-info *ngIf="derivationEditor"
+            [registerEditor]="derivationEditor"
+            [registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
+        </app-register-editor-info>
+    </div>
+</div>
+
+<button *ngIf="!showDeriveForm && canDerive" (click)="openFormToDeriveRequest()" mat-button type="button" color="primary">
+    <span>
+        {{'access-management.derive_request.BUTTON_TITLE' | translate}}
+    </span>
+</button>

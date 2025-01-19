@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.application.associatereferenceappointment;
 
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,9 +14,12 @@ public class AssociateReferenceAppointment {
 
 	private final ReferenceAppointmentStorage referenceAppointmentStorage;
 
-	public void run(Integer referenceId, Integer appointmentId) {
-		log.debug("Input parameters -> referenceId {}, appointmentId {}", referenceId, appointmentId);
-		referenceAppointmentStorage.save(referenceId, appointmentId);
+	private final ReferenceStorage referenceStorage;
+
+	public void run(Integer referenceId, Integer appointmentId, Boolean isProtected, Integer institutionId) {
+		log.debug("Input parameters -> referenceId {}, appointmentId {}, isProtected {}, institutionId {}", referenceId, appointmentId, isProtected, institutionId);
+		referenceAppointmentStorage.save(referenceId, appointmentId, isProtected);
+		referenceStorage.updateDestinationInstitution(referenceId, institutionId);
 	}
 
 }

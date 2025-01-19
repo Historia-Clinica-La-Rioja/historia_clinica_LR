@@ -4,9 +4,9 @@
 		<div fxLayout="column" fxLayoutGap="20px">
 			<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
-					<app-antecedentes-personales-summary [personalHistory]="personalHistory$ | async"
-						[personalHistoriesHeader]="personalProblemsHeader">
-					</app-antecedentes-personales-summary>
+					<app-patient-problems-summary [patientProblems]="patientProblems$ | async"
+						[personalProblemsHeader]="personalProblemsHeader">
+					</app-patient-problems-summary>
 				</div>
 				<div fxLayout="column" fxFlex="50%" fxLayoutGap="0px">
 					<app-antecedentes-familiares-summary [familyHistories]="familyHistories$ | async"

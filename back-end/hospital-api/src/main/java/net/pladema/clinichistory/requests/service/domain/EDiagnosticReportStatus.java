@@ -1,7 +1,11 @@
 package net.pladema.clinichistory.requests.service.domain;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,4 +37,15 @@ public enum EDiagnosticReportStatus {
     public String getDescription() {
         return description;
     }
+
+    public Boolean isFinal() {
+    	return this.equals(FINAL);
+    }
+
+	public static EDiagnosticReportStatus map(String id) {
+		for (EDiagnosticReportStatus e : values()) {
+			if (e.id.equals(id)) return e;
+		}
+		throw new NotFoundException("status-type-not-exists", String.format("El tipo de estado %s no es válido", id));
+	}
 }

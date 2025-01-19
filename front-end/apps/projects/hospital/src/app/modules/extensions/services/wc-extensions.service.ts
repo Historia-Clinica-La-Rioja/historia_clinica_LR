@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ExtensionComponentDto } from '@extensions/extensions-model';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import {
+	EMPTY,
+	Observable,
+	ReplaySubject,
+	catchError,
+	map,
+	startWith,
+} from 'rxjs';
 import { ExtensionsService } from './extensions.service';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 import {
@@ -11,23 +18,23 @@ import {
 	toSystemHomeWCParamsList,
 	toMenuItemList,
 	toInstitutionHomeWCParams,
+	toPatientProfileWCParams,
 } from './wc-extensions.mappers';
-import { SlotsStorageService } from './storages/slots-storage.service';
 import { MenuItem } from '@presentation/components/menu/menu.component';
+import { ExtensionsWCService } from './storages/extensions-wc.service';
+import { SlotsStorageService } from './storages/slots-storage.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class WCExtensionsService {
 
-	private emitters: { slot: Slot, emitter: BehaviorSubject<SlotedInfo[]> }[] = [];
-	private slotedComponents: { slot: Slot, components$: Observable<SlotedInfo[]> }[] = [];
+	private extensions = new ReplaySubject<ExtensionsWCService>(1);
+	private webComponents = new ReplaySubject<SlotsStorageService>(1);
 
 	constructor(
-		private readonly extensionService: ExtensionsService
+		private readonly extensionService: ExtensionsService,
 	) {
-		this.init();
-		this.fetchExtensions();
 	}
 
 	getSystemHomeComponents(): Observable<WCParams[]> {
@@ -58,6 +65,12 @@ export class WCExtensionsService {
 				map(sloted => sloted.map(toClinicHistoryWCParams(patientId)))
 			);
 	}
+	getPatientProfileComponents(patientId: number): Observable<WCParams[]> {
+		return this.listComponentsFromSlot(Slot.PATIENT_PROFILE)
+			.pipe(
+				map(sloted => sloted.map(toPatientProfileWCParams(patientId)))
+			);
+	}
 
 	getInstitutionHomeComponents(institutionId: number): Observable<WCParams[]> {
 		return this.listComponentsFromSlot(Slot.INSTITUTION_HOME_PAGE)
@@ -82,38 +95,27 @@ export class WCExtensionsService {
 	}
 
 	private listComponentsFromSlot(slot: Slot): Observable<SlotedInfo[]> {
-		return this.slotedComponents.find(a => a.slot === slot).components$;
+		return this.webComponents.asObservable()
+			.pipe(
+				map(e => e.wcForSlot(slot)),
+				startWith([]), // Emitir un array vacío como valor inicial
+			);
 	}
 
-	private fetchExtensions() {
-
-		/**
-		 * Cada modulo va a insertar una tupla en la BD
-		 * Esa tupla va a tener el nombre del modulo en cuestion a modo informativo
-		 * 		y la url en la que tiene un archivo
-			Este archvi informa en donde esta cada WC que quiere agregar
-		* 		como se llama el wc que quiere agregar
-		* 		en donde esta hosteado ese WC
-		* 		en que pantalla se quiere ubicar este WC
-		* 		parametros para el wc?
-		*/
-
-		const allPlugins$: Observable<ExtensionComponentDto[]> = this.extensionService.getExtensions();
-
-		allPlugins$.subscribe(
-			allPlugins => {
-				allPlugins.forEach(plugin => {
-					this.extensionService.getDefinition(plugin.path).subscribe(
+	public fetchExtensions() {
+		this.extensionService.getExtensions().subscribe(
+			extensionDefinitionList => {
+				const extensionsSlotsService = this.newExtensionsWCService(extensionDefinitionList);
+				extensionDefinitionList.forEach(extensionDefinition => {
+					this.extensionService.getDefinition(extensionDefinition.path).pipe(
+						catchError(error => {
+							console.warn(`No se pudo cargar ${extensionDefinition.name}`, error);
+							return EMPTY;
+						}),
+					).subscribe(
 						(defPluginArr: WCInfo[]) => {
-							// console.log('getdef ', defPluginArr);
-							const slotsStorageService = new SlotsStorageService(plugin.path);
-							defPluginArr.forEach(d => {
-								slotsStorageService.put(d);
-							});
-							slotsStorageService.forEachSlot(
-								(slotName, valuesToEmit) =>
-									this.emitters.find(sc => sc.slot === slotName).emitter.next(valuesToEmit)
-							)
+							extensionsSlotsService.loaded(extensionDefinition, defPluginArr);
+							this.webComponents.next(extensionsSlotsService.wcSlots);
 						}
 					)
 				})
@@ -121,15 +123,13 @@ export class WCExtensionsService {
 		);
 	}
 
-	init() { // Just public for testing
-		Object.values(Slot).forEach(
-			slot => {
-				const emitter = new BehaviorSubject<SlotedInfo[]>([]);
-				this.emitters.push({ slot, emitter });
-				this.slotedComponents.push({ slot, components$: emitter.asObservable() }); // Initial value null means not fetched, [] means no components
-			}
-		)
+	private newExtensionsWCService(extensions: ExtensionComponentDto[]): ExtensionsWCService {
+		const extensionsWCService = new ExtensionsWCService(extensions);
+		this.extensions.next(extensionsWCService);
+		return extensionsWCService;
 	}
+
+
 
 }
 
@@ -144,8 +144,9 @@ export interface WCInfo {
 
 
 export interface SlotedInfo {
+	slot: Slot;
 	componentName: string;
-	url: string;
+	fullUrl: string;
 	title?: string;
 }
 
@@ -164,6 +165,9 @@ export enum Slot {
 
 	// Una solapa mas en la historia clinica
 	CLINIC_HISTORY_TAB = 'CLINIC_HISTORY_TAB',
+
+	// Un card mas en el perfil del paciente
+	PATIENT_PROFILE = 'PATIENT_PROFILE',
 }
 
 

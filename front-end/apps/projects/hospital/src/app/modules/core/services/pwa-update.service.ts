@@ -1,7 +1,7 @@
 import { ApplicationRef, Injectable } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { concat, interval, Observable, ReplaySubject } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { PWAAction } from '@core/core-model';
 
 @Injectable({
@@ -24,13 +24,14 @@ export class PwaUpdateService {
 		const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));
 		// const everySixHours$ = interval(6 * 60 * 60 * 1000);
 		const everyHour$ = interval(60 * 60 * 1000);
-		const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everyHour$);
+		const everyHourOnceAppIsStable$ = concat(appIsStable$, everyHour$);
 
-		everySixHoursOnceAppIsStable$.subscribe(() => {
+		everyHourOnceAppIsStable$.subscribe(() => {
 			this.checkForUpdate();
 		});
 
 		updates.versionUpdates.pipe(
+			tap(evt => console.log('event update app', evt)),
 			filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
 			map(evt => ({
 				type: 'UPDATE_AVAILABLE',

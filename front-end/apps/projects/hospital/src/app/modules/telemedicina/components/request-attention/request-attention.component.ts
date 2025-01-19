@@ -3,7 +3,7 @@ import { CareLineDto, ClinicalSpecialtyDto, DateTimeDto, EVirtualConsultationPri
 import { mapPriority, statusLabel, status } from '../../virtualConsultations.utils';
 import { timeDifference } from '@core/utils/date.utils';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { map, race, forkJoin, Observable, take, Subscription } from 'rxjs';
+import { map, race, forkJoin, Observable, take, Subscription, of } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
@@ -19,6 +19,8 @@ import { Option, filter } from '@presentation/components/filters-select/filters-
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
+import { capitalize } from '@core/utils/core.utils';
+import { VirtualConsultationCustom } from '../request-info-card/request-info-card.component';
 
 @Component({
 	selector: 'app-request-attention',
@@ -29,7 +31,8 @@ export class RequestAttentionComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
 	@Input() virtualConsultationsFacadeService: VirtualConsultationsFacadeService;
-	virtualConsultations$: Observable<VirtualConsultation[]>;
+	virtualConsultationsFiltered$: Observable<VirtualConsultationCustom[]>;
+	virtualConsultationsBackUp$: Observable<VirtualConsultationCustom[]>;
 	toggleEnabled = false;
 	virtualConsultatiosStatus = status;
 	initialProfessionalStatus = false;
@@ -40,6 +43,9 @@ export class RequestAttentionComponent implements OnInit {
 	careLinesOptions: CareLineDto[];
 	specialitiesOptions: ClinicalSpecialtyDto[];
 	institutionOptions: InstitutionBasicInfoDto[];
+	patientFilter:string;
+	applySearchFilter = '';
+
 	constructor(
 		private virtualConsultationService: VirtualConstultationService,
 		private jitsiCallService: JitsiCallService,
@@ -53,8 +59,14 @@ export class RequestAttentionComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.getOptionsFilters();
-		this.virtualConsultations$ = this.virtualConsultationsFacadeService.virtualConsultationsAttention$.pipe(map(requests =>
+
+		this.virtualConsultationsFiltered$ = this.virtualConsultationsFacadeService.virtualConsultationsAttention$.pipe(map(requests =>
 			requests.map(request => this.toVCToBeShown(request)
+			)
+		))
+
+		this.virtualConsultationsBackUp$ = this.virtualConsultationsFacadeService.virtualConsultationsAttention$.pipe(map(requests =>
+			requests.map(request =>   this.toVCToBeShown(request)
 			)
 		))
 
@@ -125,11 +137,11 @@ export class RequestAttentionComponent implements OnInit {
 
 	prepareDtoFilter($event) {
 		let newCriteria: VirtualConsultationFilterDto = {};
-		newCriteria.availability = $event.availability.status ? null : $event.availability;
-		newCriteria.careLineId = $event.careLine.status ? null : $event.careLine;
-		newCriteria.clinicalSpecialtyId = $event.speciality.status ? null : $event.speciality;
-		newCriteria.priority = $event.priority.status ? null : $event.priority;
-		newCriteria.institutionId = $event.institution.status? null : $event.instution;
+		newCriteria.availability = $event.availability;
+		newCriteria.careLineId = $event.careLine;
+		newCriteria.clinicalSpecialtyId = $event.speciality;
+		newCriteria.priority = $event.priority;
+		newCriteria.institutionId = $event.institution;
 		this.searchRequest(newCriteria);
 	}
 
@@ -231,13 +243,45 @@ export class RequestAttentionComponent implements OnInit {
 		this.router.navigate([route]);
 	}
 
-	private toVCToBeShown(vc: VirtualConsultationDto) {
+	private toVCToBeShown(vc: VirtualConsultationDto) : VirtualConsultationCustom {
 		return {
 			...vc,
+			responsibleData: {available:vc.responsibleData.available,firstName:null,healthcareProfessionalId:vc.responsibleData.healthcareProfessionalId,lastName:null},
 			statusLabel: statusLabel[vc.status],
 			priorityLabel: mapPriority[vc.priority],
 			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime))
 		}
+	}
+
+	applyFilter($event: any): void {
+		this.applySearchFilter = ($event.target as HTMLInputElement).value;
+		this.applyFiltes();
+	}
+
+	private applyFiltes(): void {
+		if (this.applySearchFilter.length) {
+		this.virtualConsultationsFiltered$= of(this.filter());
+		}else{
+			this.virtualConsultationsFiltered$ = this.virtualConsultationsBackUp$;
+		}
+	}
+
+	private filter(): VirtualConsultationCustom[] {
+		let listFilter =[];
+		 this.virtualConsultationsBackUp$.subscribe(data=>{
+			listFilter = data;
+		});
+			return listFilter.filter((e: VirtualConsultationDto) => this.getFullName(e).toLowerCase().includes(this.applySearchFilter.toLowerCase()))
+	}
+
+	getFullName(patient: VirtualConsultationDto): string {
+		const names = [
+			patient?.patientData.name,
+			patient?.patientData.lastName,
+		].filter(name => name !== undefined && name.trim() !== '');
+
+		const capitalizedNames = names.map(name => capitalize(name));
+		return capitalizedNames.join(' ');
 	}
 
 }

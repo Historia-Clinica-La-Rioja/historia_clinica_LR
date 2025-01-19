@@ -2,10 +2,13 @@
 	<mat-form-field appearance="outline">
 		<mat-label>{{label | translate}}</mat-label>
 		<mat-date-range-input [min]="min" [max]="max" [rangePicker]="dateRangePicker">
-			<input matStartDate formControlName="start" readonly>
-			<input matEndDate formControlName="end" (dateChange)="emitChange()" readonly>
+			<input matStartDate formControlName="start" (dateChange)="fixedRangeDays ? setAndEmitRangeForFixedDates() : null" readonly>
+			<input matEndDate formControlName="end" (dateChange)="fixedRangeDays ? setAndEmitRangeForFixedDates() : emitChange()" [disabled]="!!fixedRangeDays" readonly>
 		</mat-date-range-input>
 		<mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
 		<mat-date-range-picker #dateRangePicker></mat-date-range-picker>
+		<button type="button" *ngIf="dateRangeForm.get('start').value" mat-icon-button matSuffix (click)="delete()">
+			<mat-icon color="warn">close</mat-icon>
+		</button>
 	</mat-form-field>
 </form>

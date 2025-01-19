@@ -15,7 +15,8 @@ public enum EReferenceClosureType {
 	CONTINUA_OBSERVACION(1, "Continúa en observación"),
 	INICIA_TRATAMIENTO(2, "Inicia tratamiento en centro de referencia"),
 	REQUIERE_ESTUDIOS(3, "Requiere estudios complementarios"),
-	CONTRARREFERENCIA(4, "Contrarreferencia");
+	CONTRARREFERENCIA(4, "Contrarreferencia"),
+	CIERRE_ADMINISTRATIVO(5, "Cierre administrativo de referencia");
 
 	private final Short id;
 	private final String description;

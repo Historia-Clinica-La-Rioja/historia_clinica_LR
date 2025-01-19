@@ -6,7 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { RegisterNursingRecordComponent } from '../../dialogs/register-nursing-record/register-nursing-record.component';
 import { NursingRecordFacadeService } from '../../services/nursing-record-facade.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { isSameDay } from 'date-fns';
 
@@ -20,7 +19,6 @@ export class NursingRecordComponent {
 	PENDING = ENursingRecordStatus.PENDING;
 	COMPLETED = ENursingRecordStatus.COMPLETED;
 	REJECTED = ENursingRecordStatus.REJECTED;
-	datePipeFormat = DatePipeFormat;
 	internmentEpisodeId: number;
 	today = new Date();
 	isSameDay = isSameDay;

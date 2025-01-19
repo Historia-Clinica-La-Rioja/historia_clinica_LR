@@ -5,8 +5,11 @@ import {
     TextField,
     ReferenceField,
     NumberField,
-    DateField,
 } from 'react-admin';
+
+import {
+    SgxDateField,
+} from '../../components';
 
 const ImmunizationDataList = props => (
     <List {...props} hasCreate={false} hasEdit={true}>
@@ -14,8 +17,8 @@ const ImmunizationDataList = props => (
             <NumberField source="id" label="Identificador vacuna" />
             <TextField source="vaccineSctid" label="Sctid vacuna" />
             <TextField source="vaccinePt" label="Descripción vacuna" />
-            <DateField source="administrationDate" label="Fecha de administración" showTime />
-            <DateField source="expirationDate" label="Fecha de vencimiento" showTime />
+            <SgxDateField source="administrationDate" label="Fecha de administración" showTime />
+            <SgxDateField source="expirationDate" label="Fecha de vencimiento" showTime />
             <TextField source="conditionDescription" label="Condición" />
             <TextField source="schemeDescription" label="Esquema" />
             <TextField source="dose" label="Dosis" />

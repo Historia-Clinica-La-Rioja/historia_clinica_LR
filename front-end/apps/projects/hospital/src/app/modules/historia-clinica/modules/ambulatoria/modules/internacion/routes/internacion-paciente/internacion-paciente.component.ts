@@ -8,8 +8,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
 import { MapperService } from '@presentation/services/mapper.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PatientService } from '@api-rest/services/patient.service';
 import {
 	BasicPatientDto,
@@ -26,7 +25,6 @@ import { InternacionService } from '@api-rest/services/internacion.service';
 import { INTERNACION, ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION } from '../../../../../../constants/summaries';
 import { ROLES_FOR_EDIT_DIAGNOSIS } from '../../../internacion/constants/permissions';
 import { ProbableDischargeDialogComponent } from '../../../../../../dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
-import { Moment } from 'moment';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
@@ -43,7 +41,7 @@ export class InternacionPacienteComponent implements OnInit {
 	personPhoto: PersonPhotoDto;
 	anamnesisDoc: AnamnesisSummaryDto;
 	epicrisisDoc: EpicrisisSummaryDto;
-	lastProbableDischargeDate: Moment;
+	lastProbableDischargeDate: Date;
 	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	showDischarge: boolean;
 	editDiagnosisSummary$: boolean;

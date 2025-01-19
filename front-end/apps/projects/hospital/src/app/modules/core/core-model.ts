@@ -7,7 +7,7 @@ export class MenuItemDef {
 	url: string;
 	permissions?: ERole[];
 	options?: any;
-	featureFlag?: AppFeature;
+	featureFlag?: AppFeature[];
 }
 
 export interface PWAAction {

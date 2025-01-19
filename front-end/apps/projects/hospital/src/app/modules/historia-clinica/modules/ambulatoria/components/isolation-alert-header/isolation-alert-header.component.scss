@@ -1,0 +1,18 @@
+mat-icon {
+    overflow: visible;
+}
+
+mat-list {
+    display: block;
+    max-width: 100%;
+}
+
+.mat-list-item {
+    height: auto !important;
+}
+
+.mat-list-item span[matLine] {
+    word-break: break-word;
+    white-space: pre-line;
+    font-size: 14px;
+}

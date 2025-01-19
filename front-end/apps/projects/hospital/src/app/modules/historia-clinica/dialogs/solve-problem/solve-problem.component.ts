@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { format } from "date-fns";
 
 import { hasError } from '@core/utils/form.utils';
-import { DateFormat, MIN_DATE } from "@core/utils/date.utils";
-import { HCEPersonalHistoryDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
+import { MIN_DATE } from "@core/utils/date.utils";
+import { HCEHealthConditionDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -27,13 +26,15 @@ export class SolveProblemComponent implements OnInit {
 	problemasService: ProblemasService;
 	private readonly form: UntypedFormGroup;
 	private problema: HealthConditionNewConsultationDto;
-	private dataDto: HCEPersonalHistoryDto;
+	private dataDto: HCEHealthConditionDto;
 	private readonly patientId: number;
 	private readonly problemId: number;
-	dateIsReadOnly: boolean;
 	severityTypeMasterData: any[];
 	today: Date;
 	minDate = MIN_DATE;
+	maxDate = new Date();
+	dateToSet: Date;
+	markAsTouched = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
@@ -50,11 +51,11 @@ export class SolveProblemComponent implements OnInit {
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.today = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE));
+		this.today = new Date();
 		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required],
+			snomed: [{value: null, disabled: true}, Validators.required],
 			severidad: [null],
-			cronico: [null, Validators.required],
+			cronico: [{value: null, disabled: true}, Validators.required],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null, Validators.required]
 		});
@@ -79,19 +80,20 @@ export class SolveProblemComponent implements OnInit {
 			this.form.controls.severidad.disable();
 		}
 
-		let dateToSet;
 		if (p.startDate) {
-			dateToSet = this.toFormatDate(this.dataDto.startDate)
-			this.dateIsReadOnly = true
+			this.dateToSet = this.toFormatDate(this.dataDto.startDate)
+			this.minDate = p.startDate
+			this.maxDate = p.startDate
 		} else {
-			dateToSet = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE))
+			this.dateToSet = new Date();
 		}
 
 		this.form.controls.cronico.setValue(p.isChronic);
-		this.form.controls.fechaInicio.setValue(dateToSet);
+		this.form.controls.fechaInicio.setValue(this.dateToSet);
 	}
 
 	solveProblem() {
+		this.markAsTouched = true;
 		if (this.form.valid) {
 			const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
 				{
@@ -105,7 +107,7 @@ export class SolveProblemComponent implements OnInit {
 
 			dialogRefConfirmation.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
-					this.problema.inactivationDate = this.form.value.fechaFin.toDate();
+					this.problema.inactivationDate = this.form.value.fechaFin;
 					this.problema.startDate = this.form.value.fechaInicio;
 					this.problema.statusId = HEALTH_CLINICAL_STATUS.RESUELTO;
 					this.problema.id = this.problemId;
@@ -137,7 +139,7 @@ export class SolveProblemComponent implements OnInit {
 
 		if (fechaFin) {
 			if (fechaInicio) {
-				const inactivationDate = fechaFin.toDate();
+				const inactivationDate = fechaFin;
 				const initDate = fechaInicio;
 				if (initDate > inactivationDate) {
 					this.form.controls.fechaFin.setErrors({ min: true });
@@ -150,13 +152,21 @@ export class SolveProblemComponent implements OnInit {
 		}
 	}
 
+	fechaInicioChanged(date: Date) {
+		this.form.controls.fechaInicio.setValue(date);
+	}
+
+	fechaFinChanged(date: Date) {
+		this.form.controls.fechaFin.setValue(date);
+	}
+
 	hasError(type: string, controlName: string): boolean {
 		return hasError(this.form, type, controlName);
 	}
-
 
 	toFormatDate = (dateStr) => {
 		const [day, month, year] = dateStr.split('/');
 		return new Date(year, month - 1, day);
 	}
+
 }

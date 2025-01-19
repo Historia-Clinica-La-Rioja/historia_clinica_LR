@@ -3,6 +3,7 @@ package net.pladema.user.infrastructure.input.shared;
 import ar.lamansys.sgh.shared.infrastructure.input.service.user.dto.UserSharedInfoDto;
 import net.pladema.user.application.fetchuserdatafromtoken.FetchUserDataFromToken;
 
+import net.pladema.user.application.getcuilbyuserid.GetCuilByUserId;
 import net.pladema.user.application.port.exceptions.UserPersonStorageException;
 import net.pladema.user.infrastructure.input.rest.mapper.UserDataDtoMapper;
 
@@ -25,6 +26,9 @@ public class SharedHospitalUserPortImpl implements SharedHospitalUserPort {
 	private final GetUserPersonInfo getUserPersonInfo;
 
 	private final FetchUserDataFromToken fetchUserDataFromToken;
+
+	private final GetCuilByUserId getCuilByUserId;
+
 	private final UserDataDtoMapper userDataDtoMapper;
 
 	@Override
@@ -49,5 +53,10 @@ public class SharedHospitalUserPortImpl implements SharedHospitalUserPort {
 		} catch (UserPersonStorageException e) {
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public Optional<String> getCuitByUserId(Integer userId) {
+		return getCuilByUserId.run(userId);
 	}
 }

@@ -43,11 +43,11 @@
 	<div fxFlex="50%">
 		<span class="info-title">Fecha de Nacimiento</span>
 		<span *ngIf="personalInformation?.birthDate; else noInformation"
-			class="info-content">{{personalInformation?.birthDate}}</span>
+			class="info-content">{{personalInformation?.birthDate | dateFormat: 'date'}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row" style="word-break: break-all;">
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between" class="form-row">
 	<div fxFlex="50%">
 		<span class="info-title">Email</span>
 		<span *ngIf="personalInformation?.email; else noInformation"

@@ -1,12 +1,11 @@
 package net.pladema.medicalconsultation.appointment.repository.domain;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import lombok.Getter;
 import lombok.ToString;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Getter
 @ToString
@@ -22,28 +21,22 @@ public class EquipmentAppointmentVo {
 
 	private final Short reportStatusId;
 
-	private final String studyName;
-
 	private final Integer serviceRequestId;
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Short reportStatusId, String studyName) {
-		this.appointment = appointment;
-		this.identificationType = identificationType;
-		this.identificationnumber = identificationnumber;
-		this.reportStatusId = reportStatusId;
-		this.institutionBasicInfoBo = null;
-		this.studyName = studyName;
-		this.serviceRequestId = null;
-	}
+	private final Integer transcribedServiceRequestId;
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName, Short reportStatusId, String studyName, Integer serviceRequestId) {
+	private final Integer diagnosticReportId;
+
+	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName,
+								  Short reportStatusId, Integer diagnosticReportId, Integer serviceRequestId, Integer transcribedServiceRequestId) {
 		this.appointment = appointment;
 		this.identificationType = identificationType;
 		this.identificationnumber = identificationnumber;
 		this.reportStatusId = reportStatusId;
 		this.institutionBasicInfoBo = new InstitutionBasicInfoBo(institutionId, institutionName);
-		this.studyName = studyName;
+		this.diagnosticReportId = diagnosticReportId;
 		this.serviceRequestId = serviceRequestId;
+		this.transcribedServiceRequestId = transcribedServiceRequestId;
 	}
 
 	public Integer getId() {

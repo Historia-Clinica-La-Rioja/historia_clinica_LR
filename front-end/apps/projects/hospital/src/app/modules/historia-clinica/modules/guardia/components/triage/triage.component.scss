@@ -4,12 +4,23 @@ form {
 	@include mat-form-field-background-white;
 }
 
+.formLabel {
+	font-weight: 500;
+}
+
 .simple-form-field {
-	width: 60%;
 	min-width: 280px;
+}
+
+.triage-options {
+	width: 100%;
 }
 
 .page {
 	width: 100%;
 	max-width: 500px;
+}
+
+.patient-summary {
+	margin: 0px 0px 20px 0px;
 }

@@ -1,0 +1,130 @@
+<app-content width="full">
+    <h2 class="m-top">{{'gis.TITLE' | translate}}</h2>
+    <section class="container">
+        <mat-card class="institution-address-container" *ngIf="stepperMode">
+            <mat-stepper [labelPosition]="'bottom'" linear #stepper (selectionChange)="changeStep($event)" [selectedIndex]="currentStepperIndex">
+                <mat-step label="{{'gis.steppers.ADDRESS' | translate}}" [completed]="institutionAddressForm.valid">
+                    <h1 class="m-top" [translate]="'gis.institution-data.TITLE'"></h1>
+                    <form [formGroup]="institutionAddressForm">
+                        <app-title-description-list 
+                            *ngIf="institution"
+                            [title]="'gis.address.INSTITUTION'"
+                            [descriptionData]="[{description: institution.name}]">
+                        </app-title-description-list>
+    
+                        <div class="m-top">
+                            <mat-label [translate]="'gis.address.STATE'"></mat-label>
+                            <app-typeahead
+                                [externalSetValue]="stateInitValue"
+                                [required]="true"
+                                [options]="states" 
+                                (selectionChange)="setState($event)">
+                            </app-typeahead>
+                            <mat-error class="vanilla-mat-error" *ngIf="hasError(institutionAddressForm, 'required', 'stateId')">
+                                <span translate="forms.REQUIRED"></span>
+                            </mat-error>
+                        </div>
+                
+                        <div class="m-top">
+                            <mat-label [translate]="'gis.address.DEPARTMENT'"></mat-label>
+                            <app-typeahead
+                                [externalSetValue]="departmentInitValue"
+                                [required]="true"
+                                [options]="departments"
+                                [disabled]="!this.institutionAddressForm.value.stateId"
+                                (selectionChange)="setDepartment($event)">
+                            </app-typeahead>
+                            <mat-error class="vanilla-mat-error" *ngIf="hasError(institutionAddressForm, 'required', 'departmentId')">
+                                <span translate="forms.REQUIRED"></span>
+                            </mat-error>
+                        </div>
+                
+                        <div class="m-top">
+                            <mat-label [translate]="'gis.address.CITY'"></mat-label>
+                            <app-typeahead
+                                [externalSetValue]="cityInitValue"
+                                [required]="true"
+                                [options]="cities"
+                                [disabled]="!this.institutionAddressForm.value.departmentId"
+                                (selectionChange)="setCity($event)">
+                            </app-typeahead>
+                            <mat-error class="vanilla-mat-error" *ngIf="hasError(institutionAddressForm, 'required', 'cityId')">
+                                <span translate="forms.REQUIRED"></span>
+                            </mat-error>
+                        </div>
+                
+                        <div class="space-between">
+                            <div class="m-top column street">
+                                <mat-label [translate]="'gis.address.STREET'"></mat-label>
+                                <mat-form-field appearance="outline">
+                                    <input matInput type="text" formControlName="streetName" placeholder="{{'gis.institution-data.STREET_PLACEHOLDER' | translate}}">
+                                    <mat-error *ngIf="hasError(institutionAddressForm, 'required', 'streetName')">
+                                        <span translate="forms.REQUIRED"></span>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+    
+                            <div class="m-top column number">
+                                <mat-label [translate]="'gis.address.HOUSE_NUMBER'"></mat-label>
+                                <mat-form-field appearance="outline">
+                                    <input matInput type="text" formControlName="houseNumber" placeholder="{{'gis.institution-data.HOUSE_NUMBER_PLACEHOLDER' | translate}}">
+                                    <mat-error *ngIf="hasError(institutionAddressForm, 'required', 'houseNumber')">
+                                        <span translate="forms.REQUIRED"></span>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                
+                        <div class="actions">
+                            <app-button
+                                *ngIf="editMode"
+                                (clicked)="cancel()"
+                                [text]="'buttons.CANCEL'">
+                            </app-button>
+                            <app-button
+                                (click)="stepper.next()"
+                                [disabled]="institutionAddressForm.invalid"
+                                [text]="'buttons.NEXT'"
+                                [buttonType]="ButtonType.RAISED">
+                            </app-button>
+                        </div>
+                  </form>
+                </mat-step>
+                <mat-step label="{{'gis.steppers.GEOPOSITION' | translate}}" [completed]="institutionDescription">
+                    <app-institution-description-step
+                        *ngIf="institutionDescription" 
+                        (nextStep)="stepper.next()"
+                        [editMode]="editMode"
+                        (cancelSelected)="cancel()"
+                        (previousStep)="stepper.previous()"
+                        [setInstitutionDescription]="institutionDescription">
+                    </app-institution-description-step>
+                </mat-step>
+                <mat-step label="{{'gis.steppers.RESPONSABILITY_AREA' | translate}}" [completed]="institutionDescription && currentStepperIndex === GEOPOSITION_STEP">
+                    <app-responsability-area 
+                        *ngIf="currentStepperIndex === RESPONSABILITY_AREA_STEP"
+                        [setInstitutionDescription]="institutionDescription"
+                        [editMode]="editMode"
+                        (previous)="stepper.previous()"
+                        (cancelSelected)="cancel()"
+                        (confirmed)="setInstitutionData()">
+                    </app-responsability-area>
+                </mat-step>
+            </mat-stepper>
+        </mat-card>
+
+        <app-institution-description-detail
+            *ngIf="showDetails && institutionDescription" 
+            (stepperEdit)="edit()"
+            (patientSearch)="cancel()"
+            [setInstitutionDescription]="institutionDescription">
+        </app-institution-description-detail>
+
+        <app-patient-search *ngIf="!showDetails && !stepperMode"></app-patient-search>
+
+        <div class="map-container">
+            <app-loading *ngIf="isLoading"></app-loading>
+            <app-map *ngIf="showMap && !isLoading" [setMapCoordinates]="coordinatesCurrentValue" [setMapArea]="area" [handleLocationPoint]="handleLocationPoint"></app-map>
+        </div>
+    </section>
+</app-content>

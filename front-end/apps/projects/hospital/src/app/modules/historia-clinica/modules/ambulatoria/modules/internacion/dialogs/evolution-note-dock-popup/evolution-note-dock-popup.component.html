@@ -111,7 +111,7 @@
 											{{ bloodType.description }}
 										</mat-option>
 									</mat-select>
-									<button id="clear_blood_type" type="button" mat-button
+									<button id="clear_blood_type" type="button" 
 										*ngIf="form.value.anthropometricData.bloodType" matSuffix color="warn"
 										mat-icon-button
 										(click)="clearBloodType(form.controls.anthropometricData); $event.stopPropagation()">
@@ -169,13 +169,14 @@
 									</mat-form-field>
 								</div>
 							</div>
+							<app-patient-evolution-charts-button [patientId]="data.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
 						</ng-container>
 					</app-document-section>
 				</div>
 			</app-new-consultation-expansion-section>
 
 
-			<app-alergias id="allergies" [(allergies)]="allergies"></app-alergias>
+			<app-alergias id="allergies" [(allergies)]="allergies" (isAllergyNoRefer)="setIsAllergyNoRefer($event)"></app-alergias>
 
 
 			<app-vacunas id="immunizations" [(immunizations)]="immunizations"></app-vacunas>
@@ -196,3 +197,4 @@
 		</button>
 	</div>
 </app-dock-popup>
+

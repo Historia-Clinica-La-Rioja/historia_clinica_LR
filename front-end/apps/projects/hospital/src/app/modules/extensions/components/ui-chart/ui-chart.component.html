@@ -1,0 +1,14 @@
+<ng-container *ngIf="(chart$ | async) as chart; else loading">
+	<ng-container *ngIf="chart?.chartDefinition">
+		<div [ngSwitch]="chart.chartDefinition.chartType" >
+			<app-query-table-renderer *ngSwitchCase="'table'"  [params]="{ resultSet: chart.resultSet, pivotConfig: chart.chartDefinition.pivotConfig }"></app-query-table-renderer>
+			<app-query-card-renderer  *ngSwitchCase="'number'" [params]="{ resultSet: chart.resultSet, title: chart.renderConfig.title.text }" ></app-query-card-renderer>
+			<app-query-chart-renderer *ngSwitchDefault         [params]="chart"></app-query-chart-renderer>
+		</div>
+	</ng-container>
+</ng-container>
+
+<ng-template #loading>
+	<app-page-layout *ngIf="!errorCube"></app-page-layout>
+	<span *ngIf="errorCube">No se pudo obtener el reporte</span>
+</ng-template>

@@ -4,46 +4,25 @@
 			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
 				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentHistoric">
 					<div fxLayout="row" fxLayoutGap="5px">
-						<mat-icon mat-list-icon fontSet="material-icons-outlined"
-							color="primary">{{documentSearch.summary.icon}}</mat-icon>
 						<div fxLayout="column" fxLayoutGap="20px">
-							<span id="document-type" class="color-primary uppercase">
-								{{documentSearch.summary.title}}
-							</span>
-							<div *ngIf="documentSearch.summary.subtitle">
-								<span id="main-diagnosis" class="capitalize-first-letter bold-text">
-									<ng-container>
-										<span>{{documentSearch.summary.subtitle}} (Principal)</span>
-									</ng-container>
-								</span>
-							</div>
-							<div fxLayout="column" fxLayoutGap="10px">
-								<span mat-line>{{getFullName(documentSearch.summary.createdBy.firstName,
-									documentSearch.summary.createdBy.nameSelfDetermination)}}
-									{{documentSearch.summary.createdBy.lastName}}</span>
-								<span mat-line>{{documentSearch.summary.createdOn | date : 'short'}}</span>
-							</div>
+							<app-summary-attention class="padding-left"
+								[title]="documentSearch.summary.title | translate"
+								[specialty]="documentSearch.summary.specialty"
+								[registerEditor]="documentSearch.summary.registerEditor">
+							</app-summary-attention>
 							<mat-divider></mat-divider>
 						</div>
 					</div>
 				</mat-list-option>
 			</mat-selection-list>
 
-			<div *ngIf="activeDocument" class="content" fxLayout="row" fxLayoutAlign="space-between start">
-				<div *ngIf="activeDocument.summary.title === 'TRIAGE' else evolutionNote">
-					<app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
-						showRiskFactors='true'>
-					</app-triage-details>
-				</div>
-				<ng-template #evolutionNote>
-					<app-emergency-care-evolution-note [content]="activeDocument.content"></app-emergency-care-evolution-note>
-				</ng-template>
-				<button mat-icon-button color="primary" id="download_document" name="download_document"
-					(click)="downloadDocument()">
-					<mat-icon fontSet="material-icons-outlined">
-						download_icon</mat-icon>
-				</button>
-			</div>
+            <div *ngIf="activeDocument && (activeDocument.summary.title === DOCUMENT_TYPES.TRIAGE)" class="summary">
+                <app-triage-summary [content]="activeDocument" [episodeId]="emergencyCareId"></app-triage-summary>
+            </div>
+            <div *ngIf="activeDocument && (activeDocument.summary.title === DOCUMENT_TYPES.EVOLUTION_NOTE || activeDocument.summary.title === DOCUMENT_TYPES.NURSING_EVOLUTION_NOTE)" class="summary">
+                <app-emergency-care-evolution-note [content]="activeDocument" [episodeId]="emergencyCareId"
+                    [patientId]="patientId" (resetActiveDocument)="resetActiveDocument()"></app-emergency-care-evolution-note>
+            </div>
 
 		</div>
 		<div *ngIf="this.documentHistoric && !this.documentHistoric.length">

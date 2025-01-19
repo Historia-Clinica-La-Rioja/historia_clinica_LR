@@ -1,0 +1,16 @@
+<div fxLayoutAlign="end">
+    <button id="close" mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<h2 mat-dialog-title>{{"call-center.new-appointment.TITLE" | translate }}</h2>
+<form [formGroup]="form" mat-mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+    <app-full-name-custom-form formControlName="fullName" [submitParentFormEvent]="submitFormEvent"></app-full-name-custom-form>
+    <app-identification-number-custom-form formControlName="identificationNumber" [submitParentFormEvent]="submitFormEvent"></app-identification-number-custom-form>
+    <app-gender-custom-form formControlName="genderId" [submitParentFormEvent]="submitFormEvent"></app-gender-custom-form>
+    <app-phone-custom-form formControlName="phone" [submitParentFormEvent]="submitFormEvent"></app-phone-custom-form>
+    <app-email-custom-form formControlName="email" [submitParentFormEvent]="submitFormEvent"></app-email-custom-form>
+</form>
+<mat-dialog-actions fxLayoutAlign="end">
+    <app-button text="buttons.CONFIRM" [buttonType]="ButtonType" [isLoading]="isLoadingRequest" (clicked)="save()"></app-button>
+</mat-dialog-actions>

@@ -1,14 +1,19 @@
-import { Component, Input, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
+import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DiagnosisDto, HealthConditionDto } from '@api-rest/api-model';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
-import { Subscription } from 'rxjs';
+import { IsolationAlertDiagnosesService } from '@historia-clinica/services/isolation-alert-diagnoses.service';
+import { of, Subscription, switchMap, take } from 'rxjs';
+import { EmergencyCareDiagnosis, EmergencyCareMainDiagnosis } from '../emergency-care-diagnoses/emergency-care-diagnoses.component';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { ClinicalTermDto, DiagnosisDto, HealthConditionDto, AppFeature } from '@api-rest/api-model';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-diagnosticos-form',
 	templateUrl: './diagnosticos-form.component.html',
 	styleUrls: ['./diagnosticos-form.component.scss'],
 	providers: [
+		ComponentEvaluationManagerService,
 		{
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: forwardRef(() => DiagnosticosFormComponent),
@@ -16,46 +21,64 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class DiagnosticosFormComponent implements OnChanges {
-
-	@Input() diagnosis: {
-		mainDiagnosis: HealthConditionDto,
-		diagnosticos: DiagnosisDto[]
-	}
-
-	ngOnChanges(changes: SimpleChanges): void {
-		if ( this.diagnosis?.mainDiagnosis ) {
-			this.diagnosis.mainDiagnosis.isAdded = this.diagnosis?.mainDiagnosis ? true : false;
-		}
-		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(this.diagnosis?.diagnosticos || []);
-		this.formDiagnosticos.controls.mainDiagnostico.setValue(this.diagnosis?.mainDiagnosis);
-	}
+export class DiagnosticosFormComponent {
 
 	formDiagnosticos = this.formBuilder.group({
-		mainDiagnostico: new FormControl<HealthConditionDto | null>(null),
-		otrosDiagnosticos: new FormControl<DiagnosisDto[] | null>([]),
+		mainDiagnostico: new FormControl<EmergencyCareMainDiagnosis | null>(null),
+		otrosDiagnosticos: new FormControl<EmergencyCareDiagnosis[] | null>([]),
 	});
 
 	onChangeSub: Subscription;
 
+	existsADiagnosisAssociatedToIsolationAlerts = false;
+	isolationAlertSubscription: Subscription;
+
+	boxMesaggeInfo: BoxMessageInformation = {
+		message: "historia-clinica.isolation-alert.DIAGNOSIS_ASSOCIATED_TO_ISOLATION_ALERT",
+		showButtons: false
+	}
+	isolationAlertsDiagnoses: ClinicalTermDto[] = [];
+
+	isolationAlertsFFIsOn = false
+
 	constructor(
 		private formBuilder: FormBuilder,
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
-	) { }
-
-	diagnosisChange(event) {
-		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(event)
+		private readonly isolationAlertDiagnoses: IsolationAlertDiagnosesService,
+		private readonly featureFlagService: FeatureFlagService
+	) {
+		this.isolationAlertSubscription = this.featureFlagService.isActive(AppFeature.HABILITAR_PACIENTES_COLONIZADOS_EN_DESARROLLO).
+			pipe(
+				take(1),
+				switchMap(isActive => {
+					this.isolationAlertsFFIsOn = isActive;
+					return isActive ? this.isolationAlertDiagnoses.isolationAlertDiagnoses$ : of()
+				})
+			).subscribe((isolationAlertDiagnosis: ClinicalTermDto[]) => {
+				if (isolationAlertDiagnosis) {
+					this.isolationAlertsDiagnoses = isolationAlertDiagnosis;
+					this.calculateDiagnosesAssociatedToIsolationAlerts();
+				}
+			});
 	}
 
-	mainDiagnosisChange(event) {
-		this.formDiagnosticos.controls.mainDiagnostico.setValue(event)
+	diagnosisChange(event: EmergencyCareDiagnosis[]) {
+		this.formDiagnosticos.controls.otrosDiagnosticos.setValue(event);
+	}
+
+	mainDiagnosisChange(event: EmergencyCareMainDiagnosis) {
+		this.formDiagnosticos.controls.mainDiagnostico.setValue(event);
 	}
 
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.formDiagnosticos.setValue(obj);
+			this.componentEvaluationManagerService.mainDiagnosis = obj.mainDiagnostico.main;
+			this.componentEvaluationManagerService.diagnosis = obj.otrosDiagnosticos.diagnosis;
+			this.isolationAlertsFFIsOn && this.calculateDiagnosesAssociatedToIsolationAlerts();
+		}
 	}
 
 	registerOnChange(fn: any): void {
@@ -76,6 +99,60 @@ export class DiagnosticosFormComponent implements OnChanges {
 
 	ngOnDestroy(): void {
 		this.onChangeSub.unsubscribe();
+		this.isolationAlertSubscription && this.isolationAlertSubscription.unsubscribe();
+	}
+
+	private calculateDiagnosesAssociatedToIsolationAlerts() {
+		this.resetDiagnosesAssociatedToIsolationAlerts();
+		this.disableDiagnosesAssociatedToIsolationAlerts(this.isolationAlertsDiagnoses);
+	}
+
+	private resetDiagnosesAssociatedToIsolationAlerts() {
+		if (this.formDiagnosticos.value.mainDiagnostico) {
+			const main = this.formDiagnosticos.value.mainDiagnostico.main;
+			this.formDiagnosticos.controls.mainDiagnostico.setValue(this.toEmergencyCareMainDiagnosis(main, false));
+		}
+
+		if (this.formDiagnosticos.value.otrosDiagnosticos.length) {
+			const others = this.formDiagnosticos.value.otrosDiagnosticos.map(otherDiagnosis => this.toEmergencyCareDiagnosis(otherDiagnosis.diagnosis, false));
+			this.formDiagnosticos.controls.otrosDiagnosticos.setValue(others);
+		}
+
+		this.existsADiagnosisAssociatedToIsolationAlerts = false;
+	}
+
+	private disableDiagnosesAssociatedToIsolationAlerts(isolationAlertDiagnoses: ClinicalTermDto[]) {
+		isolationAlertDiagnoses.forEach(diagnosis => {
+			const main = this.formDiagnosticos.value.mainDiagnostico?.main;
+			if (isMainAssociated()) {
+				this.existsADiagnosisAssociatedToIsolationAlerts = true;
+				this.formDiagnosticos.controls.mainDiagnostico.setValue(this.toEmergencyCareMainDiagnosis(main, true));
+			}
+
+			const otherDiagnoses = this.formDiagnosticos.value.otrosDiagnosticos;
+			if (isOtherDiagnosesAssociated()) {
+				const elementIndex = otherDiagnoses.findIndex(otherDiagnosis => otherDiagnosis.diagnosis.snomed.sctid === diagnosis.snomed.sctid);
+				otherDiagnoses[elementIndex].isAssociatedToIsolationAlert = true;
+				this.existsADiagnosisAssociatedToIsolationAlerts = true;
+			}
+
+			function isMainAssociated() {
+				return main && diagnosis.snomed.sctid === main.snomed.sctid
+			}
+
+			function isOtherDiagnosesAssociated() {
+				return otherDiagnoses?.some(otherDiagnosis => otherDiagnosis.diagnosis.snomed.sctid === diagnosis.snomed.sctid);
+			}
+		});
+	}
+
+
+	private toEmergencyCareMainDiagnosis(mainDiagnosis: HealthConditionDto, isAssociatedToIsolationAlert: boolean): EmergencyCareMainDiagnosis {
+		return { main: mainDiagnosis, isAssociatedToIsolationAlert }
+	}
+
+	private toEmergencyCareDiagnosis(diagnosis: DiagnosisDto, isAssociatedToIsolationAlert: boolean): EmergencyCareDiagnosis {
+		return { diagnosis, isAssociatedToIsolationAlert }
 	}
 
 }

@@ -26,7 +26,7 @@
 			<mat-select id="startingHour" [formControl]="form.controls.init" [disabled]="form.controls.fullBlock.value">
 				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleStartingTime | slice:0:possibleStartingTime.length-1"
 					(click)="filterEndingTime()">
-					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
+					{{ possibleTime | viewDateDto:'time' | dateFormat :'time' }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
@@ -34,10 +34,9 @@
 		<mat-form-field appearance="outline" class="hour-selector">
 			<mat-select id="endingHour" [formControl]="form.controls.end" [disabled]="form.controls.fullBlock.value">
 				<mat-option [value]="possibleTime" *ngFor="let possibleTime of possibleEndingTime">
-					{{ possibleTime | viewDateDto:'time' | date:'shortTime' }}
+					{{ possibleTime | viewDateDto:'time' | dateFormat :'time' }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
-		<span [translate]="'turnos.block.HOURS'"></span>
 	</div>
 </form>

@@ -12,6 +12,7 @@ import net.pladema.medicalconsultation.diary.repository.entity.DiaryCareLine;
 import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDia
 	private final CareLineService careLineService;
 
 	@Override
+	@Transactional
 	public void updateCareLinesAssociatedToDiary(Integer diaryId, List<Integer> careLines) {
 
 		List<DiaryCareLine> diaryCareLinesHistory = this.diaryCareLineRepository.findAllByDiaryId(diaryId);
@@ -75,10 +77,16 @@ public class DiaryCareLineServiceImpl implements DiaryCareLineService, SharedDia
 	}
 
 	@Override
-	public List<CareLineBo> getPossibleCareLinesForDiaryByPractices(Integer institutionId, List<Integer> practicesId) {
-		log.debug("Input parameters -> institutionId {}, practicesId {}", institutionId, practicesId);
-		List<CareLineBo> careLines = careLineService.getByInstitutionIdAndPracticesId(institutionId, practicesId);
+	public List<CareLineBo> getPossibleCareLinesForDiaryByPracticesAndSpecialty(Integer institutionId, List<Integer> practicesId, Integer clinicalSpecialtyId) {
+		log.debug("Input parameters -> institutionId {}, practicesId {}, clinicalSpecialtyId {}", institutionId, practicesId, clinicalSpecialtyId);
+		List<CareLineBo> careLines = careLineService.getByInstitutionIdAndPracticesIdAndSpecialty(institutionId, practicesId, clinicalSpecialtyId);
 		log.trace("Output -> {}", careLines);
 		return careLines;
+	}
+
+	@Override
+	public List<Integer> getDiaryIdsByCareLineId(Integer careLineId, Integer institutionId) {
+		log.debug("Input parameters -> careLineId {}, institutionId {}", careLineId, institutionId);
+		return diaryCareLineRepository.getDiaryIdsByCareLineIdAndInstitutionId(careLineId, institutionId);
 	}
 }

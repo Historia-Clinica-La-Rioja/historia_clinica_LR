@@ -11,7 +11,7 @@ public class NotifyPatientVo {
     private final String doctorFirstName;
     private final String doctorLastName;
     private final String doctorsOfficeName;
-    private final String topic;
+    private final String tvMonitor;
 
     public NotifyPatientVo(
             Integer appointmentId,
@@ -21,7 +21,7 @@ public class NotifyPatientVo {
             String doctorLastName,
             String doctorFirstName,
             String doctorsOfficeName,
-            String topic) {
+            String tvMonitor) {
         this.appointmentId = appointmentId;
         this.patientLastName = patientLastName;
         this.patientFirstName = patientFirstName;
@@ -29,7 +29,7 @@ public class NotifyPatientVo {
         this.doctorLastName = doctorLastName;
         this.doctorFirstName = doctorFirstName;
         this.doctorsOfficeName = doctorsOfficeName;
-        this.topic = topic;
+        this.tvMonitor = tvMonitor;
     }
 
 }

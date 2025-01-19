@@ -15,4 +15,6 @@ public interface DocumentTemplateStorage {
 
     Optional<Long> getFileId(Long id);
 
+    void delete(Long id);
+
 }

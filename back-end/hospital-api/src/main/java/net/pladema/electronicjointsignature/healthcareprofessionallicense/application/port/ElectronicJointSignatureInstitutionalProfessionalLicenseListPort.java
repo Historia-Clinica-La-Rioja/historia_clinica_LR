@@ -1,0 +1,11 @@
+package net.pladema.electronicjointsignature.healthcareprofessionallicense.application.port;
+
+import net.pladema.electronicjointsignature.healthcareprofessionallicense.domain.ElectronicJointSignatureInstitutionProfessionalBo;
+
+import java.util.List;
+
+public interface ElectronicJointSignatureInstitutionalProfessionalLicenseListPort {
+
+	List<ElectronicJointSignatureInstitutionProfessionalBo> fetchInstitutionProfessional(Integer institutionId, Integer excludedHealthcareProfessionalId);
+
+}

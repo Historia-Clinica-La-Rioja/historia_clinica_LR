@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface HierarchicalUnitRepository extends SGXAuditableEntityJPARepository<HierarchicalUnit, Integer> {
@@ -33,11 +32,13 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 	List<HierarchicalUnitBo> getAllByInstitutionId(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT hu " +
+	@Query(value = "SELECT (CASE WHEN COUNT(hu.id) > 0 THEN TRUE ELSE FALSE END) " +
 			"FROM HierarchicalUnit  hu " +
 			"WHERE hu.alias = :alias " +
+			"AND hu.institutionId = :institutionId " +
 			"AND hu.deleteable.deleted IS FALSE")
-	Optional<HierarchicalUnit> findByAlias(@Param("alias") String alias);
+	boolean existsByAliasAndInstitutionId(@Param("alias") String alias,
+										@Param("institutionId") Integer institutionId);
 
 	@Transactional
 	@Modifying
@@ -68,12 +69,11 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 	List<HierarchicalUnitBo> getAllByUserIdAndInstitutionId(@Param("userId") Integer userId,
 															@Param("institutionId") Integer institutionId);
 
-
 	@Transactional(readOnly = true)
-	@Query("SELECT hu2.id "+
+	@Query("SELECT hu2.id " +
 			"FROM HierarchicalUnit hu " +
 			"JOIN HierarchicalUnit hu2 ON (hu.id = hu2.hierarchicalUnitIdToReport) " +
-			"WHERE hu.id = :hierarchicalUnitId")
-	List<Integer> getAllDescendantIdsByHierarchicalUnitId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
-	
+			"WHERE hu.id IN :hierarchicalUnitIds")
+	List<Integer> getAllDescendantIdsByHierarchicalUnitIds(@Param("hierarchicalUnitIds") List<Integer> hierarchicalUnitIds);
+
 }

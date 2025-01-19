@@ -26,6 +26,10 @@ import java.io.Serializable;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class EpisodeDocumentType implements Serializable {
 
+	public static final short REGULAR = (short)1;
+	public static final short ADMISSION_CONSENT = (short)2;
+	public static final short SURGICAL_CONSENT = (short)3;
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

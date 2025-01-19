@@ -1,0 +1,504 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_25
+
+    - changeSet:
+        id: addColumn_closest_service
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: hierarchical_unit
+              columns:
+                - column:
+                    name: closest_service_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: closest_service_id
+              baseTableName: hierarchical_unit
+              constraintName: FK_closest_service_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
+
+    - changeSet:
+        id: role-api_anexo-level-change
+        context: "!schema-only"
+        author: efernandez
+        ignore: true
+        changes:
+          - sql:
+              sql: |-
+                UPDATE user_role SET institution_id = -1 WHERE role_id = 47;
+
+    - changeSet:
+        id: role-api_anexo-level-change-corrected
+        context: "!schema-only"
+        author: efernandez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE user_role ur SET institution_id = -1 WHERE ur.id IN (SELECT DISTINCT ON(ur2.user_id, ur2.role_id) ur2.id FROM user_role ur2 WHERE ur2.role_id = 47 ORDER BY ur2.user_id, ur2.role_id, ur2.id ASC);
+                DELETE FROM user_role WHERE role_id = 47 AND institution_id != -1;
+
+    - changeSet:
+        id: add-column-local_viewer_url-to-pac_server_image_lvl
+        author: fzudaire
+        comment: se agrego en distintas versiones mediante hotfix (2.23, 2.24 y 2.25), para evitar conflictos
+            se agrega en todas las versiones afectadas pero con precondición
+        preConditions:
+            -   onFail: MARK_RAN
+            -   not:
+                    -   columnExists:
+                            tableName: pac_server_image_lvl
+                            columnName: local_viewer_url
+        changes:
+            - addColumn:
+                tableName: pac_server_image_lvl
+                columns:
+                    - column:
+                        name: local_viewer_url
+                        type: varchar(128)
+                        constraints:
+                            nullable: true
+
+    - changeSet:
+        id: createTable-institution_responsibility_area
+        comment: Create table institution_responsibility_area
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: institution_responsibility_area
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_institution_responsibility_area_institution_id
+                      references: institution(id)
+                - column:
+                    name: order_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: latitude
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: longitude
+                    type: float
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: institution_id, order_id
+              constraintName: PK_institution_responsibility_area
+              tableName: institution_responsibility_area
+              validate: true
+
+    - changeSet:
+        id: insert-alta-hospitalaria-discharge-type-in-table-discharge_type
+        author: tomasbecher
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO discharge_type VALUES (15, 'Alta hospitalaria', false, true);
+
+    - changeSet:
+        id: emergency_care_discharge-addObservationColumn
+        comment: Create column observation in table emergency_care_discharge
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: observation
+                    type: text
+              tableName: emergency_care_discharge
+    
+    - changeSet:
+        id: addColumn_massive_retry
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: massive_retry
+                    type: boolean
+                    defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: createIndexPersonId-person_file
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_person_file_person_id" ON person_file(person_id);
+
+    - changeSet:
+        id: createIndexSignatureStatusId-document_file
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_file_signature_status_id" ON document_file(signature_status_id);
+
+    - changeSet:
+        id: createIndexDocumentId-outpatient_consultation
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_document_id" ON outpatient_consultation (document_id);
+
+    - changeSet:
+        id: delete-duplicated-indexes
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                DROP INDEX IF EXISTS "IDX_appointment_assn_appointment_id";
+                DROP INDEX IF EXISTS "IDX_document_health_condition_document_id";
+                DROP INDEX IF EXISTS "IDX_document_health_condition_health_condition_id";
+                ALTER TABLE document_prosthesis DROP CONSTRAINT "UQ_document_id_document_prosthesis";
+                ALTER TABLE user_key DROP CONSTRAINT "UQ_key";
+
+
+    - changeSet:
+        id: appointment_patient_identity_accreditation_status-createTable
+        comment: Create table appointment_patient_identity_accreditation_status
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: appointment_patient_identity_accreditation_status
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_appointment_patient_identity_accreditation_status
+                      references: appointment(id)
+                      foreignKeyName: FK_appointment_patient_identity_accreditation_status_appointment
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_identity_accreditation_status_id
+                    type: smallint
+                - column:
+                    name: patient_identification_hash
+                    type: varchar(255)
+
+    - changeSet:
+        id: update-notes-in-table-triage
+        author: tomasbecher
+        changes:
+          - modifyDataType:
+              columnName:  notes
+              newDataType:  text
+              tableName:  triage
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_appointment_summary
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_appointment_summary
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_user_person_complete_data
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_user_person_complete_data
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_all_move_studies
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_all_move_studies
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_clinic_history_audit
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_clinic_history_audit
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_user_person_data
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_user_person_data
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_booking_person
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_booking_person
+
+    - changeSet:
+        id: drop-view-before-identification_number-update-v_available_professional
+        author: tomasbecher
+        changes:
+          - dropView:
+              viewName: v_available_professional
+
+    - changeSet:
+        id: update-identification_number-in-booking_person
+        author: tomasbecher
+        changes:
+          - modifyDataType:
+              columnName:  identification_number
+              newDataType:  varchar(20)
+              tableName:  booking_person
+
+    - changeSet:
+        id: update-identification_number-in-person
+        author: tomasbecher
+        changes:
+          - modifyDataType:
+              columnName:  identification_number
+              newDataType:  varchar(20)
+              tableName:  person
+
+    - changeSet:
+        id: update-identification_number-in-person_history
+        author: tomasbecher
+        changes:
+          - modifyDataType:
+              columnName:  identification_number
+              newDataType:  varchar(20)
+              tableName:  person_history
+
+    - changeSet:
+        id: update-patient_document_number-in-external_clinical_history
+        author: tomasbecher
+        changes:
+          - modifyDataType:
+              columnName:  patient_document_number
+              newDataType:  varchar(20)
+              tableName:  external_clinical_history
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_appointment_summary
+        author: tomasbecher
+        changes:
+          - createView:
+              viewName: v_appointment_summary
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                (SELECT a.id,
+                      a.date_type_id,
+                      a.hour,
+                      a.appointment_state_id,
+                      ass.description AS status_description,
+                      a.is_overturn,
+                      a.phone_number,
+                      a.phone_prefix,
+                      a.patient_id,
+                      p1.first_name            AS patient_first_name,
+                      p1.last_name             AS patient_last_name,
+                      p1.identification_number AS patient_identification_number,
+                      p1.gender_id             AS patient_gender_id,
+                      hp.license_number,
+                      p2.first_name            AS doctor_name,
+                      p2.last_name             AS doctor_last_name,
+                      P2.identification_number AS doctor_identification_number,
+                      mc.name AS medical_coverage_name,
+                      mc.cuit,
+                      pmc.affiliate_number,
+                      cs.sctid_code,
+                      cs.name AS clinical_specialty_name,
+                      doff.institution_id,
+                      i.cuit                   AS institution_cuit,
+                      i.sisa_code,
+                      cs.id as clinical_specialty_id,
+                      p2.gender_id             AS doctor_gender_id
+                FROM appointment AS a
+                INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
+                INNER JOIN appointment_assn aa on aa.appointment_id = a.id
+                INNER JOIN patient pa1 on a.patient_id = pa1.id
+                INNER JOIN person p1 ON pa1.person_id = p1.id
+                INNER JOIN diary d ON aa.diary_id = d.id
+                INNER JOIN doctors_office doff ON d.doctors_office_id = doff.id
+                INNER JOIN institution i ON doff.institution_id = i.id
+                INNER JOIN clinical_specialty cs ON d.clinical_specialty_id = cs.id
+                INNER JOIN healthcare_professional hp ON d.healthcare_professional_id = hp.id
+                INNER JOIN person p2 ON hp.person_id = p2.id
+                LEFT JOIN patient_medical_coverage AS pmc ON a.patient_medical_coverage_id = pmc.id
+                LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id = mc.id
+                WHERE a.appointment_state_id != 6)
+                UNION ALL
+                (SELECT a.id,
+                      a.date_type_id,
+                      a.hour,
+                      a.appointment_state_id ,
+                      ass.description AS status_description,
+                      a.is_overturn,
+                      a.phone_number,
+                      a.phone_prefix,
+                      a.patient_id,
+                      bp.first_name            AS patient_first_name,
+                      bp.last_name             AS patient_last_name,
+                      bp.identification_number AS patient_identification_number,
+                      bp.gender_id             AS patient_gender_id,
+                      hp.license_number,
+                      p2.first_name            AS doctor_name,
+                      p2.last_name             AS doctor_last_name,
+                      P2.identification_number AS doctor_identification_number,
+                      null AS medical_coverage_name,
+                      null AS cuit,
+                      null AS affiliate_number,
+                      cs.sctid_code,
+                      cs.name AS clinical_specialty_name,
+                      doff.institution_id,
+                      i.cuit                   AS institution_cuit,
+                      i.sisa_code,
+                      cs.id as clinical_specialty_id,
+                      p2.gender_id             AS doctor_gender_id
+                FROM appointment AS a
+                INNER JOIN appointment_state ass on a.appointment_state_id = ass.id
+                INNER JOIN appointment_assn aa on aa.appointment_id = a.id
+                INNER JOIN booking_appointment ba on a.id = ba.appointment_id
+                INNER JOIN booking_person bp ON ba.booking_person_id = bp.id
+                INNER JOIN diary d ON aa.diary_id = d.id
+                INNER JOIN doctors_office doff ON d.doctors_office_id = doff.id
+                INNER JOIN institution i ON doff.institution_id = i.id
+                INNER JOIN clinical_specialty cs ON d.clinical_specialty_id = cs.id
+                INNER JOIN healthcare_professional hp ON d.healthcare_professional_id = hp.id
+                INNER JOIN person p2 ON hp.person_id = p2.id
+                WHERE a.appointment_state_id = 6)
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_user_person_complete_data
+        author: tomasbecher
+        changes:
+          - createView:
+              viewName: v_user_person_complete_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT 
+                p.id AS person_id,
+                up.user_id AS user_id,
+                CASE WHEN p.middle_names IS NOT NULL THEN CONCAT(p.first_name, ' ', p.middle_names) ELSE p.first_name END AS given_name,
+                CASE WHEN p.other_last_names IS NOT NULL THEN CONCAT(p.last_name, ' ', p.other_last_names) ELSE p.last_name END AS family_names,
+                it.description AS identification_type,
+                p.identification_number AS identification_number,
+                g.description AS gender,
+                pe.name_self_determination AS name_self_determination,
+                spg.description AS self_perceived_gender,
+                p.birth_date AS birth_date
+                FROM person p
+                LEFT JOIN user_person up ON (p.id = up.person_id )
+                LEFT JOIN person_extended pe ON (p.id = pe.person_id)
+                LEFT JOIN identification_type it ON (p.identification_type_id = it.id)
+                LEFT JOIN gender g ON (p.gender_id = g.id)
+                LEFT JOIN self_perceived_gender spg ON (pe.gender_self_determination = spg.id)
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_all_move_studies
+        author: tomasbecher
+        changes:
+          - createView:
+              - viewName: v_all_move_studies
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  ( select ms.id as id_move, p2.first_name , p2.last_name ,p2.identification_number, ms.image_id , a.date_type_id as appoinment_date ,a.hour as appoinment_time, ms.status, ms.result, ms.institution_id, m.acronym
+                    from public.move_studies ms
+                    join public.appointment a on ms.appointment_id =a.id
+                    join public.patient p on a.patient_id = p.id
+                    join public.person p2 on p.person_id = p2.id
+                    join public.equipment_appointment_assn  ep on ep.appointment_id= a.id
+                    join public.equipment_diary   ed on ed.id = ep.equipment_diary_id
+                    join public.equipment e   on e.id = ed.equipment_id
+                    join public.modality m on m.id = e.modality_id)
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_clinic_history_audit
+        author: tomasbecher
+        changes:
+          - createView:
+              - viewName: v_clinic_history_audit
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  (select cha.id ,per.first_name ,per.last_name , pe.name_self_determination,it.description, per.identification_number ,u.username ,date(cha.access_date) ,cha.reason_id,cha.observations,cha.scope, i.name  
+                   from clinic_history_audit cha
+                   join patient p  on p.id = cha.patient_id
+                   join person per on per.id = p.person_id
+                   join person_extended pe on pe.person_id = per.id  
+                   join institution i on  i.id = cha.institution_id
+                   join users u on u.id = cha.user_id
+                   join identification_type it on it.id = per.identification_type_id)
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_user_person_data
+        author: tomasbecher
+        changes:
+          - createView:
+              viewName: v_user_person_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT 
+                up.user_id AS id,
+                u.username AS sub,
+                pe.email AS email,
+                CASE WHEN p.middle_names IS NOT NULL THEN CONCAT(p.first_name, ' ', p.middle_names) ELSE p.first_name END AS given_name,
+                CASE WHEN p.other_last_names IS NOT NULL THEN CONCAT(p.last_name, ' ', p.other_last_names) ELSE p.last_name END AS family_name,
+                pe.cuil AS cuil,
+                it.description AS identification_type,
+                p.identification_number AS identification_number,
+                g.description AS gender
+                FROM users u 
+                LEFT JOIN user_person up on u.id = up.user_id 
+                LEFT JOIN person p ON p.id = up.person_id
+                LEFT JOIN person_extended pe ON pe.person_id = p.id
+                LEFT JOIN identification_type it ON it.id = p.identification_type_id
+                LEFT JOIN gender g ON g.id = p.gender_id;
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_booking_person
+        author: tomasbecher
+        changes:
+          - createView:
+              viewName: v_booking_person
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT id, CAST(first_name AS VARCHAR(255)), CAST(last_name AS VARCHAR(255)),
+                       identification_type_id, identification_number,
+                       gender_id, birth_date
+                FROM person
+
+    - changeSet:
+        id: create-view-after-identification_number-update-v_available_professional
+        author: tomasbecher
+        changes:
+          - createView:
+              viewName: v_available_professional
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT hp.id, hp.person_id,
+                      CAST(first_name AS VARCHAR(255)), CAST(last_name AS VARCHAR(255)),identification_type_id, identification_number
+                FROM healthcare_professional hp
+                JOIN person p on hp.person_id = p.id
+                WHERE hp.id IN (SELECT DISTINCT pp.healthcare_professional_id FROM professional_professions pp WHERE pp.deleted = false)

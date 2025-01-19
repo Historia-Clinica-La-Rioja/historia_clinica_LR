@@ -1,5 +1,7 @@
 package net.pladema.authorization.domain;
 
+import javax.annotation.Nullable;
+
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
@@ -13,8 +15,10 @@ public class UserPersonaBo {
 	public final Supplier<String> avatar;
 	public final String nameSelfDetermination;
 	public final LocalDateTime previousLogin;
+	@Nullable
+	public final String cuil;
 
-	public UserPersonaBo(String email, Integer id, Integer personId, String firstName, String lastName, Supplier<String> avatar, String nameSelfDetermination, LocalDateTime previousLogin) {
+	public UserPersonaBo(String email, Integer id, Integer personId, String firstName, String lastName, Supplier<String> avatar, String nameSelfDetermination, LocalDateTime previousLogin, String cuil) {
 		this.email = email;
 		this.id = id;
 		this.personId = personId;
@@ -23,6 +27,7 @@ public class UserPersonaBo {
 		this.avatar = avatar;
 		this.nameSelfDetermination = nameSelfDetermination;
 		this.previousLogin = previousLogin;
+		this.cuil = cuil;
 	}
 
 }

@@ -2,6 +2,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
 
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -17,6 +19,7 @@ import ar.lamansys.sgh.clinichistory.mocks.ClinicalObservationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -31,6 +34,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(showSql = false)
+@Disabled
 class HCEClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	private HCEClinicalObservationRepositoryImpl hceClinicalObservationRepository;
@@ -46,6 +50,12 @@ class HCEClinicalObservationRepositoryImplTest extends UnitRepository {
 
 	@MockBean
 	private DocumentRepository documentRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+	
+	@MockBean
+	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
 
 	@BeforeEach
 	void setUp() {

@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.diary.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +26,8 @@ public class DiaryListDto {
 
 	private String alias;
 
-	private String clinicalSpecialtyName;
-
+	private String clinicalSpecialtyName;	
+	
+	private List<String> practices;
+    
 }

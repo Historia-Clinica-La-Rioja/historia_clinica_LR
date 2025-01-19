@@ -6,10 +6,7 @@ import {
 	BMPatientDto, BMPersonDto, CompletePatientDto, EAuditType, EducationLevelDto, ERole, EthnicityDto, GenderDto,
 	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, RoleAssignmentDto, SelfPerceivedGenderDto
 } from '@api-rest/api-model';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 
-import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -25,9 +22,8 @@ import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MapperService } from '@core/services/mapper.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { hasError, scrollIntoError, updateControlValidator, VALIDATIONS } from '@core/utils/form.utils';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EditIdentificationNumberComponent, PersonBasicDataResponseCustom } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
@@ -40,6 +36,7 @@ import { UserService } from '@api-rest/services/user.service';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { NO_INSTITUTION } from '../../../home/home.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 
 const ROUTE_PROFILE = 'pacientes/profile/';
@@ -70,7 +67,7 @@ export class EditPatientComponent implements OnInit {
 	public form: UntypedFormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
-	public today: Moment = moment();
+	public today = newDate();
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
@@ -93,6 +90,7 @@ export class EditPatientComponent implements OnInit {
 	public ethnicities: EthnicityDto[];
 	public occupations: PersonOccupationDto[];
 	public educationLevels: EducationLevelDto[];
+	public isHabilitarAuditoriaOn = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -110,7 +108,7 @@ export class EditPatientComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private permissionsService: PermissionsService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private patientMasterDataService: PatientMasterDataService,
 		private auditPatientService: AuditPatientService,
 		private readonly userService: UserService,
@@ -120,6 +118,7 @@ export class EditPatientComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_AUDITORIA).subscribe(isOn => this.isHabilitarAuditoriaOn = isOn);
 		this.loggedUserService.assignments$.subscribe((roleAssignment: RoleAssignmentDto[]) => this.hasAuditorRole = anyMatch<ERole>(roleAssignment.map(roleAssignment => roleAssignment.role), [ERole.AUDITOR_MPI]));
 		this.route.queryParams
 			.subscribe(params => {
@@ -140,7 +139,7 @@ export class EditPatientComponent implements OnInit {
 							this.auditablePatientInfo = {
 								message: this.completeDataPatient.auditablePatientInfo.message,
 								createdBy: this.completeDataPatient.auditablePatientInfo.createdBy,
-								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								createdOn: this.dateFormatPipe.transform(this.auditableFullDate, 'datetime'),
 								institutionName: this.completeDataPatient.auditablePatientInfo.institutionName
 							};
 						}
@@ -338,8 +337,8 @@ export class EditPatientComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);
@@ -602,6 +601,7 @@ export class EditPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value && this.form.controls.middleNames.value.length ? this.form.controls.middleNames.value : null,
 			otherLastNames: this.form.controls.otherLastNames.value && this.form.controls.otherLastNames.value.length ? this.form.controls.otherLastNames.value : null,
+			personAge: null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value && this.form.controls.email.value.length ? this.form.controls.email.value : null,
@@ -762,7 +762,7 @@ export class EditPatientComponent implements OnInit {
 
 
 		if (data.personData.birthDate) {
-			this.form.controls.birthDate.setValue(momentParseDate(data.personData.birthDate));
+			this.form.controls.birthDate.setValue(dateISOParseDate(data.personData.birthDate));
 			this.form.controls.birthDate.disable();
 		} else {
 			this.form.controls.birthDate.setValue(null);

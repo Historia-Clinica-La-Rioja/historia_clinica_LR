@@ -1,0 +1,9 @@
+package net.pladema.staff.application.ports;
+
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo;
+
+public interface HealthcareProfessionalPort {
+
+	MedicationRequestValidationDispatcherProfessionalBo getProfessionalDataNeededForMedicationRequestValidation(Integer healthcareProfessionalId);
+
+}

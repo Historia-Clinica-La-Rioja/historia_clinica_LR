@@ -1,46 +1,113 @@
-<div>
-    <button mat-button mat-icon-button [mat-dialog-close]=true>
-        <mat-icon>close</mat-icon>
-    </button>
+<div class="end">
+	<button  mat-icon-button [mat-dialog-close]=true>
+		<mat-icon>close</mat-icon>
+	</button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="save()">
-    <h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
+	<h1 [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.TITLE'"></h1>
 
-    <section class="selected-file">
-        <mat-form-field class="example-full-width" appearance="outline">
-            <mat-label [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.NAME'"></mat-label>
-            <input matInput formControlName="fileName">
-        </mat-form-field>
-        
-        <mat-error class="typeahead-required" *ngIf="hasError(form, 'requiredFileType', 'file')" 
-            [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.FILE'">
-        </mat-error>
-    </section>
-    
-    <app-typeahead 
-        *ngIf="documentTypes?.length > 0; else noDocumentsType"
-        [options]="documentTypes"
-        [titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
-        [required]="required"
-        (selectionChange)="setDocumentType($event)">
-    </app-typeahead>
-    <mat-error class="typeahead-required" *ngIf="hasError(form, 'required', 'type') && documentTypes?.length > 0"
-        [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
-    </mat-error>
+	<app-typeahead *ngIf="documentTypes?.length; else noDocumentsType" [options]="documentTypes"
+		(click)="setControlTouched(form.get('type'))"
+		[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE' | translate"
+		[required]="required" (selectionChange)="setDocumentType($event)">
+	</app-typeahead>
+	<mat-error class="typeahead-required" *ngIf="form.controls['type'].touched"
+		[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.TYPE_REQUIRED'">
+	</mat-error>
+	<mat-error class="typeahead-required" *ngIf="hasError(form, 'invalid', 'type')">
+		{{hasConsentDocumentError}}
+	</mat-error>
 
-    <section class="actions">
-        <button mat-stroked-button color="primary" [mat-dialog-close]=true>
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
-        </button>
-    
-        <button mat-raised-button color="primary" [disabled]=" ! this.form.valid">
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH'"></span>
-        </button>
-    </section>
+	<section class="file-actions" *ngIf="(!file && !hasError(form, 'required', 'type'))">
+		<div *ngIf="showGenerateDocument" class="end">
+			<button mat-stroked-button color="primary" fxFlex="100%" (click)="generateDocument()"
+				[disabled]="!isAdministrative">
+				<mat-icon class="material-icons-outlined">add_circle_outline</mat-icon>
+				<span
+					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE_DOCUMENT'"></span>
+			</button>
+		</div>
+		<div *ngIf="showAttachFile" class="end">
+			<button mat-stroked-button color="primary" fxFlex="100%" (click)="fileInput.click()">
+				<mat-icon>attachment</mat-icon>
+				<span
+					[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH_FILE'"></span>
+			</button>
+			<input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file"
+				accept=".jpg, .jpeg, .png, .pdf" (click)="$event.target.value=null">
+		</div>
+	</section>
 
-    <ng-template #noDocumentsType>
-        <p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-DOCUMENTS-TYPE'">
-        </p>
-    </ng-template>
+	<section class="surgical-info" *ngIf="showSurgicalInfo">
+		<form [formGroup]="surgicalForm" (ngSubmit)="generate()">
+			<app-typeahead *ngIf="professionals?.length > 0; else noProfessional" [options]="professionals"
+				(click)="setControlTouched(surgicalForm.get('professional'))"
+				[titleInput]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL' | translate"
+				[required]="required" (selectionChange)="setProfessional($event)">
+			</app-typeahead>
+			<mat-error class="typeahead-required"
+				*ngIf="surgicalForm.controls['professional'].touched && professionals?.length"
+				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.PROFESSIONAL_REQUIRED'">
+			</mat-error>
+
+			<div class="form-field-reduced">
+				<div>
+					<button mat-button type="button" id="add-procedure-button" color="primary"
+						(click)="addProcedure()">
+						+ {{ 'ambulatoria.paciente.nueva-consulta.procedimientos.buttons.ADD' | translate }}
+					</button>
+				</div>
+				<app-titled-content-card *ngIf="!procedureService.isEmpty()"
+					[title]="'internaciones.internacion-paciente.documents.dialogs.attach.fields.ADDED_PROCEDURES'">
+					<app-procedure-list [service]="procedureService"></app-procedure-list>
+				</app-titled-content-card>
+			</div>
+
+			<mat-form-field appearance="outline" class="form-field observation">
+				<textarea formControlName="observation"
+					placeholder="{{'internaciones.internacion-paciente.documents.dialogs.attach.fields.OBSERVATIONS' | translate }}"
+					matInput type="text" id="observation">
+				</textarea>
+			</mat-form-field>
+
+			<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" class="end">
+				<button mat-stroked-button color="primary" btn-block type="button" (click)="hideSurgicalInfo()">
+					<span> {{'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL' |
+						translate}}</span>
+				</button>
+				<button mat-flat-button color="primary"
+					[disabled]="professionals?.length > 0 && procedureService.isEmpty()">
+					<span> {{'internaciones.internacion-paciente.documents.dialogs.attach.actions.GENERATE' |
+						translate}}</span>
+				</button>
+			</div>
+		</form>
+	</section>
+
+	<section class="file" *ngIf="file">
+		<a (click)="openFile(file)">{{file.name}}</a>
+		<button  mat-icon-button color="warn" (click)="deleteFile()">
+			<mat-icon>delete_outline</mat-icon>
+		</button>
+	</section>
+
+	<section class="dialog-actions" *ngIf="!showSurgicalInfo">
+		<button mat-stroked-button color="primary" [mat-dialog-close]=true>
+			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CANCEL'"></span>
+		</button>
+
+		<button mat-raised-button color="primary" [disabled]="!this.form.valid || isLoading">
+			<span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.CONTINUE'"></span>
+		</button>
+	</section>
+
+	<ng-template #noDocumentsType>
+		<p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-DOCUMENTS-TYPE'">
+		</p>
+	</ng-template>
+	<ng-template #noProfessional>
+		<p [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.NO-PROFESSIONAL'">
+		</p>
+	</ng-template>
 </form>

@@ -5,6 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
+import net.pladema.medicalconsultation.appointment.infrastructure.output.notification.NewAppointmentNotificationArgs;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.notification.NewAppointmentTemplateInput;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +19,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
-import ar.lamansys.sgx.shared.templating.utils.testing.AppTemplateConfig;
-import ar.lamansys.sgx.shared.templating.utils.testing.TemplateMailTestingHelper;
+import ar.lamansys.sgx.shared.notifications.templating.utils.testing.AppTemplateConfig;
+import ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateMailTestingHelper;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = AppTemplateConfig.class)

@@ -21,8 +21,12 @@ public class DocumentFileBo {
 
     private final String checksum;
 
+	private final Short signatureStatusId;
+
+	private final String digitalSignatureHash;
+
     public DocumentFileBo(Long id, Integer sourceId, Short sourceTypeId, Short typeId, String filepath,
-                          String filename, String uuidfile, String checksum) {
+                          String filename, String uuidfile, String checksum, Short signatureStatusId, String digitalSignatureHash) {
         this.id = id;
         this.sourceId = sourceId;
         this.sourceTypeId = sourceTypeId;
@@ -31,5 +35,7 @@ public class DocumentFileBo {
         this.filename = filename;
         this.uuidfile = uuidfile;
         this.checksum = checksum;
+		this.signatureStatusId = signatureStatusId;
+		this.digitalSignatureHash = digitalSignatureHash;
     }
 }

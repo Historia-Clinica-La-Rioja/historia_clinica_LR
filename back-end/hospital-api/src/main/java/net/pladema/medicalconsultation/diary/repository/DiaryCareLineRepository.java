@@ -29,9 +29,21 @@ public interface DiaryCareLineRepository extends SGXAuditableEntityJPARepository
 			"AND dcl.deleteable.deleted = false")
 	List<CareLineBo> getCareLinesByDiaryId(@Param("diaryId") Integer diaryId);
 
+	@Transactional(readOnly = true)
 	@Query("SELECT dcl.pk.careLineId " +
 			"FROM DiaryCareLine dcl " +
 			"WHERE dcl.pk.diaryId = :diaryId " +
 			"AND dcl.deleteable.deleted = false")
 	List<Integer> getCareLineIdsByDiary(@Param("diaryId") Integer diaryId);
+
+	@Query("SELECT dcl.pk.diaryId " +
+			"FROM DiaryCareLine dcl " +
+			"JOIN Diary d ON (dcl.pk.diaryId = d.id) " +
+			"JOIN DoctorsOffice dof ON (d.doctorsOfficeId = dof.id) " +
+			"WHERE dcl.pk.careLineId = :careLineId " +
+			"AND dof.institutionId = :institutionId " +
+			"AND dcl.deleteable.deleted = false")
+	List<Integer> getDiaryIdsByCareLineIdAndInstitutionId(@Param("careLineId") Integer careLineId,
+														  @Param("institutionId") Integer institutionId);
+
 }

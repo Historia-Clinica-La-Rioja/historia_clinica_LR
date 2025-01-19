@@ -36,4 +36,20 @@ public class AnthropometricDataDto implements Serializable {
     @Nullable
     private ClinicalObservationDto headCircumference;
 
+    public boolean hasValues() {
+        return this.hasMinimalValues()
+                || (bmi != null && bmi.getValue() != null)
+                || (headCircumference != null && headCircumference.getValue() != null);
+    }
+
+    public boolean hasMinimalValues() {
+        return (bloodType != null && bloodType.getValue() != null)
+                ||(height != null && height.getValue() != null)
+                ||(weight != null && weight.getValue() != null);
+    }
+
+    @Nullable
+    public ClinicalObservationDto getBMI() {
+        return bmi;
+    }
 }

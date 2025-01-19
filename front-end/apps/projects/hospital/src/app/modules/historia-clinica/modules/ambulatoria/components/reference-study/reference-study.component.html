@@ -1,0 +1,11 @@
+<div *ngIf="reportReference else referenceStudyClose">
+	<app-reference-study-closure-information [reportReference]="reportReference" [patientId]="patientId"
+		[diagnosticReportId]="diagnosticReportId"  [resultsPractices]="resultsPractices">
+	</app-reference-study-closure-information>
+</div>
+
+<ng-template #referenceStudyClose>
+	<app-reference-study-close [patientId]="patientId" [reference]="reference"
+		[diagnosticReportId]="diagnosticReportId" [studies]="studies">
+	</app-reference-study-close>
+</ng-template>

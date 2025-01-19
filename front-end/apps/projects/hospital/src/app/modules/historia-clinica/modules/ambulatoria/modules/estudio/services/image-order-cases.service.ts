@@ -23,11 +23,15 @@ export class ImageOrderCasesService {
 			.pipe(map(diagnostics => this.mapperStudyCasesService.mapDiagnosticSinOrdenToDiagnosticWithTypeReportInfoDto(diagnostics)))
 		const transcriptaOrden$: Observable<DiagnosticWithTypeReportInfoDto[]> = this.serviceRequestService.getStudyTranscribedOrder(patientId)
 			.pipe(map(diagnostics => this.mapperStudyCasesService.mapDiagnosticTranscriptaToDiagnosticWithTypeReportInfoDto(diagnostics)))
-		return forkJoin([sinOrden$, transcriptaOrden$])
+		const studyOrder$: Observable<DiagnosticWithTypeReportInfoDto[]> = this.serviceRequestService.getListStudyOrder(patientId)
+			.pipe(map(study => this.mapperStudyCasesService.mapStudyOrderToDiagnosticWithTypeReportInfoDto(study)))
+		return forkJoin([sinOrden$, transcriptaOrden$,studyOrder$])
 			.pipe(map(streamDiagnostics => {
 				const sinOrden: DiagnosticWithTypeReportInfoDto[] = streamDiagnostics[0]
 				const transcriptaOrden: DiagnosticWithTypeReportInfoDto[] = streamDiagnostics[1]
-				return this.applyFilterToOrderImageCases(sinOrden.concat(transcriptaOrden), filterValues)
+				const ordenCompleta = streamDiagnostics[2]
+				const finalOrderListCases = sinOrden.concat(transcriptaOrden).concat(ordenCompleta)
+				return this.applyFilterToOrderImageCases(finalOrderListCases, filterValues)
 			}))
 	}
 

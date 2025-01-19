@@ -1,0 +1,21 @@
+.margin-top {
+	margin-top: 20px;
+}
+
+.span-clickable {
+
+	span:hover {
+		text-decoration: underline;
+	}
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.content {
+	min-height: 120px;
+}

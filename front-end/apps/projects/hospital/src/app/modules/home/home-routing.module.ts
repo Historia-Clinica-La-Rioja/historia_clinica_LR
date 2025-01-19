@@ -3,38 +3,20 @@ import { Routes, RouterModule } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { RoleGuard } from '@core/guards/RoleGuard';
-import { SystemExtensionComponent } from '@extensions/routes/extension/extension.component';
 
 import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
-import { ProfileComponent } from './routes/profile/profile.component';
-import { SettingsComponent } from './routes/settings/settings.component';
 import { ManageKeysComponent } from './routes/manage-keys/manage-keys.component';
+import { ProfileComponent } from './routes/profile/profile.component';
+import { SETTINGS_ROUTES } from './routes/settings';
 import { UpdatePasswordComponent } from "../auth/components/update-password/update-password.component";
-import {
-	UpdatePasswordSuccessComponent
-} from "../auth/components/update-password-success/update-password-success.component";
+import { UpdatePasswordSuccessComponent } from "../auth/components/update-password-success/update-password-success.component";
+import { TemplateRenderComponent } from './routes/template-render/template-render.component';
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
+import { HomeRoutes, MANAGER_ROLES } from './constants/menu';
+import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
+import { CubeReportComponent } from '../reportes/routes/cube-report/cube-report.component';
 
-export const PUBLIC_API_ROLES = [
-	ERole.API_FACTURACION,
-	ERole.API_TURNOS,
-	ERole.API_PACIENTES,
-	ERole.API_RECETAS,
-	ERole.API_SIPPLUS,
-	ERole.API_USERS,
-	ERole.API_IMAGENES,
-	ERole.API_ORQUESTADOR,
-];
-
-export enum HomeRoutes {
-	Home = '',						// pantalla inicial
-	Profile = 'profile',			// Perfil del usuario
-	Settings = 'settings',			// Configuración
-	Extension = 'extension', 		// Extensión
-	UserKeys = 'user-keys', 		// API Keys del usuario
-	Auditoria = 'auditoria'
-}
 
 const routes: Routes = [
 	{
@@ -47,17 +29,20 @@ const routes: Routes = [
 				path: HomeRoutes.Profile + '/' + HomeRoutes.UserKeys,
 				component: ManageKeysComponent,
 			},
-			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
+			{ path: `${HomeRoutes.Settings}/template/:templateId`, component: TemplateRenderComponent },
 			{
 				path: HomeRoutes.Settings,
-				component: SettingsComponent,
-				canActivate: [FeatureFlagGuard, RoleGuard],
+				component: RouteMenuComponent,
+				canActivate: [ RoleGuard ],
 				data: {
-					featureFlag: AppFeature.HABILITAR_CONFIGURACION,
-					allowedRoles: [ERole.ROOT],
-					needsRoot: true
+					allowedRoles: [ ERole.ROOT, ERole.ADMINISTRADOR ],
+					needsRoot: true,
+					label: { key: 'app.menu.CONFIGURACION' },
+					icon: 'settings',
 				},
+				children: SETTINGS_ROUTES,
 			},
+
 			{ path: 'update-password', component: UpdatePasswordComponent },
 			{ path: 'update-password-success', component: UpdatePasswordSuccessComponent },
 			{ path: 'web-components/:wcId', component: RoutedExternalComponent },
@@ -65,6 +50,34 @@ const routes: Routes = [
 				path: HomeRoutes.Auditoria,
 				loadChildren: () => import('../../modules/auditoria/auditoria.module').then(m => m.AuditoriaModule),
 			},
+			{
+				path: HomeRoutes.AccessManagement,
+				loadChildren: () => import('@access-management/access-management.module').then(m => m.AccessManagementModule),
+				canActivate: [FeatureFlagGuard, RoleGuard],
+				data: {
+					featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
+					allowedRoles: MANAGER_ROLES,
+					needsRoot: true
+				},
+			},
+			{
+				path: HomeRoutes.CallCenter,
+				loadChildren: () => import('@call-center/call-center.module').then(m => m.CallCenterModule),
+				canActivate: [RoleGuard],
+				data: {
+					allowedRoles: [ERole.GESTOR_CENTRO_LLAMADO],
+					needsRoot: true,
+				},
+			},
+            {   
+                path: "get-call-center-appointments", component: CubeReportComponent,
+				canActivate: [FeatureFlagGuard, RoleGuard],
+				data: {
+					featureFlag: AppFeature.HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO,
+					allowedRoles: [ERole.GESTOR_CENTRO_LLAMADO],
+					needsRoot: true
+				},
+             },
 		]
 	}
 ];

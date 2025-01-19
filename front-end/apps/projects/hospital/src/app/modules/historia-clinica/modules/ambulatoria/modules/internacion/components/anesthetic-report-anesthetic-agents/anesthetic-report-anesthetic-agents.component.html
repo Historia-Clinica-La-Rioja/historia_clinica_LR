@@ -1,0 +1,13 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="!(service.anestheticReportAnestheticAgentService.isEmpty$ | async)"
+        title="{{ 'internaciones.anesthesic-report.anesthetic-agents.REGISTERED_ANESTHETIC_AGENTS' }}">
+        <app-medication-background-list [service]="service.anestheticReportAnestheticAgentService"></app-medication-background-list>
+    </app-titled-content-card>
+
+    <div>
+        <button id="add-agent" mat-button color="primary" class="anesthetic-agent-button"
+            (click)="addAnestheticAgent()">
+            {{ 'internaciones.anesthesic-report.anesthetic-agents.ADD_ANESTHETIC_AGENT' | translate }}
+        </button>
+    </div>
+</div>

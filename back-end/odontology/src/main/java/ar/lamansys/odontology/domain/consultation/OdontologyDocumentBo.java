@@ -1,5 +1,6 @@
 package ar.lamansys.odontology.domain.consultation;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,15 +35,17 @@ public class OdontologyDocumentBo {
 
     private List<ConsultationProcedureBo> procedures;
 
-    private List<ConsultationPersonalHistoryBo> personalHistories;
+    private ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories;
 
-    private List<ConsultationAllergyBo> allergies;
+    private ReferableItemBo<ConsultationAllergyBo> allergies;
 
     private List<ConsultationMedicationBo> medications;
 
     private String evolutionNote;
 
     private LocalDate performedDate;
+
+	private Integer medicalCoverageId;
 
     public OdontologyDocumentBo(Long id,
                                 ConsultationBo consultation,
@@ -64,6 +67,7 @@ public class OdontologyDocumentBo {
         this.medications = consultation.getMedications();
         this.evolutionNote = consultation.getEvolutionNote();
         this.performedDate = performedDate;
+		this.medicalCoverageId = consultation.getPatientMedicalCoverageId();
     }
 
 }

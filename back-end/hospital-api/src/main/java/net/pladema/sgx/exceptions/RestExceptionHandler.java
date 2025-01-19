@@ -14,6 +14,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
@@ -26,6 +29,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +45,9 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import ar.lamansys.sgx.shared.filestorage.application.BucketObjectAccessException;
+import ar.lamansys.sgx.shared.filestorage.application.BucketObjectException;
+import ar.lamansys.sgx.shared.filestorage.application.BucketObjectNotFoundException;
 import ar.lamansys.sgx.shared.strings.StringValidatorException;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
@@ -212,13 +219,42 @@ public class RestExceptionHandler {
 		return new ApiErrorMessageDto("IOException", ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ InvalidFormatException.class })
+	public ApiErrorMessageDto handleIOException(InvalidFormatException ex) {
+		LOG.error("InvalidFormatException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto("Invalid JSON Format", ex.getMessage());
+	}
+
+
+	@ExceptionHandler(ClientAbortException.class)
+	protected ResponseEntity<Object> handleClientAbortException(ClientAbortException ex, WebRequest request) {
+		var requestDescription = request.getDescription(false);
+	 	LOG.warn("ClientAbortException occurred: {}", requestDescription);
+		return ResponseEntity.noContent().build();
+	}
+
 	@ExceptionHandler({ FileServiceException.class })
 	public ResponseEntity<ApiErrorMessageDto> handleFileServiceException(FileServiceException ex) {
-		LOG.error("FileServiceException exception -> {}", ex.getMessage());
+		LOG.error("FileServiceException exception -> {}", ex.getMessage(), ex);
 		var error = new ApiErrorMessageDto(ex.getCodeInfo(), ex.getMessage());
 		return new ResponseEntity<>(error, FileServiceEnumException.INSUFFICIENT_STORAGE.equals(ex.getCode()) ?
 				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.BAD_REQUEST);
 	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({
+			BucketObjectNotFoundException.class,
+			BucketObjectAccessException.class
+	})
+	public ApiErrorMessageDto handleBucketObjectException(BucketObjectException boe) {
+		LOG.debug("BucketObjectException {} -> {}", boe.errorCode, boe.path, boe);
+		return new ApiErrorMessageDto(
+				boe.errorCode,
+				"No se pudo acceder al archivo"
+		);
+	}
+
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ RestorePasswordNotificationException.class })
 	protected ApiErrorMessageDto handleRestorePasswordNotificationException(RestorePasswordNotificationException ex) {
@@ -228,9 +264,16 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ DateParseException.class })
-	protected ApiErrorMessageDto handleDateTimeParseException(DateParseException ex, Locale locale) {
+	protected ApiErrorMessageDto handleDateTimeParseException(DateParseException ex) {
 		LOG.debug("DateTimeParseException -> originalDateValue {}", ex.originalDateValue, ex);
 		return new ApiErrorMessageDto("invalid-date", ex.originalDateValue);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RequestRejectedException.class })
+	protected ApiErrorMessageDto handleRequestRejectedException(RequestRejectedException ex) {
+		LOG.warn("RequestRejectedException {}", ex.getMessage());
+		return new ApiErrorMessageDto("request-rejected", ex.getMessage());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -245,6 +288,7 @@ public class RestExceptionHandler {
 				.toArray(String[]::new);
 		return new ApiErrorMessageDto("BindException", String.format("Error al leer el valor de %s", Arrays.toString(fieldsAndValues)));
 	}
+
 
 
 	private ApiErrorMessageDto buildErrorMessage(RuntimeException ex) {

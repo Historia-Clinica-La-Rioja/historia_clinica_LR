@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
@@ -8,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ class DiagnosticReportDanglingFilesServiceImplTest extends UnitRepository {
 
     @Autowired
     private DiagnosticReportFileRepository diagnosticReportFileRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp() {

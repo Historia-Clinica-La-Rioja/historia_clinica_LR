@@ -1,5 +1,33 @@
-@import "./components/vacunas/vacunas.component.scss-theme.scss";
+@mixin ambulatoria-mixins($theme) {}
 
-@mixin ambulatoria-mixins($theme) {
-	@include app-vacunas($theme);
+@mixin violence-mixins() {
+    .basic-options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .aside {
+        margin-left: 2.5rem;
+    }
+
+    label {
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+
+    .full-width {
+        width: 100%;
+    }
+
+    .mt-10 {
+        margin-top: 10px;
+    }
+
+    form {
+        margin-bottom: 1rem;
+    }
+    .mat-error{
+        font-size: 11px;
+    }
 }

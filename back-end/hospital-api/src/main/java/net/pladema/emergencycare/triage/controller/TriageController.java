@@ -11,15 +11,15 @@ import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
-import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.dto.TriageAdultGynecologicalDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;
 import net.pladema.emergencycare.triage.controller.mapper.TriageListMapper;
-import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.mapper.TriageMapper;
 import net.pladema.emergencycare.triage.controller.mapper.TriageMasterDataMapper;
 import net.pladema.emergencycare.triage.service.TriageMasterDataService;
 import net.pladema.emergencycare.triage.service.TriageService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.medicalconsultation.doctorsoffice.controller.service.DoctorsOfficeExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.user.controller.service.UserPersonExternalService;
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,7 +102,7 @@ public class TriageController {
     }
 
     @GetMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Collection<TriageListDto>> getAll(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name="episodeId") Integer episodeId) {
@@ -117,12 +118,13 @@ public class TriageController {
     }
 
     @PostMapping
-    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> createAdministrative(
             @PathVariable("institutionId") Integer institutionId,
             @PathVariable("episodeId") Integer episodeId,
             @RequestBody TriageAdministrativeDto body) {
         LOG.debug("Add triage administrative => {}", body);
+		assertValidTriageLevel(body.getCategoryId());
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
 		Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
@@ -135,12 +137,13 @@ public class TriageController {
 
     @Transactional
     @PostMapping("/adult-gynecological")
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> newAdultGynecological(
             @PathVariable("institutionId") Integer institutionId,
             @PathVariable("episodeId") Integer episodeId,
             @RequestBody TriageAdultGynecologicalDto body){
         LOG.debug("Add triage adult-gynecological => {}", body);
+		assertValidTriageLevel(body.getCategoryId());
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
@@ -155,12 +158,13 @@ public class TriageController {
 
     @Transactional
     @PostMapping("/pediatric")
-    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+    @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
     public ResponseEntity<Integer> newPediatric(
             @PathVariable("institutionId") Integer institutionId,
             @PathVariable("episodeId") Integer episodeId,
             @RequestBody TriagePediatricDto body){
         LOG.debug("Add triage pediatric => {}", body);
+		assertValidTriageLevel(body.getCategoryId());
         TriageBo triage = triageMapper.toTriageBo(body);
         triage.setEmergencyCareEpisodeId(episodeId);
         Integer patientId = emergencyCareEpisodeService.get(episodeId, institutionId).getPatient() != null ? emergencyCareEpisodeService.get(episodeId, institutionId).getPatient().getId() : null;
@@ -174,7 +178,12 @@ public class TriageController {
         return ResponseEntity.ok().body(result);
     }
 
-    private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){
+	private void assertValidTriageLevel(Short categoryId) {
+		final Short WITHOUT_TRIAGE_LEVEL_ID = 6;
+		Assert.isTrue(!categoryId.equals(WITHOUT_TRIAGE_LEVEL_ID), "El nivel de triage no puede ser \"Sin triage\" ");
+	}
+
+	private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){
         LOG.debug("Input parameter -> riskFactorsObservationDto {}", riskFactorsObservationDto);
         List<Integer> result = new ArrayList<>();
         if (riskFactorsObservationDto.getSystolicBloodPressure() != null && riskFactorsObservationDto.getSystolicBloodPressure().getId() != null)

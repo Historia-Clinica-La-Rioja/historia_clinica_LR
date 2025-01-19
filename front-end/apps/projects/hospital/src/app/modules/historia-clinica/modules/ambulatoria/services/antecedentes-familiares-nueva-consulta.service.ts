@@ -2,14 +2,13 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
+import { newDate } from '@core/utils/moment.utils';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { Subject } from 'rxjs';
 
 export interface AntecedenteFamiliar {
 	snomed: SnomedDto;
-	fecha: Moment;
+	fecha: Date;
 }
 
 export class AntecedentesFamiliaresNuevaConsultaService {
@@ -19,7 +18,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	private snomedConcept: SnomedDto;
 	private readonly ECL = SnomedECL.FAMILY_RECORD;
 
-	dataEmitter = new Subject()
+	dataEmitter = new Subject<AntecedenteFamiliar[]>()
 	data$ = this.dataEmitter.asObservable();
 
 	constructor(
@@ -101,8 +100,8 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		}
 	}
 
-	getMaxFecha(): Moment {
-		return newMoment();
+	getMaxFecha(): Date {
+		return newDate();
 	}
 
 	getECL(): SnomedECL {
@@ -111,6 +110,14 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 
 	isEmpty(): boolean {
 		return (!this.data || this.data.length === 0);
+	}
+
+	setFamilyHistories(familyHistories: AntecedenteFamiliar[]){
+		familyHistories.forEach(familyHistory => {
+			this.form.controls.fecha.setValue(familyHistory.fecha);
+			this.setConcept(familyHistory.snomed);
+			this.addToList();
+		});
 	}
 
 }

@@ -21,4 +21,5 @@ public class DetailsOrderImageBo {
 	private LocalDateTime completedOn;
 	private Integer professionalId;
 	private Boolean isReportRequired;
+	private Integer patientId;
 }

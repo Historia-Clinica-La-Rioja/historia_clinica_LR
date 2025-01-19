@@ -1,0 +1,129 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_29
+
+    - changeSet:
+        id: addColumn-required_documentation-medicine_group
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: medicine_group
+              columns:
+                - column:
+                    name: required_documentation
+                    type: text
+
+    - changeSet:
+          id: add-indexes-to-document_vital_sign-and-observation_vital_sign
+          author: fzudaire
+          changes:
+              -   sql:
+                      sql: |-
+                          CREATE INDEX IF NOT EXISTS IDX_document_vital_sign_observation_vital_sign_id ON  document_vital_sign (observation_vital_sign_id);
+                          CREATE INDEX IF NOT EXISTS IDX_observation_vital_sign_patient_id ON observation_vital_sign (patient_id);
+
+    - changeSet:
+          id: addColumn-has_prosthesis-and-fills-with-existing-data
+          author: fzudaire
+          changes:
+              - addColumn:
+                    tableName: surgical_report
+                    columns:
+                        - column:
+                              name: has_prosthesis
+                              type: boolean
+                              constraints:
+                                  nullable: true
+              - sql:
+                    sql: |-
+                        UPDATE surgical_report SET has_prosthesis = TRUE 
+                        WHERE EXISTS (
+                        	SELECT 1 
+                        	FROM document_prosthesis dp
+                        	WHERE dp.document_id = surgical_report.document_id
+                        );
+
+    - changeSet:
+        id: createIndexInstitutionId-institution-medicine_group
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_instutiton_medicine_group_institution_id" ON institution_medicine_group (institution_id);
+
+    - changeSet:
+          id: createTable-study_download_error
+          author: mromero
+          changes:
+              - createTable:
+                    tableName: study_download_error
+                    columns:
+                        - column:
+                              autoIncrement: true
+                              constraints:
+                                  nullable: false
+                                  primaryKey: true
+                                  primaryKeyName: PK_study_download_error
+                              name: id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: image_id
+                              type: varchar(80)
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: pac_server_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: error_code
+                              type: smallint
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: error_description
+                              type: varchar(255)
+                        - column:
+                            constraints:
+                                nullable: false
+                            name: effective_time
+                            type: datetime
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: institution_id
+                              type: int
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: created_on
+                              type: datetime
+                              defaultValueDate: ${date.now}
+                        - column:
+                              constraints:
+                                  nullable: false
+                              name: file_uuid
+                              type: varchar(44)
+                              defaultValue: uuid
+              - addForeignKeyConstraint:
+                    baseColumnNames: pac_server_id
+                    baseTableName: study_download_error
+                    constraintName: FK_study_download_error_pac_server_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: pac_server
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: institution_id
+                    baseTableName: study_download_error
+                    constraintName: FK_study_download_error_institution_id
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: institution
+                    validate: true
+

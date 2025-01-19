@@ -1,0 +1,26 @@
+.row {
+    display: flex;
+    flex-direction: row;
+
+    .spacing-radio-buttons {
+        gap: 16px;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+    .spacing-radio-buttons {
+        gap: 8px;
+    }
+}
+
+.title {
+    text-wrap: wrap;
+    width: 30%;
+}
+
+.spacing-title {
+    gap: 16px;
+}

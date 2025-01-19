@@ -22,4 +22,5 @@ public interface HospitalUserStorage {
 	Optional<Integer> fetchUserIdFromNormalToken(String token);
 	void resetTwoFactorAuthentication(Integer userId);
 	boolean hasProfessionalRole(Integer userId);
+	Optional<String> getCuilByUserId(Integer userId);
 }

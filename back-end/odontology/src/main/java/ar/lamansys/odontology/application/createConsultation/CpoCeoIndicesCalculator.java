@@ -5,8 +5,8 @@ import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationCpoCeoIndicesStorage;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.CpoCeoIndicesBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyConsultationStorage;
+import ar.lamansys.odontology.application.odontogram.ports.ToothIndicesStorage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

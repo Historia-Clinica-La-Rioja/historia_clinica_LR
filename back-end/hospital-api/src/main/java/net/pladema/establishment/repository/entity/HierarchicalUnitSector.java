@@ -28,6 +28,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(SGXAuditListener.class)
+@Where(clause = "deleted=false")
 public class HierarchicalUnitSector extends SGXAuditableEntity<Integer> implements Serializable {
 
 	private static final long serialVersionUID = -1832876231321092835L;

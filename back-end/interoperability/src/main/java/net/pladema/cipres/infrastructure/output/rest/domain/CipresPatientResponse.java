@@ -16,9 +16,9 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CipresPatientResponse {
 
-	private Map<String, Object> persona;
+	private Map<String, Object> paciente;
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public CipresPatientResponse(@JsonProperty("persona") Map<String, Object> persona) {
-		this.persona = persona;
+	public CipresPatientResponse(@JsonProperty("paciente") Map<String, Object> paciente) {
+		this.paciente = paciente;
 	}
 }

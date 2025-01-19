@@ -1,0 +1,9 @@
+.search {
+	height: 100%;
+	min-height: 100%;
+	min-width: 80%;
+	width: 80%;
+	@media screen and (min-width: 960px) {
+		min-width: 40%;
+	}
+}

@@ -2,8 +2,10 @@ package net.pladema.medicalconsultation.appointment.service.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
+import ar.lamansys.sgh.clinichistory.domain.document.OrderImageFileReducedBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,10 +17,10 @@ import net.pladema.medicalconsultation.appointment.repository.domain.EquipmentAp
 
 @Getter
 @Setter
-@ToString
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@NoArgsConstructor
+@ToString
 public class EquipmentAppointmentBo {
 
 	private Integer id;
@@ -45,9 +47,17 @@ public class EquipmentAppointmentBo {
 
 	private Short reportStatusId;
 
-	private String studyName;
-
 	private Integer serviceRequestId;
+
+	private Integer transcribedServiceRequestId;
+
+	private List<OrderImageFileReducedBo> transcribedOrderAttachedFiles;
+
+	private Integer diagnosticReportId;
+
+	private List<String> studies;
+
+	private String localViewerUrl;
 
 	public static EquipmentAppointmentBo fromEquipmentAppointmentVo(EquipmentAppointmentVo equipmentAppointmentVo) {
 		return EquipmentAppointmentBo.builder()
@@ -60,8 +70,9 @@ public class EquipmentAppointmentBo {
 				.patientMedicalCoverageId(equipmentAppointmentVo.getPatientMedicalCoverageId())
 				.derivedTo(equipmentAppointmentVo.getInstitutionBasicInfoBo())
 				.reportStatusId(equipmentAppointmentVo.getReportStatusId())
-				.studyName(equipmentAppointmentVo.getStudyName())
+				.diagnosticReportId(equipmentAppointmentVo.getDiagnosticReportId())
 				.serviceRequestId(equipmentAppointmentVo.getServiceRequestId())
+				.transcribedServiceRequestId(equipmentAppointmentVo.getTranscribedServiceRequestId())
 				.build();
 	}
 

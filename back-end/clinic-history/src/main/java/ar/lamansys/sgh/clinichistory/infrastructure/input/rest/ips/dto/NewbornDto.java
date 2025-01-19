@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EBirthCondition;
-import ar.lamansys.sgh.clinichistory.domain.ips.EGender;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EBirthCondition;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

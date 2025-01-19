@@ -6,8 +6,7 @@
 
 		<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 			<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId"
-					(triageRiskFactors)="updateRiskFactors($event)">
+				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId" [isEmergencyCareTemporalPatient]="isEmergencyCareTemporalPatient">
 				</app-resumen-de-guardia>
 			</div>
 
@@ -26,7 +25,7 @@
 		</div>
 
 
-		<app-emergency-care-evolutions *ngIf="episodeId" [emergencyCareId]="episodeId"></app-emergency-care-evolutions>
+		<app-emergency-care-evolutions *ngIf="episodeId" [emergencyCareId]="episodeId" [patientId]="patientId"></app-emergency-care-evolutions>
 
 	</div>
 </app-content>

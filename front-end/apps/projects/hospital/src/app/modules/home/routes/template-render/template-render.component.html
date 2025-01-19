@@ -1,0 +1,49 @@
+<app-content width="full">
+	<div class="template-values" *ngIf="(procedureTemplate$ | async) as template; else loading">
+
+		<mat-card class="template-form">
+				UNO
+			<mat-card-title>{{template?.description}}</mat-card-title>
+
+			<mat-card-subtitle>{{template?.parameters.length }} parametros</mat-card-subtitle>
+
+			<mat-card-content>
+				<app-procedure-template-form [template]="template"
+					(valueChange)="changeValues($event)"></app-procedure-template-form>
+			</mat-card-content>
+
+		</mat-card>
+
+		<mat-card class="form-values">
+				DOS
+			<mat-card-title>Valores</mat-card-title>
+			<mat-card-subtitle>{{emitedValues ? 'Últimos valores' : 'Interactúe con el formulario'}}</mat-card-subtitle>
+
+			<mat-card-content *ngIf="emitedValues">
+				<app-json [content]="emitedValues"></app-json>
+			</mat-card-content>
+
+			<mat-card-actions align="end">
+				<button mat-button (click)="save()">GUARDAR</button>
+			</mat-card-actions>
+
+		</mat-card>
+
+		<mat-card class="template-form">
+			TRES
+			<mat-card-title>{{template?.description}} {{isChanged? '*' : ''}}</mat-card-title>
+			<mat-card-subtitle>Usando valores</mat-card-subtitle>
+
+			<mat-card-content *ngIf="(inputValues$ | async) as inputValues">
+				<app-procedure-template-form [template]="template" [values]="inputValues"
+					(valueChange)="changed($event)"></app-procedure-template-form>
+			</mat-card-content>
+
+		</mat-card>
+
+	</div>
+</app-content>
+
+<ng-template #loading>
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-template>

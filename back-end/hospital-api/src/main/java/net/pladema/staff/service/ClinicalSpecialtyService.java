@@ -17,10 +17,12 @@ public interface ClinicalSpecialtyService {
 
 	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByCareLineIdAndDestinationIntitutionId(Integer careLineId, Integer destinationInstitutionId);
 
-	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(Short provinceId);
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesInAllInstitutions();
 
 	String getClinicalSpecialtyNameByDiaryId(Integer diaryId);
 	
 	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(Integer institutionId);
+
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByDepartmentId(Short departmentId);
 
 }

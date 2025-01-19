@@ -32,6 +32,10 @@ export const STUDY_STATUS = {
 		id: '2',
 		description: 'Completado'
 	},
+	PARTIAL: {
+		id: '255609007',
+		description: 'Completado Parcialmente'
+	},
 	ERROR: {
 		id: '89925002',
 		description: 'Eliminado'
@@ -55,4 +59,10 @@ export const PRESCRIPTION_STATES = {
 		id: 3,
 		description: 'Dispensado provisorio'
 	}
+}
+
+export enum STUDY_STATUS_ENUM {
+	REGISTERED = 'Pendiente',
+	FINAL = 'Completado',
+	PARTIAL = 'Completado Parcialmente'
 }

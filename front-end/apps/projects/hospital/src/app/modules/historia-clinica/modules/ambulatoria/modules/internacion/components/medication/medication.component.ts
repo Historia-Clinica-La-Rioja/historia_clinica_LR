@@ -4,6 +4,7 @@ import { MedicationDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
+import { Color } from "@presentation/colored-label/colored-label.component";
 import { FormMedicationComponent } from '../../dialogs/form-medication/form-medication.component';
 
 @Component({
@@ -16,6 +17,8 @@ export class MedicationComponent {
 	@Input() medications: MedicationDto[] = [];
 	@Input() hideSuspended = false;
 	@Input() title = '';
+
+	protected readonly Color = Color;
 
 
 	constructor(

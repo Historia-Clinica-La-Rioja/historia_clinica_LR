@@ -9,6 +9,8 @@ import { DockPopupService } from "@presentation/services/dock-popup.service";
 import { MatDialog } from "@angular/material/dialog";
 import { DiagnosisDto, HealthConditionDto } from "@api-rest/api-model";
 import { Subject, take } from 'rxjs';
+import { SurgicalReportDockPopupComponent } from '@historia-clinica/components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { AnestheticReportDockPopupComponent } from '@historia-clinica/components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -32,8 +34,17 @@ export class InternmentActionsService {
 	medicalDischargeSubject = new Subject<InternmentFields>();
 	medicalDischarge$ = this.medicalDischargeSubject.asObservable();
 
+	surgicalReportSubject = new Subject<InternmentFields>();
+	surgicalReport$ = this.surgicalReportSubject.asObservable();
+
+	anestheticReportSubject = new Subject<InternmentFields>();
+	anestheticReport$ = this.anestheticReportSubject.asObservable();
+
 	popUpOpenSubject = new Subject<boolean>();
 	popUpOpen$ = this.popUpOpenSubject.asObservable();
+
+	dialogRefSubject = new Subject<DockPopupRef>();
+	dialogRef$ = this.dialogRefSubject.asObservable();
 
 	constructor(
 		private readonly dockPopupService: DockPopupService,
@@ -62,10 +73,12 @@ export class InternmentActionsService {
 				diagnosticos: this.diagnosticos
 			});
 			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
 			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				this.anamnesisSubject.next(fieldsToUpdate);
 				this.popUpOpenSubject.next(false);
+				this.dialogRefSubject.next(this.dialogRef);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -83,13 +96,16 @@ export class InternmentActionsService {
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosticos: this.diagnosticos,
 				evolutionNoteId: documentId,
-				documentType: documentType
+				documentType: documentType,
+				patientId: this.patientId
 			});
 			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
 			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
 				delete this.dialogRef;
 				this.evolutionNoteSubject.next(fieldsToUpdate);
 				this.popUpOpenSubject.next(false);
+				this.dialogRefSubject.next(this.dialogRef);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -111,12 +127,14 @@ export class InternmentActionsService {
 				disableClose: true,
 			});
 			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
 			this.dialogRef.afterClosed().pipe(take(1)).subscribe((epicrisisClose: EpicrisisClose) => {
 				delete this.dialogRef;
 				this.epicrisisSubject.next(epicrisisClose?.fieldsToUpdate);
 				if (epicrisisClose?.openMedicalDischarge)
 					this.openMedicalDischarge();
 				this.popUpOpenSubject.next(false);
+				this.dialogRefSubject.next(this.dialogRef);
 			});
 		} else {
 			if (this.dialogRef.isMinimized()) {
@@ -140,6 +158,58 @@ export class InternmentActionsService {
 				this.medicalDischargeSubject.next(medicalDischarge);
 			this.popUpOpenSubject.next(false);
 		});
+	}
+
+	openAnestheticReport(id?: number, isDraft?: boolean) {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {
+				autoFocus: false,
+				disableClose: true,
+				patientId: this.patientId,
+				internmentEpisodeId: this.internmentEpisodeId,
+				mainDiagnosis: this.mainDiagnosis,
+				anestheticPartId: id,
+				isDraft: !!isDraft
+			});
+			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate) => {
+				delete this.dialogRef;
+				this.popUpOpenSubject.next(false);
+				this.anestheticReportSubject.next(fieldsToUpdate);
+				this.dialogRefSubject.next(this.dialogRef);
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
+	}
+
+	openSurgicalReport(id?: number): void {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(SurgicalReportDockPopupComponent, {
+				patientId: this.patientId,
+				internmentEpisodeId: this.internmentEpisodeId,
+				surgicalReportId: id,
+				autoFocus: false,
+				disableClose: true,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosis: this.diagnosticos,
+			});
+			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate: InternmentFields) => {
+				delete this.dialogRef;
+				this.surgicalReportSubject.next(fieldsToUpdate);
+				this.popUpOpenSubject.next(false);
+				this.dialogRefSubject.next(this.dialogRef);
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 }
 

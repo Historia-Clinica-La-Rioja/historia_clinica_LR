@@ -1,12 +1,23 @@
 package net.pladema.snowstorm.services.loadCsv;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import net.pladema.snowstorm.services.loadCsv.exceptions.EUpdateSnomedConceptsException;
+import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import net.pladema.snowstorm.repository.SnomedCacheLogRepository;
 import net.pladema.snowstorm.repository.SnomedGroupRepository;
 import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
@@ -14,23 +25,10 @@ import net.pladema.snowstorm.repository.entity.SnomedCacheLog;
 import net.pladema.snowstorm.repository.entity.SnomedRelatedGroup;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.domain.semantics.SnomedSemantics;
-import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsException;
-import net.pladema.snowstorm.services.loadCsv.exceptions.UpdateSnomedConceptsExceptionEnum;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class UpdateSnomedConceptsSynonymsByCsv {
 
 	@Value("${snomed-cache-update.batch-size:1000}")
@@ -44,21 +42,10 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 	private final SharedSnomedPort sharedSnomedPort;
 	private final SnomedCacheLogRepository snomedCacheLogRepository;
 
-	private final Semaphore semaphore = new Semaphore(1);
-
-	public UpdateConceptsSynonymsResultBo run(MultipartFile csvFile, String eclKey){
-		log.debug("Update SnomedConceptsSynonyms By CSV File");
-		if (!this.semaphore.tryAcquire()) {
-			log.error("There is another Snomed update in progress");
-			throw new UpdateSnomedConceptsException(UpdateSnomedConceptsExceptionEnum.UPDATE_ALREADY_IN_PROGRESS,
-					"Hay otra actualización en marcha. Intente nuevamente más tarde");
-		}
-		UpdateConceptsSynonymsResultBo result = updateSnomedConceptSynonyms(csvFile, eclKey);
-		this.semaphore.release();
-		return result;
-	}
-
-	private UpdateConceptsSynonymsResultBo updateSnomedConceptSynonyms(MultipartFile csvFile, String eclKey){
+	public UpdateConceptsResultBo updateSnomedConceptSynonyms(
+			InputStreamSource csvFile,
+			String eclKey
+	){
 		Integer conceptsProcessed = 0;
 		Integer erroneousConcepts = 0;
 		Integer missingMainConcepts = 0;
@@ -69,6 +56,7 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 		Integer snomedGroupId = getSnomedGroupId(eclKey, today);
 		List<SnomedConceptBo> conceptBatch = null;
 
+		log.debug("Total concepts to process -> {}", totalConcepts);
 		while (conceptsProcessed < totalConcepts) {
 			try {
 				conceptBatch = getNextBatch(batchSize, conceptsProcessed, totalConcepts, csvFile);
@@ -76,10 +64,11 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 				// if the batch size had decreased before due to an error, it will increase again
 				batchSize = Math.min(batchSize * BATCH_SIZE_MULTIPLIER, batchMaxSize);
 				log.debug("Concepts processed -> {}", conceptsProcessed);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// If the batch size is equal to 1, it means that that element is the one that can't be saved.
 				// So, it should be skipped to try to save the rest
 				if (batchSize.equals(1)) {
+					log.error("Capturing Throwable Update Snomed -> {}", e.getMessage());
 					saveError(e, conceptBatch.get(0), errorMessages);
 					conceptsProcessed += 1;
 					erroneousConcepts += 1;
@@ -90,36 +79,38 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 			}
 
 		}
-		UpdateConceptsSynonymsResultBo result = new UpdateConceptsSynonymsResultBo(eclKey,
+		UpdateConceptsResultBo result = new UpdateConceptsResultBo(
 				conceptsProcessed - erroneousConcepts,
 				erroneousConcepts,
-				missingMainConcepts,
-				errorMessages);
+				errorMessages,
+				missingMainConcepts
+		);
 		log.debug("Finished loading snomed concepts");
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private void saveError(Exception e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
-		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), e.getCause().getMessage());
+	private void saveError(Throwable e, SnomedConceptBo snomedConceptBo, List<String> errorMessages) {
+		String particularError = e.getCause() != null
+				? e.getCause().getMessage()
+				: e.getMessage();
+		String message = String.format("Error saving %s -> %s", snomedConceptBo.toString(), particularError);
 		errorMessages.add(message);
 		snomedCacheLogRepository.save(new SnomedCacheLog(message, dateTimeProvider.nowDateTime()));
 	}
 
-	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, MultipartFile csvFile) {
+	private List<SnomedConceptBo> getNextBatch(Integer batchSize, Integer conceptsProcessed, Integer totalConcepts, InputStreamSource csvFile) {
 		int batchFinishIndex = Math.min(conceptsProcessed + batchSize, totalConcepts);
 		return getConcepts(csvFile, conceptsProcessed, batchFinishIndex);
 	}
 
-	private List<SnomedConceptBo> getConcepts(MultipartFile csvFile, int start, int end) {
-		log.debug("Input parameter -> csvFile {}, start {}, end {}", csvFile.getOriginalFilename(), start, end);
+	private List<SnomedConceptBo> getConcepts(InputStreamSource csvFile, int start, int end) {
+		log.debug("Input parameter -> getConcepts start {}, end {}", start, end);
 		List<SnomedConceptBo> result = new ArrayList<>();
-		if (SnomedConceptsCsvReader.hasCsvFormat(csvFile)) {
-			try {
-				result = SnomedConceptsCsvReader.csvToSnomedConceptsBo(csvFile.getInputStream(), start, end);
-			} catch (IOException e) {
-				log.error(e.getMessage());
-			}
+		try {
+			result = SnomedConceptsCsvReader.csvToSnomedConceptsBo(csvFile.getInputStream(), start, end);
+		} catch (IOException e) {
+			log.error(e.getMessage());
 		}
 		log.debug("Output size -> {}", result.size());
 		return result;
@@ -131,7 +122,6 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 		try {
 			ecl = snomedSemantics.getEcl(SnomedECL.map(eclKey));
 		} catch (NotFoundException e){
-			this.semaphore.release();
 			throw e;
 		}
 		Integer result = snomedGroupRepository.getBaseGroupIdByEclAndDescription(ecl, eclKey);
@@ -141,6 +131,10 @@ public class UpdateSnomedConceptsSynonymsByCsv {
 
 	private Integer saveConcepts(Integer conceptsProcessed, LocalDate today, Integer snomedGroupId, List<SnomedConceptBo> conceptBatch, Integer missingMainConcepts) {
 		List<Integer> conceptIds = sharedSnomedPort.addSnomedSynonyms(mapToDto(conceptBatch));
+		if (conceptIds.isEmpty()) {
+			throw new UpdateSnomedConceptsException(EUpdateSnomedConceptsException.NO_SYNONYMS_BATCH_WERE_CREATED,
+					"No se han creado nuevos sinónimos, ya que no se encuentran definidos en snomed.");
+		}
 		conceptsProcessed = associateConceptIdsWithSnomedGroup(snomedGroupId, conceptIds, conceptsProcessed, today);
 		missingMainConcepts = missingMainConcepts + (conceptBatch.size() - conceptsProcessed);
 		return conceptsProcessed;

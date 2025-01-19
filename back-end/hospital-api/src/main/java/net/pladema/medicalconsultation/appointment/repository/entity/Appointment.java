@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
@@ -84,6 +86,14 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 	@Column(name = "applicant_healthcare_professional_email")
 	private String applicantHealthcareProfessionalEmail;
 
+	@Column(name = "diary_label_id")
+	private Integer diaryLabelId;
+	@Column(name = "recurring_appointment_type_id")
+	private Short recurringAppointmentTypeId;
+
+	@Column(name = "appointment_id")
+	private Integer parentAppointmentId;
+
 	public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
 		return Appointment.builder()
 				.dateTypeId(appointmentBo.getDate())
@@ -100,16 +110,21 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 				.callId(appointmentBo.getCallId())
 				.modalityId(appointmentBo.getModalityId())
 				.applicantHealthcareProfessionalEmail(appointmentBo.getApplicantHealthcareProfessionalEmail())
+				.recurringAppointmentTypeId(appointmentBo.getRecurringTypeBo() != null ? appointmentBo.getRecurringTypeBo().getId(): RecurringAppointmentType.NO_REPEAT.getId())
+				.parentAppointmentId(appointmentBo.getParentAppointmentId())
 				.build();
 	}
 
 	private static Short fromStateId(Short appointmentStateId) {
-		if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BOOKED))
-			return AppointmentState.BOOKED;
-		else if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BLOCKED))
-			return AppointmentState.BLOCKED;
-		else
-			return AppointmentState.ASSIGNED;
+		if (appointmentStateId != null) {
+			if (appointmentStateId.equals(AppointmentState.BOOKED))
+				return AppointmentState.BOOKED;
+			else if (appointmentStateId.equals(AppointmentState.BLOCKED))
+				return AppointmentState.BLOCKED;
+			else if (appointmentStateId.equals(AppointmentState.SERVED))
+				return AppointmentState.SERVED;
+		}
+		return AppointmentState.ASSIGNED;
 	}
 
 	public boolean isAssigned(){

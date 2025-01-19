@@ -1,0 +1,193 @@
+{
+	"access-management": {
+		"home": {
+			"TITLE": "Gestión de accesos",
+			"tabs": {
+				"REQUESTS": "solicitudes",
+				"REGULATION_OFFER": "oferta por regulacion"
+			}
+		},
+		"search_references": {
+			"CARE_LINE": "Línea de cuidado",
+			"ORIGIN_INSTITUTION": "Institución origen",
+			"DESTINATION_INSTITUTION": "Institución destino",
+			"INSTITUTION_NETWORK": "Red de institución",
+			"DEPARTMENT_DESTINATION": "Partido destino",
+			"REQUEST_LIST": "lista de solicitudes:",
+			"RECEIVED": "Recibidas",
+			"REQUEST": "Solicitadas",
+			"FILTER_BY_PERIOD": "Filtrar por período",
+			"PERIOD_VALIDATIONS": "El rango de fechas no debe superar los 90 días",
+			"ORIGIN": "origen",
+			"DESTINATION": "destino",
+			"REQUESTED_REFERENCE": "Referencia solicitada",
+			"ONE_MORE_PROBLEM": "problema más",
+			"MORE_PROBLEMS": "problemas más",
+			"PRIORITY": "Prioridad",
+			"SHIFT_STATUS": "Estado de la atención",
+			"SPECIALTY": "Especialidad de destino",
+			"REQUEST_STATUS": "Estado de solicitud",
+			"CONTINUES_UNDER_OBSERVATION": "Continúa en observación",
+			"TREATMENT_BEGINS_IN_A_EFERENCE_CENTER": "Inicia tratamiento en centro de referencia",
+			"REQUIERES_COMPLEMENTARY_STUDIES": "Requiere estudios complementarios",
+			"COUNTER_REFERENCE": "Contrarreferencia",
+			"VIEW_APPLICATION": "Ver solicitud",
+			"DOCUMENT_SEARCH": "Buscar por documento",
+            "PRACTICE": "Práctica/Procedimiento",
+			"REGULATION_STATES": "Estado de auditoria",
+			"APPROVAL_STATES": "Estado de aprobación",
+			"reference": {
+				"TITLE": "Detalle de solicitud",
+				"CONTACT_DATA": "Datos de contacto",
+				"REFERENCE_DATA": "Datos de Referencia",
+				"APPOINTMENT_DATA": "Datos del turno",
+				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK": " asignar turno en red de atencion",
+				"ASSIGNED_BY": "Asignado por:",
+				"approval": {
+					"TITLE": "Estado de aprobación",
+					"SUBTITLE": "Solicitud ingresada por Regla General",
+					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
+					"states": {
+						"PENDING_APPROVAL": "Esperando aprobacion",
+						"PENDING_AUDIT": "Esperando auditoria",
+						"SUGGESTED": "Revision sugerida",
+						"REJECTED": "Rechazada",
+						"APPROVED": "Aprobada",
+						"AUDITED": "Auditada",
+						"AUDIT_NOT_REQUIRED": "No requiere auditoria"
+					},
+					"stepper-labels": {
+						"ORIGIN": "Origen",
+						"DESTINATION": "Destino",
+						"APPOINTMENT": "Turno"
+					},
+					"EDIT_REFERENCE_BUTTON": "Editar referencia / institución destino"
+				},
+				"institutional_network_actions": {
+					"REJECT": "rechazar",
+					"SUGGEST_REVIEW": "sugerir revision",
+					"APPROVE": "aprobar"
+				},
+				"discard_popup": {
+					"audit": {
+						"TITLE": "auditar revisión"
+					},
+					"rejected": {
+						"TITLE": "rechazar solicitud",
+						"PLACEHOLDER": "Explique el motivo de rechazo"
+					},
+					"suggested-review": {
+						"TITLE": "sugerir revisión",
+						"PLACEHOLDER": "Explique el motivo de la revisión"
+					},
+					"approved": {
+						"TITLE": "aprobar solicitud"
+					}
+				},
+				"approval_actions": {
+					"CANCEL": "cancelar",
+					"MODIFY": "modificar",
+					"CANCEL_SUCCESS": "Se cancelo la solicitud exitosamente",
+					"CANCEL_ERROR": "Error al cancelar la solicitud",
+					"CONFIRMATION_CANCEL_TITLE": "¿Estás seguro que desea cancelar la solicitud de referencia?",
+					"CONFIRMATION_CANCEL_BUTTON_CONFIRM": "SI, CANCELAR",
+					"CONFIRMATION_CANCEL_BUTTON_CANCEL": "NO, REGRESAR"
+				}
+			}
+		},
+		"regulation_offer": {
+			"SEARCH_IN_REGULATION_OFFER_CRITERIA": "Seleccione los criterios para la búsqueda de turnos disponibles en la red de regulación:",
+			"CARELINE": "Línea de cuidado",
+			"PROVINCE": "Provincia",
+			"DEPARTMENT": "Partido",
+			"INSTITUTION": "Institución",
+			"SPECIALTY": "Especialidad",
+			"DATE_PERIOD_NOTE": "Se traerán resultados desde la fecha seleccionada hasta 7 días en adelante",
+			"SEARCH_START_DATE": "Fecha de inicio de búsqueda",
+			"NOT_FOUND_APPOINTMENTS": "No se han encontrado turnos disponibles con esos criterios de búsqueda.",
+			"INVALID_FORM_MESSAGE": "Debe ingresar todos los campos obligatorios marcados para la búsqueda",
+			"AVAILABLE_APPOINTMENTS_TITLE": "Turnos disponibles encontrados",
+			"START_DATE": "Fecha de inicio",
+			"END_DATE": "Fecha de fin",
+			"PRACTICES": "Prácticas",
+			"OPTIONAL": "(Opcional)",
+			"MODALITY_ATTENTION": "Modalidad de atención",
+			"ON_SITE_ATTENTION": "Presencial",
+			"PATIENT_VIRTUAL_ATTENTION": "Teleconsulta con paciente",
+			"SECOND_OPINION_VIRTUAL_ATTENTION": "Teleconsulta con segunda opinión",
+			"SEARCH_APPOINTMENTS": "Buscar turnos"
+		},
+		"appointment_result_view": {
+			"ASSIGN_APPOINTMENT": "asignar turno",
+			"JOINT_DIARY": "agenda conjunta"
+		},
+		"derive_request": {
+			"BUTTON_TITLE": "Derivar a gestor de acceso superior",
+			"FORM_TITLE": "Derivar a regulador superior",
+			"FORM_PLACEHOLDER": "Comentario para el regulador superior",
+			"SHOW_SUCCESS_DERIVATION": "La derivación se ha llevado a cabo exitosamente",
+			"SHOW_SUCCESS_EDIT": "La derivación se ha modificado exitosamente",
+			"SHOW_ERROR_DERIVATION:": "Error al cargar la derivación",
+			"DERIVATION_MESSAGE_TITLE": "DERIVADO A GESTIÓN {{forwardingType}}"
+		},
+		"administrative_reference_closure": {
+			"CLOSURE_BUTTON": "Cierre administrativo de referencia",
+			"DIALOG_TITLE": "¿Confirmar cierre administrativo?",
+			"DIALOG_DESCRIPTION": "La referencia se dará por finalizada y ya no podrá reabrirse.",
+			"DIALOG_INPUT_LABEL": "Motivo de cierre",
+			"DIALOG_INPUT_PLACEHOLDER": "Describa motivo de cierre",
+			"DIALOG_CANCEL_BUTTON": "Cancelar",
+			"DIALOG_CONFIRM_BUTTON": "Confirmar cierre",
+			"CLOSURE_NOTE_LABEL": "Motivo de cierre:"
+		},
+		"reference-edition": {
+			"TITLE": "Editar solicitud de referencia",
+			"EDIT_REFERENCE_DATA": "Editar datos de referencia",
+			"PLACEHOLDER_ASSOCIATED_PROBLEM": "Problema asociado",
+			"PLACEHOLDER_CARE_LINE": "Línea de cuidado",
+			"SEARCH_BY_CARE_LINE": "Solicitar por línea de cuidado?",
+			"REFERENCE_TYPE": "Tipo de referencia",
+			"CONSULTATION_OPTION": "Consulta",
+			"PROCEDURE_OPTION": "Procedimiento",
+			"PLACEHOLDER_SPECIALITY": "Especialidad",
+			"PLACEHOLDER_SPECIALITY_OPTIONAL": "Especialidad (Opcional)",
+			"PLACEHOLDER_INSTITUTION": "Institución",
+			"PLACEHOLDER_SUMMARY": "Resumen de referencia solicitada",
+			"UPLOAD_FILES": "Adjuntar archivos",
+			"SEND_REQUEST": "enviar solicitud",
+			"NO_CARE_LINES": "No existen líneas de cuidado para la solicitud",
+			"PROVINCE": "Provincia",
+			"DEPARTMENT": "Partido",
+			"ORIGIN": "Origen",
+			"DESTINATION": "Destino",
+			"PATIENT_PHONE": "Teléfono del paciente",
+			"PHONE_NUMBER": "Número",
+			"PHONE_PREFIX": "Prefijo",
+			"PRIORITY_CRITERIA": "Criterio de priorización",
+			"RECEIVER": "Receptor",
+			"PROTECTED_APPOINTMENT": " turnos protegidos disponibles para ser asignados por red de atención en los próximos 60 días.",
+			"APPOINTMENT": " turnos disponibles para ser asignados por la institución destino en los próximos 60 días.",
+			"PRACTICE_PROCEDURE": "Práctica/procedimiento",
+			"STUDY_CATEGORY": "Categoría de estudios",
+			"CONSULTATION": "Consulta",
+			"PRACTICE": "Práctica/Procedimiento",
+			"snack_bar_description": {
+				"FILES_SUCCESS": "Se subieron los archivos correctamente",
+				"FILES_ERROR": "Hubo un error al subir los archivos",
+				"REFERENCE_EDITION_SUCCESS": "Se edito la referencia exitosamente",
+				"REFERENCE_EDITION_ERROR": "Hubo un error al editar la referencia",
+				"FILES_DELETE_SUCCESS": "Se eliminaron los archivos correctamente",
+				"FILES_DELETE_ERROR": "Hubo un error al eliminar los archivos",
+				"ADMINISTRATIVE_CLOSURE_SUCCESS": "Cierre administrativo realizado con éxito",
+				"ADMINISTRATIVE_CLOSURE_ERROR": "Hubo un error al cerrar la referencia"
+			}
+		},
+		"holiday_warning": {
+			"TITLE": "Día feriado",
+			"HOLIDAY_DISCLAIMER": "¿Desea asignar un turno de todos modos?",
+			"OK_BUTTON": "No, elegir otra fecha",
+			"CANCEL_BUTTON": "Si, asignar turno"
+		},
+		"REFERENCE_FORWARDING": "Derivado a gestión {{forwardingType}}"
+	}
+}

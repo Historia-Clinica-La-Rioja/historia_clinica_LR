@@ -6,10 +6,15 @@ import {
 	ECAdultGynecologicalDto,
 	ResponseEmergencyCareDto,
 	EmergencyCareListDto,
-	DateTimeDto
+	DateTimeDto,
+	RiskFactorDto,
+	PageDto,
+	EmergencyCareEpisodeFilterDto,
+	EmergencyCareEpisodeAttentionPlaceDto,
+	EmergencyCareClinicalSpecialtySectorDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 
 
@@ -27,10 +32,10 @@ export class EmergencyCareEpisodeService {
 	) {
 	}
 
-	getAll(): Observable<EmergencyCareListDto[]> {
-		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
-			BASIC_URL_SUFIX}/episodes`;
-		return this.http.get<EmergencyCareListDto[]>(url);
+	getAll(pageSize: number, pageNumber: number, filter: EmergencyCareEpisodeFilterDto): Observable<PageDto<EmergencyCareListDto>> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId + BASIC_URL_SUFIX}/episodes`;
+		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize).append('filter', JSON.stringify(filter));
+		return this.http.get<PageDto<EmergencyCareListDto>>(url, { params: queryParam });
 	}
 
 	createAdministrative(newEpisode: ECAdministrativeDto): Observable<number> {
@@ -69,6 +74,12 @@ export class EmergencyCareEpisodeService {
 		return this.http.get<DateTimeDto>(url);
 	}
 
+	getSpecialtySectors(): Observable<EmergencyCareClinicalSpecialtySectorDto[]> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/specialty-sector`;
+		return this.http.get<EmergencyCareClinicalSpecialtySectorDto[]>(url);
+	}
+
 	updateAdministrative(episodeId: number, data): Observable<number> {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/episodes/` + episodeId;
@@ -79,5 +90,22 @@ export class EmergencyCareEpisodeService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/episodes/` + episodeId + '/has-evolution-note';
 		return this.http.get<boolean>(url);
+	}
+
+	getRiskFactorsGeneralState(episodeId: number): Observable<RiskFactorDto> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId + BASIC_URL_SUFIX}/episodes/${episodeId}/general/riskFactors`;
+		return this.http.get<RiskFactorDto>(url);
+	}
+
+	updatePatientDescription(episodeId: number, patientDescription: string): Observable<boolean> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/${episodeId}/updatePatientDescription`;
+		return this.http.put<boolean>(url, patientDescription);
+	}
+
+	getLastAttentionPlace(episodeId: number): Observable<EmergencyCareEpisodeAttentionPlaceDto> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/${episodeId}/last-attention-place`;
+		return this.http.get<EmergencyCareEpisodeAttentionPlaceDto>(url);
 	}
 }

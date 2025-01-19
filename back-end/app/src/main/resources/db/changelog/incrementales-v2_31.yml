@@ -1,0 +1,54 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_31 
+
+
+    - changeSet:
+        id: insert-new-emergency-care-type
+        author: jvaldez
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO emergency_care_type VALUES (-1, 'No definido');
+
+    - changeSet:
+        id: add-default-value-and-not-null-constraint-emergency_care_type_id
+        author: jvaldez
+        changes:
+          - addNotNullConstraint:
+              columnDataType: smallint
+              columnName: emergency_care_type_id
+              tableName: emergency_care_episode
+              validate: true
+              defaultNullValue: -1
+
+    - changeSet:
+          id: addColumn-food_intake_date-procedure_description
+          author: mromero
+          changes:
+              - addColumn:
+                    tableName: procedure_description
+                    columns:
+                      - column:
+                          name: food_intake_date
+                          type: date
+
+    - changeSet:
+          id: addColumn-created_by-report_queue
+          author: mromero
+          changes:
+          - addColumn:
+                columns:
+                - column:
+                      name: created_by
+                      type: int
+                tableName: report_queue
+
+    - changeSet:
+        id: document_type-nursing_emergency_care_evolution_note
+        author: efernandez
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (21, 'Nota de evolución de enfermería de guardia');

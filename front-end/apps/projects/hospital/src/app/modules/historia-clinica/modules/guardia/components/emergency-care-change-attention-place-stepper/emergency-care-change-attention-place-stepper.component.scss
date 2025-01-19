@@ -1,0 +1,19 @@
+.no-margin-bottom {
+	margin-bottom: 0;
+}
+
+.margin-botom-20px{
+	margin-bottom: 20px;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.actions-button-on-left{
+	display: flex;
+	justify-content: flex-start;
+	gap: 1rem;
+}

@@ -1,3 +1,5 @@
+@import "../../../../../assets/styles/mat-mixins";
+
 .page-title{
 	font-weight: 500;
 }
@@ -7,6 +9,10 @@
 .professionals-attending{
 	margin-left: 5%;
 }
-#content-filters{
-	max-width: 70%;
+.content-patient-filter{
+	@include mat-form-field-background-white;
+}
+
+#search-patient{
+	width: 360px;;
 }

@@ -1,15 +1,14 @@
 package ar.lamansys.nursing.domain;
 
-import ar.lamansys.nursing.domain.NursingConsultationBo;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
-
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
+
 @Getter
-@Setter
 @ToString
+@AllArgsConstructor
 public class NursingConsultationInfoBo {
 
     private Integer id;
@@ -30,16 +29,19 @@ public class NursingConsultationInfoBo {
 
 	private Integer hierarchicalUnitId;
 
-    public NursingConsultationInfoBo(Integer id, NursingConsultationBo nursingConsultation, Integer patientMedicalCoverageId, Integer doctorId, LocalDate performedDate, boolean billable, Integer hierarchicalUnitId) {
+    public static NursingConsultationInfoBo newNursingConsultationInfoBo(NursingConsultationBo nursingConsultation, Integer doctorId, LocalDate performedDate, boolean billable) {
+		return new NursingConsultationInfoBo(null, nursingConsultation.getPatientId(), nursingConsultation.getPatientMedicalCoverageId(), nursingConsultation.getInstitutionId(), nursingConsultation.getClinicalSpecialtyId(), performedDate, doctorId, billable, nursingConsultation.getHierarchicalUnitId());
+	}
+
+    public NursingConsultationInfoBo(Integer id, NursingConsultationBo nursingConsultation, Integer doctorId, LocalDate performedDate, boolean billable) {
         this.id = id;
         this.patientId = nursingConsultation.getPatientId();
         this.institutionId = nursingConsultation.getInstitutionId();
         this.clinicalSpecialtyId = nursingConsultation.getClinicalSpecialtyId();
-        this.patientMedicalCoverageId = patientMedicalCoverageId;
+        this.patientMedicalCoverageId = nursingConsultation.getPatientMedicalCoverageId();
         this.doctorId = doctorId;
         this.performedDate = performedDate;
         this.billable = billable;
-		this.hierarchicalUnitId = hierarchicalUnitId;
     }
 
 }

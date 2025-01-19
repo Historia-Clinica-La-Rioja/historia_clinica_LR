@@ -11,7 +11,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '@presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PersonService } from '@api-rest/services/person.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { InternmentPatientService } from '@api-rest/services/internment-patient.service';
@@ -79,7 +79,7 @@ export class PatientProfileComponent implements OnInit {
 						this.internmentEpisode = internmentEpisodeProcessDto;
 					});
 
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 					.subscribe( emergencyCareEpisodeInProgressDto => {
 						this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 					});
@@ -88,5 +88,10 @@ export class PatientProfileComponent implements OnInit {
 	goToMedicalHistory() {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}`;
 		this.router.navigate([url]);
+	}
+
+	newAppointment() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/turnos`;
+		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
 	}
 }

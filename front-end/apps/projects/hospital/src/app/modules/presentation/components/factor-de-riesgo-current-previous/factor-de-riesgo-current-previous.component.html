@@ -5,7 +5,7 @@
 			<span class="mat-caption">Anterior</span>
 			<div class="flex-row">
 				<mat-icon *ngIf="riskFactor.previousValue?.effectiveTime" inline color="accent"
-					matTooltip="{{ getDate(riskFactor.previousValue.effectiveTime) | date: 'dd/MM/yy - HH:mm' }} hs">
+					matTooltip="{{ getDate(riskFactor.previousValue.effectiveTime) | dateFormat: 'datetime' }}">
 					access_time
 				</mat-icon>
 				<span class="mat-body-1">

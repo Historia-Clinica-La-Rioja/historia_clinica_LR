@@ -1,0 +1,72 @@
+<app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
+	<div body fxLayout="column" fxLayoutGap="20px" *ngIf="!loadingReport">
+
+		<app-surgical-report-diagnosis data-id="diagnosis-section" [diagnosis]="diagnosis"
+			[mainDiagnosis]="mainDiagnosis" [(surgicalReport)]="surgicalReport">
+		</app-surgical-report-diagnosis>
+
+		<app-surgical-report-surgery-procedures data-id="surgery-procedures-section"
+			[(surgicalReport)]="surgicalReport"></app-surgical-report-surgery-procedures>
+
+		<app-surgical-report-professional-team data-id="professional-team-section" [professionals]="professionals"
+			[canConfirmSurgicalTeam]="canConfirmSurgicalTeam" [(surgicalReport)]="surgicalReport" (validSurgeon)="setValidSurgicalTeam($event)">
+		</app-surgical-report-professional-team>
+
+		<app-surgical-report-anesthesia data-id="anesthesia-section" [(surgicalReport)]="surgicalReport"
+			[searchConceptsLocallyFF]="searchConceptsLocallyFF"></app-surgical-report-anesthesia>
+
+		<app-surgical-report-procedures data-id="procedures-section" [(surgicalReport)]="surgicalReport"
+			(validDate)="setValidDate($event)" [markAsTouched]="markAsTouched">
+		</app-surgical-report-procedures>
+
+		<app-professional-and-description data-id="pathologist-section"
+			[title]="'ambulatoria.paciente.surgical-report.exam.TITLE' | translate" [icon]="'blur_circular'"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.exam.PATOLOGO' | translate"
+			[professionals]="professionals" [type]="PATHOLOGIST" [(surgicalReport)]="surgicalReport">
+		</app-professional-and-description>
+
+		<app-professional-and-description data-id="transfusionist-section"
+			[title]="'ambulatoria.paciente.surgical-report.blood-solutions.TITLE' | translate" [icon]="'water_drop'"
+			[professionalTitle]="'ambulatoria.paciente.surgical-report.blood-solutions.TRANSFUSIONISTA' | translate"
+			[professionals]="professionals" [type]="TRANSFUSIONIST" [(surgicalReport)]="surgicalReport">
+		</app-professional-and-description>
+
+		<app-procedure-and-description data-id="culture-section"
+			[title]="'ambulatoria.paciente.surgical-report.culture.TITLE' | translate"
+			[tableTitle]="'ambulatoria.paciente.surgical-report.culture.TABLE_TITLE' | translate"
+			[buttonTitle]="'ambulatoria.paciente.surgical-report.culture.BUTTON_TITLE' | translate" [icon]="'science'"
+			[type]="CULTURE" [(surgicalReport)]="surgicalReport">
+		</app-procedure-and-description>
+
+		<app-surgical-report-prosthesis data-id="prosthesis-section" [(surgicalReport)]="surgicalReport"
+			(validProsthesis)="setValidProsthesis($event)" [markAsTouched]="markAsTouched">
+		</app-surgical-report-prosthesis>
+
+		<app-procedure-and-description data-id="frozen-biopsy-section"
+			[title]="'ambulatoria.paciente.surgical-report.biopsy.TITLE' | translate"
+			[tableTitle]="'ambulatoria.paciente.surgical-report.biopsy.TABLE_TITLE' | translate"
+			[buttonTitle]="'ambulatoria.paciente.surgical-report.biopsy.BUTTON_TITLE' | translate" [icon]="'thermostat'"
+			[type]="FROZEN_SECTION_BIOPSY" [(surgicalReport)]="surgicalReport">
+		</app-procedure-and-description>
+
+		<app-procedure-and-description data-id="drainage-section"
+			[title]="'ambulatoria.paciente.surgical-report.drainage.TITLE' | translate"
+			[tableTitle]="'ambulatoria.paciente.surgical-report.drainage.TABLE_TITLE' | translate"
+			[buttonTitle]="'ambulatoria.paciente.surgical-report.drainage.BUTTON_TITLE' | translate" [icon]="'vaccines'"
+			[type]="DRAINAGE" [(surgicalReport)]="surgicalReport">
+		</app-procedure-and-description>
+
+		<app-surgical-report-post-diagnosis data-id="post-diagnosis-section"
+			[(surgicalReport)]="surgicalReport"></app-surgical-report-post-diagnosis>
+
+		<div class="spinner" *ngIf="loadingReport">
+			<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+		</div>
+	</div>
+
+	<div actions id="buttons" fxLayoutAlign="end">
+		<app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
+			[buttonType]="'mat-raised-button'" (clicked)="save()">
+		</app-button>
+	</div>
+</app-dock-popup>

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.fetchEmergencyCareEpisodeState;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.emergencyCareEpisodeState.EmergencyCareEpisodeHealthConditionRepository;
@@ -22,22 +23,34 @@ public class FetchEmergencyCareEpisodeStateDiagnoses {
 
 	private final EmergencyCareEpisodeHealthConditionRepository emergencyCareEpisodeHealthConditionRepository;
 
-	public List<HealthConditionBo> getDiagnosesGeneralState(Integer episodeId) {
+	public List<DiagnosisBo> getDiagnosesGeneralState(Integer episodeId) {
 		LOG.debug("Input parameters -> episodeId {}", episodeId);
-		GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(getEpisodeRelatedDiagnoses(episodeId));
-		List<HealthConditionBo> result = new ArrayList<>();
-		HealthConditionBo mainDiagnosis = generalHealthConditionBo.getMainDiagnosis();
-		if (mainDiagnosis != null)
-			result.add(mainDiagnosis);
-		result.addAll(generalHealthConditionBo.getDiagnosis());
+		List<HealthConditionVo> episodeRelatedDiagnoses = emergencyCareEpisodeHealthConditionRepository.findAllDiagnoses(episodeId);
+		GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(episodeRelatedDiagnoses);
+		var result =  buildDiagnosisList(generalHealthConditionBo);
 		LOG.debug("Output -> result {}", result);
 		return result;
 	}
 
-	private List<HealthConditionVo> getEpisodeRelatedDiagnoses(Integer episodeId) {
+	/**
+	 * In some cases the nursing attention diagnostic must be excluded.
+	 * For example, when creating a new evolution note, a doctor shouldn't be able to select this diagnostic.
+	 */
+	public List<DiagnosisBo> getDiagnosesGeneralStateExcludeNursingDiagnostic(Integer episodeId) {
 		LOG.debug("Input parameters -> episodeId {}", episodeId);
-		List<HealthConditionVo> result = emergencyCareEpisodeHealthConditionRepository.findAllDiagnoses(episodeId);
+		List<HealthConditionVo> episodeRelatedDiagnoses = emergencyCareEpisodeHealthConditionRepository.findAllDiagnoses(episodeId);
+		GeneralHealthConditionBo generalHealthConditionBo = GeneralHealthConditionBo.excludingNursingDiagnostic(episodeRelatedDiagnoses);
+		var result =  buildDiagnosisList(generalHealthConditionBo);
 		LOG.debug("Output -> result {}", result);
+		return result;
+	}
+
+	public List<DiagnosisBo> buildDiagnosisList(GeneralHealthConditionBo generalHealthConditionBo) {
+		List<DiagnosisBo> result = new ArrayList<>();
+		HealthConditionBo mainDiagnosis = generalHealthConditionBo.getMainDiagnosis();
+		if (mainDiagnosis != null)
+			result.add(new DiagnosisBo(mainDiagnosis));
+		result.addAll(generalHealthConditionBo.getDiagnosis());
 		return result;
 	}
 

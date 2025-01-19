@@ -1,0 +1,25 @@
+<div fxLayout="column" fxLayoutGap="10px">
+	<label>
+		<input type="checkbox" [checked]="isDeferredSectionSelected" (change)="toggleDeferredSection($event)"/>
+		{{ 'ambulatoria.paciente.outpatient-order.create-order-dialog.DEFERRED_ORDER_OF_STUDY' | translate }}
+	</label>
+
+	<div *ngIf="isDeferredSectionSelected">
+		<span>
+			{{ 'ambulatoria.paciente.outpatient-order.create-order-dialog.DEFERRE_ORDER_DATE' | translate }}
+		</span>
+
+		<div fxLayout="row" fxLayoutGap="25px">
+			<app-datepicker [minDate]="minDate" [maxDate]="maxDate" requiredText="{{ 'forms.REQUIRED' | translate }}"
+				(selectDate)="setDate($event)">
+			</app-datepicker>
+
+			<app-time-picker [timePickerData]="{ hideLabel: true, isRequired: true }" (timeSelected)="setHours($event)">
+			</app-time-picker>
+		</div>
+
+		<mat-error *ngIf="isSelectedDateInThePast">
+			{{ "ambulatoria.paciente.outpatient-order.create-order-dialog.INVALID_TIME" | translate }}
+		</mat-error>
+	</div>
+</div>

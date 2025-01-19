@@ -2,16 +2,15 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { delay, map, switchMap } from 'rxjs/operators';
 
 import { PwaInstallService } from '@core/services/pwa-install.service';
 import { PwaUpdateService } from '@core/services/pwa-update.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-
-import { AppFeature } from '@api-rest/api-model';
-import { Theme } from '@core/components/exchangeable-theme/exchangeable-theme.component';
+import { AppThemeService } from '@core/services/app-theme.service';
+import { MatDialog } from '@angular/material/dialog';
+import { VersionAvailableComponent } from '@core/dialogs/version-available/version-available.component';
 
 export const DEFAULT_LANG = 'es-AR';
 
@@ -21,8 +20,8 @@ export const DEFAULT_LANG = 'es-AR';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	selectedTheme: Theme;
 	isExchangeableTheme$: Observable<boolean>;
+	selectedThemeClass$: Observable<string>;
 	constructor(
 		translate: TranslateService,
 		titleService: Title,
@@ -31,7 +30,8 @@ export class AppComponent {
 		snackBarService: SnackBarService,
 		private matIconRegistry: MatIconRegistry,
 		private domSanitizer: DomSanitizer,
-		private readonly featureFlagService: FeatureFlagService,
+		private readonly appThemeService: AppThemeService,
+		readonly dialog: MatDialog
 	) {
 		translate.setDefaultLang(DEFAULT_LANG);
 		translate.use(DEFAULT_LANG);
@@ -104,7 +104,7 @@ export class AppComponent {
 			'clean_hands',
 			this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/clean_hands.svg')
 		);
-		//
+
 		pwaInstallService.install$.pipe(
 			switchMap(
 				pwaInstallAction =>
@@ -113,15 +113,22 @@ export class AppComponent {
 		).subscribe(pwaInstallAction => pwaInstallAction.run());
 
 		pwaUpdateService.update$.pipe(
-			switchMap(
-				pwaUpdateAction =>
-					snackBarService.showAction('Nueva versión', { text: 'Actualizar', payload: pwaUpdateAction })
-			),
+			switchMap(pwaUpdateAction => snackBarService.showActionDismiss('Nueva versión', { text: 'Actualizar', payload: pwaUpdateAction })),
+			delay(100),
+			switchMap(pwaUpdateAction => pwaUpdateAction.isDismissByAction ? of(pwaUpdateAction.action) : this.refreshVersion().pipe(map( _ => pwaUpdateAction.action)))
 		).subscribe(pwaUpdateAction => pwaUpdateAction.run());
 
-		pwaUpdateService.checkForUpdate();
+		pwaUpdateService.checkForUpdate()
 
-		this.isExchangeableTheme$ = this.featureFlagService.isActive(AppFeature.HABILITAR_INTERCAMBIO_TEMAS);
+		this.selectedThemeClass$ = this.appThemeService.theme$.pipe(map(theme => theme.class));
+	}
+
+	refreshVersion(): Observable<boolean>{
+		return this.dialog.open(VersionAvailableComponent,{
+			disableClose: true,
+				width: '520px',
+				autoFocus: false
+		}).afterClosed()
 	}
 
 }

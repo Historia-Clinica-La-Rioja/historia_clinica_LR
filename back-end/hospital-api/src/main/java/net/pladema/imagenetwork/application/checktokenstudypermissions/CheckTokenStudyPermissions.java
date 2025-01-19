@@ -3,7 +3,7 @@ package net.pladema.imagenetwork.application.checktokenstudypermissions;
 import ar.lamansys.sgx.shared.token.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.application.exception.StudyException;
-import net.pladema.imagenetwork.application.exception.StudyExceptionEnum;
+import net.pladema.imagenetwork.domain.exception.EStudyException;
 import net.pladema.imagenetwork.application.port.StudyPermissionUUIDStorage;
 import net.pladema.imagenetwork.domain.StudyPermissionBo;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +19,10 @@ public class CheckTokenStudyPermissions {
 	private final String secretJWT;
 	private final StudyPermissionUUIDStorage studyPermissionUUIDStorage;
 
+	private static final String IMAGEID = "studyInstanceUID";
+
+	private static final String INVALID_TOKEN = "El token enviado para acceder al estudio '%s', no es válido. Expiró o se encuentra mal formado y no fue provisto por la app.";
+
 	public CheckTokenStudyPermissions(@Value("${token.secret}") String secretJWT, StudyPermissionUUIDStorage studyPermissionUUIDStorage) {
 		this.secretJWT = secretJWT;
 		this.studyPermissionUUIDStorage = studyPermissionUUIDStorage;
@@ -30,10 +34,10 @@ public class CheckTokenStudyPermissions {
 		StudyPermissionBo studyPermissionFromToken = (isUUID(tokenStudy) ?
 				processUUID(tokenStudy) :
 				processJWT(tokenStudy, studyInstanceUID))
-				.orElseThrow(() -> new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), studyInstanceUID)));
+				.orElseThrow(() -> new StudyException(EStudyException.TOKEN_INVALID, String.format(INVALID_TOKEN, studyInstanceUID)));
 
 		if (!studyPermissionFromToken.getStudyInstanceUID().equals(studyInstanceUID))
-			throw new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), studyInstanceUID));
+			throw new StudyException(EStudyException.TOKEN_INVALID, String.format(INVALID_TOKEN, studyInstanceUID));
 
 		String token = studyPermissionFromToken.getToken();
 		log.trace("Output -> token '{}' is valid", token);
@@ -51,9 +55,9 @@ public class CheckTokenStudyPermissions {
 
 	private Optional<StudyPermissionBo> processJWT(String tokenStudy, String studyInstanceUID) {
 		return JWTUtils.parseClaims(tokenStudy, secretJWT)
-				.filter(claims -> claims.containsKey("studyInstanceUID"))
-				.map(claims -> Optional.of(new StudyPermissionBo(tokenStudy, (String) claims.get("studyInstanceUID"))))
-				.orElseThrow(() -> new StudyException(StudyExceptionEnum.TOKEN_INVALID, String.format(StudyExceptionEnum.TOKEN_INVALID.getMessage(), studyInstanceUID)));
+				.filter(claims -> claims.containsKey(IMAGEID))
+				.map(claims -> Optional.of(new StudyPermissionBo(tokenStudy, (String) claims.get(IMAGEID))))
+				.orElseThrow(() -> new StudyException(EStudyException.TOKEN_INVALID, String.format(INVALID_TOKEN, studyInstanceUID)));
 	}
 
 	private Optional<StudyPermissionBo> processUUID(String tokenStudy) {

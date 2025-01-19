@@ -1,6 +1,5 @@
 import {
 	MainDiagnosisDto,
-	InternmentSummaryDto,
 	HealthConditionDto,
 	SnomedDto,
 } from '@api-rest/api-model';
@@ -9,11 +8,8 @@ import { MainDiagnosesService } from '@api-rest/services/main-diagnoses.service'
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { InternacionService } from '@api-rest/services/internacion.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
-import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { map } from 'rxjs/operators';
 import { MatSelectionList } from '@angular/material/list';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
@@ -21,7 +17,6 @@ import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/
 import { DockPopupRef } from "@presentation/services/dock-popup-ref";
 import { OVERLAY_DATA } from "@presentation/presentation-model";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 
 @Component({
 	selector: 'app-change-main-diagnosis-dock-popup',
@@ -37,26 +32,21 @@ export class ChangeMainDiagnosisDockPopupComponent implements OnInit {
 	panelOpenState = true;
 	form: UntypedFormGroup;
 	currentMainDiagnosis: HealthConditionDto;
-	internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	diagnostics$: Observable<HealthConditionDto[]>;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
-		private readonly internmentService: InternacionService,
 		private readonly internmentStateService: InternmentStateService,
 		private readonly snomedService: SnomedService,
 		private readonly mainDiagnosesService: MainDiagnosesService,
-		private readonly mapperService: MapperService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 	) { }
 
 	ngOnInit(): void {
-		this.internmentEpisodeSummary$ = this.internmentService.getInternmentEpisodeSummary(this.data.internmentEpisodeId).pipe(
-			map((internmentEpisodeSummary: InternmentSummaryDto) => this.mapperService.toInternmentEpisodeSummary(internmentEpisodeSummary))
-		);
+
 		this.internmentStateService.getMainDiagnosis(this.data.internmentEpisodeId).subscribe(
 			mainDiagnosis => this.currentMainDiagnosis = mainDiagnosis
 		);

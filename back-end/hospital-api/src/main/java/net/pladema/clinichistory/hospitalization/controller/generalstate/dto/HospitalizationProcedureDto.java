@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.hospitalization.controller.generalstate.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,4 +32,13 @@ public class HospitalizationProcedureDto {
     @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
     @EqualsAndHashCode.Include
     private String performedDate;
+    
+	@Nullable
+	private ProcedureTypeEnum type = ProcedureTypeEnum.PROCEDURE;
+
+	@Nullable
+	private Boolean isPrimary = Boolean.TRUE;
+
+	@Nullable
+	private String note;
 }

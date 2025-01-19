@@ -18,8 +18,8 @@ export class ClinicalSpecialtyService {
 		return this.http.get<any[]>(url);
 	}
 
-	getClinicalSpecialtiesByProvinceId(provinceId: number): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/by-province/${provinceId}`;
+	getClinicalSpecialtiesInAllInstitutions(): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
@@ -43,7 +43,7 @@ export class ClinicalSpecialtyService {
 
 	getLoggedInProfessionalClinicalSpecialties(): Observable<ClinicalSpecialtyDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/loggedProfessionalClinicalSpecialty`;
-		return this.http.get<any[]>(url);
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
 	getActiveDiariesByProfessionalsClinicalSpecialties(professionalsIds: number[]): Observable<ProfessionalsByClinicalSpecialtyDto[]> {
@@ -66,13 +66,18 @@ export class ClinicalSpecialtyService {
 		return this.http.get<ClinicalSpecialtyDto[]>(url, { params });
 	}
 
-	getAllByDestinationInstitution(careLineId: number, destinationInstitutionId: number): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinicalspecialty/careline/${careLineId}/destinationinstitution/${destinationInstitutionId}`;
+	getVirtualConsultationClinicalSpecialtiesByInstitutionId(): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinical-specialty/virtual-consultation`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 
-	getVirtualConsultationClinicalSpecialtiesByInstitutionId(): Observable<ClinicalSpecialtyDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/clinical-specialty/virtual-consultation`;
+	getAll(): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/clinicalSpecialty`;
+		return this.http.get<ClinicalSpecialtyDto[]>(url);
+	}
+
+	getClinicalSpecialtiesByDepartmentId(departmentId: number): Observable<ClinicalSpecialtyDto[]> {
+		const url = `${environment.apiBase}/clinical-specialty/department/${departmentId}`;
 		return this.http.get<ClinicalSpecialtyDto[]>(url);
 	}
 

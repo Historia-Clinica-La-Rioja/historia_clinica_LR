@@ -1,12 +1,13 @@
 package net.pladema.establishment.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.AgeGroup;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.BedCategory;
 import net.pladema.establishment.repository.entity.CareType;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.establishment.repository.entity.Room;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.establishment.repository.entity.SectorOrganization;
@@ -15,10 +16,10 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.persistence.EntityManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +30,9 @@ class BedSummaryRepositoryTest extends UnitRepository {
     private EntityManager entityManager;
 
     private BedSummaryRepositoryImpl bedSummaryRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp(){

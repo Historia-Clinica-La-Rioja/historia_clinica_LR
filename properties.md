@@ -213,10 +213,33 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.cipres.password           |	| -                                                        | Opcional | Contraseña otorgada para acceder a los recursos de CIPRES        | v1.57.0 |
 | ws.cipres.realusername       |  | -                                                        | Opcional | Nombre real de usuario para acceder a los recursos de CIPRES     | v1.57.0 |
 
+### Plataforma de Firma Digital Remota
+| Propiedad | Variable de ambiente | Valor por defecto                       | Condición       | Descripcion                                                                                                                                                         | Desde  |
+| -------- | ------ |-----------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| app.feature.HABILITAR_FIRMA_DIGITAL   | | false                                   | **Obligatorio** | Define si se va a habilitar el módulo de Firma digital                                                                                                              | v2.2.0 |
+| digital.signature.url.redirect | APP_DOMAIN | localhost:4200/firma-digital/documentos | **Único**       | Url necesaria para enviarle al servicio del firmador. Dicho servicio redirige al usuario desde su sistema a la url una vez firmado un documento. **[NO MODIFICAR]** | v2.2.0 |
+| ws.firmador.url.base |  | -                                       | Opcional | Url del servicio externo del firmador. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                                           | v2.2.0 |
+| ws.firmador.api.key |  | -                                       | Opcional | Clave que provee el firmador. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                                                    | v2.2.0 |
+| ws.firmador.api.token |  | -                                       | Opcional | Token que provee el firmador. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                                                    | v2.2.0 |
+| ws.firmador.path.login |  | -                                       | Opcional | Path que provee el firmador para autenticarse al mismo. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                          | v2.2.0 |
+| ws.firmador.path.multiple.sign |  | -                                       | Opcional | Path que provee el firmador para firmar multiples documentos. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                    | v2.2.0 |
+
+
+### Addons: Prefacturación (billing)
+| Propiedad                    | Variable de ambiente | Valor por defecto | Condición | Descripción | Desde   |
+|------------------------------| ------ |----------------------------------------------------------| -------- |------------------------------------------------------------------|---------|
+| ws.addons.billing.enabled| | false | Opcional | Indica si se debe solicitar información de prefacturación al servidor Addons. | v2.17.0 |
+| ws.addons.billing.url| | - | Obligatorio si enabled=true | Url base donde se encuentra el servidor Addons. Ejemplo: https://addons.prefacturacion-soma.dev-env.lamansys.ar/api/addons/external | v2.17.0 |
+| ws.addons.billing.appKey| | - | Obligatorio si enabled=true | App key para poder acceder a los endpoints de Addons. | v2.17.0 |
+| ws.addons.billing.appKeyHeader| | external-token | Obligatorio si enabled=true | Nombre del header donde se envía el app key. | v2.17.0 |
+| ws.addons.billing.encounterUrl| | encounter | Obligatorio si enabled=true | Sub-path donde se encuentra el servicio de prefacturación. La url completa se arma como url + '/' + encounterUrl. | v2.17.0 |
+
+
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |
 | integration.covid.encryption.key | | WillGriggIsOnFir | Opcional | Clave para la encriptación de datos provistos por endpoints de SGH a otras aplicaciones (ej: covid) | v1.9.0 |
+
 
 ## Propiedades específicas de flavors 
 
@@ -275,13 +298,13 @@ Se crearon las siguientes propiedades para configurar los tableros de la aplicac
 | scheduledjobs.updateappointmentsstate.dayofweek            |  | *                | Opcional  | Configura el dia de la semana del cron usado para la actualización de estado de turnos.                                                            | v1.44.2 |
 | scheduledjobs.updateappointmentsstate.hourssincelastchange |  | 24               | Opcional  | Configura la mínima cantidad pasados desde el momento de la ejecución respecto a la fecha correspondiente al turno.                                | v1.44.2 |
 | scheduledjobs.updateappointmentsstate.limit                |  | 10               | Opcional  | Configura la máxima cantidad de turnos seleccionados para actualizar.                                                                              | v1.44.2 |
-| scheduledjobs.cipres-consultations.enabled                 |   | false            | Opcional  | Des/habilita la creación de consultas en cipres.                                                                                                   | v1.57.0 |
-| scheduledjobs.cipres-consultations.seconds                 |   | 0                | Opcional  | Configura los segundos del cron utilizado para la creación de consultas en cipres.                                                                 | v1.57.0 |
-| scheduledjobs.cipres-consultations.minutes                 |  | 5                | Opcional  | Configura los minutos del cron utilizado para la creación de consultas en cipres.                                                                  | v1.57.0 |
-| scheduledjobs.cipres-consultations.hours                   |   | 0-5              | Opcional  | Configura las horas del cron utilizado para la creación de consultas en cipres.                                                                    | v1.57.0 |
-| scheduledjobs.cipres-consultations.dayofmonth              |  | *                | Opcional  | Configura el dia del mes del cron utilizado para la creación de consultas en cipres.                                                               | v1.57.0 |
-| scheduledjobs.cipres-consultations.month                   |   | *                | Opcional | Configura el mes del cron utilizado para la creación de consultas en cipres.                                                                       | v1.57.0 |
-| scheduledjobs.cipres-consultations.dayofweek               |  | *                | Opcional  | Configura el dia de la semana del cron utilizado para la creación de consultas en cipres.                                                          | v1.57.0 |
+| scheduledjobs.cipresconsultations.enabled                 |   | false            | Opcional  | Des/habilita la creación de consultas en cipres.                                                                                                   | v1.57.0 |
+| scheduledjobs.cipresconsultations.seconds                 |   | 0                | Opcional  | Configura los segundos del cron utilizado para la creación de consultas en cipres.                                                                 | v1.57.0 |
+| scheduledjobs.cipresconsultations.minutes                 |  | 5                | Opcional  | Configura los minutos del cron utilizado para la creación de consultas en cipres.                                                                  | v1.57.0 |
+| scheduledjobs.cipresconsultations.hours                   |   | 0-5              | Opcional  | Configura las horas del cron utilizado para la creación de consultas en cipres.                                                                    | v1.57.0 |
+| scheduledjobs.cipresconsultations.dayofmonth              |  | *                | Opcional  | Configura el dia del mes del cron utilizado para la creación de consultas en cipres.                                                               | v1.57.0 |
+| scheduledjobs.cipresconsultations.month                   |   | *                | Opcional | Configura el mes del cron utilizado para la creación de consultas en cipres.                                                                       | v1.57.0 |
+| scheduledjobs.cipresconsultations.dayofweek               |  | *                | Opcional  | Configura el dia de la semana del cron utilizado para la creación de consultas en cipres.                                                          | v1.57.0 |
 | scheduledjobs.updatepatienttype.enabled                    |   | true             | Opcional  | Des/habilitar la actualización de estado de pacientes.                                                                                             | v2.4.0  |
 | scheduledjobs.updatepatienttype.cron                       |   | 0 20 0 * * *                 | Opcional  | Configura los segundos, minutos, horas, dia y mes del cron usado para la actualización de estado de pacientes.                                     | v2.4.0  |
 | scheduledjobs.updatepatienttype.pastdays                   |  | 180              | Opcional  | Configura la mínima cantidad pasados desde el momento de la ejecución respecto a la fecha correspondiente al ultimo cambio de estado del paciente. | v2.4.0  |
@@ -330,3 +353,9 @@ Se crearon las siguientes propiedades para configurar la funcionalidad de red de
 |----------------------------------------|----------------------|-----------------------|-----------|-------------------------------------------------------------------------------------------------------|---------|
 | app.imagenetwork.permission.expiration | -                    | 60m                   | Opcional  | Define cuanto tiempo de validez posee un token desde que se genera, para acceder a un estudio médico. | v2.1.0  |
 | app.imagenetwork.viewer.web.url        | VIEWER_WEB_URL       | http://localhost:3000 | Opcional  | Establece la URL donde se encuentra el visualizador web definido para ver estudios médicos.           | v2.1.0  |
+
+## Problemas en HC
+
+| Propiedad                              | Variable de ambiente | Valor por defecto | Necesidad | Descripcion                                                                                                | Desde    |
+|----------------------------------------|----------------------|-------------------|-----------|------------------------------------------------------------------------------------------------------------|----------|
+| app.problems.set-incorrect.time-window | -                    | 24h               | Opcional  | Define la ventana de tiempo dentro de la cual un problema puede ser marcado como cargado por error (en hs) | v.2.11.0 |

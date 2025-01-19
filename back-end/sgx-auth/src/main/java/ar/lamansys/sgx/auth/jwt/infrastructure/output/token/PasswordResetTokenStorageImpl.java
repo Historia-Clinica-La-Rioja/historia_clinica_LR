@@ -31,7 +31,7 @@ public class PasswordResetTokenStorageImpl implements PasswordResetTokenStorage 
     }
 
     @Override
-    public PasswordResetTokenBo get(String token) {
+    public PasswordResetTokenBo get(String token) throws PasswordResetTokenStorageException {
         logger.debug("Get password reset token from database {} ", token);
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() ->

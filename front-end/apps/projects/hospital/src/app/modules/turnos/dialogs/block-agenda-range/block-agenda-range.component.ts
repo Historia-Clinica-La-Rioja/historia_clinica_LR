@@ -63,15 +63,15 @@ export class BlockAgendaRangeComponent implements OnInit {
 				this.dialogRef.close(true);
 			},
 			error => {
-				this.snackBarService.showError(error.message);
+				this.snackBarService.showError(error.errors[0]);
 			}
 		);
 	}
 
 	private getValues(form) {
 		const value = form.value.control;
-		const initDateDto: DateDto = dateToDateDto(value.initDate.toDate());
-		const endDateDto: DateDto = dateToDateDto(value.endDate.toDate());
+		const initDateDto: DateDto = dateToDateDto(value.initDate);
+		const endDateDto: DateDto = dateToDateDto(value.endDate);
 		const init = value.init;
 		const end = value.end;
 		const appointmentBlockMotiveId = form.value.blockMotive || null;

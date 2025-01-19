@@ -1,0 +1,90 @@
+<ng-container *ngIf="selectedData$ | async as selectedData">
+	<form [formGroup]="vitalSignsForm">
+		<div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-start">
+			<mat-label class="form-subtitle"
+				[translate]="'internaciones.anesthesic-report.vital-signs.ANESTHESIA_START'"></mat-label>
+			<div fxLayout="row wrap" fxLayoutGap="24px">
+				<app-datepicker fxLayout="50%" [title]="'internaciones.anesthesic-report.vital-signs.DATE'"
+					(selectDate)="setDateAttribute($event, 'anesthesiaStartDate')"
+					[dateToSetInDatepicker]="selectedData?.anesthesiaStartDate" [maxDate]="service.anestheticReportVitalSignsService.anesthesiaEndDate">
+				</app-datepicker>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label class="form-input-title"
+						[translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
+					<app-time-picker [timePickerData]="selectedData?.anesthesiaStartTimePicker"
+						(timeSelected)="setTimeAttribute($event, 'anesthesiaStartTime')">
+					</app-time-picker>
+				</div>
+			</div>
+		</div>
+
+		<div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-end">
+			<mat-label class="form-subtitle"
+				[translate]="'internaciones.anesthesic-report.vital-signs.ANESTHESIA_END'"></mat-label>
+			<div fxLayout="row wrap" fxLayoutGap="24px">
+				<app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'"
+					(selectDate)="setDateAttribute($event, 'anesthesiaEndDate')"
+					[dateToSetInDatepicker]="selectedData?.anesthesiaEndDate" [minDate]="service.anestheticReportVitalSignsService.anesthesiaStartDate">
+				</app-datepicker>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label class="form-input-title"
+						[translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
+					<app-time-picker [timePickerData]="selectedData?.anesthesiaEndTimePicker"
+						(timeSelected)="setTimeAttribute($event, 'anesthesiaEndTime')">
+					</app-time-picker>
+				</div>
+			</div>
+			<mat-error class="time-error"
+				*ngIf="vitalSignsForm.get('anesthesiaEndDate')?.hasError('endTimeBeforeStartTime')">
+				{{ 'internaciones.anesthesic-report.vital-signs.START_END_MINIMUM_DIFFERENCE' | translate }}
+			</mat-error>
+		</div>
+
+		<div fxLayout="column" fxLayoutGap="8px" data-id="surgery-start">
+			<mat-label class="form-subtitle"
+				[translate]="'internaciones.anesthesic-report.vital-signs.SURGERY_START'"></mat-label>
+			<div fxLayout="row wrap" fxLayoutGap="24px">
+				<app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'"
+					(selectDate)="setDateAttribute($event, 'surgeryStartDate')"
+					[dateToSetInDatepicker]="selectedData?.surgeryStartDate" [maxDate]="service.anestheticReportVitalSignsService.surgeryEndDate">
+				</app-datepicker>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label class="form-input-title"
+						[translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
+					<app-time-picker [timePickerData]="selectedData?.surgeryStartTimePicker"
+						(timeSelected)="setTimeAttribute($event, 'surgeryStartTime')"></app-time-picker>
+				</div>
+			</div>
+		</div>
+
+		<div fxLayout="column" fxLayoutGap="8px" data-id="surgery-end">
+			<mat-label class="form-subtitle"
+				[translate]="'internaciones.anesthesic-report.vital-signs.SURGERY_END'"></mat-label>
+			<div fxLayout="row wrap" fxLayoutGap="24px">
+				<app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'"
+					(selectDate)="setDateAttribute($event, 'surgeryEndDate')"
+					[dateToSetInDatepicker]="selectedData?.surgeryEndDate" [minDate]="service.anestheticReportVitalSignsService.surgeryStartDate">
+				</app-datepicker>
+				<div fxLayout="column" fxLayoutGap="10px">
+					<mat-label class="form-input-title"
+						[translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
+					<app-time-picker [timePickerData]="selectedData?.surgeryEndTimePicker"
+						(timeSelected)="setTimeAttribute($event, 'surgeryEndTime')"></app-time-picker>
+				</div>
+			</div>
+			<mat-error class="time-error"
+				*ngIf="vitalSignsForm.get('surgeryEndDate')?.hasError('endTimeBeforeStartTime')">
+				{{ 'internaciones.anesthesic-report.vital-signs.START_END_MINIMUM_DIFFERENCE' | translate }}
+			</mat-error>
+		</div>
+	</form>
+</ng-container>
+
+<div class="measuring-point-container">
+	<app-measuring-point [service]="service.anestheticReportVitalSignsService"></app-measuring-point>
+</div>
+
+<div class="registered-measuring-points-container">
+	<app-measuring-point-background-list
+		[service]="service.anestheticReportVitalSignsService"></app-measuring-point-background-list>
+</div>

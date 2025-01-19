@@ -2,9 +2,9 @@ package net.pladema.cipres.application.getconsultations;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.OutpatientConsultationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipres.CipresOutpatientConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAnthropometricDataDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedOutpatientConsultationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedCipresOutpatientConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,7 @@ import net.pladema.cipres.domain.SnomedBo;
 
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,30 +28,29 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GetConsultations {
 
-	private final SharedOutpatientConsultationPort sharedOutpatientConsultationPort;
+	private final SharedCipresOutpatientConsultationPort sharedCipresOutpatientConsultationPort;
 
-	public Map<Integer, List<OutpatientConsultationBo>> run() {
-		return mapToBo(sharedOutpatientConsultationPort.getOutpatientConsultationsToCipres());
-	}
-
-	private Map<Integer, List<OutpatientConsultationBo>> mapToBo(Map<Integer, List<OutpatientConsultationDto>> consultations) {
-		Map<Integer, List<OutpatientConsultationBo>> result = new HashMap<>();
-		consultations.keySet().forEach(patientId -> {
-			result.put(patientId, consultations.get(patientId).stream().map(this::mapToOutpatientConsultationBo).collect(Collectors.toList()));
-		});
+	public List<OutpatientConsultationBo> run() {
+		var consultations = sharedCipresOutpatientConsultationPort.getOutpatientConsultations();
+		var result = consultations.stream().map(this::mapToOutpatientConsultationBo).collect(Collectors.toList());
+		log.debug("Output size {} -> ", result.size());
 		return result;
 	}
 
-	private OutpatientConsultationBo mapToOutpatientConsultationBo(OutpatientConsultationDto consultation) {
+	private OutpatientConsultationBo mapToOutpatientConsultationBo(CipresOutpatientConsultationDto consultation) {
 		 return OutpatientConsultationBo.builder()
 				 .id(consultation.getId())
 				 .date(consultation.getDate())
 				 .patient(mapToBasicPatientDataBo(consultation.getPatient()))
+				 .clinicalSpecialtyId(consultation.getClinicalSpecialtyId())
 				 .clinicalSpecialtySctid(consultation.getClinicalSpecialtySctid())
+				 .cipresEncounterId(consultation.getCipresEncounterId())
 				 .anthropometricData(mapToAnthropometricDataBo(consultation.getAnthropometricData()))
 				 .riskFactor(mapToSharedRiskFactorBo(consultation.getRiskFactor()))
 				 .problems(consultation.getProblems().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				 .procedures(consultation.getProcedures().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
+				 .medications(consultation.getMedications().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
+				 .institutionId(consultation.getInstitutionId())
 				 .institutionSisaCode(consultation.getInstitutionSisaCode())
 				 .build();
 	}
@@ -67,11 +64,7 @@ public class GetConsultations {
 
 	private BasicDataPersonBo mapToBasicPersonDataBo(BasicDataPersonDto person) {
 		return BasicDataPersonBo.builder()
-				.firstName(person.getFirstName())
-				.middleNames(person.getMiddleNames())
-				.otherLastNames(person.getOtherLastNames())
-				.lastName(person.getLastName())
-				.birthDate(person.getBirthDate())
+				.id(person.getId())
 				.identificationNumber(person.getIdentificationNumber())
 				.identificationTypeId(person.getIdentificationTypeId())
 				.genderId(person.getGender().getId())

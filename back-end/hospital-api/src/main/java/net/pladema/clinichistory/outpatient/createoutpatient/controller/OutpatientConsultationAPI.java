@@ -1,24 +1,24 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 
-import java.io.IOException;
-
-import javax.validation.Valid;
-
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
-import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "Outpatient consultation", description = "Outpatient consultation")
@@ -28,9 +28,11 @@ public interface OutpatientConsultationAPI {
     ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,
-            @RequestBody @Valid CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException;
+			@RequestPart("createOutpatientDto") @Valid CreateOutpatientDto createOutpatientDto,
+			@RequestPart("serviceRequestFiles") MultipartFile[] serviceRequestFiles
+	) throws IOException, PDFDocumentException, CreateOutpatientConsultationServiceRequestException;
 
-    @PostMapping("/gettingVaccine")
+	@PostMapping("/gettingVaccine")
     ResponseEntity<Boolean> gettingVaccine(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,
@@ -47,4 +49,5 @@ public interface OutpatientConsultationAPI {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestBody @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, PDFDocumentException;
+
 }

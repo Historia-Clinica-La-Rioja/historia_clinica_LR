@@ -1,0 +1,7 @@
+<div class="item">
+    <span class="text" #textContentElement [matTooltip]="isTextEllipsed ? pharmaco.pt.term : ''">{{ pharmaco.pt.term }}</span>
+    <app-colored-label *ngIf="pharmaco.financed"
+        description="{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ENABLED_IN_VADEME' | translate}}"
+        color="green">
+    </app-colored-label>
+</div>

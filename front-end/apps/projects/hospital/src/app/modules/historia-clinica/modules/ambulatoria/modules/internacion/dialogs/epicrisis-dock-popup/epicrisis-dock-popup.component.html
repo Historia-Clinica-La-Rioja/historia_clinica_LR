@@ -172,7 +172,7 @@
 
 									<input matInput type="text" formControlName="snomedProblem" readonly
 										matTooltip="{{ snomedConceptProblem.pt }}">
-									<button id="clear" mat-button matSuffix color="warn" mat-icon-button
+									<button id="clear"  matSuffix color="warn" mat-icon-button
 										(click)="resetFormProblem()">
 										<mat-icon>close</mat-icon>
 									</button>
@@ -238,22 +238,26 @@
 	</div>
 
 	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
-		<button id="sign-draft" type="button" mat-stroked-button color="primary" *appHasRole="['ESPECIALISTA_MEDICO']"
-			(click)="saveDraft()" [disabled]="isDisableConfirmButton">
-			<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
-		</button>
+		<div *ngIf="!isConfirmed">
+			<button id="sign-draft" type="button" mat-stroked-button color="primary"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="saveDraft()"
+				[disabled]="isDisableConfirmButton">
+				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.SAVE_DRAFT'"></span>
+			</button>
+		</div>
 		<div *ngIf="!isDraft">
 			<button [disabled]="isDisableConfirmButton" id="sign-confirm" type="button" mat-raised-button
-				color="primary" *appHasRole="['ESPECIALISTA_MEDICO']" (click)="save()">
+				color="primary" *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="save()">
 				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.CONFIRM'"></span>
 			</button>
 		</div>
 		<div *ngIf="isDraft && canConfirmedDocument">
 			<button id="sign-confirm-draft" type="button" mat-raised-button color="primary"
-				*appHasRole="['ESPECIALISTA_MEDICO']" (click)="saveConfirmedDraft()"
+				*appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" (click)="saveConfirmedDraft()"
 				[disabled]="isDisableConfirmButton">
 				<span class="uppercase" [translate]="'internaciones.epicrisis.buttons.FINALIZE'"></span>
 			</button>
 		</div>
 	</div>
 </app-dock-popup>
+

@@ -1,0 +1,16 @@
+<div [formGroup]="form">
+	<mat-form-field appearance="outline" class="search">
+		<mat-label>{{label | translate}}</mat-label>
+		<input id="description" matInput formControlName="description" (keyup)="emmit($event)">
+
+		<mat-icon *ngIf="!form.value.description else clear" matSuffix class="grey">search</mat-icon>
+
+		<ng-template #clear>
+			<button type="button" id="clear"  matSuffix
+				color="warn" mat-icon-button (click)="clearDescription()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</ng-template>
+	</mat-form-field>
+</div>
+

@@ -308,4 +308,120 @@ databaseChangeLog:
     file: incrementales-v2_8.yml
     relativeToChangelogFile: true
 
+- include:
+    file: incrementales-v2_9.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_10.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_11.yml
+    relativeToChangelogFile: true
+
 # Los forks deberían agregar sus incrementales debajo de esta línea para evitar conflictos
+
+- include:
+    file: incrementales-v2_12.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_13.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_14.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_15.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_16.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_17.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_18.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_19.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_20.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_21.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_22.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_23.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_24.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_25.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_26.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_27.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_28.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_29.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_30.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_31.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_32.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_33.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_34.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_35.yml
+    relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_36.yml
+    relativeToChangelogFile: true
+
+- includeAll: # DEBE quedar al final
+      path: views/
+      relativeToChangelogFile: true

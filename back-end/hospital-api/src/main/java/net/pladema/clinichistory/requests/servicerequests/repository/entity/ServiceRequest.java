@@ -10,6 +10,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "service_request")
@@ -57,6 +58,21 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "source_id")
 	private Integer sourceId;
+
+	@Column(name = "observations", columnDefinition = "TEXT")
+	private String observations;
+
+	@Column(name = "uuid")
+	private UUID uuid;
+
+	@Column(name = "study_type_id")
+	private Short studyType;
+
+	@Column(name = "requires_transfer")
+	private Boolean requiresTransfer;
+
+	@Column(name = "deferred_date")
+	private LocalDateTime deferredDate;
 
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,

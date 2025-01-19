@@ -1,0 +1,8 @@
+<div class="title-description">
+	<span class="grey">{{title | translate}}:</span>
+	<span *ngIf="showFullText else textEllipsisTooltip" class="full-text">{{text | translate}}</span>
+	<ng-template #textEllipsisTooltip>
+		<app-text-ellipsis-tooltip [text]="text"></app-text-ellipsis-tooltip>
+	</ng-template>
+	
+</div>

@@ -8,6 +8,7 @@ import { ERole } from '@api-rest/api-model';
 import { PendingChangesGuard } from '@core/guards/PendingChangesGuard';
 import { EpisodeSummaryComponent } from './routes/episode-summary/episode-summary.component';
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
+import { AuditAccessGuard } from '@historia-clinica/modules/ambulatoria/guards/AuditAccess.guard';
 
 const ALLOWED_ROLES = [
 	ERole.ESPECIALISTA_MEDICO,
@@ -17,7 +18,8 @@ const ALLOWED_ROLES = [
 	ERole.PERSONAL_DE_IMAGENES,
 	ERole.PERSONAL_DE_LABORATORIO,
 	ERole.PERSONAL_DE_FARMACIA,
-	ERole.PRESCRIPTOR
+	ERole.PRESCRIPTOR,
+	ERole.ABORDAJE_VIOLENCIAS
 ];
 
 const PRINT_ROLES = [
@@ -30,7 +32,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				component: HomeComponent
+				component: HomeComponent,
 			},
 			{
 				path: 'paciente/:idPaciente/print',
@@ -42,7 +44,7 @@ const routes: Routes = [
 				path: 'paciente/:idPaciente',
 				component: AmbulatoriaPacienteComponent,
 				canDeactivate: [PendingChangesGuard],
-				canActivate: [RoleGuard],
+				canActivate: [RoleGuard, AuditAccessGuard],
 				data: { allowedRoles: ALLOWED_ROLES }
 			},
 			{

@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.List;
 
-@RestController
 @AllArgsConstructor
-@RequestMapping("/address/masterdata")
 @Tag(name = "Address Master Data", description = "Address Master Data")
+@RequestMapping("/address/masterdata")
+@RestController
 public class AddressMasterDataController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AddressMasterDataController.class);
@@ -60,6 +61,12 @@ public class AddressMasterDataController {
 		return ResponseEntity.ok().body(addressMasterDataService.findCitiesByDepartment(departmentId, AddressProjection.class));
 	}
 
+	@GetMapping(value = "/department/{departmentId}/get-all-cities")
+	public ResponseEntity<Collection<AddressProjection>> getAllCitiesByDepartment(@PathVariable("departmentId") Short departmentId) {
+		LOG.debug("{}", "All cities by department");
+		return ResponseEntity.ok().body(addressMasterDataService.findAllCitiesByDepartment(departmentId, AddressProjection.class));
+	}
+
 	@GetMapping(value = "/department/{departmentId}")
 	public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable("departmentId") Short departmentId) {
 		LOG.debug("{}", "Department by id");
@@ -68,23 +75,32 @@ public class AddressMasterDataController {
 		return ResponseEntity.ok().body(resultDto);
 	}
 
-	@GetMapping(value = "/institution/{institutionId}/departments/with-specialty/{clinicalSpecialtyId}")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-clinical-specialty-filter")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
+			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Collection<AddressProjection>> getDeparmentsByCareLineAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
-																					@PathVariable("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																					@RequestParam(name = "careLineId", required = false) Integer careLineId) {
-		LOG.debug("{}", "All departments in province having clinical specialty");
-		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsForReference(institutionId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+																									 @RequestParam("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
+																									 @RequestParam(name = "careLineId", required = false) Integer careLineId) {
+		LOG.debug("{}", "All departments by reference for clinical specialty filter");
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByClinicalSpecialty(careLineId, clinicalSpecialtyIds, AddressProjection.class));
 	}
 
 	@GetMapping(value = "/institution/{institutionId}/departments/by-reference-practice-filter")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, GESTOR_DE_ACCESO_INSTITUCIONAL')  || " +
+			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(@PathVariable("institutionId") Integer institutionId,
 																												  @RequestParam("practiceSnomedId") Integer practiceSnomedId,
 																												  @RequestParam(name = "careLineId", required = false) Integer careLineId,
-																												  @RequestParam(name = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId) {
-		LOG.debug("{}", "All departments by reference for practice filter");
-		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyId, AddressProjection.class));
+																												  @RequestParam(name = "clinicalSpecialtyIds", required = false) List<Integer> clinicalSpecialtyIds) {
+		LOG.debug("Input parameters -> institutionId {}, practiceSnomedId {}, careLineId {}, clinicalSpecialtyIds {}", institutionId, practiceSnomedId, careLineId, clinicalSpecialtyIds);
+		return ResponseEntity.ok().body(addressMasterDataService.getDepartmentsByReferenceFilterByPractice(practiceSnomedId, careLineId, clinicalSpecialtyIds, AddressProjection.class));
 	}
 
+	@GetMapping(value = "/departments")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByInstitutions() {
+		Collection<AddressProjection> result = addressMasterDataService.getDepartmentsByInstitutions();
+		LOG.debug("Output result -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
 }

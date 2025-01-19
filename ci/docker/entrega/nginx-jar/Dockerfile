@@ -18,4 +18,4 @@ EXPOSE 8280
 EXPOSE 8080
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD ["java","-jar","/app/hospital.jar","--spring.config.additional-location=file:./env.properties"]   
+CMD ["java","-XX:+UseSerialGC","-verbose:gc","-jar","/app/hospital.jar","--spring.config.additional-location=file:./env.properties"]   

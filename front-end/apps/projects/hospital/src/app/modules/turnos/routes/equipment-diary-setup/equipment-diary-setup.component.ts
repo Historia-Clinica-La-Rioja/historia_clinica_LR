@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
-import { currentWeek, DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SectorService } from '@api-rest/services/sector.service';
@@ -17,7 +17,9 @@ import { AgendaHorarioService, EDiaryType } from '@turnos/services/agenda-horari
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
-import { Tabs } from '@turnos/routes/home/home.component';
+import { TabsLabel } from '@turnos/constants/tabs';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -55,11 +57,13 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	getError = getError;
 
 	private readonly routePrefix;
-	private mappedCurrentWeek = {};
 
 	editMode = false;
 	editingDiaryId: number;
-	editingDiary: CompleteEquipmentDiaryDto;
+	diaryStartDate: Date;
+	diaryEndDate: Date;
+	ButtonType = ButtonType;
+	isSaving = false;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -82,10 +86,6 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		currentWeek().forEach(day => {
-			this.mappedCurrentWeek[day.day()] = day;
-		});
-
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
 			equipmentId: [null, [Validators.required]],
@@ -99,7 +99,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 		this.sectorService.getTypes().subscribe(types => {
 			const diagnosticImagingId = types.find(type => type.description === DIAGNOSTIC_IMAGING).id;
-			this.sectors$ = this.sectorService.getDiagnosticImagingType(diagnosticImagingId);
+			this.sectors$ = this.sectorService.getAllSectorByType(diagnosticImagingId);
 		});
 
 		this.route.data.subscribe(data => {
@@ -108,7 +108,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.equipmentDiaryService.getBy(this.editingDiaryId).subscribe((diary: CompleteEquipmentDiaryDto) => {
-						this.minDate = momentParseDate(diary.startDate).toDate();
+						this.minDate = dateISOParseDate(diary.startDate);
 						this.setValuesFromExistingAgenda(diary);
 					})
 				});
@@ -140,8 +140,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 			return;
 		}
 
-		const startDate: string = momentFormat(formValue.startDate, DateFormat.API_DATE);
-		const endDate: string = momentFormat(formValue.endDate, DateFormat.API_DATE);
+		const startDate: string = toApiFormat(formValue.startDate);
+		const endDate: string = toApiFormat(formValue.endDate);
 
 		const ocupations$: Observable<any[]> = this.equipmentDiaryOpeningHoursService
 			.getAllWeeklyEquipmentOcupation(this.form.controls.equipmentId.value, this.editingDiaryId, startDate, endDate);
@@ -182,15 +182,18 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 			dialogRef.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
+					this.isSaving = true;
 					this.errors = [];
 					const diary: EquipmentDiaryADto = this.buildEquipmentDiaryDto();
 					if (this.editMode) {
 						this.equipmentDiaryService.updateEquipmentDiary(diary, this.editingDiaryId)
+							.pipe(finalize(() => this.isSaving = false))
 							.subscribe((diaryId: number) => {
 								this.processSuccess(diaryId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)))
 					} else {
 						this.equipmentDiaryService.addEquipmentDiary(diary)
+							.pipe(finalize(() => this.isSaving = false))
 							.subscribe((diaryId: number) => {
 								this.processSuccess(diaryId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)));
@@ -205,9 +208,18 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
 			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-			let selectedEquipment = window.history.state.selectedEquipment;
+
+			let selectedEquipment = window.history.state.selectedEquipment || {id: this.form.get('equipmentId').value};
 			let selectedDiary = window.history.state.selectedDiary;
-			this.router.navigate([url], { state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN, selectedEquipment, selectedDiary} });
+
+			if (!window.history.state.selectedDiary) {
+				this.equipmentDiaryService.getBy(agendaId).subscribe(agenda => {
+					selectedDiary = agenda;
+					this.router.navigate([url], { state: { tab: TabsLabel.IMAGE_NETWORK, selectedEquipment, selectedDiary} });
+				});
+			} else {
+				this.router.navigate([url], { state: { tab: TabsLabel.IMAGE_NETWORK, selectedEquipment, selectedDiary} });
+			}
 		}
 	}
 
@@ -215,8 +227,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		return {
 			id: this.editingDiaryId,
 			appointmentDuration: this.form.controls.appointmentDuration.value,
-			startDate: momentFormat(this.form.controls.startDate.value, DateFormat.API_DATE),
-			endDate: momentFormat(this.form.controls.endDate.value, DateFormat.API_DATE),
+			startDate: toApiFormat(this.form.controls.startDate.value),
+			endDate: toApiFormat(this.form.controls.endDate.value),
 			automaticRenewal: this.autoRenew,
 			includeHoliday: this.holidayWork,
 			equipmentDiaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
@@ -233,15 +245,25 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.setEquipmentsBySector();
 		this.form.controls.equipmentId.setValue(diary.equipmentId);
+		this.diaryStartDate = dateISOParseDate(diary.startDate);
+		this.diaryEndDate = dateISOParseDate(diary.endDate);
 		this.loadCalendar();
-		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
-		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 
 		this.disableNotEditableControls();
 		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
 		this.agendaHorarioService.setDiaryOpeningHours(diary.equipmentDiaryOpeningHours);
 
+	}
+
+	setSelectedStartDate(selectDate: Date) {
+		this.form.controls.startDate.setValue(selectDate);
+		this.setAllWeeklyEquipmentOcupation();
+	}
+
+	setSelectedEndDate(selectDate: Date) {
+		this.form.controls.endDate.setValue(selectDate);
+		this.setAllWeeklyEquipmentOcupation();
 	}
 
 	private disableNotEditableControls() {

@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { DateFormat, momentFormat, momentParse, momentParseDate, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, dateISOParseDate, dateParse, newDate } from '@core/utils/moment.utils';
 import { EMedicalCoverageType, HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
+import { BasicPatientDto, HealthInsuranceDto, PatientMedicalCoverageDto, PersonPhotoDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
+import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
+import { PatientNameService } from './patient-name.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,7 +14,8 @@ export class MapperService {
 
 	toPatientMedicalCoverageDto: (s: PatientMedicalCoverage) => PatientMedicalCoverageDto = MapperService._toPatientMedicalCoverageDto;
 	toPatientMedicalCoverage: (s: PatientMedicalCoverageDto) => PatientMedicalCoverage = MapperService._toPatientMedicalCoverage;
-
+	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
+	toPatientSummary: (p: BasicPatientDto, f: PersonPhotoDto, s: PatientNameService) => PatientSummary = MapperService._toPatientSummary;
 	constructor() { }
 
 
@@ -18,11 +23,11 @@ export class MapperService {
 		return {
 			affiliateNumber: s.affiliateNumber,
 			medicalCoverage: s.medicalCoverage.toMedicalCoverageDto(),
-			startDate: s.startDate ? momentFormat(s.startDate, DateFormat.API_DATE) : null,
-			endDate: s.endDate ? momentFormat(s.endDate, DateFormat.API_DATE) : null,
+			startDate: s.startDate ? toApiFormat(s.startDate) : null,
+			endDate: s.endDate ? toApiFormat(s.endDate) : null,
 			planId: s.planId,
 			planName: s.planName,
-			vigencyDate: s.validDate ? momentFormat(s.validDate, DateFormat.API_DATE) : null,
+			vigencyDate: s.validDate ? toApiFormat(s.validDate) : null,
 			id: s.id,
 			active: s.active,
 			condition: s.condition
@@ -35,10 +40,10 @@ export class MapperService {
 			id: s.id,
 			affiliateNumber: s.affiliateNumber,
 			validDate: s.vigencyDate ?
-				momentParse(s.vigencyDate, DateFormat.API_DATE) : newMoment(),
+				dateParse(s.vigencyDate, DateFormat.API_DATE) : newDate(),
 			medicalCoverage: toMedicalCoverage(s.medicalCoverage),
-			startDate: s.startDate ? momentParseDate(s.startDate) : undefined,
-			endDate: s.endDate ? momentParseDate(s.endDate) : undefined,
+			startDate: s.startDate ? dateISOParseDate(s.startDate) : undefined,
+			endDate: s.endDate ? dateISOParseDate(s.endDate) : undefined,
 			planId: s.planId,
 			planName: s.planName,
 			active: s.active,
@@ -51,5 +56,37 @@ export class MapperService {
 				: new PrivateHealthInsurance(dto.id, dto.name, dto.type,dto.cuit);
 		}
 
+	}
+
+	private static _toPatientBasicData<T extends BasicPatientDto>(patient: T): PatientBasicData {
+		return {
+			id: patient.id,
+			firstName: patient.person?.firstName,
+			middleNames: patient.person?.middleNames,
+			lastName: patient.person?.lastName,
+			otherLastNames: patient.person?.otherLastNames,
+			gender: patient.person?.gender?.description,
+			age: patient.person?.age,
+			nameSelfDetermination: patient.person?.nameSelfDetermination,
+			selfPerceivedGender: patient.person?.selfPerceivedGender,
+			personAge: patient.person?.personAge
+		};
+	}
+
+	private static _toPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoDto, patientNameService: PatientNameService): PatientSummary {
+		const { firstName, nameSelfDetermination, lastName, middleNames, otherLastNames } = basicData.person;
+		return {
+			fullName: patientNameService.completeName(firstName, nameSelfDetermination, lastName, middleNames, otherLastNames),
+			...(basicData.identificationType && {
+				identification: {
+					type: basicData.identificationType,
+					number: basicData.identificationNumber
+				}
+			}),
+			id: basicData.id,
+			gender: basicData.person.gender?.description || null,
+			age: basicData.person.age || null,
+			photo: photo.imageData
+		}
 	}
 }

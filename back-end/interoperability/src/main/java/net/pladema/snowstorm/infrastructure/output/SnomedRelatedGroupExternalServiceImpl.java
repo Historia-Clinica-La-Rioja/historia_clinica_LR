@@ -42,4 +42,27 @@ public class SnomedRelatedGroupExternalServiceImpl implements SnomedRelatedGroup
 				.map(bo -> 	new SharedSnomedDto(bo.getId(), bo.getSctid(), bo.getPt()))
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public List<SharedSnomedDto> getPracticesFromAllInstitutionsByCareLineId(Integer careLineId) {
+		log.debug("Fetch practices for all institutions");
+		List<SharedSnomedDto> result = snomedRelatedGroupRepository.getAllByDescriptionAndGroupTypeAndCareLineId(SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, careLineId)
+				.stream()
+				.map(bo -> 	new SharedSnomedDto(bo.getId(), bo.getSctid(), bo.getPt()))
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<SharedSnomedDto> getPracticesByDepartmentId(Short departmentId) {
+		log.debug("Input parameter -> departmentId {} ", departmentId);
+		List<SharedSnomedDto> result = snomedRelatedGroupRepository.getAllByDepartmentId(SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, departmentId)
+				.stream()
+				.map(bo -> 	new SharedSnomedDto(bo.getId(), bo.getSctid(), bo.getPt()))
+				.collect(Collectors.toList());
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 }

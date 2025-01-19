@@ -13,8 +13,6 @@ import { SnackBarService } from "@presentation/services/snack-bar.service";
 
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
 import { ActivateTwoFactorAuthenticationComponent } from "../../dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
-import { HomeRoutes } from '../../home-routing.module';
-import { hasAccessToManageKeys } from '../manage-keys/manage-keys.component';
 
 @Component({
 	selector: 'app-profile',
@@ -22,7 +20,6 @@ import { hasAccessToManageKeys } from '../manage-keys/manage-keys.component';
 	styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-	userKeysRoute;
 	roleAssignments$: Observable<{ label: string, institution?: {name: string} }[]>;
 
 	twoFactorAuthenticationFFEnabled = false;
@@ -52,9 +49,6 @@ export class ProfileComponent {
 			.subscribe(isOn => this.twoFactorAuthenticationFFEnabled = isOn);
 		this.twoFactorAuthenticationService.loggedUserHasTwoFactorAuthenticationEnabled()
 			.subscribe((enabled) => this.twoFactorAuthenticationEnabledForUser = enabled);
-		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
-			this.userKeysRoute = hasAccessToManageKeys(allRoles) ? [HomeRoutes.UserKeys] : undefined;
-		});
 	}
 
 	updatePassword(): void {

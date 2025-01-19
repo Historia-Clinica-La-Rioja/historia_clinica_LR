@@ -1,10 +1,10 @@
 .img-logo-container {
 	display: flex;
-	margin: 0 20px;
 	height: 100%;
 
 	img {
-		height: 45px;
+		width: 13rem;
+		height: auto;
 	}
 	@media (max-width: 600px) {
 		img {

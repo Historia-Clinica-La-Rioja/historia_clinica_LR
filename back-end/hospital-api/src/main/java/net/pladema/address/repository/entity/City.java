@@ -40,4 +40,7 @@ public class City implements Serializable {
 	@Column(name = "active")
 	private Boolean active;
 
+	@Column(name = "bahra_code")
+	private String bahraCode;
+
 }

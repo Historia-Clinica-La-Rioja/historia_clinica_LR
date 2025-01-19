@@ -17,12 +17,9 @@ import {
     LogoutButton,
 } from './layout';
 
-import customRoutes from './layout/routes';
-
 const App = () => (
     <Admin
         title="Historia de salud integrada"
-        customRoutes={customRoutes}
         dataProvider={dataProvider}
         authProvider={authProvider}
         i18nProvider={i18nProviderBuilder(messages)}

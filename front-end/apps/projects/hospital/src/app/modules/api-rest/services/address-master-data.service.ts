@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { DepartmentDto } from '@api-rest/api-model';
@@ -29,9 +29,9 @@ export class AddressMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
-	getDepartmentsBySpecialy(provinceId: number, clinicalSpecialtyId: number): Observable<any[]> {
-		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		return this.http.get<any[]>(url);
+	getAllCitiesByDepartment(departmentId: number): Observable<AddressProjection[]> {
+		const url = `${environment.apiBase}/address/masterdata/department/${departmentId}/get-all-cities`;
+		return this.http.get<AddressProjection[]>(url);
 	}
 
 	getCitiesByDepartment(departmentId: number): Observable<any[]> {
@@ -44,35 +44,35 @@ export class AddressMasterDataService {
 		return this.http.get<DepartmentDto>(url);
 	}
 
-	getActiveDiariesInInstitutionByClinicalSpecialty(provinceId: number, careLineId: number, clinicalSpecialtyId: number) {
-		const url = `${environment.apiBase}/address/masterdata/province/${provinceId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		const queryParams = { careLineId: careLineId.toString() };
-		return this.http.get<any[]>(url, { params: queryParams });
-	};
-
-
-	getDepartmentsForReference(clinicalSpecialtyId: number, careLineId?: number) {
-		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/with-specialty/${clinicalSpecialtyId}`;
-		if (careLineId) {
-			const queryParams = { careLineId: careLineId.toString() };
-			return this.http.get<any[]>(url, { params: queryParams });
-		}
-		else
-			return this.http.get<any[]>(url);
+	getDeparmentsByCareLineAndClinicalSpecialty(clinicalSpecialtyIds: number[], careLineId?: number): Observable<AddressProjection[]> {
+		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-clinical-specialty-filter`;
+		let queryParams = new HttpParams();
+		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
+		if (careLineId !== undefined && careLineId !== null)
+			queryParams = queryParams.append('careLineId', JSON.stringify(careLineId));
+		return this.http.get<AddressProjection[]>(url, { params: queryParams });
 	}
 
-	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyId?: number, careLineId?: number,) {
+	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyIds?: number[], careLineId?: number): Observable<AddressProjection[]> {
 		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-practice-filter`;
 
-		let queryParams = { practiceSnomedId: practiceSnomedId.toString() };
+		let queryParams = new HttpParams().append('practiceSnomedId', practiceSnomedId.toString());
 
-		if (careLineId !== undefined && careLineId !== null) {
-			queryParams['careLineId'] = careLineId.toString();
-		}
+		if (careLineId !== undefined && careLineId !== null)
+			queryParams = queryParams.append('careLineId', careLineId.toString());
 
-		if (clinicalSpecialtyId !== undefined && clinicalSpecialtyId !== null) {
-			queryParams['clinicalSpecialtyId'] = clinicalSpecialtyId.toString();
-		}
-		return this.http.get<any[]>(url, { params: queryParams });
+		if (clinicalSpecialtyIds !== undefined && clinicalSpecialtyIds !== null && clinicalSpecialtyIds.length)
+			clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', clinicalSpecialtyId.toString()));
+		return this.http.get<AddressProjection[]>(url, { params: queryParams });
 	}
+
+	getDepartmentsByInstitutions(): Observable<AddressProjection[]> {
+		const url = `${environment.apiBase}/address/masterdata/departments`;
+		return this.http.get<AddressProjection[]>(url);
+	}
+}
+
+export interface AddressProjection {
+	id: number;
+	description: string;
 }

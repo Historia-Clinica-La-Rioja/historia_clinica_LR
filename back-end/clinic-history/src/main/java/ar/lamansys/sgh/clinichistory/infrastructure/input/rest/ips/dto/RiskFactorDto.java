@@ -49,4 +49,26 @@ public class RiskFactorDto implements Serializable {
     @Nullable
     private EffectiveClinicalObservationDto cardiovascularRisk;
 
+    @Valid
+    @Nullable
+    private EffectiveClinicalObservationDto hematocrit;
+
+    public boolean hasValues(){
+        return (systolicBloodPressure != null
+                || diastolicBloodPressure != null
+                || temperature != null
+                || heartRate != null
+                || respiratoryRate != null
+                || bloodOxygenSaturation != null
+                || bloodGlucose != null
+                || glycosylatedHemoglobin != null
+                || cardiovascularRisk != null
+                || hematocrit != null);
+    }
+
+    public boolean hasAnestheticClinicalEvaluationValues() {
+        return systolicBloodPressure != null
+                || diastolicBloodPressure != null
+                || hematocrit != null;
+    }
 }

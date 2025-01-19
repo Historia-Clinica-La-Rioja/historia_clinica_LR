@@ -34,18 +34,27 @@
 	<div *ngSwitchCase="TYPE_DEFINITIONS.cubejs_chart">
 		<app-cubejs-chart
 			[query]="uiComponent.args.query"
-			[dateFormat]="uiComponent.args.dateFormat"
 			[chartOptions]="uiComponent.args.chartOptions"
 			[title]="uiComponent.args.title"
 			[chartDefinitionService]="uiComponent.args.service"
 		>
 		</app-cubejs-chart>
 	</div>
+	<div *ngSwitchCase="TYPE_DEFINITIONS.ui_chart">
+		<app-ui-chart
+			[query]="uiComponent.args.query"
+			[chartOptions]="uiComponent.args.chartOptions"
+			[title]="uiComponent.args.title"
+			[chartDefinitionService]="uiComponent.args.service"
+		>
+		</app-ui-chart>
+	</div>
 	<div *ngSwitchCase="TYPE_DEFINITIONS.tabs">
 		<app-tabs [tabs]="uiComponent.args.tabs"></app-tabs>
 	</div>
-	<div *ngSwitchCase="TYPE_DEFINITIONS.html" [innerHTML]="valueAsHtml"></div>
-
+	<div *ngSwitchCase="TYPE_DEFINITIONS.html">
+		<app-html [content]="uiComponent.args.value"></app-html>
+	</div>
 	<div *ngSwitchCase="TYPE_DEFINITIONS.code">
 		<code>{{uiComponent.args.value | json}}</code>
 	</div>

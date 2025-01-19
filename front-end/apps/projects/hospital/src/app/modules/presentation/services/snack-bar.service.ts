@@ -52,4 +52,13 @@ export class SnackBarService {
 			verticalPosition: config?.verticalPosition || DEFAULT_V_POSITION,
 		}).onAction().pipe(map(_ => action.payload));
 	}
+
+	showActionDismiss<T>(message: string, action: {text: string, payload: T}, config?: ToastConfig): Observable< { action:T, isDismissByAction: boolean} > {
+		return this.snackBar.open(message, action.text, {
+			duration: config?.duration || DEFAULT_DURATION,
+			horizontalPosition: config?.horizontalPosition || DEFAULT_H_POSITION,
+			verticalPosition: config?.verticalPosition || DEFAULT_V_POSITION,
+		}).afterDismissed()
+		.pipe(map(matSnackBarDismiss => { return { action: action.payload, isDismissByAction: matSnackBarDismiss.dismissedByAction}}));
+	}
 }

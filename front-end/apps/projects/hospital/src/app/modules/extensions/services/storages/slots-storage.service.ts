@@ -1,42 +1,55 @@
-import { Slot, SlotedInfo, WCInfo } from "../wc-extensions.service";
+import {
+	Slot,
+	SlotedInfo,
+	WCInfo,
+} from '../wc-extensions.service';
 
-const slotedInfoMapper = (element: WCInfo, baseUrl: string): SlotedInfo  => ({
+const slotedInfoMapper = (element: WCInfo, slot: Slot, baseUrl: string): SlotedInfo  => ({
+	slot,
 	componentName: element.componentName,
-	url: (new URL(element.url, baseUrl)).toString(),
+	fullUrl: (new URL(element.url, baseUrl)).toString(),
 	title: element.title,
 });
 
+// const wcNameIs = (name: string) => (slotedInfo: SlotedInfo) => slotedInfo.componentName === name;
+const wcSlotIs = (slot: Slot) => (slotedInfo: SlotedInfo) => slotedInfo.slot === slot;
+
 export class SlotsStorageService {
-	private valuesToEmit: Map<Slot, SlotedInfo[]>;
+	private valuesToEmit: SlotedInfo[] = [];
+
 	constructor(
-		private readonly baseUrl: string,
 	) {
-		this.valuesToEmit = new Map();
-		// Un menú mas a nivel sistema
-		this.valuesToEmit.set(Slot.HOME_MENU, []);
-		// Un menú mas a nivel institución
-		this.valuesToEmit.set(Slot.INSTITUTION_MENU, []);
-		// Un componente mas de la pantalla inicial del sistema
-		this.valuesToEmit.set(Slot.SYSTEM_HOME_PAGE, []);
-		// Un componente mas de la pantalla inicial de la institucion
-		this.valuesToEmit.set(Slot.INSTITUTION_HOME_PAGE, []);
-		// Una solapa mas en la historia clinica
-		this.valuesToEmit.set(Slot.CLINIC_HISTORY_TAB, []);
 	}
 
+	get length(): number {
+		return this.valuesToEmit.length;
+	}
 
-	put(webCompontentInfo: WCInfo) {
+	wcForSlot(slot: Slot): SlotedInfo[] {
+		return this.valuesToEmit.filter(wcSlotIs(slot));
+	}
+
+	addAll(list: WCInfo[], baseUrl: string) {
+		list.forEach(
+			webCompontentInfo => this.put(webCompontentInfo, baseUrl)
+		)
+	}
+
+	private put(webCompontentInfo: WCInfo, baseUrl: string) {
 		const slot = webCompontentInfo.slot as Slot;
-		const list = this.valuesToEmit.get(slot);
 
-		if (!list) {
+		if (!slot) {
 			console.warn(`Extension ${webCompontentInfo.slot} inexistente`);
-		} else {
-			list.push(slotedInfoMapper(webCompontentInfo, this.baseUrl));
+			return;
 		}
-	}
-
-	forEachSlot(fnc : (slot: Slot, list: SlotedInfo[]) => any) {
-		this.valuesToEmit.forEach((list, slot) => fnc(slot, list));
+		if (!webCompontentInfo.url) {
+			console.warn(`Extension ${webCompontentInfo.slot} no tiene url`);
+			return;
+		}
+		if (!webCompontentInfo.componentName) {
+			console.warn(`Extension ${webCompontentInfo.slot} no tiene componentName`);
+			return;
+		}
+		this.valuesToEmit.push(slotedInfoMapper(webCompontentInfo, slot, baseUrl))
 	}
 }

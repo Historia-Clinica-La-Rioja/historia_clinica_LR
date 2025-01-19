@@ -1,0 +1,15 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title class="mat-h2" [translate]="'guardia.home.attention_places.change-attention-place.TITLE'"></span>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>clear</mat-icon>
+	</button>
+</div>
+
+<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+	<app-emergency-care-change-attention-place-stepper
+		[patient]="data.patient"
+		[lastPlacePreview]="data.lastPlacePreview"
+		[episodeId]="data.episodeId"
+		(formEmitter)="saveNewSelectedSpace($event)">
+	</app-emergency-care-change-attention-place-stepper>
+</mat-dialog-content>

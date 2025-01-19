@@ -1,10 +1,15 @@
 import {Injectable} from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, Data, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { ERole } from '@api-rest/api-model';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
+
+export const isAllow = (data: Data, roles$: Observable<ERole[]>): Observable<boolean | undefined> =>
+	!data?.allowedRoles ? of(true) : roles$.pipe(
+		map((userRoles: ERole[]) => anyMatch(userRoles, data?.allowedRoles)),
+	);
 
 @Injectable({ providedIn: 'root' })
 export class RoleGuard implements CanActivate {
@@ -18,16 +23,16 @@ export class RoleGuard implements CanActivate {
 	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
-		const allowedRoles = route.data.allowedRoles;
+		// const allowedRoles = route.data.allowedRoles;
 		const needsRoot = route.data?.needsRoot;
 		const institutionId = needsRoot ? this.NO_INSTITUTION : this.getInstitutionIdFrom(route);
 
-		return this.permissionsService.filterAssignments$(institutionId)
-			.pipe(switchMap((userRoles: ERole[]) => {
-				return (anyMatch(userRoles, allowedRoles)) ?
-					of(true) :
-					of(this.router.createUrlTree(['/']));
-		}));
+		return isAllow(route.data, this.permissionsService.filterAssignments$(institutionId))
+			.pipe(
+				switchMap(isOn => {
+					return isOn ? of(true) : of(this.router.createUrlTree(['/']));
+				})
+			);
 	}
 
 	private getInstitutionIdFrom(route: ActivatedRouteSnapshot): number {

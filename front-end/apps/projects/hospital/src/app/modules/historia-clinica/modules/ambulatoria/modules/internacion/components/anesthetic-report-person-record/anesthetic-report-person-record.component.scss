@@ -1,0 +1,25 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
+.record-button {
+    font-size: 16px;
+}
+
+mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
+	margin: 10px 0;
+}
+
+.data-section {
+    margin-top: 16px;
+}
+
+.asa-data {
+    width: 50%;
+}
+
+mat-form-field {
+	width: 100%;
+}

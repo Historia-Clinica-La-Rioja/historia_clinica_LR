@@ -1,0 +1,109 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'internaciones.anesthesic-report.anesthetic-technique.ADD_TITLE'">
+    </span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content class="modalContent">
+    <ng-container *ngIf="!data.anestheticTechniqueService.snomedConcept else anestheticTechniqueForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else injectTypeaheadSearch"
+            [label]="'internaciones.anesthesic-report.anesthetic-technique.TYPE'"
+            (search)="data.anestheticTechniqueService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #injectTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.anestheticTechniqueService.getECL()"
+                [placeholder]="'internaciones.anesthesic-report.anesthetic-technique.TYPE'"
+                (conceptSelected)="data.anestheticTechniqueService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #anestheticTechniqueForm>
+    <form [formGroup]="form" (ngSubmit)="addAnestheticTechnique()">
+
+        <div fxLayout="column" fxLayoutGap="12px">
+            <mat-label [translate]="'internaciones.anesthesic-report.anesthetic-technique.TYPE'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="type-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.anestheticTechniqueService.snomedConcept.pt }}">
+                <button id="clear-type"  matSuffix color="warn" mat-icon-button
+                    (click)="data.anestheticTechniqueService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div fxLayout="column" fxLayoutGap="12px">
+                <mat-label class="bold"
+                    [translate]="'internaciones.anesthesic-report.anesthetic-technique.TECHNIQUE_LABEL'"></mat-label>
+                <mat-radio-group color="primary" fxLayout="column" fxLayoutGap="12px" name="technique" id="technique"
+                    formControlName="technique">
+                    <mat-radio-button id="technique_{{technique.id}}" *ngFor="let technique of techniques"
+                        [value]="technique">
+                        {{technique.description}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div fxLayout="column" fxLayoutGap="12px">
+                <mat-label class="bold"
+                    [translate]="'internaciones.anesthesic-report.anesthetic-technique.TRACHEAL_INTUBATION_LABEL'"></mat-label>
+                <mat-radio-group id="trachealIntubation" fxLayout="column" fxLayoutGap="12px"
+                    formControlName="trachealIntubation">
+                    <mat-radio-button color="primary" [value]="TRACHEAL_OPTIONS.TRACHEAL_ENABLED">
+                        {{'internaciones.anesthesic-report.anesthetic-technique.OPTION_YES' | translate}}
+                    </mat-radio-button>
+                    <ng-container *ngIf="enableTrachealIntubationOptions">
+                        <ng-container *ngTemplateOutlet="trachealIntubationOptions">
+                        </ng-container>
+                    </ng-container>
+                    <mat-radio-button color="primary" [value]="TRACHEAL_OPTIONS.TRACHEAL_DISABLED">
+                        {{'internaciones.anesthesic-report.anesthetic-technique.OPTION_NO' | translate}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div fxLayout="column" fxLayoutGap="12px">
+                <mat-label class="bold"
+                    [translate]="'internaciones.anesthesic-report.anesthetic-technique.BREATHING_LABEL'"></mat-label>
+                <mat-radio-group color="primary" fxLayout="column" fxLayoutGap="12px" id="breathing"
+                    formControlName="breathing">
+                    <mat-radio-button id="breathing_{{breathing.id}}" *ngFor="let breathing of breathings"
+                        [value]="breathing">
+                        {{breathing.description}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div fxLayout="column" fxLayoutGap="12px">
+                <mat-label class="bold"
+                    [translate]="'internaciones.anesthesic-report.anesthetic-technique.CIRCUIT_LABEL'"></mat-label>
+                <mat-radio-group color="primary" fxLayout="column" fxLayoutGap="12px" id="circuit"
+                    formControlName="circuit">
+                    <mat-radio-button id="circuit_{{circuit.id}}" *ngFor="let circuit of circuits" [value]="circuit">
+                        {{circuit.description}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <ng-template #trachealIntubationOptions>
+                <div fxLayout="column" fxLayoutGap="12px">
+                    <mat-radio-group color="primary" class="margin-traqueal" fxLayout="column" fxLayoutGap="12px"
+                        id="trachealIntubationMethod" formControlName="trachealIntubationMethod">
+                        <mat-radio-button id="trachealIntubationMethod_{{trachealIntubation.id}}"
+                            *ngFor="let trachealIntubation of trachealIntubations" [value]="trachealIntubation">
+                            {{trachealIntubation.description}}
+                        </mat-radio-button>
+                        <mat-error *ngIf="hasError(form, 'required', 'trachealIntubationMethod')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
+                    </mat-radio-group>
+                </div>
+            </ng-template>
+            <div align="end">
+                <button id="submit_anesthetic" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

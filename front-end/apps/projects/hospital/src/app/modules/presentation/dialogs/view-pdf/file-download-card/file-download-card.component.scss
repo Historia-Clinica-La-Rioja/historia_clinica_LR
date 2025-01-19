@@ -1,0 +1,13 @@
+.full-dialog-content {
+	padding: 10px;
+	max-width: 600px;
+	margin: 10px auto;
+
+	.mat-card-header {
+		.mat-icon {
+			border-radius: unset;
+			font-size: 30px;
+			width: 30px;
+		}
+	}
+}

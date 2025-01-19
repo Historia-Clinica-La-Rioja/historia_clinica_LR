@@ -1,0 +1,17 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="title" [icon]="icon"
+	[collapsed]="true" [hideBorder]="false" [isEmpty]="isEmpty()">
+
+	<app-surgical-report-professional-info *ngIf="professionals"
+		[professionalTitle]="professionalTitle"
+		[professionals]="professionals"
+		[externalSetProfessional]="professional?.healthcareProfessional"
+		(professionalChange)="changeProfessional($event)">
+	</app-surgical-report-professional-info>
+
+	<mat-form-field appearance="outline">
+		<mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>
+		<textarea matInput [(ngModel)]="description" (ngModelChange)="changeDescription($event)"></textarea>
+	</mat-form-field>
+</app-new-consultation-expansion-section>

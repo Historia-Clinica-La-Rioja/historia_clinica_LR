@@ -7,7 +7,7 @@ export interface Study {
 
 export class OrderStudiesService {
 
-	private data: any[];
+	data: Study[];
 
 	constructor() {
 		this.data = [];
@@ -31,6 +31,10 @@ export class OrderStudiesService {
 
 	remove(index: number): void {
 		this.data = removeFrom<Study>(this.data, index);
+	}
+
+	getStudyByIndex = (index: number): Study => {
+		return this.data.at(index);
 	}
 
 }

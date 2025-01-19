@@ -1,0 +1,11 @@
+<div *ngIf="(customForms$ | async) as forms">
+	<div *ngFor="let template of forms; let i = index; last as isLast" fxLayout="column">
+		<app-select-template
+			[template]="template"
+			(selectedTemplateEmit)="selectedProcedureTemplate($event,template.id)"
+			(changeValuesEmit)="changeValues($event)">
+		</app-select-template>
+
+		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+	</div>
+</div>

@@ -72,13 +72,12 @@ public class HealthcareProfessionalByInstitutionController {
 	}
 
 	@GetMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
-	public ResponseEntity<List<ProfessionalDto>> getAllByInstitution(
-			@PathVariable(name = "institutionId")  Integer institutionId){
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR') || hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public ResponseEntity<List<ProfessionalDto>> getAllByInstitution(@PathVariable(name = "institutionId")  Integer institutionId){
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		boolean isAdministrativeRole = loggedUserExternalService.hasAnyRoleInstitution(institutionId,
 				ERole.ADMINISTRATIVO, ERole.ADMINISTRADOR_AGENDA, ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.PERSONAL_DE_ESTADISTICA,
-				ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR);
+				ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR) || loggedUserExternalService.hasAnyRoleInstitution(-1, ERole.GESTOR_CENTRO_LLAMADO) ;
 		List<HealthcareProfessionalBo> healthcareProfessionals = healthcareProfessionalService.getAllByInstitution(institutionId);
 		if (!isAdministrativeRole) {
 			Integer healthcareProfessionalId = healthcareProfessionalService.getProfessionalId(UserInfo.getCurrentAuditor());
@@ -143,6 +142,14 @@ public class HealthcareProfessionalByInstitutionController {
 	public List<ProfessionalDto> getVirtualConsultationHealthcareProfessionalsByInstitutionId(@PathVariable("institutionId") Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionalService.getVirtualConsultationProfessionalsByInstitutionId(institutionId));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@GetMapping(value = "/virtual-consultation-responsibles")
+	public List<ProfessionalDto> getVirtualConsultationResponsiblesByInstitutionId(@PathVariable("institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionalService.getVirtualConsultationResponsiblesByInstitutionId(institutionId));
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

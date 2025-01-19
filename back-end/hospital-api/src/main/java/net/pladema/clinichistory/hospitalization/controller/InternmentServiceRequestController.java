@@ -2,6 +2,10 @@ package net.pladema.clinichistory.hospitalization.controller;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,6 +56,7 @@ public class InternmentServiceRequestController {
 	private final PatientExternalService patientExternalService;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final StudyMapper studyMapper;
+	private final LocalDateMapper localDateMapper;
 
 	@PostMapping("/patient/{patientId}")
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -73,7 +82,12 @@ public class InternmentServiceRequestController {
 					patientDto,
 					categoryId,
 					serviceRequestListDto.getMedicalCoverageId(),
-					studyListDto);
+					studyListDto,
+					serviceRequestListDto.getObservations(),
+					serviceRequestListDto.getStudyType().getId(),
+					serviceRequestListDto.getRequiresTransfer(),
+					serviceRequestListDto.getDeferredDate(),
+					serviceRequestListDto.getTemplateIds());
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createInternmentServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId) );
@@ -92,14 +106,26 @@ public class InternmentServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
+	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTransfer, DateTimeDto deferredDate, List<Integer> templateIds){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
 		GenericServiceRequestBo result = new GenericServiceRequestBo();
 		result.setCategoryId(categoryId);
 		result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
 		result.setDoctorId(doctorId);
 		result.setDiagnosticReports(studyMapper.parseToList(studies));
+		result.setObservations(observations);
+		result.setStudyTypeId(studyType);
+		result.setRequiresTransfer(requiresTransfer);
+		result.setTemplateIds(templateIds);
+		if (deferredDate != null) {
+			result.setDeferredDate(result.validateDeferredDate(
+					localDateMapper.fromDateDto(deferredDate.getDate())
+							.atTime(localDateMapper.fromTimeDto(deferredDate.getTime()))));
+		} else {
+			result.setDeferredDate(null);
+		}
 		log.debug("Output -> {}", result);
 		return result;
 	}
+
 }

@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.impl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentReduceInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class InternmentDocumentModificationValidatorImpl implements InternmentDo
 			throw new InternmentDocumentException(InternmentDocumentEnumException.NULL_REASON, "Para llevar a cabo la acción el motivo es un campo requerido");
 
 		DocumentReduceInfoDto document = sharedDocumentPort.getDocument(documentId);
+
+		if(document.isCofirmed() && !document.getSignatureStatus().equals(ESignatureStatus.PENDING) && !document.getSignatureStatus().equals(ESignatureStatus.CANNOT_BE_SIGNED))
+			throw new InternmentDocumentException(InternmentDocumentEnumException.DOCUMENT_SIGNED, "No es posible llevar a cabo la acción dado que el documento fue firmado digitalmente");
 
 		Integer currentUser = UserInfo.getCurrentAuditor();
 		if (!document.getCreatedBy().equals(currentUser))

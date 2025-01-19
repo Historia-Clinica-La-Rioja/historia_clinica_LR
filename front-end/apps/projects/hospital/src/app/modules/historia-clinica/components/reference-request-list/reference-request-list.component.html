@@ -14,14 +14,16 @@
             </button>
         </div>
         <div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutGap.lt-md="5px">
-            <div *ngIf="request.clinicalSpecialty?.name" fxFlex="50" fxLayout="column">
+            <div fxLayout="column" *ngIf="request?.clinicalSpecialties?.length">
                 <span class="bold">
                     {{
-                    'historia-clinica.reference-request-list.SPECIALTY' |
+                    'historia-clinica.reference-request-list.SPECIALTIES' |
                     translate
                     }}
                 </span>
-                <span>{{ request.clinicalSpecialty.name }}</span>
+                <div *ngFor="let specialty of request?.clinicalSpecialties">
+                    <span>{{specialty.name}}</span>
+                </div>
             </div>
             <div fxFlex="calc(50%-5px)" fxLayout="column" *ngIf="request.careLine?.description">
                 <span class="bold">
@@ -33,7 +35,7 @@
                 <span>{{ request.careLine.description }}</span>
             </div>
         </div>
-        <span class="gray-caption" *ngIf="request?.note">
+        <span class="gray-caption note" *ngIf="request?.note">
             "{{ request?.note }}"
         </span>
     </div>

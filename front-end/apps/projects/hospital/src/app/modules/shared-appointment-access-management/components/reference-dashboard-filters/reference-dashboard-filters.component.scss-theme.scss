@@ -1,0 +1,17 @@
+@mixin app-reference-dashboard-filters($theme) {
+    $palette-primary: map-get($theme, primary);
+
+    app-reference-dashboard-filters {
+
+        .mat-button-toggle {
+            color: mat-color($palette-primary, 500);
+            background-color: mat-contrast($palette-primary, 400);
+        }
+
+        .mat-button-toggle-checked {
+            background-color: mat-color($palette-primary, 500);
+            color: mat-contrast($palette-primary, 400) !important;
+        }
+
+    }
+}

@@ -1,0 +1,11 @@
+<div fxLayout="row" class="description-item" *ngFor="let descriptionItem of descriptionData">
+    <span *ngIf="descriptionData.length > 1" class="bull-elements">&bull;</span>
+    <div class="text-container" fxLayout="column">
+        <span class="text formatted-text capitalize-first-letter">{{ descriptionItem.description }}</span>
+        <ng-container *ngIf="descriptionItem.dateToShow">
+            <span class="date-text grey">
+                {{ descriptionItem.dateToShow.date | dateFormat: descriptionItem.dateToShow.format }}
+            </span>
+        </ng-container>
+    </div>
+</div>

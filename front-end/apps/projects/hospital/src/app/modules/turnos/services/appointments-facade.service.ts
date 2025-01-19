@@ -3,6 +3,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { ReplaySubject, Observable, forkJoin, BehaviorSubject } from 'rxjs';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import {
+	AppointmentListDto,
 	AppointmentShortSummaryDto,
 	BasicPersonalDataDto,
 	CreateAppointmentDto,
@@ -12,9 +13,7 @@ import {
 	HolidayDto,
 } from '@api-rest/api-model';
 import {
-	momentParseTime,
-	DateFormat,
-	momentParseDate,
+	dateISOParseDate,
 } from '@core/utils/moment.utils';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
@@ -22,10 +21,30 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { toCalendarEvent } from '@turnos/utils/appointment.utils';
+import { getAppointmentEnd, getAppointmentStart, toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+
+const enum COLORES {
+	ASSIGNED = '#4187FF',
+	SOBRETURNO_ASSIGNED = '#5B40FD',
+	CONFIRMED = '#FFA500',
+	ABSENT = '#D5E0D5',
+	BLOCKED = '#7D807D',
+	SERVED = '#A3EBAF',
+	PROGRAMADA = '#7FC681',
+	ESPONTANEA = '#2687C5',
+	SOBRETURNO = '#E3A063',
+	RESERVA_ALTA = '#FFFFFF',
+	RESERVA_VALIDACION = '#EB5757',
+	FUERA_DE_AGENDA = '#FF0000',
+	PROTECTED = '#AF26C5'
+}
+
+const GREY_TEXT = 'calendar-event-grey-text';
+const WHITE_TEXT = 'calendar-event-white-text';
+const BLUE_TEXT = 'calendar-event-blue-text';
+const PURPLE_TEXT = 'calendar-event-purple-text';
 
 @Injectable({
 	providedIn: 'root'
@@ -54,7 +73,7 @@ export class AppointmentsFacadeService {
 		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
 		private readonly holidayService: HolidaysService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe: DatePipe
+		private readonly dateFormatPipe: DateFormatPipe,
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
@@ -93,14 +112,10 @@ export class AppointmentsFacadeService {
 					this.holidayService.getHolidays(this.startDate, this.endDate)]).subscribe((result) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = result[0]
 					.map(appointment => {
-						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						if (from > to) {
-							to = momentParseTime(from).set({hour: 23, minute: 59}).format(DateFormat.HOUR_MINUTE);
-						}
+						const from = getAppointmentStart(appointment.hour);
+						const to = getAppointmentEnd(appointment.hour, this.appointmentDuration);						
 						const viewName = this.getViewName(appointment.patient?.person);
-						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
-						return calendarEvent;
+						return toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 					});
 				const holidaysCalendarEvents = result[1].map(holiday => {
 					return {
@@ -145,7 +160,7 @@ export class AppointmentsFacadeService {
 
 	getHolidayData(selectedDay: Date) {
 		const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-		const holidayDateText = this.datePipe.transform(selectedDay, DatePipeFormat.FULL_DATE);
+		const holidayDateText = this.dateFormatPipe.transform(selectedDay, 'fulldate');
 		return {
 			title: 'turnos.holiday.TITLE',
 			content: `${holidayDateText.charAt(0).toUpperCase() + holidayDateText.slice(1)} ${holidayText}`,
@@ -255,8 +270,8 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string): Observable<boolean> {
-		return this.appointmentService.changeState(appointmentId, newStateId, motivo)
+	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string, patientInformationScan?: string): Observable<boolean> {
+		return this.appointmentService.changeState(appointmentId, newStateId, motivo, patientInformationScan)
 			.pipe(
 				map((response: boolean) => {
 					if (response) {
@@ -274,7 +289,80 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	verifyExistingAppointment(patientId: number, date: string, hour: string): Observable<AppointmentShortSummaryDto> {
-		return this.appointmentService.verifyExistingAppointments(patientId, date, hour);
+	verifyExistingAppointment(patientId: number, date: string, hour: string, institutionId?: number): Observable<AppointmentShortSummaryDto> {
+		return this.appointmentService.verifyExistingAppointments(patientId, date, hour, institutionId);
 	}
+
+	cancelRecurringAppointments(appointmentId: number, cancelAllAppointments: boolean): Observable<boolean> {
+		return this.appointmentService.cancelRecurringAppointments(appointmentId, cancelAllAppointments);
+	}
+
+	createExpiredAppointment(newExpiredAppointment: CreateAppointmentDto): Observable<number> {
+		return this.appointmentService.createExpiredAppointment(newExpiredAppointment);
+	}
+
+	
+}
+
+export function getColor(appointment: AppointmentListDto): COLORES {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED) {
+		return COLORES.BLOCKED
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.OUT_OF_DIARY) {
+		return COLORES.FUERA_DE_AGENDA;
+	}
+
+
+
+	if (appointment.overturn) {
+		return COLORES.SOBRETURNO;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+		return COLORES.RESERVA_VALIDACION;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
+		return COLORES.CONFIRMED;
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT) {
+		return COLORES.ABSENT;
+	}
+
+	if(appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+		return COLORES.SERVED;
+	}
+
+	if(showProtectedAppointment(appointment)) {
+		return COLORES.PROTECTED;
+	}
+
+	if (!appointment?.patient?.id) {
+		return COLORES.RESERVA_ALTA;
+	}
+
+	const assigned = appointment.overturn ? COLORES.SOBRETURNO_ASSIGNED : COLORES.ASSIGNED;
+	return assigned;
+}
+
+export function getSpanColor(appointment: AppointmentListDto): string {
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.ABSENT || appointment.appointmentStateId === APPOINTMENT_STATES_ID.SERVED) {
+		return GREY_TEXT;
+	}
+
+	if (appointment.appointmentStateId === APPOINTMENT_STATES_ID.BOOKED) {
+		return BLUE_TEXT;
+	}
+
+	if (showProtectedAppointment(appointment)) {
+		return PURPLE_TEXT;
+	}
+
+	return WHITE_TEXT;
+}
+
+function showProtectedAppointment(appointment: AppointmentListDto) {
+	return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
 }

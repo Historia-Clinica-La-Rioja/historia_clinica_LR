@@ -1,5 +1,5 @@
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
-import { Component, Input, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,7 +18,6 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 })
 export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestroy {
 
-	@Input() isVisible = false;
 	professionalsFilteredBySpecialty: ProfessionalDto[] = [];
 	professionalSelected: ProfessionalDto;
 	profesionales: ProfessionalDto[] = [];
@@ -28,7 +27,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 
 	routePrefix: string;
 
-	idProfesional: number;
+	idProfesional: number = null;
 	idEspecialidad: number;
 	patientId: number;
 	agendaFiltersSubscription: Subscription;
@@ -48,6 +47,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 	}
 
 	ngOnInit(): void {
+		this.agendaSearchService.clearAll();
 		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
 		this.healthCareProfessionalService.getAllAssociated().subscribe(doctors => {
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
@@ -65,16 +65,10 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 		});
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
-			this.resetAtributtes();
-		}
-	}
-
 
 	ngOnDestroy() {
 		this.agendaSearchService.clearAll();
-		this.agendaFiltersSubscription?.unsubscribe();
+		this.agendaFiltersSubscription.unsubscribe();
 	}
 
 	resetAtributtes(){
@@ -85,7 +79,7 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 			this.especialidadesTypeaheadOptions$ = this.getEspecialidadesTypeaheadOptions$(doctors);
 		})
 	}
-
+	
 	private diaryNotFound() {
 		this.snackBarService.showError('turnos.home.AGENDA_NOT_FOUND');
 		this.professionalSelected = undefined;
@@ -110,11 +104,16 @@ export class SeachAppointmentsByProfessionalComponent implements OnInit, OnDestr
 	goBack(professional: ProfessionalDto) {
 		this.idProfesional = professional?.id;
 		if (!professional) {
+			this.agendaSearchService.search(null);
+			this.agendaSearchService.clearAll();
 			if (this.patientId) {
 				this.router.navigate([`${this.routePrefix}`], { queryParams: { idPaciente: this.patientId } });
 			} else {
 				this.router.navigate([`${this.routePrefix}`]);
 			}
+		}else{
+			this.appointmentFacadeService.setProfessional(professional);
+			this.agendaSearchService.search(this.idProfesional);
 		}
 	}
 

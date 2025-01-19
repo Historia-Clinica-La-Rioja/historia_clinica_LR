@@ -3,10 +3,12 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
@@ -53,7 +55,7 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
     private List<@Valid ImmunizationBo> immunizations;
 
     @Nullable
-    private List<@Valid AllergyConditionBo> allergies;
+    private ReferableItemBo<@Valid AllergyConditionBo> allergies;
 
     @Nullable
     private List<@Valid ProcedureBo> procedures;
@@ -71,6 +73,14 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 	private String modificationReason;
 
 	private Long initialDocumentId;
+
+	private Integer medicalCoverageId;
+
+	private Integer sectorId;
+
+	private Integer roomId;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public Integer getPatientId() {

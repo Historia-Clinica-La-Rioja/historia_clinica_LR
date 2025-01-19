@@ -23,9 +23,12 @@ export class NewConsultationProcedureFormComponent {
     }
   }
 
-  close(): void {
+  resetForm(): void {
     this.data.procedureService.resetForm();
-    this.dialogRef.close()
+  }
+
+  dateChanged(date: Date) {
+    this.data.procedureService.getForm().controls.performedDate.setValue(date)
   }
 
 }
@@ -33,4 +36,5 @@ export class NewConsultationProcedureFormComponent {
 interface ProcedureData {
   procedureService: ProcedimientosService,
   searchConceptsLocallyFF: boolean,
+  hideDate?: boolean
 }

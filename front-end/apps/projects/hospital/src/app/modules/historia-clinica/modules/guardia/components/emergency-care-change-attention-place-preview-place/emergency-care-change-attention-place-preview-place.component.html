@@ -1,0 +1,28 @@
+<div *ngIf="placeInfo" fxLayout="column" fxLayoutGap="10px">
+	<span class="title">{{ title | translate}}</span>
+
+	<app-identifier-cases
+		identifierCase={{IDENTIFIER_CASES.SECTOR}}
+		[showLegend]="true"
+		[description]="placeInfo.sectorDescription">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="placeInfo.placeType == spaceType.DoctorsOffices"
+		identifierCase={{IDENTIFIER_CASES.DOCTOR_OFFICE}}
+		[showLegend]="true"
+		[description]="placeInfo.placeTypeDescription">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="placeInfo.placeType == spaceType.ShockRooms"
+		identifierCase={{IDENTIFIER_CASES.SHOCKROOM}}
+		[showLegend]="true"
+		[description]="placeInfo.placeTypeDescription">
+	</app-identifier-cases>
+
+	<app-identifier-cases *ngIf="placeInfo.placeType == spaceType.Beds"
+		identifierCase={{IDENTIFIER_CASES.ROOM_V2}}
+		[showLegend]="true"
+		[description]="placeInfo.placeTypeDescription">
+	</app-identifier-cases>
+</div>
+

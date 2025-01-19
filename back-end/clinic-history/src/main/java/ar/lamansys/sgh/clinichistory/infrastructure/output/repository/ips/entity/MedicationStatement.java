@@ -13,6 +13,7 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "medication_statement")
@@ -74,6 +75,12 @@ public class MedicationStatement extends SGXAuditableEntity<Integer> implements 
 
 	@Column(name = "prescription_line_state")
 	private Short prescriptionLineState;
+
+	@Column(name = "uuid")
+	private UUID uuid;
+
+	@Column(name = "suggested_commercial_medication_snomed_id")
+	private Integer suggestedCommercialMedicationSnomedId;
 
 	public MedicationStatement(Integer patientId, Integer snomedId, String statusId, Long noteId,
 							   Integer healthConditionId, Integer dosageId) {

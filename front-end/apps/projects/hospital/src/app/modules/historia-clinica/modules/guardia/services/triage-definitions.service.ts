@@ -9,7 +9,7 @@ import { AdministrativeTriageDialogComponent } from '../dialogs/administrative-t
 import { PediatricTriageDialogComponent } from '../dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from '../dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 
-export const ROLES_TO_MEDIC_TRIAGE: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO];
+export const ROLES_TO_MEDIC_TRIAGE: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 export const ROUTE_EMERGENCY_CARE = '/guardia';
 
 @Injectable()

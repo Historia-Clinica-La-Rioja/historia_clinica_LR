@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
+import { newDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { EffectiveTimeDialogComponent } from '../../dialogs/effective-time-dialog/effective-time-dialog.component';
 
@@ -11,9 +10,9 @@ import { EffectiveTimeDialogComponent } from '../../dialogs/effective-time-dialo
 })
 export class EffectiveTimeComponent {
 
-	@Input() effectiveTime: Moment = newMoment();
+	@Input() effectiveTime: Date = newDate();
 
-	@Output() update = new EventEmitter();
+	@Output() update = new EventEmitter<Date>();
 
 	constructor(
 		public dialog: MatDialog,
@@ -23,11 +22,11 @@ export class EffectiveTimeComponent {
 		const dialogRef = this.dialog.open(EffectiveTimeDialogComponent, {
 			disableClose: true,
 			data: {
-				datetime: this.effectiveTime.clone()
+				datetime: this.effectiveTime
 			}
 		});
 		dialogRef.afterClosed().subscribe(
-			(newDatetime: Moment) => {
+			(newDatetime: Date) => {
 				if (newDatetime) {
 					this.effectiveTime = newDatetime;
 					this.update.emit(newDatetime);

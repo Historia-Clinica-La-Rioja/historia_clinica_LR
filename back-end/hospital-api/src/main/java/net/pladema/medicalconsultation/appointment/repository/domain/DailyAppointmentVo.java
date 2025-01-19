@@ -25,6 +25,8 @@ public class DailyAppointmentVo {
 
     private final Short medicalAttentionTypeId;
 
+	private final String completePhone;
+
     public DailyAppointmentVo(Appointment appointment,
                               AppointmentState appointmentState,
                               LocalTime openingHourFrom,
@@ -38,6 +40,11 @@ public class DailyAppointmentVo {
         this.openingHourFrom = openingHourFrom;
         this.openingHourTo = openingHourTo;
         this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.completePhone = parseAppointmentPhone(appointment.getPhonePrefix(), appointment.getPhoneNumber());
     }
+
+	private String parseAppointmentPhone(String phonePrefix, String phoneNumber) {
+		return phoneNumber != null ? phonePrefix != null ? phonePrefix + "-" + phoneNumber : phoneNumber : null;
+	}
 
 }

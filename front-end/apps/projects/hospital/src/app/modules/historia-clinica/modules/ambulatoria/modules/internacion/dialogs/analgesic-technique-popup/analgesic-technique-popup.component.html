@@ -1,0 +1,100 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+    [translate]="'internaciones.anesthesic-report.analgesic-technique.ADD_TECHNIQUE_TITLE'" > </span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.analgesicTechniqueService.snomedConcept else AnalgesicTechniqueForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else injectTypeaheadSearch"
+            [label]="'internaciones.anesthesic-report.analgesic-technique.MEDICATION'"
+            (search)="data.analgesicTechniqueService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #injectTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.analgesicTechniqueService.getECL()"
+                [placeholder]="'internaciones.anesthesic-report.analgesic-technique.AGENT'"
+                (conceptSelected)="data.analgesicTechniqueService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #AnalgesicTechniqueForm>
+    <form [formGroup]="form" (ngSubmit)="addAnalgesicTechnique()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-label [translate]="'internaciones.anesthesic-report.analgesic-technique.AGENT'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="medication-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.analgesicTechniqueService.snomedConcept.pt }}">
+                <button id="clear-drug"  matSuffix color="warn" mat-icon-button
+                    (click)="data.analgesicTechniqueService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+
+            <mat-label [translate]="'internaciones.anesthesic-report.analgesic-technique.INJECTION_LABEL'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="injection-input" matInput type="text" formControlName="injectionNote" name="injectionNote">
+                <mat-error *ngIf="hasError(form, 'required', 'injectionNote')">
+                    <span translate="forms.REQUIRED"></span>
+                </mat-error>
+            </mat-form-field>
+
+            <div fxLayout="row wrap" fxLayoutAlign="space-between">
+                <div fxLayout="column" data-id="dosis-data" class="input-width">
+                    <mat-label
+                        [translate]="'internaciones.anesthesic-report.drug.DOSIS_LABEL'"></mat-label>
+                    <mat-form-field appearance="outline">
+                        <input id="dosis-input" matInput type="number" formControlName="dosis" name="dosis"
+                            placeholder="{{ 'internaciones.anesthesic-report.drug.DOSIS_PLACEHOLDER' | translate }}">
+                        <mat-error> {{ data.analgesicTechniqueService.dosisError$ | async }} </mat-error>
+                        <mat-error *ngIf="hasError(form, 'required', 'dosis')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" data-id="unit-data" class="input-width">
+                    <mat-label
+                        [translate]="'internaciones.anesthesic-report.drug.UNIT_LABEL'"></mat-label>
+                    <mat-form-field appearance="outline">
+                        <input id="unit-input" matInput type="text" formControlName="unit" name="unit"
+                            placeholder="{{ 'internaciones.anesthesic-report.drug.UNIT_PLACEHOLDER' | translate }}">
+                        <mat-error *ngIf="hasError(form, 'required', 'unit')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div fxLayout="column" fxLayoutGap="12px">
+                <mat-label [translate]="'internaciones.anesthesic-report.analgesic-technique.CATETER_LABEL'"></mat-label>
+                <mat-radio-group fxLayout="column" id="cateter-criteria" fxLayoutGap="12px" formControlName="cateter">
+                    <mat-radio-button color="primary" [value]="CATETER_OPTIONS.CATETER_ENABLED">
+                        {{'internaciones.anesthesic-report.analgesic-technique.OPTION_YES' | translate}}
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" [value]="CATETER_OPTIONS.CATETER_DISABLED">
+                        {{'internaciones.anesthesic-report.analgesic-technique.OPTION_NO' | translate}}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field appearance="outline">
+                    <textarea id="cateterNote-input" matInput type="text" formControlName="cateterNote" name="cateterNote" 
+                        placeholder="{{'internaciones.anesthesic-report.analgesic-technique.CATETER_NOTE_LABEL' | translate}}"></textarea>
+                    <mat-error *ngIf="hasError(form, 'required', 'cateterNote')">
+                        <span translate="forms.REQUIRED"></span>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div align="end">
+                <button id="submit_drug" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

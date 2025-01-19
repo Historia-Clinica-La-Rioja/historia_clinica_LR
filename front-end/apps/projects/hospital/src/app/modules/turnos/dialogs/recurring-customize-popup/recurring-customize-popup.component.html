@@ -1,0 +1,79 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <h1 mat-dialog-title [translate]="'turnos.appointment.recurring-dialog.TITLE'"></h1>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <form [formGroup]="form">
+        <span [translate]="'turnos.appointment.recurring-dialog.REPEAT_EVERY'"></span>
+        <div class="container small-input">
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="repeatEvery">
+            </mat-form-field>
+            <span [translate]="'turnos.appointment.recurring-dialog.WEEKS'"></span>
+        </div>
+    
+        <span [translate]="'turnos.appointment.recurring-dialog.REPEATS_ON'"></span>
+        <div class="container days">
+            <mat-chip-list>
+                <mat-chip [disabled]="disableRepeatOn"
+                    *ngFor="let day of days"
+                    [selected]="selectedDay === day"
+                    (click)="setSelectedDay(day)">
+                    {{day.description[0]}}
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    
+        <span [translate]="'turnos.appointment.recurring-dialog.END_DATE'"></span>
+        <div class="container end-date" *ngIf="!hideInputs else endDate">
+            <mat-radio-group formControlName="selectedOption"> 
+                <article class="small-input" [ngClass]="{'disabled': options[0].disabled}">
+                    <mat-radio-button value="afterFewWeeks" color="primary" (click)="setInvalidForm()"></mat-radio-button>
+                    <span class="mr" [translate]="'turnos.appointment.recurring-dialog.AFTER_FEW_WEEKS'"></span>
+                    <mat-form-field appearance="outline">
+                        <input matInput type="text" (keyup)="setAfterFewWeeks($event)" formControlName="afterFewWeeks">
+                    </mat-form-field>
+                    <span [translate]="'turnos.appointment.recurring-dialog.WEEKS'"></span>
+                </article>
+                <article [ngClass]="{'disabled': options[2].disabled}">
+                    <mat-radio-button value="withoutEndDate" color="primary" (click)="setWithoutEndDate()"></mat-radio-button>
+                    <span [translate]="'turnos.appointment.recurring-dialog.WITHOUT_END_DATE'"></span>
+                </article>
+                <article [ngClass]="{'disabled': options[1].disabled}">
+                    <mat-radio-button value="withEndDate" color="primary" (click)="setInvalidForm()"></mat-radio-button>
+                    <app-datepicker *ngIf=" ! options[1].disabled; else disabledDatepicker" [minDate]="minDate" (selectDate)="setWithEndDate($event)"></app-datepicker>
+                </article>
+            </mat-radio-group>
+        </div>
+    </form>
+    
+    <ng-template #disabledDatepicker>
+        <div fxLayout="column" fxLayoutGap="10px">
+            <span></span>
+            <mat-form-field appearance="outline">
+                <input matInput disabled [matDatepicker]="datepicker">
+                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                </mat-datepicker>
+            </mat-form-field>
+        </div>
+    </ng-template>
+    
+    <ng-template #endDate>
+        <div class="container end-date">
+            <span>{{dateToSetInDatepicker | dateFormat :'date' }}</span>
+        </div>
+    </ng-template>
+</div>
+
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button mat-stroked-button color="primary" (click)="close()">
+        <span [translate]="'turnos.appointment.recurring-dialog.CANCEL'"></span>
+    </button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]=" ! this.form.valid">
+        <span [translate]="'turnos.appointment.recurring-dialog.CONFIRM'"></span>
+    </button>
+</div>

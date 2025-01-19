@@ -1,6 +1,7 @@
 package net.pladema.patient.infrastructure.input.shared;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.*;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.PatientGenderAgeDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.patient.controller.dto.APatientDto;
@@ -18,6 +19,7 @@ import net.pladema.person.controller.service.PersonExternalService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -79,6 +81,11 @@ public class SharedPatientImpl implements SharedPatientPort {
     }
 
 	@Override
+	public Optional<PatientGenderAgeDto> getPatientGenderAge(Integer patientId){
+		return patientService.getPatientGenderAge(patientId).map(patientMapper::toPatientGenderAgeDto);
+	}
+
+	@Override
 	public boolean isValidatedOrPermanentPatient(Short patientTypeId) {
 		return patientTypeId == PatientType.VALIDATED || patientTypeId == PatientType.PERMANENT;
 	}
@@ -130,10 +137,11 @@ public class SharedPatientImpl implements SharedPatientPort {
 			result.setIdentificationType(person.getIdentificationType());
 			result.setIdentificationNumber(person.getIdentificationNumber());
 			result.setGender(mapGender(person.getGender()));
-			result.setAge(person.getAge());
+			result.setPersonAge(person.getPersonAge());
 			result.setBirthDate(person.getBirthDate());
 			result.setNameSelfDetermination(person.getNameSelfDetermination());
 			result.setSelfPerceivedGender(person.getSelfPerceivedGender());
+			result.setEmail(person.getEmail());
 		}
         return result;
     }

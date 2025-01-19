@@ -63,6 +63,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	showWarning: boolean = false;
 	isDraft = false;
 	isDisableConfirmButton = false;
+	isConfirmed: boolean = false;
 	medications: MedicationDto[] = [];
 	canConfirmedDocument = false;
 	ECL = SnomedECL.DIAGNOSIS;
@@ -84,6 +85,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 	waitToResponse = false;
 	procedures: SnomedConcept<HospitalizationProcedureDto>[] = [];
 
+
 	@ViewChild(ObstetricComponent) formulario!: ObstetricComponent;
 
 	constructor(
@@ -103,12 +105,10 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 		readonly problemEpicrisisService: ProblemEpicrisisService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS).subscribe(isOn => this.cipresEpicrisisFF = isOn);
+		this.setFeatureFlags();
 	}
 
 	ngOnInit(): void {
-
 		this.isDraft = this.data.patientInfo.isDraft;
 		this.canConfirmedDocument = this.data.patientInfo.isDraft;
 		this.diagnosticsEpicrisisService = new DiagnosisEpicrisisService(this.internacionMasterDataService, this.internmentStateService, this.tableService, this.data.patientInfo.internmentEpisodeId);
@@ -191,6 +191,7 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		this.epicrisisService.existUpdatesAfterEpicrisis(this.data.patientInfo.internmentEpisodeId).subscribe((showWarning: boolean) => this.showWarning = showWarning);
 
 		this.externalCause$ = this.externalCauseServise.getValue().subscribe();
+		this.verifyConfirmed()
 
 		this.form.get('observations').valueChanges.pipe(
 			map(formData => Object.values(formData)),
@@ -198,6 +199,16 @@ export class EpicrisisDockPopupComponent implements OnInit {
 		).subscribe(allFormValuesAreNull => {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
+	}
+
+	private verifyConfirmed() {
+		if (this.data.patientInfo.epicrisisId) {
+			this.epicrisisService.getEpicrisis(this.data.patientInfo.epicrisisId, this.data.patientInfo.internmentEpisodeId).subscribe(response => {
+				if (response && response.confirmed) {
+					this.isConfirmed = true
+				}
+			})
+		}
 	}
 
 	private setValues(e: ResponseEpicrisisDto, response: EpicrisisGeneralStateDto): void {
@@ -506,6 +517,11 @@ export class EpicrisisDockPopupComponent implements OnInit {
 
 	getObservations$(): Observable<boolean> {
 		return this.observationsSubject.asObservable();
+	}
+
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_CAMPOS_CIPRES_EPICRISIS).subscribe(isOn => this.cipresEpicrisisFF = isOn);
 	}
 }
 

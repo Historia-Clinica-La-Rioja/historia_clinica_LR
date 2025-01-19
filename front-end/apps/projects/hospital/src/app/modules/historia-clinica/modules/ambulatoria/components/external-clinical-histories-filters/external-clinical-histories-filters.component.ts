@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Moment } from 'moment';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
 
 export interface ExternalClinicalHistoryFiltersOptions {
@@ -13,7 +12,7 @@ export interface ExternalClinicalHistoryFilter {
 	specialty?: string,
 	professional?: string,
 	institution?: string,
-	consultationDate?: Moment
+	consultationDate?: Date
 }
 
 @Component({
@@ -68,8 +67,9 @@ export class ExternalClinicalHistoriesFiltersComponent implements OnInit {
 		this.externalClinicalHistoryFacadeService.setFilters(this.filters);
 	}
 
-	public setConsultationDateFilter(): void {
-		if (this.form.value.consultationDate)
+	public setConsultationDateFilter(consultationDate: Date): void {
+		this.form.controls.consultationDate.setValue(consultationDate);
+		if (consultationDate)
 			this.filters.consultationDate = this.form.value.consultationDate;
 		else
 			delete this.filters.consultationDate;

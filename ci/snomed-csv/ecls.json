@@ -1,0 +1,78 @@
+[
+  {
+    "key": "ALLERGY",
+    "value": "< 609328004 |disposición alérgica (hallazgo)|"
+  },
+  {
+    "key": "BLOOD_TYPE",
+    "value": "< 112143006 |ABO group phenotype (finding)|"
+  },
+  {
+    "key": "CARDIOVASCULAR_DISORDER",
+    "value": "<< 49601007 |trastorno del aparato cardiovascular (trastorno)|"
+  },
+  {
+    "key": "CONSULTATION_REASON",
+    "value": "<< 404684003 |hallazgo clínico (hallazgo)| OR << 71388002 |procedimiento (procedimiento)| OR << 243796009 |situación con contexto explícito (situación)| OR << 272379006 | evento (evento)|"
+  },
+  {
+    "key": "DIABETES",
+    "value": "<< 73211009 |diabetes mellitus (trastorno)|"
+  },
+  {
+    "key": "DIAGNOSIS",
+    "value": "<< 404684003 |hallazgo clínico (hallazgo)| OR << 243796009 |situación con contexto explícito (situación)| OR << 272379006 | evento (evento)|"
+  },
+  {
+    "key": "ELECTROCARDIOGRAPHIC_PROCEDURE",
+    "value": "<< 29303009 |procedimiento electrocardiográfico (procedimiento)|"
+  },
+  {
+    "key": "EVENT",
+    "value": "< 272379006 | evento (evento)|"
+  },
+  {
+    "key": "FAMILY_RECORD",
+    "value": "<< 404684003 |hallazgo clínico (hallazgo)| OR <<  243796009 |situación con contexto explícito (situación)| OR << 272379006 | evento (evento)|"
+  },
+  {
+    "key": "HOSPITAL_REASON",
+    "value": "< 404684003 |hallazgo clínico (hallazgo)| OR 272379006 | evento (evento)| OR 243796009 |situación con contexto explícito (situación)| OR 48176007 |contexto social|"
+  },
+  {
+    "key": "HYPERTENSION",
+    "value": "<< 38341003 |trastorno hipertensivo arterial sistémico (trastorno)|"
+  },
+  {
+    "key": "MEDICINE_WITH_UNIT_OF_PRESENTATION",
+    "value": "(>(^331101000221109.774160008)) AND (^425081000221106)"
+  },
+  {
+    "key": "MEDICINE",
+    "value": "< 763158003: 732943007 |tiene base de sustancia de la potencia (atributo)|=*, [0..0] 774159003 |tiene proveedor (atributo)|=*"
+  },
+  {
+    "key": "PERSONAL_RECORD",
+    "value": "<< 404684003 |hallazgo clínico (hallazgo)| OR <<  243796009 |situación con contexto explícito (situación)| OR << 272379006 | evento (evento)|"
+  },
+  {
+    "key": "PROCEDURE",
+    "value": "< 71388002 |procedimiento (procedimiento)|"
+  },
+  {
+    "key": "VACCINE",
+    "value": "^ 2281000221106 |conjunto de referencias simples de inmunizaciones notificables (metadato fundacional)|"
+  },
+  {
+    "key": "VIOLENCE_MODALITY",
+    "value": "464031000221100 |sextorsión (evento)| or 464021000221103 |sexting contra niñeces y adolescencias (evento)| or 464011000221108 |ciberacoso sexual a niñeces y adolescencias (evento)| or 463981000221102 |maltrato institucional contra niñeces y adolescencias (evento)| or 463941000221105 |violencia vicaria por motivos de género (evento)| or 463911000221106 |violencia pública-política contra las mujeres (evento)| or 463901000221108 |violencia contra las mujeres en el espacio público (evento)| or 463881000221106 |violencia obstétrica (evento)| or 463861000221104 |violencia contra la libertad reproductiva (evento)| or 463841000221103 |violencia mediática por motivos de género (evento)| or 463831000221105 |violencia institucional contra las mujeres (evento)| or 463821000221107 |violencia digital por motivos de género (evento)| or 445521005 |testigo de episodio de violencia doméstica en adulto (hallazgo)| or 463891000221109 |violencia laboral contra las mujeres (evento)|"
+  },
+  {
+    "key": "VIOLENCE_PROBLEM",
+    "value": "<<463961000221109 |maltrato contra niñeces y adolescencias (evento)| or <<440281000221108 |violencia por motivos de género (evento)| or <<225826001 |víctima de abuso sexual (hallazgo)| or <<248111006 |violación (evento)| OR 248110007 |ataque sexual (evento)|  or <<225915006 |en riesgo de maltrato (hallazgo)| or (<<386702006 |víctima de maltrato (hallazgo)| MINUS (2268003 |víctima de agresión homosexual (hallazgo)| OR 17044007 |víctima de violación de menores (hallazgo)| or 78077007 |síndrome del cónyuge golpeado (hallazgo)| or 160801005 |esposo golpeado - antecedentes (hallazgo)| or 718495005 |víctima adulta de abuso sexual durante el servicio militar (hallazgo)| or 288671000119101 |víctima adulta de maltrato físico perpetrado por pareja femenina (hallazgo)| or 424509006 |víctima de disciplina excesiva (hallazgo)| or 225828000 |víctima de abuso racial (hallazgo)| or 80520008 |víctima de aplastamiento (hallazgo)| or 95927003 |progenitor víctima de maltrato psicológico (hallazgo)| or 95929000 |anciano víctima de abuso psicológico (hallazgo)| or 160801005 |esposo golpeado - antecedentes (hallazgo)| or 213013002 |esposo golpeado (hallazgo)| or 423344000 |víctima de disciplina severa (hallazgo)| or 242973005 |testigo de exhibición impúdica (hallazgo)| or 242974004 |receptor de una llamada telefónica obscena (hallazgo)| or 74715005 |síndrome de la mujer golpeada (hallazgo)| or 1172622001 |víctima de incesto (hallazgo)| or 420180008 |víctima de relación sexual abusiva con la esposa (hallazgo)|)) or (<<371776003 |negligencia o abandono (evento)| minus (12399011000119104 |negligencia de anciano (evento)| or 12240741000119107 |negligencia de adulto (evento)| or 432262005 |descuido nutricional del adulto (evento)| or 242048007 |persona inválida desatendida (evento)| or 242043003 |abandono de anciano (evento)| or 242042008 |privación nutricional del anciano (evento)|))"
+  },
+  {
+    "key": "VIOLENCE_TYPE",
+    "value": "464001000221105 |violencia sexual contra niñeces y adolescencias (evento)| or 463991000221104 |maltrato psicológico contra niñeces y adolescencias (evento)| or 463931000221103 |violencia sexual (evento)| or 463921000221101 |violencia ambiental por motivos de género (evento)| or 463871000221108 |violencia económica contra las mujeres (evento)| or 463851000221101 |violencia política por motivos de género (evento)| or 463811000221102 |violencia simbólica por motivos de género (evento)| or 463801000221100 |violencia verbal por motivos de género (evento)| or 463781000221104 |violencia psicológica por motivos de género (evento)| or 463771000221102 |violencia física por motivos de género (evento)| or 418496002 |negligencia infantil (evento)| or 418506006 |maltrato físico (evento)| or 720025009 |maltrato emocional doméstico (evento)| or 276849007 |maltrato psicológico del adulto (evento)|"
+  }
+]

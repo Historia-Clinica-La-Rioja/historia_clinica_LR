@@ -8,6 +8,7 @@
     .page-header {
         top: 0;
         width: 100%;
+        position: fixed;
     }
     .page-footer {
         position: fixed;
@@ -71,7 +72,7 @@
 </head>
 <body>
 
-<div th:fragment="header">
+<div class="page-header" th:fragment="header">
     <div>
         <div class="section-title">
             <h2 style="width: 50%; float:left;">Historia Clínica</h2>
@@ -85,11 +86,11 @@
             <div>
                 <div class="row-content">
                     <div class="data-title">Nombre y apellido</div>
-                    <div class="data-text" th:text="${patient.person.completeName()}"></div>
+                    <div class="data-text" th:text="${patientName}"></div>
                 </div>
                 <div class="row-content">
                     <div class="data-title">Documento</div>
-                    <div class="data-text" th:text="${patient.person.identificationNumber}"></div>
+                    <div class="data-text" th:text="${patient.getIdentificationNumber()}"></div>
                 </div>
                 <div class="row-content">
                     <div class="data-title">ID</div>
@@ -101,7 +102,7 @@
                 </div>
                 <div class="row-content">
                     <div class="data-title">Fecha nac.</div>
-                    <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                    <div class="data-text" th:text="${#temporals.format(patient.getBirthDate(), 'dd/MM/yyyy')}"></div>
                 </div>
             </div>
         </div>
@@ -109,9 +110,6 @@
             <hr/>
         </div>
     </div>
-</div>
-
-<div th:fragment="encounterData">
     <div>
         <div class="section-title" >Episodio/Encuentro</div>
         <div>
@@ -125,11 +123,11 @@
             </div>
             <div class="row-content">
                 <div class="data-title">Fecha inicio</div>
-                <div class="data-text" th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></div>
+                <div class="data-text" th:if="${startDate != null}" th:text="${#temporals.format(startDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(startDate, 'HH:mm')} + ' hs.'"></div>
             </div>
             <div class="row-content">
                 <div class="data-title">Fecha fin</div>
-                <div class="data-text" th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd-MM-yyyy HH:mm') + ' hs'}"></div>
+                <div class="data-text" th:if="${endDate != null}" th:text="${#temporals.format(endDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(endDate, 'HH:mm')} + ' hs.'"></div>
             </div>
         </div>
         <div>
@@ -142,25 +140,25 @@
             </div>
             <div class="row-content">
                 <div class="data-title">Sector/Servicio</div>
-                <div class="data-text" th:text="${sector != null ? sector : ''}"></div>
+                <div class="data-text" th:text="${sector != null ? sector : '&nbsp'}"></div>
             </div>
             <div class="row-content">
                 <div class="data-title">Lugar</div>
-                <div class="data-text" th:text="${place != null ? place : ''}"></div>
+                <div class="data-text" th:text="${place != null ? place : '&nbsp'}"></div>
             </div>
         </div>
             <div style="padding-top: 5px; clear: both;">
             <div class="row-content">
                 <div class="data-title">Cobertura</div>
-                <div class="data-text" th:if="${medicalCoverage != null}" th:text="${medicalCoverage?.medicalCoverage.name}"></div>
+                <div class="data-text" th:text="${medicalCoverage != null && medicalCoverage.medicalCoverage != null ? medicalCoverage.medicalCoverage.name : '&nbsp'}"></div>
             </div>
             <div class="row-content">
                 <div class="data-title">N° de credencial</div>
-                <div class="data-text" th:if="${medicalCoverage != null}" th:text="${medicalCoverage?.affiliateNumber}"></div>
+                <div class="data-text" th:text="${medicalCoverage != null && medicalCoverage.affiliateNumber != null ? medicalCoverage.affiliateNumber : '&nbsp'}"></div>
             </div>
             <div class="row-content">
                 <div class="data-title">Plan</div>
-                <div class="data-text" th:if="${medicalCoverage != null}" th:text="${medicalCoverage?.planName}"></div>
+                <div class="data-text" th:text="${medicalCoverage != null && medicalCoverage.planName != null ? medicalCoverage.planName : '&nbsp'}"></div>
             </div>
         </div>
         <div style="clear: both;">
@@ -198,7 +196,7 @@
 
 <div class="page-footer" th:fragment="footer">
     <hr/>
-    <div th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd-MM-yyyy HH:mm')} + ' por ' + ${user} + ' en ' + ${currentInstitution}"></div>
+    <div th:text="'Historia Clinica impresa el ' + ${#temporals.format(printDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(printDate, 'HH:mm')} + ' hs.' + ' por ' + ${user} + ' en ' + ${currentInstitution}"></div>
 </div>
 
 </body>

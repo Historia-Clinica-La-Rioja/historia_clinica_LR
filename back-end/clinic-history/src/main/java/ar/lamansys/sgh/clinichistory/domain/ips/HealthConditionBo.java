@@ -1,18 +1,17 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@ToString
-public class HealthConditionBo extends ClinicalTerm {
+public class HealthConditionBo extends ClinicalTerm implements IpsBo {
 
     private String verificationId;
 
@@ -44,5 +43,19 @@ public class HealthConditionBo extends ClinicalTerm {
 
     public boolean isActive(){
         return getStatusId().equals(ConditionClinicalStatus.ACTIVE);
+    }
+
+    @Override
+    public String toString() {
+        return "HealthConditionBo{ verificationId=" + verificationId +
+                ", verification=" + verification +
+                ", main=" + main +
+                ", super=" + super.toString() +
+                '}';
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitHealthCondition(this);
     }
 }

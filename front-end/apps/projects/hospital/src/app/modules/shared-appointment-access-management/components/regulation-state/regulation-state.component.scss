@@ -1,0 +1,32 @@
+.red {
+	color: #eb5757;
+	background-color: rgba(235, 87, 87, 20%);
+}
+
+.yellow {
+	color: #ff8a00;
+	background-color: rgba(255, 237, 217, 15);
+}
+
+.green {
+	color: #27ae60;
+	background-color: rgba(50, 194, 91, 15%);
+}
+
+.blue {
+	background-color: #b0d2f0;
+	color: #1A73E8;
+}
+
+div {
+	border-radius: 50%;
+	padding: 3px 3px;
+	width: fit-content;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+mat-icon {
+	overflow: visible;
+}

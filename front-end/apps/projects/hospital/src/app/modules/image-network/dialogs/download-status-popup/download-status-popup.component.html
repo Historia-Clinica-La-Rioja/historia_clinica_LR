@@ -1,0 +1,21 @@
+<div class="dialog-title">
+    <h2 class="capitalize-first-letter" mat-dialog-title data-id="dialog-title">{{ 'image-network.worklist.details_study.DOWNLOAD_STUDY' | translate }}</h2>
+    <button *ngIf="canBeCancelled" id="close" mat-icon-button [mat-dialog-close]="true">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <div class="icon">
+        <mat-spinner *ngIf="!errorStatus" data-id="spinner" color="primary"></mat-spinner>
+        <mat-icon *ngIf="errorStatus" data-id="error" class="error-icon" color="warn">error_outlined</mat-icon>
+    </div>
+    <div class="text-container">
+		<span class="title" data-id="title"> {{ title | translate }}</span>
+		<span class="subtitle" data-id="subtitle">{{ subtitle | translate }}</span>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions class="actions-container">
+    <app-button *ngIf="canBeCancelled" [text]="'buttons.CANCEL'" [mat-dialog-close]="true"></app-button>
+    <app-button *ngIf="errorStatus" [text]="'image-network.worklist.details_study.asynchronous_download.RETRY_DOWNLOAD'"
+        [buttonType]="ButtonType.FLAT" (clicked)="retryDownload()"></app-button>
+</mat-dialog-actions>

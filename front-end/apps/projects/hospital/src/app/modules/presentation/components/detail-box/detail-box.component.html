@@ -5,7 +5,7 @@
 		</div>
 		<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
 			<span class="value">{{ detail.registeredValues[0].value }}</span>
-			<mat-icon color="primary" matTooltip="{{ detail.registeredValues[0].date | date: 'short' }}">
+			<mat-icon *ngIf="detail.registeredValues[0].date" color="primary" matTooltip="{{ detail.registeredValues[0].date | isoToDate | dateFormat: 'datetime' }}">
 				info_outline
 			</mat-icon>
 		</div>
@@ -21,7 +21,7 @@
 					<span id="previous-value">
 						{{ detail.registeredValues[1].value }}
 					</span>
-					<mat-icon id="previous-icon" matTooltip="{{ detail.registeredValues[1].date | date: 'short' }}">
+					<mat-icon id="previous-icon" *ngIf="detail.registeredValues[1].date" matTooltip="{{ detail.registeredValues[1].date | isoToDate | dateFormat: 'datetime' }}">
 						info_outline
 					</mat-icon>
 				</div>

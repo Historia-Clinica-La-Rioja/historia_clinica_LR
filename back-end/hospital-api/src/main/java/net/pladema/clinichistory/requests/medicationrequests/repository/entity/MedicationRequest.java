@@ -7,6 +7,7 @@ import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "medication_request")
@@ -63,6 +64,9 @@ public class MedicationRequest extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "is_archived")
 	private Boolean isArchived;
+
+	@Column(name = "uuid")
+	private UUID uuid;
 
 
 	public MedicationRequest(Integer patientId, Integer institutionId, String statusId,

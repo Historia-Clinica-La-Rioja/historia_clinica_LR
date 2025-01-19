@@ -1,0 +1,16 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <h1 mat-dialog-title>{{ 'image-network.worklist.details_study.SELECT_TEMPLATE_DELETE' | translate}}</h1>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content fxLayout="column" fxLayoutGap="15px">
+    <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center" *ngFor="let importFile of importTemplates$ | async">
+        <div fxLayout="row" fxLayoutAlign="space-between baseline">
+            <span>{{importFile.name}}</span>
+            <button class="margin" mat-stroked-button color="primary" (click)="deleteTemplate(importFile)">
+                <span class="uppercase" [translate]="'buttons.DELETE'"></span>
+            </button>
+        </div>
+    </div>
+</mat-dialog-content>

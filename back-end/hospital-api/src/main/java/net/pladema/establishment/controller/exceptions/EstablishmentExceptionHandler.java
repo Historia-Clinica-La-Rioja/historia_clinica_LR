@@ -4,6 +4,9 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.application.attentionplaces.exceptions.BlockAttentionPlaceException;
+import net.pladema.establishment.application.bed.exceptions.BedRelocationException;
+import net.pladema.establishment.application.rules.determineregulatedreference.exceptions.RuleException;
 import net.pladema.establishment.controller.service.exceptions.HierarchicalUnitStaffException;
 
 import org.springframework.context.MessageSource;
@@ -37,4 +40,40 @@ public class EstablishmentExceptionHandler {
 		log.debug("HierarchicalUnitStaffException exception -> {}", ex.getMessage());
 		return buildErrorMessage(ex.getMessage(), locale);
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RuleException.class })
+	protected ApiErrorMessageDto handleRuleException(RuleException ex) {
+		log.debug("RuleException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BedRelocationException.class })
+	protected ApiErrorMessageDto handleBedRelocationException(BedRelocationException ex, Locale locale) {
+		log.debug("BedRelocationException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+	@ExceptionHandler({ BackofficeClinicalServiceSectorException.class })
+	protected ApiErrorMessageDto handleBackofficeClinicalServiceSectorException(BackofficeClinicalServiceSectorException ex, Locale locale) {
+		log.debug("BackofficeClinicalServiceSectorException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BlockAttentionPlaceException.class })
+	protected ApiErrorMessageDto handleBlockBedException(BlockAttentionPlaceException ex, Locale locale) {
+		log.debug("BlockBedException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ BackofficeInstitutionException.class })
+	protected ApiErrorMessageDto handleBackofficeInstitutionException(BackofficeInstitutionException ex, Locale locale) {
+		log.debug("BackofficeInstitutionException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }

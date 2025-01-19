@@ -1,0 +1,34 @@
+<div fxLayout="row">
+	<app-filters [filters]="filters" (selectedFilters)="setFilters($event)">
+		<div date-picker fxLayout="column">
+			<div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column">
+
+				<mat-button-toggle-group value="{{dashboardService.dashboardView}}" *appHasRole="['ADMINISTRATIVO','ABORDAJE_VIOLENCIAS', 'GESTOR_DE_ACCESO_INSTITUCIONAL']"
+					(change)="dashboardService.updateDashboardView($event.value)">
+					<mat-button-toggle value="{{dashboardView.RECEIVED}}"
+						[disabled]="dashboardService.disabledDashboardActions">
+						{{'access-management.search_references.RECEIVED' | translate}}
+					</mat-button-toggle>
+					<mat-button-toggle value="{{dashboardView.REQUESTED}}"
+						[disabled]="dashboardService.disabledDashboardActions">
+						{{'access-management.search_references.REQUEST' | translate}}
+					</mat-button-toggle>
+				</mat-button-toggle-group>
+
+				<app-date-range-picker [label]="'access-management.search_references.FILTER_BY_PERIOD'"
+					[dateRange]="dashboardService.dateRange" (dateRangeChange)="checkDays($event)"
+					[disabled]="dashboardService.disabledDashboardActions" [max]="today"></app-date-range-picker>
+				<mat-error *ngIf="showValidation">{{'access-management.search_references.PERIOD_VALIDATIONS' |
+					translate}}</mat-error>
+			</div>
+		</div>
+		<div filters>
+			<form class="form" [formGroup]="filterByDocument" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start">
+				<mat-form-field appearance="outline">
+					<mat-label>{{'access-management.search_references.DOCUMENT_SEARCH' | translate}}</mat-label>
+					<input matInput formControlName="description">
+				</mat-form-field>
+			</form>
+		</div>
+	</app-filters>
+</div>

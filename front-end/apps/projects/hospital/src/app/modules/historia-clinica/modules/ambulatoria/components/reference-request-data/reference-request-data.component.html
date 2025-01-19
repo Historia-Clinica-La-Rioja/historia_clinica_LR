@@ -1,0 +1,50 @@
+<div *ngIf="reference" class="container" id="main-container" fxLayoutGap="12px">
+
+	<div class="row-container"  fxLayoutAlign="space-between">
+		<app-colored-label [description]="status.description | uppercase" [color]="status.color" id="colored-label">
+		</app-colored-label>
+		<span class="grey">
+			Orden #{{order}}
+		</span>
+	</div>
+
+	<div class="stretch-container" fxLayout="column" fxLayoutGap="12px" id="refernece-info">
+		<h2>{{'ambulatoria.reference-request-data.TITLE'|translate}}</h2>
+
+		<app-reference-state-label id="closure-type" fxLayoutAlign="start" [referenceClosureDescription]="reference.dto.closureType?.description"></app-reference-state-label>
+
+		<div class="row-container" id="refernece-info-first" fxLayout="column" fxLayoutGap="12px">
+			<app-identifier-cases [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.problems" [identifierCase]="identiferCases.PROBLEM"
+				id="problem"></app-identifier-cases>
+
+			<app-priority fxLayoutAlign="start" [priority]="reference.priority"
+				id="priority"></app-priority>
+		</div>
+
+		<div class="row-container" id="refernece-info-second"   fxLayout="column" fxLayoutGap="12px">
+			<app-identifier-cases *ngIf="reference.dto?.destinationClinicalSpecialties.length" [position]="Position.ROW" [showLegend]="true"
+				[description]="clinicalSpecialtiesName | stringSeparator"
+				[identifierCase]="identiferCases.SPECIALTY" id="specialty"></app-identifier-cases>
+			<app-identifier-cases *ngIf="reference.dto.careLine?.description" [position]="Position.ROW" [showLegend]="true"
+				[description]="reference.dto.careLine.description" [identifierCase]="identiferCases.CARE_LINE"
+				id="care-line"></app-identifier-cases>
+		</div>
+	</div>
+
+	<div>
+		<span id="note">{{ reference.dto.note }}</span>
+
+		<div *ngFor="let file of reference.dto.files">
+			<a mat-button color="primary" (click)="downloadFile(file)">
+				{{file.fileName}}
+			</a>
+		</div>
+	</div>
+
+	<div class="row-container" fxLayoutAlign="space-between" id="refernece-info-third" fxLayoutGap="22px">
+		<span class="grey" id="professional-name">{{reference.dto.professionalFullName}} </span>
+		<span class="grey" id="date">{{reference.dto.date | viewDateDto: 'localdatetime' | dateFormat:
+			'datetime'}}</span>
+	</div>
+</div>

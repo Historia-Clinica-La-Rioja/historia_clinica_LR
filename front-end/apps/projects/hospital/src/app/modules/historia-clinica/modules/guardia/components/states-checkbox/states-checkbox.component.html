@@ -1,0 +1,6 @@
+<form [formGroup]="form.controls.states">
+    <span class="font-weight">{{ 'guardia.home.episodes.filters.STATES' | translate }}</span>
+    <div *ngFor="let key of formControlsKeys" fxLayout="row" fxLayoutGap="10px">
+        <mat-checkbox [formControlName]="key">{{ key | showStateDescription:states }}</mat-checkbox>
+    </div>
+</form>

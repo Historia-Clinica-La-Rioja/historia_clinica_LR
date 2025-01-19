@@ -32,7 +32,10 @@ export class ConfirmarPrescripcionComponent implements OnInit {
 		}
 
 	ngOnInit(): void {
-		this.snackBarService.showSuccess(this.data.successLabel);
+		const timeout = this.data.timeout ? this.data.timeout : 0;
+		setTimeout(() => {
+			this.snackBarService.showSuccess(this.data.successLabel);
+		}, timeout);
 		this.prescriptionPdfInfo = this.data.prescriptionRequest;
 	}
 
@@ -79,4 +82,5 @@ export class ConfirmPrescriptionData {
 	prescriptionRequest: DocumentRequestDto[] | number[];
 	patientEmail?: string;
 	identificationNumber: string;
+	timeout?: number;
 }

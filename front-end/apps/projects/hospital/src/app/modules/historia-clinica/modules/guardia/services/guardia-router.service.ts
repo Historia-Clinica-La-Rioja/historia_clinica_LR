@@ -19,10 +19,14 @@ export class GuardiaRouterService {
 		private readonly permissionsService: PermissionsService,
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
 		});
 	}
 
+	goToEmergencyCareDashboard(){
+		const url = 'institucion/' + this.contextService.institutionId + '/guardia';
+		this.router.navigateByUrl(url);
+	}
 
 	goToEpisode(episodeId: number, patient: { typeId: number, id: number }) {
 		const routePrefix = 'institucion/' + this.contextService.institutionId;

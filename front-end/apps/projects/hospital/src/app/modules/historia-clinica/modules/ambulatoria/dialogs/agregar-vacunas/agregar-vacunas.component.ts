@@ -4,7 +4,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { ClinicalSpecialtyDto, ImmunizationDto, ImmunizePatientDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ImmunizationService } from '@api-rest/services/immunization.service';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { AgregarVacunaComponent } from '../agregar-vacuna/agregar-vacuna.component';
 import { AppointmentsService } from "@api-rest/services/appointments.service";
@@ -61,11 +60,6 @@ export class AgregarVacunasComponent implements OnInit {
       }
     );
   }
-
-  public displayDate(administrationDate: string): string {
-    return momentFormat(momentParseDate(administrationDate), DateFormat.VIEW_DATE);
-  }
-
   public remove(vaccineIndex: number): void {
     this.appliedVaccines.splice(vaccineIndex, 1);
   }

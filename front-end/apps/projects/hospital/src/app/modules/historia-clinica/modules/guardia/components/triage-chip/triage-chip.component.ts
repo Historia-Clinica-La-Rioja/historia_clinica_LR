@@ -8,17 +8,14 @@ import { Triages } from '../../constants/masterdata';
 })
 export class TriageChipComponent {
 
-	readonly triages = Triages;
-
 	@Input() category: TriageCategory;
+	@Input() isFilled = false;
 
-	constructor() {
-	}
+	constructor() {	}
 
 }
 
 export interface TriageCategory {
-	id: number;
+	id: Triages;
 	name: string;
-	colorHex: string;
 }

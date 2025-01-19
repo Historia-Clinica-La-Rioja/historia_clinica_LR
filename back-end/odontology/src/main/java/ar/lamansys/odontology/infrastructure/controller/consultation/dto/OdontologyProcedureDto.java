@@ -1,15 +1,20 @@
 package ar.lamansys.odontology.infrastructure.controller.consultation.dto;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.io.Serializable;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -21,7 +26,7 @@ public class OdontologyProcedureDto implements Serializable {
     private SnomedDto snomed;
 
     @Nullable
-    private DateDto performedDate;
-
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    private String performedDate;
 
 }

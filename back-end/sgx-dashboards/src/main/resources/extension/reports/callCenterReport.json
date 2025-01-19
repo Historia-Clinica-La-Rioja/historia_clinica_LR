@@ -1,0 +1,52 @@
+{
+  "type": "cubejs-card",
+  "args": {
+    "header": {
+      "title": "Turnos del centro de llamados"
+    },
+    "content":
+    {
+      "type": "cubejs-dashboard",
+      "args": {
+        "filters": {
+          "identificationNumber": {
+            "filter": {
+              "member": "TablaTurnosCentroLlamado.numero_identificacion",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Nro. Identificación"
+          },
+          "name": {
+            "filter": {
+              "member": "TablaTurnosCentroLlamado.primer_nombre_paciente",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Nombre de paciente"
+          },
+          "patientLastName": {
+            "filter": {
+              "member": "TablaTurnosCentroLlamado.apellido_paciente",
+              "operator": "contains"
+            },
+            "type": "freeText",
+            "label": "Apellido de paciente"
+          }
+        },
+        "content": [
+          {
+            "type" : "cubejs-chart",
+            "args" : {
+              "query" : "tablaTurnosCentroLlamado",
+              "chartOptions" : {
+                "responsive" : true,
+                "maintainAspectRatio" : false
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,16 +1,12 @@
-<div>
-    <div class="header-container" fxLayout="row" fxLayoutAlign="space-between">	
-        <div mat-dialog-title>
-            <div translate="image-network.worklist.DERIVE_REPORT"></div>
-        </div>
+<div class="header-container" fxLayout="row" fxLayoutAlign="space-between">	
+    <h2 mat-dialog-title translate="image-network.worklist.DERIVE_REPORT"></h2>
 
-        <div align="end">
-            <button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
-    </div>
+    <button id="cancel_button" name="cancel_button" mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
 
+<mat-dialog-content>
     <h2 translate="image-network.worklist.REQUEST_REPORT_TO" style="font-size: 16px"></h2>
 
     <form [formGroup]="form">
@@ -34,4 +30,4 @@
             </button>
         </div>
     </form>
-</div>
+</mat-dialog-content>

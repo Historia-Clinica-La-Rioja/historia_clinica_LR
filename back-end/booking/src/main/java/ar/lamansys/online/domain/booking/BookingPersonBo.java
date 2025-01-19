@@ -14,4 +14,6 @@ public class BookingPersonBo {
     private final String idNumber;
     private final Short genderId;
     private final String birthDate;
+	private final String phonePrefix;
+	private final String phoneNumber;
 }

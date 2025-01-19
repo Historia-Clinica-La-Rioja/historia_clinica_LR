@@ -1,0 +1,9 @@
+<div *ngIf="emergencyCarePatientSummaryItem">
+	<ng-container *ngIf="emergencyCarePatientSummaryItem.typeId === EMERGENCY_CARE_TEMPORARY else patientSummary">
+		<app-temporary-patient [patientDescription]="emergencyCarePatientSummaryItem.description"></app-temporary-patient>
+	</ng-container>
+
+	<ng-template #patientSummary>
+		<app-patient-summary [person]="emergencyCarePatientSummaryItem.person" size={{SMALL}}></app-patient-summary>
+	</ng-template>
+</div>

@@ -1,0 +1,9 @@
+@import '../../../../../assets/styles/mat-mixins.scss';
+
+app-new-consultation-expansion-section {
+	@include mat-form-field-background-white;
+}
+
+.error {
+	font-size: 75%;
+}

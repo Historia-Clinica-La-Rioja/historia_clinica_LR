@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
 
 import ar.lamansys.sgh.clinichistory.UnitRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -44,6 +46,12 @@ class HCEHealthConditionRepositoryTest extends UnitRepository {
 	@MockBean
 	private DocumentRepository documentRepository;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+	
+	@MockBean
+	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
+
 	@BeforeEach
 	void setUp() {
 		hCEHealthConditionRepository = new HCEHealthConditionRepositoryImpl(entityManager);
@@ -61,7 +69,7 @@ class HCEHealthConditionRepositoryTest extends UnitRepository {
 		createSecondDocument(patientId);
 		createThirdDocument(patientId, personalSnomed1, personalSnomed2, mainDiagnose1);
 
-		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getPersonalHistories(patientId);
+		List<HCEHealthConditionVo> resultQuery = hCEHealthConditionRepository.getSummaryProblems(patientId);
 
 		Assertions.assertThat(resultQuery)
 				.isNotNull()
@@ -76,7 +84,7 @@ class HCEHealthConditionRepositoryTest extends UnitRepository {
 				.hasSize(0);
 
 		Assertions.assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isPersonalHistory))
-				.hasSize(1);
+				.hasSize(0);
 
 		Assertions.assertThat(resultQuery.stream().filter(HCEHealthConditionVo::isChronic))
 				.hasSize(2);

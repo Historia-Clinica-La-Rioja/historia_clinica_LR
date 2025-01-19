@@ -1,6 +1,6 @@
 <h2 class="subtitle" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DESTINATION'"></h2>
 <form [formGroup]="formReference">
-	<div class="reference-type" fxLayoutGap="10px">
+	<div class="reference-type font-size-16" fxLayoutGap="10px">
 		<mat-label fxLayout="column"
 			[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.SEARCH_BY_CARE_LINE'"></mat-label>
 		<mat-radio-group id="search_by_carelines" formControlName="searchByCareLine" fxLayoutGap="5px">
@@ -24,62 +24,46 @@
 						{{careLine.description | translate}}
 					</mat-option>
 				</mat-select>
-				<mat-error *ngIf="careLines?.length else noCareLines" [translate]="'forms.REQUIRED'"></mat-error>
+				<mat-error *ngIf="!careLines?.length" [translate]="'forms.REQUIRED'"></mat-error>
 				<ng-template #noCareLines>
 					<mat-error
 						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NO_CARE_LINES'"></mat-error>
 				</ng-template>
 			</mat-form-field>
 		</div>
-		<div class="search-criteria">
-			<app-search-criteria searchCriteryStyle="'search-criteria'" label="ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE"
-				(selectedOption)="selectedOption($event)" fxLayoutGap="7px">
-			</app-search-criteria>
-		</div>
-
-		<div *ngIf="formReference.value.searchByCareLine else allSpecielty">
-			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-				<mat-label *ngIf="formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
-				<mat-label	*ngIf="!formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
-				<mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
-					<mat-option *ngFor="let specialty of specialtiesSubject$ | async" [value]="specialty">
-						{{specialty.name | translate}}
-					</mat-option>
-				</mat-select>
-				<button id="clear_identification_type" type="button" mat-button
-					*ngIf="formReference?.value.clinicalSpecialtyId && !formReference?.value.consultation" matSuffix color="warn" mat-icon-button
-					(click)="clear(formReference.controls.clinicalSpecialtyId); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-			</mat-form-field>
+		<div class="search-criteria font-size-16">
+			<app-search-criteria searchCriteryStyle="'search-criteria'"
+				label="ambulatoria.paciente.nueva-consulta.reference-dialog.REFERENCE_TYPE"
+				(selectedOption)="selectedOption($event)" fxLayoutGap="7px"></app-search-criteria>
 		</div>
 	</ng-container>
 
-	<ng-template #allSpecielty>
-		<div>
-			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-				<mat-label *ngIf="formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY'"></mat-label>
-				<mat-label	*ngIf="!formReference.value.consultation" [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
-
-				<mat-select id="specialty" name="clinicalSpecialtyId" formControlName="clinicalSpecialtyId">
-					<mat-option *ngFor="let specialty of allSpecialtiesSubject$ | async" [value]="specialty">
-						{{specialty.name | translate}}
-					</mat-option>
-				</mat-select>
-				<button id="clear_identification_type" type="button" mat-button
-					*ngIf="formReference?.value.clinicalSpecialtyId && !formReference?.value.consultation" matSuffix color="warn" mat-icon-button
-					(click)="clear(formReference.controls.clinicalSpecialtyId); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-				<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-			</mat-form-field>
-		</div>
-	</ng-template>
+	<div>
+		<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+			<mat-label [translate]="formReference.value.consultation ? 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY' : 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
+			<mat-select id="specialty" name="clinicalSpecialties" formControlName="clinicalSpecialties" multiple (selectionChange)="onSpecialtySelectionChange()">
+			  <mat-select-trigger>
+				{{formReference.controls.clinicalSpecialties.value?.[0]?.name || ''}}
+				<span *ngIf="(formReference.controls.clinicalSpecialties.value?.length || 0) > 1">
+					(+{{formReference.controls.clinicalSpecialties.value?.length - 1}} {{ 'más' }})
+				</span>
+			  </mat-select-trigger>
+			  <mat-option *ngFor="let specialty of (formReference.value.searchByCareLine ? specialtiesSubject$ : allSpecialtiesSubject$) | async" [value]="specialty">{{specialty.name | translate}}</mat-option>
+			</mat-select>
+			<button id="clear_identification_type" type="button" 
+				*ngIf="formReference?.value.clinicalSpecialties && !formReference?.value.consultation" matSuffix
+				color="warn" mat-icon-button
+				(click)="clear(formReference.controls.clinicalSpecialties); $event.stopPropagation()">
+				<mat-icon>close</mat-icon>
+			</button>
+			<mat-error *ngIf="formReference.get('clinicalSpecialties').hasError('required')"[translate]="'forms.REQUIRED'"></mat-error>
+		  </mat-form-field>
+	</div>
 	<ng-container *ngIf="!formReference.value.consultation">
-		<div  fxLayout="column">
+		<div fxLayout="column">
 			<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
-				<mat-label>{{'ambulatoria.paciente.nueva-consulta.reference-dialog.STUDY_CATEGORY' | translate}}</mat-label>
+				<mat-label>{{'ambulatoria.paciente.nueva-consulta.reference-dialog.STUDY_CATEGORY' |
+					translate}}</mat-label>
 				<mat-select id="study_category" name="studyCategory" formControlName="studyCategory">
 					<mat-option *ngFor="let study of studyCategories$ | async" [value]="study">
 						{{study.description | translate}}
@@ -93,8 +77,7 @@
 				<app-typeahead id="practice_or_procedure"
 					[disabled]="practiceOrProcedureDisabled"
 					[externalSetValue]="defaultPractice"
-
-					 [options]="practices"
+					[options]="practices"
 					[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRACTICE_PROCEDURE' | translate"
 					(selectionChange)="onPracticeSelectionChange($event)"
 					[required]=true
@@ -107,3 +90,4 @@
 	</ng-container>
 
 </form>
+

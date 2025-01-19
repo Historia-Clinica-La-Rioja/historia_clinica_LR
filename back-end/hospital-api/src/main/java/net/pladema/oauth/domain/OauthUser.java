@@ -57,7 +57,7 @@ public class OauthUser {
 			typeId = IdentificationType.CUIT;
 			break;
 		default:
-			typeId = IdentificationType.OTHER;
+			typeId = IdentificationType.NO_POSEE;
 			break;
 		}
 		return typeId;

@@ -32,7 +32,7 @@ public class ReferenceDto implements Serializable {
     private Integer careLineId;
 
 	@Nullable
-    private Integer clinicalSpecialtyId;
+    private List<Integer> clinicalSpecialtyIds;
 
     @Valid
     @NotNull(message = "{value.mandatory}")
@@ -41,7 +41,6 @@ public class ReferenceDto implements Serializable {
     private List<Integer> fileIds;
 
 	@Valid
-	@NotNull(message = "{value.mandatory}")
     private Integer destinationInstitutionId;
 
 	@Nullable

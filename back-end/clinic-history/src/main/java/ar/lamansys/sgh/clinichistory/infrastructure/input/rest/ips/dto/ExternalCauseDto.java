@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.EEventLocation;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EEventLocation;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EExternalCauseType;
 import lombok.Getter;
 import lombok.Setter;

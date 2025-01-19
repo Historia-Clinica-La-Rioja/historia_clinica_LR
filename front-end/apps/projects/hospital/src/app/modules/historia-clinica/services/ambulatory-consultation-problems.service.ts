@@ -2,8 +2,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { SnomedDto, SnomedECL, SnvsEventDto, SnvsEventManualClassificationsDto } from '@api-rest/api-model';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,13 +9,16 @@ import { SnvsMasterDataService } from "@api-rest/services/snvs-masterdata.servic
 import { EpidemiologicalManualClassificationResult, EpidemiologicalReport, EpidemiologicalReportComponent } from '@historia-clinica/modules/ambulatoria/dialogs/epidemiological-report/epidemiological-report.component';
 import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialogs/new-consultation-add-problem-form/new-consultation-add-problem-form.component';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
+import { forkJoin } from 'rxjs';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 
 export interface AmbulatoryConsultationProblem {
 	snomed: SnomedDto;
 	codigoSeveridad?: string;
 	cronico?: boolean;
-	fechaInicio?: Moment;
-	fechaFin?: Moment;
+	fechaInicio?: Date;
+	fechaFin?: Date;
 	isReportable?: boolean;
 	epidemiologicalManualClassifications?: string[];
 	snvsReports?: EpidemiologicalReport[];
@@ -56,7 +57,7 @@ export class AmbulatoryConsultationProblemsService {
 			snomed: [null, Validators.required],
 			severidad: [null],
 			cronico: [null],
-			fechaInicio: [newMoment()],
+			fechaInicio: [new Date()],
 			fechaFin: [null]
 		});
 
@@ -212,8 +213,8 @@ export class AmbulatoryConsultationProblemsService {
 		this.conclusions$.next(null)
 	}
 
-	getFechaInicioMax(): Moment {
-		return newMoment();
+	getFechaInicioMax(): Date {
+		return new Date();
 	}
 
 	getForm(): UntypedFormGroup {
@@ -228,29 +229,53 @@ export class AmbulatoryConsultationProblemsService {
 		return this.data;
 	}
 
+	getAllProblemas(patientId: number, hceGeneralStateService: HceGeneralStateService): SnomedDto[] {
+
+		let problemsList: SnomedDto[] = this.data.map(e => e.snomed);
+
+		const chronicProblems$ = hceGeneralStateService.getChronicConditions(patientId);
+
+		const activeProblems$ = hceGeneralStateService.getActiveProblems(patientId);
+
+
+		forkJoin([activeProblems$, chronicProblems$]).subscribe(([activeProblems, chronicProblems]) => {
+
+			const chronicProblemsHCEPersonalHistory = chronicProblems.map(chronicProblem => {
+				return {
+					HCEHealthConditionDto: chronicProblem,
+					chronic: true,
+				}
+			});
+
+			const activeProblemsHCEPersonalHistory = activeProblems.map(activeProblem => {
+				return {
+					HCEHealthConditionDto: activeProblem,
+					chronic: null,
+				}
+			});
+
+			const problems = [...activeProblemsHCEPersonalHistory, ...chronicProblemsHCEPersonalHistory];
+			problems.forEach((problem: HCEPersonalHistory) => {
+
+				const existProblem = problemsList.find(consultationProblem => consultationProblem.sctid === problem.HCEHealthConditionDto.snomed.sctid);
+				if (!existProblem) {
+					problemsList.push(problem.HCEHealthConditionDto.snomed);
+				}
+
+			});
+		});
+
+		return problemsList;
+	}
+
+
+	resetStartDate(){
+		this.form.controls.fechaInicio.setValue(new Date());
+	}
+
 	remove(index: number): void {
 		this.data = removeFrom<AmbulatoryConsultationProblem>(this.data, index);
 		this.problems.next(this.data);
-	}
-
-	// custom validation was required because the [max] input of MatDatepicker
-	// adds the old error when the value is changed dynamically
-	checkValidFechaFin(): void {
-		this.form.controls.fechaFin.setErrors(null);
-		if (this.form.value.fechaFin) {
-			if (this.form.value.fechaInicio) {
-				const today = newMoment();
-				const newFechaFin: Moment = this.form.value.fechaFin;
-				if (newFechaFin.isBefore(this.form.value.fechaInicio, 'day')) {
-					this.form.controls.fechaFin.setErrors({ min: true });
-				}
-				if (newFechaFin.isAfter(today)) {
-					this.form.controls.fechaFin.setErrors({ max: true });
-				}
-			} else {
-				this.form.controls.fechaFin.setErrors({ required_init_date: true });
-			}
-		}
 	}
 
 	hasError(type: string, controlName: string): boolean {

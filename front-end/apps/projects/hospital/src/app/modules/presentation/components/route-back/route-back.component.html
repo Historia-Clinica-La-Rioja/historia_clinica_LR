@@ -1,0 +1,15 @@
+<div>
+	<button mat-button color="primary" [routerLink]="['..']"  *ngIf="parentData?.label">
+		<mat-icon class="material-icons-outlined">arrow_back</mat-icon>
+		<span>Volver a </span>
+		<app-label [label]="parentData.label"></app-label>
+	</button>
+	<div class="section" *ngIf="currentData?.label">
+		<h2 class="page-title" >
+			<app-label [label]="currentData.label"></app-label>
+			<div>
+				<ng-content></ng-content>
+			</div>
+		</h2>
+	</div>
+</div>

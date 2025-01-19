@@ -2,7 +2,9 @@ export enum EstadosEpisodio {
 	EN_ATENCION = 1,
 	EN_ESPERA = 2,
 	CON_ALTA_ADMINISTRATIVA = 3,
-	CON_ALTA_MEDICA = 4
+	CON_ALTA_MEDICA = 4,
+	AUSENTE = 5,
+	LLAMADO = 6
 }
 
 export enum Triages {
@@ -11,9 +13,11 @@ export enum Triages {
 	AMARILLO_NIVEL_3 = 3,
 	VERDE_NIVEL_4 = 4,
 	AZUL_NIVEL_5 = 5,
+	GRIS_SIN_TRIAGE = 6
 }
 
 export enum EmergencyCareTypes {
+	NOT_DEFINED = -1,
 	ADULTO = 1,
 	PEDIATRIA = 2,
 	GINECOLOGIA = 3

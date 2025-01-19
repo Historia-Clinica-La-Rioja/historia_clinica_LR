@@ -1,0 +1,11 @@
+mat-toolbar {
+	height: 32px;
+	min-height: 32px;
+}
+mat-toolbar-row {
+	height: 32px;
+	max-height: 32px;
+}
+.spacer {
+	flex: 1 1 auto;
+}

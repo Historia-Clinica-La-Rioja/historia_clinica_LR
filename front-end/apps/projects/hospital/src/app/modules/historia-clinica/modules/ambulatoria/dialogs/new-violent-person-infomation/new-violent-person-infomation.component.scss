@@ -1,0 +1,7 @@
+@import '../../ambulatoria-mixins.scss';
+@include violence-mixins();
+
+.inputLabel {
+    display: flex;
+    flex-direction: column;
+}

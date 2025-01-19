@@ -17,4 +17,6 @@ public class CompleteReferenceBo extends ReferenceBo {
 
 	private Integer doctorId;
 
+	private Integer oldReferenceId;
+
 }

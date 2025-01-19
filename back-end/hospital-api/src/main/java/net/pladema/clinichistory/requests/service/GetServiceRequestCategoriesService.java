@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface GetServiceRequestCategoriesService {
 
-	List<ServiceRequestCategoryBo> run();
+	List<ServiceRequestCategoryBo> run(Boolean excludeDiagnosticImaging);
 
 }

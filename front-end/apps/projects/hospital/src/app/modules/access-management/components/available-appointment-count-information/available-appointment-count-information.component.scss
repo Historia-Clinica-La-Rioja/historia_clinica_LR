@@ -1,0 +1,18 @@
+
+.message {
+	width: 500px;
+	min-width: fit-content;
+    max-width: min-content;
+}
+
+.available-appointments {
+	color: #27ae60;
+}
+
+.available-protected-appointments {
+	color: #7A3FB5;
+}
+
+.no-available-appointments {
+    color: #f44336
+}

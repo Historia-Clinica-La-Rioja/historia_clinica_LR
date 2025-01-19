@@ -13,42 +13,42 @@ public class ComplementaryStudiesConsultationDetail {
 
 	private String institution;
 
-	private String date;
+	private String serviceRequestDate;
 
-	private String category;
+	private String serviceRequestCategory;
 
-	private String order;
+	private String orderStatus;
 
-	private String typeOfRequest;
+	private String requestType;
 
-	private String origin;
+	private String requestOrigin;
 
-	private String patientName;
+	private String patientFullName;
 
-	private String documentTypePatient;
+	private String patientDocumentType;
 
-	private String documentNumberPatient;
+	private String patientDocumentNumber;
 
-	private String socialWork;
+	private String medicalCoverage;
 
 	private String affiliateNumber;
 
-	private String professionalName;
+	private String professionalFullName;
 
-	private String documentTypeProfessional;
+	private String professionalDocumentType;
 
-	private String documentNumberProfessional;
+	private String professionalDocumentNumber;
 
 	private String license;
 
 	private String note;
 
-	private String dateOfIssue;
+	private String issueDate;
 
 	private String studyName;
 
 	private String additionalNotes;
 
-	private String associatedProblems;
+	private String associatedProblem;
 
 }

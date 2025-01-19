@@ -1,24 +1,20 @@
-import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 
-import { SnomedECL, TerminologyCSVDto, TerminologyQueueItemDto } from '@api-rest/api-model';
+import { ETerminologyKind, SnomedECL, TerminologyQueueItemDto } from '@api-rest/api-model';
 import { TerminologyCacheService } from '@api-rest/services/terminology-cache.service';
 
-@Injectable({
-	providedIn: 'root'
-})
 export class SnomedCacheService {
 	status$ = new BehaviorSubject<TerminologyECLStatus[]>(undefined);
 
 	constructor(
 		private terminologyCacheService: TerminologyCacheService,
+		private kind: ETerminologyKind,
 	) { }
 
 	fetch() {
-
 		combineLatest([
-			this.terminologyCacheService.getStatus(),
-			this.terminologyCacheService.getQueue(),
+			this.terminologyCacheService.getStatus(this.kind),
+			this.terminologyCacheService.getQueue(this.kind),
 		]).subscribe(([
 			statusList,
 			queueList,
@@ -31,8 +27,12 @@ export class SnomedCacheService {
 
 	}
 
-	add(newCsv: TerminologyCSVDto) {
-		this.terminologyCacheService.addCsv(newCsv).subscribe(
+	add(ecl: SnomedECL, url: string) {
+		this.terminologyCacheService.addCsv({
+			ecl,
+			url,
+			kind: this.kind,
+		}).subscribe(
 			_ => this.fetch()
 		);;
 	}

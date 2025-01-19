@@ -32,6 +32,7 @@ public class InternmentSummaryVo {
 	private LocalDateTime probableDischargeDate;
 	private LocalDateTime physicalDischargeDate;
 	private LocalDateTime medicalDischargeDate;
+	private String roomDescription;
 
 	public InternmentSummaryVo(Integer id, LocalDateTime entryDate, Long anamnesisDocId, String anamnesisStatusId,
 							   Long epicrisisDocId, String epicrisisStatusId,
@@ -40,7 +41,8 @@ public class InternmentSummaryVo {
 							   ResponsibleDoctorVo responsibleDoctorVo,
 							   ResponsibleContact responsibleContact, Short internmentStatusId,
 							   LocalDateTime probableDischargeDate, LocalDateTime administrativeDischargeDate,
-							   LocalDateTime physicalDischargeDate,  LocalDateTime medicalDischargeDate) {
+							   LocalDateTime physicalDischargeDate,  LocalDateTime medicalDischargeDate,
+							   String roomDescription) {
 		this.id = id;
 		this.documents = new DocumentsSummaryVo();
 		this.documents.setAnamnesis(new AnamnesisSummaryVo(anamnesisDocId, anamnesisStatusId));
@@ -61,6 +63,7 @@ public class InternmentSummaryVo {
 		this.administrativeDischargeDate = administrativeDischargeDate;
 		this.medicalDischargeDate = medicalDischargeDate;
 		this.physicalDischargeDate = physicalDischargeDate;
+		this.roomDescription = roomDescription;
 	}
 
 	public Boolean isActive(Short internmentStatusId) {

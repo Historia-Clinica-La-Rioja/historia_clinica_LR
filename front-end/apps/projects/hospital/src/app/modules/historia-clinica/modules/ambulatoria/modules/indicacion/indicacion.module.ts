@@ -1,9 +1,13 @@
+//imports
 import { NursingRecordFacadeService } from './services/nursing-record-facade.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
-
+//standalone componentes
+import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { PharmacoDetailComponent } from '@hsi-components/pharmaco-detail/pharmaco-detail.component';
+//components
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
 import { CardPharmacoComponent } from './components/card-pharmaco/card-pharmaco.component';
 import { DayDisplayComponent } from './components/day-display/day-display.component';
@@ -33,12 +37,21 @@ import { WarningMessageComponent } from './components/warning-message/warning-me
 import { ShowViaPipe } from './pipes/show-via.pipe';
 import { EmergencyCareIndicationsCardComponent } from './components/emergency-care-indications-card/emergency-care-indications-card.component';
 import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
+import { PatientInformationComponent } from './components/patient-information/patient-information.component';
+import { PrescriptionInformationComponent } from './components/prescription-information/prescription-information.component';
+import { MedicationInformationComponent } from './components/medication-information/medication-information.component';
+import { CommercialPharmacoTypeaheadComponent } from './components/commercial-pharmaco-typeahead/commercial-pharmaco-typeahead.component';
+import { DispenseButtonComponent } from './components/dispense-button/dispense-button.component';
+import { MedicationDispensePopupComponent } from './dialogs/medication-dispense-popup/medication-dispense-popup.component';
+import { PharmacosToDispenseComponent } from './components/pharmacos-to-dispense/pharmacos-to-dispense.component';
 
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
 		CardPharmacoComponent,
+		CommercialPharmacoTypeaheadComponent,
 		DayDisplayComponent,
+		DispenseButtonComponent,
 		GeneralNursingRecordComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
@@ -64,6 +77,11 @@ import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmac
 		PrescripcionValidatorPopupComponent,
 		WarningMessageComponent,
 		EmergencyCareIndicationsCardComponent,
+		PatientInformationComponent,
+		PrescriptionInformationComponent,
+		MedicationInformationComponent,
+  		MedicationDispensePopupComponent,
+    	PharmacosToDispenseComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
@@ -71,12 +89,16 @@ import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmac
 		InternmentIndicationsCardComponent,
 		EmergencyCareIndicationsCardComponent,
 		NursingCareComponent,
+		CommercialPharmacoTypeaheadComponent
 	],
 	imports: [
 		CommonModule,
 		FormsModule,
 		PresentationModule,
-		HistoriaClinicaModule
+		HistoriaClinicaModule,
+		//Standalone Component
+		PatientSummaryComponent,
+		PharmacoDetailComponent,
 	],
 	providers: [
 		NursingRecordFacadeService

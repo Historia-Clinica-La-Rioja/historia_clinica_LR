@@ -1,0 +1,31 @@
+.anesthesic-report-content {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 95%;
+	font-size: 16px;
+}
+
+.summary-content {
+    margin: 0 24px;
+}
+
+.draft-button {
+	width: fit-content;
+	padding: 0 16px;
+}
+
+.section-description {
+	margin-left: 40px;
+}
+
+.description-container {
+    word-wrap: break-word
+}
+
+.date-text {
+	font-size: 14px;
+}
+
+.loader {
+    margin: auto;
+}

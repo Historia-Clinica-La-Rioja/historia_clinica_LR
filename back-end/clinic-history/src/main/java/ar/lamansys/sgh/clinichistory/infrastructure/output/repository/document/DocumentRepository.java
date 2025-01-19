@@ -5,19 +5,16 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentRepositoryCustom;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
-
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DocumentRepository extends SGXAuditableEntityJPARepository<Document, Long>, DocumentRepositoryCustom {
-
-	public static final short MEDICAL_IMAGE_REPORT = (short) 17;
 
     @Query(value = "SELECT d.updateable " +
             "FROM Document d " +
@@ -25,19 +22,18 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
             "and d.sourceTypeId = " + SourceType.HOSPITALIZATION)
     List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
-    @Query(value = "SELECT DISTINCT new  ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced(snomedPr.pt, pr.performedDate) " +
-            "FROM DocumentProcedure AS dp " +
-            "JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
-            "JOIN Snomed AS snomedPr ON (pr.snomedId = snomedPr.id) " +
-            "WHERE dp.pk.documentId = :documentId " +
-			"AND pr.statusId != :errorStatus")
-    List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId, @Param("errorStatus") String errorStatus);
-
     @Transactional(readOnly = true)
     @Query(value = "SELECT d.id " +
             "FROM Document d " +
-            "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId")
+            "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId "+
+			"ORDER BY d.id DESC ")
     List<Long> findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT d.id " +
+			"FROM Document d " +
+			"WHERE d.sourceId = :sourceId AND d.typeId = :typeId")
+	List<Long> findBySourceIdAndTypeId(@Param("sourceId") Integer sourceId, @Param("typeId") Short typeId);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT d.sourceTypeId " +
@@ -74,11 +70,17 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 	DocumentDownloadDataVo getDocumentIdByTriageId(@Param("triageId") Integer triageId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo(d.id, df.filename) " +
+	@Query(value = "SELECT NEW ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo(df.id, df.filename) " +
+			"FROM AppointmentOrderImage aoi " +
+			"JOIN DocumentFile df ON (aoi.documentId = df.id) " +
+			"WHERE aoi.pk.appointmentId = :appointmentId ")
+	DocumentDownloadDataVo getImageReportByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT d " +
 			"FROM Document d " +
-			"JOIN DocumentFile df ON (df.id = d.id) " +
-			"WHERE df.sourceId = :appointmentId " +
-			"AND df.typeId = "+MEDICAL_IMAGE_REPORT+"")
-	DocumentDownloadDataVo getDocumentIdByAppointmentId(@Param("appointmentId") Integer appointmentId);
+			"WHERE d.id = :documentId " +
+			"AND d.typeId = :typeId")
+	Optional<Document> getDocumentByIdAndTypeId(@Param("documentId") Long documentId, @Param("typeId") Short typeId);
 
 }

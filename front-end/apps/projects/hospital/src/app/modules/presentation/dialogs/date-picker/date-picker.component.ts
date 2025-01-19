@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { fixDate } from '@core/utils/date/format';
 
 @Component({
 	selector: 'app-date-picker',
@@ -32,7 +33,8 @@ export class DatePickerComponent implements OnInit {
 
 	confirm(): void {
 		if (this.form.valid) {
-			this.dialogRef.close(this.form.controls.date.value);
+			const fixSelectedDate = fixDate(this.form.controls.date.value);
+			this.dialogRef.close(fixSelectedDate);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.service.domain;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,5 +27,7 @@ public class EmergencyCareEvolutionNoteBo {
 	private Boolean billable;
 
 	private Integer patientMedicalCoverageId;
+
+	private EDocumentType documentType;
 
 }

@@ -1,0 +1,7 @@
+<div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="start">
+    <div class="margin" *ngFor="let filter of filters">
+        <app-typeahead-filter-options [titleInput]="filter.name | translate" [filterOptions]="filter.typeaheadOption"
+            (selectedOption)="setSearchCriteria($event)">
+        </app-typeahead-filter-options>
+    </div>
+</div>

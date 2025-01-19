@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.application.odontogram;
 
-import ar.lamansys.odontology.domain.consultation.OdontogramDrawingStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontogramDrawingStorage;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.DrawingBo;
 import ar.lamansys.odontology.domain.consultation.odontogramDrawings.ToothDrawingsBo;
 import org.junit.jupiter.api.Assertions;

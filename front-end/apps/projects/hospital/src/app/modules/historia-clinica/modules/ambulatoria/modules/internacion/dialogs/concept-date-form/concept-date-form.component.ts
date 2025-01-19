@@ -2,9 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnomedDto } from '@api-rest/api-model';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { MIN_DATE } from '@core/utils/date.utils';
-import { DateFormat, newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-concept-date-form',
@@ -14,7 +13,7 @@ import { Moment } from 'moment';
 export class ConceptDateFormComponent implements OnInit {
 
 	form: UntypedFormGroup;
-	today: Moment = newMoment();
+	today: Date = new Date();
 	minDate = MIN_DATE;
 	snomedConcept: SnomedDto;
 	constructor(
@@ -31,31 +30,15 @@ export class ConceptDateFormComponent implements OnInit {
 		});
 	}
 
-	chosenMonthHandler(newDate: Moment) {
-		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Moment = this.form.controls.date.value;
-			ctrlDate.month(newDate.month());
-			this.form.controls.date.setValue(ctrlDate);
-		} else {
-			this.form.controls.date.setValue(newDate);
-		}
-	}
-
-	chosenYearHandler(newDate: Moment) {
-		if (this.form.controls.date.value !== null) {
-			const ctrlDate: Moment = this.form.controls.date.value;
-			ctrlDate.year(newDate.year());
-			this.form.controls.date.setValue(ctrlDate);
-		} else {
-			this.form.controls.date.setValue(newDate);
-		}
+	selectedDate(date: Date) {
+		this.form.controls.date.setValue(date)
 	}
 
 	addToList() {
 		if (this.form.valid) {
 			const concept: Concept = {
 				snomedConcept: this.data.snomedConcept,
-				data: this.form.value.date ? this.form.value.date.format(DateFormat.API_DATE) : null,
+				data: this.form.value.date ?toApiFormat(this.form.value.date) : null,
 			};
 			this.dialogRef.close(concept);
 		}

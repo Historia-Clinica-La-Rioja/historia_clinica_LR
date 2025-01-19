@@ -1,24 +1,35 @@
 <section>
 	<h3 class="page-title">{{'telemedicina.requests.SUBTITLE' | translate}}</h3>
 	<div fxLayout="row" fxLayoutAlign="space-between start" >
-		<div id="content-filters">
-			<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)"></app-filters-select>
+		<div fxLayout="column">
+			<div class="content-patient-filter">
+				<mat-form-field id="search-patient" appearance="outline">
+					<mat-label>{{'telemedicina.requests.form.PATIENT_SEARCH' |
+						translate}}</mat-label>
+					<input matInput id="patient-filter" [(ngModel)]="patientFilter" (keyup)="applyFilter($event)">
+					<mat-icon matSuffix>search</mat-icon>
+				</mat-form-field>
+			</div>
+			<div>
+				<app-filters-select [setFilters]="filters" (searchCriteria)="prepareDtoFilter($event)" 	filtersSelectStyle="filters-telemedicina"></app-filters-select>
+			</div>
 		</div>
+
 		<div fxLayout="column" fxLayoutAlign="end end" fxLayoutGap="1em">
-			<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)" label="Disponible para llamadas"
-				[initialValue]="initialResponsableStatus"></app-toggle-avaiability>
+			<app-toggle-availability (availabilityChanged)="availabilityChanged($event)" label="Disponible para llamadas"
+				[initialValue]="initialResponsableStatus"></app-toggle-availability>
 			<button mat-raised-button color="primary" (click)="openAddRequest()">{{'telemedicina.requests.BUTTON_ADD' |
 				translate}}</button>
 		</div>
 	</div>
 </section>
 <section>
-	<div *ngFor="let virtualConsultation of virtualConsultations$ | async">
+	<div *ngFor="let virtualConsultation of virtualConsultationsFiltered$ | async">
 		<app-request-info-card [setVirtualConsultation]="virtualConsultation">
 			<div professionals-attending class="professionals-attending"><span class="grey">{{virtualConsultation.availableProfessionalsAmount}}
 					{{'telemedicina.requests.PROFESSIONAL_ATTENDING' | translate}}</span></div>
 			<div  actions>
-				<button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="virtualConsultation.status === statusFinished || virtualConsultation.status === statusCanceled">
+				<button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="virtualConsultation.status === statusFinished || virtualConsultation.status === statusCanceled || isVirtualConsultatitioProfessional">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">
@@ -30,6 +41,10 @@
 						*ngIf="virtualConsultation.status === virtualConsultatiosStatus.IN_PROGRESS || virtualConsultation.status === virtualConsultatiosStatus.PENDING"
 						(click)="cancel(virtualConsultation.id)">
 						<span>Cancelar</span>
+					</button>
+					<button mat-menu-item *ngIf="virtualConsultation.status === virtualConsultatiosStatus.PENDING"
+					(click)="transfer(virtualConsultation)">
+					<span>Transferir solicitud</span>
 					</button>
 				</mat-menu>
 			</div>

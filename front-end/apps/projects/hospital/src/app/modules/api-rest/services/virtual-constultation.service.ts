@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto, VirtualConsultationStatusDto } from '@api-rest/api-model';
+import { VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationNotificationDataDto, VirtualConsultationRequestDto, VirtualConsultationResponsibleDataDto, VirtualConsultationStatusDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 
@@ -94,5 +94,14 @@ export class VirtualConstultationService {
 		return this.http.post(url, {})
 	}
 
+	transferResponsibleProfessionaltOfVirtualConsultation(virtualConsultationId : number,responsibleHealthcareProfessionalId:number){
+		const url = `${this.BASE_URL}/${virtualConsultationId}/transfer`;
+		return this.http.put(url,responsibleHealthcareProfessionalId);
+	}
+
+	getResponsibleProfessional(responsibleHealthcareProfessionalId:number, institutionId:number):Observable<VirtualConsultationResponsibleDataDto>{
+		const url = `${this.BASE_URL}/institution/${institutionId}/get-responsible-healthcare-professional/${responsibleHealthcareProfessionalId}`;
+		return this.http.get<VirtualConsultationResponsibleDataDto>(url);
+	}
 }
 

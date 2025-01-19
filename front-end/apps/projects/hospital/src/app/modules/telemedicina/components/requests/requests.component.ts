@@ -3,17 +3,23 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewTelemedicineRequestComponent } from '../../dialogs/new-telemedicine-request/new-telemedicine-request.component';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { ContextService } from '@core/services/context.service';
-import { CareLineDto, ClinicalSpecialtyDto, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationFilterDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, ERole, EVirtualConsultationStatus, VirtualConsultationDto, VirtualConsultationFilterDto } from '@api-rest/api-model';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { timeDifference } from '@core/utils/date.utils';
 import { statusLabel, mapPriority, status } from '../../virtualConsultations.utils';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { VirtualConsultationsFacadeService } from '../../virtual-consultations-facade.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { Option, filter } from '@presentation/components/filters-select/filters-select.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
+import { PermissionsService } from '@core/services/permissions.service';
+import { anyMatch } from '@core/utils/array.utils';
+import { capitalize } from '@core/utils/core.utils';
+import { TransferRequestComponent } from '../../dialogs/transfer-request/transfer-request.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { VirtualConsultationCustom } from '../request-info-card/request-info-card.component';
 
 @Component({
 	selector: 'app-requests',
@@ -24,7 +30,8 @@ export class RequestsComponent implements OnInit {
 	@Input() priorityOptions: Option[];
 	@Input() availitibyOptions: Option[];
 	@Input() virtualConsultationsFacadeService: VirtualConsultationsFacadeService;
-	virtualConsultations$: Observable<VirtualConsultationDto[]>;
+	virtualConsultationsFiltered$: Observable<VirtualConsultationCustom[]>;
+	virtualConsultationsBackUp$: Observable<VirtualConsultationCustom[]>;
 	virtualConsultatiosStatus = status;
 	initialResponsableStatus = false;
 	careLinesOptions: CareLineDto[];
@@ -32,14 +39,20 @@ export class RequestsComponent implements OnInit {
 	professionalsOptions: Option[] = [];
 	stateOptions: Option[] = [];
 	filters: filter[] = [];
-	statusFinished= EVirtualConsultationStatus.FINISHED;
-	statusCanceled= EVirtualConsultationStatus.CANCELED;
+	statusFinished = EVirtualConsultationStatus.FINISHED;
+	statusCanceled = EVirtualConsultationStatus.CANCELED;
+	isVirtualConsultatitioProfessional: boolean;
+	patientFilter: string;
+	applySearchFilter = '';
+
 	constructor(
 		private dialog: MatDialog,
 		private virtualConsultationService: VirtualConstultationService,
 		private contextService: ContextService,
 		private careLineService: CareLineService, private clinicalSpecialtyService: ClinicalSpecialtyService,
 		private healthcareProfessionalByInstitucion: HealthcareProfessionalByInstitutionService,
+		private readonly permissionsService: PermissionsService,
+		private readonly snackBarService: SnackBarService,
 	) {
 	}
 
@@ -49,10 +62,19 @@ export class RequestsComponent implements OnInit {
 		this.virtualConsultationService.getResponsibleStatus(this.contextService.institutionId).subscribe(
 			status => this.initialResponsableStatus = status
 		)
-		this.virtualConsultations$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
-			 requests.map(request =>   this.toVCToBeShown(request)
+
+		this.virtualConsultationsFiltered$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
+			requests.map(request => this.toVCToBeShown(request)
 			)
 		))
+		this.virtualConsultationsBackUp$ = this.virtualConsultationsFacadeService.virtualConsultationsRequest$.pipe(map(requests =>
+			requests.map(request => this.toVCToBeShown(request)
+			)
+		))
+
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.isVirtualConsultatitioProfessional = anyMatch<ERole>(userRoles, [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL]);
+		});
 	}
 
 	getOptionsFilters() {
@@ -98,12 +120,13 @@ export class RequestsComponent implements OnInit {
 		this.stateOptions.push(state);
 	}
 
-	private toVCToBeShown(vc: VirtualConsultationDto) {
+	private toVCToBeShown(vc: VirtualConsultationDto): VirtualConsultationCustom {
 		return {
 			...vc,
+			institutionData: {name:null,id:vc.institutionData.id},
 			statusLabel: statusLabel[vc.status],
 			priorityLabel: mapPriority[vc.priority],
-			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime))
+			waitingTime: timeDifference(dateTimeDtotoLocalDate(vc.creationDateTime)),
 		}
 	}
 
@@ -177,6 +200,27 @@ export class RequestsComponent implements OnInit {
 		)
 	}
 
+	transfer(virtualConsultation: VirtualConsultationDto) {
+		const ref = this.dialog.open(TransferRequestComponent, {
+			data: {
+				virtualConsultation: virtualConsultation
+			},
+			width: '33%'
+		});
+		ref.afterClosed().subscribe(
+			responsibleId => {
+				if (responsibleId) {
+					this.virtualConsultationService.transferResponsibleProfessionaltOfVirtualConsultation(virtualConsultation.id, responsibleId).subscribe(res => {
+						if (res) {
+							this.snackBarService.showSuccess('¡Solicitud transferida!');
+						}
+					})
+				}
+			}
+		)
+	}
+
+
 	prepareFilters() {
 		let filters = [];
 		let filterCareLines: filter = {
@@ -223,5 +267,37 @@ export class RequestsComponent implements OnInit {
 
 		this.filters = filters;
 	}
+
+	applyFilter($event: any): void {
+		this.applySearchFilter = ($event.target as HTMLInputElement).value;
+		this.applyFiltes();
+	}
+
+	private applyFiltes(): void {
+		if (this.applySearchFilter.length) {
+			this.virtualConsultationsFiltered$ = of(this.filter());
+		} else {
+			this.virtualConsultationsFiltered$ = this.virtualConsultationsBackUp$;
+		}
+	}
+
+	private filter(): VirtualConsultationCustom[] {
+		let listFilter =[];
+		 this.virtualConsultationsBackUp$.subscribe(data=>{
+			listFilter = data;
+		});
+		return listFilter.filter((e: VirtualConsultationDto) => this.getFullName(e).toLowerCase().includes(this.applySearchFilter.toLowerCase()))
+	}
+
+	getFullName(patient: VirtualConsultationDto): string {
+		const names = [
+			patient?.patientData.name,
+			patient?.patientData.lastName,
+		].filter(name => name !== undefined && name.trim() !== '');
+
+		const capitalizedNames = names.map(name => capitalize(name));
+		return capitalizedNames.join(' ');
+	}
+
 }
 

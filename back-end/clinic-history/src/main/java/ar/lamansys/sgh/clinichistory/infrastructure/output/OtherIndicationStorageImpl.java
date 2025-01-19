@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
 import ar.lamansys.sgh.clinichistory.application.ports.OtherIndicationStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;

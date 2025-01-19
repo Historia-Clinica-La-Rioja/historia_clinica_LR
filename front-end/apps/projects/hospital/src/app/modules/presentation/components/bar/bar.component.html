@@ -5,5 +5,8 @@
 			<app-logo></app-logo>
 			<app-logo [isSecondaryLogo]="true"></app-logo>
 		</div>
+		<div *ngIf="isExchangeableTheme$ | async" fxLayout="row" fxLayoutAlign="end">
+			<app-exchangeable-theme></app-exchangeable-theme>
+		</div>
 	</mat-toolbar-row>
 </mat-toolbar>

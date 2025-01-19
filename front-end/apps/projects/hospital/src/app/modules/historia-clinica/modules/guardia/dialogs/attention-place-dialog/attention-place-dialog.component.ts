@@ -10,9 +10,11 @@ import { map } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AttendPlace } from '../../routes/home/home.component';
+import { AttendPlace } from '../../components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { EstadosEpisodio, SECTOR_GUARDIA } from '../../constants/masterdata';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
+import { AttentionPlaceData } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
+import { objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 
 const CONFIRM: ButtonData = {
 	text: 'guardia.dialog.attention_place.CONFIRM',
@@ -30,6 +32,7 @@ const BED_ASSIGN = {
 })
 export class AttentionPlaceDialogComponent implements OnInit {
 
+	dialogTitle: string;
 	places$: Observable<MasterDataInterface<number>[]>;
 	offices$: Observable<DoctorsOfficeDto[]>;
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
@@ -39,20 +42,34 @@ export class AttentionPlaceDialogComponent implements OnInit {
 	form: FormGroup;
 	hasError = hasError;
 
+	preselectedOffice: TypeaheadOption<DoctorsOfficeDto>;
+	preselectedShockroom: TypeaheadOption<ShockroomDto>;
+
 	constructor(
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly doctorsOfficeService: DoctorsOfficeService,
 		private readonly shockroomService: ShockroomService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: { quantity: AttentionPlacesQuantityDto },
+		@Inject(MAT_DIALOG_DATA) public data: {
+			quantity: AttentionPlacesQuantityDto,
+			isCall: boolean,
+			lastAttentionPlace: AttentionPlaceData },
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService
 	) { }
 
 	ngOnInit(): void {
+		this.setDialogTittle();
 		this.places$ = this.emergencyCareMasterDataService.getEmergencyEpisodeSectorType();
 		this.filterPlaces();
 		this.setForm();
+		this.verifyPlaceType();
+	}
+
+	private setDialogTittle(){
+		this.dialogTitle = this.data.isCall
+            ? 'guardia.dialog.attention_place.TITLE_CALL'
+            : 'guardia.dialog.attention_place.TITLE_ATTEND';
 	}
 
 	verifyPlaceType() {
@@ -64,6 +81,13 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			this.officesTypeaheadOptions$ = this.getTypeaheadOptions$(this.offices$);
 			office.addValidators(Validators.required);
 			office.updateValueAndValidity();
+			this.offices$.subscribe(offices => {
+				if (this.data.lastAttentionPlace?.doctorsOfficeId) {
+					const selectedOffice = offices.find(office => office.id === this.data.lastAttentionPlace.doctorsOfficeId);
+					this.form.get('office').setValue(selectedOffice);
+					this.preselectedOffice = objectToTypeaheadOption(selectedOffice, 'description');
+				}
+			});
 		}
 
 		if (id === AttentionPlace.SHOCKROOM) {
@@ -72,6 +96,13 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			this.shockroomsTypeaheadOptions$ = this.getTypeaheadOptions$(this.shockrooms$);
 			shockroom.addValidators(Validators.required);
 			shockroom.updateValueAndValidity();
+			this.shockrooms$.subscribe(shockrooms => {
+				if (this.data.lastAttentionPlace?.shockroomId) {
+					const selectedShockroom = shockrooms.find(shockroom => shockroom.id === this.data.lastAttentionPlace.shockroomId);
+					this.form.get('shockroom').setValue(selectedShockroom);
+					this.preselectedShockroom = objectToTypeaheadOption(selectedShockroom, 'description');
+				}
+			});
 		}
 
 		if (id === AttentionPlace.HABITACION)
@@ -86,7 +117,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		this.form.get('shockroom').setValue(value);
 	}
 
-	attend() {
+	confirm() {
 		if (this.form.invalid) return;
 
 		const id: number = Number(this.form.get('place').value);
@@ -110,7 +141,10 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			}
 		}
 		this.dialogRef.close(attendPlace);
-		this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
+
+		this.data.isCall
+		? this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.LLAMADO)
+		: this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION)
 	}
 
 	private filterPlaces() {
@@ -164,9 +198,9 @@ export class AttentionPlaceDialogComponent implements OnInit {
 
 	private setForm() {
 		this.form = this.formBuilder.group({
-			place: [null, Validators.required],
-			office: [null],
-			shockroom: [null]
+			place: [this.data.lastAttentionPlace?.place || null, Validators.required],
+			office: [this.data.lastAttentionPlace?.doctorsOfficeId || null],
+			shockroom: [this.data.lastAttentionPlace?.shockroomId || null]
 		});
 	}
 }

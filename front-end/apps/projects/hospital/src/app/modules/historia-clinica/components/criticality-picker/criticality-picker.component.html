@@ -1,0 +1,12 @@
+<form [formGroup]="form" class="display-column">
+	<span class="font-bold">{{'historia-clinica.general.CRITICALITY' | translate}}</span>
+	<mat-form-field appearance="outline">
+		<mat-select id="criticality-select" formControlName="criticality"
+			[placeholder]="'historia-clinica.general.SELECT' | translate">
+			<mat-option *ngFor="let criticality of criticalities" [value]="criticality">
+				<span>{{ criticality.description }}</span>
+			</mat-option>
+		</mat-select>
+		<mat-error translate="forms.REQUIRED"></mat-error>
+	</mat-form-field>
+</form>

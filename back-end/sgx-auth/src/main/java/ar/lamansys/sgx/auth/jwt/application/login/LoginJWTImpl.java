@@ -37,12 +37,10 @@ public class LoginJWTImpl implements Login {
 	@Override
 	public JWTokenBo execute(LoginBo login) throws BadLoginException {
 		UserInfoBo user = userInfoStorage.getUser(login.username);
-		if (user == null)
-			throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario inválido");
+		if (user == null || !passwordEncryptor.matches(login.password, user.getPassword()))
+			throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario/contraseña inválida");
 		if (!user.isEnable())
 			throw new BadLoginException(BadLoginEnumException.DISABLED_USER, "Usuario inválido");
-		if (!passwordEncryptor.matches(login.password, user.getPassword()))
-			throw new BadLoginException(BadLoginEnumException.BAD_CREDENTIALS, "Usuario/contraseña inválida");
 		log.debug("User {} authenticated", login.username);
 		JWTokenBo result;
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_2FA) && fetchUserHasTwoFactorAuthenticationEnabled.run(user.getId())) {

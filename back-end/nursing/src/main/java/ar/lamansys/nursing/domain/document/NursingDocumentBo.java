@@ -40,6 +40,8 @@ public class NursingDocumentBo {
 
     private final LocalDate performedDate;
 
+	private Integer medicalCoverageId;
+
     public NursingDocumentBo(Long id,
                              NursingConsultationBo nursingConsultationBo,
                              Integer encounterId,
@@ -62,6 +64,7 @@ public class NursingDocumentBo {
         this.evolutionNote = nursingConsultationBo.getEvolutionNote();
         this.patientMedicalCoverage = nursingConsultationBo.getPatientMedicalCoverageId();
         this.performedDate = performedDate;
+		this.medicalCoverageId = nursingConsultationBo.getPatientMedicalCoverageId();
     }
 
 }

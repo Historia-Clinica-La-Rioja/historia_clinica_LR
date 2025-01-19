@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentLabRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentMedicamentionStatementRepository;
@@ -13,6 +14,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProsthesisRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
@@ -21,6 +23,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -81,12 +84,17 @@ class DocumentServiceImplTest {
 	@MockBean
 	private SnomedService snomedService;
 
+	@MockBean
+	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
+
+	@MockBean
+	private DocumentProsthesisRepository documentProsthesisRepository;
+
+	@InjectMocks
+	private DocumentServiceImpl documentService;
+
 	@BeforeEach
 	void setUp() {
-		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
-                documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
-				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
-				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository, documentObstetricEventRepository, documentTriageRepository, documentReportSnomedConceptRepository, snomedService);
 	}
 
 	@Test

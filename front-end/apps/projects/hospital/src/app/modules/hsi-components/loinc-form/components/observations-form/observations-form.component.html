@@ -1,0 +1,13 @@
+<div class="columns-3">
+	<div *ngIf="loincFormControl?.form">
+		<form [formGroup]="loincFormControl.form">
+			<div *ngFor="let loincInput of loincFormControl.loincInputs" class="form-row">
+				<app-observation-input
+					[loincInput]="loincInput"
+					[form]="loincFormControl.form"
+					(valueChange)="loincInputValueChange($event)"
+				></app-observation-input>
+			</div>
+		</form>
+	</div>
+</div>

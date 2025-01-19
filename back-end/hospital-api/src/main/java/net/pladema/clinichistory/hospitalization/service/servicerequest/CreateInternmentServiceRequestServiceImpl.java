@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.servicerequest;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.application.port.output.ServiceRequestTemplatePort;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
 import net.pladema.clinichistory.requests.service.domain.GenericServiceRequestBo;
@@ -23,12 +24,16 @@ public class CreateInternmentServiceRequestServiceImpl implements CreateInternme
 	private final CreateServiceRequestService createServiceRequestService;
 	private final InternmentPatientService internmentPatientService;
 
+	private final ServiceRequestTemplatePort serviceRequestTemplatePort;
+
+
 	@Override
 	public Integer execute(GenericServiceRequestBo genericServiceRequestBo) {
 		log.debug("Input parameter -> internmentServiceRequestBo {}", genericServiceRequestBo);
 		Integer activeEpisodeId = getActiveInternmentEpisodeId(genericServiceRequestBo.getInstitutionId(), genericServiceRequestBo.getPatientId());
 		ServiceRequestBo serviceRequestBo = mapToServiceRequestBo(genericServiceRequestBo, activeEpisodeId);
 		Integer result = createServiceRequestService.execute(serviceRequestBo);
+		serviceRequestTemplatePort.saveAll(result, genericServiceRequestBo.getTemplateIds());
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -44,6 +49,10 @@ public class CreateInternmentServiceRequestServiceImpl implements CreateInternme
 				.requestDate(genericServiceRequestBo.getRequestDate())
 				.associatedSourceTypeId(SourceType.HOSPITALIZATION)
 				.associatedSourceId(activeEpisodeId)
+				.observations(genericServiceRequestBo.getObservations())
+				.studyTypeId(genericServiceRequestBo.getStudyTypeId())
+				.requiresTransfer(genericServiceRequestBo.getRequiresTransfer())
+				.deferredDate(genericServiceRequestBo.getDeferredDate())
 				.build();
 	}
 

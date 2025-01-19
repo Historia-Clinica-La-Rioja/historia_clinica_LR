@@ -1,0 +1,11 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="5px">
+    <span>{{"call-center.new-appointment.custom-form.full-name.TITLE" | translate}}</span>
+    <mat-form-field appearance="outline">
+        <input matInput type="text" [placeholder]="'call-center.new-appointment.custom-form.full-name.PLACEHOLDER_NAME' | translate" formControlName="name" (blur)="onTouched()">
+        <mat-error *ngIf="hasError(form, 'required', 'name') || hasError(form, 'whitespace', 'name')">{{ "forms.REQUIRED" | translate }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <input matInput type="text" [placeholder]="'call-center.new-appointment.custom-form.full-name.PLACEHOLDER_LAST_NAME' | translate" formControlName="lastName" (blur)="onTouched()">
+        <mat-error *ngIf="hasError(form, 'required', 'lastName') || hasError(form, 'whitespace', 'lastName')">{{ "forms.REQUIRED" | translate }}</mat-error>
+    </mat-form-field>
+</form>

@@ -38,7 +38,7 @@ public class ImageFileService {
 
     public String readImage(FilePathBo path) {
         LOG.debug("Input parameter -> path {}", path);
-		String result = fileService.readFileAsString(path, ENCODING);
+		String result = fileService.readFileAsString(path, ENCODING).orElse(null);
 		LOG.debug(OUTPUT, imageDataToString(result));
 		return result;
     }

@@ -5,7 +5,6 @@ import com.google.common.base.Joiner;
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,7 +40,8 @@ public class CHAnamnesisBo extends CHDocumentBo {
 
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
-		List<String> terms = Stream.of(problems, notes, bloodType.replace("−", "&ndash;"), anthropometricData, riskFactors, familyRecord, medicines, allergies, vaccines, personalRecord, familyRecord).filter(term -> term != null && !term.isBlank()).collect(Collectors.toList());
+		List<String> terms = Stream.of(problems, notes, bloodType, anthropometricData, riskFactors, allergies, vaccines, personalRecord, familyRecord, medicines).filter(term -> term != null && !term.isBlank()).collect(Collectors.toList());
+		terms = terms.stream().map(term -> term.replace("&", "&#38;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"", "&#34;").replace("−", "&ndash;")).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if (!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);

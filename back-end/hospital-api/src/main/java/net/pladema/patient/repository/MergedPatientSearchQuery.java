@@ -6,7 +6,6 @@ import ar.lamansys.sgx.shared.repositories.QueryStringHelper;
 import lombok.NoArgsConstructor;
 import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
 import net.pladema.patient.service.domain.MergedPatientSearch;
-import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.person.repository.entity.Person;
 
 import java.math.BigInteger;

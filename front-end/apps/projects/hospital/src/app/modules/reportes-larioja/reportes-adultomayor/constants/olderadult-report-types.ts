@@ -11,5 +11,9 @@ export const OLDERADULT_REPORT_TYPES = [
     {
         description: 'Polifarmacia',
         id: 3,
+    },
+    {
+        description: 'Escalas de Evaluación Gerontológica',
+        id: 4,
     }
 ]

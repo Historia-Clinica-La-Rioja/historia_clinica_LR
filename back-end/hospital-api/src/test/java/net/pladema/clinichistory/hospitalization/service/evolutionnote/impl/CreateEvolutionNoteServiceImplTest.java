@@ -12,6 +12,23 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.application.document.validators.AnthropometricDataValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.EffectiveRiskFactorTimeValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.getanestheticreportdraft.GetLastAnestheticReportDraftFromInternmentEpisode;
+import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
+
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +60,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvolutionNoteService;
@@ -55,6 +71,7 @@ import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
@@ -94,21 +111,68 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
 	private EvolutionNoteValidator evolutionNoteValidator;
 
-    @BeforeEach
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+
+	@Mock
+	private GeneratedPdfResponseService generatedPdfResponseService;
+
+	@Mock
+	private PatientService patientService;
+
+	@Mock
+	private PersonService personService;
+
+	@Mock
+	private InstitutionService institutionService;
+
+	@Mock
+	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
+
+	@Mock
+	private HealthcareProfessionalService healthcareProfessionalService;
+
+	@Mock
+	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
+    @Mock
+    private GetLastAnestheticReportDraftFromInternmentEpisode getLastAnestheticReportDraftFromInternmentEpisode;
+
+    @Mock
+    private ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
+	@BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
-                dateTimeProvider,
 				evolutionNoteDocumentRepository,
                 patientDischargeRepository,
+				medicalCoveragePlanRepository,
                 documentService,
-                medicalCoveragePlanRepository,
-                internmentEpisodeStorage, featureFlagsService);
+                internmentEpisodeStorage,
+				featureFlagsService,
+				generatedPdfResponseService,
+				patientService,
+				personService,
+				institutionService,
+				fetchEpisodeDocumentTypeById,
+				healthcareProfessionalService,
+				getLicenseNumberByProfessional,
+                validateAdministrativeDischarge,
+                getLastAnestheticReportDraftFromInternmentEpisode
+        );
+
+        var generalDocumentValidator = new GeneralDocumentValidator(
+                new AnthropometricDataValidator(),
+                new EffectiveRiskFactorTimeValidator()
+        );
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
                 fetchHospitalizationHealthConditionState,
-                dateTimeProvider, new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService));
+                dateTimeProvider,
+                new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService, generalDocumentValidator)
+        );
     }
 
     @Test
@@ -364,20 +428,20 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setDiagnosis(Lists.emptyList());
         result.setImmunizations(Lists.emptyList());
-        result.setAllergies(Lists.emptyList());
+        result.setAllergies(new ReferableItemBo<>());
         return result;
     }
 
     private RiskFactorBo newRiskFactors(String value, LocalDateTime time) {
         var vs = new RiskFactorBo();
-        vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time));
+        vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time, null));
         return vs;
     }
 
     private AnthropometricDataBo newAnthropometricData(String value, LocalDateTime time) {
         var adb = new AnthropometricDataBo();
-        adb.setBloodType(new ClinicalObservationBo(null, value, time));
-        adb.setWeight(new ClinicalObservationBo(null, value, time));
+        adb.setBloodType(new ClinicalObservationBo(null, value, time, null));
+        adb.setWeight(new ClinicalObservationBo(null, value, time, null));
         return adb;
     }
 

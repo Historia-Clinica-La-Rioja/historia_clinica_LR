@@ -13,20 +13,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
-import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
-import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
-import net.pladema.user.application.port.HospitalUserStorage;
-import net.pladema.user.infrastructure.input.rest.dto.UserRoleDto;
-import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -43,7 +40,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.PatientGenderAgeDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.service.AddressExternalService;
@@ -54,7 +55,7 @@ import net.pladema.patient.controller.constraints.PatientUpdateValid;
 import net.pladema.patient.controller.dto.AAdditionalDoctorDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.CompletePatientDto;
-import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
+import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
 import net.pladema.patient.controller.dto.PatientPhotoDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
 import net.pladema.patient.controller.dto.PatientSearchFilter;
@@ -66,8 +67,9 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.AdditionalDoctorService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.DoctorsBo;
-import net.pladema.patient.service.domain.LimitedPatientSearchBo;
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientSearch;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.person.controller.dto.BMPersonDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.controller.dto.PersonPhotoDto;
@@ -75,6 +77,10 @@ import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.controller.service.PersonExternalService;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
+import net.pladema.user.application.port.HospitalUserStorage;
+import net.pladema.user.infrastructure.input.rest.dto.UserRoleDto;
+import net.pladema.user.infrastructure.input.rest.mapper.HospitalUserRoleMapper;
 
 @RestController
 @RequestMapping("/patient")
@@ -151,7 +157,9 @@ public class PatientController {
 	}
 
 	@GetMapping(value = "/optionalfilter")
-	public ResponseEntity<LimitedPatientSearchDto> searchPatientOptionalFilters(@RequestParam String searchFilterStr) {
+	public PageDto<PatientSearchDto> searchPatientOptionalFilters(@RequestParam String searchFilterStr,
+																  @NotNull @RequestParam Short pageNumber,
+																  @NotNull @RequestParam Short pageSize) {
 		LOG.debug("Input data -> searchFilterStr {} ", searchFilterStr);
 		PatientSearchFilter searchFilter = null;
 		try {
@@ -159,10 +167,9 @@ public class PatientController {
 		} catch (IOException e) {
 			LOG.error(String.format("Error mappeando filter: %s", searchFilterStr), e);
 		}
-		LimitedPatientSearchBo limitedPatientSearchBo = patientService.searchPatientOptionalFilters(searchFilter);
-		LimitedPatientSearchDto result = mapToLimitedPatientSearchDto(limitedPatientSearchBo);
-
-		return ResponseEntity.ok(result);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<PatientSearch> limitedPatientSearchBo = patientService.searchPatientOptionalFilters(searchFilter, pageable);
+		return mapToPatientSeatchPageDto(limitedPatientSearchBo, pageable);
 	}
 
 	@PostMapping(value = "/institution/{institutionId}")
@@ -237,12 +244,22 @@ public class PatientController {
 					.ifPresent(u-> hospitalUserStorage.disableUser(u.getId()));
 		}
 		BMPersonDto createdPerson = personExternalService.updatePerson(patientDto, patient.getPersonId());
+
 		PersonExtended personExtendedUpdated = personExternalService.updatePersonExtended(patientDto,
 				createdPerson.getId());
-		persistPatientAddress(patientDto, Optional.of(personExtendedUpdated.getAddressId()));
+
+		var addressId = personExtendedUpdated.getAddressId();
+
+		if(addressId == null) {
+			AddressDto addressDto =  persistPatientAddress(patientDto, Optional.empty());
+			addressId = addressExternalService.addAddress(addressDto).getId();
+			personExternalService.addPersonExtended(patientDto, createdPerson.getId(), addressId);
+		}
+
+		persistPatientAddress(patientDto, Optional.of(addressId));
 		Patient createdPatient = persistPatientData(patientDto, createdPerson, patient, institutionId);
 
-		if (institutionId != NO_INSTITUTION) {
+		if (!Objects.equals(institutionId, NO_INSTITUTION)) {
 			patientService.auditActionPatient(institutionId,patientId, EActionType.UPDATE);
 			if (patientDto.getAuditType() != null && patientDto.getAuditType().equals(EAuditType.TO_AUDIT))
 				patientService.persistSelectionForAnAudict(patientId, institutionId, patientDto.getMessage());
@@ -365,6 +382,16 @@ public class PatientController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@GetMapping("/{patientId}/gender-age")
+	public ResponseEntity<PatientGenderAgeDto> getPatientGenderAge(@PathVariable(name = "patientId") Integer patientId){
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		PatientGenderAgeBo patientGenderAgeBo = patientService.getPatientGenderAge(patientId)
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
+		PatientGenderAgeDto result = patientMapper.toPatientGenderAgeDto(patientGenderAgeBo);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
 	private AddressDto persistPatientAddress(APatientDto patientDto, Optional<Integer> idAdress) {
 		AddressDto addressToAdd = patientMapper.updatePatientAddress(patientDto);
 		LOG.debug("Going to add address -> {}", addressToAdd);
@@ -444,15 +471,13 @@ public class PatientController {
 		return optPhoto;
 	}
 
-	private LimitedPatientSearchDto mapToLimitedPatientSearchDto(LimitedPatientSearchBo limitedPatientSearchBo) {
-		LimitedPatientSearchDto result = this.patientMapper.toLimitedPatientSearchDto(limitedPatientSearchBo);
-		result.getPatientList().stream().forEach(p -> {
-			limitedPatientSearchBo.getPatientList().stream().forEach( pl -> {
-				if(pl.getIdPatient().equals(p.getIdPatient())) {
-					p.getPerson().setNameSelfDetermination(pl.getNameSelfDetermination());
-				}
-			});
-		});
+	private PageDto<PatientSearchDto> mapToPatientSeatchPageDto(Page<PatientSearch> limitedPatientSearchBo, Pageable pageable) {
+		List<PatientSearchDto> content = patientMapper.toPatientSearchDtoList(limitedPatientSearchBo.getContent());
+		PageDto<PatientSearchDto> result = PageDto.fromPage(new PageImpl<>(content, pageable, limitedPatientSearchBo.getTotalElements()));
+		result.getContent().forEach(p -> limitedPatientSearchBo.getContent().forEach(pl -> {
+			if (pl.getIdPatient().equals(p.getIdPatient()))
+				p.getPerson().setNameSelfDetermination(pl.getNameSelfDetermination());
+		}));
 		return result;
 	}
 

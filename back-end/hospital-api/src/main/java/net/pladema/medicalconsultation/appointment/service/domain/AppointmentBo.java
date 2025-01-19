@@ -1,27 +1,30 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
-
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+
+import javax.annotation.Nullable;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"expiredRegister"})
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
@@ -61,6 +64,8 @@ public class AppointmentBo {
 
 	private Short appointmentBlockMotiveId;
 
+	private LocalDateTime updatedOn;
+
 	private boolean isProtected;
 
 	private LocalDateTime createdOn;
@@ -75,9 +80,64 @@ public class AppointmentBo {
 	
 	private DiagnosticReportBo orderData;
 
-	private TranscribedDiagnosticReportBo transcribedData;
+	private TranscribedServiceRequestBo transcribedOrderData;
 
 	private String applicantHealthcareProfessionalEmail;
+
+	private DiaryLabelBo diaryLabelBo;
+	
+	private boolean hasAssociatedReference;
+
+	private Short associatedReferenceClosureTypeId;
+	
+	private RecurringTypeBo recurringTypeBo;
+
+	private Integer parentAppointmentId;
+
+	@Nullable
+	private Short appointmentOptionId;
+
+	@Nullable
+	private boolean hasAppointmentChilds;
+
+	private Integer referenceId;
+
+	private Short expiredReasonId;
+
+	private String expiredReasonText;
+
+	private boolean expiredRegister;
+
+	private Short patientIdentityAccreditationStatusId;
+
+	//Temporary flag, it is set to true only when the AppointmentsController#create method is called to avoid unexpected behaviors
+	private boolean bookingRestictionEnabled = false;
+
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
+						String applicantHealthcareProfessionalEmail) {
+		this.diaryId = diaryId;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.modalityId = modalityId;
+		this.patientEmail = patientEmail;
+		this.callId = callId;
+		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
+	}
+
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Integer openingHoursId,
+						 boolean isOverturn, Integer patientMedicalCoverageId, String phonePrefix, String phoneNumber, Short modalityId) {
+		this.diaryId = diaryId;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.openingHoursId = openingHoursId;
+		this.overturn = isOverturn;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.phonePrefix = phonePrefix;
+		this.phoneNumber = phoneNumber;
+		this.modalityId = modalityId;
+	}
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
@@ -94,7 +154,11 @@ public class AppointmentBo {
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.createdOn(appointmentDiaryVo.getCreatedOn())
+				.updatedOn(appointmentDiaryVo.getUpdatedOn())
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
+				.patientEmail(appointmentDiaryVo.getEmail())
+				.diaryLabelBo(appointmentDiaryVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentDiaryVo.getDiaryLabel()): null)
+				.openingHoursId(appointmentDiaryVo.getOpeningHoursId())
 				.build();
 	}
 
@@ -114,6 +178,18 @@ public class AppointmentBo {
 				.observationBy(appointmentVo.getObservationBy())
 				.callId(appointmentVo.getCallId())
 				.modalityId(appointmentVo.getModalityId())
+				.diaryLabelBo(appointmentVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentVo.getDiaryLabel()): null)
+				.patientEmail(appointmentVo.getPatientEmail())
+				.recurringTypeBo(appointmentVo.getRecurringAppointmentTypeId() != null
+						? new RecurringTypeBo(
+							appointmentVo.getRecurringAppointmentTypeId(),
+							RecurringAppointmentType.map(appointmentVo.getRecurringAppointmentTypeId()).getValue()
+						)
+						: null
+				)
+				.parentAppointmentId(appointmentVo.getAppointment().getParentAppointmentId())
+				.updatedOn(appointmentVo.getAppointment().getUpdatedOn())
+				.patientIdentityAccreditationStatusId(appointmentVo.getPatientIdentityAccreditationStatusId())
 				.build();
 	}
 
@@ -129,6 +205,7 @@ public class AppointmentBo {
 				.phonePrefix(appointment.getPhonePrefix())
 				.phoneNumber(appointment.getPhoneNumber())
 				.snomedId(appointment.getSnomedId())
+				.updatedOn(appointment.getUpdatedOn())
 				.build();
     }
 
@@ -144,4 +221,13 @@ public class AppointmentBo {
 	public int hashCode() {
 		return Objects.hash(getId());
 	}
+
+	public boolean isExpiredRegister() {
+		return LocalDateTime.of(this.date, this.hour).isBefore(this.createdOn.minusHours(3));
+	}
+
+	public boolean isBlocked() {
+		return this.getAppointmentStateId() == AppointmentState.BLOCKED;
+	}
+
 }

@@ -1,0 +1,2000 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_15
+
+    - changeSet:
+          id: dropView-v_clinic_history_10
+          author: mromero
+          dbms: "postgresql"
+          changes:
+              - dropView:
+                    viewName: v_clinic_history
+
+    - changeSet:
+          id: createView-v_clinic_history_11
+          comment: Create view v_clinic_history_11
+          author: mromero
+          changes:
+              - createView:
+                    viewName: v_clinic_history
+                    fullDefinition: false
+                    replaceIfExists: true
+                    selectQuery: |-
+                        select d.id as id,
+                        d.source_id as source_id,
+                        d.patient_id as patient_id,
+                        d.source_type_id as source_type_id,
+                        d.created_on,
+                        d.created_by,
+                        d.type_id as document_type_id,
+                        dt.description as document_type,
+                        cs.name as clinical_specialty,
+                        i.id as institution_id,
+                        i.name as institution,
+                        d.patient_age_period as patient_age_period,
+                        (select sr.source_type_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_type_id,
+                        (select sr.source_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_id,
+                        (select MIN(ie.entry_date)
+                        from internment_episode ie
+                        left join service_request sr on (sr.source_id = ie.id)
+                        where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                        or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_start_date,
+                        (select MAX(pd.administrative_discharge_date)
+                        from internment_episode ie
+                        left join service_request sr on (sr.source_id = ie.id)
+                        left join patient_discharge pd on (pd.internment_episode_id = ie.id)
+                        where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                        or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_end_date,
+                        (select MIN(ece.created_on)
+                        from emergency_care_episode ece
+                        left join service_request sr on (sr.source_id = ece.id)
+                        where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                        or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_start_date,
+                        (select MAX(ecd.administrative_discharge_on)
+                        from emergency_care_episode ece
+                        left join service_request sr on (sr.source_id = ece.id)
+                        join emergency_care_discharge ecd on (ecd.emergency_care_episode_id = ece.id)
+                        where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                        or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_end_date,
+                        (select (case when(
+                        (select count(*) filter (where dr.status_id = '1')
+                        from document_diagnostic_report ddr
+                        join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                        where ddr.document_id = d.id and d.type_id= 6 group by ddr.document_id)
+                        =
+                        (select count(*) filter (where dr.status_id = '261782000' or dr.status_id = '89925002')
+                        from document_diagnostic_report ddr
+                        join diagnostic_report dr
+                        on (dr.id = ddr.diagnostic_report_id)
+                        where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id))
+                        then
+                        (select MAX(dr.created_on)
+                        from document_diagnostic_report ddr
+                        join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id) where ddr.document_id = d.id and dr.status_id = '261782000')
+                        end)) as service_request_end_date,
+                        (select MAX(ms.updated_on)
+                        from document_medicamention_statement dms
+                        join medication_statement ms on (ms.id = dms.medication_statement_id)
+                        where dms.document_id = d.id and d.type_id = 5 and ms.status_id in ('255594003', '6155003', '385655000')) as medication_end_date,
+                        COALESCE('Diagnósticos: ' || (select string_agg((case when hc.main then 'Principal: ' || s.pt else 'Otro: ' || s.pt end) ||
+                        (case when hc.status_id in ('723506003', '277022003', '73425007') then '|(Eliminado el día ' || to_char(hc.start_date ,'dd-mm-yyyy') || ')' else '' end), '| ')
+                        from document_health_condition dhc
+                        join health_condition hc on (hc.id = dhc.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where dhc.document_id = d.id and d.type_id in (1, 2, 3, 13, 16) and hc.problem_id = '439401001' group by dhc.document_id), '') ||
+                        coalesce(case when d.type_id = 10 then 'Problema asociado: ' else 'Problemas: ' end ||
+                        (select string_agg(s.pt || (case when hc.status_id = '-55607006' then '|(Crónico)' else '' end) ||
+                        (case when hc.start_date is not null and d.type_id <> 10 then '|(desde ' || to_char(hc.start_date ,'dd-mm-yyyy') else '' end) ||
+                        (case when hc.inactivation_date is not null and d.type_id <> 10 then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') else '' end) ||
+                        (case when perl.description is not null and d.type_id <> 10 then ', motivo: ' || perl.description else '' end) ||
+                        (case when n.description is not null and d.type_id <> 10 then ', observaciones: ' || n.description else '' end) ||
+                        (case when hc.start_date is not null and d.type_id <> 10 then ')' else '' end), '| ')
+                        from document_health_condition dhc
+                        join health_condition hc on (hc.id = dhc.health_condition_id)
+                        left join note n on (hc.note_id = n.id)
+                        left join problem_error_reason per on (hc.id = per.health_condition_id)
+                        left join problem_error_reasons_list perl on (per.reason_id = perl.id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where dhc.document_id = d.id and d.type_id in (4, 7, 10) and hc.problem_id in ('55607006', '-55607006') group by dhc.document_id), '') ||
+                        COALESCE('Problemas asociados: ' || (select string_agg(r.description, '| ')
+                        from emergency_care_episode_reason ecer
+                        join reasons r on (ecer.reason_id=r.id)
+                        where d.type_id = 15 and d.source_id = ecer.emergency_care_episode_id), '') ||
+                        COALESCE('Motivos de consulta: ' || (select string_agg(or1.description , '| ')
+                        from odontology_consultation_reason ocr
+                        join odontology_reason or1 on (or1.id = ocr.reason_id)
+                        where ocr.odontology_consultation_id = d.source_id and d.type_id = 9 ), '') ||
+                        COALESCE('Problemas: ' || (select string_agg(distinct s.pt, '| ')
+                        from document_medicamention_statement dms
+                        join medication_statement ms on (ms.id = dms.medication_statement_id)
+                        left outer join health_condition hc on (hc.id = ms.health_condition_id)
+                        left outer join snomed s on (s.id = hc.snomed_id)
+                        where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id), '') ||
+                        COALESCE('Problemas: ' || (select string_agg(s.pt, '| ' )
+                        from document_indication di
+                        join indication i on (i.id = di.indication_id )
+                        join pharmaco ph on (ph.id = i.id)
+                        join health_condition hc on (hc.id = ph.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where d.id = di.document_id and d.type_id = 12 group by di.document_id), '') ||
+                        COALESCE('Diagnostico asociado: ' || (select string_agg(distinct s.pt, '| ')
+                        from document_diagnostic_report ddr
+                        join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                        join health_condition hc on (hc.id = dr.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id), '') ||
+                        COALESCE('Problemas asociados: ' || (select string_agg(distinct s.pt, '| ')
+                        from counter_reference cr
+                        join reference_health_condition rhc on (cr.reference_id = rhc.reference_id)
+                        join health_condition hc on (hc.id = rhc.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where d.source_id = cr.id and d.type_id = 11), '') as problems,
+                        COALESCE('Antecedentes familiares: ' || (select string_agg(s.pt || (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date, 'dd-mm-yyyy') || ')' else '' end), ', ')
+                        from document_health_condition dhc
+                        join health_condition hc on (hc.id = dhc.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where dhc.document_id = d.id and d.type_id in (1, 3, 4, 16) and hc.problem_id = '57177007' group by dhc.document_id), '') as family_record,
+                        COALESCE(case when d.type_id = 9 then 'Otros diagnósticos y antecedentes personales: ' else 'Antecedentes personales: ' end ||
+                        (select string_agg(s.pt ||
+                        (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date ,'dd-mm-yyyy') else '' end) ||
+                        (case when hc.inactivation_date is not null then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') else '' end) ||
+                        (case when pht.description is not null then ', tipo: ' || pht.description else '' end) ||
+                        (case when n.description is not null then ', observaciones: ' || n.description else '' end) ||
+                        (case when hc.start_date is not null then ')' else '' end), '| ')
+                        from document_health_condition dhc
+                        join health_condition hc on (hc.id = dhc.health_condition_id)
+                        left join note n on (hc.note_id = n.id)
+                        left join personal_history ph ON (hc.id = ph.health_condition_id)
+                        left join personal_history_type pht ON (ph.type_id = pht.id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where dhc.document_id = d.id and hc.problem_id in ('00000002') group by dhc.document_id), '') as personal_record,
+                        COALESCE('Procedimientos: ' || (select string_agg(case when p.performed_date is not null then s.pt || ' (' || to_char(p.performed_date, 'dd-mm-yyyy') || ')' else s.pt END ,', ')
+                        from document_procedure dp
+                        left outer join "procedures" p  on (p.id=dp.procedure_id)
+                        left outer join snomed s on (s.id=p.snomed_id)
+                        where dp.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 10, 11, 16) group by dp.document_id),'') as procedures,
+                        COALESCE((select string_agg(s.pt ||
+                        (case when dos.period_unit = 'd' then '\nUna aplicación por día' else '' end) ||
+                        (case when dos.period_unit = 'h' then '\nUna aplicación cada ' || dos.frequency || 'hs' else '' end) ||
+                        (case when dos.chronic = true then ', uso crónico' else '' end) ||
+                        (case when dos.duration is not null then ' durante ' || dos.duration || ' días' else '' end) ||
+                        (case when ms.note_id is not null then '\nObservaciones: ' || n.description else '' end) ||
+                        (case when hc.snomed_id is not null then '\nProblema asociado: ' || s2.pt else '' end) ||
+                        (case when ms.status_id = '6155003' then '\nFinalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) ||
+                        (case when ms.status_id = '385655000' then '\nSuspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) , '\n\n')
+                        from document_medicamention_statement dms
+                        join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                        join medication_statement_status mss on (ms.status_id=mss.id)
+                        join snomed s on (s.id=ms.snomed_id)
+                        left outer join note n on (n.id = ms.note_id)
+                        left outer join health_condition hc on (hc.id=ms.health_condition_id)
+                        left outer join snomed s2 on (s2.id = hc.snomed_id)
+                        left outer join dosage dos on (ms.dosage_id=dos.id)
+                        where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id),'') ||
+                        COALESCE('Medicación habitual: '|| (select string_agg(s.pt ||
+                        (case when ms.note_id is not null then ' (' || n.description || ')' else '' end) ||
+                        (case when ms.status_id = '6155003' then ' (finalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end) ||
+                        (case when ms.status_id = '385655000' then ' (suspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end), '. ')
+                        from document_medicamention_statement dms
+                        join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                        join medication_statement_status mss on (ms.status_id=mss.id)
+                        join snomed s on (s.id=ms.snomed_id)
+                        left outer join note n on (n.id = ms.note_id)
+                        where dms.document_id = d.id and d.type_id in (1, 3, 4, 9, 11, 16) group by dms.document_id),'') as medicines,
+                        COALESCE('Alergias: '|| (select string_agg(s.pt,', ')
+                        from document_allergy_intolerance dai
+                        join allergy_intolerance ai on (ai.id=dai.allergy_intolerance_id)
+                        join snomed s on (s.id=ai.snomed_id)
+                        where dai.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 11, 16) group by dai.document_id),'') as allergies,
+                        COALESCE('Vacunas: ' || (select string_agg(case when i.administration_date is not null then s.pt || ' (' || to_char(i.administration_date, 'dd-mm-yyyy') || ')' else s.pt END,', ')
+                        from document_inmunization di
+                        join inmunization i on (i.id = di.inmunization_id)
+                        left outer join snomed s on (s.id = i.snomed_id)
+                        where di.document_id = d.id and d.type_id in (1, 2, 3, 4, 8, 12, 13) group by di.document_id ), '') as vaccines,
+                        COALESCE('Grupo y factor sanguíneo: '|| (select string_agg(replace(replace(s.pt, 'hallazgo relacionado con el grupo sanguíneo', ''),'(hallazgo)','') || ol.value, ', ')
+                        from document_lab dl
+                        join observation_lab ol on (ol.id=dl.observation_lab_id)
+                        join snomed s on (s.id=ol.snomed_id)
+                        where dl.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and ol.status_id = '261782000' group by dl.document_id),'') as blood_type,
+                        COALESCE('Datos antropométricos: '|| (select string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value, ', ')
+                        from document_vital_sign dvs
+                        join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                        join snomed s on (s.id=ovs.snomed_id)
+                        where dvs.document_id = d.id and s.sctid in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') as anthropometric_data,
+                        COALESCE('Signos vitales y factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                        from document_vital_sign dvs
+                        join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                        join snomed s on (s.id=ovs.snomed_id)
+                        where dvs.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and s.sctid not in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') ||
+                        COALESCE('Signos vitales y factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                        from triage_vital_signs tvs
+                        join observation_vital_sign ovs on (ovs.id = tvs.observation_vital_sign_id)
+                        join snomed s on (s.id = ovs.snomed_id)
+                        join triage t on (t.id = tvs.triage_id)
+                        join document_triage dt on (t.id = dt.triage_id)
+                        where dt.document_id = d.id and d.type_id = 15 and ovs.status_id = '261782000'), '') as risk_factors,
+                        COALESCE('Otras circunstancias que prolongan la epicrisis: ' || (select string_agg(s.pt, ', ')
+                        from document_health_condition dhc
+                        join health_condition hc on (hc.id = dhc.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where dhc.document_id = d.id and d.type_id = 3 and hc.problem_id = '00000001' group by dhc.document_id), '') as epicrisis_other_circumstances,
+                        COALESCE('Causa externa de traumatismo, envenenamiento y otros efectos adversos: ' || (select string_agg(
+                        (case when ec.external_cause_type_id is not null then '\nProducido por: ' || ect.description || '. ' else '' end) ||
+                        (case when ec.event_location is not null then '\nLugar donde ocurrió: ' || (
+                        (case when ec.event_location = 1 then 'Domicilio particular. ' else '' end) ||
+                        (case when ec.event_location = 2 then 'Vía pública. ' else '' end) ||
+                        (case when ec.event_location = 3 then 'Lugar de trabajo. ' else '' end) ||
+                        (case when ec.event_location = 4 then 'Otro. ' else '' end)) else '' end ) ||
+                        (case when ec.snomed_id is not null then '\nCómo se produjo: ' || s.pt else '' end), ', ')
+                        from document_external_cause dec2
+                        join external_cause ec on (ec.id = dec2.external_cause_id)
+                        left outer join external_cause_type ect on (ect.id = ec.external_cause_type_id)
+                        left outer join snomed s on (s.id = ec.snomed_id)
+                        where dec2.document_id = d.id and d.type_id = 3 and (ec.snomed_id is not null or ec.external_cause_type_id is not null or ec.event_location is not null)), '') as epicrisis_external_cause,
+                        COALESCE('Datos del evento obstétrico: ' || (select string_agg(
+                        (case when oe.previous_pregnancies is not null then '\nGestas anteriores: ' || oe.previous_pregnancies else '' end) ||
+                        (case when oe.current_pregnancy_end_date is not null then '\nFecha de término de gesta actual: ' || to_char(oe.current_pregnancy_end_date, 'dd-mm-yyyy') else '' end) ||
+                        (case when oe.gestational_age is not null then '\nEdad gestacional de gesta actual: ' || oe.gestational_age else '' end) ||
+                        (case when oe.pregnancy_termination_type is not null then '\nTerminación de gesta actual: ' ||
+                        (case when oe.pregnancy_termination_type = 1 then 'Vaginal' else '' end) ||
+                        (case when oe.pregnancy_termination_type = 2 then 'Cesárea' else '' end) ||
+                        (case when oe.pregnancy_termination_type = 3 then 'Sin definir' else '' end) else '' end), ', ')
+                        from document_obstetric_event doe
+                        join obstetric_event oe on (oe.id = doe.obstetric_event_id)
+                        where doe.document_id = d.id and d.type_id = 3
+                        and (oe.previous_pregnancies is not null or oe.current_pregnancy_end_date is not null or oe.gestational_age is not null or oe.pregnancy_termination_type is not null) ), '') as epicrisis_obstetric_event,
+                        COALESCE('Pediatría: ' || (select string_agg(
+                        (case when bt.description is not null then 'temperatura: ' || bt.description || ', ' else '' end) ||
+                        (case when td.crying_excessive is true then 'llanto sin consuelo, ' else '' end) ||
+                        (case when mh.description is not null then 'tono muscular: ' || mh.description || ', ' else '' end) ||
+                        (case when rr.description is not null then 'respiración con tiraje: ' || rr.description || ', ' else '' end) ||
+                        (case when td.stridor is true then 'respiración con estridor, ' else '' end) ||
+                        (case when p.description is not null then 'perfusión: ' || p.description else '' end), ', ')
+                        from triage_details td
+                        left outer join body_temperature bt on (td.body_temperature_id  = bt.id)
+                        left outer join muscle_hypertonia mh on (mh.id = td.muscle_hypertonia_id)
+                        left outer join respiratory_retraction rr on (rr.id = td.respiratory_retraction_id)
+                        left outer join perfusion p on (p.id = td.perfusion_id)
+                        join triage t on (t.id = td.triage_id)
+                        join document_triage dt on (t.id = dt.triage_id)
+                        where dt.document_id = d.id and d.type_id = 15), '') as pediatric_risk_factors,
+                        COALESCE('\nSolicitudes de referencia:\n' ||
+                        (with temporal_references as
+                        (select distinct re.id as reference_id, s.id as snomed_id
+                        from reference re
+                        join reference_health_condition rhc on (re.id = rhc.reference_id )
+                        join health_condition hc on (hc.id = rhc.health_condition_id)
+                        join snomed s on (s.id = hc.snomed_id)
+                        where re.encounter_id = d.source_id and d.type_id in (4, 9) and d.source_type_id = re.source_type_id and re.deleted IS NULL OR re.deleted = FALSE)
+                        select string_agg('\nProblemas asociados: ' ||
+                        (select string_agg(s2.pt, ',')
+                        from reference re2
+                        join reference_health_condition rhc2 on (re2.id = rhc2.reference_id)
+                        join health_condition hc2 on (hc2.id = rhc2.health_condition_id)
+                        join snomed s2 on (s2.id = hc2.snomed_id)
+                        where re2.id = re.id and s2.id in (select snomed_id from temporal_references where re2.id = reference_id)) ||
+                        (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end ) || '\nEspecialidad: ' || clinical_specialties || '\nInstitución destino: ' || i.name ||
+                        (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end),'\n')
+                        from reference re
+                        join (
+                          select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                          from reference re2
+                          join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                          join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                          group by re2.id
+                        ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                        join institution i on (i.id = re.destination_institution_id)
+                        left outer join care_line cl on (cl.id = re.care_line_id)
+                        left outer join reference_note rn on (rn.id = re.reference_note_id)
+                        where re.encounter_id = d.source_id and d.type_id in (4, 9) and re.source_type_id = d.source_type_id group by d.id), '') as outpatient_references,
+                        COALESCE('Categoria: '|| (select string_agg(src.description,'' )
+                        from service_request sr
+                        left outer join service_request_category src  on (sr.category_id=src.id)
+                        left outer join service_request_status srs on (sr.status_id=srs.id)
+                        where sr.id = d.source_id and d.type_id = 6),'') as service_request_category,
+                        COALESCE(
+                        (with temporal_orders as
+                        (select distinct d.source_id as source_id, dr.snomed_id as snomed_id, dr.health_condition_id as health_condition_id
+                        from document_diagnostic_report ddr
+                        join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                        join health_condition hc on (hc.id=dr.health_condition_id)
+                        where ddr.document_id = d.id and d.type_id = 6 and dr.status_id <> '89925002')
+                        select string_agg('Estudio: ' || s.pt || (case when dr.note_id is not null and dr.status_id = '261782000' then '.\nResultado: ' || n.description || ' (' || to_char(dr.effective_time, 'dd-mm-yyyy') || ')' else '. (Pendiente)' end),'\n')
+                        from document_diagnostic_report ddr
+                        join diagnostic_report dr on (dr.id=ddr.diagnostic_report_id)
+                        join health_condition hc on (hc.id=dr.health_condition_id)
+                        join snomed s on (s.id=dr.snomed_id)
+                        left outer join note n on (dr.note_id = n.id)
+                        where ddr.document_id = d.id
+                        and d.type_id = 6
+                        and dr.status_id  <> '89925002'
+                        and exists (select 1 from temporal_orders t where d.source_id = t.source_id and dr.snomed_id = t.snomed_id and dr.health_condition_id = t.health_condition_id)
+                        and not exists
+                        (select 1
+                        from document_diagnostic_report ddr2
+                        join diagnostic_report dr2 on (dr2.id = ddr2.diagnostic_report_id)
+                        where ddr2.document_id = ddr.document_id
+                        and dr2.id <> dr.id
+                        and dr2.patient_id = dr.patient_id
+                        and dr2.snomed_id = dr.snomed_id
+                        and dr2.health_condition_id = dr2.health_condition_id
+                        and dr2.status_id in ('261782000', '89925002')) group by ddr.document_id), '') as service_request_studies,
+                        COALESCE('Motivos de consulta: '|| (select string_agg(r.description,', ' )
+                        from outpatient_consultation oc
+                        left outer join outpatient_consultation_reasons ocr on (oc.id=ocr.outpatient_consultation_id)
+                        join reasons r on (r.id=ocr.reason_id)
+                        where oc.document_id = d.id and d.type_id = 4 group by oc.document_id),'') ||
+                        COALESCE('Motivos de consulta: ' || (select string_agg(r.description ,', ')
+                        from emergency_care_evolution_note ecen
+                        join emergency_care_evolution_note_reason ecenr on (ecenr.emergency_care_evolution_note_id = ecen.id)
+                        join reasons r on (r.id  = ecenr.reason_id)
+                        where ecen.document_id = d.id and d.type_id = 16 group by ecen.document_id),'') as consultation_reasons,
+                        COALESCE('Procedimientos sobre tejidos dentales: '|| (select string_agg(distinct('\n' || s.pt || ' en ' || s1.pt),'' )
+                        from document_odontology_procedure dop
+                        join odontology_procedure op on (op.id=dop.odontology_procedure_id)
+                        join snomed s on (s.id=op.snomed_id)
+                        left join snomed s1 on (op.tooth_id = s1.id)
+                        where dop.document_id = d.id and d.type_id = 9 group by dop.document_id),'') as odontology_procedure,
+                        COALESCE('Hallazgos sobre tejidos dentales: '|| (select string_agg(distinct ('\n' || s.pt || ' en ' || s1.pt),'' )
+                        from document_odontology_diagnostic dod
+                        join odontology_diagnostic od on (od.id=dod.odontology_diagnostic_id)
+                        join snomed s on (s.id=od.snomed_id)
+                        left outer join snomed s1 on (s1.id=od.tooth_id)
+                        where dod.document_id = d.id and d.type_id = 9 group by dod.document_id),'') as odontology_diagnostic,
+                        COALESCE('Cantidad de piezas presentes: ' || (select string_agg(
+                        (case when oci.permanent_teeth_present is not null then 'permanentes: ' || oci.permanent_teeth_present ||
+                        (case when oci.temporary_teeth_present is not null then ', ' else '' end) else '' end) ||
+                        (case when oci.temporary_teeth_present is not null then 'temporales: ' || oci.temporary_teeth_present else '' end), ', ')
+                        from odontology_consultation_indices oci
+                        where d.type_id = 9 and d.source_id = oci.odontology_consultation_id), '') as odontology_pieces,
+                        COALESCE('Dieta: '|| (select string_agg(die.description || '\nFecha indicación: ' || to_char(i.indication_date,'dd-mm-yyyy'), ', ' )
+                        from document_indication di
+                        join indication i on (i.id=di.indication_id )
+                        join diet die on (die.id=i.id)
+                        where d.id = di.document_id and d.type_id = 12 and i.type_id = 2 group by di.document_id), '') ||
+                        COALESCE('Otra indicación: '|| (select string_agg
+                        (case when oi.other_type is not null then oit.description || ': ' || oi.other_type else oit.description end || '\nFrecuencia: ' ||
+                        (case when dos.period_unit is null then 'Sin especificar' else '' end) ||
+                        (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                        (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                        (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) ||
+                        (case when oi.description is not null then '\nNotas: ' || oi.description else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),', ' )
+                        from document_indication di
+                        join indication i on (i.id=di.indication_id )
+                        join other_indication oi on (oi.id=i.id)
+                        join other_indication_type oit on (oi.other_indication_type_id=oit.id)
+                        left join dosage dos on (dos.id = oi.dosage_id)
+                        where d.id = di.document_id and d.type_id = 12 and i.type_id = 4 group by di.document_id), '') ||
+                        COALESCE('Fármaco: '|| (select string_agg(s1.pt ||
+                        (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                        (case when s2.pt is not null then '\nDiluyente: ' || s2.pt else '' end) || '\nAdministración: ' ||
+                        (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                        (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                        (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) || '\nRelación con las comidas: ' ||
+                        (case when ph.food_relation_id = 0 then 'No' else '' end) ||
+                        (case when ph.food_relation_id = 1 then 'Lejos' else '' end) ||
+                        (case when ph.food_relation_id = 2 then 'Ayuno' else '' end) ||
+                        '\nDiagnóstico asociado: ' || s.pt || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),'\n' )
+                        from document_indication di
+                        join indication i on (i.id=di.indication_id )
+                        join pharmaco ph on (ph.id=i.id)
+                        join health_condition hc on (hc.id=ph.health_condition_id)
+                        join snomed s on (s.id=hc.snomed_id)
+                        join snomed s1 on (s1.id=ph.snomed_id)
+                        left outer join other_pharmaco oph on (oph.indication_id = i.id)
+                        left outer join snomed s2 on (s2.id = oph.snomed_id)
+                        join dosage dos on (dos.id=ph.dosage_id)
+                        left outer join quantity q on (q.id=dos.dose_quantity_id)
+                        where d.id = di.document_id and d.type_id = 12 and i.type_id = 1 group by di.document_id),'') ||
+                        COALESCE('Plan parenteral: '||(select string_agg(s.pt ||
+                        (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                        (case when f.duration is not null then '\nDuración: ' || to_char(f.duration, 'HH24:MI') || ' hs' else '' end) ||
+                        '\nFlujo: ' || f.flow_ml_hour || ' ml/h | ' || f.flow_drops_hour || ' hp. Gotas' ||
+                        (case when f.daily_volume is not null then '\nVol/Día: ' || f.daily_volume || 'ml' else '' end) ||
+                        (case when s1.pt is not null then '\nFármaco: ' || s1.pt else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy') ,', ' )
+                        from document_indication di
+                        join indication i on (i.id=di.indication_id )
+                        join parenteral_plan pp on (pp.id=i.id)
+                        join snomed s on (pp.snomed_id=s.id)
+                        join dosage dos on (pp.dosage_id=dos.id)
+                        join frequency f on (f.id = pp.frequency_id)
+                        left outer join quantity q on (q.id=dos.dose_quantity_id )
+                        left outer join other_pharmaco oph on (oph.indication_id=pp.id)
+                        left outer join snomed s1 on (s1.id=oph.snomed_id)
+                        where d.id = di.document_id and d.type_id = 12 and i.type_id = 3 group by di.document_id),'') ||
+                        COALESCE ('\nEstado: ' || (select string_agg(
+                        (case when i.status_id = 1 then 'Indicada' else '' end) ||
+                        (case when i.status_id = 2 then 'Suspendida' else '' end) ||
+                        (case when i.status_id = 3 then 'En progreso' else '' end) ||
+                        (case when i.status_id = 4 then 'Completada' else '' end) ||
+                        (case when i.status_id = 5 then 'Rechazada' else '' end), ', ')
+                        from document_indication di
+                        join indication i on (i.id = di.indication_id)
+                        where di.document_id = d.id and d.type_id = 12 group by di.document_id),'') as indication,
+                        COALESCE('Detalles de referencia solicitada: ' || (select string_agg(
+                        (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end) || '\nEspecialidad: ' || clinical_specialties ||
+                        (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end), ', ')
+                        from counter_reference cr
+                        join reference re on (re.id = cr.reference_id)
+                        join (
+                          select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                          from reference re2
+                          join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                          join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                          group by re2.id
+                        ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                        left outer join care_line cl on (cl.id = re.care_line_id)
+                        left outer join reference_note rn on (rn.id = re.reference_note_id)
+                        where cr.id = d.source_id and d.type_id = 11), '') as reference_counter_reference,
+                        COALESCE('Tipo de cierre: ' || (select string_agg(
+                        (case when cr.closure_type_id = 1 then 'Continúa en observación' else '' end) ||
+                        (case when cr.closure_type_id = 2 then 'Inicia tratamiento en centro de referencia' else '' end) ||
+                        (case when cr.closure_type_id = 3 then 'Requiere estudios complementarios' else '' end) ||
+                        (case when cr.closure_type_id = 4 then 'Contrarreferencia' else '' end), ', ')
+                        from counter_reference cr
+                        where cr.id = d.source_id and d.type_id = 11), '') ||
+                        COALESCE((select string_agg('\nDescripción de cierre: ' || n.description, ', ' )
+                        from note n
+                        where n.id = d.evolution_note_id and d.type_id = 11), '') as counter_reference_closure,
+                        COALESCE((select string_agg(tc."name", ', ')
+                        from document_triage dt
+                        join triage t on (t.id = dt.triage_id)
+                        join triage_category tc on (tc.id = t.triage_category_id)
+                        where dt.document_id = d.id and d.type_id = 15 group by d.id),'') as triage_level,
+                        COALESCE('\nEnfermedad actual: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.current_illness_note_id and d.type_id in (1, 2, 3)), '') ||
+                        COALESCE('\nExamen físico: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.physical_exam_note_id and d.type_id in (1, 2, 3)), '') ||
+                        COALESCE('\nResumen de estudios y procedimientos realizados: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.studies_summary_note_id and d.type_id in (1, 2, 3)), '') ||
+                        COALESCE('\nEvolución: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.evolution_note_id and d.type_id in (1,2,3)), '') ||
+                        COALESCE('\nImpresión clínica y plan: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.clinical_impression_note_id and d.type_id in (1, 2, 3)), '') ||
+                        COALESCE('\nIndicaciones al alta: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.indications_note_id and d.type_id in (1, 2, 3)), '') ||
+                        COALESCE('\nOtras observaciones: '|| (select string_agg(n.description, ',' )
+                        from note n
+                        where n.id = d.other_note_id and d.type_id in (1, 2, 3)), '') ||
+                        COALESCE('Evolución: ' || (select string_agg(n.description, ', ')
+                        from note n
+                        where n.id = d.other_note_id and d.type_id in (4, 15, 16)), '') ||
+                        COALESCE('Evolución: '|| (select string_agg(n.description, ', ' )
+                        from note n
+                        where n.id = d.evolution_note_id and d.type_id in (9, 10, 13)), '') as notes
+                        from
+                        document as d
+                        join document_type dt ON (d.type_id=dt.id)
+                        join institution i on (i.id=d.institution_id)
+                        left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
+                        where d.deleted=false and d.status_id = '445665009';
+
+    - changeSet:
+        id: addColumn-regulation_protected_appointments_allowed-diary_opening_hours
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: diary_opening_hours
+              columns:
+                - column:
+                    name: regulation_protected_appointments_allowed
+                    type: boolean
+
+    - changeSet:
+        id: loinc-createTable
+        comment: Create tables loinc_code, loinc_system and loinc_status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: loinc_system
+              columns:
+                - column:
+                    autoIncrement: false
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_loinc_system
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description_variant
+                    type: varchar(256)
+
+          - createTable:
+              tableName: loinc_status
+              columns:
+                - column:
+                    autoIncrement: false
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_loinc_status
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+
+          - createTable:
+              tableName: loinc_code
+              columns:
+                - column:
+                    autoIncrement: false
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_loinc_code
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: loinc_status(id)
+                      foreignKeyName: FK_loinc_status_loinc_code
+                    name: status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: loinc_system(id)
+                      foreignKeyName: FK_loinc_system_loinc_code
+                    name: system_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: code
+                    type: varchar(10)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: display_name
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: custom_display_name
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_loinc_code_code" ON loinc_code (code);
+
+    - changeSet:
+        id: loinc-load-data
+        comment: Fill tables loinc_code, loinc_system and loinc_status
+        author: efernandez
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/load_loinc_data.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+    - changeSet:
+        id: createTable-unit_of_measure
+        comment: Create table unit_of_measure
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: unit_of_measure
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_unit_of_measure
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(256)
+                - column:
+                    constraints:
+                      nullable: false
+                      unique: true
+                    name: code
+                    type: varchar(50)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: enabled
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: loadData-unit_of_measure
+        comment: Load data into table unit_of_measure
+        author: efernandez
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO unit_of_measure (code, description, enabled) VALUES
+                ('%', 'percent', false),
+                ('%/100', 'percent / 100', false),
+                ('%[slope]', 'percent of slope', false),
+                ('/(12.h)', 'per 12 * hour', false),
+                ('/(2.h)', 'per 2 hour', false),
+                ('/10*10', 'PerTenGiga', false),
+                ('/10*12', 'PerTrillion', false),
+                ('/10*3', 'per thousand', false),
+                ('/10*4', 'per 10 thousand', false),
+                ('/10*6', 'PerMillion', false),
+                ('/10*9', 'PerBillion', false),
+                ('/100', 'per 100', false),
+                ('/100.g', 'per 100 gram', false),
+                ('/L', 'per liter', false),
+                ('/U', 'per enzyme unit', false),
+                ('/[HPF]', 'per high power field', false),
+                ('/[IU]', 'per international unit', false),
+                ('/[LPF]', 'per low power field', false),
+                ('/[arb''U]', 'per arbitrary unit', false),
+                ('/[iU]', 'per international unit', false),
+                ('/a', '/ year', false),
+                ('/cm[H2O]', 'per centimeter of water', false),
+                ('/d', 'per day', false),
+                ('/dL', 'per deciliter', false),
+                ('/g', 'per gram', false),
+                ('/h', 'per hour', false),
+                ('/kg', 'per kilogram', false),
+                ('/m2', 'per square meter', false),
+                ('/m3', 'per cubic meter', false),
+                ('/mL', 'per milliliter', false),
+                ('/mg', 'per milligram', false),
+                ('/min', 'per minute', false),
+                ('/min/10*3', 'per minute per thousand', false),
+                ('/mm', 'per millimeter', false),
+                ('/mm3', 'per cubic millimeter', false),
+                ('/mmol', 'per millimole', false),
+                ('/mo', 'per month', false),
+                ('/s', 'per second', false),
+                ('/uL', 'per microliter', false),
+                ('/ug', 'per microgram', false),
+                ('/wk', 'per week', false),
+                ('1', '1*', false),
+                ('1/d', 'one per day', false),
+                ('1/min', 'one per minute', false),
+                ('10*', 'the number ten for arbitrary powers', false),
+                ('10*-3', '(the number ten for arbitrary powers ^ -3)', false),
+                ('10*-6', 'the number ten for arbitrary powers ^ -6', false),
+                ('10*12/L', 'trillion per liter', false),
+                ('10*3', 'Thousand', false),
+                ('10*3.U', 'Thousand Per * Unit', false),
+                ('10*3/L', 'Thousand Per Liter', false),
+                ('10*3/mL', 'Thousand Per MilliLiter', false),
+                ('10*3/uL', 'Thousands Per MicroLiter', false),
+                ('10*4/uL', '10 thousand per microliter', false),
+                ('10*5', 'OneHundredThousand', false),
+                ('10*6', 'Million', false),
+                ('10*6.U', '(the number ten for arbitrary powers ^ 6) * Unit', false),
+                ('10*6.[CFU]/L', 'million colony forming unit per liter', false),
+                ('10*6.[IU]', 'million international unit', false),
+                ('10*6.[iU]', 'MillionInternationalUnit', false),
+                ('10*6.eq/mL', 'MillionEquivalentsPerMilliLiter', false),
+                ('10*6/(24.h)', 'million per 24 hour', false),
+                ('10*6/L', 'million per liter', false),
+                ('10*6/kg', 'million per kilogram', false),
+                ('10*6/mL', 'million per milliliter', false),
+                ('10*6/mm3', '(the number ten for arbitrary powers ^ 6) / (millimeter ^ 3)', false),
+                ('10*6/uL', 'million per microliter', false),
+                ('10*8', 'TenToEighth', false),
+                ('10*9/L', 'billion per liter', false),
+                ('10*9/mL', 'billion per milliliter', false),
+                ('10*9/uL', 'billion per microliter', false),
+                ('10.L/(min.m2)', '10 liter per minute per square meter', false),
+                ('10.L/min', '10 liter per minute', false),
+                ('10.uN.s/(cm.m2)', '10 * microNewton * second / centimeter * (meter ^ 2)', false),
+                ('10.uN.s/(cm5.m2)', '10 micronewton second per centimeter to the fifth power per square meter', false),
+                ('10.uN.s/cm', '10 * microNewton * second / centimeter', false),
+                ('10.uN.s/cm2', '10 * microNewton * second / (centimeter ^ 2)', false),
+                ('10^', 'the number ten for arbitrary powers', false),
+                ('24.h', '24 hour', false),
+                ('A', 'Ampère', false),
+                ('A/m', 'Ampère / meter', false),
+                ('AU', 'astronomic unit', false),
+                ('Ao', 'Ångström', false),
+                ('B', 'bel', false),
+                ('B[SPL]', 'bel sound pressure', false),
+                ('B[V]', 'bel volt', false),
+                ('B[W]', 'bel watt', false),
+                ('B[kW]', 'bel kilowatt', false),
+                ('B[mV]', 'bel millivolt', false),
+                ('B[uV]', 'bel microvolt', false),
+                ('Bd', 'baud', false),
+                ('Bi', 'Biot', false),
+                ('Bq', 'Becquerel', false),
+                ('By', 'byte', false),
+                ('C', 'Coulomb', false),
+                ('Cel', 'degree Celsius', false),
+                ('Ci', 'CURIE', false),
+                ('F', 'Farad', false),
+                ('G', 'Gauss', false),
+                ('GBq', 'gigaBecquerel', false),
+                ('Gal', 'Gal', false),
+                ('Gb', 'Gilbert', false),
+                ('Gy', 'Gray', false),
+                ('H', 'Henry', false),
+                ('Hz', 'Hertz', false),
+                ('J', 'joule', false),
+                ('J/L', 'joule per liter', false),
+                ('K', 'Kelvin', false),
+                ('K/W', 'Kelvin / Watt', false),
+                ('Ky', 'Kayser', false),
+                ('L', 'liter', false),
+                ('L.s2/s', 'liter * (second ^ 2) / second', false),
+                ('L/(24.h)', 'liter per 24 hour', false),
+                ('L/(8.h)', 'liter per 8 hour', false),
+                ('L/(min.m2)', 'liter per minute per square meter', false),
+                ('L/L', 'liter per liter', false),
+                ('L/d', 'liter per day', false),
+                ('L/h', 'liter per hour', false),
+                ('L/kg', 'liter per kilogram', false),
+                ('L/min', 'liter per minute', false),
+                ('L/s', 'liter / second', false),
+                ('L/s/s2', 'liter per second per square second', false),
+                ('Lmb', 'Lambert', false),
+                ('MBq', 'megaBecquerel', false),
+                ('Ms', 'megasecond', false),
+                ('Mx', 'Maxwell', false),
+                ('N', 'Newton', false),
+                ('N.cm', 'Newton centimeter', false),
+                ('N.s', 'Newton second', false),
+                ('Np', 'neper', false),
+                ('Oe', 'Oersted', false),
+                ('Ohm', 'Ohm', false),
+                ('Ohm.m', 'Ohm meter', false),
+                ('P', 'Poise', false),
+                ('Pa', 'Pascal', false),
+                ('R', 'Roentgen', false),
+                ('RAD', 'radiation absorbed dose', false),
+                ('REM', 'radiation equivalent man', false),
+                ('S', 'Siemens', false),
+                ('St', 'Stokes', false),
+                ('Sv', 'Sievert', false),
+                ('T', 'Tesla', false),
+                ('U', 'enzyme Unit', false),
+                ('U/(1.h)', 'enzyme Unit per 1 hour', false),
+                ('U/(10.g)', 'enzyme unit per 10 gram', false),
+                ('U/(12.h)', 'enzyme unit per 12 hour', false),
+                ('U/(18.h)', 'enzyme Unit per 18 hour', false),
+                ('U/(2.h)', 'enzyme unit per 2 hour', false),
+                ('U/(24.h)', 'enzyme unit per 24 hour', false),
+                ('U/10', 'enzyme unit per 10', false),
+                ('U/10*10', 'enzyme unit per 10 billion', false),
+                ('U/10*12', 'enzyme unit per trillion', false),
+                ('U/10*6', 'enzyme unit per million', false),
+                ('U/10*9', 'enzyme unit per billion', false),
+                ('U/L', 'enzyme unit per liter', false),
+                ('U/d', 'enzyme unit per day', false),
+                ('U/dL', 'enzyme unit per deciliter', false),
+                ('U/g', 'enzyme unit per gram', false),
+                ('U/h', 'enzyme unit per hour', false),
+                ('U/kg', 'enzyme unit per kilogram', false),
+                ('U/kg/h', 'Unit / kilogram / hour', false),
+                ('U/mL', 'enzyme unit per milliliter', false),
+                ('U/min', 'enzyme unit per minute', false),
+                ('U/mmol', 'enzyme unit per millimole', false),
+                ('U/mol', 'enzyme Unit per mole', false),
+                ('U/s', 'enzyme unit per second', false),
+                ('U/umol', 'enzyme Unit per micromole', false),
+                ('V', 'volt', false),
+                ('W', 'Watt', false),
+                ('Wb', 'Weber', false),
+                ('[APL''U]', 'IgA anticardiolipin unit', false),
+                ('[APL''U]/mL', 'IgA anticardiolipin unit per milliliter', false),
+                ('[AU]', 'allergy unit', false),
+                ('[Amb''a''1''U]', 'Amb a 1 units', false),
+                ('[BAU]', 'bioequivalent allergen unit', false),
+                ('[Btu]', 'British thermal unit', false),
+                ('[Btu_39]', 'British thermal unit at 39 °F', false),
+                ('[Btu_59]', 'British thermal unit at 59 °F', false),
+                ('[Btu_60]', 'British thermal unit at 60 °F', false),
+                ('[Btu_IT]', 'international table British thermal unit', false),
+                ('[Btu_m]', 'mean British thermal unit', false),
+                ('[Btu_th]', 'thermochemical British thermal unit', false),
+                ('[CCID_50]', 'CELL CULTURE INFECTIOUS DOSE 50%', false),
+                ('[CFU]', 'colony forming unit', false),
+                ('[CFU]/L', 'colony forming unit per liter', false),
+                ('[CFU]/mL', 'colony forming unit per milliliter', false),
+                ('[Cal]', 'nutrition label Calories', false),
+                ('[Ch]', 'French (catheter gauge)', false),
+                ('[D''ag''U]', 'D-ANTIGEN UNITS', false),
+                ('[FFU]', 'FOCUS-FORMING UNITS', false),
+                ('[GPL''U]', 'IgG anticardiolipin unit', false),
+                ('[GPL''U]/mL', 'IgG anticardiolipin unit per milliliter**', false),
+                ('[G]', 'Newtonian constant of gravitation', false),
+                ('[HPF]', 'high power field', false),
+                ('[HP]', 'horsepower', false),
+                ('[IU]', 'international unit', false),
+                ('[IU]/(2.h)', 'international unit per 2 hour', false),
+                ('[IU]/(24.h)', 'international unit per 24 hour', false),
+                ('[IU]/10*9', 'international unit per billion', false),
+                ('[IU]/L', 'international unit per liter', false),
+                ('[IU]/d', 'international unit per day', false),
+                ('[IU]/dL', 'international unit per deciliter', false),
+                ('[IU]/g', 'international unit per gram', false),
+                ('[IU]/h', 'international unit per hour', false),
+                ('[IU]/kg', 'international unit per kilogram', false),
+                ('[IU]/kg/d', 'international unit per kilogram per day', false),
+                ('[IU]/mL', 'international unit per milliliter', false),
+                ('[IU]/min', 'international unit per minute', false),
+                ('[LPF]', 'low power field', false),
+                ('[Lf]', 'LIMIT OF FLOCCULATION', false),
+                ('[MET]', 'metabolic equivalent', false),
+                ('[MPL''U]', 'IgM anticardiolipin unit', false),
+                ('[MPL''U]/mL', 'IgM anticardiolipin unit per milliliter**', false),
+                ('[PFU]', 'PLAQUE-FORMING UNITS', false),
+                ('[PNU]', 'PROTEIN NITROGEN UNITS', false),
+                ('[PRU]', 'peripheral vascular resistance unit', false),
+                ('[S]', 'Svedberg unit', false),
+                ('[TCID_50]', 'TISSUE CULTURE INFECTIOUS DOSE 50%', false),
+                ('[USP''U]', 'UNITED STATES PHARMACOPEIA UNIT', false),
+                ('[acr_br]', 'acre', false),
+                ('[acr_us]', 'acre', false),
+                ('[arb''U]', 'arbitrary unit', false),
+                ('[arb''U]/L', 'arbitary unit / liter', false),
+                ('[arb''U]/mL', 'arbitrary unit per milliliter', false),
+                ('[bbl_us]', 'barrel', false),
+                ('[bdsk''U]', 'Bodansky unit', false),
+                ('[beth''U]', 'Bethesda unit', false),
+                ('[bf_i]', 'board foot', false),
+                ('[bu_br]', 'bushel', false),
+                ('[bu_us]', 'bushel', false),
+                ('[c]', 'velocity of light', false),
+                ('[car_Au]', 'carat of gold alloys', false),
+                ('[car_m]', 'metric carat', false),
+                ('[cft_i]', 'cubic foot', false),
+                ('[ch_br]', 'Gunter''s chain', false),
+                ('[ch_us]', 'Gunter''s chain Surveyor''s chain', false),
+                ('[cicero]', 'cicero Didot''s pica', false),
+                ('[cin_i]', 'cubic inch', false),
+                ('[cml_i]', 'circular mil', false),
+                ('[cr_i]', 'cord', false),
+                ('[crd_us]', 'cord', false),
+                ('[cup_us]', 'cup', false),
+                ('[cyd_i]', 'cubic yard', false),
+                ('[degF]', 'degree Fahrenheit', false),
+                ('[didot]', 'didot Didot''s point', false),
+                ('[diop]', 'diopter', false),
+                ('[dpt_us]', 'dry pint', false),
+                ('[dqt_us]', 'dry quart', false),
+                ('[dr_ap]', 'dram drachm', false),
+                ('[dr_av]', 'Dram (US and British)', false),
+                ('[drp]', 'drop', false),
+                ('[drp]/[HPF]', 'drop / HPF', false),
+                ('[drp]/h', 'drop / hour', false),
+                ('[drp]/mL', 'drop / milliliter', false),
+                ('[drp]/min', 'drop / minute', false),
+                ('[drp]/s', 'drop / second', false),
+                ('[dye''U]', 'Dye unit', false),
+                ('[e]', 'elementary charge', false),
+                ('[eps_0]', 'permittivity of vacuum', false),
+                ('[fdr_br]', 'fluid dram', false),
+                ('[fdr_us]', 'fluid dram', false),
+                ('[foz_br]', 'fluid ounce', false),
+                ('[foz_us]', 'fluid ounce', false),
+                ('[ft_br]', 'foot', false),
+                ('[ft_i]', 'Feet', false),
+                ('[ft_us]', 'foot', false),
+                ('[fth_br]', 'fathom', false),
+                ('[fth_i]', 'fathom', false),
+                ('[fth_us]', 'fathom', false),
+                ('[fur_us]', 'furlong', false),
+                ('[gal_br]', 'gallon', false),
+                ('[gal_us]', 'Queen Anne''s wine gallon', false),
+                ('[gal_wi]', 'historical winchester gallon', false),
+                ('[gil_br]', 'gill', false),
+                ('[gil_us]', 'gill', false),
+                ('[gr]', 'grain', false),
+                ('[h]', 'Planck constant', false),
+                ('[hd_i]', 'hand', false),
+                ('[hnsf''U]', 'Hounsfield unit', false),
+                ('[hp_C]', 'HOMEOPATHIC POTENCY OF CENTESIMAL SERIES', false),
+                ('[hp_M]', 'HOMEOPATHIC POTENCY OF MILLESIMAL SERIES', false),
+                ('[hp_Q]', 'HOMEOPATHIC POTENCY OF QUINTAMILLESIMAL SERIES', false),
+                ('[hp_X]', 'HOMEOPATHIC POTENCY OF DECIMAL SERIES', false),
+                ('[iU]', 'international unit', false),
+                ('[iU]/L', 'InternationalUnitsPerLiter', false),
+                ('[iU]/dL', 'InternationalUnitsPerDeciLiter', false),
+                ('[iU]/g', 'InternationalUnitsPerGram', false),
+                ('[iU]/kg', 'InternationalUnitsPerKilogram', false),
+                ('[iU]/mL', 'InternationalUnitsPerMilliLiter', false),
+                ('[in_br]', 'inch', false),
+                ('[in_i''H2O]', 'inch (international) of water', false),
+                ('[in_i''Hg]', 'inch of mercury column', false),
+                ('[in_i]', 'inch (international)', false),
+                ('[in_us]', 'inch', false),
+                ('[k]', 'Boltzmann constant', false),
+                ('[ka''U]', 'King Armstrong unit', false),
+                ('[kn_br]', 'knot', false),
+                ('[kn_i]', 'knot', false),
+                ('[knk''U]', 'Kunkel unit', false),
+                ('[kp_C]', 'HOMEOPATHIC POTENCY OF CENTESIMAL KORSAKOVIAN SERIES', false),
+                ('[lb_ap]', 'pound', false),
+                ('[lb_av]', 'pound (US and British)', false),
+                ('[lb_tr]', 'pound', false),
+                ('[lbf_av]', 'pound force', false),
+                ('[lcwt_av]', 'long hunderdweight British hundredweight', false),
+                ('[ligne]', 'ligne French line', false),
+                ('[lk_br]', 'link for Gunter''s chain', false),
+                ('[lk_us]', 'link for Gunter''s chain', false),
+                ('[lne]', 'line', false),
+                ('[lton_av]', 'long ton British ton', false),
+                ('[ly]', 'light-year', false),
+                ('[m_e]', 'electron mass', false),
+                ('[m_p]', 'proton mass', false),
+                ('[mclg''U]', 'Mac Lagan unit', false),
+                ('[mesh_i]', 'mesh', false),
+                ('[mi_br]', 'mile', false),
+                ('[mi_i]', 'statute mile', false),
+                ('[mi_us]', 'mile', false),
+                ('[mil_i]', 'mil', false),
+                ('[mil_us]', 'mil', false),
+                ('[min_br]', 'minim', false),
+                ('[min_us]', 'minim', false),
+                ('[mu_0]', 'permeability of vacuum', false),
+                ('[nmi_br]', 'nautical mile', false),
+                ('[nmi_i]', 'nautical mile', false),
+                ('[oz_ap]', 'ounce (US and British)', false),
+                ('[oz_av]', 'ounce (US and British)', false),
+                ('[oz_tr]', 'ounce', false),
+                ('[p''diop]', 'prism diopter', false),
+                ('[pH]', 'pH', false),
+                ('[pc_br]', 'pace', false),
+                ('[pca]', 'pica', false),
+                ('[pca_pr]', 'Printer''s pica', false),
+                ('[pi]', 'the number pi', false),
+                ('[pi].rad/min', 'the number pi * radian / minute', false),
+                ('[pied]', 'pied French foot', false),
+                ('[pk_br]', 'peck', false),
+                ('[pk_us]', 'peck', false),
+                ('[pnt]', 'point', false),
+                ('[pnt_pr]', 'Printer''s point', false),
+                ('[pouce]', 'pouce French inch', false),
+                ('[ppb]', 'part per billion', false),
+                ('[ppm]', 'part per million', false),
+                ('[ppth]', 'parts per thousand', false),
+                ('[pptr]', 'part per trillion', false),
+                ('[psi]', 'pound per square inch', false),
+                ('[pt_br]', 'pint', false),
+                ('[pt_us]', 'pint', false),
+                ('[pwt_tr]', 'pennyweight', false),
+                ('[qt_br]', 'quart', false),
+                ('[qt_us]', 'quart', false),
+                ('[rch_us]', 'Ramden''s chain Engineer''s chain', false),
+                ('[rd_br]', 'rod', false),
+                ('[rd_us]', 'rod', false),
+                ('[rlk_us]', 'link for Ramden''s chain', false),
+                ('[sc_ap]', 'scruple', false),
+                ('[sct]', 'section', false),
+                ('[scwt_av]', 'short hundredweight U.S. hundredweight', false),
+                ('[sft_i]', 'square foot (international)', false),
+                ('[sin_i]', 'square inch (international)', false),
+                ('[smgy''U]', 'Somogyi unit', false),
+                ('[smi_us]', 'square mile', false),
+                ('[smoot]', 'Smoot', false),
+                ('[srd_us]', 'square rod', false),
+                ('[ston_av]', 'short ton U.S. ton', false),
+                ('[stone_av]', 'stone British stone', false),
+                ('[syd_i]', 'square yard', false),
+                ('[tb''U]', 'tuberculin unit', false),
+                ('[tbs_us]', 'tablespoon (US)', false),
+                ('[todd''U]', 'Todd unit', false),
+                ('[tsp_us]', 'teaspoon', false),
+                ('[twp]', 'township', false),
+                ('[yd_br]', 'yard', false),
+                ('[yd_i]', 'yard', false),
+                ('[yd_us]', 'yard', false),
+                ('a', 'year', false),
+                ('a_g', 'mean Gregorian year', false),
+                ('a_j', 'mean Julian year', false),
+                ('a_t', 'tropical year', false),
+                ('ag', 'attogram', false),
+                ('ar', 'are', false),
+                ('atm', 'standard atmosphere', false),
+                ('att', 'technical atmosphere', false),
+                ('b', 'barn', false),
+                ('bar', 'bar', false),
+                ('bit', 'bit', false),
+                ('bit_s', 'bit', false),
+                ('cL', 'centiliter', false),
+                ('cP', 'centiPoise', false),
+                ('cSt', 'centiStokes', false),
+                ('cal', 'calorie', false),
+                ('cal_IT', 'international table calorie', false),
+                ('cal_[15]', 'calorie at 15 °C', false),
+                ('cal_[20]', 'calorie at 20 °C', false),
+                ('cal_m', 'mean calorie', false),
+                ('cal_th', 'thermochemical calorie', false),
+                ('cd', 'candela', false),
+                ('cg', 'centigram', false),
+                ('circ', 'circle', false),
+                ('cm', 'centimeter', false),
+                ('cm2', 'square centimeter', false),
+                ('cm2/s', 'square centimeter per second', false),
+                ('cm3', 'cubic centimeter', false),
+                ('cm[H2O]', 'centimeter of water', false),
+                ('cm[H2O]/(s.m)', 'centimeter of water column / second * meter', false),
+                ('cm[H2O]/L/s', 'centimeter of water per liter per second', false),
+                ('cm[H2O]/s/m', 'centimeter of water per second per meter', false),
+                ('cm[Hg]', 'centimeter of mercury', false),
+                ('d', 'day', false),
+                ('dB', 'decibel', false),
+                ('dL', 'deciliter', false),
+                ('daL/min', 'dekaliter per minute', false),
+                ('daL/min/m2', 'dekaliter per minute per square meter', false),
+                ('deg', 'degree', false),
+                ('deg/s', 'degree per second', false),
+                ('dg', 'decigram', false),
+                ('dm', 'decimeter', false),
+                ('dm2/s2', 'square decimeter per square second', false),
+                ('dyn', 'dyne', false),
+                ('dyn.s/(cm.m2)', 'dyne second per centimeter per square meter', false),
+                ('dyn.s/cm', 'dyne second per centimeter', false),
+                ('eV', 'electronvolt', false),
+                ('eq', 'equivalents', false),
+                ('eq/L', 'equivalents / liter', false),
+                ('eq/mL', 'equivalents / milliliter', false),
+                ('eq/mmol', 'equivalents / millimole', false),
+                ('eq/umol', 'equivalents / micromole', false),
+                ('erg', 'erg', false),
+                ('fL', 'femtoliter', false),
+                ('fL/nL', 'femtoliter / nanoliter', false),
+                ('fg', 'femtogram', false),
+                ('fm', 'femtometer', false),
+                ('fmol', 'femtomole', false),
+                ('fmol/L', 'femtomole per liter', false),
+                ('fmol/g', 'femtomole per gram', false),
+                ('fmol/mL', 'femtomole / milliliter', false),
+                ('fmol/mg', 'femtomole / milligram', false),
+                ('g', 'gram', false),
+                ('g%', 'gram percent', false),
+                ('g.m', 'gram * meter', false),
+                ('g/(100.g)', 'gram per 100 gram', false),
+                ('g/(12.h)', 'gram per 12 hour', false),
+                ('g/(24.h)', 'gram per 24 hour', false),
+                ('g/(3.d)', 'gram per 3 days', false),
+                ('g/(4.h)', 'gram per 4 hour', false),
+                ('g/(48.h)', 'gram per 48 hour', false),
+                ('g/(5.h)', 'gram per 5 hour', false),
+                ('g/(6.h)', 'gram per 6 hour', false),
+                ('g/(72.h)', 'gram per 72 hour', false),
+                ('g/(8.h)', 'gram / 8 * hour', false),
+                ('g/(8.kg.h)', 'gram / 8 * kilogram * hour', false),
+                ('g/(kg.h)', 'gram / kilogram * hour', false),
+                ('g/(kg.min)', 'gram / kilogram * minute', false),
+                ('g/L', 'gram per liter', false),
+                ('g/cm3', 'gram per cubic centimeter', false),
+                ('g/d', 'gram per day', false),
+                ('g/dL', 'gram per deciliter', false),
+                ('g/g', 'gram per gram', false),
+                ('g/h', 'gram per hour', false),
+                ('g/h/m2', 'gram per hour per square meter', false),
+                ('g/kg', 'gram per kilogram', false),
+                ('g/kg/(8.h)', 'gram per  kilogram per 8 hour', false),
+                ('g/kg/d', 'gram per kilogram per day', false),
+                ('g/kg/h', 'gram per kilogram per hour', false),
+                ('g/kg/min', 'gram per kilogram per minute', false),
+                ('g/m2', 'grams Per Square Meter', false),
+                ('g/mL', 'gram per milliliter', false),
+                ('g/mg', 'gram per milligram', false),
+                ('g/min', 'gram per minute', false),
+                ('g/mmol', 'gram per millimole', false),
+                ('g/mol', 'gram per mole', false),
+                ('gf', 'gram-force', false),
+                ('gon', 'gon grade', false),
+                ('h', 'hour', false),
+                ('hL', 'hectoliter', false),
+                ('kBq', 'kiloBecquerel', false),
+                ('kL', 'kiloliter', false),
+                ('kPa', 'kiloPascal', false),
+                ('kU', 'kilo enzyme unit', false),
+                ('kU/L', 'kiloenzyme Unit per liter', false),
+                ('kU/g', 'kiloenzyme Unit per gram', false),
+                ('kU/h', 'kiloUnit / hour', false),
+                ('kU/mL', 'kilo enzyme unit per milliliter', false),
+                ('k[IU]/L', 'kilo international unit per liter', false),
+                ('k[IU]/mL', 'kilo international unit per milliliter', false),
+                ('k[iU]/mL', 'KiloInternationalUnitsPerMilliLiter', false),
+                ('kat', 'katal', false),
+                ('kat/L', 'katal / liter', false),
+                ('kat/kg', 'katal / kilogram', false),
+                ('kcal', 'kilocalorie', false),
+                ('kcal/(8.h)', 'kilocalorie / 8 * hour', false),
+                ('kcal/[oz_av]', 'kilocalorie per ounce (US & British)', false),
+                ('kcal/d', 'kilocalorie per day', false),
+                ('kcal/h', 'kilocalorie per hour', false),
+                ('kcal/kg/(24.h)', 'kilocalorie per kilogram per 24 hour', false),
+                ('kg', 'kilogram', false),
+                ('kg.m/s', 'kilogram meter per second', false),
+                ('kg/(s.m2)', 'kilogram per second per square meter', false),
+                ('kg/L', 'kilogram per liter', false),
+                ('kg/h', 'kilogram per hour', false),
+                ('kg/m2', 'kilogram / (meter ^ 2)', false),
+                ('kg/m3', 'kilogram / (meter ^ 3)', false),
+                ('kg/min', 'kilogram / minute', false),
+                ('kg/mol', 'kilogram per mole', false),
+                ('kg/s', 'kilogram / second', false),
+                ('km', 'kilometer', false),
+                ('ks', 'kilosecond', false),
+                ('lm', 'lumen', false),
+                ('lm.m2', 'lumen square meter', false),
+                ('lm/m2', 'lumen / (meter ^ 2)', false),
+                ('lx', 'lux', false),
+                ('m', 'meter', false),
+                ('m/s', 'meter per second', false),
+                ('m/s2', 'meter per square second', false),
+                ('m2', 'square meter', false),
+                ('m2/s', 'square meter per second', false),
+                ('m3/s', 'cubic meter per second', false),
+                ('mA', 'milliAmpère', false),
+                ('mCi', 'milliCurie', false),
+                ('mL', 'milliliter', false),
+                ('mL/(10.h)', 'milliliter per 10 hour', false),
+                ('mL/(12.h)', 'milliliter per 12 hour', false),
+                ('mL/(2.h)', 'milliliter per 2 hour', false),
+                ('mL/(24.h)', 'milliliter per 24 hour', false),
+                ('mL/(4.h)', 'milliliter per 4 hour', false),
+                ('mL/(5.h)', 'milliliter per 5 hour', false),
+                ('mL/(6.h)', 'milliliter per 6 hour', false),
+                ('mL/(72.h)', 'milliliter per 72 hour', false),
+                ('mL/(8.h)', 'milliliter per 8 hour', false),
+                ('mL/(kg.min)', 'milliliter / kilogram * minute', false),
+                ('mL/L', 'milliliter per liter', false),
+                ('mL/[sin_i]', 'milliliter per square inch (international)', false),
+                ('mL/cm[H2O]', 'milliliter / centimeter of water column', false),
+                ('mL/d', 'milliliter per day', false),
+                ('mL/dL', 'milliliter per deciliter', false),
+                ('mL/h', 'milliliter per hour', false),
+                ('mL/kg', 'milliliter per kilogram', false),
+                ('mL/kg/(8.h)', 'milliliter per kilogram per 8 hour', false),
+                ('mL/kg/d', 'milliliter per kilogram per day', false),
+                ('mL/kg/h', 'milliliter per kilogram per hour', false),
+                ('mL/kg/min', 'milliliter per kilogram per minute', false),
+                ('mL/m2', 'milliliter per square meter', false),
+                ('mL/mbar', 'milliliter per millibar', false),
+                ('mL/min', 'milliliter per minute', false),
+                ('mL/min/(173.10*-2.m2)', 'milliliter / minute / 173 * (the number ten for arbitrary powers ^ -2) * (meter ^ 2)', false),
+                ('mL/min/1.73.m2', 'milliliter per minute per 1.73 square meter', false),
+                ('mL/min/m2', 'milliliter per minute per square meter', false),
+                ('mL/mm', 'milliliter per millimeter', false),
+                ('mL/s', 'milliliter per second', false),
+                ('mPa', 'millipascal', false),
+                ('mPa.s', 'millipascal second', false),
+                ('mU', 'millienzyme Unit', false),
+                ('mU/L', 'millienzyme Unit per liter', false),
+                ('mU/g', 'millienzyme Unit per gram', false),
+                ('mU/mL', 'millienzyme Unit per milliliter', false),
+                ('mU/mL/min', 'millienzyme Unit per milliliter per minute', false),
+                ('mU/mg', 'milliUnit / milligram', false),
+                ('mU/min', 'milliUnit / minute', false),
+                ('mU/mmol', 'millienzyme Unit per millimole', false),
+                ('mV', 'milliVolt', false),
+                ('m[H2O]', 'meter of water column', false),
+                ('m[Hg]', 'meter of mercury column', false),
+                ('m[IU]/L', 'milli international unit per liter', false),
+                ('m[IU]/mL', 'milli international unit per milliliter', false),
+                ('m[iU]', 'milliinternational unit', false),
+                ('mbar', 'millibar', false),
+                ('mbar.s/L', 'millibar second per liter', false),
+                ('mbar/L/s', 'millibar per liter per second', false),
+                ('meq', 'milliequivalent', false),
+                ('meq/(12.h)', 'milliequivalent per 12 hour', false),
+                ('meq/(2.h)', 'milliequivalent per 2 hour', false),
+                ('meq/(24.h)', 'milliequivalent per 24 hour', false),
+                ('meq/(8.h)', 'milliequivalent per 8 hour', false),
+                ('meq/(8.h.kg)', 'milliequivalents / 8 * hour * kilogram', false),
+                ('meq/(kg.d)', 'milliequivalents / kilogram * day', false),
+                ('meq/L', 'milliequivalent per liter', false),
+                ('meq/d', 'milliequivalent per day', false),
+                ('meq/dL', 'milliequivalent per deciliter', false),
+                ('meq/g', 'milliequivalent per gram', false),
+                ('meq/h', 'milliequivalent per hour', false),
+                ('meq/kg', 'milliequivalent per kilogram', false),
+                ('meq/kg/h', 'milliequivalent per kilogram per hour', false),
+                ('meq/kg/min', 'milliequivalents / kilogram / minute', false),
+                ('meq/m2', 'milliequivalent per square meter', false),
+                ('meq/mL', 'milliequivalent per milliliter', false),
+                ('meq/min', 'milliequivalent per minute', false),
+                ('mg', 'milligram', false),
+                ('mg/(10.h)', 'milligram per 10 hour', false),
+                ('mg/(12.h)', 'milligram per 12 hour', false),
+                ('mg/(18.h)', 'milligram per 18 hour', false),
+                ('mg/(2.h)', 'milligram per 2 hour', false),
+                ('mg/(24.h)', 'milligram per 24 hour', false),
+                ('mg/(6.h)', 'milligram per 6 hour', false),
+                ('mg/(72.h)', 'milligram per 72 hour', false),
+                ('mg/(8.h)', 'milligram per 8 hour', false),
+                ('mg/(8.h.kg)', 'milligram / 8 * hour * kilogram', false),
+                ('mg/(kg.h)', 'milligram / kilogram * hour', false),
+                ('mg/L', 'milligram per liter', false),
+                ('mg/d', 'milligram per day', false),
+                ('mg/d/(173.10*-2.m2)', 'milligram / day / 173 * (the number ten for arbitrary powers ^ -2) * (meter ^ 2)', false),
+                ('mg/d/1.73.m2', 'milligram per day per 1.73 square meter', false),
+                ('mg/dL', 'milligram per deciliter', false),
+                ('mg/g', 'milligram per gram', false),
+                ('mg/h', 'milligram per hour', false),
+                ('mg/kg', 'milligram per kilogram', false),
+                ('mg/kg/(24.h)', 'milligram / kilogram / 24 * hour', false),
+                ('mg/kg/(8.h)', 'milligram per kilogram per 8 hour', false),
+                ('mg/kg/d', 'milligram per kilogram per day', false),
+                ('mg/kg/h', 'milligram per kilogram per hour', false),
+                ('mg/kg/min', 'milligram per kilogram per minute', false),
+                ('mg/m2', 'milligram per square meter', false),
+                ('mg/m3', 'milligram per cubic meter', false),
+                ('mg/mL', 'milligram per milliliter', false),
+                ('mg/mg', 'milligram per milligram', false),
+                ('mg/min', 'milligram per minute', false),
+                ('mg/mmol', 'milligram per millimole', false),
+                ('mg/wk', 'milligram per week', false),
+                ('mho', 'mho', false),
+                ('min', 'minute', false),
+                ('mm', 'millimeter', false),
+                ('mm/h', 'millimeter per hour', false),
+                ('mm/min', 'millimeter per minute', false),
+                ('mm2', 'square millimeter', false),
+                ('mm3', 'cubic millimeter', false),
+                ('mm[H2O]', 'millimeter of water', false),
+                ('mm[Hg]', 'millimeter of mercury', false),
+                ('mmol', 'millimole', false),
+                ('mmol/(12.h)', 'millimole per 12 hour', false),
+                ('mmol/(18.h)', 'millimole per 18 hour', false),
+                ('mmol/(2.h)', 'millimole per 2 hour', false),
+                ('mmol/(24.h)', 'millimole per 24 hour', false),
+                ('mmol/(5.h)', 'millimole per 5 hour', false),
+                ('mmol/(6.h)', 'millimole per 6 hour', false),
+                ('mmol/(8.h)', 'millimole per 8 hour', false),
+                ('mmol/(8.h.kg)', 'millimole / 8 * hour * kilogram', false),
+                ('mmol/L', 'millimole per liter', false),
+                ('mmol/L/s', 'millimole per liter per second', false),
+                ('mmol/d', 'millimole per day', false),
+                ('mmol/dL', 'millimole per deciliter', false),
+                ('mmol/g', 'millimole per gram', false),
+                ('mmol/h', 'millimole per hour', false),
+                ('mmol/h/mg', 'millimole per hour per milligram', false),
+                ('mmol/kg', 'millimole per kilogram', false),
+                ('mmol/kg/(8.h)', 'millimole per kilogram per 8 hour', false),
+                ('mmol/kg/d', 'millimole per kilogram per day', false),
+                ('mmol/kg/h', 'millimole per kilogram per hour', false),
+                ('mmol/kg/min', 'millimole per kilogram per minute', false),
+                ('mmol/m', 'millimole / meter', false),
+                ('mmol/m2', 'millimole per square meter', false),
+                ('mmol/min', 'millimole per minute', false),
+                ('mmol/mmol', 'millimole per millimole', false),
+                ('mmol/mol', 'millimole per mole', false),
+                ('mmol/s/L', 'millimole per second per liter', false),
+                ('mo', 'month', false),
+                ('mo_g', 'mean Gregorian month', false),
+                ('mo_j', 'mean Julian month', false),
+                ('mo_s', 'synodal month', false),
+                ('mol', 'mole', false),
+                ('mol/L', 'mole per liter', false),
+                ('mol/d', 'mole per day', false),
+                ('mol/kg', 'mole per kilogram', false),
+                ('mol/kg/s', 'mole per kilogram per second', false),
+                ('mol/m3', 'mole per cubic meter', false),
+                ('mol/mL', 'mole per milliliter', false),
+                ('mol/mol', 'mole per mole', false),
+                ('mol/s', 'mole per second', false),
+                ('mosm', 'milliosmole', false),
+                ('mosm/L', 'milliosmole per liter', false),
+                ('mosm/kg', 'milliosmole per kilogram', false),
+                ('ms', 'millisecond', false),
+                ('nCi', 'nanoCurie', false),
+                ('nL', 'nanoliter', false),
+                ('nU/mL', 'nanoenzyme unit per milliliter', false),
+                ('nU', 'nanoenzyme unit', false),
+                ('ng', 'nanogram', false),
+                ('ng/(24.h)', 'nanogram per 24 hour', false),
+                ('ng/(8.h)', 'nanogram per 8 hour', false),
+                ('ng/(8.h.kg)', 'nanogram / 8 * hour * kilogram', false),
+                ('ng/(kg.d)', 'nanogram / kilogram * day', false),
+                ('ng/(kg.h)', 'nanogram / kilogram * hour', false),
+                ('ng/(kg.min)', 'nanogram / kilogram * minute', false),
+                ('ng/10*6', 'nanogram per million', false),
+                ('ng/L', 'nanogram per liter', false),
+                ('ng/U', 'nanogram per enzyme unit', false),
+                ('ng/d', 'nanogram per day', false),
+                ('ng/dL', 'nanogram per deciliter', false),
+                ('ng/dL/h', 'nanogram / deciliter / hour', false),
+                ('ng/g', 'nanogram per gram', false),
+                ('ng/h', 'nanogram per hour', false),
+                ('ng/kg', 'nanogram per kilogram', false),
+                ('ng/kg/(8.h)', 'nanogram per kilogram per 8 hour', false),
+                ('ng/kg/h', 'nanogram per kilogram per hour', false),
+                ('ng/kg/min', 'nanogram per kilogram per minute', false),
+                ('ng/m2', 'nanogram per square meter', false),
+                ('ng/mL', 'nanogram per milliliter', false),
+                ('ng/mL/h', 'nanogram per milliliter per hour', false),
+                ('ng/mg', 'nanogram per milligram', false),
+                ('ng/mg/h', 'nanogram per milligram per hour', false),
+                ('ng/min', 'nanogram per minute', false),
+                ('ng/s', 'nanogram per second', false),
+                ('nkat', 'nanokatal', false),
+                ('nm', 'nanometer', false),
+                ('nm/s/L', 'nanometer per second per liter', false),
+                ('nmol', 'nanomole', false),
+                ('nmol/(24.h)', 'nanomole per 24 hour', false),
+                ('nmol/L', 'nanomole per liter', false),
+                ('nmol/L/mmol', 'nanomole per liter per millimole', false),
+                ('nmol/L/s', 'nanomole per liter per second', false),
+                ('nmol/d', 'nanomole per day', false),
+                ('nmol/dL', 'nanomole per deciliter', false),
+                ('nmol/g', 'nanomole per gram', false),
+                ('nmol/h/L', 'nanomole per hour per liter', false),
+                ('nmol/h/mL', 'nanomole per hour per milliliter', false),
+                ('nmol/h/mg', 'nanomole per hour per milligram', false),
+                ('nmol/m/mg', 'nanomole per meter per milligram', false),
+                ('nmol/mL', 'nanomole per milliliter', false),
+                ('nmol/mL/h', 'nanomole per milliliter per hour', false),
+                ('nmol/mL/min', 'nanomole per milliliter per minute', false),
+                ('nmol/mg', 'nanomole per milligram', false),
+                ('nmol/mg/h', 'nanomole per milligram per hour', false),
+                ('nmol/min', 'nanomole per minute', false),
+                ('nmol/min/10*6', 'nanomole per minute per million', false),
+                ('nmol/min/mL', 'nanomole per minute per milliliter', false),
+                ('nmol/min/mg', 'nanomole per minute per milligram', false),
+                ('nmol/mmol', 'nanomole per millimole', false),
+                ('nmol/mol', 'nanomole per mole', false),
+                ('nmol/nmol', 'nanomole per nanomole', false),
+                ('nmol/s', 'nanomole per second', false),
+                ('nmol/s/L', 'nanomole per second per liter', false),
+                ('ns', 'nanosecond', false),
+                ('osm', 'osmole', false),
+                ('osm/L', 'osmole per liter', false),
+                ('osm/kg', 'osmole per kilogram', false),
+                ('pA', 'picoampere', false),
+                ('pL', 'picoliter', false),
+                ('pT', 'picotesla', false),
+                ('pc', 'parsec', false),
+                ('pg', 'picogram', false),
+                ('pg/L', 'picogram per liter', false),
+                ('pg/dL', 'picogram per deciliter', false),
+                ('pg/mL', 'picogram per milliliter', false),
+                ('pg/mg', 'picogram per milligram', false),
+                ('pg/mm', 'picogram per millimeter', false),
+                ('ph', 'phot', false),
+                ('pkat', 'picokatal', false),
+                ('pm', 'picometer', false),
+                ('pmol', 'picomole', false),
+                ('pmol/(24.h)', 'picomole per 24 hour', false),
+                ('pmol/L', 'picomole per liter', false),
+                ('pmol/d', 'picomole per day', false),
+                ('pmol/dL', 'picomole per deciliter', false),
+                ('pmol/g', 'picomole per gram', false),
+                ('pmol/h/mL', 'picomole per hour per milliliter', false),
+                ('pmol/h/mg', 'picomole per hour per milligram', false),
+                ('pmol/mL', 'picomole per milliliter', false),
+                ('pmol/mg', 'picomole per milligram', false),
+                ('pmol/min', 'picomole per minute', false),
+                ('pmol/min/mg', 'picomole per minute per milligram', false),
+                ('pmol/mmol', 'picomole per millimole', false),
+                ('pmol/mol', 'picomole per mole', false),
+                ('pmol/umol', 'picomole per micromole', false),
+                ('ps', 'picosecond', false),
+                ('rad', 'radian', false),
+                ('s', 'second', false),
+                ('sb', 'stilb', false),
+                ('sph', 'spere', false),
+                ('sr', 'steradian', false),
+                ('st', 'stere', false),
+                ('t', 'tonne', false),
+                ('u', 'unified atomic mass unit', false),
+                ('uCi', 'MICROCURIE', false),
+                ('uL', 'microliter', false),
+                ('uL/(2.h)', 'microliter per 2 hour', false),
+                ('uL/h', 'microliter per hour', false),
+                ('uOhm', 'microOhm', false),
+                ('uU', 'microUnit', false),
+                ('uU/L', 'micro enzyme unit per liter', false),
+                ('uU/g', 'micro enzyme unit per gram', false),
+                ('uU/mL', 'micro enzyme unit per milliliter', false),
+                ('uV', 'microvolt', false),
+                ('u[IU]', 'micro international unit', false),
+                ('u[IU]/L', 'microinternational unit per liter', false),
+                ('u[IU]/mL', 'micro international unit per milliliter', false),
+                ('ueq', 'microequivalents', false),
+                ('ueq/L', 'microequivalent per liter', false),
+                ('ueq/mL', 'microequivalent per milliliter', false),
+                ('ug', 'microgram', false),
+                ('ug/(100.g)', 'microgram per 100 gram', false),
+                ('ug/(24.h)', 'microgram per 24 hour', false),
+                ('ug/(8.h)', 'microgram per 8 hour', false),
+                ('ug/(kg.d)', 'microgram / kilogram * day', false),
+                ('ug/(kg.h)', 'microgram / kilogram * hour', false),
+                ('ug/L', 'microgram per liter', false),
+                ('ug/L/(24.h)', 'microgram per liter per 24 hour', false),
+                ('ug/[sft_i]', 'microgram per square foot (international)', false),
+                ('ug/d', 'microgram per day', false),
+                ('ug/dL', 'microgram per deciliter', false),
+                ('ug/g', 'microgram per gram', false),
+                ('ug/h', 'microgram per hour', false),
+                ('ug/kg', 'microgram per kilogram', false),
+                ('ug/kg/(8.h)', 'microgram per kilogram per 8 hour', false),
+                ('ug/kg/d', 'microgram per kilogram per day', false),
+                ('ug/kg/h', 'microgram per kilogram per hour', false),
+                ('ug/kg/min', 'microgram per kilogram per minute', false),
+                ('ug/m2', 'microgram per square meter', false),
+                ('ug/m3', 'microgram per cubic meter', false),
+                ('ug/mL', 'microgram per milliliter', false),
+                ('ug/mg', 'microgram per milligram', false),
+                ('ug/min', 'microgram per minute', false),
+                ('ug/mmol', 'microgram per millimole', false),
+                ('ug/ng', 'microgram per nanogram', false),
+                ('ukat', 'microkatal', false),
+                ('um', 'micrometer', false),
+                ('um/s', 'micrometer per second', false),
+                ('umol', 'micromole', false),
+                ('umol/(2.h)', 'micromole per 2 hour', false),
+                ('umol/(24.h)', 'micromole per 24 hour', false),
+                ('umol/(8.h)', 'micromole per 8 hour', false),
+                ('umol/L', 'micromole per liter', false),
+                ('umol/L/h', 'micromole per liter per hour', false),
+                ('umol/d', 'micromole per day', false),
+                ('umol/dL', 'micromole per deciliter', false),
+                ('umol/g', 'micromole per gram', false),
+                ('umol/h', 'micromole per hour', false),
+                ('umol/h/L', 'micromole per hour per liter', false),
+                ('umol/h/g', 'micromole / hour / gram', false),
+                ('umol/h/mg', 'micromole per hour per milligram', false),
+                ('umol/kg', 'micromole per kilogram', false),
+                ('umol/m', 'micromole / meter', false),
+                ('umol/mL', 'micromole per milliliter', false),
+                ('umol/mL/min', 'micromole per milliliter per minute', false),
+                ('umol/mg', 'micromole per milligram', false),
+                ('umol/min', 'micromole per minute', false),
+                ('umol/min/L', 'micromole per minute per liter', false),
+                ('umol/min/g', 'micromole per minute per gram', false),
+                ('umol/mmol', 'micromole per millimole', false),
+                ('umol/mol', 'micromole per mole', false),
+                ('umol/umol', 'micromole per micromole', false),
+                ('us', 'microsecond', false),
+                ('wk', 'week', false)
+                ;
+
+    - changeSet:
+        id: reference_forwarding-createTable
+        comment: Create table reference_forwarding
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: reference_forwarding
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_reference_forwarding
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: reference(id)
+                      foreignKeyName: FK_reference_forwarding_reference_id
+                    name: reference_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: observation
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: forwarding_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: createTable-surgical_report
+        comment: Create table surgical_report
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: surgical_report
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_surgical_report
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_patient_id_surgical_report
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_id_surgical_report
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_id_surgical_report
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_surgical_report
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_doctor_id_surgical_report
+                    name: doctor_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: billable
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      references: patient_medical_coverage(id)
+                      foreignKeyName: FK_patient_medical_coverage_id_surgical_report
+                    name: patient_medical_coverage_id
+                    type: int
+                - column:
+                    name: start_date_time
+                    type: datetime
+                - column:
+                    name: end_date_time
+                    type: datetime
+                - column:
+                    constraints:
+                      references: note(id)
+                      foreignKeyName: FK_note_id_surgical_report
+                    name: note_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-procedure_type
+        comment: Create table procedure_type
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: procedure_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_type
+                    name: id
+                    type: smallint
+                - column:
+                    name: sctid_code
+                    type: varchar(20)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+
+    - changeSet:
+        id: procedure_type-masterdata
+        comment: Carga de datos procedure_type
+        author: mvenere
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO procedure_type VALUES (1, '71388002', 'Procedimiento');
+                INSERT INTO procedure_type VALUES (2, '387713003', 'Procedimiento quirúrgico');
+                INSERT INTO procedure_type VALUES (3, '1263452006', 'Procedimiento de anestesia y/o sedación');
+                INSERT INTO procedure_type VALUES (4, null, 'Cultivo');
+                INSERT INTO procedure_type VALUES (5, null, 'Biopsia por congelación');
+                INSERT INTO procedure_type VALUES (6, null, 'Drenaje');
+
+    - changeSet:
+        id: addColumn-procedure_type_id_procedure
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: procedures
+              columns:
+                - column:
+                    name: procedure_type_id
+                    type: smallint
+                    defaultValueDate: 1
+          - addForeignKeyConstraint:
+              baseColumnNames: procedure_type_id
+              baseTableName: procedures
+              constraintName: FK_procedure_type_procedures
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: procedure_type
+              validate: true
+
+    - changeSet:
+        id: createTable-document_healthcare_professional
+        comment: Create table document_healthcare_professional
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_healthcare_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_healthcare_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_healthcare_professional
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_id_document_healthcare_professional
+                    name: healthcare_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: profession_type_id
+                    type: smallint
+                - column:
+                    name: professional_license_number_id
+                    type: int
+                - column:
+                    name: comments
+                    type: text
+
+    - changeSet:
+        id: addColumn-is_primary_procedure
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: procedures
+              columns:
+                - column:
+                    name: is_primary
+                    type: boolean
+                    defaultValueDate: ${boolean.true}
+
+    - changeSet:
+        id: document_type-surgical-data
+        comment: Actualizar datos document_type
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (18, 'Parte quirúrgico de internación');
+                INSERT INTO document_type VALUES (19, 'Parte quirúrgico de guardia');
+
+    - changeSet:
+        id: problem_type-surgical-data
+        comment: Actualizar datos problem_type
+        author: mvenere
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type VALUES ('406520001', 'Diagnóstico pre-operatorio');
+                INSERT INTO problem_type VALUES ('406521002', 'Diagnóstico post-operatorio');
+
+    - changeSet:
+        id: modifyDataType-document_file-file_name
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(60)
+              tableName: document_file
+
+    - changeSet:
+        id: modifyDataType-document_file_history-file_name
+        author: mvenere
+        changes:
+          - modifyDataType:
+              columnName: file_name
+              newDataType: varchar(60)
+              tableName: document_file_history
+
+    - changeSet:
+        id: createTable-document_prosthesis
+        comment: Create table document_prosthesis
+        author: mvenere
+        changes:
+          - createTable:
+              tableName: document_prosthesis
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_prosthesis
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_prosthesis
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+          - addUniqueConstraint:
+              tableName: document_prosthesis
+              columnNames: document_id
+              constraintName: UQ_document_id_document_prosthesis
+
+    - changeSet:
+        id: add-auditable-columns-clinical_specialty
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: clinical_specialty
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: delete-duplicated-clinical_specialty
+        comment: Set as deleted duplicated clinical specialty 'Diagnóstico por imágenes pediátrico'
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                declare
+                	ids INTEGER[];
+                BEGIN
+                 IF (SELECT COUNT(1) FROM clinical_specialty cs WHERE (cs.sctid_code = '320541000221105' and cs.clinical_specialty_type_id = 2)) > 1 THEN
+                    SELECT array_agg(cs.id) into ids FROM clinical_specialty cs WHERE (cs.sctid_code = '320541000221105' and cs.clinical_specialty_type_id = 2);
+                    UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
+                 END IF;
+                END $$;
+
+    - changeSet:
+        id: delete-duplicated-clinical_specialty_2
+        comment: Set as deleted duplicated clinical specialty 'Dermatología'
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                declare
+                	ids INTEGER[];
+                BEGIN
+                 IF (SELECT COUNT(1) FROM clinical_specialty cs WHERE (cs.sctid_code = '700241009' and cs.clinical_specialty_type_id = 1)) > 1 THEN
+                    SELECT array_agg(cs.id) into ids FROM clinical_specialty cs WHERE (cs.sctid_code = '700241009' and cs.clinical_specialty_type_id = 1);
+                    UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
+                 END IF;
+                END $$; 
+
+    - changeSet:
+        id: delete-duplicated-clinical_specialty_3
+        comment: Set as deleted duplicated clinical specialty 'Obstetricia'
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                declare
+                	ids INTEGER[];
+                BEGIN
+                 IF (SELECT COUNT(1) FROM clinical_specialty cs WHERE (cs.sctid_code = '408470005' and cs.clinical_specialty_type_id = 2)) > 1 THEN
+                    SELECT array_agg(cs.id) into ids FROM clinical_specialty cs WHERE (cs.sctid_code = '408470005' and cs.clinical_specialty_type_id = 2);
+                    UPDATE clinical_specialty SET deleted = TRUE where id = ids[2];
+                 END IF;
+                END $$; 
+

@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Moment } from 'moment';
-import { newMoment, momentFormat, DateFormat } from '@core/utils/moment.utils';
+import { newDate, buildFullDateFromDate } from '@core/utils/moment.utils';
 import { hasError, futureTimeValidation } from '@core/utils/form.utils';
-import { MIN_DATE } from "@core/utils/date.utils";
+import { MIN_DATE, toHourMinute } from "@core/utils/date.utils";
+import { isSameDay } from 'date-fns';
 
 @Component({
 	selector: 'app-effective-time-dialog',
@@ -14,13 +14,13 @@ import { MIN_DATE } from "@core/utils/date.utils";
 export class EffectiveTimeDialogComponent implements OnInit {
 
 	timeForm: UntypedFormGroup;
-	today: Moment = newMoment();
+	today: Date = newDate();
 	minDate = MIN_DATE;
 
 	hasError = hasError;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { datetime: Moment },
+		@Inject(MAT_DIALOG_DATA) public data: { datetime: Date },
 		public dialogRef: MatDialogRef<EffectiveTimeDialogComponent>,
 		private formBuilder: UntypedFormBuilder,
 	) { }
@@ -28,35 +28,32 @@ export class EffectiveTimeDialogComponent implements OnInit {
 	ngOnInit(): void {
 		this.timeForm = this.formBuilder.group({
 			date: [this.data.datetime, Validators.required],
-			time: [momentFormat(this.data.datetime, DateFormat.HOUR_MINUTE), [Validators.required, futureTimeValidation]],
+			time: [toHourMinute(this.data.datetime), this.getTimeValidators(this.data.datetime, this.today)],
 		});
 
 		this.timeForm.controls.date.valueChanges.subscribe(
-			(selectedDate: Moment) => {
-				const selectedDateString = momentFormat(selectedDate, DateFormat.API_DATE);
-				const todayDateString = momentFormat(this.today, DateFormat.API_DATE);
-				if (selectedDateString === todayDateString) {
-					this.timeForm.controls.time.setValidators([Validators.required, futureTimeValidation]);
+			(selectedDate: Date) => {
+					this.timeForm.controls.time.clearValidators();
+					this.timeForm.controls.time.setValidators(this.getTimeValidators(selectedDate,this.today));
 					this.timeForm.controls.time.updateValueAndValidity();
-				} else {
-					this.timeForm.controls.time.setValidators(Validators.required);
-					this.timeForm.controls.time.updateValueAndValidity();
-				}
 			}
 		);
+	}
+
+	getTimeValidators(setDate: Date, prevDate: Date) {
+		return isSameDay(setDate, prevDate) ?  [Validators.required, futureTimeValidation] : [Validators.required]
+	}
+
+	dateChanged(date: Date) {
+		this.timeForm.controls.date.setValue(date)
 	}
 
 	set(): void {
 		if (this.timeForm.valid) {
 			const newTime: string = this.timeForm.controls.time.value;
-			const newDatetime: Moment = this.timeForm.controls.date.value;
-			newDatetime.set({
-				hour: +newTime.substr(0, 2),
-				minute: +newTime.substr(3, 2),
-				second: 0,
-				millisecond: 0,
-			});
-			this.dialogRef.close(newDatetime);
+			const newDatetime: Date = this.timeForm.controls.date.value;
+			const result: Date = buildFullDateFromDate(newTime, newDatetime)
+			this.dialogRef.close(result);
 		}
 	}
 

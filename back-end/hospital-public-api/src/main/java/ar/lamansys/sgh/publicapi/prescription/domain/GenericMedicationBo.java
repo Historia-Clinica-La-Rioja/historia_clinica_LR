@@ -2,14 +2,10 @@ package ar.lamansys.sgh.publicapi.prescription.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.Objects;
 
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Getter
 public class GenericMedicationBo {
 	String name;

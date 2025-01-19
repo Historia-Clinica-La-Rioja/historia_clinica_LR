@@ -1,0 +1,41 @@
+{
+    "digital-signature": {
+        "TITLE": "Documentos pendientes de firma",
+        "UNSELECTED_DOCUMENT": "Seleccione un documento para ver el detalle del mismo.",
+        "NO_DOCUMENTS": "No hay documentos pendientes para firmar.",
+        "card-information": {
+            "NO_SNOMED_CONCEPT": "Sin problemas registrados",
+            "PROBLEM": "Diagnóstico/problema",
+            "CREATED": "Creación",
+            "PROFESSIONAL": "Profesional",
+            "PATIENT": "Paciente",
+            "ATTENTION_TYPE": "Tipo de atención",
+			"SIGN_STATUS": "Estado de firma"
+        },
+        "dialogs": {
+            "cuil": {
+                "NO_CUIL": "El profesional no tiene CUIL",
+                "CONTENT": "Contacta a un administrativo para cargarlo"
+            },
+            "sign": {
+                "TITLE": "¿Está seguro que desea firmarlos?",
+                "CONTENT": "Si confirma la firma, ya no podrá editar los documentos seleccionados"
+            }
+        },
+        "detailed-documents": {
+            "SPECIALTY": "Especialidad",
+            "PATIENT": "Paciente",
+            "PROFESSIONAL": "Profesional",
+            "REASON": "Motivo de consulta",
+            "RISK_FACTORS": "Signos vitales y factores de riesgo",
+            "ANTHROPOMETRIC_DATA": "Datos antropométricos",
+            "DIAGNOSIS": "Diagnósticos",
+            "FAMILY_HISTORIES": "Antecedentes familiares",
+            "PERSONAL_HISTORIES": "Antecedentes personales",
+            "PROCEDURES": "Procedimientos",
+            "EVOLUTION": "Evolución",
+            "ALLERGIES": "Alergias",
+            "MEDICATION": "Medicación habitual"
+        }
+    }
+}

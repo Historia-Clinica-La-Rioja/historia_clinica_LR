@@ -25,9 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   	) { }
 
 	ngOnInit(): void {
-		this.managementBed$ = this.bedManagementFacadeService.getBedManagement([this.internmentSector, this.emergencySector]).pipe(
-			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
-		).subscribe(data => this.existBedManagementList = data ? true : false);
+		this.existsBedManagementList();
 	}
 
 	onSelectBed(bedId): void {
@@ -37,11 +35,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 	updateMapping(event) {
 		this.updateMappingBed = event;
 		delete this.selectedBed;
+		this.existsBedManagementList();
 	}
 
 	ngOnDestroy(): void {
 		this.managementBed$.unsubscribe();
   	}
+
+	private existsBedManagementList() {
+		this.managementBed$ = this.bedManagementFacadeService.getBedManagement([this.internmentSector, this.emergencySector]).pipe(
+			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)
+		).subscribe(data => this.existBedManagementList = data ? true : false);
+	}
 
 }
 
@@ -61,6 +66,7 @@ export class BedManagement {
 		bedId: number;
 		bedNumber: string;
 		free: boolean;
+		isBlocked: boolean;
 	}[];
 	sectorTypeDescription: string
 }

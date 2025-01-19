@@ -30,7 +30,7 @@ export class EmergencyCareTemporaryPatientProfile {
 		this.route.paramMap.subscribe(
 			(params) => {
 				this.patientId = Number(params.get('id'));
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 					.pipe(map(r => r.id)).subscribe(rr => this.episodeId = rr)
 			}
 		)

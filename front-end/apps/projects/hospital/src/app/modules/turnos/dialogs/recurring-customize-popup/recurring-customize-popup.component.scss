@@ -1,0 +1,40 @@
+h1, span {
+    font-weight: 500;
+}
+
+.disabled {
+    color: gray;
+}
+
+.container {
+    padding: 1rem 0 1rem 0;
+}
+
+.days {
+    mat-chip {
+        cursor: pointer;
+    }
+}
+
+.end-date {
+    article {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.small-input {
+    mat-form-field {
+        margin-right: 1rem;
+        text-align: center;
+        width: 4rem;
+    }
+
+    .mr {
+        margin-right: 1rem;
+    }
+}
+
+.middle {
+    margin: 0 auto;
+}

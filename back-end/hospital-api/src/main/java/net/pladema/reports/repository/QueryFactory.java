@@ -2,7 +2,6 @@ package net.pladema.reports.repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +17,8 @@ import javax.persistence.Query;
 
 import net.pladema.establishment.application.hierarchicalunits.FetchDescendantsByHierarchicalUnitId;
 
+import net.pladema.reports.application.ports.InstitutionReportStorage;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,14 @@ public class QueryFactory {
 
 	private final FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId;
 
-    public QueryFactory(EntityManager entityManager, FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId){
+	private final InstitutionReportStorage institutionReportStorage;
+
+    public QueryFactory(EntityManager entityManager,
+						FetchDescendantsByHierarchicalUnitId fetchDescendantsByHierarchicalUnitId,
+						InstitutionReportStorage institutionReportStorage){
         this.entityManager = entityManager;
     	this.fetchDescendantsByHierarchicalUnitId = fetchDescendantsByHierarchicalUnitId;
+		this.institutionReportStorage = institutionReportStorage;
 	}
 
     @SuppressWarnings("unchecked")
@@ -41,10 +47,10 @@ public class QueryFactory {
 										  Integer hierarchicalUnitTypeId, Integer hierarchicalUnitId,
 										  boolean includeHierarchicalUnitDescendants) {
 
-		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
-		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59, LocalTime.MAX.getNano());
+		LocalDateTime startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
+		LocalDateTime endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59).plusHours(3);
 
-        Query outpatientQuery = entityManager.createNamedQuery("Reports.ConsultationDetail");
+		Query outpatientQuery = entityManager.createNamedQuery("Reports.ConsultationDetail");
         outpatientQuery.setParameter("institutionId", institutionId);
         outpatientQuery.setParameter("startDate", startDate);
         outpatientQuery.setParameter("endDate", endDate);
@@ -66,7 +72,7 @@ public class QueryFactory {
 		data.sort(Comparator.comparing(ConsultationDetailWithoutInstitution::getPatientSurname));
 
 
-		List<ConsultationDetail> result = mapToConsultationDetail(data, institutionId);
+		List<ConsultationDetail> result = data.stream().map(ConsultationDetail::new).collect(Collectors.toList());
 
 		result = result.stream()
        			.filter(cd -> doctorId == null || Objects.equals(doctorId, cd.getProfessionalId()))
@@ -85,34 +91,6 @@ public class QueryFactory {
 		return result;
 	}
 
-	private List<ConsultationDetail> mapToConsultationDetail(List<ConsultationDetailWithoutInstitution> data, Integer institutionId){
-		InstitutionInfo institutionInfo = getInstitutionInfo(institutionId);
-		List<ConsultationDetail> result = new ArrayList<>();
-		for (ConsultationDetailWithoutInstitution row : data) {
-			result.add(new ConsultationDetail(row, institutionInfo));
-		}
-		return result;
-	}
-
-	private InstitutionInfo getInstitutionInfo(Integer institutionId){
-		String sqlString = "SELECT p.description, d.description, i.sisaCode, i.name " +
-				"FROM Institution i " +
-				"JOIN Address a ON (i.addressId = a.id) " +
-				"JOIN City c ON (a.cityId = c.id) " +
-				"JOIN Department d ON (c.departmentId = d.id) " +
-				"JOIN Province p ON (d.provinceId = p.id) " +
-				"WHERE i.id = :institutionId";
-		List queryResult = entityManager.createQuery(sqlString)
-				.setParameter("institutionId", institutionId)
-				.getResultList();
-		Object[] resultSearch = queryResult.size() == 1 ? (Object[]) queryResult.get(0) : null;
-		assert resultSearch != null;
-		return new InstitutionInfo(
-				(resultSearch[0]!=null)? (String) resultSearch[0] : null,
-				(resultSearch[1]!=null)? (String) resultSearch[1] : null,
-				(resultSearch[2]!=null)? (String) resultSearch[2] : null,
-				(resultSearch[3]!=null)? (String) resultSearch[3] : null);
-	}
 	private List<ConsultationDetailWithoutInstitution> formatProblemsAndProcedures(List<ConsultationDetailWithoutInstitution> list){
 		for(ConsultationDetailWithoutInstitution fila : list){
 			if(fila.getProblems() != null) {

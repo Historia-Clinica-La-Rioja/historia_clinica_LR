@@ -4,8 +4,9 @@ import { BedService } from '@api-rest/services/bed.service';
 import { Observable, ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { BedManagementFilter } from '../components/bed-filters/bed-filters.component';
-import { momentParseDateTime, momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { isAfter, isSameDay } from 'date-fns';
 
 @Injectable()
 export class BedManagementFacadeService {
@@ -56,7 +57,8 @@ export class BedManagementFacadeService {
 			this.filterBySector(newFilter, bedManagement)
 			&& this.filterByService(newFilter, bedManagement)
 			&& this.filterByProbableDischargeDate(newFilter, bedManagement)
-			&& this.filterByFreeBed(newFilter, bedManagement)));
+			&& this.filterByFreeBed(newFilter, bedManagement)
+			&& this.filterByHierarchicalUnits(newFilter, bedManagement)));
 		this.initialFilters = newFilter;
 		this.bedSummarySubject.next(result);
 		this.bedManagementFilterSubject.next(newFilter);
@@ -71,11 +73,27 @@ export class BedManagementFacadeService {
 	}
 
 	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrBefore(momentParseDate(filter.probableDischargeDate)) : false : true);
+		if (!filter.probableDischargeDate) {
+			return true;
+		}
+		if (!bed.probableDischargeDate) {
+			return false
+		}
+		const dateIsAfter = isAfter(dateISOParseDate(bed.probableDischargeDate), dateISOParseDate(filter.probableDischargeDate))
+		const dateIsSame = isSameDay(dateISOParseDate(bed.probableDischargeDate), dateISOParseDate(filter.probableDischargeDate))
+		return dateIsAfter || dateIsSame;
 	}
 
 	private filterByFreeBed(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.filled ? true : bed.bed.free);
+		return (filter.filled ? true : !bed.bed.isBlocked && bed.bed.free);
+	}
+
+	private filterByHierarchicalUnits(filter: BedManagementFilter, bed: BedSummaryDto) {
+		return (filter.hierarchicalUnits?.length ? this.sectorHasHierarchicalUnits(filter, bed) : true);
+	}
+
+	private sectorHasHierarchicalUnits(filter: BedManagementFilter, bed: BedSummaryDto) {
+		return bed.sector.hierarchicalUnit.length ? bed.sector.hierarchicalUnit.some(h => filter.hierarchicalUnits.includes(h.id)) : false;
 	}
 
 	public getFilterOptions() {

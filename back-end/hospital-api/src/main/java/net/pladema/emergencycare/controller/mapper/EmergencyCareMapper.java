@@ -1,13 +1,15 @@
 package net.pladema.emergencycare.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.dto.*;
+import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
-import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.mapper.TriageMapper;
 import net.pladema.medicalconsultation.doctorsoffice.controller.mapper.DoctorsOfficeMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
@@ -21,7 +23,9 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class, LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class})
+@Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class,
+		LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class, OutpatientConsultationMapper.class,
+		EmergencyCareClinicalSpecialtySectorMapper.class})
 public interface EmergencyCareMapper {
 
     @Named("toResponseEmergencyCareDto")
@@ -29,9 +33,9 @@ public interface EmergencyCareMapper {
     @Mapping(target = "emergencyCareType", ignore = true)
     @Mapping(target = "emergencyCareState", ignore = true)
     @Mapping(target = "policeInterventionDetails", source = "policeInterventionDetails", qualifiedByName = "toPoliceInterventionDto")
-    @Mapping(target = "reasons", source = "reasons", qualifiedByName = "fromListReasonBo")
     @Mapping(target = "creationDate", source = "createdOn")
     @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
+	@Mapping(target = "patient.person.photo", ignore = true)
     ResponseEmergencyCareDto toResponseEmergencyCareDto(EmergencyCareBo emergencyCareBo);
 
     @AfterMapping
@@ -41,13 +45,17 @@ public interface EmergencyCareMapper {
         target.setEntranceType(EnumWriter.write(EEmergencyCareEntrance.getById(emergencyCareBo.getEmergencyCareEntranceId())));
     }
 
-    @Named("toEmergencyCareListDto")
-    @Mapping(target = "type", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "creationDate", source = "createdOn")
-    @Mapping(target = "triage.id", source = "triageCategoryId")
-    @Mapping(target = "triage.name", source = "triageName")
-    @Mapping(target = "triage.color", source = "triageColorCode")
+	@Named("toEmergencyCareListDto")
+	@Mapping(target = "type", ignore = true)
+	@Mapping(target = "state", ignore = true)
+	@Mapping(target = "creationDate", source = "createdOn")
+	@Mapping(target = "triage.id", source = "triageCategoryId")
+	@Mapping(target = "triage.name", source = "triageName")
+	@Mapping(target = "triage.color", source = "triageColorCode")
+	@Mapping(target = "triage.reasons", source = "triage.reasons")
+	@Mapping(target = "triage.creator", source = "triage.creator")
+	@Mapping(target = "triage.clinicalSpecialtySector", source = "triage.clinicalSpecialtySectorBo")
+	@Mapping(target = "patient.person.photo", ignore = true)
     EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 
     @Named("toListEmergencyCareListDto")
@@ -70,6 +78,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId")
     @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId")
     @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
+	@Mapping(target = "reason", source = "administrative.reason")
     EmergencyCareBo administrativeEmergencyCareDtoToEmergencyCareBo(ECAdministrativeDto emergencyCareDto);
 
     @Named("administrativeUpdateEmergencyCareDtoToEmergencyCareBo")
@@ -81,7 +90,8 @@ public interface EmergencyCareMapper {
     @Mapping(target = "emergencyCareTypeId", source = "emergencyCareTypeId")
     @Mapping(target = "emergencyCareEntranceId", source = "entranceTypeId")
     @Mapping(target = "hasPoliceIntervention", source = "hasPoliceIntervention")
-    EmergencyCareBo emergencyCareDtoToEmergencyCareBo(NewEmergencyCareDto updateEmergencyCareDto);
+	@Mapping(target = "reason", source = "reason")
+	EmergencyCareBo emergencyCareDtoToEmergencyCareBo(NewEmergencyCareDto updateEmergencyCareDto);
 
     @Named("adultGynecologicalEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
@@ -93,7 +103,8 @@ public interface EmergencyCareMapper {
     @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId")
     @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId")
     @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
-    EmergencyCareBo adultGynecologicalEmergencyCareDtoToEmergencyCareBo(ECAdultGynecologicalDto emergencyCareDto);
+	@Mapping(target = "reason", source = "administrative.reason")
+	EmergencyCareBo adultGynecologicalEmergencyCareDtoToEmergencyCareBo(ECAdultGynecologicalDto emergencyCareDto);
 
     @Named("pediatricEmergencyCareDtoToEmergencyCareBo")
     @Mapping(target = "patient.id", source = "administrative.patient.id")
@@ -105,7 +116,8 @@ public interface EmergencyCareMapper {
     @Mapping(target = "emergencyCareTypeId", source = "administrative.emergencyCareTypeId")
     @Mapping(target = "emergencyCareEntranceId", source = "administrative.entranceTypeId")
     @Mapping(target = "hasPoliceIntervention", source = "administrative.hasPoliceIntervention")
-    EmergencyCareBo pediatricEmergencyCareDtoToEmergencyCareBo(ECPediatricDto emergencyCareDto);
+	@Mapping(target = "reason", source = "administrative.reason")
+	EmergencyCareBo pediatricEmergencyCareDtoToEmergencyCareBo(ECPediatricDto emergencyCareDto);
 
     @Named("toEmergencyCareUserDto")
     @Mapping(target = "firstName", source = "personDto.firstName")
@@ -116,5 +128,6 @@ public interface EmergencyCareMapper {
 	@Named("toEmergencyCareEpisodeInProgressDto")
 	EmergencyCareEpisodeInProgressDto toEmergencyCareEpisodeInProgressDto(EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressBo);
 
-
+	@Named("fromEmergencyCareEpisodeFilterDto")
+	EmergencyCareEpisodeFilterBo fromEmergencyCareEpisodeFilterDto(EmergencyCareEpisodeFilterDto emergencyCareEpisodeFilterDto);
 }

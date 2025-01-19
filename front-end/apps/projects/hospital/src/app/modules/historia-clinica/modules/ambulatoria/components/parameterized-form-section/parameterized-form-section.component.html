@@ -1,0 +1,19 @@
+<app-new-consultation-expansion-section id="parameterized-form"
+    title="{{'ambulatoria.paciente.nueva-consulta.parameterized-form.TITLE' | translate}}" icon="format_list_bulleted">
+
+    <app-titled-content-card *ngIf="!!parameterizedFormToSave.length" title="{{ 'ambulatoria.paciente.nueva-consulta.parameterized-form.REGISTERED_FORM' }}">
+        <mat-list>
+            <mat-list-item *ngFor="let form of parameterizedFormToSave; last as isLast; index as index">
+                <div class="flex-container">
+                    <span class="form-title"> {{form.selectedFormName | translate }}</span>
+                    <app-button buttonType="mat-icon-button" matIcon="delete_outline" color="warn" (clicked)="remove(index)"></app-button>
+                </div>
+                <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+            </mat-list-item>
+        </mat-list>
+    </app-titled-content-card>
+    <app-button id="parameterized-form-add" buttonType="mat-button"
+        text="{{'ambulatoria.paciente.nueva-consulta.parameterized-form.ADD'}}" (clicked)="openDialog()">
+    </app-button>
+
+</app-new-consultation-expansion-section>

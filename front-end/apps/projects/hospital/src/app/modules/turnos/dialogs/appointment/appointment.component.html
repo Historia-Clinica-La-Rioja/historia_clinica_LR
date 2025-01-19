@@ -7,32 +7,15 @@
 	<div mat-dialog-content class="window" id="window"
 		gdAreas="personal-data personal-data | coverage appointment | div-sup div-sup | state-observations reports | div-inf div-inf "
 		gdColumns="1fr 1fr" gdRows="auto" gdGap="10px 50px"
-		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports"
-		gdColumns.lt-md="auto"
+		gdAreas.lt-md="personal-data | coverage | appointment | state-observations | reports" gdColumns.lt-md="auto"
 		gdGap.lt-md="0px">
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
-				<div class="header-content" fxLayout="row" fxLayoutAlign="start " fxLayoutGap="20px">
-					<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" [src]="decodedPhoto$ | async"
-						onerror="this.src='../../../../../assets/images/empty-profile.png'">
-					<div fxLayout="column" fxLayoutAlign="center start">
-						<span class="mat-body-strong capitalize title-size"
-							*ngIf="data.appointmentData.patient.fullName">
-							{{ viewPatientName(data.appointmentData) | uppercase }}
-						</span>
-						<div>
-							<span id="patient_id" class="mat-body-strong subtitle-size">ID
-								{{data.appointmentData.patient.id}}
-							</span>•
-							<span class="mat-body-strong subtitle-size"
-								*ngIf="data.appointmentData.patient.identificationNumber">
-								{{identificationType?.description}}
-								{{data.appointmentData.patient.identificationNumber | number:'3.0-0'}}
-							</span>
-						</div>
-						<div *ngIf="!isRejectedPatient">
-							<a type="button" mat-icon-button color="primary"
+				<div class="header-content" fxLayout="column" fxLayoutAlign="start " fxLayoutGap="20px">
+					<app-patient-summary *ngIf="patientSummary" data-id="patient-summary" [person]="patientSummary"></app-patient-summary>
+					<div *ngIf="!isRejectedPatient">
+						<a type="button" mat-icon-button color="primary"
 							*appHasRole="['ESPECIALISTA_MEDICO','PROFESIONAL_DE_SALUD','ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 							[routerLink]="'/institucion/' + institutionId + '/ambulatoria/paciente/' + data.appointmentData?.patient?.id"
 							(click)="closeDialog()">
@@ -41,7 +24,6 @@
 							</span>
 							<mat-icon color="primary">open_in_new</mat-icon>
 						</a>
-						</div>
 					</div>
 				</div>
 				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
@@ -60,7 +42,7 @@
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.coverageData.COVERAGE_DATA' |
 						translate}}</span>
-					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column" >
+					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageData else noInfo"
 							matTooltip="{{coverageData.medicalCoverage.name}}">{{coverageText}}</span>
 						<span class="mat-body patient-info coverage-text subtitle-size" *ngIf="coverageNumber">/
@@ -71,6 +53,7 @@
 							{{coverageCondition}}
 						</span>
 					</div>
+					<app-colored-label *ngIf="coverage && coverageData?.medicalCoverage" [description]="coverage.description" [color]="coverage.color"></app-colored-label>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' |
@@ -78,8 +61,8 @@
 					<span *ngIf="phoneNumber else noInfo"
 						class="mat-body patient-info coverage-text subtitle-size">{{phoneNumber}}</span>
 				</div>
-				<button type="button" mat-icon-button color="primary" *ngIf="( hasRoleToEdit$ | async ) && !isRejectedPatient"
-					(click)="hideFilters()">
+				<button type="button" mat-icon-button color="primary"
+					*ngIf="!isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )" (click)="hideFilters()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.EDIT_PATIENT_INFO' | translate}}
@@ -90,7 +73,7 @@
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
 					<mat-form-field appearance="outline">
-						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+						<button type="button"  matSuffix color="warn" mat-icon-button
 							*ngIf="formEdit.value.newCoverageData" (click)="clear(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -120,9 +103,8 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
-							<mat-error
-							*ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
-							[translate]="'forms.FORMAT_NUMERIC'">
+							<mat-error *ngIf="hasError(formEdit, 'pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 						<mat-form-field fxFlex="70%" appearance="outline">
@@ -136,14 +118,14 @@
 							<mat-error *ngIf="hasError(formEdit, 'maxlength', 'phoneNumber')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
 							</mat-error>
-							<mat-error
-							*ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
-							[translate]="'forms.FORMAT_NUMERIC'">
+							<mat-error *ngIf="hasError(formEdit, 'pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
 						</mat-form-field>
 					</div>
 					<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
-						<button mat-stroked-button color="primary" btn-block type="button" (click)="hideFilters(); updatePhoneValidators()">
+						<button mat-stroked-button color="primary" btn-block type="button"
+							(click)="hideFilters(); updatePhoneValidators()">
 							<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 						</button>
 						<button mat-flat-button color="primary" [disabled]="isInvalidFormEdit()">
@@ -165,10 +147,7 @@
 							calendar_today
 						</mat-icon>
 						<div>
-							<span class="mat-body strong-size"> {{selectedDate | date:"EEEE, d " | titlecase }}
-								de</span>
-							<span class="mat-body strong-size"> {{selectedDate | date:"MMMM " | titlecase}} de</span>
-							<span class="mat-body strong-size"> {{selectedDate | date:"y " | titlecase}}</span>
+							<span class="mat-body strong-size"> {{selectedDate | dateFormat:"fulldate" | titlecase }} </span>
 						</div>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
@@ -176,34 +155,41 @@
 							class="icon-grey">
 							access_time
 						</mat-icon>
-						<span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
+						<span class="mat-body subtitle-size"> {{selectedDate | dateFormat: 'time'}}</span>
 					</div>
-					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" class="modality" *ngIf="isVirtualConsultationModality">
-						<mat-icon fontSet="material-icons-outlined" mat-list-icon [inline]="true" id="modality"
-							class="icon-purple">
-							video_call
-						</mat-icon>
-						<span class="mat-body subtitle-size purple"> {{selectedModality | translate}}</span>
+					<div>
+						<app-modality-label class="custom-label-modality" [modality]="selectedModality?.value"></app-modality-label>
 					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
 					</div>
-					<div fxLayout="column" class="assigned-by" *ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
+					<div fxLayout="column" class="assigned-by"
+						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn | date:"dd/MM/yyyy H:mm"}}hs.</span>
+						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn.toString() | isoToDate
+							|  dateFormat: 'datetime'}}</span>
 					</div>
+					<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
+						<app-reference-state-label [referenceClosureDescription]="appointment.associatedReferenceClosureType?.description"></app-reference-state-label>
+					</div>
+					<span *ngIf="recurringTypeSelected" class="recurring-type-text">{{recurringTypeSelected.value}}</span>
 				</div>
-				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && canMakeVirtualConsultation">
+				<div fxLayout="column" fxLayoutGap="10px" class="motive" *ngIf="isVirtualConsultationModality && selectedState !== appointmentStatesIds.SERVED && (attachProfessional || agendaOwner)">
 						<button type="button" mat-raised-button color="primary" (click)="entryCall()">
 							<mat-icon class="material-icons-outlined">video_call</mat-icon>
 							<span class="mat-body strong-size">
 								{{'turnos.appointment.JOIN_CALL' | translate}}
 							</span>
 						</button>
-						<span class="assigned-by">{{appointment?.callLink}}</span>
+						<div fxLayout="row" fxLayoutAlign="space-around center">
+							<span class="assigned-by">{{appointment?.callLink}}</span>
+							<button mat-icon-button (click)="copied()" [cdkCopyToClipboard]="appointment?.callLink">
+								<mat-icon>content_copy</mat-icon>
+							  </button>
+						</div>
 				</div>
 				<button type="button" mat-icon-button color="primary"
-					*ngIf="(selectedState === appointmentStatesIds.ASSIGNED) && ( hasRoleToEdit$ | async ) && !isVirtualConsultationModality" (click)="openDateForm()">
+					*ngIf="((selectedState === appointmentStatesIds.ASSIGNED) && (( hasRoleAdmin$ | async ) || (agendaOwner && data.hasPermissionToAssignShift)))" (click)="openDateForm()">
 					<mat-icon class="material-icons-outlined">edit</mat-icon>
 					<span class="mat-body strong-size">
 						{{'turnos.appointment.date.EDIT_DATE_TIME' | translate}}
@@ -211,38 +197,98 @@
 				</button>
 			</div>
 
-			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
-				(ngSubmit)="updateAppointmentDate()">
-				<app-datepicker [minDate]="startAgenda" [maxDate]="endAgenda" [dateToSetInDatepicker]="selectedDate"
-					[availableDays]="availableDays" [disableDays]="disableDays" (selectDate)="selectDate($event)">
-				</app-datepicker>
-
-				<div fxLayout="row">
+			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm">
+				<div fxLayoutGap="10px">
+					<mat-form-field appearance="outline">
+						<mat-select formControlName="modality" (selectionChange)="setModalityAndValidator(true)" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
+							<mat-option
+								*ngFor="let modality of modalitys" [value]="modality.value">
+									{{modality.description | translate}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div fxLayout="row" fxLayoutAlign="space-between end" fxLayoutGap="10px grid">
 					<mat-form-field appearance="outline" class="hour">
+						<mat-label>{{'turnos.appointment.DAY' | translate}}</mat-label>
+						<mat-select formControlName="day" (selectionChange)="selectDate(datestypes.DAY)">
+							<mat-option *ngFor="let day of availableDays" [value]="day">{{day}}</mat-option>
+						</mat-select>
+					  </mat-form-field>
+					  <mat-form-field appearance="outline" class="hour">
+						<mat-label>{{'turnos.appointment.MONTH' | translate}}</mat-label>
+						<mat-select formControlName="month" (selectionChange)="selectDate(datestypes.MONTH)">
+							<mat-option *ngFor="let month of availableMonths" [value]="month">{{month}}</mat-option>
+						</mat-select>
+					  </mat-form-field>
+					  <mat-form-field appearance="outline" class="hour">
+						<mat-label>{{'turnos.appointment.YEAR' | translate}}</mat-label>
+						<mat-select formControlName="year" (selectionChange)="selectDate(datestypes.YEAR)">
+							<mat-option *ngFor="let year of availableYears" [value]="year">{{year}}</mat-option>
+						</mat-select>
+					  </mat-form-field>
+				</div>
+				<div fxLayout="row" fxLayoutGap="20px grid">
+					<mat-form-field appearance="outline" class="hour">
+						<mat-label>{{'turnos.appointment.HOUR' | translate}}</mat-label>
 						<mat-select formControlName="hour">
 							<mat-option [value]="possibleScheduleHour"
 								*ngFor="let possibleScheduleHour of possibleScheduleHours">
-								{{ possibleScheduleHour | date:'shortTime' }}
+								{{ possibleScheduleHour.hours}}:{{possibleScheduleHour.minutes | number:'2.0-0'}}
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
 					<span class="hs"> hs.</span>
 				</div>
+				<div fxLayout="row" *ngIf="viewInputEmail" fxLayoutGap="20px">
+					<mat-form-field appearance="outline">
+						<mat-label>{{'turnos.new-appointment.EMAIL_PATIENT' | translate}}</mat-label>
+						<input matInput type="email" formControlName="email">
+						<mat-error *ngIf="hasError(formDate, 'required', 'email')"><span translate="forms.REQUIRED"></span></mat-error>
+						<mat-hint>{{'turnos.new-appointment.MESSAGE_UPDATE_EMAIL' | translate}}</mat-hint>
+						<mat-error *ngIf="hasError(formDate,'email', 'email')"
+							[translate]="'pacientes.form.INVALID'"></mat-error>
+						</mat-form-field>
+				</div>
+
+				<div class="recurring-type" *appFeatureFlag="HABILITAR_RECURRENCIA_EN_DESARROLLO">
+					<div *ngIf="isAppointmentAfterToday">
+						<mat-form-field appearance="outline">
+							<mat-label [translate]="'turnos.appointment.RECURRING_TYPE'"></mat-label>
+							<mat-select formControlName="recurringType">
+								<mat-option
+									[disabled]="value.id != NO_REPEAT && (this.appointment.parentAppointmentId || this.appointment.hasAppointmentChilds)"
+									[value]="value.id"
+									*ngFor="let value of recurringTypes"
+									(click)="checkOption(value.id)">
+									{{value.value}}
+								</mat-option>
+							</mat-select>
+							<mat-error *ngIf="hasError(formDate, 'required', 'recurringType')" [translate]="'forms.REQUIRED'"></mat-error>
+							<mat-error *ngIf="hasError(formDate, 'invalid', 'recurringType')">{{this.formDate.controls.recurringType.errors.invalid}}</mat-error>
+						</mat-form-field>
+					</div>
+				</div>
+
 				<div class="confirm-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px" fxFlex="60%">
 					<button id="cancel-edition" mat-stroked-button color="primary" btn-block type="button"
 						(click)="cancelDateForm()">
 						<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 					</button>
-					<button id="save-edition" mat-flat-button color="primary" [disabled]="formDate.invalid">
-						<span>{{'turnos.appointment.SAVE' | translate}}</span>
-					</button>
+					<app-button id="save-edition" 
+						[text]="'turnos.appointment.SAVE'" 
+						[buttonType]="saveButtonType"
+						[disabled]="formDate.invalid"
+						[isLoading]="isSaveLoading"
+						(clicked)="updateAppointmentDate()">
+					</app-button>
 				</div>
 			</form>
 		</section>
 
 		<section gdArea="state-observations">
 
-			<section id="state">
+			<section id="state" fxLayout="column" fxLayoutGap="10px">
 				<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
 				<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
@@ -281,39 +327,68 @@
 						</mat-icon>
 					</button>
 
-					<button type="button" disabled
+					<button type="button"
 						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }"
-						mat-stroked-button>
+						(click)="onClickedState(appointmentStatesIds.SERVED)" mat-stroked-button
+						[disabled]="(hasRoleToChangeState$ | async) === false || !HABILITAR_ATENDER_TURNO_MANUAL">
 						<mat-icon color="primary" svgIcon="person_check_outlined"
 							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
 				</div>
+				<app-colored-icon-text *ngIf="HABILITAR_ANEXO_II_MENDOZA && selectedModality?.value === ON_SITE_ATTENTION && selectedState !== appointmentStatesIds.ASSIGNED && appointment.patientIdentityAccreditationStatus "
+					[coloredIconText]="scanMenssage"
+				></app-colored-icon-text>
 
-				<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive" *ngIf="isMotiveRequired() && !isRejectedPatient"
-					fxLayout="column">
-					<span class="mat-body-strong strong-size">{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}</span>
-					<mat-form-field appearance="outline">
-						<textarea formControlName="motive"
-							placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
-							id="motive"></textarea>
-						<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
-						</mat-error>
-						<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
-							[translate]="'forms.MAX_LENGTH_ERROR'"
-							[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
-						</mat-error>
-					</mat-form-field>
-					<div fxLayoutAlign="end">
-						<button mat-flat-button color="primary" id="save">
-							<span> {{'turnos.appointment.SAVE' | translate}}</span>
+				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
+					<span class="mat-body-strong strong-size"
+						*ngIf="absentMotive || !hideAbsentMotiveForm">
+						{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}
+					</span>
+					<div *ngIf="absentMotive && hideAbsentMotiveForm" fxLayout="row"
+						fxLayoutAlign="space-between" fxLayoutGap="20px">
+						<p class="mat-body strong-size">
+							{{absentMotive}}
+						</p>
+						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient"
+							(click)="setHideAbsentMotiveForm(false)">
+							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
 					</div>
+					<form [formGroup]="formMotive" (ngSubmit)="saveAbsent()" class="motive"
+						*ngIf="isMotiveRequired() && !hideAbsentMotiveForm && !isRejectedPatient" fxLayout="column">
+						<mat-form-field appearance="outline">
+							<textarea formControlName="motive"
+								placeholder="{{'turnos.appointment.ABSENCE_MOTIVE' | translate }}" matInput type="text"
+								id="motive"></textarea>
+							<mat-error *ngIf="hasError(formMotive, 'required', 'motive')" [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(formMotive, 'maxlength', 'motive')"
+								[translate]="'forms.MAX_LENGTH_ERROR'"
+								[translateParams]="{max: getError(formMotive, 'maxlength', 'motive')?.requiredLength}">
+							</mat-error>
+						</mat-form-field>
+						<div fxLayoutAlign="end">
+							<div class="absent-motive-buttons" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+								<button mat-stroked-button color="primary" btn-block type="button"
+									*ngIf="absentMotive" (click)="cancelEditMotive()">
+									<span> {{'turnos.appointment.CANCEL' | translate}}</span>
+								</button>
+								<button mat-flat-button color="primary" id="save">
+									<span> {{'turnos.appointment.SAVE' | translate}}</span>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
 
-				</form>
+				<div style="margin-top: 10px" *ngIf="selectedState === appointmentStatesIds.CONFIRMED">
+					<span class="waiting-time">{{waitingTime}}</span>
+				</div>
+
 			</section>
 
 			<section id="observation-section" class="observation-section">
-				<div *ngIf="!observation && hideObservationForm && hideObservationTitle && !isRejectedPatient">
+				<div *ngIf="!observation && hideObservationForm && hideObservationTitle && !isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )">
 					<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)">
 						{{'turnos.appointment.observations.ADD_OBSERVATION' | translate}}
 					</a>
@@ -328,12 +403,13 @@
 						<p class="mat-body strong-size">
 							{{observation}}
 						</p>
-						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient" (click)="setHideObservationForm(false)">
+						<button type="button" mat-icon-button color="primary" *ngIf="!isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )"
+							(click)="setHideObservationForm(false)">
 							<mat-icon class="material-icons-outlined">edit</mat-icon>
 						</button>
 					</div>
-					<form [formGroup]="formObservations" *ngIf="!hideObservationForm && !isRejectedPatient" fxLayout="column"
-						fxLayoutGap="5px" (ngSubmit)="updateObservation()">
+					<form [formGroup]="formObservations" *ngIf="!hideObservationForm && !isRejectedPatient"
+						fxLayout="column" fxLayoutGap="5px" (ngSubmit)="updateObservation()">
 						<mat-form-field appearance="outline">
 							<textarea formControlName="observation"
 								placeholder="{{'turnos.appointment.observations.ADD_OBSERVATION_SUBTITLE' | translate }}"
@@ -355,11 +431,16 @@
 			</section>
 		</section>
 
+		<app-appointment-label
+			[appointment]="appointment"
+			[diaryId]="data.agenda.id">
+		</app-appointment-label>
+
 		<section gdArea="reports" id="reports">
 			<ng-container
 				*appHasRole="['ADMINISTRATIVO', 'ENFERMERO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
 				<ng-container
-					*ngIf="downloadReportIsEnabled && !isAbsent() && ((hasRoleToDownloadReports$ | async) === true || data.hasPermissionToAssignShift)">
+					*ngIf="canDownloadReport">
 					<section class="report" fxLayout="column">
 						<span class="mat-body-strong strong-size">{{'turnos.report.TITLE' | translate}}</span>
 						<section fxLayout="row" fxLayoutGap="30px">
@@ -406,6 +487,7 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy H:mm"}}hs.</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | dateFormat: 'datetime' }}</span>
 	</div>
 </ng-template>
+

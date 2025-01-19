@@ -1,0 +1,18 @@
+<div mat-dialog-content>
+    <div fxLayout="column" fxLayoutGap="12px">
+        <div fxLayout="row" fxlayoutGap="10px">
+                <mat-icon class="size" color="primary">error_outline</mat-icon>
+            <div class="mat-title title">
+                {{'warning-refresh.TITLE' | translate}}
+            </div>
+        </div>
+        <div>
+            {{'warning-refresh.CONTENT' | translate}}
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
+    <button mat-flat-button color="primary"(click)="reload()">
+        <span [translate]="'warning-refresh.BUTTON_REFRESH'"></span>
+    </button>
+</div>

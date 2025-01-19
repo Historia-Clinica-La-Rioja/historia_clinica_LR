@@ -1,3 +1,5 @@
+import { throwError } from "rxjs";
+
 export const pushTo = <T>(data: T[], elem: T): T[] => {
 	return data.concat([elem]);
 };
@@ -25,4 +27,17 @@ export const pushIfNotExists = <T>(data: T[], obj: T, compareFunction: (obj1: T,
 
 export const sortBy = (field: string) => <T>(data: T[]): T[] => {
 	return data?.sort((a, b) => a[field] < b[field] ? -1 : 1);
+};
+
+export const getArrayCopyWithoutElementAtIndex = <T>(arr: T[], index: number): T[] => {
+	return arr.slice(0, index).concat(arr.slice(index + 1));
+};
+
+export const getElementAtPosition = <T>(data: T[], position: number): T => {
+    if (Array.isArray(data) && position < data.length) {
+        return data[position]
+    } else {
+        throwError;
+    }
+    return null;
 };

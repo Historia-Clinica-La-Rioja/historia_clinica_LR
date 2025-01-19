@@ -1,15 +1,22 @@
 package net.pladema.clinichistory.requests.servicerequests.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import lombok.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import ar.lamansys.sgh.shared.domain.general.AddressBo;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -29,6 +36,12 @@ public class InformerObservationBo implements IDocumentBo {
 	private PatientInfoBo patientInfo;
 	private boolean confirmed;
 	private LocalDateTime performedDate;
+
+	private AddressBo institutionAddress;
+
+	private List<DiagnosticReportBo> diagnosticReports;
+
+	private Map<String, Object> contextMap;
 
 	@Override
 	public short getDocumentType() { return DocumentType.MEDICAL_IMAGE_REPORT;	}

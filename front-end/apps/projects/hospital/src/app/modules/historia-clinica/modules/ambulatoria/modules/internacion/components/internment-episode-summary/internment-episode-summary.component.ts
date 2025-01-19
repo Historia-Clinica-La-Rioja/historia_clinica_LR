@@ -12,6 +12,7 @@ import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/con
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { ROLES_FOR_ACCESS_EPISODE_DOCUMENTS } from '../../constants/permissions';
 import { InternmentSummaryFacadeService } from '../../services/internment-summary-facade.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_RELOCATE_PATIENT_BED_PREFIX = '/pase-cama';
@@ -29,7 +30,12 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	currentUserIsAllowToDoAPhysicalDischarge = false;
 	currentUserHasPermissionToAccessDocuments = false;
 	physicalDischargeDate: string;
-	@Input() internmentEpisode: InternmentEpisodeSummary;
+	probableDischargeDate: string;
+	_internmentEpisode: InternmentEpisodeSummary
+	@Input() set internmentEpisode(e: InternmentEpisodeSummary) {
+		this._internmentEpisode = e;
+		this.probableDischargeDate = e.probableDischargeDate ? this.dateFormatPipe.transform(e.probableDischargeDate,'date') : 'Sin fecha definida'
+	}
 	@Input() canLoadProbableDischargeDate: boolean;
 	@Input() patientId: number;
 	@Input() showDischarge: boolean;
@@ -56,6 +62,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		private readonly internmentService: InternmentEpisodeService,
 		private internmentEpisodeDocumentService: InternmentEpisodeDocumentService,
 		readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 	}
@@ -66,7 +73,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 				(anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ENFERMERO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES])));
 		});
 		this.loadPhysicalDischarge();
-		this.internmentSummaryFacadeService.setInternmentEpisodeId(this.internmentEpisode.id);
+		this.internmentSummaryFacadeService.setInternmentEpisodeId(this._internmentEpisode.id);
 		this.internmentSummaryFacadeService.anamnesis$.subscribe(a => this.anamnesisDoc = a);
 		this.internmentSummaryFacadeService.epicrisis$.subscribe(e => this.epicrisisDoc = e);
 		this.internmentSummaryFacadeService.evolutionNote$.subscribe(evolutionNote => this.lastEvolutionNoteDoc = evolutionNote);
@@ -76,7 +83,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 			this.setDocuments();
 	}
 	setDocuments() {
-		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this.internmentEpisode.id)
+		this.internmentEpisodeDocumentService.getInternmentEpisodeDocuments(this._internmentEpisode.id)
 			.subscribe((response: EpisodeDocumentResponseDto[]) => {
 				if (response)
 					this.documents = response
@@ -84,11 +91,11 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	}
 
 	goToPaseCama(): void {
-		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this.internmentEpisode.id + ROUTE_PATIENT_SUFIX + this.patientId + ROUTE_RELOCATE_PATIENT_BED_PREFIX]);
+		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this._internmentEpisode.id + ROUTE_PATIENT_SUFIX + this.patientId + ROUTE_RELOCATE_PATIENT_BED_PREFIX]);
 	}
 
 	goToAdministrativeDischarge(): void {
-		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this.internmentEpisode.id + ROUTE_PATIENT_SUFIX + this.patientId + ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX]);
+		this.router.navigate([this.routePrefix + ROUTE_INTERNMENT_EPISODE_PREFIX + this._internmentEpisode.id + ROUTE_PATIENT_SUFIX + this.patientId + ROUTE_ADMINISTRATIVE_DISCHARGE_PREFIX]);
 	}
 
 	physicalDischarge() {
@@ -106,7 +113,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirm => {
 			if (confirm) {
-				this.internmentService.physicalDischargeInternmentEpisode(this.internmentEpisode.id).subscribe(
+				this.internmentService.physicalDischargeInternmentEpisode(this._internmentEpisode.id).subscribe(
 					success => {
 						this.snackBarService.showSuccess('internaciones.discharge.messages.PHYSICAL_DISCHARGE_SUCCESS');
 						this.loadPhysicalDischarge();
@@ -118,7 +125,7 @@ export class InternmentEpisodeSummaryComponent implements OnInit {
 	}
 
 	loadPhysicalDischarge() {
-		this.internmentService.getPatientDischarge(this.internmentEpisode.id).subscribe(patientDischarge => {
+		this.internmentService.getPatientDischarge(this._internmentEpisode.id).subscribe(patientDischarge => {
 			this.hasAdministrativeDischarge = !!patientDischarge.administrativeDischargeDate;
 			if (patientDischarge.physicalDischargeDate && !(patientDischarge?.administrativeDischargeDate)) {
 				const date = new Date(patientDischarge.physicalDischargeDate);
@@ -144,13 +151,13 @@ export interface InternmentEpisodeSummary {
 		licenses: string[];
 	};
 	totalInternmentDays: number;
-	admissionDatetime: string;
+	admissionDatetime: Date;
 	responsibleContact?: {
 		fullName: string;
 		relationship: string;
 		phoneNumber: string;
 	};
-	probableDischargeDate: string;
+	probableDischargeDate: Date;
 }
 
 export interface InternmentDocuments {

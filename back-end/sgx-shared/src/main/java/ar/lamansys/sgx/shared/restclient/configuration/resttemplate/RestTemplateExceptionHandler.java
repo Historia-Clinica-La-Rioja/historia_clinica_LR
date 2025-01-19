@@ -19,7 +19,7 @@ public class RestTemplateExceptionHandler extends DefaultResponseErrorHandler {
 			super.handleError(httpResponse);
 		} catch (HttpStatusCodeException e) {
 			var body = e.getResponseBodyAsString();
-			LOG.error("Body error: {}", body);
+			LOG.error("status: {} Body error: {}", e.getStatusCode(), body);
 			throw new RestTemplateApiException(httpResponse.getStatusCode(), body, body);
 		}
 	}

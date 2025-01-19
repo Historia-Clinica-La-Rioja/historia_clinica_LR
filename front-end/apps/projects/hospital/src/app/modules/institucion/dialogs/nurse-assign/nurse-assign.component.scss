@@ -1,0 +1,17 @@
+@import '../../../../../assets/styles/variables.scss';
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.subtitle {
+    color: $grey;
+}
+
+mat-dialog-content {
+    padding-right: 6rem;
+    div {
+        margin-top: 1rem;
+    }
+}

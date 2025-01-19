@@ -2,7 +2,7 @@
     $palette-primary: map-get($theme, primary);
     app-indices {
         .index-box {
-            background-color:  mat-color($palette-primary, 50);;
+            background-color:  mat-color($palette-primary, 100);;
         }
     }
 }

@@ -27,7 +27,8 @@ public class CellContent {
         DATE,
         LOCALDATE,
         LOCALDATETIME,
-        CALENDAR
+        CALENDAR,
+		INTEGER
     }
 
     private ICellStyle style;
@@ -59,4 +60,9 @@ public class CellContent {
     private boolean isFormula(Object value) {
         return String.valueOf(value).startsWith("=");
     }
+
+	public CellContent(Object value, DATAFORMAT dataformat){
+		this.value = value;
+		this.dataformat = dataformat;
+	}
 }

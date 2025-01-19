@@ -1,0 +1,22 @@
+<div class="container" id="complete-study-information" fxLayout="column" fxLayoutGap="12px">
+
+    <div class="block-container" fxLayout="column" fxLayoutGap="12px" data-id="info-container">
+        <div class="row-container" fxLayoutAlign="space-between">
+            <app-colored-label [description]="status.description | uppercase" [color]="status.color" id="colored-label">
+            </app-colored-label>
+            <span class="order">
+                Orden #{{order}}
+            </span>
+        </div>
+
+        <app-identifier-cases [position]="position.ROW" [showLegend]="true" [description]="titleContent"
+            [identifierCase]="identiferCases.PROBLEM" id="problem"></app-identifier-cases>
+
+        <app-title-description *ngIf="descriptionState" [title]="observations" [text]="descriptionState" data-id="observation-description">
+        </app-title-description>
+    </div>
+
+	<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour" data-id="editor-description">
+	</app-register-editor-info>
+
+</div>

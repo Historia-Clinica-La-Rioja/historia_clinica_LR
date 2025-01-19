@@ -18,13 +18,19 @@ public class OutpatientConsultationBo {
 
 	private BasicDataPatientBo patient;
 
-	private Integer apiPatientId;
+	private Long apiPatientId;
 
 	private String date;
 
+	private Integer clinicalSpecialtyId;
+
 	private String clinicalSpecialtySctid;
 
+	private Integer institutionId;
+
 	private String institutionSisaCode;
+
+	private Integer cipresEncounterId;
 
 	private AnthropometricDataBo anthropometricData;
 
@@ -34,4 +40,5 @@ public class OutpatientConsultationBo {
 
 	private List<SnomedBo> procedures;
 
+	private List<SnomedBo> medications;
 }

@@ -7,7 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import net.pladema.clinichistory.requests.medicationrequests.repository.ListMedicationRepository;
 import net.pladema.clinichistory.requests.medicationrequests.repository.domain.MedicationFilterVo;
 import net.pladema.clinichistory.requests.medicationrequests.service.ListMedicationInfoService;

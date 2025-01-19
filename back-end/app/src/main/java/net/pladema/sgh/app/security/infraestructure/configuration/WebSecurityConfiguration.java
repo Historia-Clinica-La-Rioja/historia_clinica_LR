@@ -4,6 +4,8 @@ import static net.pladema.sgh.app.security.infraestructure.filters.PublicApiAuth
 
 import java.util.stream.Stream;
 
+import net.pladema.sgh.app.security.infraestructure.filters.FHIRApiAuthenticationFilter;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -59,6 +61,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private final AuthorizationFilter authorizationFilter;
 
 	private final TwoFactorAuthenticationFilter twoFactorAuthenticationFilter;
+	private final FHIRApiAuthenticationFilter fhirApiAuthenticationFilter;
 
 	public WebSecurityConfiguration(
 			ActuatorConfiguration actuatorConfiguration,
@@ -68,7 +71,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
 			PublicApiAuthenticationFilter publicApiAuthenticationFilter,
 			AuthorizationFilter authorizationFilter,
-			TwoFactorAuthenticationFilter twoFactorAuthenticationFilter
+			TwoFactorAuthenticationFilter twoFactorAuthenticationFilter,
+			FHIRApiAuthenticationFilter fhirApiAuthenticationFilter
 	) {
 		this.actuatorConfiguration = actuatorConfiguration;
 		// filters
@@ -77,6 +81,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		this.publicApiAuthenticationFilter = publicApiAuthenticationFilter;
 		this.authorizationFilter = authorizationFilter;
 		this.twoFactorAuthenticationFilter = twoFactorAuthenticationFilter;
+		this.fhirApiAuthenticationFilter = fhirApiAuthenticationFilter;
 
 		if (featureFlagsService.isOn(AppFeature.LIBERAR_API_RESERVA_TURNOS))
 				this.BOOKING_API_RESOURCES =  new String[]{
@@ -115,10 +120,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 						ERole.ROOT.getValue(),
 						ERole.ADMINISTRADOR.getValue())
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
-					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
 					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue(),
-					ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getValue())
+					ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getValue(),
+					ERole.AUDITORIA_DE_ACCESO.getValue(),
+					ERole.ADMINISTRADOR_DE_DATOS_PERSONALES.getValue(),
+					ERole.API_IMAGENES.getValue(),
+					ERole.ROOT.getValue()
+				)
 				.antMatchers(RECAPTCHA + "/**").permitAll()
 				.antMatchers("/oauth/**").permitAll()
 				.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
@@ -126,8 +135,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/bed/reports/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
 				.antMatchers("/fhir/**").permitAll()
-				.antMatchers(BOOKING_API_RESOURCES).permitAll()
 				.antMatchers(PUBLIC_API_CONTEXT_MATCHER).hasAnyAuthority(publicApiRolesAuthorities)
+				.antMatchers("/public-api/digital-signature/callback/**").permitAll()
+				.antMatchers(BOOKING_API_RESOURCES).permitAll()
 				.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();
 
@@ -138,6 +148,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterAfter(publicApiAuthenticationFilter, OAuth2AuthenticationFilter.class);
 		httpSecurity.addFilterAfter(authorizationFilter, PublicApiAuthenticationFilter.class);
 		httpSecurity.addFilterAfter(twoFactorAuthenticationFilter, AuthorizationFilter.class);
+		httpSecurity.addFilterAfter(fhirApiAuthenticationFilter, TwoFactorAuthenticationFilter.class);
+
 	}
 
 }

@@ -13,11 +13,15 @@ export const toInstitutionWCParams = (institutionId: number) =>
 export const slotedInfoToWCParamsMapper = (element: SlotedInfo, params): WCParams => element ? {
 	title: element.title,
 	componentName: element.componentName,
-	url: element.url,
+	url: element.fullUrl,
 	params,
 } : undefined;
 
 export const toClinicHistoryWCParams = (patientId: number) =>
+	(element: SlotedInfo): WCParams =>
+		slotedInfoToWCParamsMapper(element, { patientId });
+
+export const toPatientProfileWCParams = (patientId: number) =>
 	(element: SlotedInfo): WCParams =>
 		slotedInfoToWCParamsMapper(element, { patientId });
 

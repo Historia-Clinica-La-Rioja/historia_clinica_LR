@@ -44,6 +44,10 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 		return this.form;
 	}
 
+	resetForm() {
+		this.form.reset();
+	}
+
 	isValidForm(): boolean {
 		this.form.markAllAsTouched();
 		return this.form.invalid;

@@ -1,6 +1,6 @@
 package ar.lamansys.sgx.cubejs.application.charts;
 
-import static ar.lamansys.sgx.shared.templating.SpringTemplateUtils.createJsonTemplateEngine;
+import static ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils.createJsonTemplateEngine;
 
 import java.util.HashMap;
 import java.util.Map;

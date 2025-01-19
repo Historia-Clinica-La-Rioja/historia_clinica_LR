@@ -12,6 +12,14 @@
            padding: 10px;
            font-family: Tahoma, Verdana, sans-serif;
         }
+
+        h5 {
+           font-weight: bold;
+           font-size: 15px;
+           margin: 15px 0px;
+           border-top: 1px solid black;
+        }
+
         h4 {
            margin: 15px 0px;
            color: #2687c5;
@@ -31,12 +39,32 @@
            margin: 2px 0px;
         }
 
+        span {
+           font-weight: normal;
+        }
+
+        .bold-text {
+           font-weight: bold;
+        }
+
 
     </style>
 </head>
 <body th:fragment="frail">
     <div class="container">
-        <h3>Prueba de Edmonton (fragilidad) - Resultados de informe</h3>
+        <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
+        <p>Institución: <span th:text="${institutionName}"></span></p>
+        <hr></hr>
+        <h5>Datos del paciente</h5>
+        <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
+        <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
+        <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
+        <hr></hr>
+        <h5>Datos del profesional</h5>
+        <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
+        <p>M.P.: <span th:text="${professional.licenseNumber}"></span></p>
+
+        <h3>Prueba de Edmonton (fragilidad) - Informe de resultados</h3>
 
         <hr></hr>
 
@@ -76,7 +104,7 @@
             </label><br></br>
         </div>
         <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
-            <p>En general, ¿cómo describiría su salud?</p>
+            <p style="margin-top: 5px;">En general, ¿cómo describiría su salud?</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt7" th:checked="${respuesta.answerId == 7}"></input>
                 Excelente
@@ -109,7 +137,8 @@
                 Más de 20 segundos
             </label><br></br>
         </div>
-
+        <br></br>
+        <p style="text-align:right;">1/3</p>
         <hr></hr>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
@@ -163,7 +192,7 @@
             </label><br></br>
         </div>
         <div class="itemcontainer" th:each="respuesta : ${answers[7]}">
-            <p>¿Se olvida de tomar sus medicamentos en ocasiones?</p>
+            <p style="margin-top: 5px;">¿Se olvida de tomar sus medicamentos en ocasiones?</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt21" th:checked="${respuesta.answerId == 19}"></input>
                 No
@@ -215,30 +244,40 @@
             </label><br></br>
         </div>
 
+        <p style="text-align:right;">2/3</p>
+        <br></br>
+
         <div class="itemcontainer" th:each="respuesta : ${answers[11]}">
-            <h4>Total</h4>
-            <p>El puntaje final de la prueba realizada se interpreta como:</p>
-            <label>
+            <h4>Resultado de evaluación</h4>
+            <p>
+                <span class="bold-text">El puntaje final de la prueba es: </span>
+                <span style="font-weight: normal;" th:text="${respuesta.value + ' puntos'}">[PUNTUACIÓN]</span>
+            </p>
+            <p>Que se interpreta como:</p>
+            <label th:class="${respuesta.answerId == 21} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt29" th:checked="${respuesta.answerId == 21}"></input>
-                4 o menor: individuo sano
+                0 - 4: individuo sano
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 22} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt30" th:checked="${respuesta.answerId == 22}"></input>
-                5 o 6: vulnerable
+                5 - 6: vulnerable
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 23} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt31" th:checked="${respuesta.answerId == 23}"></input>
-                7 u 8: fragilidad leve
+                7 - 8: fragilidad leve
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 24} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt32" th:checked="${respuesta.answerId == 24}"></input>
-                9 o 10: fragilidad moderada
+                9 - 10: fragilidad moderada
             </label><br></br>
-            <label>
+            <label th:class="${respuesta.answerId == 25} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt33" th:checked="${respuesta.answerId == 25}"></input>
                 11 o mayor: fragilidad severa
             </label><br></br>
         </div>
+
+        <br></br>
+        <p style="text-align:right;">3/3</p>
 
     </div>
     <!-- Bootstrap's script -->

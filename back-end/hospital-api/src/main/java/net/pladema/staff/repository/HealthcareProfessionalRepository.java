@@ -3,6 +3,8 @@ package net.pladema.staff.repository;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,10 +25,11 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			+ " LEFT JOIN PersonExtended pe ON p.id = pe.id"
 			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
 			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId"
-			+ " WHERE ur.roleId = 3 " // Role 'Especialista Medico'
+			+ " WHERE ur.roleId IN :roles "
 			+ " AND ur.institutionId = :institutionId "
-			+ " AND hp.deleteable.deleted = false")
-	List<HealthcarePersonBo> getAllDoctors(@Param("institutionId") Integer institutionId);
+			+ " AND hp.deleteable.deleted = false "
+			+ " GROUP BY hp.id, hp.licenseNumber,p.id, p, pe.nameSelfDetermination")
+	List<HealthcarePersonBo> getAllDoctors(@Param("institutionId") Integer institutionId, @Param("roles") List<Short> roles);
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT(hp.id) "
@@ -48,16 +51,31 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
 			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination, p.middleNames, p.otherLastNames)"
 			+ " FROM  HealthcareProfessional hp "
-			+ " INNER JOIN Person p ON hp.personId = p.id"
-			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id)"
-			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id"
-			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId"
+			+ " INNER JOIN Person p ON hp.personId = p.id "
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id) "
+			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id "
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId "
 			+ " WHERE ur.institutionId = :institutionId "
 			+ "	AND ur.roleId IN (:professionalERolIds) "
 			+ " AND hp.deleteable.deleted = false "
-			+ " ORDER BY p.lastName, p.firstName")
+			+ " AND ur.deleteable.deleted = false "
+			+ " ORDER BY p.lastName, p.firstName ")
     List<HealthcareProfessionalVo> findAllByInstitution(@Param("institutionId") Integer institutionId,
 														@Param("professionalERolIds") List<Short> professionalERoleIds);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
+			+ " hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber,p.id, pe.nameSelfDetermination, p.middleNames, p.otherLastNames)"
+			+ " FROM  HealthcareProfessional hp "
+			+ " INNER JOIN Person p ON hp.personId = p.id "
+			+ " LEFT JOIN PersonExtended pe ON (p.id = pe.id) "
+			+ " INNER JOIN UserPerson up ON up.pk.personId = p.id "
+			+ " INNER JOIN UserRole ur ON up.pk.userId = ur.userId "
+			+ "	AND ur.roleId IN (:professionalERoleIds) "
+			+ " AND hp.deleteable.deleted IS false "
+			+ " AND ur.deleteable.deleted IS false "
+			+ " ORDER BY p.lastName, p.firstName ")
+	List<HealthcareProfessionalVo> findAllByRoleIds(@Param("professionalERoleIds") List<Short> professionalERoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo("
@@ -114,4 +132,36 @@ public interface HealthcareProfessionalRepository extends SGXAuditableEntityJPAR
 			"JOIN VirtualConsultation vc ON (vc.responsibleHealthcareProfessionalId = hp.id) " +
 			"WHERE vc.institutionId = :institutionId")
 	List<HealthcareProfessionalVo> getVirtualConsultationProfessionalsByInstitutionId(@Param("institutionId") Integer institutionId);
+
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT DISTINCT new net.pladema.staff.repository.domain.HealthcareProfessionalVo( " +
+			"hp.id, hp.licenseNumber, p.firstName, p.lastName, p.identificationNumber, p.id, pe.nameSelfDetermination) " +
+			"FROM HealthcareProfessional hp " +
+			"JOIN Person p ON (hp.personId = p.id) " +
+			"JOIN UserPerson up ON (p.id = up.pk.personId) " +
+			"JOIN UserRole ur ON (up.pk.userId = ur.userId) " +
+			"JOIN Institution i ON (ur.institutionId = i.id) " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"WHERE c.departmentId = :departmentId " +
+			"AND ur.roleId IN (:professionalERoleIds) " +
+			"AND hp.deleteable.deleted = false " +
+			"AND ur.deleteable.deleted = false ")
+	List<HealthcareProfessionalVo> getAllProfessionalsByDepartment(@Param("departmentId") Short departmentId,
+																   @Param("professionalERoleIds") List<Short> professionalERoleIds);
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherProfessionalBo(p.firstName, p.lastName, it.description, p.identificationNumber, pln.licenseNumber, pln.type, pe.email) " +
+			"FROM HealthcareProfessional hp " +
+			"JOIN Person p ON (p.id = hp.personId) " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
+			"JOIN IdentificationType it ON (it.id = p.identificationTypeId) " +
+			"LEFT JOIN ProfessionalProfessions pp ON (pp.healthcareProfessionalId = hp.id) " +
+			"LEFT JOIN ProfessionalLicenseNumber pln ON (pln.professionalProfessionId = pp.id) " +
+			"WHERE hp.id = :healthcareProfessionalId " +
+			"AND pp.deleteable.deleted = FALSE " +
+			"ORDER BY pln.type DESC")
+	List<MedicationRequestValidationDispatcherProfessionalBo> fetchProfessionalDataNeededForMedicationRequestValidation(@Param("healthcareProfessionalId") Integer healthcareProfessionalId);
+
 }

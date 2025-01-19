@@ -1,0 +1,26 @@
+mat-list-item {
+	padding: 1rem;
+
+	span {
+		display: flex;
+		align-items: center;
+	}
+}
+
+.violence-situation-header {
+	color: rgba(0, 0, 0, 0.54);
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.violence-types-modalities {
+	max-width: 80%;
+}
+
+.situation-number {
+	font-weight: 500;
+}
+
+mat-divider {
+	width: 100%;
+}

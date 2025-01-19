@@ -93,6 +93,31 @@ export class InternacionMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getViasPremedication(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-premedication`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getViasAnestheticPlan(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-anesthetic-plan`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getViasAnestheticAgent(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-anesthetic-agent`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getViasNonAnestheticDrug(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-non-anesthetic-drug`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getViasAntibioticProphylaxis(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-antibiotic-prophylaxis`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 	getOtherIndicationTypes(): Observable<OtherIndicationTypeDto[]> {
 		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
 		return this.http.get<OtherIndicationTypeDto[]>(url);
@@ -107,4 +132,25 @@ export class InternacionMasterDataService {
 		const url = `${environment.apiBase}/internments/masterdata/document/type`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
+
+    public getAnestheticTechniqueTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/anesthetic-technique`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
+    public getTrachealIntubationTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/tracheal-intubation`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
+    public getBreathingTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/breathing`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
+    public getCircuitTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/circuit`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
 }

@@ -1,0 +1,21 @@
+<ul>
+    <ng-container *ngIf="(availableProtectedAppointmentCount$ | async) as protectedAppointment; else noAvailableAppointments">
+        <li class="message available-protected-appointments">
+            <span>{{protectedAppointment}} {{'access-management.reference-edition.PROTECTED_APPOINTMENT' | translate}}</span>
+        </li>
+        <br>
+    </ng-container>
+
+    <ng-container *ngIf="availableAppointmentCount$ | async as appointment; else noAvailableAppointments">
+        <li class="message available-appointments">
+            <span> {{appointment}}	{{'access-management.reference-edition.APPOINTMENT' | translate}}</span>
+        </li>
+    </ng-container>
+
+    <ng-template #noAvailableAppointments>
+        <li class="message no-available-appointments">
+            <span>{{0}}	{{'access-management.reference-edition.APPOINTMENT' | translate}}</span>
+        </li>
+    </ng-template>
+
+</ul>

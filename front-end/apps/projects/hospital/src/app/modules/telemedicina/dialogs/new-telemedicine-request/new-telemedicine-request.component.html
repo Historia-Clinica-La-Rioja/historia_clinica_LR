@@ -7,13 +7,13 @@
 	<h2>{{'telemedicina.requests.TITLE_ADD_REQUEST' | translate}}</h2>
 </div>
 <section>
-	<mat-stepper linear="true" #stepper labelPosition="bottom">
+	<mat-stepper linear="true" #stepper labelPosition="bottom" (selectionChange)="onStepChange($event)">
 		<mat-step [stepControl]="firstStepForm" label="{{'telemedicina.PATIENTS_SEARCH' | translate}}">
 			<app-search-patient (onSelectedPatient)="onSelectedPatient($event)"></app-search-patient>
 		</mat-step>
 		<mat-step [stepControl]="secondStepForm" label="{{'telemedicina.REQUEST_INFORMATION' | translate}}">
 			<div fxLayout="row" fxLayoutAlign="center center">
-				<app-information-request-form (requestInformationData)="prepareVirtualConsultationRequest($event)" [confirmAndValidateForm]="confirmAndValidateForm" [patient]="this.firstStepForm.controls.selectedPatient.value" [patientPhoto]="photoSelectedPatient" class="information-request-content"></app-information-request-form>
+				<app-information-request-form (requestInformationData)="prepareVirtualConsultationRequest($event)" [confirmAndValidateForm]="confirmAndValidateForm" [resetForm]="secondStepForReset" [patient]="this.firstStepForm.controls.selectedPatient.value" [patientPhoto]="photoSelectedPatient" class="information-request-content"></app-information-request-form>
 			</div>
 			<div fxLayout="row" fxLayoutAlign="end center" class="buttons">
 				<button mat-stroked-button matStepperPrevious color="primary">{{'buttons.BACK' | translate}}</button>

@@ -28,9 +28,15 @@ public interface HealthcareProfessionalService {
 
     HealthcareProfessionalBo findProfessionalByPersonId(Integer personId);
 
+	HealthcareProfessionalBo findProfessionalByUserId(Integer userId);
+
     Integer saveProfessional(HealthcareProfessionalCompleteBo professionalCompleteBo);
 
 	Optional<Integer> getProfessionalIdByPersonId(Integer personId);
 
 	List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId);
+
+	List<HealthcareProfessionalBo> getVirtualConsultationResponsiblesByInstitutionId(Integer institutionId);
+
+	List<HealthcareProfessionalBo> getAllProfessionalsByDepartment(Short departmentId);
 }

@@ -11,8 +11,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class OdontologyConsultationDetail {
 
-	private String institution;
-
 	private String professional;
 
 	private String procedures;

@@ -1,5 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TriageAdministrativeDto } from '@api-rest/api-model';
+import { Component, Input } from '@angular/core';
+import { TriageListDto } from '@api-rest/api-model';
+import { Triage } from '../triage/triage.component';
+import { Observable } from 'rxjs';
+import { TriageActionsService } from '../../services/triage-actions.service';
+
 
 @Component({
 	selector: 'app-administrative-triage',
@@ -8,34 +12,20 @@ import { TriageAdministrativeDto } from '@api-rest/api-model';
 })
 export class AdministrativeTriageComponent {
 
-	@Input() confirmLabel = 'Confirmar episodio';
-	@Input() cancelLabel = 'Volver';
-	@Input() disableConfirmButton: boolean;
-	@Output() confirm = new EventEmitter();
-	@Output() cancel = new EventEmitter();
-	private triageCategoryId: number;
-	private doctorsOfficeId: number;
+	@Input() canAssignNotDefinedTriageLevel: boolean;
+	@Input() lastTriage$: Observable<TriageListDto>;
 
-	constructor() {
+	constructor(
+		private readonly triageActionsService: TriageActionsService,
+	) {	}
+
+	setTriageData(triageData: Triage) {
+		this.triageActionsService.triageAdministrative = {
+			categoryId: triageData.triageCategoryId,
+			doctorsOfficeId: triageData.doctorsOfficeId,
+			reasons: triageData.reasons,
+			clinicalSpecialtySectorId: triageData.specialtySectorId
+		}
 	}
 
-	setTriageCategoryId(triageCategoryId: number): void {
-		this.triageCategoryId = triageCategoryId;
-	}
-
-	setDoctorsOfficeId(doctorsOfficeId: number): void {
-		this.doctorsOfficeId = doctorsOfficeId;
-	}
-
-	confirmTriage(): void {
-		const triage: TriageAdministrativeDto = {
-			categoryId: this.triageCategoryId,
-			doctorsOfficeId: this.doctorsOfficeId
-		};
-		this.confirm.emit(triage);
-	}
-
-	back(): void {
-		this.cancel.emit();
-	}
 }

@@ -1,6 +1,5 @@
 package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -24,7 +23,7 @@ public class ChangePrescriptionStateDto {
 	@NotNull(message = "Este campo no puede ser nulo")
 	private String pharmacistRegistration;
 	@NotNull(message = "Este campo no puede ser nulo")
-	private LocalDateTime changeDate;
+	private String changeDate;
 	@NotNull(message = "Este campo no puede ser nulo")
 	@Valid
 	private	List<@Valid ChangePrescriptionStateMedicationDto> changePrescriptionStateLineMedicationList;

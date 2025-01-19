@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.establishment.controller.dto.BedDto;
 import net.pladema.medicalconsultation.doctorsoffice.controller.dto.DoctorsOfficeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import net.pladema.medicalconsultation.shockroom.infrastructure.controller.dto.ShockroomDto;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -35,11 +33,15 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
 	
 	private DateTimeDto endDate;
 
-    public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
+	private String institutionName;
+
+	private Boolean canBeAbsent;
+
+    public ResponseEmergencyCareDto(Integer id, String reason, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, Boolean hasPoliceIntervention, PoliceInterventionDetailsDto policeIntervention,
                                     String ambulanceCompanyId, EmergencyCarePatientDto patient,
                                     MasterDataDto emergencyCareState, DateTimeDto createdOn){
-        super(reasons, emergencyCareType, entranceType, hasPoliceIntervention, policeIntervention, ambulanceCompanyId, patient);
+        super(reason, emergencyCareType, entranceType, hasPoliceIntervention, policeIntervention, ambulanceCompanyId, patient);
         this.id = id;
         this.emergencyCareState = emergencyCareState;
         this.creationDate = createdOn;

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { EVirtualConsultationStatus } from '@api-rest/api-model';
+import { EVirtualConsultationStatus, VirtualConsultationDto } from '@api-rest/api-model';
+import { Priority } from '@presentation/components/priority/priority.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,8 +10,8 @@ import { Subscription } from 'rxjs';
 })
 export class RequestInfoCardComponent {
 	virtualConsultationsSubscription: Subscription;
-	virtualConsultation: any;
-	@Input() set setVirtualConsultation(virtualConsultation: any) {
+	virtualConsultation: VirtualConsultationCustom;
+	@Input() set setVirtualConsultation(virtualConsultation: VirtualConsultationCustom) {
 		this.virtualConsultation = virtualConsultation;
 		if (!virtualConsultation.problem)
 			this.virtualConsultation.problem = 'Sin información';
@@ -19,3 +20,8 @@ export class RequestInfoCardComponent {
 
 	constructor() { }
 }
+ export interface VirtualConsultationCustom extends VirtualConsultationDto {
+	statusLabel: {description:string,color:string},
+	priorityLabel: Priority,
+	waitingTime: string,
+ }

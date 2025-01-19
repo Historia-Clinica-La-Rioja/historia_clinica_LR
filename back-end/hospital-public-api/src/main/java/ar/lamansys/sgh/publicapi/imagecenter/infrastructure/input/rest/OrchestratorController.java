@@ -1,5 +1,10 @@
 package ar.lamansys.sgh.publicapi.imagecenter.infrastructure.input.rest;
 
+import ar.lamansys.sgh.publicapi.imagecenter.application.resultstudies.PossibleStudies;
+import ar.lamansys.sgh.publicapi.imagecenter.application.resultstudies.exceptions.ResultStudiesException;
+import ar.lamansys.sgh.publicapi.imagecenter.infrastructure.input.rest.dto.PossibleStudiesDto;
+
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +31,8 @@ public class OrchestratorController {
 	private final UpdateResult updateResult;
 	private final UpdateSize updateSize;
 
+	private final PossibleStudies possibleStudies;
+
 	@PostMapping("/update-result")
 	public @ResponseBody Boolean
 	updateResult(@RequestBody MoveResultDto moveResultDto) throws UpdateResultException {
@@ -37,6 +44,12 @@ public class OrchestratorController {
 	public @ResponseBody Boolean
 	setSizeStudy(@RequestBody SizeResultDto sizeResultDto) throws UpdateSizeException {
 		return updateSize.run(sizeResultDto.getIdMove(), sizeResultDto.getSize(),  sizeResultDto.getImageId());
+	}
+
+	@PostMapping("/set-possible-studies")
+	public @ResponseBody Boolean
+	setPossibleStudies(@RequestBody PossibleStudiesDto possibleStudiesDto) throws ResultStudiesException {
+		return possibleStudies.run(possibleStudiesDto.getIdMove(), possibleStudiesDto.getAppointmentId(), possibleStudiesDto.getStudies());
 	}
 
 }

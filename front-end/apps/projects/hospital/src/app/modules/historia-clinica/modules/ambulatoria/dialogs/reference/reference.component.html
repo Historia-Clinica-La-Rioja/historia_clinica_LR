@@ -12,55 +12,59 @@
 		<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
 
 			<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
-				<div>
+				<div class="section">
 					<app-origin-institution-reference [formReference]="formReference" [data]="data"
 						(updateSpecialtiesAndCarelineFields)="activateSpecialtiesAndCarelineFields()">
 					</app-origin-institution-reference>
 
-                    <section fxLayout="column">
+					<section fxLayout="column">
 
-                        <span class="subtitle"
-                            [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRIORITY_CRITERIA'">
-                        </span>
+						<h2 class="subtitle"
+							[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PRIORITY_CRITERIA'">
+						</h2>
 
-                        <mat-form-field appearance="outline">
-                            <mat-select id="priority" formControlName="priority">
-                                <mat-select-trigger *ngIf="formReference.value.priority">
-                                    <div fxLayoutGap="10px" fxLayoutAlign="start center">
-                                        <div class="circle" [ngClass]="{'red': formReference.value.priority.id == PRIORITY.HIGH, 'orange': formReference.value.priority.id == PRIORITY.MEDIUM, 'green': formReference.value.priority.id == PRIORITY.LOW }"></div>
-                                        <span>{{formReference.value.priority.description}}</span>
-                                    </div>
-                                </mat-select-trigger>
-                                <mat-option *ngFor="let priority of priorities$ | async" [value]="priority">
-                                    <div fxLayoutGap="10px" fxLayoutAlign="start center">
-                                        <div class="circle" [ngClass]="{'red': priority.id == PRIORITY.HIGH, 'orange': priority.id == PRIORITY.MEDIUM, 'green': priority.id == PRIORITY.LOW }"></div>
-                                        <span>{{priority.description}}</span>
-                                    </div>
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-select id="priority" formControlName="priority">
+								<mat-select-trigger *ngIf="formReference.value.priority">
+									<div fxLayoutGap="10px" fxLayoutAlign="start center">
+										<div class="circle"
+											[ngClass]="{'red': formReference.value.priority.id == PRIORITY.HIGH, 'orange': formReference.value.priority.id == PRIORITY.MEDIUM, 'green': formReference.value.priority.id == PRIORITY.LOW }">
+										</div>
+										<span>{{formReference.value.priority.description}}</span>
+									</div>
+								</mat-select-trigger>
+								<mat-option *ngFor="let priority of priorities$ | async" [value]="priority">
+									<div fxLayoutGap="10px" fxLayoutAlign="start center">
+										<div class="circle"
+											[ngClass]="{'red': priority.id == PRIORITY.HIGH, 'orange': priority.id == PRIORITY.MEDIUM, 'green': priority.id == PRIORITY.LOW }">
+										</div>
+										<span>{{priority.description}}</span>
+									</div>
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
 
-                    </section>
+					</section>
 
-                    <span class="subtitle"
-                        [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></span>
-                    <div fxLayout="row" fxLayoutGap="10px">
-                        <mat-form-field fxFlex="30%" appearance="outline">
-                            <mat-label
-                                [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX'"></mat-label>
-                            <input matInput type="text" id="phonePrefix" name="phonePrefix"
-                                formControlName="phonePrefix"
-                                placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX' | translate }}">
-                            <mat-error *ngIf="formReference.hasError('required', 'phonePrefix')">
-                                <span translate="forms.REQUIRED"></span>
-                            </mat-error>
-                            <mat-error *ngIf="formReference.hasError('maxlength', 'phonePrefix')"
-                                translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
-                            </mat-error>
-                            <mat-error *ngIf="formReference.hasError('pattern', 'phonePrefix')"
-                                translate="forms.FORMAT_NUMERIC">
-                            </mat-error>
-                        </mat-form-field>
+					<h2 class="subtitle"
+						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PATIENT_PHONE'"></h2>
+					<div fxLayout="row" fxLayoutGap="10px">
+						<mat-form-field fxFlex="30%" appearance="outline">
+							<mat-label
+								[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX'"></mat-label>
+							<input matInput type="text" id="phonePrefix" name="phonePrefix"
+								formControlName="phonePrefix"
+								placeholder="{{'ambulatoria.paciente.nueva-consulta.reference-dialog.PHONE_PREFIX' | translate }}">
+							<mat-error *ngIf="formReference.hasError('required', 'phonePrefix')">
+								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="formReference.hasError('maxlength', 'phonePrefix')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
+							</mat-error>
+							<mat-error *ngIf="formReference.hasError('pattern', 'phonePrefix')"
+								[translate]="'forms.FORMAT_NUMERIC'">
+							</mat-error>
+						</mat-form-field>
 
 						<mat-form-field fxFlex="70%" appearance="outline">
 							<mat-label
@@ -72,7 +76,10 @@
 								<span translate="forms.REQUIRED"></span>
 							</mat-error>
 							<mat-error *ngIf="formReference.hasError('maxlength', 'phoneNumber')"
-								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 20}">
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
+							</mat-error>
+							<mat-error *ngIf="formReference.hasError('pattern', 'phoneNumber')"
+								[translate]="'forms.FORMAT_NUMERIC'">
 							</mat-error>
                             <mat-error *ngIf="formReference.hasError('pattern', 'phoneNumber')"
                                 translate="forms.FORMAT_NUMERIC">
@@ -82,21 +89,23 @@
 				</div>
 
 				<div>
-					<app-carelines-and-specialties-reference [formReference]="formReference" [submitForm]="submitForm"
-						[updateFormFields]="referenceProblemsService.getProblems()|async" [setProvinceId]="provinceId"
+					<app-carelines-and-specialties-reference [formReference]="formReference" [submitForm]="submitForm" (regulationRequiredChange)="onRegulationRequiredChange($event)"
+						[updateFormFields]="referenceProblemsService.getProblems()|async"
 						(resetControls)="resetControls()"
 						(updateDepartamentsAndInstitution)="activateSpecialtiesAndCarelineFields()">
 					</app-carelines-and-specialties-reference>
 
 
-					<app-destination-institution-reference [formReference]="formReference" [submitForm]="submitForm"
+					<app-destination-institution-reference
+						[formReference]="formReference"
+						[submitForm]="submitForm"
 						[updateFormFields]="updateDepartamentsAndInstitution"
-						[careLine]="formReference.value.careLine?.id"
-						[clinicalSpecialty]="formReference.value.clinicalSpecialtyId?.id"
-						(provinceSelected)="onProvinceSelectionChange($event)"
-						(departmentSelected)="onDepartmentSelectionChange($event)"
-						(institutionSelected)="onInstitutionSelectionChange($event)">
+						(provinceSelected)="onProvinceSelectionChange($event)">
 					</app-destination-institution-reference>
+
+					<div *ngIf="regulationRequired">
+						<app-box-message [boxMessageInfo]="boxMessageInfo"></app-box-message>
+					</div>
 				</div>
 			</div>
 
@@ -105,6 +114,7 @@
 					<mat-label
 						[translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SUMMARY'"></mat-label>
 					<textarea matInput type="text" name="summary" formControlName="summary"></textarea>
+					<mat-error *ngIf="formReference.hasError('maxlength', 'summary')" translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: TEXT_AREA_MAX_LENGTH}"></mat-error>
 				</mat-form-field>
 			</div>
 
@@ -124,7 +134,7 @@
 						<span class="mat-body element-light-color">
 							{{fileName}}
 						</span>
-						<button mat-button color="warn"
+						<button mat-icon-button color="warn"
 							(click)="removeSelectedFile(index)"><mat-icon>delete</mat-icon></button>
 					</div>
 				</div>

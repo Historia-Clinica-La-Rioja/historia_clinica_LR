@@ -24,4 +24,6 @@ public interface BookingSpecialtyStorage {
     List<BookingSpecialtyBo> findAllSpecialties();
 
     Optional<List<BookingSpecialtyBo>> findAllSpecialtiesByProfessional(Integer healthcareProfessionalId);
+
+	List<BookingSpecialtyBo> findSpecialtiesByProfessionals();
 }

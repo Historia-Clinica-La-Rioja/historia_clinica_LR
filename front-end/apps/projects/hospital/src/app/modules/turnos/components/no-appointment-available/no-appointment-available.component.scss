@@ -1,0 +1,15 @@
+@import '../../../../../assets/styles/mixins';
+
+div.no-data {
+	padding: 20px 5px;
+	text-align: center;
+}
+
+.title{
+	@include font-weight-bold;
+    font-size: large;
+}
+
+button{
+    width: max-content;
+}

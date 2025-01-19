@@ -1,5 +1,6 @@
 package net.pladema.staff.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
@@ -16,6 +18,9 @@ class HealthcareProfessionalRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private HealthcareProfessionalRepository healthcareProfessionalRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	void setUp() {

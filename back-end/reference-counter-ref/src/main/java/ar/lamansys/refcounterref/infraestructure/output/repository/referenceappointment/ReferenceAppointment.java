@@ -24,8 +24,11 @@ public class ReferenceAppointment extends SGXAuditableEntity<ReferenceAppointmen
 	@EmbeddedId
 	public ReferenceAppointmentPk pk;
 
-	public ReferenceAppointment(Integer referenceId, Integer appointmentId) {
+	public Boolean protectedAppointment;
+
+	public ReferenceAppointment(Integer referenceId, Integer appointmentId, Boolean protectedAppointment) {
 		this.pk = new ReferenceAppointmentPk(referenceId, appointmentId);
+		this.protectedAppointment = protectedAppointment;
 	}
 
 	@Override

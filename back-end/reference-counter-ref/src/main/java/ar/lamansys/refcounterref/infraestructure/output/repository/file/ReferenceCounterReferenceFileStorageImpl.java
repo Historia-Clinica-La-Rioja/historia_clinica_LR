@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.file;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,7 +86,18 @@ public class ReferenceCounterReferenceFileStorageImpl implements ReferenceCounte
         log.debug("Input parameters -> referenceCounterReferenceId {}, type {}", referenceCounterReferenceId, type);
         return referenceCounterReferenceFileRepository.findByReferenceCounterReferenceIdAndType(referenceCounterReferenceId, type);
     }
-    public void deleteFiles(List<Integer> filesIds) {
+
+	@Override
+	@Transactional(rollbackFor={RuntimeException.class, IOException.class})
+	public List<Integer> saveAll(Integer institutionId, Integer patientId, MultipartFile[] files, Integer type) throws IOException {
+		List<Integer> result = new ArrayList<>();
+		for (MultipartFile file : files) {
+			result.add(save(institutionId, patientId, file, type));
+		}
+		return result;
+	}
+
+	public void deleteFiles(List<Integer> filesIds) {
         log.debug("Input parameters -> filesIds {}", filesIds);
         referenceCounterReferenceFileRepository.deleteAllById(filesIds);
     }

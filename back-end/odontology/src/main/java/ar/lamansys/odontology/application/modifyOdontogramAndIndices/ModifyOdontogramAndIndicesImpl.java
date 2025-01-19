@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.application.modifyOdontogramAndIndices;
 
-import ar.lamansys.odontology.application.createConsultation.DrawOdontogramService;
+import ar.lamansys.odontology.application.createConsultation.DrawOdontogramServiceImpl;
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationException;
 import ar.lamansys.odontology.application.createConsultation.exceptions.CreateConsultationExceptionEnum;
 import ar.lamansys.odontology.application.odontogram.GetToothService;
@@ -12,8 +12,8 @@ import ar.lamansys.odontology.domain.ProcedureBo;
 import ar.lamansys.odontology.domain.ProcedureStorage;
 import ar.lamansys.odontology.domain.consultation.ConsultationCpoCeoIndicesStorage;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
-import ar.lamansys.odontology.domain.consultation.ToothIndicesStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyConsultationStorage;
+import ar.lamansys.odontology.application.odontogram.ports.ToothIndicesStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.OdontologyDiagnosticProcedureInfoDto;
 import lombok.AllArgsConstructor;
@@ -29,13 +29,13 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ModifyOdontogramAndIndicesImpl implements ModifyOdontogramAndIndices{
+public class ModifyOdontogramAndIndicesImpl {
 
 	private final SharedSnomedPort sharedSnomedPort;
 	private final GetToothService getToothService;
 	private final GetToothSurfacesService getToothSurfacesService;
 	private final ToothIndicesStorage toothIndicesStorage;
-	private final DrawOdontogramService drawOdontogramService;
+	private final DrawOdontogramServiceImpl drawOdontogramService;
 	private final DiagnosticStorage diagnosticStorage;
 	private final ProcedureStorage procedureStorage;
 
@@ -43,7 +43,6 @@ public class ModifyOdontogramAndIndicesImpl implements ModifyOdontogramAndIndice
 
 	private final OdontologyConsultationStorage odontologyConsultationStorage;
 
-	@Override
 	public void run(List<OdontologyDiagnosticProcedureInfoDto> odp, Integer newPatientId) {
 		log.debug("Input parameters -> DiagnosticProceduresInfo{}, patientId{}",odp,newPatientId);
 		List<ConsultationDentalActionBo> cda = new ArrayList<>();
@@ -90,11 +89,10 @@ public class ModifyOdontogramAndIndicesImpl implements ModifyOdontogramAndIndice
 			cda.add(cdaToAdd);
 		});
 
-		var result = drawOdontogramService.run(newPatientId,cda);
-
 		var indices = toothIndicesStorage.computeIndices(newPatientId,cda);
 
 		var lastOdontologyConsultation = odontologyConsultationStorage.getLastByPatientId(newPatientId);
+		var result = drawOdontogramService.run(newPatientId,cda, lastOdontologyConsultation.getId());
 		indices.setConsultationDate(lastOdontologyConsultation.getUpdatedOn());
 		consultationCpoCeoIndicesStorage.saveIndices(lastOdontologyConsultation.getId(),indices);
 

@@ -15,14 +15,12 @@ import net.pladema.sgx.exceptions.BackofficeValidationException;
 
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -38,19 +36,19 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public void assertGetList(HierarchicalUnitStaff entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		return null;
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public void assertGetOne(Integer id) {
 
 	}
@@ -79,7 +77,7 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public ItemsAllowed<Integer> itemsAllowedToList(HierarchicalUnitStaff entity) {
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))
 			return new ItemsAllowed<>();
@@ -87,17 +85,13 @@ public class BackofficeHierarchicalUnitStaffValidator implements BackofficePermi
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<HierarchicalUnitStaff> entitiesByExample = repository.findAllByHierarchicalUnitId(entity.getHierarchicalUnitId());
+
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-		List<Integer> resultIds = entitiesByExample.stream()
-				.filter(hus -> idsAllowed.contains(hus.getId()))
-				.map(HierarchicalUnitStaff::getId)
-				.collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_DE_ACCESO_DOMINIO')")
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return new ItemsAllowed<>();
 	}

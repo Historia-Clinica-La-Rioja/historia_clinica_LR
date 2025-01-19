@@ -1,9 +1,12 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.parameterizedform.infrastructure.input.rest.dto.CompleteParameterizedFormDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -23,13 +26,18 @@ public class CreateOutpatientDto {
 
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();
 
-    private List<@Valid OutpatientProcedureDto> procedures = new ArrayList<>();
+    private List<@Valid CreateOutpatientProcedureDto> procedures = new ArrayList<>();
+	@Nullable
+	private List<@Valid CreateOutpatientServiceRequestDto> serviceRequests = new ArrayList<>();
 
-    private List<@Valid OutpatientFamilyHistoryDto> familyHistories = new ArrayList<>();
+    @Nullable
+    private ReferableItemDto<@Valid OutpatientPersonalHistoryDto> personalHistories;
+
+    private ReferableItemDto<@Valid OutpatientFamilyHistoryDto> familyHistories;
 
     private  List<@Valid OutpatientMedicationDto> medications = new ArrayList<>();
 
-    private List<@Valid OutpatientAllergyConditionDto> allergies = new ArrayList<>();
+    private ReferableItemDto<@Valid OutpatientAllergyConditionDto> allergies;
 
     private List<@Valid ReferenceDto> references = new ArrayList<>();
 
@@ -52,5 +60,9 @@ public class CreateOutpatientDto {
 	@Valid
 	@Nullable
 	private Integer hierarchicalUnitId;
+
+	private List<Integer> involvedHealthcareProfessionalIds;
+
+	private List<CompleteParameterizedFormDto> completeForms;
 
 }

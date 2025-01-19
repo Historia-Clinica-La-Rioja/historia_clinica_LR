@@ -8,19 +8,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionV2Bo;
+
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionLineV2Bo;
+
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
+
+import ar.lamansys.sgh.publicapi.prescription.domain.SuggestedCommercialMedicationBo;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercial;
-import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercialRepository;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateBo;
@@ -90,10 +98,18 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"ps.sctid_code as psc, " +
 		"pln.license_number, case when pln.type_license_number = 1 then 'NACIONAL' else 'PROVINCIAL' end, ms.prescription_line_number as msid, msls.description as mssd, s.pt as spt, s.sctid as sid, " +
 		"pt.description as ptd, s2.pt as s2pt, s2.sctid as s2id, " +
-		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, 0 as presentation_quantity, d.id, mr.is_archived, " +
+		"d2.doses_by_unit as unit_dose, d2.doses_by_day, d2.duration, '' as presentation, mscp.medication_pack_quantity as presentation_quantity, d.id, mr.is_archived, " +
 		"case when d2.dose_quantity_id is null then null else q.value end, " +
-		"msls.id as status_id " +
-		"from medication_statement ms join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
+		"msls.id as status_id, " +
+		"patient_country.description AS country, "  +
+		"patient_province.description AS province, "  +
+		"patient_department.description AS department, "  +
+		"patient_city.description AS city, "  +
+		"patient_address.street AS person_street, " +
+		"patient_address.number AS person_street_number, " +
+		"s3.sctid, s3.pt, mscp.presentation_unit_quantity, q.unit " +
+		"from medication_statement ms " +
+		"join document_medicamention_statement dms on ms.id = dms.medication_statement_id " +
 		"join document d on d.id = dms.document_id " +
 		"join medication_request mr on mr.id = d.source_id join patient p on p.id = ms.patient_id " +
 		"join person p2 on p2.id = p.person_id " +
@@ -106,6 +122,11 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"left join medical_coverage_plan mcp on mcp.medical_coverage_id = pmc.medical_coverage_id " +
 		"left join institution i on i.id = d.institution_id " +
 		"left join address a on a.id = i.address_id " +
+		"left join address patient_address ON (patient_address.id = pe.address_id) " +
+		"left join country patient_country ON (patient_address.country_id = patient_country.id) " +
+		"left join province patient_province ON (patient_address.province_id = patient_province.id) " +
+		"left join department patient_department ON (patient_address.department_id = patient_department.id) " +
+		"left join city patient_city ON (patient_address.city_id = patient_city.id) " +
 		"join healthcare_professional hp on hp.id = mr.doctor_id " +
 		"join person p3 on p3.id = hp.person_id " +
 		"join identification_type it2 on it2.id = p3.identification_type_id " +
@@ -121,10 +142,12 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		"left join dosage d2 on d2.id = ms.dosage_id " +
 		"left join quantity q on d2.dose_quantity_id = q.id " +
 		"left join medication_statement_line_state msls on msls.id = ms.prescription_line_state " +
+		"LEFT JOIN {h-schema}snomed s3 ON (s3.id = ms.suggested_commercial_medication_snomed_id) " +
+		"LEFT JOIN {h-schema}medication_statement_commercial_prescription mscp ON (mscp.medication_statement_id = ms.id) " +
 		"where p2.identification_number LIKE :identificationNumber " +
 		"and mr.id = :numericPrescriptionId " +
-		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + "AS VARCHAR) " +
-				"and (ms.status_id LIKE CAST(" + COMPLETO + "AS varchar) OR ms.status_id LIKE CAST(" + ACTIVO + "AS varchar)) " +
+		"and (d.type_id = " + RECETA + " or d.type_id = " + RECETA_DIGITAL + ") and hc.verification_status_id LIKE CAST(" + CONFIRMADO + " AS VARCHAR) " +
+				"and (ms.status_id LIKE CAST(" + COMPLETO + " AS VARCHAR) OR ms.status_id LIKE CAST(" + ACTIVO + " AS VARCHAR)) " +
 		"order by mr.id desc";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
@@ -174,7 +197,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.collect(Collectors.toList());
 
 		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdentifier.prescriptionId);
-		medicationStatementCommercialRepository.deleteAllInBatch(entities);
+		Set<Integer> medicationStatementIds = entities.stream().map(MedicationStatementCommercial::getMedicationStatementId).collect(Collectors.toSet());
+		medicationStatementCommercialRepository.logicalDeleteAllByMedicationStatementIds(medicationStatementIds);
 		medicationStatementCommercialRepository.saveAll(entities);
 		medicationStatementCommercialRepository.flush();
 	}
@@ -186,13 +210,25 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"SELECT DISTINCT mr.id AS mrid, ms.prescription_date, ms.due_date, " +
 				"p3.first_name AS p3fn, p3.last_name, it2.description AS it2d, p3.identification_number AS p3d, pe2.phone_number, pe2.email AS email, " +
 				"ps.description AS psd, ps.sctid_code AS professional_specialty_snomed_code, pln.license_number, CASE WHEN pln.type_license_number = 1 THEN 'NACIONAL' ELSE 'PROVINCIAL' END, " +
-				"doc.id, cs.name, cs.sctid_code AS specialty_snomed_code " +
+				"doc.id, cs.name, cs.sctid_code AS specialty_snomed_code, " +
+				"co.description AS country, " +
+				"pr.description AS province, " +
+				"de.description AS department, " +
+				"ci.description AS city, " +
+				"pa.street AS person_street, " +
+				"pa.number AS person_street_number " +
 				"FROM medication_statement ms " +
 				"JOIN document_medicamention_statement dms ON ms.id = dms.medication_statement_id " +
 				"JOIN document doc ON doc.id = dms.document_id " +
 				"JOIN medication_request mr ON mr.id = doc.source_id " +
 				"JOIN patient p ON p.id = ms.patient_id " +
 				"JOIN person p2 ON p2.id = p.person_id " +
+				"LEFT JOIN person_extended pep2 ON (pep2.person_id = p2.id) " +
+				"LEFT JOIN address pa ON (pa.id = pep2.address_id) " +
+				"LEFT JOIN country co ON (pa.country_id = co.id) " +
+				"LEFT JOIN province pr ON (pa.province_id = pr.id) " +
+				"LEFT JOIN department de ON (pa.department_id = de.id) " +
+				"LEFT JOIN city ci ON (pa.city_id = ci.id) " +
 				"JOIN healthcare_professional hp ON hp.id = mr.doctor_id " +
 				"JOIN person p3 ON p3.id = hp.person_id " +
 				"JOIN identification_type it2 ON it2.id = p3.identification_type_id " +
@@ -235,6 +271,133 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 		return Optional.of(listResult);
 
+	}
+
+	@Override
+	public Optional<PrescriptionV2Bo> getPrescriptionByIdAndDniV2(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
+		String stringQuery = "SELECT * " +
+				"FROM v_prescription_request_v2 " +
+				"WHERE patient_identification_number = :identificationNumber " +
+				"AND medication_request_id = :numericPrescriptionId ";
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("identificationNumber", identificationNumber)
+				.setParameter("numericPrescriptionId", prescriptionIdentifier.prescriptionId);
+
+		List<Object[]> queryResult = query.getResultList();
+		List<PrescriptionV2Bo> result = queryResult.stream()
+				.map(this::processPrescriptionV2)
+				.collect(Collectors.toList());
+		if (result.isEmpty())
+			return Optional.empty();
+		PrescriptionV2Bo mergedResult = mergeResultsV2(result);
+		if (mergedResult.getPrescriptionId() != null)
+			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
+		mergedResult.setDomain(prescriptionIdentifier.domain);
+		mergedResult.getPrescriptionLines().forEach(line -> line.setCommercialMedications(fetchPrescriptionCommercials(line.getMedicationStatementId())));
+		return Optional.of(mergedResult);
+	}
+
+	private PrescriptionV2Bo processPrescriptionV2(Object[] queryResult) {
+		LocalDate dueDate = queryResult[2] != null ? ((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
+		String accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
+		String prescriptionLineStatus = getPrescriptionLineStatus(queryResult, dueDate);
+		return new PrescriptionV2Bo(
+				domainNumber.toString(),
+				((Integer) queryResult[0]).toString(),
+				((Date) queryResult[1]).toLocalDate().atStartOfDay(),
+				dueDate.atStartOfDay(),
+				"api/external-document-access/download-prescription/" + accessId,
+				queryResult[42] == null ? Boolean.FALSE : (Boolean) queryResult[42],
+				new PatientPrescriptionBo(
+						(String) queryResult[3],
+						(String) queryResult[4],
+						(String) queryResult[5],
+						(String) queryResult[6],
+						(String) queryResult[7],
+						((Date) queryResult[8]).toLocalDate(),
+						(String) queryResult[9],
+						(String) queryResult[10],
+						(String) queryResult[11],
+						(String) queryResult[12],
+						(String) queryResult[13],
+						(String) queryResult[14],
+						(String) queryResult[46],
+						(String) queryResult[47],
+						(String) queryResult[48],
+						(String) queryResult[49],
+						(String) queryResult[50],
+						(String) queryResult[51]
+				),
+				new InstitutionPrescriptionBo(
+						(String) queryResult[15],
+						(String) queryResult[16],
+						(String) queryResult[17],
+						(String) queryResult[18]
+				),
+				new ProfessionalPrescriptionBo(
+						(String) queryResult[19],
+						(String) queryResult[20],
+						(String) queryResult[21],
+						(String) queryResult[22],
+						(String) queryResult[23],
+						(String) queryResult[24],
+						List.of(new PrescriptionProfessionBo(
+								(String) queryResult[25],
+								(String) queryResult[26]
+						)),
+						List.of(new PrescriptionProfessionalRegistrationBo(
+								(String) queryResult[27],
+								(String) queryResult[28]
+						))
+				),
+				List.of(new PrescriptionLineV2Bo(
+						(Integer) queryResult[29],
+						prescriptionLineStatus,
+						new PrescriptionProblemBo(
+								(String) queryResult[31],
+								(String) queryResult[32],
+								queryResult[33].equals(CRONICO) ? "Crónico" : "Agudo"
+						),
+						new GenericMedicationBo(
+								(String) queryResult[34],
+								(String) queryResult[35]
+						),
+						new SuggestedCommercialMedicationBo((String) queryResult[58], (String) queryResult[57]),
+						null,
+						new PrescriptionDosageBo(
+								queryResult[36] != null ? (Double) queryResult[36] : 0,
+								queryResult[37] != null ? (Double) queryResult[37] : 0,
+								queryResult[38] != null ? (Double) queryResult[38] : 1,
+								(String) queryResult[39],
+								(Short) queryResult[40],
+								queryResult[43] != null ? (Double)queryResult[43] : null,
+								queryResult[53] != null ? (Integer)queryResult[53] : null,
+								queryResult[54] != null ? (String)queryResult[54] : null,
+								(Short) queryResult[59],
+								(String) queryResult[60]),
+						(Integer) queryResult[45],
+						queryResult[52] != null ? (String)queryResult[52] : null
+				)),
+				new PrescriptionSpecialtyBo(
+						(String) queryResult[55],
+						(String) queryResult[56]
+				)
+		);
+	}
+
+	private List<CommercialMedicationBo> fetchPrescriptionCommercials(Integer medicationStatementId) {
+		String queryString = "SELECT msc.commercial_name, msc.snomed_id " +
+				"FROM {h-schema}medication_statement ms " +
+				"JOIN {h-schema}medication_statement_commercial msc ON (msc.medication_statement_id = ms.id) " +
+				"WHERE ms.id = :medicationStatementId " +
+				"AND msc.deleted = FALSE";
+
+		List<Object[]> queryResult = entityManager.createNativeQuery(queryString)
+				.setParameter("medicationStatementId", medicationStatementId)
+				.getResultList();
+
+		return queryResult.stream().map(commercialMedication -> new CommercialMedicationBo((String) commercialMedication[0], (String) commercialMedication[1])).collect(Collectors.toList());
 	}
 
 	private boolean isInNewStatus(Integer prescriptionLineNumber, List<LineStatusBo> newStatus) {
@@ -378,7 +541,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	private void assertExistsPrescriptionAndDni(List<Object[]> queryResult, String idNumber) throws PrescriptionNotFoundException {
 		if(queryResult.isEmpty() || !queryResult.get(0)[3].toString().equals(idNumber)) {
-			throw new PrescriptionNotFoundException();
+			throw new PrescriptionNotFoundException("No se encontró la receta en el dominio");
 		}
 	}
 
@@ -455,6 +618,41 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		return result;
 	}
 
+	private PrescriptionV2Bo mergeResultsV2(List<PrescriptionV2Bo> unmergedResults) {
+		PrescriptionV2Bo result = new PrescriptionV2Bo();
+		if (unmergedResults.isEmpty())
+			return result;
+		result.setDomain(unmergedResults.get(0).getDomain());
+		result.setPrescriptionId(unmergedResults.get(0).getPrescriptionId());
+		result.setPrescriptionDate(unmergedResults.get(0).getPrescriptionDate());
+		result.setDueDate(unmergedResults.get(0).getDueDate());
+		result.setLink(unmergedResults.get(0).getLink());
+		result.setIsArchived(unmergedResults.get(0).getIsArchived());
+		result.setPatientPrescription(unmergedResults.get(0).getPatientPrescription());
+		result.setInstitutionPrescription(unmergedResults.get(0).getInstitutionPrescription());
+		result.setPrescriptionLines(unmergedResults.get(0).getPrescriptionLines());
+		result.setPrescriptionSpecialty(unmergedResults.get(0).getPrescriptionSpecialty());
+		ProfessionalPrescriptionBo professionalPrescriptionBo = unmergedResults.get(0).getProfessionalPrescription();
+		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>(professionalPrescriptionBo.getProfessions());
+		List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBos = new ArrayList<>(professionalPrescriptionBo.getRegistrations());
+		List<PrescriptionLineV2Bo> prescriptionLineBoList = new ArrayList<>(result.getPrescriptionLines());
+		for (int i = 1; i < unmergedResults.size(); i++) {
+			PrescriptionProfessionBo specialty = unmergedResults.get(i).getProfessionalPrescription().getProfessions().get(0);
+			PrescriptionProfessionalRegistrationBo prescriptionRegistration = unmergedResults.get(i).getProfessionalPrescription().getRegistrations().get(0);
+			if (!prescriptionProfessionalRegistrationBos.contains(prescriptionRegistration))
+				prescriptionProfessionalRegistrationBos.add(prescriptionRegistration);
+			if (!prescriptionProfessionBos.contains(specialty))
+				prescriptionProfessionBos.add(specialty);
+			if (!prescriptionLineBoList.contains(unmergedResults.get(i).getPrescriptionLines().get(0)))
+				prescriptionLineBoList.add(unmergedResults.get(i).getPrescriptionLines().get(0));
+		}
+		professionalPrescriptionBo.setProfessions(prescriptionProfessionBos);
+		professionalPrescriptionBo.setRegistrations(prescriptionProfessionalRegistrationBos);
+		result.setProfessionalPrescription(professionalPrescriptionBo);
+		result.setPrescriptionLines(prescriptionLineBoList);
+		return result;
+	}
+
 	private PrescriptionsDataBo processPrescriptionsDataQuery(List<Object[]> queryResult) {
 
 		if(queryResult.isEmpty()) {
@@ -488,16 +686,16 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						prescriptionProfessionBos,
 						prescriptionProfessionalRegistrationBos
 				),
-				new PrescriptionSpecialtyBo((String)queryResult.get(0)[14], (String)queryResult.get(0)[15])
+				new PrescriptionSpecialtyBo((String)queryResult.get(0)[14], (String)queryResult.get(0)[15]),
+				new PatientPrescriptionAddressBo((String)queryResult.get(0)[16],(String)queryResult.get(0)[17],(String)queryResult.get(0)[18],(String)queryResult.get(0)[19],(String)queryResult.get(0)[20],(String)queryResult.get(0)[21])
 		);
 	}
 
 	private PrescriptionBo processPrescriptionQuery(Object[] queryResult) {
-
+		var accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
 		var dueDate = queryResult[2] != null ?
 				((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
-
-		var accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
+		String prescriptionLineStatus = getPrescriptionLineStatus(queryResult, dueDate);
 
 		return new PrescriptionBo(
 				domainNumber.toString(),
@@ -507,18 +705,24 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"api/external-document-access/download-prescription/" + accessId,
 				queryResult[42] == null ? Boolean.FALSE : (Boolean)queryResult[42],
 				new PatientPrescriptionBo(
-						(String)queryResult[3],
-						(String)queryResult[4],
-						(String)queryResult[5],
-						(String)queryResult[6],
-						(String)queryResult[7],
-						((Date)queryResult[8]).toLocalDate(),
-						(String)queryResult[9],
-						(String)queryResult[10],
-						(String)queryResult[11],
-						(String)queryResult[12],
-						(String)queryResult[13],
-						(String)queryResult[14]
+						(String)queryResult[3], //name
+						(String)queryResult[4], //lastName
+						(String)queryResult[5], //selfPerceivedName
+						(String)queryResult[6], //dniSex
+						(String)queryResult[7], //gender
+						((Date)queryResult[8]).toLocalDate(), //birthDate
+						(String)queryResult[9], //identificationType
+						(String)queryResult[10], //identificationNumber
+						(String)queryResult[11], //medicalCoverage
+						(String)queryResult[12], //medicalCoverageCuit
+						(String)queryResult[13], //medicalCoveragePlan
+						(String)queryResult[14],
+						queryResult[45] == null ? "" : (String) queryResult[45],
+						queryResult[46] == null ? "" : (String) queryResult[46],
+						queryResult[47] == null ? "" : (String) queryResult[47],
+						queryResult[48] == null ? "" : (String) queryResult[48],
+						queryResult[49] == null ? "" : (String) queryResult[49],
+						queryResult[50] == null ? "" : (String) queryResult[50]
 				),
 				new InstitutionPrescriptionBo(
 						(String)queryResult[15],
@@ -544,7 +748,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				),
 				List.of(new PrescriptionLineBo(
 						(Integer)queryResult[29],
-						queryResult[44].equals(RECETA_CANCELADA) || dueDate.isAfter(LocalDate.now()) ? (String)queryResult[30] : "VENCIDO",
+						prescriptionLineStatus,
 						new PrescriptionProblemBo(
 								(String)queryResult[31],
 								(String)queryResult[32],
@@ -554,14 +758,44 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String)queryResult[34],
 								(String)queryResult[35]
 						),
+						new SuggestedCommercialMedicationBo((String) queryResult[52], (String) queryResult[51]),
 						new CommercialMedicationBo(),
 						queryResult[36] != null ? (Double)queryResult[36] : 0,
 						queryResult[37] != null ? (Double) queryResult[37] : 0,
 						queryResult[38] != null ? (Double)queryResult[38] : 1,
 						(String)queryResult[39],
-						(Integer)queryResult[40],
-						queryResult[43] != null ? (Double)queryResult[43] : null
+						(Short) queryResult[40],
+						queryResult[53] != null ? (Short) queryResult[53] : null,
+						queryResult[43] != null ? (Double)queryResult[43] : null,
+						queryResult[54] != null ? (String) queryResult[54] : null
 				))
 		);
+	}
+
+	/**
+	 * The order of the conditionals matters. A cancelled prescription can't be expired/overdue
+	 * The status is computed as follows:
+	 * 	1. If the state is not null AND the line is cancelled -> return cancelled
+	 * 	2. If it's expired -> return "VENCIDO"
+	 * 	3. If the state is not null -> return the state
+	 * 	4. By default, return "ACTIVO"
+	 */
+	private String getPrescriptionLineStatus(Object[] queryResult, LocalDate dueDate) {
+
+		Object medicationStatementLineStateId = queryResult[44];
+		Object medicationStatementLineStateDescription = queryResult[30];
+
+		if (medicationStatementLineStateId != null && medicationStatementLineStateId.equals(RECETA_CANCELADA))
+			return (String) medicationStatementLineStateDescription;
+
+		if (dueDate.isBefore(LocalDate.now())) {
+			return PrescriptionValidStatesEnum.VENCIDO.name();
+		}
+
+		if (medicationStatementLineStateId != null && medicationStatementLineStateDescription != null) {
+			return (String) medicationStatementLineStateDescription;
+		}
+
+		return PrescriptionValidStatesEnum.ACTIVO.name();
 	}
 }

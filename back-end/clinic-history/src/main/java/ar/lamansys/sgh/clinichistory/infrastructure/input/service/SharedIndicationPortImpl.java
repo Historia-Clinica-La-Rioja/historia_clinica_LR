@@ -55,7 +55,7 @@ import ar.lamansys.sgh.clinichistory.application.indication.createotherindicatio
 import ar.lamansys.sgh.clinichistory.application.indication.getinternmentepisodediets.GetInternmentEpisodeDiets;
 import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherIndicationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentIndicationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentIndication;

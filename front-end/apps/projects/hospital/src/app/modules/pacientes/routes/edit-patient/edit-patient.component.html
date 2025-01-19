@@ -55,49 +55,52 @@
 					</div>
 				</div>
 
-				<div *ngIf="!hasAuditorRole">
-					<div *ngIf="!auditablePatientInfo else messageForAuditSection">
-						<button mat-button type="button" id="mark_for_audit" color="primary"
-							(click)="openAuditDialog()">
-							<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
-							{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
-						</button>
-						<br><br>
-					</div>
+				<ng-container *ngIf="isHabilitarAuditoriaOn">
+					<div *ngIf="!hasAuditorRole">
+						<div *ngIf="!auditablePatientInfo else messageForAuditSection">
+							<button mat-button type="button" id="mark_for_audit" color="primary"
+								(click)="openAuditDialog()">
+								<mat-icon fontSet="material-icons-outlined">sms_failed</mat-icon>
+								{{ 'pacientes.edit.MARK_FOR_AUDIT' | translate }}
+							</button>
+							<br><br>
+						</div>
 
-					<ng-template #messageForAuditSection>
-						<mat-card id="message_for_audit_section">
-						<div fxLayout="column" fxLayoutGap="10px" >
-							<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
+						<ng-template #messageForAuditSection>
+							<mat-card id="message_for_audit_section">
+							<div fxLayout="column" fxLayoutGap="10px" >
+								<span [translate]="'pacientes.edit.MESSAGE_FOR_AUDIT'"></span>
 
-							<div>
-								<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
-								<div class="mat-caption">
-									<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} -
-									</span>
-									<span *ngIf="auditablePatientInfo.institutionName">
-										{{ auditablePatientInfo.institutionName }} - </span>
-									<span>{{ auditablePatientInfo.createdOn | translate }}</span>
+								<div>
+									<span id="message_for_audit"> "{{ auditablePatientInfo.message }}" </span>
+									<div class="mat-caption">
+										<span *ngIf="auditablePatientInfo.createdBy">{{ auditablePatientInfo.createdBy }} -
+										</span>
+										<span *ngIf="auditablePatientInfo.institutionName">
+											{{ auditablePatientInfo.institutionName }} - </span>
+										<span>{{ auditablePatientInfo.createdOn | translate }}</span>
+									</div>
+								</div>
+
+								<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
+									fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
+									<button mat-button type="button" id="edit_message_for_audit" color="primary"
+										(click)="openAuditDialog(auditablePatientInfo.message)">
+										<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+										{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
+									</button>
+									<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
+										(click)="openUnmarkPatientWarning()">
+										<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+										{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
+									</button>
 								</div>
 							</div>
+						</mat-card>
+						</ng-template>
+					</div>
+				</ng-container>
 
-							<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" fxLayout.lt-sm="column"
-								fxLayoutAlign.lt-sm="start start" fxLayoutGap.lt-sm="3px">
-								<button mat-button type="button" id="edit_message_for_audit" color="primary"
-									(click)="openAuditDialog(auditablePatientInfo.message)">
-									<mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-									{{ 'pacientes.edit.EDIT_MESSAGE_FOR_AUDIT' | translate }}
-								</button>
-								<button mat-button type="button" id="unmark_patient_for_audit" color="warn"
-									(click)="openUnmarkPatientWarning()">
-									<mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
-									{{ 'pacientes.edit.UNMARK_PATIENT_FOR_AUDIT' | translate }}
-								</button>
-							</div>
-						</div>
-					</mat-card>
-					</ng-template>
-				</div>
 				<div class="form-row" fxLayoutGap="15px">
 					<div>
 						<div>
@@ -280,7 +283,7 @@
 								{{country.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId"
+						<button id="clear_address_country" type="button"  *ngIf="form.value.addressCountryId"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressCountryId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -294,7 +297,7 @@
 								{{province.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_province" type="button" mat-button
+						<button id="clear_address_province" type="button" 
 							*ngIf="form.value.addressProvinceId" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressProvinceId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -309,7 +312,7 @@
 								{{department.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_departament" type="button" mat-button
+						<button id="clear_address_departament" type="button" 
 							*ngIf="form.value.addressDepartmentId" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressDepartmentId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -323,7 +326,7 @@
 								{{city.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId"
+						<button id="clear_address_city" type="button"  *ngIf="form.value.addressCityId"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressCityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -374,12 +377,12 @@
 						</div>
 						<mat-form-field class="prefix-field" appearance="outline" class="matInput">
 							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()"
-								formControlName="phonePrefix" maxlength="4" minlength="2"
+								formControlName="phonePrefix"
 								placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">
 								<span translate="forms.REQUIRED"></span>
 							</mat-error>
-							<mat-error *ngIf="hasError(form, 'minlength', 'phonePrefix')"
+							<mat-error *ngIf="form.hasError('maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
 							<mat-error *ngIf="hasError(form, 'pattern', 'phonePrefix')"
@@ -393,10 +396,13 @@
 						</div>
 						<mat-form-field appearance="outline" class="matInput">
 							<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber"
-								formControlName="phoneNumber" maxlength="15" minlength="15"
+								formControlName="phoneNumber"
 								placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phoneNumber')">
 								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="form.hasError('maxlength', 'phoneNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
 							</mat-error>
 							<mat-error *ngIf="hasError(form, 'pattern', 'phoneNumber')"
 								[translate]="'forms.FORMAT_NUMERIC'">
@@ -491,7 +497,7 @@
 								{{ethnicity.pt | titlecase}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId"
+						<button id="clear_address_ethnicity" type="button"  *ngIf="form.value.ethnicityId"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.ethnicityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -513,7 +519,7 @@
 							</mat-option>
 
 						</mat-select>
-						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value"
+						<button id="clear-occupation" type="button"  *ngIf="form.controls.occupationId.value"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.occupationId.reset(); $event.stopPropagation(); currentOccupationDescription = ''">
 							<mat-icon>close</mat-icon>
@@ -534,7 +540,7 @@
 								{{educationLevel.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear-educationLevel" type="button" mat-button
+						<button id="clear-educationLevel" type="button" 
 							*ngIf="form.controls.educationLevelId.value" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.educationLevelId.reset(); $event.stopPropagation(); currentEducationLevelDescription = ''">
 							<mat-icon>close</mat-icon>
@@ -554,7 +560,8 @@
 		<div fxLayaout="row" fxLayoutAlign="start center"  *ngIf="completeDataPatient?.patientLastEditInfoDto?.updatedBy">
 			<p class="grey" *ngIf="completeDataPatient?.patientLastEditInfoDto?.wasEdited ">{{'pacientes.edit.EDIT_BY' | translate}} </p>
 			<p class="grey" *ngIf="!completeDataPatient?.patientLastEditInfoDto?.wasEdited ">{{'pacientes.new.CREATE_BY' | translate}} </p>
-			<p class="grey">{{completeDataPatient.patientLastEditInfoDto.updatedBy}} - {{completeDataPatient.patientLastEditInfoDto.updatedOn | date: 'dd/MM/yyyy - HH:mm'}}</p>
+			<p class="grey">{{completeDataPatient.patientLastEditInfoDto.updatedBy}} - {{completeDataPatient.patientLastEditInfoDto.updatedOn.toString() | isoToDate | dateFormat: 'datetime'}}</p>
 		</div>
 	</section>
 </app-content>
+

@@ -1,0 +1,65 @@
+<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between start" fxLayoutGap="10px"
+	fxLayoutGap.lt-md="30px">
+
+	<app-patient-summary fxFlex="20%" [person]="referenceReport.patient" [size]="size"></app-patient-summary>
+
+	<div id="problems-priority-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="15%">
+
+		<app-identifier-cases style="white-space: pre-line" *ngIf="referenceReport.dto.clinicalSpecialtyOrigin" [identifierCase]="identiferCases.PROBLEM"
+			[description]="referenceReport.dto.problems | showProblems" id="problem">
+		</app-identifier-cases>
+
+        <app-priority [priority]="referenceReport.priority"></app-priority>
+        <span class="grey">{{referenceReport.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
+    </div>
+
+	<div id="origin-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="15%">
+		<span class="grey"> {{'access-management.search_references.ORIGIN' | translate | uppercase}}</span>
+		<div fxLayout="column" fxLayoutAlign="start start" fxFlex="100%">
+			<app-identifier-cases *ngIf="referenceReport.dto.clinicalSpecialtyOrigin" [identifierCase]="identiferCases.SPECIALTY"
+				[description]="referenceReport.dto.clinicalSpecialtyOrigin" id="specialty">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="referenceReport.dto.institutionOrigin" [identifierCase]="identiferCases.INSTITUTION"
+				[description]="referenceReport.dto.institutionOrigin" id="institution">
+			</app-identifier-cases>
+
+		</div>
+	</div>
+
+	<div id="destination-data" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="20%">
+		<span class="grey">{{'access-management.search_references.DESTINATION' | translate | uppercase}}</span>
+		<div fxLayout="column" fxLayoutAlign="start start" fxFlex="100%">
+
+			<app-identifier-cases *ngIf="referenceReport.dto.procedure" [identifierCase]="identiferCases.PRACTICE"
+				[description]="referenceReport.dto.procedure" id="procedure">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="referenceReport.dto.destinationClinicalSpecialties.length" [identifierCase]="identiferCases.SPECIALTY"
+				[description]="destinationClinicalSpecialtiesName" id="specialty">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="referenceReport.dto.careLine" [identifierCase]="identiferCases.CARE_LINE"
+				[description]="referenceReport.dto.careLine" id="careLine">
+			</app-identifier-cases>
+
+			<app-identifier-cases *ngIf="referenceReport.dto.institutionDestination" [identifierCase]="identiferCases.INSTITUTION"
+				[description]="referenceReport.dto.institutionDestination" id="institution">
+			</app-identifier-cases>
+		</div>
+	</div>
+
+	<app-reference-state-label id="closure-type" fxFlex="15%" [referenceClosureDescription]="referenceReport.dto.closureType?.description"></app-reference-state-label>
+
+	<div fxLayout="column" fxLayoutGap="10px" fxFlex="5%" >
+		<app-regulation-state id="regulation-state" [state]="referenceReport.dto.regulationState"></app-regulation-state>
+		<app-reference-forwarding-label id="forwarding" *ngIf="isInDashboardManagerRole && referenceReport.dto.forwardingType" [forwardingType]="referenceReport.dto.forwardingType"></app-reference-forwarding-label>
+	</div>
+
+	<div fxFlex="10%">
+		<app-colored-label id="state" *ngIf="referenceReport.state"
+			[description]="referenceReport.state.description" [color]="referenceReport.state.color">
+		</app-colored-label>
+	</div>
+
+</div>

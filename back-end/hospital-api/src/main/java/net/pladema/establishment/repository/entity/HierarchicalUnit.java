@@ -50,4 +50,7 @@ public class HierarchicalUnit extends SGXAuditableEntity<Integer> implements Ser
 	@Column(name = "clinical_specialty_id")
 	private Integer clinicalSpecialtyId;
 
+	@Column(name = "closest_service_id")
+	private Integer closestServiceId;
+
 }

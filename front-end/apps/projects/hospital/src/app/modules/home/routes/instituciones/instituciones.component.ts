@@ -15,6 +15,9 @@ import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
+import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { itemHasAnyRole } from '@core/services/permissions.service';
+import { BACKOFFICE_ROLES } from '@core/components/backoffice/backoffice.component';
 
 @Component({
 	selector: 'app-instituciones',
@@ -39,7 +42,8 @@ export class InstitucionesComponent {
 		private router: Router,
 		private accountService: AccountService,
 		private wcExtensionsService: WCExtensionsService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly hierarchicalUnitService: HierarchicalUnitService
 	) {
 		loggedUserService.assignments$.subscribe((allRoles: RoleAssignmentDto[]) => {
 			this.userRoles = allRoles;
@@ -100,6 +104,7 @@ export class InstitucionesComponent {
 			this.router.navigate([AppRoutes.Backoffice]);
 		} else {
 			if (this.hasAccessToInstitution(institutionDto.id)){
+				this.hierarchicalUnitService.resetForm();
 				this.router.navigate([AppRoutes.Institucion, institutionDto.id]);
 			} else {
 				this.snackBarService.showError("No es posible acceder a Receta Digital todavia");
@@ -112,11 +117,7 @@ export class InstitucionesComponent {
 	}
 
 	hasAccessToBackoffice(allRoles: RoleAssignmentDto[]) {
-		return allRoles
-			.filter((ra) => ra.role === ERole.ROOT ||
-				ra.role === ERole.ADMINISTRADOR ||
-				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ||
-				ra.role === ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO).length > 0;
+		return itemHasAnyRole(BACKOFFICE_ROLES, allRoles.map(r => r.role));
 	}
 
 	hasAccessToWebappInstitutions(allRoles: RoleAssignmentDto[]) {

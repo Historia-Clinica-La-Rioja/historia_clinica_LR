@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexModule } from '@angular/flex-layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
 // deps
 import { CoreMaterialModule } from './core.material.module';
 import { AppMaterialModule } from '../material/app.material.module';
@@ -14,18 +16,25 @@ import { ContentComponent } from './components/content/content.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 // directives
 import { HasRoleDirective } from './directives/has-role.directive';
+import { HasRoleWithoutContextDirective } from './directives/has-role-without-context.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
+//pipes
+import { StringSeparatorPipe } from './pipes/string-separator.pipe';
+import { VersionAvailableComponent } from './dialogs/version-available/version-available.component';
+import { CustomEventsHandlerService } from './services/custom-events-handler.service';
 
 @NgModule({
 	declarations: [
 		// components
 		ContentComponent,
 		ExchangeableThemeComponent,
+		VersionAvailableComponent,
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		HasRoleWithoutContextDirective,
+		//pipes
+		StringSeparatorPipe,
 	],
 	imports: [
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
@@ -57,11 +66,18 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 		// components
 		ContentComponent,
 		ExchangeableThemeComponent,
+		VersionAvailableComponent,
+		// directives
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		HasRoleWithoutContextDirective,
+		//pipes
+		StringSeparatorPipe
 	],
-	providers: []
+	providers: [
+		CustomEventsHandlerService
+	]
 })
 export class CoreModule {
 }

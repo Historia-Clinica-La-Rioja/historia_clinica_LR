@@ -1,0 +1,77 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_21
+
+    - changeSet:
+        id: createTable-document_electronic_signature_reject_reason
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: document_electronic_signature_reject_reason
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_electronic_signature_reject_reason
+                      references: document_involved_professional(id)
+                      foreignKeyName: FK_document_involved_professional_document_involved_professional
+                    name: document_involved_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: reason_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text
+
+    - changeSet:
+          id: addColumn-anesthetic_chart-to-anesthetic_report
+          author: fzudaire
+          changes:
+              - addColumn:
+                    tableName: anesthetic_report
+                    columns:
+                        - column:
+                              name: anesthetic_chart
+                              type: text
+                              constraints:
+                                  nullable: true
+
+    - changeSet:
+        id: createIndexClinicalSpecialtyId-outpatient_consultation
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_clinical_specialty_id" ON outpatient_consultation(clinical_specialty_id);
+
+    - changeSet:
+        id: createIndexCreatedOn-outpatient_consultation
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_created_on" ON outpatient_consultation(created_on);          
+
+    - changeSet:
+        id: createIndexEncounterId-cipres_encounter
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_cipres_encounter_encounter_id" ON cipres_encounter(encounter_id);
+
+    - changeSet:
+        id: createIndexPersonId-patient
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_patient_person_id" ON patient(person_id);

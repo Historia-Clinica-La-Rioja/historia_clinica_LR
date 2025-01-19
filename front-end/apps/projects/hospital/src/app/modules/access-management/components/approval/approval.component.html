@@ -1,0 +1,34 @@
+<div *ngIf="permissionService.visualPermissions.showApprovalDropdown else showRegulationState">
+	<app-institutional-network-actions-dropdown
+		*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_INSTITUCIONAL']"
+		[isOrigin]="false" [regulationStates]="regulationDestinationStates"
+		(newState)="onNewState($event)" (editing)="onEditingState($event)">
+	</app-institutional-network-actions-dropdown>
+</div>
+
+<ng-template #showRegulationState>
+	<app-colored-label [description]="regulationState.description | translate | uppercase"
+		[color]="regulationState.color" [icon]="regulationState.icon">
+	</app-colored-label>
+</ng-template>
+
+<ng-container *ngIf="permissionService.referenceCompleteData.administrativeState &&
+	permissionService.referenceCompleteData.administrativeState?.state !== permissionService.referenceDestinationState.waitingApproval">
+	<div *ngIf="referenceAdministrativeDto?.reason && !hideReason else stateCreatorInfo" fxLayout="column" fxLayoutGap="10px">
+		<span class="reason">{{referenceAdministrativeDto.reason}}</span>
+		<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
+			<span>{{referenceAdministrativeDto.professionalName}}</span>
+			<span>{{referenceAdministrativeDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
+		</div>
+		<app-edit-reference [isButton]="true" *ngIf="permissionService.visualPermissions.showEditReferenceInDestinationState"
+			[referenceCompleteData]="permissionService.referenceCompleteData" (newReferenceDetail)="updateReferenceInfomation($event)">
+		</app-edit-reference>
+	</div>
+	
+	<ng-template #stateCreatorInfo>
+		<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
+			<span>{{referenceAdministrativeDto.professionalName}}</span>
+			<span>{{referenceAdministrativeDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
+		</div>
+	</ng-template>
+</ng-container>

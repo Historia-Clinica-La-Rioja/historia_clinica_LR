@@ -32,7 +32,7 @@ import net.pladema.staff.application.saveprofessionallicensesnumber.SaveProfessi
 import net.pladema.staff.controller.dto.ProfessionalLicenseNumberDto;
 import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 
 @RestController
@@ -66,7 +66,7 @@ public class ProfessionalLicenseNumberController {
 	}
 
 	@GetMapping("/registration-numbers")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<ProfessionalRegistrationNumbersDto>> getAllProfessionalRegistrationNumbers(@PathVariable Integer institutionId) {
 		log.debug("Input parameters -> {}", institutionId);
 		List<ProfessionalRegistrationNumbersDto> result = getAllProfessionalRegistrationNumbers.run(institutionId).stream()

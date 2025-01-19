@@ -6,7 +6,7 @@ import ar.lamansys.sgh.clinichistory.application.ports.OtherIndicationStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.ParenteralPlanStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.PharmacoStorage;
 import ar.lamansys.sgh.clinichistory.domain.ips.DietBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.IndicationSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NursingRecordBo;

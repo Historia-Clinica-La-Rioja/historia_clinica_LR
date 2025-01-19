@@ -67,7 +67,7 @@
 				"RESOLVED": "Resuelto",
 				"ANAMNESIS_SUBTITLE": "Agregue los diagnósticos detectados",
 				"EVOLUTION_NOTE_SUBTITLE": "Seleccione los diagnósticos que desea evolucionar o agregue nuevos",
-				"VERIFICATION": "Verificación",
+				"VERIFICATION": "Verificación:",
 				"SAVE": "Guardar cambios",
 				"ACTIVE": "Activo",
 				"ADD_MAIN_DIAGNOSIS": "+ Agregar diagnóstico principal",
@@ -214,6 +214,7 @@
 			"TITLE": "Epicrisis",
 			"SUBTITLE": "Completa los siguientes datos.",
 			"MESSAGE-REMEMBER": "Seleccione los datos que desea incluir en la Epicrisis",
+            "CONTINUE_DRAFT": "Seguir editando",
 			"alergias": {
 				"TITLE": "Alergias",
 				"table": {
@@ -323,6 +324,274 @@
 				"NO_DATA": "No se registraron datos en el episodio"
 			}
 		},
+		"surgical-report": {
+			"equipo-quirofano":{
+				"TITLE": "Equipo Quirófano",
+				"SURGEON": "Cirujano encargado"
+			},
+			"equipo-patologo":{
+				"TITLE": "Examen anatomopatológico",
+				"PROFESSIONAL": "Patólogo"
+			},
+			"equipo-transfucionista":{
+				"TITLE": "Sangre y soluciones",
+				"PROFESSIONAL": "Técnico en hemoterapia"
+			},
+			"cultivo":{
+				"TITLE": "Cultivos",
+				"PROCEDURES": "Procedimientos registrados"
+			},
+			"biopsia":{
+				"TITLE": "Biopsia por congelación",
+				"PROCEDURES": "Procedimientos registrados"
+			},
+			"drenaje":{
+				"TITLE": "Drenajes",
+				"PROCEDURES": "Procedimientos registrados"
+			},
+			"protesis":{
+				"TITLE": "Prótesis",
+				"PROCEDURES": "Posee prótesis",
+				"options": {
+					"YES": "Si",
+                    "NO": "No",
+					"NO_INFO":"Sin información"
+				}
+			}
+		},
+		"anesthesic-report": {
+			"SUCCESS": "Parte anestésico guardado correctamente",
+			"SUCCESS_DRAFT": "Borrador parte anestésico guardado correctamente",
+			"CONTINUE_DRAFT": "Seguir editando",
+            "ERROR": "Error al guardar documento de parte anestésico",
+			"diagnosis": {
+				"TITLE": "Diagnósticos",
+				"MAIN_DIAGNOSIS": "Diagnóstico principal",
+				"OTHER_DIAGNOSIS": "Otros diagnósticos registrados",
+				"CONFIRMED": "(Confirmado)",
+				"PRESUMPTIVE": "(Presuntivo)"
+			},
+			"proposed-surgery": {
+				"TITLE": "Cirugía propuesta",
+				"ADD_PROPOSED_SURGERY": "+ Agregar cirugía propuesta",
+				"REGISTERED_PROPOSED_SURGERIES": "Cirugías propuestas registradas",
+				"INCLUDE_ALL": "Incluir todas las cirugías propuestas en el Parte Anestésico",
+				"ADD_SURGERY": "Agregar cirugía propuesta",
+				"PROPOSED_SURGERY": "Cirugía propuesta"
+			},
+			"anthropometric-data": {
+				"TITLE": "Datos antropométricos",
+				"BLOOD_TYPE": "Grupo sanguíneo",
+				"BLOOD_TYPE_PLACEHOLDER": "Tipo y factor",
+				"HEIGHT": "Talla (cm)",
+				"WEIGHT": "Peso (kg)",
+				"detail": {
+					"HEIGHT": "Talla",
+					"WEIGHT": "Peso",
+                    "HEAD_CIRCUNFERENCE": "Perímetro cefálico"
+				}
+			},
+			"anesthesic-clinical-evaluation": {
+				"TITLE": "Evaluación clínica anestésica",
+				"MIN_BLOOD_PRESSURE": "Tensión arterial Min (mm/Hg)",
+				"MAX_BLOOD_PRESSURE": "Tensión arterial Max (mm/Hg)",
+				"HEMATOCRIT": "Hematocritos (%)",
+				"detail": {
+					"MIN_BLOOD_PRESSURE": "Tensión arterial Min",
+					"MAX_BLOOD_PRESSURE": "Tensión arterial Max",
+					"HEMATOCRIT": "Hematocritos"
+				}
+			},
+			"anesthetic-history": {
+				"TITLE": "Antecedentes anestésicos",
+				"PREVIOUS_ANESTHESIA": "El paciente se realizó algún tipo de anestesia previamente?",
+				"anesthetic-history-options": {
+					"YES": "Si",
+					"NO": "No",
+					"CANT_ANSWER": "No puede contestar",
+					"anesthetic-zone": {
+						"REGIONAL": "Regional",
+						"GENERAL": "General",
+						"BOTH": "Ambas"
+					}
+				}
+			},
+			"usual-medication": {
+				"TITLE": "Medicación habitual",
+				"REGISTERED_USUAL_MEDICATION": "Medicación habitual registrada",
+				"ADD_USUAL_MEDICATION": "+ Agregar medicación habitual",
+				"ADD_MEDICATION": "Agregar medicación habitual",
+				"USUAL_MEDICATION": "Medicación habitual"
+			},
+			"premedication-and-food-intake": {
+				"TITLE": "Premedicación e ingesta alimentaria",
+				"REGISTERED_PREMEDICATION": "Premedicación registrada",
+				"ADD_PREMEDICATION": "+ Agregar premedicación",
+				"ADD_PREMEDICATION_TITLE": "Agregar premedicación",
+				"PREMEDICATION": "Premedicación",
+				"DRUG": "Droga",
+				"DOSIS": "Dosis: ",
+				"DOSIS_PLACEHOLDER": "Ingresar dosis",
+				"UNIT": "Unidad: ",
+				"UNIT_PLACEHOLDER": "Ingresar unidad",
+				"VIA": "Via: ",
+				"VIA_PLACEHOLDER": "Ingresar via",
+				"LAST_FOOD_INTAKE": "Última ingesta de comida",
+				"TIME": "Hora",
+				"DATE": "Fecha"
+			},
+			"anesthetic-plan": {
+				"TITLE": "Plan anestésico",
+				"ADD_PLAN_TITLE": "Agregar plan anestésico",
+				"ADD_PLAN": " + Agregar plan anestésico",
+				"MEDICATION": "Medicación",
+				"PLAN_RECORDS": "Plan anestésico registrado"
+			},
+			"analgesic-technique": {
+				"TITLE": "Técnica analgésica",
+				"ADD_TECHNIQUE_TITLE": "Agregar técnica analgésica",
+				"ADD_TECHNIQUE": " + Agregar técnica analgésica",
+				"MEDICATION": "Medicación",
+				"TECHNIQUE_RECORDS": "Técnica analgésica registrada",
+				"OPTION_YES": "Si",
+				"OPTION_NO":"No",
+				"CATETER_LABEL": "Cateter: ",
+				"INJECTION_LABEL": "Zona de inyección",
+				"INJECTION_ZONE": "Zona de inyección",
+				"AGENT":"Agente",
+				"CATETER_NOTE_LABEL":"Observaciones"
+			},
+			"anesthetic-technique": {
+				"TITLE": "Técnica anestésica",
+				"TYPE": "Tipo",
+				"ADD_TITLE": "Agregar técnica anestésica",
+				"ADD_ANESTHETIC_TECHNIQUE": " + Agregar técnica anestésica",
+				"TECHNIQUE_RECORDS": "Técnica anestésica registrada",
+				"TECHNIQUE_LABEL": "Tecnica",
+				"TRACHEAL_INTUBATION_LABEL": "Intubación traqueal",
+				"BREATHING_LABEL": "Respiración",
+				"CIRCUIT_LABEL": "Circuito",
+				"OPTION_YES": "Si",
+				"OPTION_NO":"No"
+			},
+			"fluid-administration": {
+				"TITLE": "Administración de líquidos",
+				"FLUID_RECORDS": "Liquidos registrados",
+				"ADD_FLUID": "+ Agregar liquido",
+				"ADD_TITLE": "Agregar liquido",
+				"LIQUID_LABEL": "Liquido",
+				"AMOUNT_LABEL": "Cantidad"
+			},
+			"drug": {
+				"HOUR": "Hora: ",
+				"UNIT_LABEL": "Unidad: ",
+				"UNIT_PLACEHOLDER": "Ingresar unidad",
+				"VIA_LABEL": "Via: ",
+				"VIA_PLACEHOLDER": "Ingresar via",
+				"DOSIS_LABEL": "Dosis: ",
+				"DOSIS_PLACEHOLDER": "Ingresar dosis",
+				"DRUG_LABEL": "Droga",
+				"VIA_TEXT_PLACEHOLDER": "Ingresar via"
+			},
+			"record": {
+				"TITLE": "Antecedentes",
+				"REGISTERED_RECORDS": "Antecedentes registrados",
+				"ADD_RECORD": "+ Agregar antecedente",
+				"ADD_RECORD_TITLE": "Agregar antecedente",
+				"RECORD": "Antecedente",
+				"OBSERVATIONS": "Observaciones: ",
+				"ADD_OBSERVATIONS": "Agregar observaciones",
+				"ASA": "ASA"
+			},
+			"anesthetic-agents":{
+				"TITLE": "Agentes anestésicos",
+				"REGISTERED_ANESTHETIC_AGENTS": "Agentes anestésicos registrados",
+				"ADD_ANESTHETIC_AGENT": "+ Agregar agente anestésico",
+				"LABEL": "Agente anestésico"
+			},
+			"non-anesthetic-drugs":{
+				"TITLE": "Drogas no anestésicas",
+				"REGISTERED_NON_ANESTHETIC_DRUGS": "Drogas no anestésicas registradas",
+				"ADD_NON_ANESTHETIC_DRUG": "+ Agregar droga no anestésica",
+				"LABEL": "Droga no anestésica"
+			},
+			"intrasurgical-anesthetic-procedures": {
+				"TITLE": "Procedimientos anestésicos intraquirúrgicos",
+				"options": {
+					"YES": "Si",
+					"NO": "No"
+				},
+				"VENOUS_ACCESS": "Acceso venoso",
+				"NASOGASTRIC_TUBE": "Sonda nasogastrica",
+				"URINARY_CATHETER": "Sonda vesical"
+			},
+			"antibiotic-prophylaxis":{
+				"TITLE": "Profilaxis antibiótica",
+				"REGISTERED_ANTIBIOTIC_PROPHYLAXIS": "Profilaxis antibióticas registradas",
+				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica",
+				"LABEL": "Profilaxis antibiótica"
+			},
+			"vital-signs": {
+				"TITLE": "Signos vitales durante la anestesia",
+				"DATE": "Fecha",
+				"TIME": "Hora",
+				"ANESTHESIA_START": "Comienzo anestesia",
+				"ANESTHESIA_END": "Fin anestesia",
+				"SURGERY_START": "Comienzo cirugía",
+				"SURGERY_END": "Fin cirugía",
+				"SUCCESS_ADD": "Punto de medición registrado correctamente",
+				"ERROR_ADD": "Ya existe un punto de medición registrado en ese horario",
+				"SUCCESS_EDIT": "Punto de medición editado correctamente",
+				"START_END_MINIMUM_DIFFERENCE": "La hora de finalización debe ser 5 minutos posterior a la hora de inicio.",
+				"measuring-point": {
+					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",
+					"REGISTERED_MEASURING_POINTS": "Puntos de medición registrados",
+					"SURGERY_DATE": "Fecha cirugía",
+					"SURGERY_TIME": "Hora control",
+					"MAX_BLOOD_PRESSURE": "Tensión arterial Max",
+					"MIN_BLOOD_PRESSURE": "Tensión arterial Min",
+					"PULSE": "Pulso",
+					"SATURATION": "Saturación O2",
+					"END_TIDAL": "End Tidal CO2",
+					"REGISTER": "Registrar punto de medición",
+					"MEDITION": "Medición",
+					"EDIT_MEASURING_POINT": "Editar punto de medición"
+				},
+				"registered-point": {
+					"MAX_BLOOD_PRESSURE": "TA Max:",
+					"MIN_BLOOD_PRESSURE": "TA Min:",
+					"PULSE": "Pulso:",
+					"SATURATION": "Saturación O2:",
+					"END_TIDAL": "End Tidal CO2:"
+				}
+			},
+			"end-of-anesthesia-status": {
+				"TITLE": "Estado al finalizar la anestesia",
+				"sections": {
+					"PAINFUL_SENSITIVITY": "Sensibilidad dolorosa",
+					"CORNEAL_REFLEX": "Reflejo corneal",
+					"OBEY_ORDERS": "Obedece órdenes",
+					"TALK": "Conversa",
+					"RESPIRATORY_DEPRESSION": "Depresión respiratoria",
+					"CIRCULATORY_DEPRESSION": "Depresión circulatoria",
+					"VOMITING": "Vómitos",
+					"CURED": "Curarizado",
+					"TRACHEAL_CANNULA": "Cánula traqueal",
+					"PHARYNGEAL_CANNULA": "Cánula faringea",
+					"GOES_INSIDE": "Se interna",
+					"goes-inside-options": {
+						"FLOOR": "En piso",
+						"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva"
+					}
+				},
+				"OBSERVATIONS": "Observaciones: ",
+				"ADD_OBSERVATIONS": "Agregar observaciones"
+			},
+			"buttons": {
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
+			}
+		},
 		"clinical-assessment-diagnosis": {
 			"TITLE": "Evaluación clínica de diagnósticos",
 			"SUBTITLE": "Completá los siguientes datos.",
@@ -399,10 +668,90 @@
 			"info": {
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
+            "document-name": {
+				"ANAMNESIS": "Evaluación de ingreso",
+				"EVOLUTION_NOTE": "Nota de evolución",
+				"NURSE_EVOLUTION_NOTE": "Nota de evolución de enfermería",
+                "ANESTHETIC_REPORT": "Parte anestésico",
+                "EPICRISIS": "Epicrisis",
+				"TRIAGE": "Triage",
+				"DOCTOR_EVOLUTION_NOTE": "Nota de evolución médica",
+				"SURGICAL_REPORT": "Parte quirúrgico"
+			},
+            "procedure": {
+				"TITLE": "Procedimientos",
+				"REGISTERED_PROCEDURES": "Procedimientos registrados"
+			},
+			"observations": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones",
+                "INDICATIONS_NOTE": "Indicaciones al alta"
+			},
+			"vital-signs-and-risk-factor": {
+				"TITLE": "Signos vitales y factores de riesgo",
+				"HEART_RATE": "Frecuencia cardíaca",
+				"RESPIRATORY_RATE": "Frecuencia respiratoria",
+				"TEMPERATURE": "Temperatura corporal",
+				"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno",
+				"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica",
+				"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica",
+				"BLOOD_GLUCOSE": "Glucemia",
+                "GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada",
+                "CARDIOVASCULAR_RISK": "Riesgo cardiovascular"
+			},
+            "allergies": {
+                "TITLE": "Alergias",
+                "RECORDED_ALLERGIES": "Alergias registradas"
+            },
+            "vaccines": {
+                "TITLE": "Vacunas",
+                "RECORDED_VACCINES": "Vacunas registradas"
+            },
+            "personal-histories": {
+                "TITLE": "Antecedentes personales",
+                "RECORDED_PERSONAL_HISTORIES": "Antecedentes personales registrados"
+            },
+            "family-histories": {
+                "TITLE": "Antecedentes familiares",
+                "RECORDED_FAMILY_HISTORIES": "Antecedentes familiares registrados"
+            },
+            "usual-medications": {
+                "TITLE": "Medicación habitual",
+                "RECORDED_USUAL_MEDICATIONS": "Medicación habitual registrada"
+            },
+            "other-problems": {
+                "TITLE": "Otras circunstancias que prolongan la internación",
+                "REGISTERED_OTHER_PROBLEMS": "Otras circunstancias que prolongan la internación registradas"
+            },
+            "external-cause": {
+                "TITLE": "Causa externa de traumatismo, envenenamiento y otros efectos adversos",
+                "PRODUCED_BY": "Producido por",
+                "EVENT_LOCATION": "Lugar donde ocurrió",
+				"HOW_IT_HAPPENED": "Cómo se produjo"
+            },
+            "obstetric-event": {
+                "TITLE": "Datos del evento obstétrico",
+                "PREVIOUS_PREGNANCIES": "Gestas anteriores - Número total de nacimientos previos (vaginales y cesáreas), vivos o muertos, antes del presente",
+                "CURRENT_FEAT": "Gesta actual - Fecha de término del embarazo",
+                "GESTATIONAL_AGE": "Edad gestacional",
+				"TERMINATION": "Terminación",
+                "new-born": {
+                    "NEWBORN": "Recién nacido",
+                    "WEIGHT": "Peso al nacer",
+				    "CONDITION": "Condición al nacer",
+				    "GENDER": "Sexo"
+                }
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
-			"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada"
+			"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+			"NO_SNOMED_CONCEPT": "Sin problemas registrados"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",
@@ -475,17 +824,27 @@
 				"NO_DOCUMENTS": "Aún no hay archivos adjuntos cargados",
 				"dialogs": {
 					"attach": {
-						"TITLE": "Adjuntar documento",
+						"TITLE": "Agregar documento al episodio",
 						"NO-DOCUMENTS-TYPE": "Aún no se han definido tipos de documentos",
+						"NO-PROFESSIONAL": "Aún no se ha definido el profesional cirujano",
 						"fields": {
 							"NAME": "Nombre del archivo",
 							"TYPE": "Tipo de documento",
+							"PROFESSIONAL": "Profesional cirujano",
 							"TYPE_REQUIRED": "El tipo de documento es obligatorio",
-							"FILE": "El tipo de archivo debe estar en formato PDF"
+							"PROFESSIONAL_REQUIRED": "El profesional cirujano es obligatorio",
+							"PROCEDURE_REQUIRED": "El procedimiento a realizar es obligatorio",
+							"FILE": "El tipo de archivo debe estar en formato PDF",
+							"ADDED_PROCEDURES": "Procedimientos agregados",
+							"OBSERVATIONS": "Observaciones"
 						},
 						"actions": {
+							"GENERATE_DOCUMENT": "GENERAR DOCUMENTO",
+							"ATTACH_FILE": "ADJUNTAR ARCHIVO",
 							"CANCEL": "CANCELAR",
-							"ATTACH": "ADJUNTAR"
+							"CONTINUE": "CONTINUAR",
+							"ADD_DOCUMENT": "+ Agregar documento",
+							"GENERATE": "GENERAR"
 						}
 					},
 					"delete": {
@@ -520,8 +879,6 @@
 			"vacunas-summary": {
 				"ADD": "Agregar vacuna",
 				"INMUNIZATION": "Vacuna",
-				"REGISTRY_DATE": "Fecha de vacunación",
-				"INVALID_DATE": "La fecha ingresada debe estar dentro del rango establecido por el calendario",
 				"save": {
 					"SUCCESS": "Una nueva vacuna se guardó exitosamente",
 					"ERROR": "Error al guardar nueva vacuna"
@@ -529,13 +886,12 @@
 			},
 			"risk-factors-summary": {
 				"save": {
-					"SUCCESS": "Los factores de riesgo se actualizaron exitosamente",
-					"ERROR": "Error al actualizar factores de riesgo"
+					"SUCCESS": "Los signos vitales y factores de riesgo se actualizaron exitosamente",
+					"ERROR": "Error al actualizar signos vitales y factores de riesgo"
 				}
 			}
 		},
 		"new-internment": {
-			"DATE": "Fecha",
 			"DATE_TIME": "Fecha y hora de ingreso",
 			"TITLE": "Nueva internación",
 			"SUBTITLE": "Complete los siguientes datos",
@@ -628,6 +984,7 @@
 				"DELETE_TITLE": "Aclarar motivo de eliminación",
 				"EDIT_TITLE": "Aclarar motivo de edición",
 				"SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál edita este documento.",
+				"DELETE_SUBTITLE": "Para confirmar los cambios por favor especifique el motivo por el cuál elimina este documento.",
 				"REASON": "Motivo"
 			}
 		},

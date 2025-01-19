@@ -15,13 +15,13 @@ public class SumarGeneralConsultationDetail {
 
 	private Integer clinicalSpecialtyId;
 
-	private String clinicalSpecialty;
+	private String operativeUnit;
 
 	private Integer professionalId;
 
-	private String provider;
+	private String lender;
 
-	private String providerDni;
+	private String lenderDni;
 
 	private String attentionDate;
 
@@ -49,7 +49,9 @@ public class SumarGeneralConsultationDetail {
 
 	private String medicalCoverage;
 
-	private String address;
+	private String direction;
+
+	private String neighborhood;
 
 	private String location;
 
@@ -77,7 +79,7 @@ public class SumarGeneralConsultationDetail {
 
 	private String bmi;
 
-	private String headCircunference;
+	private String headCircumference;
 
 	private String reasons;
 
@@ -89,13 +91,13 @@ public class SumarGeneralConsultationDetail {
 
 	private String evolution;
 
-	public SumarGeneralConsultationDetail(String institution, Integer clinicalSpecialtyId, String clinicalSpecialty, Integer professionalId, String provider, String providerDni, String attentionDate, String hour, String consultationNumber, String patientDni, String patientName, String gender, String selfPerceivedGender, String selfPerceivedName, String birthDate, String ageTurn, String ageToday, String ethnicity, String medicalCoverage, String address, String location, String educationLevel, String occupation, String systolicBloodPressure, String diastolicBloodPressure, String meanArterialPressure, String temperature, String heartRate, String respirationRate, String oxygenSaturationHemoglobin, String height, String weight, String headCircunference, String reasons, String procedures, String problems, String medication, String evolution) {
+	public SumarGeneralConsultationDetail(String institution, Integer clinicalSpecialtyId, String operativeUnit, Integer professionalId, String lender, String lenderDni, String attentionDate, String hour, String consultationNumber, String patientDni, String patientName, String gender, String selfPerceivedGender, String selfPerceivedName, String birthDate, String ageTurn, String ageToday, String ethnicity, String medicalCoverage, String direction, String neighborhood, String location, String educationLevel, String occupation, String systolicBloodPressure, String diastolicBloodPressure, String meanArterialPressure, String temperature, String heartRate, String respirationRate, String oxygenSaturationHemoglobin, String height, String weight, String headCircumference, String reasons, String procedures, String problems, String medication, String evolution) {
 		this.institution = institution;
 		this.clinicalSpecialtyId = clinicalSpecialtyId;
-		this.clinicalSpecialty = clinicalSpecialty;
+		this.operativeUnit = operativeUnit;
 		this.professionalId = professionalId;
-		this.provider = provider;
-		this.providerDni = providerDni;
+		this.lender = lender;
+		this.lenderDni = lenderDni;
 		this.attentionDate = attentionDate;
 		this.hour = hour;
 		this.consultationNumber = consultationNumber;
@@ -109,7 +111,8 @@ public class SumarGeneralConsultationDetail {
 		this.ageToday = ageToday;
 		this.ethnicity = ethnicity;
 		this.medicalCoverage = medicalCoverage;
-		this.address = address;
+		this.direction = direction;
+		this.neighborhood = neighborhood;
 		this.location = location;
 		this.educationLevel = educationLevel;
 		this.occupation = occupation;
@@ -122,7 +125,7 @@ public class SumarGeneralConsultationDetail {
 		this.oxygenSaturationHemoglobin = oxygenSaturationHemoglobin;
 		this.height = height;
 		this.weight = weight;
-		this.headCircunference = headCircunference;
+		this.headCircumference = headCircumference;
 		this.reasons = reasons;
 		this.procedures = procedures;
 		this.problems = problems;

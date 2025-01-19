@@ -88,11 +88,17 @@
         <h3 class="tipos" id="69">Interpretación de puntaje</h3>
         <p id="70">La sumatoria da como resultado:</p>
         <mat-radio-group id="puntaje" name="points" [(ngModel)]="selectedCalificacion">
-          <mat-radio-button color="primary"[style.color]="(selectedCalificacion === 'A5' || selectedCalificacion === 'B5') ? '#2687c5' : ''" id="49" value="A5" [disabled]="selectedCalificacion === 'B5'">Se considera PERSONA PRE FRÁGIL</mat-radio-button>
-          <mat-radio-button color="primary" [style.color]="(selectedCalificacion === 'A5' || selectedCalificacion === 'B5') ? '#2687c5' : ''" id="50" value="B5" [disabled]="selectedCalificacion === 'A5'">Se considera PERSONA FRÁGIL</mat-radio-button>
+          <p color="primary"[style.color]="(selectedCalificacion === 'A5') ? '#2687c5' : 'darkgray'" [style.font-weight]="(selectedCalificacion === 'A5') ? '550' : 'normal'" id="49" value="A5">- Se considera PERSONA PRE FRÁGIL</p>
+          <p color="primary" [style.color]="(selectedCalificacion === 'B5') ? '#2687c5' : 'darkgray'" [style.font-weight]="(selectedCalificacion === 'B5') ? '550' : 'normal'"  id="50" value="B5">- Se considera PERSONA FRÁGIL</p>
         </mat-radio-group>
         
-        <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Enviar Formulario</button>
+        <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Guardar Formulario</button>
       </div>
     </form>
+  </div>
+
+      <!-- SALTO DE LINEA PARA EXTENDER FORMULARIO, ESTO NO ES LLM -->
+
+  <div>
+    <br>
   </div>

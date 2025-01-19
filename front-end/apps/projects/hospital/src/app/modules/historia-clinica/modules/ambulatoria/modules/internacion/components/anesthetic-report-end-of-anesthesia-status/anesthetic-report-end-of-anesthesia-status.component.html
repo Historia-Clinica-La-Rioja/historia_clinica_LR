@@ -1,0 +1,74 @@
+<form [formGroup]="form" class="intrasurgical-anesthetic-procedures-form">
+    <div fxLayout="column" fxLayoutGap="16px">
+
+        <div data-id="intentional-sensitivity">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.intentionalSensitivity" (onOptionChange)="handleOptionSelected($event, 'intentionalSensitivity')"></app-radio-group>
+        </div>
+
+        <div data-id="corneal-reflex">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.cornealReflex" (onOptionChange)="handleOptionSelected($event, 'cornealReflex')"></app-radio-group>
+        </div>
+
+        <div data-id="obey-orders">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.obeyOrders" (onOptionChange)="handleOptionSelected($event, 'obeyOrders')"></app-radio-group>
+        </div>
+
+        <div data-id="talk">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.talk" (onOptionChange)="handleOptionSelected($event, 'talk')"></app-radio-group>
+        </div>
+
+        <div data-id="respiratory-depression">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.respiratoryDepression" (onOptionChange)="handleOptionSelected($event, 'respiratoryDepression')"></app-radio-group>
+        </div>
+
+        <div data-id="circulatory-depression">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.circulatoryDepression" (onOptionChange)="handleOptionSelected($event, 'circulatoryDepression')"></app-radio-group>
+        </div>
+
+        <div data-id="vomiting">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.vomiting" (onOptionChange)="handleOptionSelected($event, 'vomiting')"></app-radio-group>
+        </div>
+
+        <div data-id="curated">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.curated" (onOptionChange)="handleOptionSelected($event, 'curated')"></app-radio-group>
+        </div>
+
+        <div data-id="tracheal-cannula">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.trachealCannula" (onOptionChange)="handleOptionSelected($event, 'trachealCannula')"></app-radio-group>
+        </div>
+
+        <div data-id="pharyngeal-cannula">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.pharyngealCannula" (onOptionChange)="handleOptionSelected($event, 'pharyngealCannula')"></app-radio-group>
+        </div>
+
+        <div data-id="internment">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.internment" (onOptionChange)="handleOptionSelected($event, 'internment')"></app-radio-group>
+
+            <div *ngIf="allowOptions">
+                <mat-radio-group class="internment-options" fxLayout="column" fxLayoutGap="8px" (change)="onInternmentOptionsChange($event)">
+                    <mat-radio-button color="primary" [value]="internmentOptions.FLOOR" [checked]="selectedOption === internmentOptions.FLOOR">
+                        <span class="option-title">
+                            {{'internaciones.anesthesic-report.end-of-anesthesia-status.sections.goes-inside-options.FLOOR' | translate}}
+                        </span>
+                    </mat-radio-button>
+                    <mat-radio-button color="primary" [value]="internmentOptions.INTENSIVE_CARE_UNIT" [checked]="selectedOption === internmentOptions.INTENSIVE_CARE_UNIT">
+                        <span class="option-title">
+                            {{'internaciones.anesthesic-report.end-of-anesthesia-status.sections.goes-inside-options.INTENSIVE_CARE_UNIT' | translate}}
+                        </span>
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="observations">
+                <form [formGroup]="endOfAnesthesiaStatusForm">
+                    <mat-label [translate]="'internaciones.anesthesic-report.end-of-anesthesia-status.OBSERVATIONS'"></mat-label>
+                    <mat-form-field appearance="outline" data-id="observations">
+                        <textarea matInput type="text" id="end-of-anesthesia-observations" formControlName="observations"
+                            placeholder="{{'internaciones.anesthesic-report.end-of-anesthesia-status.ADD_OBSERVATIONS' | translate }}">
+                        </textarea>
+                    </mat-form-field>
+                </form>
+            </div>
+        </div>
+    </div>
+</form>

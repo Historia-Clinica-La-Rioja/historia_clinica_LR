@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.HCHMedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
@@ -25,7 +26,8 @@ public class FetchHospitalizationMedicationState {
 
     public List<MedicationBo> run(Integer internmentEpisodeId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        List<MedicationVo> resultQuery = hchMedicationStatementRepository.findGeneralState(internmentEpisodeId);
+        List<Short> invalidDocumentTypes = List.of(DocumentType.ANESTHETIC_REPORT);
+        List<MedicationVo> resultQuery = hchMedicationStatementRepository.findGeneralState(internmentEpisodeId, invalidDocumentTypes);
         List<MedicationBo> result = resultQuery.stream().map(MedicationBo::new).collect(Collectors.toList());
         LOG.debug(OUTPUT, result);
         return result;

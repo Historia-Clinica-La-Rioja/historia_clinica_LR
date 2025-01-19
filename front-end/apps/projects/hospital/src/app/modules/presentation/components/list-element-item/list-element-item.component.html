@@ -1,6 +1,5 @@
 <div class="report-status" fxLayout="row" fxLayoutGap="10px" fxLayout.lt-lg="column">
-	
-	<app-colored-label	
+	<app-colored-label
 		[description]="content.status.description | translate |	uppercase"
 		[color]="content.status.cssClass">
     </app-colored-label>
@@ -8,20 +7,27 @@
 	<div fxLayout="column" fxFlex="60%" fxLayoutGap="10px">
 		<span class="content medication">{{content.description}}</span>
 		<div fxLayout="row" fxLayoutGap="20px">
-			<div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
-				<span class="extra-info-title">{{extraInfo.title | translate}}</span>
-				<span>{{extraInfo.content}}</span>
+			<div *ngIf="content?.reference" class="color-grey">
+				<app-colored-icon-text [coloredIconText]="content.reference.coloredIconText"></app-colored-icon-text>
 			</div>
+            <div fxLayout="column" fxLayoutGap="5px" class="content">
+                <div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
+                    <span class="extra-info-title">{{extraInfo.title | translate}}</span>
+                    <span class="formatted-text">{{extraInfo.content}}</span>
+                </div>
+            </div>
 		</div>
 		<div *ngIf="indication && content.observations" class="color-grey observation">
 			"{{content.observations}}"
 		</div>
 	</div>
-	
 
 	<div fxLayout="row" fxFlex="20%" fxLayoutGap="10px" class="professional-elapsed-time color-grey">
 		<span>{{ content.createdBy }}</span>
-		<span>{{ content.timeElapsed }}</span>
+		<span *ngIf="content.timeElapsed else createdOn">{{ content.timeElapsed }}</span>
+		<ng-template #createdOn>
+			<span *ngIf="content.createdOn">{{ content.createdOn | dateFormat: 'datetime' }}</span>
+		</ng-template>
 	</div>
 	<ng-content></ng-content>
 </div>

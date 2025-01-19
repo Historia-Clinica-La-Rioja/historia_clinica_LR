@@ -2,6 +2,8 @@ package net.pladema.snowstorm.repository;
 
 import net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo;
 import net.pladema.snowstorm.repository.entity.SnomedGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,11 +22,6 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			"	AND sg.description = :description " +
 			" 	AND sg.groupId IS NULL ")
     Integer getBaseGroupIdByEclAndDescription(@Param("ecl") String ecl, @Param("description") String description);
-
-	@Query( " SELECT sg.id " +
-			" FROM SnomedGroup sg " +
-			" WHERE sg.description = :description ")
-	Integer getIdByDescription(@Param("description") String description);
 
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +
@@ -64,6 +61,12 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 											  @Param("userId") Integer userId,
 											  @Param("templateGroupType") Short templateGroupType);
 
+	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
+			" FROM SnomedGroup sg " +
+			" JOIN SnomedRelatedGroup srg ON (sg.id = srg.groupId) " +
+			" JOIN Snomed s ON (srg.snomedId = s.id) " +
+			" WHERE sg.id IN :templateIds ")
+	List<SnomedTemplateSearchVo> getTemplatesByIds(@Param("templateIds") List<Integer> templateIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT sg " +
@@ -93,4 +96,27 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			" AND sg.groupType = :groupType" )
 	List<String> getDescriptionByParentGroupEcl(@Param("ecl") String ecl, @Param("groupType") Short groupType);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT sg.id " +
+			"FROM SnomedGroup sg " +
+			"WHERE sg.description = :description " +
+			"AND sg.institutionId = :institutionId")
+	Optional<Integer> getIdByDescriptionAndInstitutionId(@Param("description") String description, @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT 1 " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedRelatedGroup srg ON (srg.groupId = sg.id) " +
+			"JOIN Snomed s ON (s.id = srg.snomedId) " +
+			"WHERE s.sctid = :conceptId " +
+			"AND s.pt = :term " +
+			"AND sg.description = :ecl")
+	Integer isEclRelatedBySnomedConceptIdAndTerm(@Param("conceptId") String conceptId, @Param("term") String term, @Param("ecl") String ecl);
+
+    Page<SnomedGroup> findByDescriptionStartingWithAndDescriptionIn(
+    	@Param("description") String description,
+		@Param("allowedDescriptions") List<String> allowedDescriptions,
+    	Pageable pageable);
+
+	Page<SnomedGroup> findByDescriptionIn(List<String> allowedDescriptions, Pageable pageable);
 }

@@ -1,16 +1,16 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.healthcondition;
 
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
-
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
+import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthCondition;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionPk;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHealthConditionPort;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,5 +36,15 @@ public class ReferenceHealthConditionStorageImpl implements ReferenceHealthCondi
 			ReferenceHealthCondition result = referenceHealthConditionRepository.save(new ReferenceHealthCondition(refPk));
 			return result.getPk().getHealthConditionId();
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Integer> getReferenceIds(Integer healthConditionId) {
+		return referenceHealthConditionRepository.getReferenceIdsByHealthConditionId(healthConditionId);
+	}
+
+	@Override
+	public List<ReferenceProblemBo> getReferenceProblems(Integer referenceId){
+		return referenceHealthConditionRepository.getReferencesProblems(Collections.singletonList(referenceId));
 	}
 }

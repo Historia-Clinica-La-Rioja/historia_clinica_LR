@@ -73,8 +73,16 @@ public class NursingOutpatientConsultationDetail {
 
 	private String bmi;
 
+	private String glycosylatedHemoglobin;
+
+	private String cardiovascularRisk;
+
+	private String bloodSugar;
+
 	private String procedures;
 
 	private String evolution;
+
+
 
 }

@@ -1,10 +1,12 @@
 package net.pladema.permissions.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.permissions.repository.entity.RolePermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static net.pladema.TestUtils.assertCreateAuditableEntity;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,6 +17,9 @@ class RolePermissionRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private RolePermissionRepository rolePermissionRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	void setUp() {

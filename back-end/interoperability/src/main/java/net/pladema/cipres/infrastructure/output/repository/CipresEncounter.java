@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "cipres_encounter")
 @Getter
@@ -35,5 +38,8 @@ public class CipresEncounter {
 
 	@Column(name = "response_code", nullable = false)
 	private Short responseCode;
+
+	@Column(name="date", nullable = false)
+	private LocalDate date;
 
 }

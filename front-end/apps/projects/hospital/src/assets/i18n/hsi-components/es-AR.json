@@ -1,0 +1,31 @@
+{
+	"view-medical-history-button": {
+		"TITLE": "Ver historia clínica"
+	},
+	"temporary-patient": {
+		"TITLE": "Paciente temporal"
+	},
+	"summary-multiple-sign": {
+		"state-signature": {
+			"OUTDATED": "Vencido",
+			"PENDING" : "Pendiente",
+			"REJECTED" : "Rechazado",
+			"SIGNED" : "Firmado"
+		}
+	},
+	"pharmaco-detail": {
+		"PHARMACO": "Fármaco indicado",
+		"UNIT_DOSE": "Dosis / Unidad",
+		"DAY_DOSE": "Dosis / Día",
+		"TREATMENT_DAYS": "Días de tratamiento",
+		"QUANTITY": "Cantidad",
+		"SUGGESTED_COMMERCIAL": "Marca sugerida",
+		"PRESENTATION": "Presentación",
+		"MEDICATION_PACK": "Envases",
+		"INTERVAL": "Intervalo",
+		"OBSERVATIONS": "Observaciones"
+	},
+	"patientLocationComponent": {
+		"NO_DATA": "Sin ubicación definida"
+	}
+}

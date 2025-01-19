@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import javax.validation.Valid;
 @Getter
 @Setter
 @ToString
-public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> {
+public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> implements IpsBo {
 
     @Valid
     private ClinicalObservationBo bloodType;
@@ -40,9 +41,14 @@ public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> {
             return null;
 		Float convertedHeight = Float.parseFloat(height.getValue());
 		if (convertedHeight == 0f){
-			return new ClinicalObservationBo(null, "-", weight.getEffectiveTime());
+			return new ClinicalObservationBo(null, "-", weight.getEffectiveTime(), null);
 		}
         Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((convertedHeight/100),2);
-        return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime());
+        return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime(), null);
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitAnthropometricData(this);
     }
 }

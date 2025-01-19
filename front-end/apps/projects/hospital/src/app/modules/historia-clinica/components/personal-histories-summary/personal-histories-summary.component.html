@@ -1,0 +1,42 @@
+<app-summary-card id="personal-histories" [header]="personalHistoriesHeader" [editable]="false">
+    <mat-list id="personal-histories-list" *ngIf="personalHistories_?.length > 0 else noInfo">
+        <div fxLayout="row" *ngFor="let personalHistory of personalHistories_">
+            <mat-list-item class="smaller-font">
+                <div fxFlex="30%" fxFlex.lt-lg="35%">
+                    <span mat-line class="capitalize-first-letter"
+                        matTooltip="{{personalHistory.personalHistoryInfo.snomed.pt | titlecase }}">
+                        {{ personalHistory.personalHistoryInfo.snomed.pt }}
+                    </span>
+                </div>
+                <div fxFlex="20%" fxFlex.lt-lg="25%" class="grey capitalize-first-letter">
+                    <span mat-line matTooltip="{{personalHistory.personalHistoryInfo.type | titlecase }}">
+                        {{ personalHistory.personalHistoryInfo.type }}</span>
+                </div>
+
+                <div fxFlex="20%" fxFlex.lt-lg="30%" class="grey wrap-text">
+                    <span *ngIf="personalHistory.startDate">{{ personalHistory.startDate | dateFormat: 'date' }}</span>
+                </div>
+
+                <div fxFlex="20%" class="grey wrap-text hide-date">
+                    <span *ngIf="personalHistory.inactivationDate">{{ personalHistory.inactivationDate | dateFormat: 'date' }}</span>
+                </div>
+
+                <div fxFlex="5%">
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" data-id="menu-dialog">
+                        <button mat-menu-item data-id="view-datails" (click)="openViewDetailsDialog(personalHistory)">
+                            <span [translate]="'ambulatoria.paciente.problemas.VIEW_DETAIL'"></span>
+                        </button>
+                    </mat-menu>
+                </div>
+                <mat-divider></mat-divider>
+            </mat-list-item>
+        </div>
+    </mat-list>
+</app-summary-card>
+
+<ng-template #noInfo>
+    <app-no-data></app-no-data>
+</ng-template>

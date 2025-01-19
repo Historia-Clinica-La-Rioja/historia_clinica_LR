@@ -36,6 +36,8 @@ public class AttentionTypeReportItemDto {
 
     private final String appointmentState;
 
+	private final String completePhone;
+
     public AttentionTypeReportItemDto(AttentionTypeReportItemBo appointment, BasicDataPersonDto person){
         this.hour = appointment.getHour();
         this.patientId = appointment.getPatientId();
@@ -49,5 +51,6 @@ public class AttentionTypeReportItemDto {
         this.appointmentState = appointment.getAppointmentState();
         this.medicalCoverageName = null;
         this.medicalCoverageAffiliateNumber = null;
+		this.completePhone = appointment.getCompletePhone();
     }
 }

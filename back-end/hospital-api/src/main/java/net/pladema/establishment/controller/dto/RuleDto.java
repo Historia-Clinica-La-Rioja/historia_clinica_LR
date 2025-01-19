@@ -17,12 +17,12 @@ public class RuleDto {
 
 	private Integer id;
 
-	private Short typeId;
-
 	private Integer clinicalSpecialtyId;
 
 	private Integer snomedId;
 
 	private String name;
+
+	private Short level;
 
 }

@@ -1,10 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import {
-	AllergyConditionDto, DiagnosisDto, EvolutionNoteDto,
-	HealthConditionDto, HospitalizationProcedureDto, ImmunizationDto, MasterDataInterface, ResponseEvolutionNoteDto
-} from '@api-rest/api-model';
+import { AllergyConditionDto, DiagnosisDto, EvolutionNoteDto, HealthConditionDto, HospitalizationProcedureDto, ImmunizationDto, MasterDataInterface, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -12,7 +9,6 @@ import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
 import { MIN_DATE } from "@core/utils/date.utils";
 import { getError, hasError } from '@core/utils/form.utils';
-import { dateToMoment } from "@core/utils/moment.utils";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,6 +18,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -54,6 +51,10 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	isDisableConfirmButton = false;
 	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
 	observationsSubject = new BehaviorSubject<boolean>(true);
+	anthropometricData: AnthropometricData;
+	isEvolutionChartsFFActive = false;
+	isAllergyNoRefer: boolean = true;
+
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
@@ -64,7 +65,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly permissionsService: PermissionsService,
 		private readonly translateService: TranslateService,
-		private readonly dialog: MatDialog,
+		private readonly dialog: MatDialog
 	) {
 		this.diagnosticos = data.diagnosticos;
 		this.mainDiagnosis = data.mainDiagnosis;
@@ -119,11 +120,11 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
 
-		this.form.get('anthropometricData').valueChanges.pipe(
-			map(formData => Object.values(formData)),
-			map(formValues => formValues.every(value => value === null))
-		).subscribe(allFormValuesAreNull => {
+		this.form.get('anthropometricData').valueChanges.subscribe(formData => {
+			const formValues = Object.values(formData);
+			const allFormValuesAreNull = formValues.every(value => value === null);
 			this.anthropometricDataSubject.next(allFormValuesAreNull);
+			this.anthropometricData = formData;
 		});
 	}
 
@@ -167,7 +168,10 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		const formValues = this.form.value;
 		return {
 			confirmed: true,
-			allergies: this.allergies,
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.allergies.length === 0) ? null: this.isAllergyNoRefer,
+				content: this.allergies
+			},
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
 				bloodType: formValues.anthropometricData.bloodType ? {
 					id: this.evolutionNote ?
@@ -216,13 +220,17 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		}
 	}
 
+	setIsAllergyNoRefer = ($event) => {
+		this.isAllergyNoRefer = $event;
+	}
+
 	clearBloodType(control): void {
 		control.controls.bloodType.reset();
 	}
 
 	loadEvolutionNoteInfo() {
 		this.componentEvaluationManagerService.evolutionNote = this.evolutionNote;
-		this.allergies = this.evolutionNote.allergies;
+		this.allergies = this.evolutionNote.allergies.content;
 
 		let evolutionNoteDiagnosis = this.evolutionNote.diagnosis;
 		evolutionNoteDiagnosis?.forEach(d => d.isAdded = true);
@@ -247,7 +255,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				if (this.evolutionNote.riskFactors[key].value != undefined) {
 					this.form.controls.riskFactors.patchValue({ [key]: { value: this.evolutionNote.riskFactors[key].value } });
 					const date: Date = new Date(this.evolutionNote.riskFactors[key].effectiveTime);
-					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: dateToMoment(date) } });
+					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: date } });
 				}
 			});
 		}
@@ -271,7 +279,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		error.errors?.forEach(val => {
 			this.apiErrors.push(val);
 		});
-		this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+		let msg = (error.text) ? error.text : 'internaciones.nota-evolucion.messages.ERROR';
+		this.snackBarService.showError(msg);
 	}
 
 	private openEditReason(evolutionNote: EvolutionNoteDto) {

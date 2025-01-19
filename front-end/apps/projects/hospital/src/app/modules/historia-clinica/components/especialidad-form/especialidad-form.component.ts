@@ -1,5 +1,5 @@
-import { Component, OnInit, forwardRef } from '@angular/core';
-import { FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { Component, forwardRef } from '@angular/core';
+import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { Subscription } from 'rxjs';
@@ -16,15 +16,12 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class EspecialidadFormComponent implements OnInit {
-
+export class EspecialidadFormComponent implements ControlValueAccessor {
 
 	specialties: ClinicalSpecialtyDto[];
-	defaultSpecialty: ClinicalSpecialtyDto;
-	formEvolucion = this.formBuilder.group({
+	formClinicalSpecialty = this.formBuilder.group({
 		clinicalSpecialty: new FormControl<ClinicalSpecialtyDto | null>(null, Validators.required),
 	});
-
 
 	onChangeSub: Subscription;
 
@@ -32,7 +29,7 @@ export class EspecialidadFormComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 	) {
-		this.setProfessionalSpecialties()
+		this.setProfessionalSpecialties();
 	}
 
 	private setProfessionalSpecialties() {
@@ -43,27 +40,22 @@ export class EspecialidadFormComponent implements OnInit {
 
 	private setSpecialtyFields(specialtyArray: ClinicalSpecialtyDto[]) {
 		this.specialties = specialtyArray;
-		this.defaultSpecialty = specialtyArray[0];
-		this.formEvolucion.get('clinicalSpecialty').setValue(this.defaultSpecialty);
-		this.formEvolucion.controls['clinicalSpecialty'].markAsTouched();
+		const preloadedSpecialty = this.specialties.find(specialty => this.formClinicalSpecialty.value.clinicalSpecialty?.id === specialty.id);
+		this.formClinicalSpecialty.get('clinicalSpecialty').setValue(preloadedSpecialty || this.specialties[0]);
+		this.formClinicalSpecialty.controls['clinicalSpecialty'].markAsTouched();
 	}
-
-
-	ngOnInit(): void {
-	}
-
 
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
 		if (obj)
-			this.formEvolucion.setValue(obj);
+			this.formClinicalSpecialty.setValue(obj);
 	}
 
 	registerOnChange(fn: any): void {
-		this.onChangeSub = this.formEvolucion.valueChanges
+		this.onChangeSub = this.formClinicalSpecialty.valueChanges
 			.subscribe(value => {
-				const toEmit = this.formEvolucion.valid ? value : null;
+				const toEmit = this.formClinicalSpecialty.valid ? value : null;
 				fn(toEmit);
 			})
 	}
@@ -73,7 +65,7 @@ export class EspecialidadFormComponent implements OnInit {
 	}
 
 	setDisabledState?(isDisabled: boolean): void {
-		isDisabled ? this.formEvolucion.disable() : this.formEvolucion.enable();
+		isDisabled ? this.formClinicalSpecialty.disable() : this.formClinicalSpecialty.enable();
 	}
 
 	ngOnDestroy(): void {

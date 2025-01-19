@@ -1,9 +1,17 @@
 package net.pladema.person.service.impl;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
@@ -11,11 +19,12 @@ import net.pladema.person.repository.domain.DuplicatePersonVo;
 
 import net.pladema.person.repository.domain.PersonSearchResultVo;
 
+import net.pladema.user.domain.PersonBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonHistoryRepository;
@@ -37,6 +46,7 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final PersonExtendedRepository personExtendedRepository;
 	private final PersonHistoryRepository personHistoryRepository;
+	private final FeatureFlagsService featureFlagsService;
 
 
     @Override
@@ -142,6 +152,79 @@ public class PersonServiceImpl implements PersonService {
 		return result;
 	}
 
+	@Override
+	public CompletePersonNameBo findByHealthcareProfessionalId(Integer healthcareProfessionalId) {
+		LOG.debug("Input parameters -> healthcareProfessionalId {}", healthcareProfessionalId);
+		CompletePersonNameBo result = personRepository.findByHealthcareProfessionalId(healthcareProfessionalId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Optional<PersonBo> getPersonData(Integer patientId) {
+		return personRepository.findPersonExtendedByPatientId(patientId);
+	}
+
+	@Override
+	public String getCompletePersonNameByUserId(Integer userId) {
+		LOG.debug("Input parameter -> userId {}", userId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameByUserId(userId);
+		return parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
+	public String getCompletePersonNameById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameByIds(List.of(personId)).get(0);
+		return parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
+	public String getFormalPersonNameById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameByIds(List.of(personId)).get(0);
+		return parseFormalPersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
+	public String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
+		String finalFirstName = this.getFinalFirstName(firstName, middleNames, selfDeterminateName);
+		String finalLastName = this.getFinalLastName(lastName, otherLastNames);
+		return String.join(" ", finalFirstName, finalLastName);
+	}
+
+	@Override
+	public String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName) {
+		String finalFirstName = getFinalFirstName(givenName, selfDeterminateName);
+		return Stream.of(finalFirstName, familyNames)
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+	}
+
+	@Override
+	public String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
+		String finalFirstName = this.getFinalFirstName(firstName, middleNames, selfDeterminateName);
+		String finalLastName = this.getFinalLastName(lastName, otherLastNames);
+		return String.join(" ", finalLastName, finalFirstName);
+	}
+
+	@Override
+	public ContactInfoBo getContactInfoById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		ContactInfoBo result = personExtendedRepository.getContactInfoById(personId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<String> getCompletePersonNameByIds(List<Integer> personIds) {
+		LOG.debug("Input parameters -> personIds {}", personIds);
+		List<CompletePersonNameVo> queryResult = personRepository.getCompletePersonNameByIds(personIds);
+		List<String> result = queryResult.stream().map(personName -> parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName())).collect(Collectors.toList());
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
 	private Supplier<NotFoundException> personNotFound(Integer personId) {
         return () -> new NotFoundException("person-not-exists", String.format("La persona %s no existe", personId));
     }
@@ -152,6 +235,18 @@ public class PersonServiceImpl implements PersonService {
 		Optional<Person> result = personRepository.findPersonByPatientId(patientId);
 		LOG.debug("Output result -> {}", result);
 		return result;
+	}
+
+	private String getFinalFirstName(String firstName, String middleNames, String selfDeterminateName) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName != null ? firstName : "", middleNames != null ? middleNames : "") : firstName != null ? firstName : "";
+	}
+
+	private String getFinalFirstName(String givenName, String selfDeterminateName) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName :  givenName;
+	}
+
+	private String getFinalLastName(String lastName, String otherLastNames) {
+		return otherLastNames != null ? String.join(" ", lastName != null ? lastName : "", otherLastNames != null ? otherLastNames : "") : lastName != null ? lastName : "";
 	}
 
 }

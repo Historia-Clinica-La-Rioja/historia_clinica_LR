@@ -28,13 +28,13 @@
 			<app-available-label [available]="virtualConsultation.responsibleData.available"></app-available-label>
 		</div>
 
-		<div id="datos-espera-de-atencion" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%" *ngIf="virtualConsultation.status === statusPending">
-			<app-iconed-text class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
-			<ng-content select="[professionals-attending]"></ng-content>
+		<div id="datos-espera-de-atencion" fxLayout="column" fxLayoutAlign="start start" fxFlex="15%" >
+			<app-iconed-text *ngIf="virtualConsultation.status === statusPending" class="grey" icon="schedule" [text]="virtualConsultation.waitingTime"></app-iconed-text>
+			<ng-content *ngIf="virtualConsultation.status === statusPending" select="[professionals-attending]"></ng-content>
 		</div>
 
 		<div id="dato-estado-solicitud" fxFlex="10%" fxLayout="column" fxLayoutAlign="start center">
-			<app-colored-label [description]="virtualConsultation.statusLabel.description"
+			<app-colored-label [description]="virtualConsultation.statusLabel.description.toUpperCase()"
 				[color]="virtualConsultation.statusLabel.color"></app-colored-label>
 		</div>
 

@@ -1,8 +1,8 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { ContextService } from "@core/services/context.service";
 import { DownloadService } from "@core/services/download.service";
-import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { environment } from "@environments/environment";
 import { Observable } from "rxjs";
 
@@ -18,8 +18,8 @@ export class NursingReportsService {
 
     private getNursingReport(params: any, fileName: string, url: any): Observable<any> {
         let requestParams: HttpParams = new HttpParams();
-        requestParams = requestParams.append('fromDate', momentFormat(params.startDate, DateFormat.API_DATE));
-        requestParams = requestParams.append('toDate', momentFormat(params.endDate, DateFormat.API_DATE));
+        requestParams = requestParams.append('fromDate', toApiFormat(params.startDate));
+        requestParams = requestParams.append('toDate', toApiFormat(params.endDate));
 
         return this.downloadService.downloadXlsWithRequestParams(url, fileName, requestParams);
     }

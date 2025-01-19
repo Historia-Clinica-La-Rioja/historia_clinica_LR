@@ -1,7 +1,16 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
-import lombok.*;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 
 @Getter
@@ -10,10 +19,34 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudyWithoutOrderReportInfoDto {
+
+	@NotNull(message = "value.mandatory")
 	private String snomed;
+
+	@Nullable
 	private String imageId;
+
+	@Nullable
 	private HCEDocumentDataDto hceDocumentDataDto;
+
+	@NotNull(message = "value.mandatory")
 	private Boolean status;
-	private Boolean seeStudy;
+
+	@NotNull(message = "value.mandatory")
+	private Boolean isAvailableInPACS;
+
+	@NotNull(message = "value.mandatory")
 	private Boolean viewReport;
+
+	@NotNull(message = "value.mandatory")
+	private Short reportStatus;
+
+	@Nullable
+	private DateDto appointmentDate;
+	@Nullable
+	private TimeDto appointmentHour;
+	@Nullable
+	private String localViewerUrl;
+	@Nullable
+	private String deriveTo;
 }

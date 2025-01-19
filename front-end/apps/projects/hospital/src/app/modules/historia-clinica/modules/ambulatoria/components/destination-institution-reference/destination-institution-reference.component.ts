@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { AddressDto, DepartmentDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { AddressDto, ClinicalSpecialtyDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { InstitutionService } from '@api-rest/services/institution.service';
+import { ContextInstitutionService } from '@api-rest/services/context-institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
-import { UntypedFormGroup } from '@angular/forms';
 import { DiaryAvailableAppointmentsSearchService } from '@turnos/services/diary-available-appointments-search.service';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
 	selector: 'app-destination-institution-reference',
@@ -16,18 +16,6 @@ import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } fr
 export class DestinationInstitutionReferenceComponent implements OnInit {
 	@Input() formReference: UntypedFormGroup;
 	@Input() submitForm: boolean;
-	@Input() set careLine(careLineId: number) {
-		this.specialtyId = null;
-		this.careLineId = careLineId;
-		this.setDepartaments();
-		this.onSpecialtySelectionChange();
-	};
-
-	@Input() set clinicalSpecialty(specialty: number) {
-		this.specialtyId = null;
-		this.specialtyId = specialty;
-		this.setDepartaments();
-	};
 
 	@Input() set updateFormFields(updateDepartamentsAndInstitution: boolean) {
 		if (updateDepartamentsAndInstitution) {
@@ -35,50 +23,42 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		}
 	}
 
-	@Output() departmentSelected = new EventEmitter<number>();
-	@Output() institutionSelected = new EventEmitter<number>();
-	@Output() resetControls = new EventEmitter();
-
-	provinceValue: number;
+	ZERO = 0;
 	departments: TypeaheadOption<any>[];
 	institutions: TypeaheadOption<any>[];
-	defaultProvince: TypeaheadOption<any>;
 	defaultDepartment: TypeaheadOption<any>;
 	defaultInstitution: TypeaheadOption<any>;
 	departmentDisable = true;
 	institutionsDisable = true;
-	originalDestinationDepartment: TypeaheadOption<any>;
 	institutionDestinationId: number;
 	departmentId: number;
-	originDepartment: DepartmentDto;
 	originInstitutionInfo: AddressDto;
-	provinces: TypeaheadOption<any>[];
-	specialtyId: number;
-	isDayGreaterThanZero = false;
+	specialtyIds: number[];
 	institutionSelection = false;
 	careLineId: number;
 	appointment$ = new BehaviorSubject<number>(undefined);
+	protectedAppointment$ = new BehaviorSubject<number>(undefined);
 	practiceOrProcedure = false;
 	practiceSnomedId;
-	clinicalSpecialtyId;
+	clinicalSpecialties: ClinicalSpecialtyDto[];
+
 	constructor(
-		private readonly institutionService: InstitutionService,
+		private readonly contextInstitutionService: ContextInstitutionService,
 		private readonly adressMasterData: AddressMasterDataService,
 		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
-		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
+		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService
 	) { }
 
-	ngOnInit(): void {
+	ngOnInit() {
 		this.institutionSelection = false;
 
 		this.referenceOriginInstitutionService.originInstitutionInfo$.subscribe(info => this.originInstitutionInfo = info);
 
 		const practiceOrProcedure$ = this.formReference.controls.practiceOrProcedure.valueChanges.pipe(
-			debounceTime(300),
 			distinctUntilChanged()
 		);
 
-		const clinicalSpecialtyId$ = this.formReference.controls.clinicalSpecialtyId.valueChanges.pipe(
+		const clinicalSpecialtyId$ = this.formReference.controls.clinicalSpecialties.valueChanges.pipe(
 			debounceTime(300),
 			distinctUntilChanged()
 		);
@@ -88,62 +68,73 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			distinctUntilChanged()
 		);
 
-		combineLatest([practiceOrProcedure$, clinicalSpecialtyId$, careLine$]).subscribe(([practiceOrProcedure, clinicalSpecialtyId, careLine]) => {
+		combineLatest([practiceOrProcedure$, clinicalSpecialtyId$, careLine$]).subscribe(([practiceOrProcedure, clinicalSpecialties, careLine]) => {
 			this.practiceOrProcedure = !!practiceOrProcedure;
-
+			this.cleanFields();
 			if (practiceOrProcedure) {
-				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialtyId?.id, careLine?.id).subscribe(data => {
-					this.cleanFields();
+				this.adressMasterData.getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceOrProcedure.id, clinicalSpecialties?.length, careLine?.id).subscribe(data => {
 					this.departments = this.toTypeaheadOptions(data, 'description');
 					this.departmentDisable = false;
 					this.practiceSnomedId = practiceOrProcedure.id;
-					this.clinicalSpecialtyId = clinicalSpecialtyId?.id;
+					this.clinicalSpecialties = clinicalSpecialties;
 				});
+			} else {
+				if (this.formReference.controls.practiceOrProcedure.value) this.practiceSnomedId = this.formReference.controls.practiceOrProcedure.value.id;
+				else this.practiceSnomedId = null
 			}
+		});
+
+		careLine$.subscribe(data => {
+			this.specialtyIds = null;
+			this.careLineId = data?.id;
+			this.setDepartaments();
+			this.onSpecialtySelectionChange();
+		})
+
+		clinicalSpecialtyId$.subscribe(data => {
+			this.specialtyIds = null;
+			this.specialtyIds = data?.map(specialty => specialty.id);
+			this.setDepartaments();
+		});
+
+		this.formReference.controls.problems.valueChanges.subscribe((changes) => {
+			this.defaultDepartment = null;
+			this.defaultInstitution = null;
+			this.onDepartmentSelectionChange(null);
+			this.onInstitutionSelectionChange(null);
+			this.departmentDisable = true;
+			this.institutionsDisable = true;
 		});
 	}
 
 
-	private toTypeaheadOptions(response: any[], attribute: string): TypeaheadOption<any>[] {
-		return response.map(r => {
-			return {
-				value: r.id,
-				compareValue: r[attribute],
-				viewValue: r[attribute]
-			}
-		})
-	}
-
-	private clearTypeahead() {
-		return { value: null, viewValue: null, compareValue: null }
-	}
 
 	onSpecialtySelectionChange() {
 		this.defaultDepartment = this.clearTypeahead();
 		this.defaultInstitution = this.clearTypeahead();
-		this.departmentSelected.emit(null);
-		this.institutionSelected.emit(null);
+		this.formReference.controls.departmentId.setValue(null);
+		this.formReference.controls.institutionDestinationId.setValue(null);
 	}
 
 	onDepartmentSelectionChange(departmentId: number) {
 		this.defaultInstitution = this.clearTypeahead();
 		if (departmentId) {
 			if (this.practiceOrProcedure) {
-				this.institutionService.getInstitutionsByReferenceByPracticeFilter
-					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialtyId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+				this.contextInstitutionService.getInstitutionsByReferenceByPracticeFilter
+					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties?.map(clinicalSpecialty => clinicalSpecialty.id)).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 						this.institutions = this.toTypeaheadOptions(institutions, 'name');
 						this.institutionsDisable = false;
 					});
 			}
 			else {
-				this.institutionService.getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId, this.specialtyId, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+				this.contextInstitutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, this.specialtyIds, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 					this.institutions = this.toTypeaheadOptions(institutions, 'name');
 					this.institutionsDisable = false;
 				});
 			}
 		}
 		this.departmentId = departmentId;
-		this.departmentSelected.emit(departmentId);
+		this.formReference.controls.departmentId.setValue(departmentId);
 	}
 
 	onInstitutionSelectionChange(institutionDestinationId: number) {
@@ -154,25 +145,25 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			this.institutionSelection = false;
 		}
 		this.institutionDestinationId = institutionDestinationId;
-		this.institutionSelected.emit(institutionDestinationId);
+		this.formReference.controls.institutionDestinationId.setValue(institutionDestinationId);
 	}
 
 	setAppointments(institutionDestinationId: number) {
-		if (this.formReference.value.consultation) {
-			if (this.careLineId)
-				this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyId, this.departmentId, this.careLineId).subscribe(rs =>
-					this.appointment$.next(rs));
-			else
-				this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyId).subscribe(rs =>
-					this.appointment$.next(rs));
-
+		if (this.careLineId) {
+			this.diaryAvailableAppointmentsSearchService.getAvailableProtectedAppointmentsQuantity(institutionDestinationId, this.specialtyIds, this.departmentId, this.careLineId, this.practiceSnomedId).subscribe(rs =>
+				this.protectedAppointment$.next(rs));
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppiuntmentsQuantityByCarelineDiaries(institutionDestinationId, this.careLineId, this.practiceSnomedId, this.specialtyIds).subscribe(rs =>
+				this.appointment$.next(rs));
 		}
+		else
+			this.diaryAvailableAppointmentsSearchService.getAvailableAppointmentsQuantity(institutionDestinationId, this.specialtyIds, this.practiceSnomedId).subscribe(rs =>
+				this.appointment$.next(rs));
 	}
 
 	private setDepartaments() {
 		this.cleanFields();
-		if (this.specialtyId) {
-			this.adressMasterData.getDepartmentsForReference(this.specialtyId, this.careLineId).subscribe(e => {
+		if (this.formReference.value.consultation && this.specialtyIds?.length) {
+			this.adressMasterData.getDeparmentsByCareLineAndClinicalSpecialty(this.specialtyIds, this.careLineId).subscribe(e => {
 				this.departments = this.toTypeaheadOptions(e, 'description');
 				this.departmentDisable = false;
 			});
@@ -187,4 +178,17 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.institutionSelection = false;
 	}
 
+	private toTypeaheadOptions(response: any[], attribute: string): TypeaheadOption<any>[] {
+		return response.map(r => {
+			return {
+				value: r.id,
+				compareValue: r[attribute],
+				viewValue: r[attribute]
+			}
+		})
+	}
+
+	private clearTypeahead() {
+		return { value: null, viewValue: null, compareValue: null }
+	}
 }

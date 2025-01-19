@@ -1,12 +1,9 @@
 <div fxLayout="row">
-	<mat-form-field appearance="outline" class="serch">
-		<mat-label>{{'internaciones.internment-patient-card.SEARCH' |
-			translate}}</mat-label>
-		<input matInput (keyup)="applyFilter($event)">
-		<mat-icon matSuffix>search</mat-icon>
-	</mat-form-field>
+	<app-search-cases fxFlex="50%" [label]="'internaciones.internment-patient-card.SEARCH'" [filters]="filters"
+		(descriptionFiltered)="applyFilter($event)">
+	</app-search-cases>
 
-	<button  id="button-filter" mat-button color="primary" class="button-filter" (click)="setPanelState()" fxLayoutAlign="none start"
+	<button  fxFlex="50%" id="button-filter" mat-button color="primary" class="button-filter" (click)="setPanelState()" fxLayoutAlign="none start"
 		fxLayoutGap="15px">
 		<mat-icon color="primary">filter_list</mat-icon>
 		{{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary"
@@ -26,7 +23,7 @@
 					{{sector.sectorDescription | translate}}
 				</mat-option>
 			</mat-select>
-			<button id="clear-filter-sector" type="button" mat-button *ngIf="formFilter.controls.sector.value" matSuffix
+			<button id="clear-filter-sector" type="button"  *ngIf="formFilter.controls.sector.value" matSuffix
 				color="warn" mat-icon-button
 				(click)="clearFilterField(formFilter.controls.sector); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
@@ -40,7 +37,7 @@
 					{{room.roomNumber | translate}}
 				</mat-option>
 			</mat-select>
-			<button id="clear-filter-room" type="button" mat-button *ngIf="formFilter.controls.room.value" matSuffix
+			<button id="clear-filter-room" type="button"  *ngIf="formFilter.controls.room.value" matSuffix
 				color="warn" mat-icon-button
 				(click)="clearFilterField(formFilter.controls.room); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
@@ -113,3 +110,4 @@
 <ng-template #noInfo>
 	<app-no-data></app-no-data>
 </ng-template>
+

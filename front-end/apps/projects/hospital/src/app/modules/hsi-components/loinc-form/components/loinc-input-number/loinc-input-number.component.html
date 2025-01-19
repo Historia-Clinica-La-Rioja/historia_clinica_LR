@@ -1,0 +1,21 @@
+<span>{{title | translate}}</span>
+
+<div fxLayoutGap="8px" fxLayout="row" fxLayoutAlign="none center">
+	<mat-form-field appearance="outline">
+		<input [formControl]="numberControl" matInput type="text" [pattern]="numberPattern" [(value)]="preloadValue"
+			(change)="emitValueChange($event)">
+		<mat-error *ngIf="numberControl.invalid">
+			{{'ambulatoria.reference-study-close.form.INVALID_FORMAT' | translate }}
+		</mat-error>
+	</mat-form-field>
+	<div>
+		<mat-form-field appearance="outline">
+			<mat-select [disabled]="listOptionsUnits.length === 1" [(value)]="_preloadUnit"
+				(selectionChange)="onUnitChange($event.value.unitOfMeasureId)">
+				<mat-option *ngFor="let unit of listOptionsUnits" [value]="unit">
+					{{unit.description}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+</div>

@@ -65,7 +65,7 @@ export class TypeaheadComponent implements OnInit, OnChanges {
 		if (!this.disabled && event.isUserInput) {
 			this.optionSelected = option;
 			this.selectionChange.emit(option.value);
-		} 
+		}
 		if (this.disabled) {
 			this.reset();
 		}

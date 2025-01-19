@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 
@@ -7,22 +7,21 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 	templateUrl: './problem-concept-search-dialog.component.html',
 	styleUrls: ['./problem-concept-search-dialog.component.scss']
 })
-export class ProblemConceptSearchDialogComponent implements OnInit {
+export class ProblemConceptSearchDialogComponent {
 	enableSubmitButton = true;
 
 	constructor(public dialogRef: MatDialogRef<ProblemConceptSearchDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public readonly data: ProblemData) { }
 
-	ngOnInit(): void {
-	}
-
-	addProblem(event): void {
-		this.data.ambulatoryConsultationProblemsService.setConcept(event);
+	addProblem(event) {
+		if(event){
+			this.data.ambulatoryConsultationProblemsService.setConcept(event);
+		}
 		this.data.ambulatoryConsultationProblemsService.addToList(false);
 		this.dialogRef.close();
 	}
 
-	close(): void {
+	close() {
 		this.data.ambulatoryConsultationProblemsService.resetForm();
 		this.dialogRef.close()
 	}

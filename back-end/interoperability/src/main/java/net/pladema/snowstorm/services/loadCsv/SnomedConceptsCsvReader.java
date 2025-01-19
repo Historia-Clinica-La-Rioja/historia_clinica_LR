@@ -4,7 +4,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SnomedConceptsCsvReader {
-
-    private static final String TYPE = "text/csv";
-
-    public static boolean hasCsvFormat(MultipartFile file) {
-        return TYPE.equals(file.getContentType());
-    }
 
 	public static Integer getTotalRecords(InputStreamSource file) {
 		try {

@@ -19,6 +19,9 @@ export class ChipsAutocompleteComponent implements OnChanges {
 	@Input() options: ChipsOption<any>[];
 	@Input() placeholder: string;
 	@Input() externalSetValues: ChipsOption<any>[];
+	@Input() set clearOptionsSelected(clear: boolean) {
+		if (clear) this.optionsSelected = [];
+	} 
 	@Output() selectionChange = new EventEmitter();
 	@ViewChild('input') input: ElementRef<HTMLInputElement>;
 
@@ -36,7 +39,7 @@ export class ChipsAutocompleteComponent implements OnChanges {
 			map(value => (value ? this._filter(value) : this.options?.slice()))
 		);
 
-		if (this.externalSetValues.length > 0 && !this.optionsSelected.length) {
+		if (this.externalSetValues?.length > 0 && !this.optionsSelected.length) {
 			this.optionsSelected = this.externalSetValues;
 			this.selectionChange.emit(this.optionsSelected);
 		}

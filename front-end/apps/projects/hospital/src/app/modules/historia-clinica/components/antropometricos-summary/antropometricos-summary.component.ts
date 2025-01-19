@@ -1,18 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
+import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
 
+const URL_ACCESO_PACIENTE = "/paciente";
 @Component({
 	selector: 'app-antropometricos-summary',
 	templateUrl: './antropometricos-summary.component.html',
 	styleUrls: ['./antropometricos-summary.component.scss']
 })
-export class AntropometricosSummaryComponent implements OnInit {
+export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 
 	@Input() internmentEpisodeId: number;
 	@Input() anthropometricDataList$: Observable<HCEAnthropometricDataDto[]> | Observable<AnthropometricDataDto[]>;
@@ -20,6 +24,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	details: DetailBoxExtended[] = [];
 	readonly antropometricosSummary = ANTROPOMETRICOS;
+	subscriptionAnthropometricData: Subscription;
+	patientId: number;
 
 	private readonly LABELS = {
 		height: 'Talla (cm)',
@@ -30,11 +36,25 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	constructor(
 		public dialog: MatDialog,
+		readonly patientEvolutionChartService: PatientEvolutionChartsService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly activatedRoute: ActivatedRoute,
+		public readonly router: Router,
 	) { }
 
+	ngOnDestroy(): void {
+		this.subscriptionAnthropometricData?.unsubscribe();
+	}
+
 	ngOnInit(): void {
-		this.anthropometricDataList$.subscribe(list => this.updateAnthropometricData(list));
+		this.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
+		this.patientEvolutionChartService.patientId = this.patientId;
+		if(this.router.url !== URL_ACCESO_PACIENTE ){
+			this.subscriptionAnthropometricData = this.anthropometricDataList$.subscribe(list => {
+				this.updateAnthropometricData(list);
+				this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
+			});
+		}
 	}
 
 	openDialog(): void {
@@ -42,13 +62,15 @@ export class AntropometricosSummaryComponent implements OnInit {
 			disableClose: true,
 			width: '25%',
 			data: {
-				internmentEpisodeId: this.internmentEpisodeId
+				internmentEpisodeId: this.internmentEpisodeId,
+				patientId : this.patientId
 			}
 		});
 
 		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
-				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight,
+				this.internmentSummaryFacadeService.setFieldsToUpdate({
+					heightAndWeight: fieldsToUpdate.heightAndWeight,
 					bloodType: fieldsToUpdate.bloodType,
 					evolutionClinical: true
 				});
@@ -122,6 +144,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 			);
 
 			this.details = details;
+		} else {
+			this.details = [];
 		}
 	}
 

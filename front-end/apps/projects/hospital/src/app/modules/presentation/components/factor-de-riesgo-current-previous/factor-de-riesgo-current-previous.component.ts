@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
-import { isMoment } from '@core/utils/moment.utils';
+import { fixDate } from '@core/utils/date/format';
 
 @Component({
 	selector: 'app-factor-de-riesgo-current-previous',
@@ -14,7 +14,7 @@ export class FactorDeRiesgoCurrentPreviousComponent {
 	constructor() { }
 
 	getDate(effectiveTime): Date {
-		return (isMoment(effectiveTime)) ? effectiveTime.toDate() : effectiveTime;
+		return fixDate(effectiveTime)
 	}
 
 }

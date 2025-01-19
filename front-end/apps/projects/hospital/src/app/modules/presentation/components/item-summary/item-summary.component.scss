@@ -1,0 +1,69 @@
+.avatar {
+	border-radius: 50%;
+	width: 2.8125rem;
+	height: 2.8125rem;
+}
+
+.display {
+	display: flex;
+	align-items: flex-start;
+	align-content: flex-start;
+	gap: 1.1875rem;
+	flex-shrink: 0;
+	align-items: center;
+}
+
+.info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.25rem;
+}
+
+.title {
+	font-weight: 500;
+	font-size: 1rem;
+	flex-wrap: wrap;
+}
+
+.subtitle {
+	font-weight: 400;
+	line-height: 1rem;
+	font-size: 0.75rem;
+	word-break: break-word;
+}
+
+.subtitle2 {
+	color: #9a9a9a;
+	font-weight: 400;
+	line-height: 1rem;
+	font-size: 0.75rem;
+}
+
+.big {
+
+	.display {
+		gap: 1.1875rem;
+	}
+
+	.info {
+		gap: 0.5rem;
+	}
+
+	.avatar {
+		width: 3.75rem;
+		height: 3.75rem;
+	}
+
+	.title {
+		font-size: 1.25rem;
+	}
+
+	.subtitle {
+		font-size: 1rem;
+	}
+
+	.subtitle2 {
+		font-size: 1rem;
+	}
+}

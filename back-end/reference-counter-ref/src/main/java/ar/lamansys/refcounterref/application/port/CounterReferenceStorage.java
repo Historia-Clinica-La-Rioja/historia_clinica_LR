@@ -5,13 +5,15 @@ import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceSummary
 import ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CounterReferenceStorage {
 
     Integer save(CounterReferenceInfoBo counterReferenceInfoBo);
 
-    CounterReferenceSummaryBo getCounterReference(Integer referenceId);
+    Optional<CounterReferenceSummaryBo> getCounterReference(Integer referenceId);
 
     List<CounterReferenceProcedureBo> getProceduresByCounterReference(Integer counterReferenceId);
 
+	boolean existsCounterReference(Integer referenceId);
 }

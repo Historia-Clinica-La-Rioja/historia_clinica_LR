@@ -1,5 +1,5 @@
-import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Component, Input, forwardRef } from '@angular/core';
+import { FormBuilder, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
 import { hasError } from '@core/utils/form.utils';
 import { Subscription } from 'rxjs';
 
@@ -16,10 +16,18 @@ import { Subscription } from 'rxjs';
 	]
 })
 export class EvolucionFormComponent {
+
+	@Input()
+	set markAsTouched(value: boolean) {
+		if (value) {
+			this.formEvolucion.get('evolucion')?.markAsTouched();
+		}
+	}
+
 	hasError = hasError;
 	onChangeSub: Subscription;
 	formEvolucion = this.formBuilder.group({
-		evolucion: [],
+		evolucion: [null, Validators.required],
 	});
 
 	constructor(

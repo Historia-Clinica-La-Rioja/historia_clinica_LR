@@ -1,29 +1,28 @@
-<section class="episode-document-container"> 
-    <div>
-        <span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
-        <button mat-button color="primary" (click)="fileInput.click()">
-            <mat-icon> attach_file</mat-icon>
-            <span [translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ATTACH'"></span>
-        </button>
-        <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" (click)="$event.target.value=null">
-    </div>
-    <article>
-        <ng-container *ngIf="documents?.length > 0; else noDocuments">
-            <div *ngFor="let document of documents" class="episode-document-list">
-                <p>{{document.description}}</p>
-                <a (click)="download(document.id, document.fileName)">{{document.fileName}}</a>
-                <p>{{document.createdOn |
-                    viewDateDto:
-                    'date' | date: 'dd/MM/yyyy'}}</p>
-                <button mat-button mat-icon-button color="warn"
-                    (click)="openDeleteDialog(document.id)">
-                    <mat-icon>delete_outline</mat-icon>
-                </button>
-            </div>
-        </ng-container>
-        <ng-template #noDocuments>
-            <p class="no-documents" [translate]="'internaciones.internacion-paciente.documents.NO_DOCUMENTS'">
-            </p>
-        </ng-template>
-    </article>
+<section class="episode-document-container">
+	<div>
+		<span class="mat-body-2" [translate]="'internaciones.internacion-paciente.documents.TITLE'"></span>
+		<button mat-button color="primary" (click)="openAttachDialog()" [disabled]="disabled">
+			<span
+				[translate]="'internaciones.internacion-paciente.documents.dialogs.attach.actions.ADD_DOCUMENT'"></span>
+		</button>
+	</div>
+	<article>
+		<ng-container *ngIf="documents?.length > 0; else noDocuments">
+			<div *ngFor="let document of documents" class="episode-document-list">
+				<p>{{document.description}}</p>
+				<a (click)="download(document.id, document.fileName)">{{document.fileName}}</a>
+				<p>{{document.createdOn |
+					viewDateDto:
+					'date' | dateFormat: 'date'}}</p>
+				<button  mat-icon-button color="warn" [disabled]="hasAdministrativeDischarge" (click)="openDeleteDialog(document.id)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
+			</div>
+		</ng-container>
+		<ng-template #noDocuments>
+			<p class="no-documents" [translate]="'internaciones.internacion-paciente.documents.NO_DOCUMENTS'">
+			</p>
+		</ng-template>
+	</article>
 </section>
+

@@ -23,3 +23,9 @@
 #container {
     padding: 15px;
 }
+
+.wrap-reason {
+    white-space: normal; 
+    word-break: break-all;
+    overflow-wrap: break-word;
+}

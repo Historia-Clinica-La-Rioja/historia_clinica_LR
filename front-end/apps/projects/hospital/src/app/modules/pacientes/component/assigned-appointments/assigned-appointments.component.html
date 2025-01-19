@@ -10,6 +10,10 @@
 				<mat-divider inset *ngIf="index < appointmentsList.length-1"></mat-divider>
 			</div>
 		</ng-container>
+		<mat-divider class="divider"></mat-divider>
+		<button mat-button type="button" color="primary" (click)="openAppointmentHistoric()">
+			{{'pacientes.profile.VIEW_APPOINTMENT_HISTORY' | translate}}
+		</button>
 	</mat-card-content>
 </app-summary-card>
 

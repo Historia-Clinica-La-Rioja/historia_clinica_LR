@@ -1,0 +1,22 @@
+<mat-card *ngIf="templates?.length > 0">
+	<mat-card-title-group>
+		<mat-card-title [matMenuTriggerFor]="menu">
+			<mat-icon *ngIf="templates?.length > 1" aria-hidden="false" aria-label="Example home icon" fontIcon="expand_more"></mat-icon>
+			<span class="uppercase">{{(procedureTemplateFullSummary$ | async)?.description}}</span>
+		</mat-card-title>
+		<mat-card-subtitle>{{(procedureTemplateFullSummary$ | async)?.snomed?.pt}}</mat-card-subtitle>
+	</mat-card-title-group>
+	<mat-card-content *ngIf="(procedureTemplateFullSummary$ | async) as template; else loading">
+		<app-procedure-template-form [template]="template" (valueChange)="changeValues($event)"></app-procedure-template-form>
+	</mat-card-content>
+	<ng-template #loading>
+		<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+	</ng-template>
+</mat-card>
+
+<mat-menu #menu="matMenu">
+	<button mat-menu-item *ngFor="let template of templates" (click)="setTemplate(template)">
+		<mat-icon>edit_note</mat-icon>
+		<span>{{template.description}}</span>
+	</button>
+</mat-menu>

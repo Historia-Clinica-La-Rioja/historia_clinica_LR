@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 
 import java.util.Objects;
 
@@ -32,5 +32,9 @@ public class ProfessionalLicenseNumberBo {
 		return this.type.equals(bo.getType())
 				&& Objects.equals(this.professionalProfessionId,bo.getProfessionalProfessionId())
 				&& Objects.equals(this.healthcareProfessionalSpecialtyId, bo.getHealthcareProfessionalSpecialtyId());
+	}
+
+	public String getCompleteTypeLicenseNumber() {
+		return String.join("-", type.getAcronym(), licenseNumber);
 	}
 }

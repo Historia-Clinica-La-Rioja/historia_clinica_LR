@@ -1,16 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import {
-	InternmentEpisodeProcessDto,
-	PersonPhotoDto
-} from '@api-rest/api-model';
+import { PersonPhotoDto } from '@api-rest/api-model';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
+import { Color } from '@presentation/colored-label/colored-label.component';
+import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PatientGenderService } from "@core/services/patient-gender.service";
-import { Color } from '@presentation/colored-label/colored-label.component';
+import { Observable } from 'rxjs';
+import { PatientBasicData, getAge } from '@presentation/utils/patient.utils';
 
 const NO_DOCUMENT_TYPE = 'No posee';
+
 @Component({
 	selector: 'app-patient-card',
 	templateUrl: './patient-card.component.html',
@@ -28,7 +27,7 @@ export class PatientCardComponent {
 	@Input() showAdditionalInformation: boolean;
 	@Input() size = 'default';
 	decodedPhoto$: Observable<string>;
-	@Input() internmentEpisodeProcess: InternmentEpisodeProcessDto;
+	@Input() internmentEpisodeInProgress: boolean;
 	@Input() emergencyCareEpisodeInProgress: boolean;
 	Color = Color;
 
@@ -71,11 +70,14 @@ export class PatientCardComponent {
 		return (this.showID());
 	}
 
-	public viewGenderAge(): string {
+	public setGender(): string {
 		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender);
-		gender = gender ? gender : 'Sin género';
-		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : 'Sin edad';
-		return gender + ' · ' + age;
+		gender = gender ? gender : 'presentation.patient.gender.NO_GENDER';
+		return gender;
+	}
+
+	public getAge(): string{
+		return getAge(this.patient);
 	}
 
 	public viewPatientName(): string {
@@ -85,16 +87,4 @@ export class PatientCardComponent {
 		return name;
 	}
 
-}
-
-export class PatientBasicData {
-	id: number;
-	firstName: string;
-	middleNames?: string;
-	lastName: string;
-	otherLastNames?: string;
-	gender?: string;
-	age?: number;
-	nameSelfDetermination?: string;
-	selfPerceivedGender?: string;
 }

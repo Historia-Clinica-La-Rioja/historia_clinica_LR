@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Content } from '@presentation/components/indication/indication.component';
+import { ContentStudy } from '../study/study.component';
 
 @Component({
 	selector: 'app-study-list-element',
@@ -8,7 +8,7 @@ import { Content } from '@presentation/components/indication/indication.componen
 })
 export class StudyListElementComponent implements OnInit {
 
-	@Input() content: Content;
+	@Input() content: ContentStudy;
 	@Input() createdDuring: CreatedDuring;
 
 

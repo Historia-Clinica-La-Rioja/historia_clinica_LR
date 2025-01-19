@@ -1,26 +1,24 @@
-import { DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AssignedAppointmentDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
-  selector: 'app-assigned-appointment',
-  templateUrl: './assigned-appointment.component.html',
-  styleUrls: ['./assigned-appointment.component.scss']
+	selector: 'app-assigned-appointment',
+	templateUrl: './assigned-appointment.component.html',
+	styleUrls: ['./assigned-appointment.component.scss']
 })
-export class AssignedAppointmentComponent {
+export class AssignedAppointmentComponent implements OnInit{
 
-  @Input() appointment: AssignedAppointmentDto;
+	appointmentDate: Date;
+	appointmentHour: Date;
+	@Input() appointment: AssignedAppointmentDto;
 
-  constructor(private readonly datePipe: DatePipe) { }
+	constructor() {	}
 
-  getViewDate(): string {
-    return this.datePipe.transform(dateDtoToDate(this.appointment.date), DatePipeFormat.FULL_DATE);
-  }
+	ngOnInit(): void {
+		this.appointmentDate = dateDtoToDate(this.appointment.date);
+		this.appointmentHour = timeDtoToDate(this.appointment.hour);
+	}
 
-  getViewTime(): string {
-    return this.datePipe.transform(timeDtoToDate(this.appointment.hour), DatePipeFormat.SHORT_TIME);
-  }
-
+	
 }

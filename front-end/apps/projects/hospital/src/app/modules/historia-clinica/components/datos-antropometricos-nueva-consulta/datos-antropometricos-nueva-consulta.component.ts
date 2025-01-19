@@ -1,25 +1,55 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { DatosAntropometricosNuevaConsultaService } from '../../modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
+import { TranslateService } from '@ngx-translate/core';
+import { AnthropometricData, PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 @Component({
-  selector: 'app-datos-antropometricos-nueva-consulta',
-  templateUrl: './datos-antropometricos-nueva-consulta.component.html',
-  styleUrls: ['./datos-antropometricos-nueva-consulta.component.scss']
+	selector: 'app-datos-antropometricos-nueva-consulta',
+	templateUrl: './datos-antropometricos-nueva-consulta.component.html',
+	styleUrls: ['./datos-antropometricos-nueva-consulta.component.scss'],
+	providers: [PatientEvolutionChartsService]
 })
-export class DatosAntropometricosNuevaConsultaComponent {
+export class DatosAntropometricosNuevaConsultaComponent implements OnInit, OnChanges {
 
-  @Input() datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
-  @Input() showPreloadData: boolean = false;
-  readonly isNumberOrDot = isNumberOrDot;
+	readonly isNumberOrDot = isNumberOrDot;
+	boxMessageInfo: BoxMessageInformation;
+	anthropometricData$: Observable<AnthropometricData>;
 
-  savePreloadData(save: boolean): void {
-    if (save) {
-      this.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()
-    }
-    else {
-      this.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData();
-    }
-  }
+	@Input() datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
+	@Input() showPreloadData: boolean = false;
+	@Input() patientId: number;
+
+	constructor(
+		private readonly translateService: TranslateService
+	) { }
+
+	ngOnInit(): void {
+		this.anthropometricData$ = this.datosAntropometricosNuevaConsultaService.antropometricData$;
+	}
+
+	ngOnChanges() {
+		this.boxMessageInfo = {
+			title: 'historia-clinica.include-previous-data-question.TITLE',
+			question: 'historia-clinica.include-previous-data-question.QUESTION',
+			message: this.translateService.instant('historia-clinica.include-previous-data-question.DESCRIPTION',
+				{
+					dataName: this.translateService.instant('ambulatoria.paciente.nueva-consulta.datos-antropometricos.NAME'),
+					date: this.datosAntropometricosNuevaConsultaService.getDate()
+				}),
+			showButtons: true
+		}
+	}
+
+	savePreloadData(save: boolean): void {
+		if (save) {
+			this.datosAntropometricosNuevaConsultaService.savePreloadedAnthropometricData()
+		}
+		else {
+			this.datosAntropometricosNuevaConsultaService.discardPreloadedAnthropometricData();
+		}
+	}
 
 }

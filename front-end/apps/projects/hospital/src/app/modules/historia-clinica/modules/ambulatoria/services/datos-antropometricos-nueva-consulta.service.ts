@@ -4,25 +4,34 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ClinicalObservationDto, HCEAnthropometricDataDto, MasterDataInterface } from '@api-rest/api-model';
 import { Observable, Subject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DatePipe } from '@angular/common';
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { TranslateService } from '@ngx-translate/core';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
+export type AnthropometricDataKey = keyof AnthropometricData;
 export interface DatosAntropometricos {
 	bloodType?: ClinicalObservationDto;
 	bmi?: ClinicalObservationDto;
 	height: ClinicalObservationDto;
 	weight: ClinicalObservationDto;
-	headCircumference: ClinicalObservationDto;
+	headCircumference?: ClinicalObservationDto;
+}
+
+export interface AnthropometricDataValues {
+	bloodType?: string;
+	bmi?: string;
+	height: string;
+	weight: string;
+	headCircumference?: string;
 }
 
 export class DatosAntropometricosNuevaConsultaService {
 
 	form: UntypedFormGroup;
-	private bloodTypes: MasterDataInterface<string>[];
+	private bloodTypes: MasterDataInterface<string>[] = [];
 	private heightErrorSource = new Subject<string | void>();
 	private _heightError$ = this.heightErrorSource.asObservable();
 	private weightErrorSource = new Subject<string | void>();
@@ -33,6 +42,10 @@ export class DatosAntropometricosNuevaConsultaService {
 	private dateList: string[] = [];
 	private readonly atLeastOneValueInFormGroup = atLeastOneValueInFormGroup;
 
+	private antropometricDataSubject = new Subject<AnthropometricData>();
+	antropometricData$ = this.antropometricDataSubject.asObservable();
+	antropometricData: AnthropometricData;
+	preloadedBloodType: string;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -40,7 +53,7 @@ export class DatosAntropometricosNuevaConsultaService {
 		private readonly patientId: number,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe?: DatePipe,
+		private readonly dateFormatPipe?: DateFormatPipe,
 	) {
 		this.form = this.formBuilder.group({
 			bloodType: [null],
@@ -49,7 +62,8 @@ export class DatosAntropometricosNuevaConsultaService {
 			weight: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.weight), Validators.max(DATOS_ANTROPOMETRICOS.MAX.weight), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]]
 		});
 
-		this.form.controls.headCircumference.valueChanges.subscribe(_ => {
+		this.form.controls.headCircumference.valueChanges.subscribe(headCircumference => {
+			this.addFieldChanges('headCircumference', headCircumference);
 			if (this.form.controls.headCircumference.hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.headCircumference }).subscribe(
 					(errorMsg: string) => this.headCircumferenceErrorSource.next(errorMsg)
@@ -70,7 +84,8 @@ export class DatosAntropometricosNuevaConsultaService {
 			}
 		});
 
-		this.form.controls.height.valueChanges.subscribe(_ => {
+		this.form.controls.height.valueChanges.subscribe(height => {
+			this.addFieldChanges('height', height);
 			if (this.form.controls.height.hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.height }).subscribe(
 					(errorMsg: string) => this.heightErrorSource.next(errorMsg)
@@ -91,7 +106,8 @@ export class DatosAntropometricosNuevaConsultaService {
 			}
 		});
 
-		this.form.controls.weight.valueChanges.subscribe(_ => {
+		this.form.controls.weight.valueChanges.subscribe(weight => {
+			this.addFieldChanges('weight', weight);
 			if (this.form.controls.weight.hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.weight }).subscribe(
 					(errorMsg: string) => this.weightErrorSource.next(errorMsg)
@@ -114,6 +130,8 @@ export class DatosAntropometricosNuevaConsultaService {
 
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
 			this.bloodTypes = bloodTypes;
+			if (this.preloadedBloodType)
+				this.setBloodType()
 		});
 	}
 
@@ -155,7 +173,7 @@ export class DatosAntropometricosNuevaConsultaService {
 				(anthropometricData: HCEAnthropometricDataDto) => {
 					this.notShowPreloadedAnthropometricData = anthropometricData ? true : false;
 					if (anthropometricData) {
-						this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
+						this.setAnthropometricAndDisabledForm(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
 						Object.keys(anthropometricData).forEach((key: string) => {
 							if (anthropometricData[key].effectiveTime) {
 								this.dateList.push(anthropometricData[key].effectiveTime);
@@ -167,13 +185,13 @@ export class DatosAntropometricosNuevaConsultaService {
 		}
 	}
 
-	setAnthropometric(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string): void {
-		this.form.get('weight').setValue(weight);
-		this.form.get('height').setValue(height);
-		this.form.get('headCircumference').setValue(headCircumference);
-		if (bloodDescription != null)
-			this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
+	setAnthropometricAndDisabledForm(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string): void {
+		this.setForm(weight, height, bloodDescription, headCircumference);
 		this.form.disable();
+	}
+
+	setAnthropometricData(preloadAnthropometricData: AnthropometricDataValues) {
+		this.setForm(preloadAnthropometricData.weight, preloadAnthropometricData.height, preloadAnthropometricData.bloodType, preloadAnthropometricData.headCircumference);
 	}
 
 	discardPreloadedAnthropometricData() {
@@ -192,10 +210,31 @@ export class DatosAntropometricosNuevaConsultaService {
 	}
 
 	getDate(): string {
-		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+		if (this.dateList.length > 0) return this.dateFormatPipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), 'datetime');
 	}
 
 	hasAtLeastOneValueLoaded(): boolean {
 		return this.atLeastOneValueInFormGroup(this.form);
 	}
+
+	private addFieldChanges(fieldName: AnthropometricDataKey, value: string) {
+		this.antropometricData = { ...this.antropometricData, [fieldName]: value };
+		this.antropometricDataSubject.next(this.antropometricData);
+	}
+
+	private setForm(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string) {
+		this.form.get('weight').setValue(weight);
+		this.form.get('height').setValue(height);
+		this.form.get('headCircumference').setValue(headCircumference);
+		if (bloodDescription) {
+			this.preloadedBloodType = bloodDescription;
+			this.setBloodType();
+		}
+	}
+
+	private setBloodType() {
+		const bloodType = this.bloodTypes.find(b => b.description === this.preloadedBloodType);
+		this.form.get('bloodType').setValue(bloodType || null);
+	}
+
 }

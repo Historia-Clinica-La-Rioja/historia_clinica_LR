@@ -1,0 +1,2128 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_14 
+
+    - changeSet:
+        id: city-bahra_code-metadata2
+        comment: Add bahra_code data to table city
+        author: bchacon
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE city SET bahra_code = '5000701001' WHERE id = 14948;
+                UPDATE city SET bahra_code = '5000701002' WHERE id = 14949;
+                UPDATE city SET bahra_code = '5000701003' WHERE id = 14950;
+                UPDATE city SET bahra_code = '5000701004' WHERE id = 14951;
+                UPDATE city SET bahra_code = '5000701005' WHERE id = 14952;
+                UPDATE city SET bahra_code = '5000701006' WHERE id = 14953;
+                UPDATE city SET bahra_code = '5000701007' WHERE id = 14954;
+                UPDATE city SET bahra_code = '5000701008' WHERE id = 14955;
+                UPDATE city SET bahra_code = '5000701009' WHERE id = 14956;
+                UPDATE city SET bahra_code = '5000701010' WHERE id = 14957;
+                UPDATE city SET bahra_code = '5000701011' WHERE id = 14958;
+                UPDATE city SET bahra_code = '5002101002' WHERE id = 14991;
+                UPDATE city SET bahra_code = '5002101003' WHERE id = 14993;
+                UPDATE city SET bahra_code = '5002101004' WHERE id = 14994;
+                UPDATE city SET bahra_code = '5002101005' WHERE id = 14995;
+                UPDATE city SET bahra_code = '5002802001' WHERE id = 15001;
+                UPDATE city SET bahra_code = '5002802002' WHERE id = 15002;
+                UPDATE city SET bahra_code = '5002802003' WHERE id = 15003;
+                UPDATE city SET bahra_code = '5002802004' WHERE id = 15006;
+                UPDATE city SET bahra_code = '5002802005' WHERE id = 15007;
+                UPDATE city SET bahra_code = '5002802006' WHERE id = 15009;
+                UPDATE city SET bahra_code = '5002802007' WHERE id = 15010;
+                UPDATE city SET bahra_code = '5002802008' WHERE id = 15014;
+                UPDATE city SET bahra_code = '5002802009' WHERE id = 15016;
+                UPDATE city SET bahra_code = '5002802010' WHERE id = 15018;
+                UPDATE city SET bahra_code = '5002802011' WHERE id = 15020;
+                UPDATE city SET bahra_code = '5002802012' WHERE id = 15021;
+                UPDATE city SET bahra_code = '5002802013' WHERE id = 15022;
+                UPDATE city SET bahra_code = '5002802014' WHERE id = 15024;
+                UPDATE city SET bahra_code = '50028040' WHERE id = 15023;
+                UPDATE city SET bahra_code = '5004905003' WHERE id = 15059;
+                UPDATE city SET bahra_code = '5004905004' WHERE id = 15063;
+                UPDATE city SET bahra_code = '5004905005' WHERE id = 15064;
+                UPDATE city SET bahra_code = '5004905007' WHERE id = 15066;
+                UPDATE city SET bahra_code = '5004905008' WHERE id = 15067;
+                UPDATE city SET bahra_code = '5004905009' WHERE id = 15068;
+                UPDATE city SET bahra_code = '5004905010' WHERE id = 15062;
+                UPDATE city SET bahra_code = '5004905011' WHERE id = 15080;
+                UPDATE city SET bahra_code = '50056010' WHERE id = 15094;
+                UPDATE city SET bahra_code = '50056030' WHERE id = 15112;
+                UPDATE city SET bahra_code = '50056040' WHERE id = 15113;
+                UPDATE city SET bahra_code = '50056090' WHERE id = 15117;
+                UPDATE city SET bahra_code = '5006309001' WHERE id = 15144;   
+                UPDATE city SET bahra_code = '5006309002' WHERE id = 15145;
+                UPDATE city SET bahra_code = '5006309004' WHERE id = 15148;
+                UPDATE city SET bahra_code = '5006309005' WHERE id = 15151;
+                UPDATE city SET bahra_code = '5006309006' WHERE id = 15157;
+                UPDATE city SET bahra_code = '5007006002' WHERE id = 15179;
+                UPDATE city SET bahra_code = '5007006003' WHERE id = 15183; 
+                UPDATE city SET bahra_code = '5007006004' WHERE id = 15189;
+                UPDATE city SET bahra_code = '50070040' WHERE id = 15191;
+                UPDATE city SET bahra_code = '50084130' WHERE id = 15250;
+                UPDATE city SET bahra_code = '50084150' WHERE id = 15252;
+                UPDATE city SET bahra_code = '5010521001' WHERE id = 15322;
+                UPDATE city SET bahra_code = '50105020' WHERE id = 15326;
+                UPDATE city SET bahra_code = '50105230' WHERE id = 15355;
+                UPDATE city SET bahra_code = '50112010' WHERE id = 15410;
+                UPDATE city SET bahra_code = '66133035' WHERE id = 19969;
+                UPDATE city SET bahra_code = '86049070' WHERE id = 24145;
+                UPDATE city SET bahra_code = '86049080' WHERE id = 24149;
+                UPDATE city SET bahra_code = '86098010' WHERE id = 24744;
+                UPDATE city SET bahra_code = '86098020' WHERE id = 24745;
+                UPDATE city SET bahra_code = '86098030' WHERE id = 24751;
+                UPDATE city SET bahra_code = '86098040' WHERE id = 24755;
+                UPDATE city SET bahra_code = '86098050' WHERE id = 24758;
+                UPDATE city SET bahra_code = '86098060' WHERE id = 24759;
+                UPDATE city SET bahra_code = '86105010' WHERE id = 24806;
+                UPDATE city SET bahra_code = '86147130' WHERE id = 25143;
+                UPDATE city SET bahra_code = '86147160' WHERE id = 25156;
+                UPDATE city SET bahra_code = '06168030' WHERE id = 727;
+                UPDATE city SET bahra_code = '06210040' WHERE id = 925;
+                UPDATE city SET bahra_code = '06175020' WHERE id = 763;
+                UPDATE city SET bahra_code = '30015130' WHERE id = 10078;
+                UPDATE city SET bahra_code = '3002115001' WHERE id = 10108;
+                UPDATE city SET bahra_code = '30021110' WHERE id = 10118;
+                UPDATE city SET bahra_code = '30021127' WHERE id = 10123;
+                UPDATE city SET bahra_code = '30021130' WHERE id = 10122;
+                UPDATE city SET bahra_code = '30035020' WHERE id = 10174;
+                UPDATE city SET bahra_code = '30042010' WHERE id = 10237;
+                UPDATE city SET bahra_code = '30056035' WHERE id = 10288;
+                UPDATE city SET bahra_code = '30084170' WHERE id = 10534;
+                UPDATE city SET bahra_code = '30084290' WHERE id = 10550;
+                UPDATE city SET bahra_code = '30091010' WHERE id = 10635;
+                UPDATE city SET bahra_code = '30091080' WHERE id = 10609;
+                UPDATE city SET bahra_code = '30098090' WHERE id = 10639;
+                UPDATE city SET bahra_code = '30098140' WHERE id = 10671;
+                UPDATE city SET bahra_code = '30098150' WHERE id = 10676;
+                UPDATE city SET bahra_code = '30008050' WHERE id = 10015;
+                UPDATE city SET bahra_code = '30008080' WHERE id = 10016;
+                UPDATE city SET bahra_code = '30008110' WHERE id = 10019;     
+                UPDATE city SET bahra_code = '62028010' WHERE id = 16764;
+                UPDATE city SET bahra_code = '62042040' WHERE id = 16878;
+                UPDATE city SET bahra_code = '62042050' WHERE id = 16879;
+                UPDATE city SET bahra_code = '62042060' WHERE id = 16880;
+                UPDATE city SET bahra_code = '62042260' WHERE id = 16870;
+                UPDATE city SET bahra_code = '62042147' WHERE id = 16869;
+                UPDATE city SET bahra_code = '62042335' WHERE id = 16876;
+                UPDATE city SET bahra_code = '62070070' WHERE id = 17013;
+                UPDATE city SET bahra_code = '62077005' WHERE id = 17036;
+                UPDATE city SET bahra_code = '62084030' WHERE id = 17052;    
+                UPDATE city SET bahra_code = '62021005' WHERE id = 16748;  
+                UPDATE city SET bahra_code = '26007030' WHERE id = 9695;
+                UPDATE city SET bahra_code = '26007040' WHERE id = 9697;
+                UPDATE city SET bahra_code = '26014025' WHERE id = 9710;  
+                UPDATE city SET bahra_code = '2602103002' WHERE id = 9756;
+                UPDATE city SET bahra_code = '2602103008' WHERE id = 9763;
+                UPDATE city SET bahra_code = '2602103010' WHERE id = 9765;
+                UPDATE city SET bahra_code = '2602103017' WHERE id = 9772;
+                UPDATE city SET bahra_code = '2602103003' WHERE id = 9758;
+                UPDATE city SET bahra_code = '2602103021' WHERE id = 9775;
+                UPDATE city SET bahra_code = '2602103022' WHERE id = 9776;
+                UPDATE city SET bahra_code = '2602103019' WHERE id = 9773;
+                UPDATE city SET bahra_code = '2602103020' WHERE id = 9774;    
+                UPDATE city SET bahra_code = '26035010' WHERE id = 9808;
+                UPDATE city SET bahra_code = '26098010' WHERE id = 9949;     
+                UPDATE city SET bahra_code = '90007110' WHERE id = 25821;
+                UPDATE city SET bahra_code = '90021040' WHERE id = 26116;  
+                UPDATE city SET bahra_code = '90014010' WHERE id = 25830;
+                UPDATE city SET bahra_code = '90014020' WHERE id = 25833;
+                UPDATE city SET bahra_code = '90014040' WHERE id = 25852;
+                UPDATE city SET bahra_code = '90014080' WHERE id = 25948;
+                UPDATE city SET bahra_code = '90014050' WHERE id = 25875;
+                UPDATE city SET bahra_code = '90014100' WHERE id = 25974;
+                UPDATE city SET bahra_code = '90014120' WHERE id = 25989;
+                UPDATE city SET bahra_code = '90042010' WHERE id = 26415;
+                UPDATE city SET bahra_code = '90042020' WHERE id = 26436;
+                UPDATE city SET bahra_code = '90056090' WHERE id = 26685;
+                UPDATE city SET bahra_code = '90056080' WHERE id = 26684;
+                UPDATE city SET bahra_code = '90063010' WHERE id = 26782;
+                UPDATE city SET bahra_code = '90105100' WHERE id = 27328;
+                UPDATE city SET bahra_code = '90112030' WHERE id = 27605;
+                UPDATE city SET bahra_code = '14007270' WHERE id = 4978;
+                UPDATE city SET bahra_code = '1400721001' WHERE id = 5005;
+                UPDATE city SET bahra_code = '1400727003' WHERE id = 5063;
+                UPDATE city SET bahra_code = '1402131002' WHERE id = 5149;
+                UPDATE city SET bahra_code = '14021090' WHERE id = 5199;
+                UPDATE city SET bahra_code = '14021090' WHERE id = 5198;
+                UPDATE city SET bahra_code = '14021320' WHERE id = 5178;
+                UPDATE city SET bahra_code = '14035020' WHERE id = 5340;
+                UPDATE city SET bahra_code = '14035070' WHERE id = 5359;   
+                UPDATE city SET bahra_code = '14063040' WHERE id = 5538;
+                UPDATE city SET bahra_code = '14091210' WHERE id = 5798;
+                UPDATE city SET bahra_code = '1409102002' WHERE id = 5797;
+                UPDATE city SET bahra_code = '14098030' WHERE id = 5838;
+                UPDATE city SET bahra_code = '14098260' WHERE id = 5921;
+                UPDATE city SET bahra_code = '14126020' WHERE id = 6261;
+                UPDATE city SET bahra_code = '1413319001' WHERE id = 6293;
+                UPDATE city SET bahra_code = '14133170' WHERE id = 6350;
+                UPDATE city SET bahra_code = '14133210' WHERE id = 6324;
+                UPDATE city SET bahra_code = '14140050' WHERE id = 6372;
+                UPDATE city SET bahra_code = '14140140' WHERE id = 6412;
+                UPDATE city SET bahra_code = '14140250' WHERE id = 6441;
+                UPDATE city SET bahra_code = '14147020' WHERE id = 6535;
+                UPDATE city SET bahra_code = '14147300' WHERE id = 6608;
+                UPDATE city SET bahra_code = '14147360' WHERE id = 6600;
+                UPDATE city SET bahra_code = '1414735001' WHERE id = 6589;
+                UPDATE city SET bahra_code = '14147070' WHERE id = 6552;
+                UPDATE city SET bahra_code = '14161040' WHERE id = 6693;
+                UPDATE city SET bahra_code = '14175070' WHERE id = 6851;
+                UPDATE city SET bahra_code = '14182050' WHERE id = 6876;
+                UPDATE city SET bahra_code = '14168010' WHERE id = 6797;
+                UPDATE city SET bahra_code = '82021280' WHERE id = 22377;
+                UPDATE city SET bahra_code = '82028080' WHERE id = 22465;
+                UPDATE city SET bahra_code = '82056160' WHERE id = 22719;
+                UPDATE city SET bahra_code = '82063120' WHERE id = 22790;
+                UPDATE city SET bahra_code = '82063130' WHERE id = 22786;
+                UPDATE city SET bahra_code = '82063150' WHERE id = 22764;
+                UPDATE city SET bahra_code = '82070070' WHERE id = 22803;
+                UPDATE city SET bahra_code = '82084120' WHERE id = 23000;
+                UPDATE city SET bahra_code = '82091040' WHERE id = 23038;
+                UPDATE city SET bahra_code = '6605614001' WHERE id = 18845;
+                UPDATE city SET bahra_code = '4602805001' WHERE id = 14326;
+                UPDATE city SET bahra_code = '4602802002' WHERE id = 14346;
+                UPDATE city SET bahra_code = '46028010' WHERE id = 14325;
+                UPDATE city SET bahra_code = '46028020' WHERE id = 14331;
+                UPDATE city SET bahra_code = '46028030' WHERE id = 14339;
+                UPDATE city SET bahra_code = '46028040' WHERE id = 14343;
+                UPDATE city SET bahra_code = '46028050' WHERE id = 14347;
+                UPDATE city SET bahra_code = '46056010' WHERE id = 14488;
+                UPDATE city SET bahra_code = '46056020' WHERE id = 14493;
+                UPDATE city SET bahra_code = '46070010' WHERE id = 14584;
+                UPDATE city SET bahra_code = '46070020' WHERE id = 14586;
+                UPDATE city SET bahra_code = '46070030' WHERE id = 14587;
+                UPDATE city SET bahra_code = '46070040' WHERE id = 14595;
+                UPDATE city SET bahra_code = '46084010' WHERE id = 14631;
+                UPDATE city SET bahra_code = '46084020' WHERE id = 14636;
+                UPDATE city SET bahra_code = '46084030' WHERE id = 14673;
+                UPDATE city SET bahra_code = '46084040' WHERE id = 14677;
+                UPDATE city SET bahra_code = '46084050' WHERE id = 14691;
+                UPDATE city SET bahra_code = '4611901010' WHERE id = 14924;
+                UPDATE city SET bahra_code = '58042010' WHERE id = 16231;
+                UPDATE city SET bahra_code = '58056020' WHERE id = 16298;
+                UPDATE city SET bahra_code = '38007090' WHERE id = 12894;
+                UPDATE city SET bahra_code = '38007100' WHERE id = 12885;
+                UPDATE city SET bahra_code = '38021060' WHERE id = 13025;
+                UPDATE city SET bahra_code = '38021070' WHERE id = 13034;
+                UPDATE city SET bahra_code = '3802107001' WHERE id = 13036;
+                UPDATE city SET bahra_code = '3802107002' WHERE id = 13037;
+                UPDATE city SET bahra_code = '38021010' WHERE id = 12980;
+                UPDATE city SET bahra_code = '38021020' WHERE id = 12983;
+                UPDATE city SET bahra_code = '38021030' WHERE id = 12996;
+                UPDATE city SET bahra_code = '38021040' WHERE id = 13004;
+                UPDATE city SET bahra_code = '38021050' WHERE id = 13013;
+                UPDATE city SET bahra_code = '38021065' WHERE id = 13028;
+                UPDATE city SET bahra_code = '38014020' WHERE id = 12916;
+                UPDATE city SET bahra_code = '38014055' WHERE id = 12937;
+                UPDATE city SET bahra_code = '38014060' WHERE id = 12926;
+                UPDATE city SET bahra_code = '38049010' WHERE id = 13301;
+                UPDATE city SET bahra_code = '38049030' WHERE id = 13328;
+                UPDATE city SET bahra_code = '38063150' WHERE id = 13370;
+                UPDATE city SET bahra_code = '38077020' WHERE id = 13559;
+                UPDATE city SET bahra_code = '38077050' WHERE id = 13569;
+                UPDATE city SET bahra_code = '38077060' WHERE id = 13575;
+                UPDATE city SET bahra_code = '38077090' WHERE id = 13598;
+                UPDATE city SET bahra_code = '38112030' WHERE id = 13951;
+                UPDATE city SET bahra_code = '0618203002' WHERE id = 788;
+                UPDATE city SET bahra_code = '06182010' WHERE id = 773;
+                UPDATE city SET bahra_code = '06182010' WHERE id = 774;
+                UPDATE city SET bahra_code = '06182020' WHERE id = 785;
+                UPDATE city SET bahra_code = '06182050' WHERE id = 789;
+                UPDATE city SET bahra_code = '06189020' WHERE id = 833;
+                UPDATE city SET bahra_code = '06189075' WHERE id = 830;
+                UPDATE city SET bahra_code = '06203100' WHERE id = 897;
+                UPDATE city SET bahra_code = '06203030' WHERE id = 877;
+                UPDATE city SET bahra_code = '06203040' WHERE id = 878;
+                UPDATE city SET bahra_code = '0624501001' WHERE id = 1108;
+                UPDATE city SET bahra_code = '0624501005' WHERE id = 1115;
+                UPDATE city SET bahra_code = '0625201007' WHERE id = 1125;
+                UPDATE city SET bahra_code = '06260010' WHERE id = 1149;
+                UPDATE city SET bahra_code = '0627001001' WHERE id = 1192;
+                UPDATE city SET bahra_code = '0627001003' WHERE id = 1180;
+                UPDATE city SET bahra_code = '0627401004' WHERE id = 1200;
+                UPDATE city SET bahra_code = '06357020' WHERE id = 1546;
+                UPDATE city SET bahra_code = '0636403003' WHERE id = 1603;
+                UPDATE city SET bahra_code = '0637101003' WHERE id = 1610;
+                UPDATE city SET bahra_code = '0637101022' WHERE id = 1637;
+                UPDATE city SET bahra_code = '0637101023' WHERE id = 1633;
+                UPDATE city SET bahra_code = '0637101006' WHERE id = 1611;
+                UPDATE city SET bahra_code = '0637101010' WHERE id = 1622;
+                UPDATE city SET bahra_code = '0637101012' WHERE id = 1624;
+                UPDATE city SET bahra_code = '0637101013' WHERE id = 1628;
+                UPDATE city SET bahra_code = '0637101017' WHERE id = 1613;
+                UPDATE city SET bahra_code = '0637101026' WHERE id = 1615;
+                UPDATE city SET bahra_code = '0640801002' WHERE id = 1770;
+                UPDATE city SET bahra_code = '0640801003' WHERE id = 1772;
+                UPDATE city SET bahra_code = '0641001003' WHERE id = 1780;
+                UPDATE city SET bahra_code = '06412010' WHERE id = 1792;
+                UPDATE city SET bahra_code = '06413055' WHERE id = 1810;
+                UPDATE city SET bahra_code = '06413055' WHERE id = 1816;
+                UPDATE city SET bahra_code = '0642002002' WHERE id = 1842;
+                UPDATE city SET bahra_code = '0642701013' WHERE id = 1860;
+                UPDATE city SET bahra_code = '0644103005' WHERE id = 1911;
+                UPDATE city SET bahra_code = '0644103005' WHERE id = 1967;
+                UPDATE city SET bahra_code = '06448030' WHERE id = 1987;
+                UPDATE city SET bahra_code = '06448030' WHERE id = 1986;
+                UPDATE city SET bahra_code = '0649001001' WHERE id = 2175;
+                UPDATE city SET bahra_code = '06505050' WHERE id = 2252;
+                UPDATE city SET bahra_code = '0651501004' WHERE id = 2293;
+                UPDATE city SET bahra_code = '0652502001' WHERE id = 2357;
+                UPDATE city SET bahra_code = '06581030' WHERE id = 2634;
+                UPDATE city SET bahra_code = '06623040' WHERE id = 2898;
+                UPDATE city SET bahra_code = '06623090' WHERE id = 2909;
+                UPDATE city SET bahra_code = '0663804007' WHERE id = 2963;
+                UPDATE city SET bahra_code = '0663804010' WHERE id = 2990;
+                UPDATE city SET bahra_code = '0664801001' WHERE id = 3020;
+                UPDATE city SET bahra_code = '06686020' WHERE id = 3231;
+                UPDATE city SET bahra_code = '0675601001' WHERE id = 3483;
+                UPDATE city SET bahra_code = '0680501003' WHERE id = 3744;
+                UPDATE city SET bahra_code = '0680501007' WHERE id = 3750;
+                UPDATE city SET bahra_code = '7403507001' WHERE id = 21626;
+                UPDATE city SET bahra_code = '74056070' WHERE id = 21779;
+                UPDATE city SET bahra_code = '74056100' WHERE id = 21744;
+                UPDATE city SET bahra_code = '74056150' WHERE id = 21766;
+                UPDATE city SET bahra_code = '7405610001' WHERE id = 21780;
+                UPDATE city SET bahra_code = '7405610002' WHERE id = 21781;
+                UPDATE city SET bahra_code = '7405610003' WHERE id = 21782;
+                UPDATE city SET bahra_code = '7405610004' WHERE id = 21783;
+                UPDATE city SET bahra_code = '7405610005' WHERE id = 21784;
+                UPDATE city SET bahra_code = '74056020' WHERE id = 21719;
+                UPDATE city SET bahra_code = '74056030' WHERE id = 21721;
+                UPDATE city SET bahra_code = '74056040' WHERE id = 21722;
+                UPDATE city SET bahra_code = '74056050' WHERE id = 21724;
+                UPDATE city SET bahra_code = '74056060' WHERE id = 21728;
+                UPDATE city SET bahra_code = '74056080' WHERE id = 21739;
+                UPDATE city SET bahra_code = '74056090' WHERE id = 21742;
+                UPDATE city SET bahra_code = '74056110' WHERE id = 21757;
+                UPDATE city SET bahra_code = '74056120' WHERE id = 21760;
+                UPDATE city SET bahra_code = '74056130' WHERE id = 21764;
+                UPDATE city SET bahra_code = '74056160' WHERE id = 21774;
+                UPDATE city SET bahra_code = '74063010' WHERE id = 21814;
+                UPDATE city SET bahra_code = '74063020' WHERE id = 21816;
+                UPDATE city SET bahra_code = '74063030' WHERE id = 21818;
+                UPDATE city SET bahra_code = '74063040' WHERE id = 21819;
+                UPDATE city SET bahra_code = '74063050' WHERE id = 21832;
+                UPDATE city SET bahra_code = '74063060' WHERE id = 21835;
+                UPDATE city SET bahra_code = '74063070' WHERE id = 21842;
+                UPDATE city SET bahra_code = '74063080' WHERE id = 21845;
+                UPDATE city SET bahra_code = '18084010' WHERE id = 7589;
+                UPDATE city SET bahra_code = '18112070' WHERE id = 7842;
+                UPDATE city SET bahra_code = '18168030' WHERE id = 8320;
+                UPDATE city SET bahra_code = '22098010' WHERE id = 9319;
+                UPDATE city SET bahra_code = '22098020' WHERE id = 9322;
+                UPDATE city SET bahra_code = '22098030' WHERE id = 9336;
+                UPDATE city SET bahra_code = '22112010' WHERE id = 9394;
+                UPDATE city SET bahra_code = '22112020' WHERE id = 9397;
+                UPDATE city SET bahra_code = '22112030' WHERE id = 9404;
+                UPDATE city SET bahra_code = '34035060' WHERE id = 11685;
+                UPDATE city SET bahra_code = '34035070' WHERE id = 11687;
+
+    - changeSet:
+        id: addColumn-observations-service_request
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: observations
+                    type: text
+
+    - changeSet:
+        id: reference_clinical_specialty-createTable
+        comment: Create table reference_clinical_specialty
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: reference_clinical_specialty
+              columns:
+                - column:
+                    name: reference_id
+                    type: int
+                - column:
+                    name: clinical_specialty_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: reference_id, clinical_specialty_id
+              constraintName: PK_reference_clinical_specialty
+              tableName: reference_clinical_specialty
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: reference_id
+              baseTableName: reference_clinical_specialty
+              constraintName: FK_reference_clinical_specialty_reference_id
+              referencedColumnNames: id
+              referencedTableName: reference
+          - addForeignKeyConstraint:
+              baseColumnNames: clinical_specialty_id
+              baseTableName: reference_clinical_specialty
+              constraintName: FK_reference_clinical_specialty_clinical_specialty_id
+              referencedColumnNames: id
+              referencedTableName: clinical_specialty
+
+    - changeSet:
+        id: reference_clinical_specialty-data-migration
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  row_data RECORD;
+                BEGIN
+                  FOR row_data IN (
+                    SELECT r.id, r.clinical_specialty_id 
+                    FROM reference r
+                    WHERE r.clinical_specialty_id IS NOT NULL
+                  ) LOOP
+                    INSERT INTO reference_clinical_specialty VALUES (row_data.id, row_data.clinical_specialty_id);
+                  END LOOP;
+                END $$;
+
+    - changeSet:
+        id: dropView-v_clinic_history_7
+        author: mmalyvarni
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_clinic_history
+
+    - changeSet:
+        id: createView-v_clinic_history_8
+        comment: Create view v_clinic_history_8
+        author: mmalyvarni
+        changes:
+          - createView:
+              viewName: v_clinic_history
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                select d.id as id,
+                d.source_id as source_id,
+                d.patient_id as patient_id,
+                d.source_type_id as source_type_id,
+                d.created_on,
+                d.created_by,
+                d.type_id as document_type_id,
+                dt.description as document_type,
+                cs.name as clinical_specialty,
+                i.id as institution_id,
+                i.name as institution,
+                d.patient_age_period as patient_age_period,
+                (select sr.source_type_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_type_id,
+                (select sr.source_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_id,
+                (select MIN(ie.entry_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_start_date,
+                (select MAX(pd.administrative_discharge_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                left join patient_discharge pd on (pd.internment_episode_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_end_date,
+                (select MIN(ece.created_on)
+                from emergency_care_episode ece
+                left join service_request sr on (sr.source_id = ece.id)
+                where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_start_date,
+                (select MAX(ecd.administrative_discharge_on)
+                from emergency_care_episode ece
+                left join service_request sr on (sr.source_id = ece.id)
+                join emergency_care_discharge ecd on (ecd.emergency_care_episode_id = ece.id)
+                where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_end_date,
+                (select (case when(
+                (select count(*) filter (where dr.status_id = '1')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                where ddr.document_id = d.id and d.type_id= 6 group by ddr.document_id)
+                =
+                (select count(*) filter (where dr.status_id = '261782000' or dr.status_id = '89925002')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr
+                on (dr.id = ddr.diagnostic_report_id)
+                where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id))
+                then
+                (select MAX(dr.created_on)
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id) where ddr.document_id = d.id and dr.status_id = '261782000')
+                    end)) as service_request_end_date,
+                (select MAX(ms.updated_on)
+                from document_medicamention_statement dms
+                join medication_statement ms on (ms.id = dms.medication_statement_id)
+                where dms.document_id = d.id and d.type_id = 5 and ms.status_id in ('255594003', '6155003', '385655000')) as medication_end_date,
+                COALESCE('Diagnósticos: ' || (select string_agg((case when hc.main then 'Principal: ' || s.pt else 'Otro: ' || s.pt end) ||
+                (case when hc.status_id in ('723506003', '277022003', '73425007') then '|(Eliminado el día ' || to_char(hc.start_date ,'dd-mm-yyyy') || ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 2, 3, 13, 16) and hc.problem_id = '439401001' group by dhc.document_id), '') ||
+                coalesce(case when d.type_id = 10 then 'Problema asociado: ' else 'Problemas: ' end ||
+                (select string_agg(s.pt || (case when hc.status_id = '-55607006' then '|(Crónico)' else '' end) ||
+                (case when hc.start_date is not null and d.type_id <> 10 then '|(desde ' || to_char(hc.start_date ,'dd-mm-yyyy') else '' end) ||
+                (case when hc.inactivation_date is not null and d.type_id <> 10 then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') else '' end) ||
+                (case when perl.description is not null and d.type_id <> 10 then ', motivo: ' || perl.description else '' end) ||
+                (case when n.description is not null and d.type_id <> 10 then ', observaciones: ' || n.description else '' end) ||
+                (case when hc.start_date is not null and d.type_id <> 10 then ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                left join note n on (hc.note_id = n.id)
+                left join problem_error_reason per on (hc.id = per.health_condition_id)
+                left join problem_error_reasons_list perl on (per.reason_id = perl.id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (4, 7, 10) and hc.problem_id in ('55607006', '-55607006') group by dhc.document_id), '') ||
+                COALESCE('Problemas asociados: ' || (select string_agg(r.description, '| ')
+                from emergency_care_episode_reason ecer
+                join reasons r on (ecer.reason_id=r.id)
+                where d.type_id = 15 and d.source_id = ecer.emergency_care_episode_id), '') ||
+                COALESCE('Motivos de consulta: ' || (select string_agg(or1.description , '| ')
+                from odontology_consultation_reason ocr
+                join odontology_reason or1 on (or1.id = ocr.reason_id)
+                where ocr.odontology_consultation_id = d.source_id and d.type_id = 9 ), '') ||
+                COALESCE('Problemas: ' || (select string_agg(distinct s.pt, '| ')
+                from document_medicamention_statement dms
+                join medication_statement ms on (ms.id = dms.medication_statement_id)
+                left outer join health_condition hc on (hc.id = ms.health_condition_id)
+                left outer join snomed s on (s.id = hc.snomed_id)
+                where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id), '') ||
+                COALESCE('Problemas: ' || (select string_agg(s.pt, '| ' )
+                from document_indication di
+                join indication i on (i.id = di.indication_id )
+                join pharmaco ph on (ph.id = i.id)
+                join health_condition hc on (hc.id = ph.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where d.id = di.document_id and d.type_id = 12 group by di.document_id), '') ||
+                COALESCE('Diagnostico asociado: ' || (select string_agg(distinct s.pt, '| ')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id = dr.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id), '') ||
+                COALESCE('Problemas asociados: ' || (select string_agg(distinct s.pt, '| ')
+                from counter_reference cr
+                join reference_health_condition rhc on (cr.reference_id = rhc.reference_id)
+                join health_condition hc on (hc.id = rhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where d.source_id = cr.id and d.type_id = 11), '') as problems,
+                COALESCE('Antecedentes familiares: ' || (select string_agg(s.pt || (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date, 'dd-mm-yyyy') || ')' else '' end), ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 3, 4, 16) and hc.problem_id = '57177007' group by dhc.document_id), '') as family_record,
+                COALESCE(case when d.type_id = 9 then 'Otros diagnósticos y antecedentes personales: ' else 'Antecedentes personales: ' end ||
+                (select string_agg(s.pt || (case when hc.status_id = '-55607006' then ' (Crónico)' else '' end) ||
+                (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date , 'dd-mm-yyyy') ||
+                (case when hc.inactivation_date is not null then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') || ')' else ')' end) else '' end), ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 3, 9) and hc.problem_id in ('55607006', '-55607006') group by dhc.document_id), '') as personal_record,
+                COALESCE('Procedimientos: ' || (select string_agg(case when p.performed_date is not null then s.pt || ' (' || to_char(p.performed_date, 'dd-mm-yyyy') || ')' else s.pt END ,', ')
+                from document_procedure dp
+                left outer join "procedures" p  on (p.id=dp.procedure_id)
+                left outer join snomed s on (s.id=p.snomed_id)
+                where dp.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 10, 11, 16) group by dp.document_id),'') as procedures,
+                COALESCE((select string_agg(s.pt ||
+                (case when dos.period_unit = 'd' then '\nUna aplicación por día' else '' end) ||
+                (case when dos.period_unit = 'h' then '\nUna aplicación cada ' || dos.frequency || 'hs' else '' end) ||
+                (case when dos.chronic = true then ', uso crónico' else '' end) ||
+                (case when dos.duration is not null then ' durante ' || dos.duration || ' días' else '' end) ||
+                (case when ms.note_id is not null then '\nObservaciones: ' || n.description else '' end) ||
+                (case when hc.snomed_id is not null then '\nProblema asociado: ' || s2.pt else '' end) ||
+                (case when ms.status_id = '6155003' then '\nFinalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) ||
+                (case when ms.status_id = '385655000' then '\nSuspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) , '\n\n')
+                from document_medicamention_statement dms
+                join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                join medication_statement_status mss on (ms.status_id=mss.id)
+                join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (n.id = ms.note_id)
+                left outer join health_condition hc on (hc.id=ms.health_condition_id)
+                left outer join snomed s2 on (s2.id = hc.snomed_id)
+                left outer join dosage dos on (ms.dosage_id=dos.id)
+                where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id),'') ||
+                COALESCE('Medicación habitual: '|| (select string_agg(s.pt ||
+                (case when ms.note_id is not null then ' (' || n.description || ')' else '' end) ||
+                (case when ms.status_id = '6155003' then ' (finalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end) ||
+                (case when ms.status_id = '385655000' then ' (suspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end), '. ')
+                from document_medicamention_statement dms
+                join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                join medication_statement_status mss on (ms.status_id=mss.id)
+                join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (n.id = ms.note_id)
+                where dms.document_id = d.id and d.type_id in (1, 3, 4, 9, 11, 16) group by dms.document_id),'') as medicines,
+                COALESCE('Alergias: '|| (select string_agg(s.pt,', ')
+                from document_allergy_intolerance dai
+                join allergy_intolerance ai on (ai.id=dai.allergy_intolerance_id)
+                join snomed s on (s.id=ai.snomed_id)
+                where dai.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 11, 16) group by dai.document_id),'') as allergies,
+                COALESCE('Vacunas: ' || (select string_agg(case when i.administration_date is not null then s.pt || ' (' || to_char(i.administration_date, 'dd-mm-yyyy') || ')' else s.pt END,', ')
+                from document_inmunization di
+                join inmunization i on (i.id = di.inmunization_id)
+                left outer join snomed s on (s.id = i.snomed_id)
+                where di.document_id = d.id and d.type_id in (1, 2, 3, 4, 8, 12, 13) group by di.document_id ), '') as vaccines,
+                COALESCE('Grupo y factor sanguíneo: '|| (select string_agg(replace(replace(s.pt, 'hallazgo relacionado con el grupo sanguíneo', ''),'(hallazgo)','') || ol.value, ', ')
+                from document_lab dl
+                join observation_lab ol on (ol.id=dl.observation_lab_id)
+                join snomed s on (s.id=ol.snomed_id)
+                where dl.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and ol.status_id = '261782000' group by dl.document_id),'') as blood_type,
+                COALESCE('Datos antropométricos: '|| (select string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value, ', ')
+                from document_vital_sign dvs
+                join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id = d.id and s.sctid in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') as anthropometric_data,
+                COALESCE('Factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                from document_vital_sign dvs
+                join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and s.sctid not in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') ||
+                COALESCE('Factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                from triage_vital_signs tvs
+                join observation_vital_sign ovs on (ovs.id = tvs.observation_vital_sign_id)
+                join snomed s on (s.id = ovs.snomed_id)
+                join triage t on (t.id = tvs.triage_id)
+                join document_triage dt on (t.id = dt.triage_id)
+                where dt.document_id = d.id and d.type_id = 15 and ovs.status_id = '261782000'), '') as risk_factors,
+                COALESCE('Otras circunstancias que prolongan la epicrisis: ' || (select string_agg(s.pt, ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id = 3 and hc.problem_id = '00000001' group by dhc.document_id), '') as epicrisis_other_circumstances,
+                COALESCE('Causa externa de traumatismo, envenenamiento y otros efectos adversos: ' || (select string_agg(
+                (case when ec.external_cause_type_id is not null then '\nProducido por: ' || ect.description || '. ' else '' end) ||
+                (case when ec.event_location is not null then '\nLugar donde ocurrió: ' || (
+                (case when ec.event_location = 1 then 'Domicilio particular. ' else '' end) ||
+                (case when ec.event_location = 2 then 'Vía pública. ' else '' end) ||
+                (case when ec.event_location = 3 then 'Lugar de trabajo. ' else '' end) ||
+                (case when ec.event_location = 4 then 'Otro. ' else '' end)) else '' end ) ||
+                (case when ec.snomed_id is not null then '\nCómo se produjo: ' || s.pt else '' end), ', ')
+                from document_external_cause dec2
+                join external_cause ec on (ec.id = dec2.external_cause_id)
+                left outer join external_cause_type ect on (ect.id = ec.external_cause_type_id)
+                left outer join snomed s on (s.id = ec.snomed_id)
+                where dec2.document_id = d.id and d.type_id = 3 and (ec.snomed_id is not null or ec.external_cause_type_id is not null or ec.event_location is not null)), '') as epicrisis_external_cause,
+                COALESCE('Datos del evento obstétrico: ' || (select string_agg(
+                (case when oe.previous_pregnancies is not null then '\nGestas anteriores: ' || oe.previous_pregnancies else '' end) ||
+                (case when oe.current_pregnancy_end_date is not null then '\nFecha de término de gesta actual: ' || to_char(oe.current_pregnancy_end_date, 'dd-mm-yyyy') else '' end) ||
+                (case when oe.gestational_age is not null then '\nEdad gestacional de gesta actual: ' || oe.gestational_age else '' end) ||
+                (case when oe.pregnancy_termination_type is not null then '\nTerminación de gesta actual: ' ||
+                (case when oe.pregnancy_termination_type = 1 then 'Vaginal' else '' end) ||
+                (case when oe.pregnancy_termination_type = 2 then 'Cesárea' else '' end) ||
+                (case when oe.pregnancy_termination_type = 3 then 'Sin definir' else '' end) else '' end), ', ')
+                from document_obstetric_event doe
+                join obstetric_event oe on (oe.id = doe.obstetric_event_id)
+                where doe.document_id = d.id and d.type_id = 3
+                and (oe.previous_pregnancies is not null or oe.current_pregnancy_end_date is not null or oe.gestational_age is not null or oe.pregnancy_termination_type is not null) ), '') as epicrisis_obstetric_event,
+                COALESCE('Pediatría: ' || (select string_agg(
+                (case when bt.description is not null then 'temperatura: ' || bt.description || ', ' else '' end) ||
+                (case when td.crying_excessive is true then 'llanto sin consuelo, ' else '' end) ||
+                (case when mh.description is not null then 'tono muscular: ' || mh.description || ', ' else '' end) ||
+                (case when rr.description is not null then 'respiración con tiraje: ' || rr.description || ', ' else '' end) ||
+                (case when td.stridor is true then 'respiración con estridor, ' else '' end) ||
+                (case when p.description is not null then 'perfusión: ' || p.description else '' end), ', ')
+                from triage_details td
+                left outer join body_temperature bt on (td.body_temperature_id  = bt.id)
+                left outer join muscle_hypertonia mh on (mh.id = td.muscle_hypertonia_id)
+                left outer join respiratory_retraction rr on (rr.id = td.respiratory_retraction_id)
+                left outer join perfusion p on (p.id = td.perfusion_id)
+                join triage t on (t.id = td.triage_id)
+                join document_triage dt on (t.id = dt.triage_id)
+                where dt.document_id = d.id and d.type_id = 15), '') as pediatric_risk_factors,
+                COALESCE('\nSolicitudes de referencia:\n' ||
+                (with temporal_references as
+                (select distinct re.id as reference_id, s.id as snomed_id
+                from reference re
+                join reference_health_condition rhc on (re.id = rhc.reference_id )
+                join health_condition hc on (hc.id = rhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where re.encounter_id = d.source_id and d.type_id in (4, 9) and d.source_type_id = re.source_type_id and re.deleted IS NULL OR re.deleted = FALSE)
+                select string_agg('\nProblemas asociados: ' ||
+                (select string_agg(s2.pt, ',')
+                from reference re2
+                join reference_health_condition rhc2 on (re2.id = rhc2.reference_id)
+                join health_condition hc2 on (hc2.id = rhc2.health_condition_id)
+                join snomed s2 on (s2.id = hc2.snomed_id)
+                where re2.id = re.id and s2.id in (select snomed_id from temporal_references where re2.id = reference_id)) ||
+                (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end ) || '\nEspecialidad: ' || clinical_specialties || '\nInstitución destino: ' || i.name ||
+                (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end),'\n')
+                from reference re
+                join (
+                  select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                  from reference re2
+                  join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                  join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                  group by re2.id
+                ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                join institution i on (i.id = re.destination_institution_id)
+                left outer join care_line cl on (cl.id = re.care_line_id)
+                left outer join reference_note rn on (rn.id = re.reference_note_id)
+                where re.encounter_id = d.source_id and d.type_id in (4, 9) and re.source_type_id = d.source_type_id group by d.id), '') as outpatient_references,
+                COALESCE('Categoria: '|| (select string_agg(src.description,'' )
+                from service_request sr
+                left outer join service_request_category src  on (sr.category_id=src.id)
+                left outer join service_request_status srs on (sr.status_id=srs.id)
+                where sr.id = d.source_id and d.type_id = 6),'') as service_request_category,
+                COALESCE(
+                (with temporal_orders as
+                (select distinct d.source_id as source_id, dr.snomed_id as snomed_id, dr.health_condition_id as health_condition_id
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id=dr.health_condition_id)
+                where ddr.document_id = d.id and d.type_id = 6 and dr.status_id <> '89925002')
+                select string_agg('Estudio: ' || s.pt || (case when dr.note_id is not null and dr.status_id = '261782000' then '. Resultado: ' || n.description || ' (' || to_char(dr.effective_time, 'dd-mm-yyyy') || ')' else ' (Pendiente)' end),'\n')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id=ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id=dr.health_condition_id)
+                join snomed s on (s.id=dr.snomed_id)
+                left outer join note n on (dr.note_id = n.id)
+                where ddr.document_id = d.id
+                and d.type_id = 6
+                and dr.status_id  <> '89925002'
+                and exists (select 1 from temporal_orders t where d.source_id = t.source_id and dr.snomed_id = t.snomed_id and dr.health_condition_id = t.health_condition_id)
+                and not exists
+                (select 1
+                from document_diagnostic_report ddr2
+                join diagnostic_report dr2 on (dr2.id = ddr2.diagnostic_report_id)
+                where ddr2.document_id = ddr.document_id
+                and dr2.id <> dr.id
+                and dr2.patient_id = dr.patient_id
+                and dr2.snomed_id = dr.snomed_id
+                and dr2.health_condition_id = dr2.health_condition_id
+                and dr2.status_id in ('261782000', '89925002')) group by ddr.document_id), '') as service_request_studies,
+                COALESCE('Motivos de consulta: '|| (select string_agg(r.description,', ' )
+                from outpatient_consultation oc
+                left outer join outpatient_consultation_reasons ocr on (oc.id=ocr.outpatient_consultation_id)
+                join reasons r on (r.id=ocr.reason_id)
+                where oc.document_id = d.id and d.type_id = 4 group by oc.document_id),'') ||
+                COALESCE('Motivos de consulta: ' || (select string_agg(r.description ,', ')
+                from emergency_care_evolution_note ecen
+                join emergency_care_evolution_note_reason ecenr on (ecenr.emergency_care_evolution_note_id = ecen.id)
+                join reasons r on (r.id  = ecenr.reason_id)
+                where ecen.document_id = d.id and d.type_id = 16 group by ecen.document_id),'') as consultation_reasons,
+                COALESCE('Procedimientos sobre tejidos dentales: '|| (select string_agg(distinct('\n' || s.pt || ' en ' || s1.pt),'' )
+                from document_odontology_procedure dop
+                join odontology_procedure op on (op.id=dop.odontology_procedure_id)
+                join snomed s on (s.id=op.snomed_id)
+                left join snomed s1 on (op.tooth_id = s1.id)
+                where dop.document_id = d.id and d.type_id = 9 group by dop.document_id),'') as odontology_procedure,
+                COALESCE('Hallazgos sobre tejidos dentales: '|| (select string_agg(distinct ('\n' || s.pt || ' en ' || s1.pt),'' )
+                from document_odontology_diagnostic dod
+                join odontology_diagnostic od on (od.id=dod.odontology_diagnostic_id)
+                join snomed s on (s.id=od.snomed_id)
+                left outer join snomed s1 on (s1.id=od.tooth_id)
+                where dod.document_id = d.id and d.type_id = 9 group by dod.document_id),'') as odontology_diagnostic,
+                COALESCE('Cantidad de piezas presentes: ' || (select string_agg(
+                (case when oci.permanent_teeth_present is not null then 'permanentes: ' || oci.permanent_teeth_present ||
+                (case when oci.temporary_teeth_present is not null then ', ' else '' end) else '' end) ||
+                (case when oci.temporary_teeth_present is not null then 'temporales: ' || oci.temporary_teeth_present else '' end), ', ')
+                from odontology_consultation_indices oci
+                where d.type_id = 9 and d.source_id = oci.odontology_consultation_id), '') as odontology_pieces,
+                COALESCE('Dieta: '|| (select string_agg(die.description || '\nFecha indicación: ' || to_char(i.indication_date,'dd-mm-yyyy'), ', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join diet die on (die.id=i.id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 2 group by di.document_id), '') ||
+                COALESCE('Otra indicación: '|| (select string_agg
+                (case when oi.other_type is not null then oit.description || ': ' || oi.other_type else oit.description end || '\nFrecuencia: ' ||
+                (case when dos.period_unit is null then 'Sin especificar' else '' end) ||
+                (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) ||
+                (case when oi.description is not null then '\nNotas: ' || oi.description else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join other_indication oi on (oi.id=i.id)
+                join other_indication_type oit on (oi.other_indication_type_id=oit.id)
+                left join dosage dos on (dos.id = oi.dosage_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 4 group by di.document_id), '') ||
+                COALESCE('Fármaco: '|| (select string_agg(s1.pt ||
+                (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                (case when s2.pt is not null then '\nDiluyente: ' || s2.pt else '' end) || '\nAdministración: ' ||
+                (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) || '\nRelación con las comidas: ' ||
+                (case when ph.food_relation_id = 0 then 'No' else '' end) ||
+                (case when ph.food_relation_id = 1 then 'Lejos' else '' end) ||
+                (case when ph.food_relation_id = 2 then 'Ayuno' else '' end) ||
+                '\nDiagnóstico asociado: ' || s.pt || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),'\n' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join pharmaco ph on (ph.id=i.id)
+                join health_condition hc on (hc.id=ph.health_condition_id)
+                join snomed s on (s.id=hc.snomed_id)
+                join snomed s1 on (s1.id=ph.snomed_id)
+                left outer join other_pharmaco oph on (oph.indication_id = i.id)
+                left outer join snomed s2 on (s2.id = oph.snomed_id)
+                join dosage dos on (dos.id=ph.dosage_id)
+                left outer join quantity q on (q.id=dos.dose_quantity_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 1 group by di.document_id),'') ||
+                COALESCE('Plan parenteral: '||(select string_agg(s.pt ||
+                (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                (case when f.duration is not null then '\nDuración: ' || to_char(f.duration, 'HH24:MI') || ' hs' else '' end) ||
+                '\nFlujo: ' || f.flow_ml_hour || ' ml/h | ' || f.flow_drops_hour || ' hp. Gotas' ||
+                (case when f.daily_volume is not null then '\nVol/Día: ' || f.daily_volume || 'ml' else '' end) ||
+                (case when s1.pt is not null then '\nFármaco: ' || s1.pt else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy') ,', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join parenteral_plan pp on (pp.id=i.id)
+                join snomed s on (pp.snomed_id=s.id)
+                join dosage dos on (pp.dosage_id=dos.id)
+                join frequency f on (f.id = pp.frequency_id)
+                left outer join quantity q on (q.id=dos.dose_quantity_id )
+                left outer join other_pharmaco oph on (oph.indication_id=pp.id)
+                left outer join snomed s1 on (s1.id=oph.snomed_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 3 group by di.document_id),'') ||
+                COALESCE ('\nEstado: ' || (select string_agg(
+                (case when i.status_id = 1 then 'Indicada' else '' end) ||
+                (case when i.status_id = 2 then 'Suspendida' else '' end) ||
+                (case when i.status_id = 3 then 'En progreso' else '' end) ||
+                (case when i.status_id = 4 then 'Completada' else '' end) ||
+                (case when i.status_id = 5 then 'Rechazada' else '' end), ', ')
+                from document_indication di
+                join indication i on (i.id = di.indication_id)
+                where di.document_id = d.id and d.type_id = 12 group by di.document_id),'') as indication,
+                COALESCE('Detalles de referencia solicitada: ' || (select string_agg(
+                (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end) || '\nEspecialidad: ' || clinical_specialties ||
+                (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end), ', ')
+                from counter_reference cr
+                join reference re on (re.id = cr.reference_id)
+                join (
+                  select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                  from reference re2
+                  join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                  join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                  group by re2.id
+                ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                left outer join care_line cl on (cl.id = re.care_line_id)
+                left outer join reference_note rn on (rn.id = re.reference_note_id)
+                where cr.id = d.source_id and d.type_id = 11), '') as reference_counter_reference,
+                COALESCE('Tipo de cierre: ' || (select string_agg(
+                (case when cr.closure_type_id = 1 then 'Continúa en observación' else '' end) ||
+                (case when cr.closure_type_id = 2 then 'Inicia tratamiento en centro de referencia' else '' end) ||
+                (case when cr.closure_type_id = 3 then 'Requiere estudios complementarios' else '' end) ||
+                (case when cr.closure_type_id = 4 then 'Contrarreferencia' else '' end), ', ')
+                from counter_reference cr
+                where cr.id = d.source_id and d.type_id = 11), '') ||
+                COALESCE((select string_agg('\nDescripción de cierre: ' || n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id = 11), '') as counter_reference_closure,
+                COALESCE((select string_agg(tc."name", ', ')
+                from document_triage dt
+                join triage t on (t.id = dt.triage_id)
+                join triage_category tc on (tc.id = t.triage_category_id)
+                where dt.document_id = d.id and d.type_id = 15 group by d.id),'') as triage_level,
+                COALESCE('\nEnfermedad actual: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.current_illness_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nExamen físico: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.physical_exam_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nResumen de estudios y procedimientos realizados: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.studies_summary_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nEvolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id in (1,2,3)), '') ||
+                COALESCE('\nImpresión clínica y plan: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.clinical_impression_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nIndicaciones al alta: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.indications_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nOtras observaciones: '|| (select string_agg(n.description, ',' )
+                from note n
+                where n.id = d.other_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('Evolución: ' || (select string_agg(n.description, ', ')
+                from note n
+                where n.id = d.other_note_id and d.type_id in (4, 15, 16)), '') ||
+                COALESCE('Evolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id in (9, 10, 13)), '') as notes
+                from
+                document as d
+                join document_type dt ON (d.type_id=dt.id)
+                join institution i on (i.id=d.institution_id)
+                left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
+                where d.deleted=false and d.status_id = '445665009';
+
+    - changeSet:
+        id: createTable-historic_reference_regulation
+        author: fsimaro
+        comment: Create table historic_reference_regulation
+        changes:
+          - createTable:
+              tableName: historic_reference_regulation
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_historic_reference_regulation
+                    name: id
+                    type: int
+                - column:
+                    name: reference_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_historic_reference_regulation_reference_id
+                      references: reference(id)
+                - column:
+                    name: rule_id
+                    type: int
+                    constraints:
+                      nullable: true
+                      foreignKeyName: FK_historic_reference_regulation_rule_id
+                      references: rule(id)
+                - column:
+                    name: rule_level
+                    type: smallint
+                - column:
+                    name: state_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: add-references-on-historic_reference_regulation
+        author: fsimaro
+        comment: Add created references as approved on historic_reference_regulation
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO historic_reference_regulation (reference_id, state_id) 
+                SELECT r.id, 1 FROM reference r WHERE r.deleted = false;
+
+    - changeSet:
+        id: reference_observation-createTable
+        comment: Create table reference_observation
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: reference_observation
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_reference_observation
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: reference(id)
+                      foreignKeyName: FK_reference_observation_reference_id
+                    name: reference_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: observation
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    
+    - changeSet:
+        id: createTable-personal_history_type
+        author: mromero
+        changes:
+          - createTable:
+              tableName: personal_history_type
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_personal_history_type
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(20)
+
+    - changeSet:
+        id: add-metadata-personal_history_type
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO personal_history_type (id, description) VALUES 
+                (1, 'Hábito'),
+                (2, 'Clínico'),
+                (3, 'Quirúrgico');
+
+    - changeSet:
+        id: createTable-personal_history
+        author: mromero
+        changes:
+          - createTable:
+              tableName: personal_history
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_personal_history
+                    name: health_condition_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: health_condition_id
+              baseTableName: personal_history
+              constraintName: FK_personal_history_health_condition_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: health_condition
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: type_id
+              baseTableName: personal_history
+              constraintName: FK_personal_history_type_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: personal_history_type
+              validate: true
+              
+    - changeSet:
+        id: add-metadata-problem_type
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type (id, description) VALUES ('00000002', 'Antecedente personal');
+
+    - changeSet:
+        id: update-personalHistories-problem_id-health_condition
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE health_condition hc
+                    SET problem_id = '00000002'
+                    WHERE EXISTS (
+                        SELECT 1
+                        FROM document_health_condition dhc
+                        JOIN document d on (dhc.document_id = d.id)
+                        WHERE dhc.health_condition_id = hc.id
+                        AND d.source_type_id IN (0,6)
+                        AND hc.problem_id = '55607006'
+                    );
+
+    - changeSet:
+        id: dropView-v_clinic_history_8
+        author: mromero
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_clinic_history
+
+    - changeSet:
+        id: createView-v_clinic_history_9
+        comment: Create view v_clinic_history_9
+        author: mromero
+        changes:
+          - createView:
+              viewName: v_clinic_history
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                select d.id as id,
+                d.source_id as source_id,
+                d.patient_id as patient_id,
+                d.source_type_id as source_type_id,
+                d.created_on,
+                d.created_by,
+                d.type_id as document_type_id,
+                dt.description as document_type,
+                cs.name as clinical_specialty,
+                i.id as institution_id,
+                i.name as institution,
+                d.patient_age_period as patient_age_period,
+                (select sr.source_type_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_type_id,
+                (select sr.source_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_id,
+                (select MIN(ie.entry_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_start_date,
+                (select MAX(pd.administrative_discharge_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                left join patient_discharge pd on (pd.internment_episode_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_end_date,
+                (select MIN(ece.created_on)
+                from emergency_care_episode ece
+                left join service_request sr on (sr.source_id = ece.id)
+                where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_start_date,
+                (select MAX(ecd.administrative_discharge_on)
+                from emergency_care_episode ece
+                left join service_request sr on (sr.source_id = ece.id)
+                join emergency_care_discharge ecd on (ecd.emergency_care_episode_id = ece.id)
+                where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_end_date,
+                (select (case when(
+                (select count(*) filter (where dr.status_id = '1')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                where ddr.document_id = d.id and d.type_id= 6 group by ddr.document_id)
+                =
+                (select count(*) filter (where dr.status_id = '261782000' or dr.status_id = '89925002')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr
+                on (dr.id = ddr.diagnostic_report_id)
+                where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id))
+                then
+                (select MAX(dr.created_on)
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id) where ddr.document_id = d.id and dr.status_id = '261782000')
+                end)) as service_request_end_date,
+                (select MAX(ms.updated_on)
+                from document_medicamention_statement dms
+                join medication_statement ms on (ms.id = dms.medication_statement_id)
+                where dms.document_id = d.id and d.type_id = 5 and ms.status_id in ('255594003', '6155003', '385655000')) as medication_end_date,
+                COALESCE('Diagnósticos: ' || (select string_agg((case when hc.main then 'Principal: ' || s.pt else 'Otro: ' || s.pt end) ||
+                (case when hc.status_id in ('723506003', '277022003', '73425007') then '|(Eliminado el día ' || to_char(hc.start_date ,'dd-mm-yyyy') || ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 2, 3, 13, 16) and hc.problem_id = '439401001' group by dhc.document_id), '') ||
+                coalesce(case when d.type_id = 10 then 'Problema asociado: ' else 'Problemas: ' end ||
+                (select string_agg(s.pt || (case when hc.status_id = '-55607006' then '|(Crónico)' else '' end) ||
+                (case when hc.start_date is not null and d.type_id <> 10 then '|(desde ' || to_char(hc.start_date ,'dd-mm-yyyy') else '' end) ||
+                (case when hc.inactivation_date is not null and d.type_id <> 10 then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') else '' end) ||
+                (case when perl.description is not null and d.type_id <> 10 then ', motivo: ' || perl.description else '' end) ||
+                (case when n.description is not null and d.type_id <> 10 then ', observaciones: ' || n.description else '' end) ||
+                (case when hc.start_date is not null and d.type_id <> 10 then ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                left join note n on (hc.note_id = n.id)
+                left join problem_error_reason per on (hc.id = per.health_condition_id)
+                left join problem_error_reasons_list perl on (per.reason_id = perl.id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (4, 7, 10) and hc.problem_id in ('55607006', '-55607006') group by dhc.document_id), '') ||
+                COALESCE('Problemas asociados: ' || (select string_agg(r.description, '| ')
+                from emergency_care_episode_reason ecer
+                join reasons r on (ecer.reason_id=r.id)
+                where d.type_id = 15 and d.source_id = ecer.emergency_care_episode_id), '') ||
+                COALESCE('Motivos de consulta: ' || (select string_agg(or1.description , '| ')
+                from odontology_consultation_reason ocr
+                join odontology_reason or1 on (or1.id = ocr.reason_id)
+                where ocr.odontology_consultation_id = d.source_id and d.type_id = 9 ), '') ||
+                COALESCE('Problemas: ' || (select string_agg(distinct s.pt, '| ')
+                from document_medicamention_statement dms
+                join medication_statement ms on (ms.id = dms.medication_statement_id)
+                left outer join health_condition hc on (hc.id = ms.health_condition_id)
+                left outer join snomed s on (s.id = hc.snomed_id)
+                where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id), '') ||
+                COALESCE('Problemas: ' || (select string_agg(s.pt, '| ' )
+                from document_indication di
+                join indication i on (i.id = di.indication_id )
+                join pharmaco ph on (ph.id = i.id)
+                join health_condition hc on (hc.id = ph.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where d.id = di.document_id and d.type_id = 12 group by di.document_id), '') ||
+                COALESCE('Diagnostico asociado: ' || (select string_agg(distinct s.pt, '| ')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id = dr.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id), '') ||
+                COALESCE('Problemas asociados: ' || (select string_agg(distinct s.pt, '| ')
+                from counter_reference cr
+                join reference_health_condition rhc on (cr.reference_id = rhc.reference_id)
+                join health_condition hc on (hc.id = rhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where d.source_id = cr.id and d.type_id = 11), '') as problems,
+                COALESCE('Antecedentes familiares: ' || (select string_agg(s.pt || (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date, 'dd-mm-yyyy') || ')' else '' end), ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 3, 4, 16) and hc.problem_id = '57177007' group by dhc.document_id), '') as family_record,
+                COALESCE(case when d.type_id = 9 then 'Otros diagnósticos y antecedentes personales: ' else 'Antecedentes personales: ' end ||
+                (select string_agg(s.pt ||
+                (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date ,'dd-mm-yyyy') else '' end) ||
+                (case when hc.inactivation_date is not null then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') else '' end) ||
+                (case when pht.description is not null then ', tipo: ' || pht.description else '' end) ||
+                (case when n.description is not null then ', observaciones: ' || n.description else '' end) ||
+                (case when hc.start_date is not null then ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                left join note n on (hc.note_id = n.id)
+                left join personal_history ph ON (hc.id = ph.health_condition_id)
+                left join personal_history_type pht ON (ph.type_id = pht.id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and hc.problem_id in ('00000002') group by dhc.document_id), '') as personal_record,
+                COALESCE('Procedimientos: ' || (select string_agg(case when p.performed_date is not null then s.pt || ' (' || to_char(p.performed_date, 'dd-mm-yyyy') || ')' else s.pt END ,', ')
+                from document_procedure dp
+                left outer join "procedures" p  on (p.id=dp.procedure_id)
+                left outer join snomed s on (s.id=p.snomed_id)
+                where dp.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 10, 11, 16) group by dp.document_id),'') as procedures,
+                COALESCE((select string_agg(s.pt ||
+                (case when dos.period_unit = 'd' then '\nUna aplicación por día' else '' end) ||
+                (case when dos.period_unit = 'h' then '\nUna aplicación cada ' || dos.frequency || 'hs' else '' end) ||
+                (case when dos.chronic = true then ', uso crónico' else '' end) ||
+                (case when dos.duration is not null then ' durante ' || dos.duration || ' días' else '' end) ||
+                (case when ms.note_id is not null then '\nObservaciones: ' || n.description else '' end) ||
+                (case when hc.snomed_id is not null then '\nProblema asociado: ' || s2.pt else '' end) ||
+                (case when ms.status_id = '6155003' then '\nFinalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) ||
+                (case when ms.status_id = '385655000' then '\nSuspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) , '\n\n')
+                from document_medicamention_statement dms
+                join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                join medication_statement_status mss on (ms.status_id=mss.id)
+                join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (n.id = ms.note_id)
+                left outer join health_condition hc on (hc.id=ms.health_condition_id)
+                left outer join snomed s2 on (s2.id = hc.snomed_id)
+                left outer join dosage dos on (ms.dosage_id=dos.id)
+                where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id),'') ||
+                COALESCE('Medicación habitual: '|| (select string_agg(s.pt ||
+                (case when ms.note_id is not null then ' (' || n.description || ')' else '' end) ||
+                (case when ms.status_id = '6155003' then ' (finalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end) ||
+                (case when ms.status_id = '385655000' then ' (suspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end), '. ')
+                from document_medicamention_statement dms
+                join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                join medication_statement_status mss on (ms.status_id=mss.id)
+                join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (n.id = ms.note_id)
+                where dms.document_id = d.id and d.type_id in (1, 3, 4, 9, 11, 16) group by dms.document_id),'') as medicines,
+                COALESCE('Alergias: '|| (select string_agg(s.pt,', ')
+                from document_allergy_intolerance dai
+                join allergy_intolerance ai on (ai.id=dai.allergy_intolerance_id)
+                join snomed s on (s.id=ai.snomed_id)
+                where dai.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 11, 16) group by dai.document_id),'') as allergies,
+                COALESCE('Vacunas: ' || (select string_agg(case when i.administration_date is not null then s.pt || ' (' || to_char(i.administration_date, 'dd-mm-yyyy') || ')' else s.pt END,', ')
+                from document_inmunization di
+                join inmunization i on (i.id = di.inmunization_id)
+                left outer join snomed s on (s.id = i.snomed_id)
+                where di.document_id = d.id and d.type_id in (1, 2, 3, 4, 8, 12, 13) group by di.document_id ), '') as vaccines,
+                COALESCE('Grupo y factor sanguíneo: '|| (select string_agg(replace(replace(s.pt, 'hallazgo relacionado con el grupo sanguíneo', ''),'(hallazgo)','') || ol.value, ', ')
+                from document_lab dl
+                join observation_lab ol on (ol.id=dl.observation_lab_id)
+                join snomed s on (s.id=ol.snomed_id)
+                where dl.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and ol.status_id = '261782000' group by dl.document_id),'') as blood_type,
+                COALESCE('Datos antropométricos: '|| (select string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value, ', ')
+                from document_vital_sign dvs
+                join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id = d.id and s.sctid in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') as anthropometric_data,
+                COALESCE('Factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                from document_vital_sign dvs
+                join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and s.sctid not in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') ||
+                COALESCE('Factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                from triage_vital_signs tvs
+                join observation_vital_sign ovs on (ovs.id = tvs.observation_vital_sign_id)
+                join snomed s on (s.id = ovs.snomed_id)
+                join triage t on (t.id = tvs.triage_id)
+                join document_triage dt on (t.id = dt.triage_id)
+                where dt.document_id = d.id and d.type_id = 15 and ovs.status_id = '261782000'), '') as risk_factors,
+                COALESCE('Otras circunstancias que prolongan la epicrisis: ' || (select string_agg(s.pt, ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id = 3 and hc.problem_id = '00000001' group by dhc.document_id), '') as epicrisis_other_circumstances,
+                COALESCE('Causa externa de traumatismo, envenenamiento y otros efectos adversos: ' || (select string_agg(
+                (case when ec.external_cause_type_id is not null then '\nProducido por: ' || ect.description || '. ' else '' end) ||
+                (case when ec.event_location is not null then '\nLugar donde ocurrió: ' || (
+                (case when ec.event_location = 1 then 'Domicilio particular. ' else '' end) ||
+                (case when ec.event_location = 2 then 'Vía pública. ' else '' end) ||
+                (case when ec.event_location = 3 then 'Lugar de trabajo. ' else '' end) ||
+                (case when ec.event_location = 4 then 'Otro. ' else '' end)) else '' end ) ||
+                (case when ec.snomed_id is not null then '\nCómo se produjo: ' || s.pt else '' end), ', ')
+                from document_external_cause dec2
+                join external_cause ec on (ec.id = dec2.external_cause_id)
+                left outer join external_cause_type ect on (ect.id = ec.external_cause_type_id)
+                left outer join snomed s on (s.id = ec.snomed_id)
+                where dec2.document_id = d.id and d.type_id = 3 and (ec.snomed_id is not null or ec.external_cause_type_id is not null or ec.event_location is not null)), '') as epicrisis_external_cause,
+                COALESCE('Datos del evento obstétrico: ' || (select string_agg(
+                (case when oe.previous_pregnancies is not null then '\nGestas anteriores: ' || oe.previous_pregnancies else '' end) ||
+                (case when oe.current_pregnancy_end_date is not null then '\nFecha de término de gesta actual: ' || to_char(oe.current_pregnancy_end_date, 'dd-mm-yyyy') else '' end) ||
+                (case when oe.gestational_age is not null then '\nEdad gestacional de gesta actual: ' || oe.gestational_age else '' end) ||
+                (case when oe.pregnancy_termination_type is not null then '\nTerminación de gesta actual: ' ||
+                (case when oe.pregnancy_termination_type = 1 then 'Vaginal' else '' end) ||
+                (case when oe.pregnancy_termination_type = 2 then 'Cesárea' else '' end) ||
+                (case when oe.pregnancy_termination_type = 3 then 'Sin definir' else '' end) else '' end), ', ')
+                from document_obstetric_event doe
+                join obstetric_event oe on (oe.id = doe.obstetric_event_id)
+                where doe.document_id = d.id and d.type_id = 3
+                and (oe.previous_pregnancies is not null or oe.current_pregnancy_end_date is not null or oe.gestational_age is not null or oe.pregnancy_termination_type is not null) ), '') as epicrisis_obstetric_event,
+                COALESCE('Pediatría: ' || (select string_agg(
+                (case when bt.description is not null then 'temperatura: ' || bt.description || ', ' else '' end) ||
+                (case when td.crying_excessive is true then 'llanto sin consuelo, ' else '' end) ||
+                (case when mh.description is not null then 'tono muscular: ' || mh.description || ', ' else '' end) ||
+                (case when rr.description is not null then 'respiración con tiraje: ' || rr.description || ', ' else '' end) ||
+                (case when td.stridor is true then 'respiración con estridor, ' else '' end) ||
+                (case when p.description is not null then 'perfusión: ' || p.description else '' end), ', ')
+                from triage_details td
+                left outer join body_temperature bt on (td.body_temperature_id  = bt.id)
+                left outer join muscle_hypertonia mh on (mh.id = td.muscle_hypertonia_id)
+                left outer join respiratory_retraction rr on (rr.id = td.respiratory_retraction_id)
+                left outer join perfusion p on (p.id = td.perfusion_id)
+                join triage t on (t.id = td.triage_id)
+                join document_triage dt on (t.id = dt.triage_id)
+                where dt.document_id = d.id and d.type_id = 15), '') as pediatric_risk_factors,
+                COALESCE('\nSolicitudes de referencia:\n' ||
+                (with temporal_references as
+                (select distinct re.id as reference_id, s.id as snomed_id
+                from reference re
+                join reference_health_condition rhc on (re.id = rhc.reference_id )
+                join health_condition hc on (hc.id = rhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where re.encounter_id = d.source_id and d.type_id in (4, 9) and d.source_type_id = re.source_type_id and re.deleted IS NULL OR re.deleted = FALSE)
+                select string_agg('\nProblemas asociados: ' ||
+                (select string_agg(s2.pt, ',')
+                from reference re2
+                join reference_health_condition rhc2 on (re2.id = rhc2.reference_id)
+                join health_condition hc2 on (hc2.id = rhc2.health_condition_id)
+                join snomed s2 on (s2.id = hc2.snomed_id)
+                where re2.id = re.id and s2.id in (select snomed_id from temporal_references where re2.id = reference_id)) ||
+                (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end ) || '\nEspecialidad: ' || clinical_specialties || '\nInstitución destino: ' || i.name ||
+                (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end),'\n')
+                from reference re
+                join (
+                  select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                  from reference re2
+                  join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                  join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                  group by re2.id
+                ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                join institution i on (i.id = re.destination_institution_id)
+                left outer join care_line cl on (cl.id = re.care_line_id)
+                left outer join reference_note rn on (rn.id = re.reference_note_id)
+                where re.encounter_id = d.source_id and d.type_id in (4, 9) and re.source_type_id = d.source_type_id group by d.id), '') as outpatient_references,
+                COALESCE('Categoria: '|| (select string_agg(src.description,'' )
+                from service_request sr
+                left outer join service_request_category src  on (sr.category_id=src.id)
+                left outer join service_request_status srs on (sr.status_id=srs.id)
+                where sr.id = d.source_id and d.type_id = 6),'') as service_request_category,
+                COALESCE(
+                (with temporal_orders as
+                (select distinct d.source_id as source_id, dr.snomed_id as snomed_id, dr.health_condition_id as health_condition_id
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id=dr.health_condition_id)
+                where ddr.document_id = d.id and d.type_id = 6 and dr.status_id <> '89925002')
+                select string_agg('Estudio: ' || s.pt || (case when dr.note_id is not null and dr.status_id = '261782000' then '. Resultado: ' || n.description || ' (' || to_char(dr.effective_time, 'dd-mm-yyyy') || ')' else ' (Pendiente)' end),'\n')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id=ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id=dr.health_condition_id)
+                join snomed s on (s.id=dr.snomed_id)
+                left outer join note n on (dr.note_id = n.id)
+                where ddr.document_id = d.id
+                and d.type_id = 6
+                and dr.status_id  <> '89925002'
+                and exists (select 1 from temporal_orders t where d.source_id = t.source_id and dr.snomed_id = t.snomed_id and dr.health_condition_id = t.health_condition_id)
+                and not exists
+                (select 1
+                from document_diagnostic_report ddr2
+                join diagnostic_report dr2 on (dr2.id = ddr2.diagnostic_report_id)
+                where ddr2.document_id = ddr.document_id
+                and dr2.id <> dr.id
+                and dr2.patient_id = dr.patient_id
+                and dr2.snomed_id = dr.snomed_id
+                and dr2.health_condition_id = dr2.health_condition_id
+                and dr2.status_id in ('261782000', '89925002')) group by ddr.document_id), '') as service_request_studies,
+                COALESCE('Motivos de consulta: '|| (select string_agg(r.description,', ' )
+                from outpatient_consultation oc
+                left outer join outpatient_consultation_reasons ocr on (oc.id=ocr.outpatient_consultation_id)
+                join reasons r on (r.id=ocr.reason_id)
+                where oc.document_id = d.id and d.type_id = 4 group by oc.document_id),'') ||
+                COALESCE('Motivos de consulta: ' || (select string_agg(r.description ,', ')
+                from emergency_care_evolution_note ecen
+                join emergency_care_evolution_note_reason ecenr on (ecenr.emergency_care_evolution_note_id = ecen.id)
+                join reasons r on (r.id  = ecenr.reason_id)
+                where ecen.document_id = d.id and d.type_id = 16 group by ecen.document_id),'') as consultation_reasons,
+                COALESCE('Procedimientos sobre tejidos dentales: '|| (select string_agg(distinct('\n' || s.pt || ' en ' || s1.pt),'' )
+                from document_odontology_procedure dop
+                join odontology_procedure op on (op.id=dop.odontology_procedure_id)
+                join snomed s on (s.id=op.snomed_id)
+                left join snomed s1 on (op.tooth_id = s1.id)
+                where dop.document_id = d.id and d.type_id = 9 group by dop.document_id),'') as odontology_procedure,
+                COALESCE('Hallazgos sobre tejidos dentales: '|| (select string_agg(distinct ('\n' || s.pt || ' en ' || s1.pt),'' )
+                from document_odontology_diagnostic dod
+                join odontology_diagnostic od on (od.id=dod.odontology_diagnostic_id)
+                join snomed s on (s.id=od.snomed_id)
+                left outer join snomed s1 on (s1.id=od.tooth_id)
+                where dod.document_id = d.id and d.type_id = 9 group by dod.document_id),'') as odontology_diagnostic,
+                COALESCE('Cantidad de piezas presentes: ' || (select string_agg(
+                (case when oci.permanent_teeth_present is not null then 'permanentes: ' || oci.permanent_teeth_present ||
+                (case when oci.temporary_teeth_present is not null then ', ' else '' end) else '' end) ||
+                (case when oci.temporary_teeth_present is not null then 'temporales: ' || oci.temporary_teeth_present else '' end), ', ')
+                from odontology_consultation_indices oci
+                where d.type_id = 9 and d.source_id = oci.odontology_consultation_id), '') as odontology_pieces,
+                COALESCE('Dieta: '|| (select string_agg(die.description || '\nFecha indicación: ' || to_char(i.indication_date,'dd-mm-yyyy'), ', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join diet die on (die.id=i.id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 2 group by di.document_id), '') ||
+                COALESCE('Otra indicación: '|| (select string_agg
+                (case when oi.other_type is not null then oit.description || ': ' || oi.other_type else oit.description end || '\nFrecuencia: ' ||
+                (case when dos.period_unit is null then 'Sin especificar' else '' end) ||
+                (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) ||
+                (case when oi.description is not null then '\nNotas: ' || oi.description else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join other_indication oi on (oi.id=i.id)
+                join other_indication_type oit on (oi.other_indication_type_id=oit.id)
+                left join dosage dos on (dos.id = oi.dosage_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 4 group by di.document_id), '') ||
+                COALESCE('Fármaco: '|| (select string_agg(s1.pt ||
+                (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                (case when s2.pt is not null then '\nDiluyente: ' || s2.pt else '' end) || '\nAdministración: ' ||
+                (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) || '\nRelación con las comidas: ' ||
+                (case when ph.food_relation_id = 0 then 'No' else '' end) ||
+                (case when ph.food_relation_id = 1 then 'Lejos' else '' end) ||
+                (case when ph.food_relation_id = 2 then 'Ayuno' else '' end) ||
+                '\nDiagnóstico asociado: ' || s.pt || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),'\n' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join pharmaco ph on (ph.id=i.id)
+                join health_condition hc on (hc.id=ph.health_condition_id)
+                join snomed s on (s.id=hc.snomed_id)
+                join snomed s1 on (s1.id=ph.snomed_id)
+                left outer join other_pharmaco oph on (oph.indication_id = i.id)
+                left outer join snomed s2 on (s2.id = oph.snomed_id)
+                join dosage dos on (dos.id=ph.dosage_id)
+                left outer join quantity q on (q.id=dos.dose_quantity_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 1 group by di.document_id),'') ||
+                COALESCE('Plan parenteral: '||(select string_agg(s.pt ||
+                (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                (case when f.duration is not null then '\nDuración: ' || to_char(f.duration, 'HH24:MI') || ' hs' else '' end) ||
+                '\nFlujo: ' || f.flow_ml_hour || ' ml/h | ' || f.flow_drops_hour || ' hp. Gotas' ||
+                (case when f.daily_volume is not null then '\nVol/Día: ' || f.daily_volume || 'ml' else '' end) ||
+                (case when s1.pt is not null then '\nFármaco: ' || s1.pt else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy') ,', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join parenteral_plan pp on (pp.id=i.id)
+                join snomed s on (pp.snomed_id=s.id)
+                join dosage dos on (pp.dosage_id=dos.id)
+                join frequency f on (f.id = pp.frequency_id)
+                left outer join quantity q on (q.id=dos.dose_quantity_id )
+                left outer join other_pharmaco oph on (oph.indication_id=pp.id)
+                left outer join snomed s1 on (s1.id=oph.snomed_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 3 group by di.document_id),'') ||
+                COALESCE ('\nEstado: ' || (select string_agg(
+                (case when i.status_id = 1 then 'Indicada' else '' end) ||
+                (case when i.status_id = 2 then 'Suspendida' else '' end) ||
+                (case when i.status_id = 3 then 'En progreso' else '' end) ||
+                (case when i.status_id = 4 then 'Completada' else '' end) ||
+                (case when i.status_id = 5 then 'Rechazada' else '' end), ', ')
+                from document_indication di
+                join indication i on (i.id = di.indication_id)
+                where di.document_id = d.id and d.type_id = 12 group by di.document_id),'') as indication,
+                COALESCE('Detalles de referencia solicitada: ' || (select string_agg(
+                (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end) || '\nEspecialidad: ' || clinical_specialties ||
+                (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end), ', ')
+                from counter_reference cr
+                join reference re on (re.id = cr.reference_id)
+                join (
+                  select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                  from reference re2
+                  join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                  join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                  group by re2.id
+                ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                left outer join care_line cl on (cl.id = re.care_line_id)
+                left outer join reference_note rn on (rn.id = re.reference_note_id)
+                where cr.id = d.source_id and d.type_id = 11), '') as reference_counter_reference,
+                COALESCE('Tipo de cierre: ' || (select string_agg(
+                (case when cr.closure_type_id = 1 then 'Continúa en observación' else '' end) ||
+                (case when cr.closure_type_id = 2 then 'Inicia tratamiento en centro de referencia' else '' end) ||
+                (case when cr.closure_type_id = 3 then 'Requiere estudios complementarios' else '' end) ||
+                (case when cr.closure_type_id = 4 then 'Contrarreferencia' else '' end), ', ')
+                from counter_reference cr
+                where cr.id = d.source_id and d.type_id = 11), '') ||
+                COALESCE((select string_agg('\nDescripción de cierre: ' || n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id = 11), '') as counter_reference_closure,
+                COALESCE((select string_agg(tc."name", ', ')
+                from document_triage dt
+                join triage t on (t.id = dt.triage_id)
+                join triage_category tc on (tc.id = t.triage_category_id)
+                where dt.document_id = d.id and d.type_id = 15 group by d.id),'') as triage_level,
+                COALESCE('\nEnfermedad actual: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.current_illness_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nExamen físico: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.physical_exam_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nResumen de estudios y procedimientos realizados: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.studies_summary_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nEvolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id in (1,2,3)), '') ||
+                COALESCE('\nImpresión clínica y plan: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.clinical_impression_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nIndicaciones al alta: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.indications_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nOtras observaciones: '|| (select string_agg(n.description, ',' )
+                from note n
+                where n.id = d.other_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('Evolución: ' || (select string_agg(n.description, ', ')
+                from note n
+                where n.id = d.other_note_id and d.type_id in (4, 15, 16)), '') ||
+                COALESCE('Evolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id in (9, 10, 13)), '') as notes
+                from
+                document as d
+                join document_type dt ON (d.type_id=dt.id)
+                join institution i on (i.id=d.institution_id)
+                left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
+                where d.deleted=false and d.status_id = '445665009';
+
+    - changeSet:
+        id: procedure_template-createTable
+        comment: Create table procedure_template
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_template
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_template
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      unique: true
+                    name: uuid
+                    type: uuid
+                - column:
+                    name: description
+                    type: varchar(50)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: procedure_template_snomed-createTable
+        comment: creation of procedure_template_snomed table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_template_snomed
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: procedure_template(id)
+                      foreignKeyName: FK_procedure_template_snomed_procedure_template_id
+                    name: procedure_template_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: snomed(id)
+                      foreignKeyName: FK_procedure_template_snomed_snomed_id
+                    name: snomed_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: procedure_template_id, snomed_id
+              constraintName: PK_procedure_template_snomed
+              tableName: procedure_template_snomed
+              validate: true
+
+    - changeSet:
+        id: dropView-v_clinic_history_9
+        author: fsimaro
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_clinic_history
+
+    - changeSet:
+        id: createView-v_clinic_history_10
+        comment: Create view v_clinic_history_10
+        author: fsimaro
+        changes:
+          - createView:
+              viewName: v_clinic_history
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                select d.id as id,
+                d.source_id as source_id,
+                d.patient_id as patient_id,
+                d.source_type_id as source_type_id,
+                d.created_on,
+                d.created_by,
+                d.type_id as document_type_id,
+                dt.description as document_type,
+                cs.name as clinical_specialty,
+                i.id as institution_id,
+                i.name as institution,
+                d.patient_age_period as patient_age_period,
+                (select sr.source_type_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_type_id,
+                (select sr.source_id from service_request sr where d.type_id = 6 and d.source_id = sr.id) as request_source_id,
+                (select MIN(ie.entry_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_start_date,
+                (select MAX(pd.administrative_discharge_date)
+                from internment_episode ie
+                left join service_request sr on (sr.source_id = ie.id)
+                left join patient_discharge pd on (pd.internment_episode_id = ie.id)
+                where (d.source_id = ie.id and d.source_type_id = 0 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 0 and d.source_id = sr.id and sr.source_id = ie.id)) as internment_end_date,
+                (select MIN(ece.created_on)
+                from emergency_care_episode ece
+                left join service_request sr on (sr.source_id = ece.id)
+                where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_start_date,
+                (select MAX(ecd.administrative_discharge_on)
+                from emergency_care_episode ece
+                left join service_request sr on (sr.source_id = ece.id)
+                join emergency_care_discharge ecd on (ecd.emergency_care_episode_id = ece.id)
+                where (d.source_id = ece.id and d.source_type_id = 4 and d.type_id <> 6)
+                or (d.type_id = 6 and sr.source_type_id = 4 and d.source_id = sr.id and sr.source_id = ece.id)) as emergency_care_end_date,
+                (select (case when(
+                (select count(*) filter (where dr.status_id = '1')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                where ddr.document_id = d.id and d.type_id= 6 group by ddr.document_id)
+                =
+                (select count(*) filter (where dr.status_id = '261782000' or dr.status_id = '89925002')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr
+                on (dr.id = ddr.diagnostic_report_id)
+                where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id))
+                then
+                (select MAX(dr.created_on)
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id) where ddr.document_id = d.id and dr.status_id = '261782000')
+                end)) as service_request_end_date,
+                (select MAX(ms.updated_on)
+                from document_medicamention_statement dms
+                join medication_statement ms on (ms.id = dms.medication_statement_id)
+                where dms.document_id = d.id and d.type_id = 5 and ms.status_id in ('255594003', '6155003', '385655000')) as medication_end_date,
+                COALESCE('Diagnósticos: ' || (select string_agg((case when hc.main then 'Principal: ' || s.pt else 'Otro: ' || s.pt end) ||
+                (case when hc.status_id in ('723506003', '277022003', '73425007') then '|(Eliminado el día ' || to_char(hc.start_date ,'dd-mm-yyyy') || ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 2, 3, 13, 16) and hc.problem_id = '439401001' group by dhc.document_id), '') ||
+                coalesce(case when d.type_id = 10 then 'Problema asociado: ' else 'Problemas: ' end ||
+                (select string_agg(s.pt || (case when hc.status_id = '-55607006' then '|(Crónico)' else '' end) ||
+                (case when hc.start_date is not null and d.type_id <> 10 then '|(desde ' || to_char(hc.start_date ,'dd-mm-yyyy') else '' end) ||
+                (case when hc.inactivation_date is not null and d.type_id <> 10 then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') else '' end) ||
+                (case when perl.description is not null and d.type_id <> 10 then ', motivo: ' || perl.description else '' end) ||
+                (case when n.description is not null and d.type_id <> 10 then ', observaciones: ' || n.description else '' end) ||
+                (case when hc.start_date is not null and d.type_id <> 10 then ')' else '' end), '| ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                left join note n on (hc.note_id = n.id)
+                left join problem_error_reason per on (hc.id = per.health_condition_id)
+                left join problem_error_reasons_list perl on (per.reason_id = perl.id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (4, 7, 10) and hc.problem_id in ('55607006', '-55607006') group by dhc.document_id), '') ||
+                COALESCE('Problemas asociados: ' || (select string_agg(r.description, '| ')
+                from emergency_care_episode_reason ecer
+                join reasons r on (ecer.reason_id=r.id)
+                where d.type_id = 15 and d.source_id = ecer.emergency_care_episode_id), '') ||
+                COALESCE('Motivos de consulta: ' || (select string_agg(or1.description , '| ')
+                from odontology_consultation_reason ocr
+                join odontology_reason or1 on (or1.id = ocr.reason_id)
+                where ocr.odontology_consultation_id = d.source_id and d.type_id = 9 ), '') ||
+                COALESCE('Problemas: ' || (select string_agg(distinct s.pt, '| ')
+                from document_medicamention_statement dms
+                join medication_statement ms on (ms.id = dms.medication_statement_id)
+                left outer join health_condition hc on (hc.id = ms.health_condition_id)
+                left outer join snomed s on (s.id = hc.snomed_id)
+                where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id), '') ||
+                COALESCE('Problemas: ' || (select string_agg(s.pt, '| ' )
+                from document_indication di
+                join indication i on (i.id = di.indication_id )
+                join pharmaco ph on (ph.id = i.id)
+                join health_condition hc on (hc.id = ph.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where d.id = di.document_id and d.type_id = 12 group by di.document_id), '') ||
+                COALESCE('Diagnostico asociado: ' || (select string_agg(distinct s.pt, '| ')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id = dr.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where ddr.document_id = d.id and d.type_id = 6 group by ddr.document_id), '') ||
+                COALESCE('Problemas asociados: ' || (select string_agg(distinct s.pt, '| ')
+                from counter_reference cr
+                join reference_health_condition rhc on (cr.reference_id = rhc.reference_id)
+                join health_condition hc on (hc.id = rhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where d.source_id = cr.id and d.type_id = 11), '') as problems,
+                COALESCE('Antecedentes familiares: ' || (select string_agg(s.pt || (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date, 'dd-mm-yyyy') || ')' else '' end), ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 3, 4, 16) and hc.problem_id = '57177007' group by dhc.document_id), '') as family_record,
+                COALESCE(case when d.type_id = 9 then 'Otros diagnósticos y antecedentes personales: ' else 'Antecedentes personales: ' end ||
+                (select string_agg(s.pt || (case when hc.status_id = '-55607006' then ' (Crónico)' else '' end) ||
+                (case when hc.start_date is not null then ' (desde ' || to_char(hc.start_date , 'dd-mm-yyyy') ||
+                (case when hc.inactivation_date is not null then ' hasta ' || to_char(hc.inactivation_date, 'dd-mm-yyyy') || ')' else ')' end) else '' end), ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id in (1, 3, 9) and hc.problem_id in ('55607006', '-55607006') group by dhc.document_id), '') as personal_record,
+                COALESCE('Procedimientos: ' || (select string_agg(case when p.performed_date is not null then s.pt || ' (' || to_char(p.performed_date, 'dd-mm-yyyy') || ')' else s.pt END ,', ')
+                from document_procedure dp
+                left outer join "procedures" p  on (p.id=dp.procedure_id)
+                left outer join snomed s on (s.id=p.snomed_id)
+                where dp.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 10, 11, 16) group by dp.document_id),'') as procedures,
+                COALESCE((select string_agg(s.pt ||
+                (case when dos.period_unit = 'd' then '\nUna aplicación por día' else '' end) ||
+                (case when dos.period_unit = 'h' then '\nUna aplicación cada ' || dos.frequency || 'hs' else '' end) ||
+                (case when dos.chronic = true then ', uso crónico' else '' end) ||
+                (case when dos.duration is not null then ' durante ' || dos.duration || ' días' else '' end) ||
+                (case when ms.note_id is not null then '\nObservaciones: ' || n.description else '' end) ||
+                (case when hc.snomed_id is not null then '\nProblema asociado: ' || s2.pt else '' end) ||
+                (case when ms.status_id = '6155003' then '\nFinalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) ||
+                (case when ms.status_id = '385655000' then '\nSuspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') else '' end) , '\n\n')
+                from document_medicamention_statement dms
+                join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                join medication_statement_status mss on (ms.status_id=mss.id)
+                join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (n.id = ms.note_id)
+                left outer join health_condition hc on (hc.id=ms.health_condition_id)
+                left outer join snomed s2 on (s2.id = hc.snomed_id)
+                left outer join dosage dos on (ms.dosage_id=dos.id)
+                where dms.document_id = d.id and d.type_id in (5, 14) group by dms.document_id),'') ||
+                COALESCE('Medicación habitual: '|| (select string_agg(s.pt ||
+                (case when ms.note_id is not null then ' (' || n.description || ')' else '' end) ||
+                (case when ms.status_id = '6155003' then ' (finalizada el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end) ||
+                (case when ms.status_id = '385655000' then ' (suspendida el día ' || to_char(ms.updated_on, 'dd-mm-yyyy') || ')' else '' end), '. ')
+                from document_medicamention_statement dms
+                join medication_statement ms  on (ms.id=dms.medication_statement_id)
+                join medication_statement_status mss on (ms.status_id=mss.id)
+                join snomed s on (s.id=ms.snomed_id)
+                left outer join note n on (n.id = ms.note_id)
+                where dms.document_id = d.id and d.type_id in (1, 3, 4, 9, 11, 16) group by dms.document_id),'') as medicines,
+                COALESCE('Alergias: '|| (select string_agg(s.pt,', ')
+                from document_allergy_intolerance dai
+                join allergy_intolerance ai on (ai.id=dai.allergy_intolerance_id)
+                join snomed s on (s.id=ai.snomed_id)
+                where dai.document_id = d.id and d.type_id in (1, 2, 3, 4, 9, 11, 16) group by dai.document_id),'') as allergies,
+                COALESCE('Vacunas: ' || (select string_agg(case when i.administration_date is not null then s.pt || ' (' || to_char(i.administration_date, 'dd-mm-yyyy') || ')' else s.pt END,', ')
+                from document_inmunization di
+                join inmunization i on (i.id = di.inmunization_id)
+                left outer join snomed s on (s.id = i.snomed_id)
+                where di.document_id = d.id and d.type_id in (1, 2, 3, 4, 8, 12, 13) group by di.document_id ), '') as vaccines,
+                COALESCE('Grupo y factor sanguíneo: '|| (select string_agg(replace(replace(s.pt, 'hallazgo relacionado con el grupo sanguíneo', ''),'(hallazgo)','') || ol.value, ', ')
+                from document_lab dl
+                join observation_lab ol on (ol.id=dl.observation_lab_id)
+                join snomed s on (s.id=ol.snomed_id)
+                where dl.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and ol.status_id = '261782000' group by dl.document_id),'') as blood_type,
+                COALESCE('Datos antropométricos: '|| (select string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value, ', ')
+                from document_vital_sign dvs
+                join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id = d.id and s.sctid in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') as anthropometric_data,
+                COALESCE('Factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                from document_vital_sign dvs
+                join observation_vital_sign ovs on (ovs.id=dvs.observation_vital_sign_id)
+                join snomed s on (s.id=ovs.snomed_id)
+                where dvs.document_id = d.id and d.type_id in (1, 2, 4, 10, 13, 16) and s.sctid not in ('50373000', '27113001', '363812007') and ovs.status_id = '261782000' group by dvs.document_id),'') ||
+                COALESCE('Factores de riesgo: '|| (select string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+                from triage_vital_signs tvs
+                join observation_vital_sign ovs on (ovs.id = tvs.observation_vital_sign_id)
+                join snomed s on (s.id = ovs.snomed_id)
+                join triage t on (t.id = tvs.triage_id)
+                join document_triage dt on (t.id = dt.triage_id)
+                where dt.document_id = d.id and d.type_id = 15 and ovs.status_id = '261782000'), '') as risk_factors,
+                COALESCE('Otras circunstancias que prolongan la epicrisis: ' || (select string_agg(s.pt, ', ')
+                from document_health_condition dhc
+                join health_condition hc on (hc.id = dhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where dhc.document_id = d.id and d.type_id = 3 and hc.problem_id = '00000001' group by dhc.document_id), '') as epicrisis_other_circumstances,
+                COALESCE('Causa externa de traumatismo, envenenamiento y otros efectos adversos: ' || (select string_agg(
+                (case when ec.external_cause_type_id is not null then '\nProducido por: ' || ect.description || '. ' else '' end) ||
+                (case when ec.event_location is not null then '\nLugar donde ocurrió: ' || (
+                (case when ec.event_location = 1 then 'Domicilio particular. ' else '' end) ||
+                (case when ec.event_location = 2 then 'Vía pública. ' else '' end) ||
+                (case when ec.event_location = 3 then 'Lugar de trabajo. ' else '' end) ||
+                (case when ec.event_location = 4 then 'Otro. ' else '' end)) else '' end ) ||
+                (case when ec.snomed_id is not null then '\nCómo se produjo: ' || s.pt else '' end), ', ')
+                from document_external_cause dec2
+                join external_cause ec on (ec.id = dec2.external_cause_id)
+                left outer join external_cause_type ect on (ect.id = ec.external_cause_type_id)
+                left outer join snomed s on (s.id = ec.snomed_id)
+                where dec2.document_id = d.id and d.type_id = 3 and (ec.snomed_id is not null or ec.external_cause_type_id is not null or ec.event_location is not null)), '') as epicrisis_external_cause,
+                COALESCE('Datos del evento obstétrico: ' || (select string_agg(
+                (case when oe.previous_pregnancies is not null then '\nGestas anteriores: ' || oe.previous_pregnancies else '' end) ||
+                (case when oe.current_pregnancy_end_date is not null then '\nFecha de término de gesta actual: ' || to_char(oe.current_pregnancy_end_date, 'dd-mm-yyyy') else '' end) ||
+                (case when oe.gestational_age is not null then '\nEdad gestacional de gesta actual: ' || oe.gestational_age else '' end) ||
+                (case when oe.pregnancy_termination_type is not null then '\nTerminación de gesta actual: ' ||
+                (case when oe.pregnancy_termination_type = 1 then 'Vaginal' else '' end) ||
+                (case when oe.pregnancy_termination_type = 2 then 'Cesárea' else '' end) ||
+                (case when oe.pregnancy_termination_type = 3 then 'Sin definir' else '' end) else '' end), ', ')
+                from document_obstetric_event doe
+                join obstetric_event oe on (oe.id = doe.obstetric_event_id)
+                where doe.document_id = d.id and d.type_id = 3
+                and (oe.previous_pregnancies is not null or oe.current_pregnancy_end_date is not null or oe.gestational_age is not null or oe.pregnancy_termination_type is not null) ), '') as epicrisis_obstetric_event,
+                COALESCE('Pediatría: ' || (select string_agg(
+                (case when bt.description is not null then 'temperatura: ' || bt.description || ', ' else '' end) ||
+                (case when td.crying_excessive is true then 'llanto sin consuelo, ' else '' end) ||
+                (case when mh.description is not null then 'tono muscular: ' || mh.description || ', ' else '' end) ||
+                (case when rr.description is not null then 'respiración con tiraje: ' || rr.description || ', ' else '' end) ||
+                (case when td.stridor is true then 'respiración con estridor, ' else '' end) ||
+                (case when p.description is not null then 'perfusión: ' || p.description else '' end), ', ')
+                from triage_details td
+                left outer join body_temperature bt on (td.body_temperature_id  = bt.id)
+                left outer join muscle_hypertonia mh on (mh.id = td.muscle_hypertonia_id)
+                left outer join respiratory_retraction rr on (rr.id = td.respiratory_retraction_id)
+                left outer join perfusion p on (p.id = td.perfusion_id)
+                join triage t on (t.id = td.triage_id)
+                join document_triage dt on (t.id = dt.triage_id)
+                where dt.document_id = d.id and d.type_id = 15), '') as pediatric_risk_factors,
+                COALESCE('\nSolicitudes de referencia:\n' ||
+                (with temporal_references as
+                (select distinct re.id as reference_id, s.id as snomed_id
+                from reference re
+                join reference_health_condition rhc on (re.id = rhc.reference_id )
+                join health_condition hc on (hc.id = rhc.health_condition_id)
+                join snomed s on (s.id = hc.snomed_id)
+                where re.encounter_id = d.source_id and d.type_id in (4, 9) and d.source_type_id = re.source_type_id and re.deleted IS NULL OR re.deleted = FALSE)
+                select string_agg('\nProblemas asociados: ' ||
+                (select string_agg(s2.pt, ',')
+                from reference re2
+                join reference_health_condition rhc2 on (re2.id = rhc2.reference_id)
+                join health_condition hc2 on (hc2.id = rhc2.health_condition_id)
+                join snomed s2 on (s2.id = hc2.snomed_id)
+                where re2.id = re.id and s2.id in (select snomed_id from temporal_references where re2.id = reference_id)) ||
+                (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end ) || '\nEspecialidad: ' || clinical_specialties || '\nInstitución destino: ' || i.name ||
+                (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end),'\n')
+                from reference re
+                join (
+                select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                from reference re2
+                join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id)
+                group by re2.id
+                ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                join institution i on (i.id = re.destination_institution_id)
+                left outer join care_line cl on (cl.id = re.care_line_id)
+                left outer join reference_note rn on (rn.id = re.reference_note_id)
+                where re.encounter_id = d.source_id and d.type_id in (4, 9) and re.source_type_id = d.source_type_id group by d.id), '') as outpatient_references,
+                COALESCE('Categoria: '|| (select string_agg(src.description,'' )
+                from service_request sr
+                left outer join service_request_category src  on (sr.category_id=src.id)
+                left outer join service_request_status srs on (sr.status_id=srs.id)
+                where sr.id = d.source_id and d.type_id = 6),'') as service_request_category,
+                COALESCE(
+                (with temporal_orders as
+                (select distinct d.source_id as source_id, dr.snomed_id as snomed_id, dr.health_condition_id as health_condition_id
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id = ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id=dr.health_condition_id)
+                where ddr.document_id = d.id and d.type_id = 6 and dr.status_id <> '89925002')
+                select string_agg('Estudio: ' || s.pt || (case when dr.note_id is not null and dr.status_id = '261782000' then '.\nResultado: ' || n.description || ' (' || to_char(dr.effective_time, 'dd-mm-yyyy') || ')' else '. (Pendiente)' end),'\n')
+                from document_diagnostic_report ddr
+                join diagnostic_report dr on (dr.id=ddr.diagnostic_report_id)
+                join health_condition hc on (hc.id=dr.health_condition_id)
+                join snomed s on (s.id=dr.snomed_id)
+                left outer join note n on (dr.note_id = n.id)
+                where ddr.document_id = d.id
+                and d.type_id = 6
+                and dr.status_id  <> '89925002'
+                and exists (select 1 from temporal_orders t where d.source_id = t.source_id and dr.snomed_id = t.snomed_id and dr.health_condition_id = t.health_condition_id)
+                and not exists
+                (select 1
+                from document_diagnostic_report ddr2
+                join diagnostic_report dr2 on (dr2.id = ddr2.diagnostic_report_id)
+                where ddr2.document_id = ddr.document_id
+                and dr2.id <> dr.id
+                and dr2.patient_id = dr.patient_id
+                and dr2.snomed_id = dr.snomed_id
+                and dr2.health_condition_id = dr2.health_condition_id
+                and dr2.status_id in ('261782000', '89925002')) group by ddr.document_id), '') as service_request_studies,
+                COALESCE('Motivos de consulta: '|| (select string_agg(r.description,', ' )
+                from outpatient_consultation oc
+                left outer join outpatient_consultation_reasons ocr on (oc.id=ocr.outpatient_consultation_id)
+                join reasons r on (r.id=ocr.reason_id)
+                where oc.document_id = d.id and d.type_id = 4 group by oc.document_id),'') ||
+                COALESCE('Motivos de consulta: ' || (select string_agg(r.description ,', ')
+                from emergency_care_evolution_note ecen
+                join emergency_care_evolution_note_reason ecenr on (ecenr.emergency_care_evolution_note_id = ecen.id)
+                join reasons r on (r.id  = ecenr.reason_id)
+                where ecen.document_id = d.id and d.type_id = 16 group by ecen.document_id),'') as consultation_reasons,
+                COALESCE('Procedimientos sobre tejidos dentales: '|| (select string_agg(distinct('\n' || s.pt || ' en ' || s1.pt),'' )
+                from document_odontology_procedure dop
+                join odontology_procedure op on (op.id=dop.odontology_procedure_id)
+                join snomed s on (s.id=op.snomed_id)
+                left join snomed s1 on (op.tooth_id = s1.id)
+                where dop.document_id = d.id and d.type_id = 9 group by dop.document_id),'') as odontology_procedure,
+                COALESCE('Hallazgos sobre tejidos dentales: '|| (select string_agg(distinct ('\n' || s.pt || ' en ' || s1.pt),'' )
+                from document_odontology_diagnostic dod
+                join odontology_diagnostic od on (od.id=dod.odontology_diagnostic_id)
+                join snomed s on (s.id=od.snomed_id)
+                left outer join snomed s1 on (s1.id=od.tooth_id)
+                where dod.document_id = d.id and d.type_id = 9 group by dod.document_id),'') as odontology_diagnostic,
+                COALESCE('Cantidad de piezas presentes: ' || (select string_agg(
+                (case when oci.permanent_teeth_present is not null then 'permanentes: ' || oci.permanent_teeth_present ||
+                (case when oci.temporary_teeth_present is not null then ', ' else '' end) else '' end) ||
+                (case when oci.temporary_teeth_present is not null then 'temporales: ' || oci.temporary_teeth_present else '' end), ', ')
+                from odontology_consultation_indices oci
+                where d.type_id = 9 and d.source_id = oci.odontology_consultation_id), '') as odontology_pieces,
+                COALESCE('Dieta: '|| (select string_agg(die.description || '\nFecha indicación: ' || to_char(i.indication_date,'dd-mm-yyyy'), ', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join diet die on (die.id=i.id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 2 group by di.document_id), '') ||
+                COALESCE('Otra indicación: '|| (select string_agg
+                (case when oi.other_type is not null then oit.description || ': ' || oi.other_type else oit.description end || '\nFrecuencia: ' ||
+                (case when dos.period_unit is null then 'Sin especificar' else '' end) ||
+                (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) ||
+                (case when oi.description is not null then '\nNotas: ' || oi.description else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join other_indication oi on (oi.id=i.id)
+                join other_indication_type oit on (oi.other_indication_type_id=oit.id)
+                left join dosage dos on (dos.id = oi.dosage_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 4 group by di.document_id), '') ||
+                COALESCE('Fármaco: '|| (select string_agg(s1.pt ||
+                (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                (case when s2.pt is not null then '\nDiluyente: ' || s2.pt else '' end) || '\nAdministración: ' ||
+                (case when dos.period_unit = 'd' then 'Única vez' else '' end) ||
+                (case when dos.period_unit = 'h' then 'Cada ' || dos.frequency || ' hs' else '' end) ||
+                (case when dos.period_unit = 'e' then 'Ante evento: ' || dos."event" else '' end) || '\nRelación con las comidas: ' ||
+                (case when ph.food_relation_id = 0 then 'No' else '' end) ||
+                (case when ph.food_relation_id = 1 then 'Lejos' else '' end) ||
+                (case when ph.food_relation_id = 2 then 'Ayuno' else '' end) ||
+                '\nDiagnóstico asociado: ' || s.pt || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy'),'\n' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join pharmaco ph on (ph.id=i.id)
+                join health_condition hc on (hc.id=ph.health_condition_id)
+                join snomed s on (s.id=hc.snomed_id)
+                join snomed s1 on (s1.id=ph.snomed_id)
+                left outer join other_pharmaco oph on (oph.indication_id = i.id)
+                left outer join snomed s2 on (s2.id = oph.snomed_id)
+                join dosage dos on (dos.id=ph.dosage_id)
+                left outer join quantity q on (q.id=dos.dose_quantity_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 1 group by di.document_id),'') ||
+                COALESCE('Plan parenteral: '||(select string_agg(s.pt ||
+                (case when q is not null then '\nVol/bolsa: ' || q.value || ' ' || q.unit else '' end) ||
+                (case when f.duration is not null then '\nDuración: ' || to_char(f.duration, 'HH24:MI') || ' hs' else '' end) ||
+                '\nFlujo: ' || f.flow_ml_hour || ' ml/h | ' || f.flow_drops_hour || ' hp. Gotas' ||
+                (case when f.daily_volume is not null then '\nVol/Día: ' || f.daily_volume || 'ml' else '' end) ||
+                (case when s1.pt is not null then '\nFármaco: ' || s1.pt else '' end) || '\nFecha indicación: ' || to_char(i.indication_date, 'dd-mm-yyyy') ,', ' )
+                from document_indication di
+                join indication i on (i.id=di.indication_id )
+                join parenteral_plan pp on (pp.id=i.id)
+                join snomed s on (pp.snomed_id=s.id)
+                join dosage dos on (pp.dosage_id=dos.id)
+                join frequency f on (f.id = pp.frequency_id)
+                left outer join quantity q on (q.id=dos.dose_quantity_id )
+                left outer join other_pharmaco oph on (oph.indication_id=pp.id)
+                left outer join snomed s1 on (s1.id=oph.snomed_id)
+                where d.id = di.document_id and d.type_id = 12 and i.type_id = 3 group by di.document_id),'') ||
+                COALESCE ('\nEstado: ' || (select string_agg(
+                (case when i.status_id = 1 then 'Indicada' else '' end) ||
+                (case when i.status_id = 2 then 'Suspendida' else '' end) ||
+                (case when i.status_id = 3 then 'En progreso' else '' end) ||
+                (case when i.status_id = 4 then 'Completada' else '' end) ||
+                (case when i.status_id = 5 then 'Rechazada' else '' end), ', ')
+                from document_indication di
+                join indication i on (i.id = di.indication_id)
+                where di.document_id = d.id and d.type_id = 12 group by di.document_id),'') as indication,
+                COALESCE('Detalles de referencia solicitada: ' || (select string_agg(
+                (case when re.care_line_id is not null then '\nLinea de cuidado: ' || cl.description else '' end) || '\nEspecialidad: ' || clinical_specialties ||
+                (case when re.reference_note_id is not null then '\nObservaciones: ' || rn.description else '' end), ', ')
+                from counter_reference cr
+                join reference re on (re.id = cr.reference_id)
+                join (
+                  select re2.id, STRING_AGG(cs."name" , ', ') as clinical_specialties
+                  from reference re2
+                  join reference_clinical_specialty rcs on (rcs.reference_id = re2.id)
+                  join clinical_specialty cs on (cs.id = rcs.clinical_specialty_id) 
+                  group by re2.id
+                ) as reference_clinical_specialties on (reference_clinical_specialties.id = re.id)
+                left outer join care_line cl on (cl.id = re.care_line_id)
+                left outer join reference_note rn on (rn.id = re.reference_note_id)
+                where cr.id = d.source_id and d.type_id = 11), '') as reference_counter_reference,
+                COALESCE('Tipo de cierre: ' || (select string_agg(
+                (case when cr.closure_type_id = 1 then 'Continúa en observación' else '' end) ||
+                (case when cr.closure_type_id = 2 then 'Inicia tratamiento en centro de referencia' else '' end) ||
+                (case when cr.closure_type_id = 3 then 'Requiere estudios complementarios' else '' end) ||
+                (case when cr.closure_type_id = 4 then 'Contrarreferencia' else '' end), ', ')
+                from counter_reference cr
+                where cr.id = d.source_id and d.type_id = 11), '') ||
+                COALESCE((select string_agg('\nDescripción de cierre: ' || n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id = 11), '') as counter_reference_closure,
+                COALESCE((select string_agg(tc."name", ', ')
+                from document_triage dt
+                join triage t on (t.id = dt.triage_id)
+                join triage_category tc on (tc.id = t.triage_category_id)
+                where dt.document_id = d.id and d.type_id = 15 group by d.id),'') as triage_level,
+                COALESCE('\nEnfermedad actual: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.current_illness_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nExamen físico: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.physical_exam_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nResumen de estudios y procedimientos realizados: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.studies_summary_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nEvolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id in (1,2,3)), '') ||
+                COALESCE('\nImpresión clínica y plan: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.clinical_impression_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nIndicaciones al alta: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.indications_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('\nOtras observaciones: '|| (select string_agg(n.description, ',' )
+                from note n
+                where n.id = d.other_note_id and d.type_id in (1, 2, 3)), '') ||
+                COALESCE('Evolución: ' || (select string_agg(n.description, ', ')
+                from note n
+                where n.id = d.other_note_id and d.type_id in (4, 15, 16)), '') ||
+                COALESCE('Evolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id in (9, 10, 13)), '') as notes
+                from
+                document as d
+                join document_type dt ON (d.type_id=dt.id)
+                join institution i on (i.id=d.institution_id)
+                left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
+                where d.deleted=false and d.status_id = '445665009';

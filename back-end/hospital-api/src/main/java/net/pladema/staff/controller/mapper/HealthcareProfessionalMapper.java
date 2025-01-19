@@ -3,8 +3,10 @@ package net.pladema.staff.controller.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.pladema.staff.controller.dto.ExternalTemporaryHealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 
+import net.pladema.staff.domain.ExternalTemporaryHealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 
 import org.mapstruct.IterableMapping;
@@ -17,7 +19,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.staff.LicenseNumberDt
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
-import jdk.jfr.Name;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.domain.LicenseNumberBo;
@@ -39,6 +40,9 @@ public interface HealthcareProfessionalMapper {
 	@Named("fromHealthcareProfessionalCompleteDto")
 	HealthcareProfessionalCompleteBo fromHealthcareProfessionalCompleteDto(HealthcareProfessionalCompleteDto healthcareProfessionalCompleteDto);
 
+	@Named("fromExternalTemporaryHealthcareProfessionalDto")
+	ExternalTemporaryHealthcareProfessionalBo fromExternalTemporaryHealthcareProfessionalDto(ExternalTemporaryHealthcareProfessionalDto externalTemporaryHealthcareProfessionalDto);
+
 	@Named("fromHealthcarePersonList")
 	@IterableMapping(qualifiedByName = "fromHealthcarePersonBo")
 	List<HealthcareProfessionalDto> fromHealthcarePersonList(List<HealthcarePersonBo> healthcarePersonList);
@@ -50,17 +54,21 @@ public interface HealthcareProfessionalMapper {
 	@IterableMapping(qualifiedByName = "toProfessionalDto")
 	List<ProfessionalDto> fromProfessionalBoList(List<HealthcareProfessionalBo> healthcareProfessionalBos);
 
-	@Name("toHealthcareProfessionalDto")
+	@Named("fromHealthcareProfessionalBo")
 	@Mapping(target = "person.firstName", source = "firstName")
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);
 
-	@Name("fromProfessionalCompleteBo")
+	@Named("fromProfessionalCompleteBo")
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
-		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),
+		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(), professionalCompleteBo.getMiddleNames(),
 				professionalCompleteBo.getLastName(), professionalCompleteBo.getNameSelfDetermination(),
 				mapProfessions(professionalCompleteBo.getProfessions()), professionalCompleteBo.getOtherLastNames());
 	}
+
+	@Named("fromProfessionalCompleteBoList")
+	@IterableMapping(qualifiedByName = "fromProfessionalCompleteBo")
+	List<ProfessionalCompleteDto> fromProfessionalCompleteBoList(List<ProfessionalCompleteBo> professionalCompleteBos);
 
 	private List<ProfessionCompleteDto> mapProfessions(List<ProfessionBo> professions) {
 		return professions.stream()

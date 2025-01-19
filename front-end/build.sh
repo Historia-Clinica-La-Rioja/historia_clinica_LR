@@ -38,11 +38,4 @@ mv apps/dist/hospital .docker/front-end
 echo "el built-commit es $(git rev-parse HEAD)" > .docker/front-end/git-sha
 
 echo "Building Frontend: output"
-
-
-echo "Building Storybook: start"
-cd apps
-npm run build-storybook
-cd -
-mv apps/storybook-static .docker/storybook
 ls -lha .docker/*

@@ -1,15 +1,19 @@
 package net.pladema.medicalconsultation.appointment.repository.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class AppointmentTicketImageBo {
 
 	private String institution;
@@ -36,12 +40,15 @@ public class AppointmentTicketImageBo {
 
 	private String sectorName;
 
+	private Integer serviceRequestId;
+
 	private String studyDescription;
 
 
 	public AppointmentTicketImageBo(String institution, String documentNumber, String patientLastName, String patientOtherLastNames,
 									String patientFirstName, String patientMiddleNames, String patientNameSelfDetermination, String medicalCoverage,
-									String medicalCoverageAcronym, LocalDate date, LocalTime hour, String sectorName, String studyDescription) {
+									String medicalCoverageAcronym, LocalDate date, LocalTime hour, String sectorName, String studyDescription,
+									Integer serviceRequestId) {
 		this.institution = institution;
 		this.documentNumber = documentNumber;
 		this.patientLastName = patientLastName;
@@ -55,6 +62,7 @@ public class AppointmentTicketImageBo {
 		this.hour = hour;
 		this.sectorName = sectorName;
 		this.studyDescription = studyDescription;
+		this.serviceRequestId = serviceRequestId;
 	}
 
 	public String getMedicalCoverage() {

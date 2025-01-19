@@ -1,4 +1,4 @@
-import { SnackBarService } from './../../presentation/services/snack-bar.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable } from 'rxjs';
@@ -6,15 +6,14 @@ import { finalize, map, takeUntil } from 'rxjs/operators';
 import { CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { WeekViewHourSegment } from 'calendar-utils';
 import { addDays, addMinutes, endOfWeek } from 'date-fns';
-import { Moment } from 'moment';
 
-import { buildFullDate, currentWeek, DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
+import { buildFullDateFromDate, currentDateWeek } from '@core/utils/moment.utils';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api-model';
 
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
-import { getDayHoursIntervalsByMinuteValue } from '@core/utils/date.utils';
+import { getDayHoursIntervalsByMinuteValue, toHourMinuteSecond } from '@core/utils/date.utils';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -34,15 +33,16 @@ const colors: any = {
 		secondary: '#D6FBD8',
 	},
 };
-
 export class AgendaHorarioService {
 
 	private diaryOpeningHours: CalendarEvent[] = [];
 	private occupiedOpeningHours: CalendarEvent[] = [];
 
-	private mappedCurrentWeek: Moment[] = [];
+	private daysOfCurrentWeek: Date[] = [];
 	private hasSelectedLinesOfCare = false;
 	private editMode = false;
+	private appointmentDuration: number;
+
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly cdr: ChangeDetectorRef,
@@ -51,20 +51,14 @@ export class AgendaHorarioService {
 		private readonly snackBarService: SnackBarService,
 		private readonly diaryType: EDiaryType
 	) {
-		currentWeek().forEach(day => {
-			this.mappedCurrentWeek[day.day()] = day;
+		currentDateWeek().forEach(day => {
+			this.daysOfCurrentWeek[day.getDay()] = day;
 		});
 	}
 
-	private appointmentDuration: number;
-
 	getMedicalAttentionTypeText(medicalAttentionTypeId: number): string {
 		const medicalAttentionType = medicalAttentionTypeId === 2 ? 'Espontánea' : 'Programada';
-		return `<strong>Atención ${medicalAttentionType} </strong> <br>`;
-	}
-
-	getOverturnsText(overturnCount: number): string {
-		return overturnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
+		return `Atención ${medicalAttentionType}`;
 	}
 
 	startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement, hasSelectedLinesOfCare?: boolean, editMode?: boolean): void {
@@ -113,11 +107,15 @@ export class AgendaHorarioService {
 					protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
 					hasSelectedLinesOfCare: this.hasSelectedLinesOfCare,
 					editMode: this.editMode,
-					patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
-					secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
+					patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
+					secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
 					onSiteAttentionAllowed: true,
-					diaryType: this.diaryType
-				}
+					diaryType: this.diaryType,
+					regulationProtectedAppointmentsAllowed: !!event.meta.regulationProtectedAppointmentsAllowed,
+				},
+				maxHeight: 'fit-content',
+				autoFocus: false,
+				height: 'max-content'
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {
@@ -127,7 +125,7 @@ export class AgendaHorarioService {
 			} else {
 				event.start = dialogInfo.startingHour;
 				event.end = dialogInfo.endingHour;
-				if (this.thereIsValidTurnAvailability(event))
+				if (this.thereIsValidTurnAvailabilityByEvent(event))
 					this.setNewEvent(event, dialogInfo);
 				else {
 					this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
@@ -138,7 +136,15 @@ export class AgendaHorarioService {
 		});
 	}
 
-	private thereIsValidTurnAvailability(event: CalendarEvent): boolean {
+	private thereIsValidAvailability(): boolean {
+		return !this.occupiedOpeningHours.some(occupiedOpeningHour =>
+			!this.diaryOpeningHours.every(diaryOpeningHour =>
+				this.compareTurnHourThreshold(occupiedOpeningHour, diaryOpeningHour)
+			)
+		);
+	}
+
+	private thereIsValidTurnAvailabilityByEvent(event: CalendarEvent): boolean {
 		return this.occupiedOpeningHours
 			.filter(occupiedTurn => event.start.getDay() === occupiedTurn.start.getDay())
 			.every(occupiedTurn => this.compareTurnHourThreshold(event, occupiedTurn));
@@ -170,11 +176,14 @@ export class AgendaHorarioService {
 						hasSelectedLinesOfCare: hasSelectedLinesOfCare,
 						openingHoursId: event.meta.diaryOpeningHourId,
 						protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
-						patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
-						secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
-						onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed ? true : false,
-						diaryType: this.diaryType
-					}
+						patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
+						secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
+						onSiteAttentionAllowed: !!event.meta.onSiteAttentionAllowed,
+						diaryType: this.diaryType,
+						regulationProtectedAppointmentsAllowed: !!event.meta.regulationProtectedAppointmentsAllowed,
+					},
+					maxHeight: 'fit-content',
+					autoFocus: false,
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
 				if (!dialogInfo) {
@@ -187,7 +196,7 @@ export class AgendaHorarioService {
 					else {
 						event.start = dialogInfo.startingHour;
 						event.end = dialogInfo.endingHour;
-						if (this.thereIsValidTurnAvailability(event))
+						if (this.thereIsValidTurnAvailabilityByEvent(event))
 							this.setNewEvent(event, dialogInfo);
 						else {
 							this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
@@ -230,6 +239,8 @@ export class AgendaHorarioService {
 			map(occupations => this.occupationsToCalendarEvents(occupations))
 		).subscribe((doctorsOfficeEvents: CalendarEvent[]) => {
 			this.occupiedOpeningHours = doctorsOfficeEvents;
+			if (!this.thereIsValidAvailability())
+				this.snackBarService.showError('turnos.agenda-setup.messages.TURN_ERROR');
 			this.refresh();
 		});
 	}
@@ -243,8 +254,8 @@ export class AgendaHorarioService {
 			return {
 				openingHours: {
 					dayWeekId: event.start.getDay(),
-					from: momentFormat(dateToMoment(event.start), DateFormat.HOUR_MINUTE_SECONDS),
-					to: momentFormat(dateToMoment(event.end), DateFormat.HOUR_MINUTE_SECONDS),
+					from: toHourMinuteSecond(event.start),
+					to: toHourMinuteSecond(event.end),
 				},
 				externalAppointmentsAllowed: event.meta.availableForBooking,
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
@@ -253,6 +264,7 @@ export class AgendaHorarioService {
 				patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed,
 				onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed,
+				regulationProtectedAppointmentsAllowed: event.meta.regulationProtectedAppointmentsAllowed
 			};
 		}
 	}
@@ -285,8 +297,7 @@ export class AgendaHorarioService {
 		return {
 			start: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.from),
 			end: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.to),
-			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId)
-				+ this.getOverturnsText(diaryOpeningHour.overturnCount),
+			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId),
 			color: this.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
 			meta: {
 				diaryOpeningHourId: diaryOpeningHour.openingHours.id,
@@ -297,13 +308,14 @@ export class AgendaHorarioService {
 				patientVirtualAttentionAllowed: diaryOpeningHour.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: diaryOpeningHour.secondOpinionVirtualAttentionAllowed,
 				onSiteAttentionAllowed: diaryOpeningHour.onSiteAttentionAllowed,
+				regulationProtectedAppointmentsAllowed: diaryOpeningHour.regulationProtectedAppointmentsAllowed
 			}
 
 		};
 	}
 
 	private getFullDate(dayNumber: number, time: string): Date {
-		return buildFullDate(time, this.mappedCurrentWeek[dayNumber]).toDate();
+		return buildFullDateFromDate(time, this.daysOfCurrentWeek[dayNumber]);
 	}
 
 	private limitNewEventsEnd(dragToSelectEvent: CalendarEvent, mouseMoveEvent: MouseEvent, segment: WeekViewHourSegment, segmentElement: HTMLElement): void {
@@ -356,7 +368,6 @@ export class AgendaHorarioService {
 			event.meta = dialogInfo;
 			event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
 			event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
-			event.title += this.getOverturnsText(dialogInfo.overturnCount);
 		}
 	}
 

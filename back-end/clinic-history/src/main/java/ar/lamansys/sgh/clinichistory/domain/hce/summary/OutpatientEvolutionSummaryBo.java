@@ -3,13 +3,15 @@ package ar.lamansys.sgh.clinichistory.domain.hce.summary;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class OutpatientEvolutionSummaryBo {
 
@@ -23,7 +25,7 @@ public class OutpatientEvolutionSummaryBo {
 
     private List<HealthConditionSummaryBo> healthConditions;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     private List<ReasonSummaryBo> reasons;
 
@@ -31,7 +33,7 @@ public class OutpatientEvolutionSummaryBo {
 
     private String evolutionNote;
 
-    public OutpatientEvolutionSummaryBo(Integer id, LocalDate startDate,
+    public OutpatientEvolutionSummaryBo(Integer id, LocalDateTime startDate,
                                         HealthcareProfessionalBo professional,
                                         ClinicalSpecialtyBo clinicalSpecialty,
                                         String evolutionNote, DocumentDataBo document){

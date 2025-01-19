@@ -1,16 +1,16 @@
 package net.pladema.establishment.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherInstitutionBo;
+import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.pladema.establishment.repository.entity.Institution;
-import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InstitutionRepository extends JpaRepository<Institution, Integer> {
@@ -30,13 +30,18 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"WHERE i.sisaCode = :sisaCode ")
 	Optional<Institution> findBySisaCode(@Param("sisaCode") String sisaCode);
 
+	@Query("SELECT i.id "+
+			"FROM Institution AS i " +
+			"WHERE i.sisaCode = :sisaCode ")
+	Optional<Integer> findIdBySisaCode(@Param("sisaCode") String sisaCode);
+
 	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
 			"FROM Institution i " +
 			"JOIN Address a ON (i.addressId = a.id) " +
 			"JOIN City c ON (a.cityId = c.id) " +
 			"WHERE c.departmentId = :departmentId " +
 			"ORDER BY i.name ")
-	List<InstitutionBasicInfoBo> findByDeparmentId(@Param("departmentId") Short departmentId);
+	List<InstitutionBasicInfoBo> findByDepartmentId(@Param("departmentId") Short departmentId);
 
 	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
 			"FROM Institution i " +
@@ -46,11 +51,12 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	List<InstitutionBasicInfoBo> findByProvinceId(@Param("provinceId") Short provinceId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
+	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
 			"FROM Institution i " +
 			"JOIN Sector s on s.institutionId = i.id " +
-			"WHERE s.sectorTypeId = '4' "+
-			"AND deleted IS FALSE ")
+			"WHERE s.sectorTypeId = 4 " +
+			"AND s.informer = TRUE " +
+			"AND s.deleteable.deleted = FALSE ")
 	List<InstitutionBasicInfoBo> getByDiagnosisImagesSectors();
 
 	@Transactional(readOnly = true)
@@ -62,21 +68,20 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"JOIN Department d ON (a.departmentId = d.id) " +
-			"JOIN Province p ON (d.provinceId = p.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
-			"WHERE d.id = :departmentId " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"WHERE c.departmentId = :departmentId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.deleteable.deleted IS FALSE " +
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE")
+			"AND hps.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithClinicalSpecialty(@Param("departmentId") Short departmentId,
-																						 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+																						 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
@@ -89,17 +94,16 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN ProfessionalProfessions pp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN HealthcareProfessionalSpecialty hps ON (pp.id = hps.professionalProfessionId) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"JOIN Department d ON (a.departmentId = d.id) " +
-			"JOIN Province p ON (d.provinceId = p.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (dcl.pk.diaryId = di.id) " +
-			"WHERE d.id = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND dcl.pk.careLineId = :careLineId " +
-			"AND clis.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND clis.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND cli.careLineId = :careLineId " +
 			"AND cli.deleted = FALSE " +
 			"AND di.deleteable.deleted IS FALSE " +
@@ -107,10 +111,10 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND ur.deleteable.deleted IS FALSE " +
 			"AND hp.deleteable.deleted IS FALSE " +
 			"AND pp.deleteable.deleted IS FALSE " +
-			"AND hps.deleteable.deleted IS FALSE")
+			"AND hps.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentIdHavingActiveDiaryWithCareLineClinicalSpecialty(@Param("departmentId") Short departmentId,
 																								 @Param("careLineId") Integer careLineId,
-																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+																								 @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
@@ -122,21 +126,22 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (di.id = dcl.pk.diaryId) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND dcl.pk.careLineId = :careLineId " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.deleteable.deleted IS FALSE " +
 			"AND dcl.deleteable.deleted IS FALSE " +
 			"AND dp.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentAndCareLineAndPracticeAndClinicalSpecialty(@Param("departmentId") Short departmentId,
-																						   @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																						   @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																						   @Param("careLineId") Integer careLineId,
 																						   @Param("practiceSnomedId") Integer practiceSnomedId);
 
@@ -144,11 +149,12 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryCareLine dcl ON (di.id = dcl.pk.diaryId) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND dcl.pk.careLineId = :careLineId " +
 			"AND di.active = TRUE " +
@@ -164,28 +170,30 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (do.institutionId = i.id) " +
 			"JOIN Diary di ON (di.doctorsOfficeId = do.id) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
-			"AND di.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND di.clinicalSpecialtyId IN :clinicalSpecialtyIds " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
 			"AND di.deleteable.deleted IS FALSE " +
 			"AND dp.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getAllByDepartmentAndClinicalSpecialtyAndPractice(@Param("departmentId") Short departmentId,
-																	  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																	  @Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
 																	  @Param("practiceSnomedId") Integer practiceSnomedId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (i.addressId = a.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
 			"JOIN DoctorsOffice do ON (i.id = do.institutionId) " +
 			"JOIN Diary di ON (do.id = di.doctorsOfficeId) " +
 			"JOIN DiaryPractice dp ON (di.id = dp.diaryId) " +
-			"WHERE a.departmentId = :departmentId " +
+			"WHERE c.departmentId = :departmentId " +
 			"AND dp.snomedId = :practiceSnomedId " +
 			"AND di.active = TRUE " +
 			"AND di.endDate >= CURRENT_DATE " +
@@ -193,4 +201,40 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND dp.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentAndPractice(@Param("departmentId") Short departmentId,
 															@Param("practiceSnomedId") Integer practiceSnomedId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
+			"FROM Institution i " +
+		  	"JOIN InstitutionalGroupInstitution igi ON (igi.institutionId = i.id) " +
+		  	"JOIN InstitutionalGroup ig ON (ig.id = igi.institutionalGroupId) " +
+		  	"WHERE ig.id IN :institutionalGroupsIds " +
+		  	"AND ig.deleteable.deleted IS FALSE " +
+		  	"AND igi.deleteable.deleted IS FALSE")
+	List<InstitutionBasicInfoBo> getInstitutionsRelatedToInstitutionalGroups(@Param("institutionalGroupsIds") List<Integer> institutionalGroupsIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT i.id "+
+			"FROM Institution AS i " +
+			"WHERE i.sisaCode = :sisaCode ")
+	List<Integer> findIdsBySisaCode(@Param("sisaCode") String sisaCode);
+
+
+	@Transactional(readOnly = true)
+	@Query("SELECT i.id "+
+			"FROM Institution AS i " +
+			"JOIN UserRole ur ON (i.id = ur.institutionId) " +
+			"WHERE ur.userId = :userId " +
+			"AND ur.deleteable.deleted IS FALSE")
+	List<Integer> getInstitutionsByUser(@Param("userId") Integer userId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW ar.lamansys.sgh.shared.domain.medicationrequestvalidation.MedicationRequestValidationDispatcherInstitutionBo(i.name, i.cuit, a.street, a.number, c.description, p.description) " +
+			"FROM Institution i " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"JOIN City c ON (c.id = a.cityId) " +
+			"JOIN Department d ON (d.id = c.departmentId) " +
+			"JOIN Province p ON (p.id = d.provinceId) " +
+			"WHERE i.id = :institutionId")
+    MedicationRequestValidationDispatcherInstitutionBo fetchInstitutionDataNeededForMedicationRequestValidation(@Param("institutionId") Integer institutionId);
+
 }

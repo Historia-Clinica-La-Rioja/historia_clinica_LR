@@ -6,9 +6,13 @@ section.page {
 
 mat-card.mat-card {
 	min-height: 300px;
-	min-width: 300px;
-	padding-left: 25px;
-	padding-right: 25px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+mat-card-title {
+	display: flex;
+	justify-content: space-between;
 }
 
 mat-chip {
@@ -16,11 +20,15 @@ mat-chip {
 	&.default {
 		background-color: $success-color;
 		color: white;
-		text-decoration: underline;
-	}	
-	&.error {
-		background-color: $error-color;
-		color: white;
-		text-decoration: none;
 	}
+	&.error {
+		background-color: white;
+		color: $error-color;
+		text-decoration: none;
+		border: 1px solid $error-color;
+	}
+}
+
+small {
+	color: $grey;
 }

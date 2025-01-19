@@ -1,15 +1,12 @@
+import { mapDateWithHypenToDateWithSlash } from './../../../api-rest/mapper/date-dto.mapper';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
-import { EAppointmentModality, EmptyAppointmentDto } from '@api-rest/api-model';
-import { DatePipeFormat } from '@core/utils/date.utils';
-import { DatePipe } from '@angular/common';
-import { ConfirmPrintAppointmentComponent } from '@turnos/dialogs/confirm-print-appointment/confirm-print-appointment.component';
-import { HolidaysService } from '@api-rest/services/holidays.service';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { Moment } from 'moment';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
+import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '@api-rest/api-model';
+import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
+import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { fromStringToDate } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-appointment-details',
@@ -17,64 +14,36 @@ import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.
 	styleUrls: ['./appointment-details.component.scss'],
 })
 export class AppointmentDetailsComponent implements OnInit {
-	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION: EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+	readonly MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
+	readonly MODALITY_SECOND_OPINION_VIRTUAL = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
 	@Input() emptyAppointment: EmptyAppointmentDto;
 	@Input() patientId: number;
-	@Input() searchInitialDate: Moment;
-	@Input() searchEndingDate: Moment;
-	@Output() resetAppointmentList = new EventEmitter<void>();
-	appointmentTime: Date = new Date();
-	private selectedHolidayDay: Date;
+	@Input() referenceSummary?: ReferenceSummaryDto;
+	@Output() resetInformation = new EventEmitter<void>();
+	appointmentDate: Date = new Date();
 
 	constructor(
 		private readonly dialog: MatDialog,
-		private readonly datePipe: DatePipe,
-		private readonly holidayService: HolidaysService,
-		private readonly appointmentsFacade: AppointmentsFacadeService
+		private readonly dateFormatPipe: DateFormatPipe,
+		private readonly holidayService: HolidayCheckService,
 	) { }
 
 	ngOnInit(): void {
-		const timeData = this.emptyAppointment.hour.split(":");
-		this.appointmentTime.setHours(+timeData[0]);
-		this.appointmentTime.setMinutes(+timeData[1]);
-		this.appointmentTime.setSeconds(+timeData[2]);
+		this.appointmentDate = new Date(this.emptyAppointment.date + 'T' + this.emptyAppointment.hour);
 	}
 
-	checkAvailability() {
-		const initialDate = momentFormat(this.searchInitialDate, DateFormat.API_DATE);
-		const endingDate = momentFormat(this.searchEndingDate, DateFormat.API_DATE);
-
-		let isHoliday = false;
-		this.holidayService.getHolidays(initialDate, endingDate).subscribe(holidays => {
-			if (holidays.length) {
-				this.selectedHolidayDay = this.appointmentsFacade.checkIfHoliday(holidays, this.emptyAppointment.date);
-				isHoliday = this.selectedHolidayDay ? true : false;
-
-				if (isHoliday) {
-					const dialogRef = this.dialog.open(DiscardWarningComponent, {
-						data: this.appointmentsFacade.getHolidayData(this.selectedHolidayDay)
-					});
-					dialogRef.afterClosed().subscribe((result: boolean) => {
-						if (result || result == undefined) {
-							dialogRef?.close();
-						}
-						else {
-							this.assignAppointment();
-						}
-					});
-				} else {
-					this.assignAppointment();
-				}
-			}
-			else
+	assign() {
+		this.holidayService.checkAvailability(this.emptyAppointment.date).subscribe(isAvailable => {
+			if (isAvailable) {
 				this.assignAppointment();
-		})
+			}
+		});
 	}
 
 	assignAppointment() {
 		const dialogReference = this.dialog.open(NewAppointmentComponent, {
-			width: '35%',
+			width: '43%',
 			disableClose: true,
 			data: {
 				date: this.emptyAppointment.date,
@@ -83,15 +52,18 @@ export class AppointmentDetailsComponent implements OnInit {
 				openingHoursId: this.emptyAppointment.openingHoursId,
 				overturnMode: false,
 				patientId: this.patientId ? this.patientId : null,
-				modalityAttention: this.modalityAttention
+				modalityAttention: this.modalityAttention,
+				protectedAppointment: !!this.referenceSummary,
+				referenceSummary: this.referenceSummary,
 			}
 		});
 		dialogReference.afterClosed().subscribe(
 			(result: any) => {
 				if (result !== -1) {
-					this.resetAppointmentList.emit();
+					this.resetInformation.emit();
 
-					var fullAppointmentDate = this.datePipe.transform(this.emptyAppointment.date, DatePipeFormat.FULL_DATE);
+					var fullAppointmentDate = this.dateFormatPipe.transform(fromStringToDate(mapDateWithHypenToDateWithSlash(this.emptyAppointment.date)), 'fulldate');
+
 					fullAppointmentDate = fullAppointmentDate[0].toUpperCase() + fullAppointmentDate.slice(1);
 					const timeData = this.emptyAppointment.hour.split(":");
 
@@ -100,10 +72,10 @@ export class AppointmentDetailsComponent implements OnInit {
 						specialtyAndAlias = `${this.emptyAppointment.alias}`;
 					if (this.emptyAppointment.clinicalSpecialtyName)
 						specialtyAndAlias = `${specialtyAndAlias} (${this.emptyAppointment.clinicalSpecialtyName})`;
-					
-					if (result.email && this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION) {
+					if (result.email && (this.modalityAttention === this.MODALITY_PATIENT_VIRTUAL_ATTENTION || this.modalityAttention === this.MODALITY_SECOND_OPINION_VIRTUAL)) {
 						var message = 'Se podrá acceder a la teleconsulta a través del link que se ha enviado a ' + `<strong> ${result.email}</strong>`
 					}
+
 					this.dialog.open(ConfirmPrintAppointmentComponent, {
 						width: '40%',
 						data: {

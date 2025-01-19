@@ -46,4 +46,8 @@ public class MoveStudiesBO {
 	private Integer institutionId;
 
 	private String domainPac;
+
+	private Date beginOfMove;
+
+	private Date endOfMove;
 }

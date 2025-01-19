@@ -18,10 +18,13 @@ public class AttentionTypeReportItemBo {
 
     private final String appointmentState;
 
+	private final String completePhone;
+
     public AttentionTypeReportItemBo(DailyAppointmentVo dailyAppointmentVo){
         this.hour = dailyAppointmentVo.getHour();
         this.patientId = dailyAppointmentVo.getPatientId();
         this.patientMedicalCoverageId = dailyAppointmentVo.getPatientMedicalCoverageId();
         this.appointmentState = dailyAppointmentVo.getAppointmentState();
+		this.completePhone = dailyAppointmentVo.getCompletePhone();
     }
 }

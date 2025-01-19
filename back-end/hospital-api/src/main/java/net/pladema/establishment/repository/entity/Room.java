@@ -43,5 +43,8 @@ public class Room {
 
 	@Column(name = "sector_id", nullable = false)
 	private Integer sectorId;
+
+	@Column(name = "topic")
+	private String topic;
 	
 }

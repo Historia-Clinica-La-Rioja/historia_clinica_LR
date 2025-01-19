@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FrailService } from '@api-rest/services/frail.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FrailService } from '@api-rest/services/fragility-test.service';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { QuestionnairesResponses } from '@api-rest/api-model';
+import { AlertDialogComponent } from '../../alert-dialog/alert-dialog.component';
 
 @Component({
   selector: 'app-get-frail',
@@ -11,50 +13,76 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class GetFrailComponent implements OnInit {
   submitted: boolean;
-  patientId: any;
-  consultation: number;
-  questionnaireId: number;
+  patientId: number;
+  frailQuestionnaires: QuestionnairesResponses[] = [];
+  lastFrailQuestionnaireId: number | null = null;
 
   constructor(
     private frailService: FrailService,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialog
   ) {
 
-    this.questionnaireId = data.patientId
+    this.patientId = data.patientId
 
   }
 
   ngOnInit(): void {
+    this.frailService.getAllByPatientId(this.patientId).subscribe(
+      (questionnaires: QuestionnairesResponses[]) => {
+        this.frailQuestionnaires = questionnaires;
+        this.getLastFrailQuestionnaireId();
+      },
+      (error) => {
+        console.error('Error fetching frail questionnaires:', error);
+      }
+    );
   }
 
-  generatePdf() {
-    this.submitted = true;
+  getLastFrailQuestionnaireId(): void {
+    // Filter "frail" questionnaires
+    const frailQuestionnaires = this.frailQuestionnaires.filter(
+      (questionnaire) => questionnaire.questionnaireTypeId === 3
+    );
 
-    if (this.questionnaireId) {
-      this.frailService.getPdf(this.questionnaireId).subscribe(
-        (response) => {
-          const blob = new Blob([response], { type: 'application/pdf' });
-          console.log(this.questionnaireId, "cuestionario")
+    // Sort by creation date
+    frailQuestionnaires.sort((a, b) => {
+      return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
+    });
 
-          const fileName = `EscaladeFrail_${this.patientId}.pdf`;
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = fileName;
-
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-
-          window.URL.revokeObjectURL(url);
-
-          
-        },
-        (error) => {
-          
-        }
-      );
+    // Get the latest ID
+    if (frailQuestionnaires.length > 0) {
+      this.lastFrailQuestionnaireId = frailQuestionnaires[0].id;
+    } else {
+      console.warn('No frail questionnaires found for this patient')
+      this.showAlert('No hay cuestionarios disponibles para este paciente.')
     }
   }
-}  
+
+  downloadLastFrailPdf(): void {
+    this.submitted = true;
+
+    if (this.lastFrailQuestionnaireId !== null) {
+      this.frailService.getPdf(this.lastFrailQuestionnaireId).subscribe(
+        (pdfBlob: Blob) => {
+          const url = window.URL.createObjectURL(pdfBlob);
+          window.open(url);
+        },
+        (error) => {
+          console.error('Error downloading the questionnaire PDF:', error);
+          this.showAlert('Error al descargar el PDF del cuestionario.');
+        }
+      );
+    } else {
+      console.warn('No Frail questionnaires available to download PDF.')
+      this.showAlert('No hay cuestionarios disponibles para descargar.')
+    }
+  }
+
+  showAlert(message: string): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { message: message },
+    });
+  }
+
+}

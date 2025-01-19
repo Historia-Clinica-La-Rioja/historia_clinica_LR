@@ -41,4 +41,11 @@ public interface DiaryPracticeRepository extends SGXAuditableEntityJPARepository
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted IS NULL)" +
 			"AND (dp.deleteable.deleted = false OR dp.deleteable.deleted IS NULL) ")
 	List<SnomedBo> getActiveDiariesPractices(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT (case when count(dp.id)> 0 then true else false end)" +
+			"FROM DiaryPractice dp " +
+			"WHERE dp.diaryId = :diaryId " +
+			"AND (dp.deleteable.deleted = false OR dp.deleteable.deleted IS NULL) ")
+	Boolean hasPractices(@Param("diaryId") Integer diaryId);
 }

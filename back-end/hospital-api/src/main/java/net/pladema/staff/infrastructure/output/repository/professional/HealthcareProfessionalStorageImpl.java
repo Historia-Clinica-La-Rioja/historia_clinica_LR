@@ -7,6 +7,14 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
+import ar.lamansys.sgx.shared.repositories.QueryPart;
+import lombok.RequiredArgsConstructor;
+import net.pladema.staff.domain.HealthcareProfessionalSearchBo;
+import net.pladema.staff.repository.domain.HealthcareProfessionalSearchQuery;
+import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
+
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,23 +24,21 @@ import net.pladema.staff.domain.ProfessionBo;
 import net.pladema.staff.domain.ProfessionSpecialtyBo;
 import net.pladema.staff.domain.ProfessionalCompleteBo;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import ar.lamansys.sgh.shared.domain.ELicenseNumberTypeBo;
 
-@Service
 @Slf4j
+@RequiredArgsConstructor
+@Service
 public class HealthcareProfessionalStorageImpl implements HealthcareProfessionalStorage {
 
 	private final EntityManager entityManager;
-
-	public HealthcareProfessionalStorageImpl(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+	private final SharedPersonPort sharedPersonPort;
 
 	@Override
 	public ProfessionalCompleteBo fetchProfessionalByUserId(Integer userId) {
 		log.debug("fetchProfessionalByUserId -> userId={}", userId);
 		String sqlString = "" +
-				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
+				"SELECT hp.id, p.id, p.firstName, p.middleNames, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
 				"FROM HealthcareProfessional AS hp " +
 				"RIGHT JOIN UserPerson AS up ON (up.pk.personId = hp.personId) " +
 				"JOIN Person p ON (up.pk.personId = p.id) " +
@@ -42,7 +48,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		query.setParameter("userId", userId);
 		Object[] authorInfo = (Object[]) query.getSingleResult();
 		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5]);
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5], (String) authorInfo[6]);
 
 		result.setProfessions(buildProfessions(result.getPersonId()));
 		log.trace("execute result query -> {}", result);
@@ -53,7 +59,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	public ProfessionalCompleteBo fetchProfessionalById(Integer professionalId) {
 		log.debug("fetchProfessionalById -> professionalId={}", professionalId);
 		String sqlString = "" +
-				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
+				"SELECT hp.id, p.id, p.firstName, p.middleNames, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
 				"FROM HealthcareProfessional AS hp " +
 				"JOIN Person p ON (hp.personId = p.id) " +
 				"JOIN PersonExtended pe ON (p.id = pe.id) " +
@@ -63,11 +69,41 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		query.setParameter("professionalId", professionalId);
 		Object[] authorInfo = (Object[]) query.getSingleResult();
 		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5]);
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5], (String) authorInfo[6]);
 
 		result.setProfessions(buildProfessions(result.getPersonId()));
 		log.trace("execute result query -> {}", result);
 		return result;
+	}
+
+	@Override
+	public List<ProfessionalCompleteBo> fetchProfessionalsByIds(List<Integer> professionalIds) {
+		log.debug("fetchProfessionalById -> professionalIds -> {}", professionalIds);
+		String sqlString = "SELECT hp.id, p.id, p.firstName, p.middleNames, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
+				"FROM HealthcareProfessional AS hp " +
+				"JOIN Person p ON (hp.personId = p.id) " +
+				"JOIN PersonExtended pe ON (p.id = pe.id) " +
+				"WHERE hp.id IN :professionalIds";
+		Query query = entityManager.createQuery(sqlString);
+		query.setParameter("professionalIds", professionalIds);
+		List<Object[]> queryResult = query.getResultList();
+		List<ProfessionalCompleteBo> result = queryResult.stream().map(authorInfo -> new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5], (String) authorInfo[6])).collect(Collectors.toList());
+		result.forEach(professional -> professional.setProfessions(buildProfessions(professional.getPersonId())));
+		log.trace("execute result query -> {}", result);
+		return result;
+	}
+
+	@Override
+	public List<HealthcareProfessionalBo> fetchAllProfessionalsByFilter(HealthcareProfessionalSearchBo searchCriteria, List<Short> professionalERolIds) {
+		HealthcareProfessionalSearchQuery healthcareProfessionalSearchQuery = new HealthcareProfessionalSearchQuery(searchCriteria, professionalERolIds);
+		QueryPart queryPart = buildQuery(healthcareProfessionalSearchQuery);
+		Query query = entityManager.createNativeQuery(queryPart.toString());
+		queryPart.configParams(query);
+		List<HealthcareProfessionalVo> professionals = healthcareProfessionalSearchQuery.construct(query.getResultList());
+		return professionals.stream()
+				.map(this::mapToHealthcareProfessionalBo)
+				.collect(Collectors.toList());
 	}
 
 	private List<ProfessionBo> buildProfessions(Integer personId) {
@@ -160,4 +196,35 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		return new LicenseNumberBo((Integer) row[0], (String) row[1], (ELicenseNumberTypeBo) row[2]);
 	}
 
+	private QueryPart buildQuery(HealthcareProfessionalSearchQuery healthcareProfessionalSearchQuery){
+
+		QueryPart firstQuery = new QueryPart("SELECT ")
+				.concatPart(healthcareProfessionalSearchQuery.select())
+				.concat(" FROM ")
+				.concatPart(healthcareProfessionalSearchQuery.from())
+				.concat(" WHERE ")
+				.concatPart(healthcareProfessionalSearchQuery.where());
+
+		QueryPart secondQuery = new QueryPart("SELECT ")
+				.concatPart(healthcareProfessionalSearchQuery.select())
+				.concat(" FROM ")
+				.concatPart(healthcareProfessionalSearchQuery.fromSecondQuery())
+				.concat(" WHERE ")
+				.concatPart(healthcareProfessionalSearchQuery.where());
+
+		return firstQuery.concat(" UNION ").concatPart(secondQuery)
+				.concat(" ORDER BY ")
+				.concat("last_name");
+	}
+
+	private HealthcareProfessionalBo mapToHealthcareProfessionalBo(HealthcareProfessionalVo hcp) {
+		String completePersonName = sharedPersonPort.parseFormalPersonName(
+				hcp.getFirstName(),
+				hcp.getMiddleNames(),
+				hcp.getLastName(),
+				hcp.getOtherLastNames(),
+				hcp.getNameSelfDetermination()
+		);
+		return new HealthcareProfessionalBo(hcp, completePersonName);
+	}
 }

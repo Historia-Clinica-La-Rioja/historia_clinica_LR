@@ -31,7 +31,7 @@ public class GetServiceRequestInfoRepositoryImpl implements GetServiceRequestInf
                     "SELECT sr.id AS sr_id, sr.doctor_id AS doctor_id, sr.request_date AS request_date, " +
                     "sr.medical_coverage_id AS medical_coverage_id, n.description AS note, " +
                     "row_number() OVER (PARTITION by dr.snomed_id, dr.health_condition_id ORDER BY dr.updated_on ASC) AS rw," +
-                    "dr.snomed_id, dr.health_condition_id, d.id AS document_id " +
+                    "dr.snomed_id, dr.health_condition_id, d.id AS document_id, sr.source_type_id, sr.institution_id, sr.observations " +
                     "FROM {h-schema}service_request sr " +
                     "JOIN {h-schema}document d ON (sr.id = d.source_id AND d.source_type_id = "+ SourceType.ORDER + ") " +
                     "JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
@@ -42,7 +42,7 @@ public class GetServiceRequestInfoRepositoryImpl implements GetServiceRequestInf
                 "SELECT t.sr_id, t.doctor_id, t.request_date, t.medical_coverage_id, t.note, " +
                 "s.id AS d_r_id, s.sctid AS d_r_sctid, s.pt AS d_r_pt, " +
                 "h.id AS hid, h.s_id AS h_s_id, h.sctid_id AS h_sctid, h.pt AS h_pt, h.cie10_codes AS cie10_codes, " +
-				"t.document_id " +
+				"t.document_id, t.source_type_id, t.institution_id, t.observations " +
                 "FROM temporal t " +
                 "JOIN {h-schema}snomed s ON (t.snomed_id = s.id) " +
                 "LEFT JOIN ( SELECT h1.id, s1.id as s_id, s1.sctid as sctid_id, s1.pt, h1.cie10_codes  " +

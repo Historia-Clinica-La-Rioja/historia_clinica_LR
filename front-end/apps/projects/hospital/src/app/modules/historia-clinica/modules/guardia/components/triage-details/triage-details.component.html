@@ -21,6 +21,17 @@
 		</div>
 	</div>
 
+	<section id="reasons" fxLayout="column" fxLayoutGap="5px">
+		<span class="title-weight">{{'guardia.triage.REASON' | translate}}</span>
+		<span *ngIf="triage.reasons.length else noInfo">{{ triage.reasons | stringSeparator }}</span>
+	</section>
+
+	<div *ngIf="triage.clinicalSpecialtySector.id">
+		<section id="specialty-sector" fxLayout="column" fxLayoutGap="5px">
+			<span class="title-weight">{{'guardia.triage.SPECIALTY_SECTOR' | translate }}</span>
+			<span>{{ triage.clinicalSpecialtySector.description }}</span>
+		</section>
+	</div>
 
 	<section
 		*ngIf="emergencyCareType && ( emergencyCareType === emergencyCareTypes.PEDIATRIA || (showRiskFactors && riskFactors?.length))"
@@ -107,7 +118,7 @@
 	<section *ngIf="emergencyCareType">
 		<div fxLayout="row">
 			<span class="title-weight" style="margin-bottom: 0">
-				{{ 'guardia.episode.triage.ultimo.EVALUACION' | translate }}
+				{{ 'guardia.episode.triage.ultimo.OBSERVATIONS' | translate }}
 			</span>
 		</div>
 		<span class="line-break-text" *ngIf="triage.notes else noInfo">

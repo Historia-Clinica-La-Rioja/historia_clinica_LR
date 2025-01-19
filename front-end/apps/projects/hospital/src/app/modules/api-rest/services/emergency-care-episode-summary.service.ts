@@ -17,14 +17,19 @@ export class EmergencyCareEpisodeSummaryService {
 	}
 
 
-	getEmergencyCareEpisodeInProgress(patientId: number): Observable<EmergencyCareEpisodeInProgressDto> {
-		const url = `${BASIC_URL + this.contextService.institutionId + PREFIX_URL}/in-progress/patient/${patientId}`;
+	getEmergencyCareEpisodeInProgressInTheInstitution(patientId: number): Observable<EmergencyCareEpisodeInProgressDto> {
+		const url = `${BASIC_URL + this.contextService.institutionId + PREFIX_URL}/in-progress-in-institution/patient/${patientId}`;
 		return this.http.get<EmergencyCareEpisodeInProgressDto>(url);
 	}
 
 	getEmergencyCareEpisodeSummary(episodeId: number): Observable<EmergencyCareListDto> {
 		const url = `${BASIC_URL + this.contextService.institutionId + PREFIX_URL}/${episodeId}/summary`;
 		return this.http.get<EmergencyCareListDto>(url);
+	}
+
+	getEmergencyCareEpisodeInProgress(patientId: number): Observable<EmergencyCareEpisodeInProgressDto> {
+		const url = `${BASIC_URL + this.contextService.institutionId + PREFIX_URL}/in-progress/patient/${patientId}`;
+		return this.http.get<EmergencyCareEpisodeInProgressDto>(url);
 	}
 
 }

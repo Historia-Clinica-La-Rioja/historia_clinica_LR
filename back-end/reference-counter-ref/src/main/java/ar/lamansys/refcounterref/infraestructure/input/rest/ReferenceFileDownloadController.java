@@ -22,7 +22,8 @@ public class ReferenceFileDownloadController {
 
 
     @GetMapping("/download/{fileId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO, GESTOR_DE_ACCESO_INSTITUCIONAL') || " +
+			"hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
     public ResponseEntity<Resource> download(@PathVariable(name = "institutionId") Integer institutionId,
 											 @PathVariable(name = "fileId") Integer fileId) {
         log.debug("Input parameters -> institutionId {}, fileId {}", institutionId, fileId);

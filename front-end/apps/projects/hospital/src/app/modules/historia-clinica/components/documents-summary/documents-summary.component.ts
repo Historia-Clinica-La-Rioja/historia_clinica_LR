@@ -1,15 +1,14 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Moment } from 'moment';
 import {
 	DocumentSearchFilterDto,
 	EDocumentSearch,
 	DocumentSearchDto,
 	DocumentHistoricDto,
-	MasterDataDto
+	MasterDataDto,
 } from '@api-rest/api-model';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { newDate } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
 import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
@@ -17,10 +16,15 @@ import { DocumentActionsService, DocumentSearch } from "@historia-clinica/module
 import { PatientNameService } from "@core/services/patient-name.service";
 import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
-import { fromStringToDate } from "@core/utils/date.utils";
 import { InternmentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { fixDate } from '@core/utils/date/format';
+import { ShowMoreConceptsPipe } from '@presentation/pipes/show-more-concepts.pipe';
+import { capitalize } from '@core/utils/core.utils';
+import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -28,18 +32,26 @@ import { InternacionMasterDataService } from "@api-rest/services/internacion-mas
 	styleUrls: ['./documents-summary.component.scss'],
 	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService]
 })
-export class DocumentsSummaryComponent implements OnInit, OnChanges {
+export class DocumentsSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
-	@Input() clinicalEvaluation: DocumentHistoricDto;
+	@Input() set clinicalEvaluation(ce: DocumentHistoricDto) {
+		this.documentHistoric = ce;
+		if (this.documentHistoric) {
+			this.updateDocuments();
+		}
+		this.activeDocument = undefined;
+		this.internmentActions.popUpOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
+		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
+	}
 	@Input() patientId: number;
-	@Input() internmentEpisodeAdmissionDatetime: string;
+	@Input() internmentEpisodeAdmissionDatetime: Date;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentTypes: MasterDataDto [] = [];
-	public documentsToShow: DocumentSearch[] = [];
+	public documentsToShow: DocumentData[] = [];
 	public readonly documentsSummary = DOCUMENTS;
-	public today: Moment = newMoment();
+	public today = newDate();
 	public form: UntypedFormGroup;
 	public activeDocument: DocumentSearch;
 	public documentHistoric: DocumentHistoricDto;
@@ -47,6 +59,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	public hasError = hasError;
 	public minDate: Date;
 	isPopUpOpen = false;
+
+    public readonly DOCUMENT_TYPES = DocumentTypes;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -71,21 +85,13 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.internacionMasterDataService.getDocumentTypes().subscribe(dt => this.documentTypes = dt);
 	}
 
-	ngOnChanges() {
-		this.documentHistoric = this.clinicalEvaluation;
-		if (this.documentHistoric) {
-			this.updateDocuments();
-		}
-		this.activeDocument = undefined;
-		this.internmentActions.popUpOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
-		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
-	}
+
 
 	ngOnInit(): void {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 		this.setInputResetBehaviour();
 		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);
-		this.minDate = fromStringToDate(this.internmentEpisodeAdmissionDatetime);
+		this.minDate = this.internmentEpisodeAdmissionDatetime;
 	}
 
 	search(): void {
@@ -112,7 +118,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	private getPlainText(): string {
 		if (this.isDate(this.form.value.field))
-			return momentFormat(this.form.value.date, DateFormat.API_DATE);
+			return toApiFormat(fixDate(this.form.value.date))
 		else if (this.form.value.field === 'DOCUMENT_TYPE')
 			return this.form.value.documentType
 		return this.form.value.text
@@ -127,24 +133,32 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 			document: d.document,
 			canDoAction: {
 				delete: this.documentActions.canDeleteDocument(d.document),
-				edit: this.documentActions.canEditDocument(d.document)
-			},
-			createdOn: d.createdOn,
-			editedOn: d.document.editedOn ? this.documentActions.loadTime(d.document.editedOn) : null
+				edit: this.documentActions.canEditDocument(d.document),
+			}
 		};
 	}
 
 	updateDocuments() {
 		this.form.patchValue({ documentsWithoutDiagnosis: false })
 		this.activeDocument = null;
-		const documents = this.documentHistoric.documents.filter(document => {
+		const documents = this.documentHistoric?.documents?.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
-		this.documentActions.setPatientDocuments(documents);
-		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
-		})
-		this.changeDetectorRef.detectChanges();
+		if (documents){
+			this.documentActions.setPatientDocuments(documents);
+			this.documentsToShow = documents.map(document => {
+				return {
+					documentSearch:	{ document },
+					summaryAttentionData: this.buildSummaryAttentionData(document)
+				}
+			})
+			this.changeDetectorRef.detectChanges();
+		}
+	}
+
+	dateChanged(date: Date) {
+		this.form.controls.date.setValue(date);
+		this.search()
 	}
 
 	showDocumentsWithoutDiagnosis() {
@@ -153,15 +167,16 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		const documents = this.documentHistoric.documents.filter(document => {
 			return this.form.value.documentsWithoutDiagnosis ? !document.diagnosis.length && !document.mainDiagnosis.length : true;
 		});
-		this.documentActions.setPatientDocuments(documents);
-		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
-		});
-		this.changeDetectorRef.detectChanges();
-	}
-
-	viewEvolutionNote(): boolean {
-		return !!(this.activeDocument?.document.notes || this.activeDocument?.document.procedures.length > 0);
+		if (documents){
+			this.documentActions.setPatientDocuments(documents);
+			this.documentsToShow = documents.map(document => {
+				return {
+					documentSearch:	{ document },
+					summaryAttentionData: this.buildSummaryAttentionData(document)
+				}
+			})
+			this.changeDetectorRef.detectChanges();
+		}
 	}
 
 	resetFilter(control: AbstractControl) {
@@ -207,6 +222,10 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.activeDocument = undefined;
 	}
 
+    resetActiveDocument() {
+        this.activeDocument = undefined;
+    }
+
 	editDraftEpicrisis(document: DocumentSearchDto) {
 
 		this.documentActions.editEpicrisisDraft(document);
@@ -231,6 +250,52 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		return `${this.patientNameService.getPatientName(firstName, nameSelfDetermination)}`;
 	}
 
+	buildSummaryAttentionData(document: DocumentSearchDto): SummaryAttentionData {
+		return {
+			title: this.getDocumentType(document),
+			problem: this.buildProblem(document),
+			registerEditor: this.buildRegisterEditor(document)
+		}
+	}
+
+	getDocumentType(document: DocumentSearchDto): string {
+		if (document.documentType === this.DOCUMENT_TYPES.SURGICAL_REPORT)
+			return 'internaciones.documents-summary.document-name.SURGICAL_REPORT';
+		if (document.documentType === this.DOCUMENT_TYPES.ANAMNESIS)
+			return 'internaciones.documents-summary.document-name.ANAMNESIS';
+		if ((document.documentType == this.DOCUMENT_TYPES.EPICRISIS || document.documentType == this.DOCUMENT_TYPES.ANESTHETIC_REPORT) && !document.confirmed)
+			return document.documentType + ' (Borrador)';
+		if (document.documentType !== this.DOCUMENT_TYPES.ANAMNESIS && document.confirmed)
+			return document.documentType;
+	}
+
+	buildProblem(document: DocumentSearchDto): string {
+		const showMoreConceptsPipe = new ShowMoreConceptsPipe();
+		let problems: string[] = [];
+		if (document.mainDiagnosis === null || document.mainDiagnosis === undefined || document.mainDiagnosis === '')
+			problems = [...document.diagnosis];
+		else
+			problems = [document.mainDiagnosis, ...document.diagnosis];
+		return problems.length ? capitalize(showMoreConceptsPipe.transform(problems)) : 'internaciones.documents-summary.NO_SNOMED_CONCEPT';
+	}
+
+	buildRegisterEditor(document: DocumentSearchDto): RegisterEditor {
+		return {
+			createdBy: this.getFullName(document.creator.firstName, document.creator.nameSelfDetermination) + " " + document.creator.lastName,
+			date: convertDateTimeDtoToDate(document.createdOn)
+		}
+	}
+}
+
+export interface DocumentData {
+	documentSearch: DocumentSearch,
+	summaryAttentionData: SummaryAttentionData
+}
+
+export interface SummaryAttentionData {
+	title: string,
+	problem: string,
+	registerEditor: RegisterEditor
 }
 
 export interface SearchField {
@@ -238,3 +303,11 @@ export interface SearchField {
 	label: string;
 }
 
+enum DocumentTypes {
+    ANESTHETIC_REPORT = 'Parte anestésico',
+    EVOLUTION_NOTE = 'Nota de evolución',
+    NURSE_EVOLUTION_NOTE = 'Nota de evolución de enfermería',
+    ANAMNESIS = 'Anamnesis',
+    EPICRISIS = 'Epicrisis',
+	SURGICAL_REPORT = 'Parte quirúrgico de internación',
+}

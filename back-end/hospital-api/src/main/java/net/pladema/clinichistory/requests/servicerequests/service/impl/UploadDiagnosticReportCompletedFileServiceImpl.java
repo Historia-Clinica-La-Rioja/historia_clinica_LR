@@ -34,8 +34,8 @@ public class UploadDiagnosticReportCompletedFileServiceImpl  implements UploadDi
 
 	@Override
 	@Transactional // Transaccion compleja
-	public List<Integer> execute(MultipartFile[] files, Integer diagnosticReportId, Integer patientId) {
-		List<Integer> result = Arrays.stream(files).mapToInt(file -> {
+	public List<Integer> execute(List<MultipartFile> files, Integer diagnosticReportId, Integer patientId) {
+		List<Integer> result = files.stream().mapToInt(file -> {
 					String newFileName = fileService.createFileName(FilenameUtils.getExtension(file.getOriginalFilename()));
 					var path = fileService.buildCompletePath(
 							buildPartialPath(patientId, newFileName, diagnosticReportId)

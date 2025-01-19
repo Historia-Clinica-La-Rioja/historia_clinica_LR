@@ -1,0 +1,380 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_17
+
+    - changeSet:
+        id: update_violence_report_text_lengths
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                ALTER TABLE violence_report_keeper ALTER COLUMN other_relationship_with_victim TYPE varchar(30) USING other_relationship_with_victim::varchar;
+                ALTER TABLE violence_report_aggressor ALTER COLUMN other_relationship_with_victim TYPE varchar(30) USING other_relationship_with_victim::varchar;
+                ALTER TABLE health_system_organization_coordination ALTER COLUMN other_health_system_organization TYPE varchar(100) USING other_health_system_organization::varchar;
+                ALTER TABLE health_institution_organization_coordination ALTER COLUMN other_health_institution_organization TYPE varchar(100) USING other_health_institution_organization::varchar;
+                ALTER TABLE institution_report_place ALTER COLUMN other_report_place TYPE varchar(100) USING other_report_place::varchar;
+                ALTER TABLE violence_report ALTER COLUMN observations TYPE text USING observations::text;
+
+    - changeSet:
+        id: violence_report-add-institution_id-column
+        comment: Add institution_id column to violence_report table
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                    defaultValue: -1
+
+    - changeSet:
+        id: set-snomed_group-ecl-text-data-type-default
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                ALTER TABLE snomed_group ALTER COLUMN ecl TYPE text USING ecl::text;
+
+    - changeSet:
+        id: rollback-odontology-problems-problem_id-health_condition
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE health_condition hc
+                    SET problem_id = '55607006'
+                    WHERE EXISTS (
+                        SELECT 1
+                        FROM document_health_condition dhc
+                        JOIN document d on (dhc.document_id = d.id)
+                        WHERE dhc.health_condition_id = hc.id
+                        AND d.source_type_id = 6
+                        AND hc.problem_id = '00000002'
+                    );
+
+    - changeSet:
+        id: violence_report_situation_history-createTable
+        comment: Create table violence_report_situation_history
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report_situation_history
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report_situation_history
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: old_situation_id
+                    type: smallint
+
+    - changeSet:
+        id: document_type-anesthetic_report
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_type VALUES (20, 'Parte anestésico');
+
+    - changeSet:
+        id: createTable-anesthetic_report
+        comment: Create table anesthetic_report
+        author: mromero
+        changes:
+          - createTable:
+              tableName: anesthetic_report
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_anesthetic_report
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_patient_id_anesthetic_report
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      references: clinical_specialty(id)
+                      foreignKeyName: FK_clinical_specialty_id_anesthetic_report
+                    name: clinical_specialty_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_id_anesthetic_report
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_anesthetic_report
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_doctor_id_anesthetic_report
+                    name: doctor_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: billable
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      references: patient_medical_coverage(id)
+                      foreignKeyName: FK_patient_medical_coverage_id_anesthetic_report
+                    name: patient_medical_coverage_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-anesthetic_substance
+        author: mromero
+        changes:
+          - createTable:
+              tableName: anesthetic_substance
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_anesthetic_substance
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_anesthetic_substance
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: snomed(id)
+                      foreignKeyName: FK_snomed_id_anesthetic_substance
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      references: dosage(id)
+                      foreignKeyName: FK_dosage_id_anesthetic_substance
+                    name: dosage_id
+                    type: int
+                - column:
+                    name: via_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_via_note_id_anesthetic_substance
+                    name: via_note_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+
+    - changeSet:
+        id: createTable-food_intake
+        author: mromero
+        changes:
+          - createTable:
+              tableName: food_intake
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_food_intake
+                      references: document(id)
+                      foreignKeyName: FK_document_id_food_intake
+                    name: document_id
+                    type: bigint
+                - column:
+                    name: clock_time
+                    type: time
+
+    - changeSet:
+        id: createTable-document_anesthetic_substance
+        author: mromero
+        changes:
+          - createTable:
+              tableName: document_anesthetic_substance
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: anesthetic_substance_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, anesthetic_substance_id
+              constraintName: PK_document_anesthetic_substance
+              tableName: document_anesthetic_substance
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_anesthetic_substance
+              constraintName: FK_document_id_document_anesthetic_substance
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: anesthetic_substance_id
+              baseTableName: document_anesthetic_substance
+              constraintName: FK_anesthetic_substance_id_document_anesthetic_substance
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: anesthetic_substance
+              validate: true
+
+    - changeSet:
+        id: createTable-anesthetic_history
+        author: mromero
+        changes:
+          - createTable:
+              tableName: anesthetic_history
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_anesthetic_history
+                      references: document(id)
+                      foreignKeyName: FK_document_id_anesthetic_history
+                    name: document_id
+                    type: bigint
+                - column:
+                    name: state_id
+                    type: smallint
+                - column:
+                    name: zone_id
+                    type: smallint
+
+    - changeSet:
+        id: createTable-procedure_description
+        author: mromero
+        changes:
+          - createTable:
+              tableName: procedure_description
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_description
+                      references: document(id)
+                      foreignKeyName: FK_document_id_procedure_description
+                    name: document_id
+                    type: bigint
+                - column:
+                    name: note_id
+                    type: bigint
+                - column:
+                    name: asa
+                    type: smallint
+
+    - changeSet:
+        id: add-metadata2-problem_type
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type (id, description) VALUES ('00000003', 'Otro Antecedente');
+
+    - changeSet:
+        id: addColumns-phonePrefix-phoneNumber-booking_person
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: booking_person
+              columns:
+                - column:
+                    name: phone_number
+                    type: varchar(20)
+                - column:
+                    name: phone_prefix
+                    type: varchar(10)
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='booking_person' and column_name='phone_prefix'
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT COUNT(column_name)
+                FROM information_schema.columns
+                WHERE table_name='booking_person' AND column_name='phone_number'

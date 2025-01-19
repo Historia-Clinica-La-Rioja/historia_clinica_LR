@@ -2,6 +2,8 @@ package net.pladema.medicalconsultation.diary.controller.exceptions;
 
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.medicalconsultation.diary.application.exceptions.DiaryAvailableAppointmentsException;
+import net.pladema.medicalconsultation.diary.application.exceptions.DiaryBookingRestrictionException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import org.springframework.core.Ordered;
@@ -30,6 +32,13 @@ public class DiaryExceptionHandler {
 	protected ApiErrorMessageDto handleDiaryException(DiaryException ex, Locale locale) {
 		log.debug("DiaryException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ DiaryAvailableAppointmentsException.class })
+	protected ApiErrorMessageDto handleDiaryAvailableAppointmentsException(DiaryAvailableAppointmentsException ex) {
+		log.debug("DiaryAvailableAppointmentsException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
 }

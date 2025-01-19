@@ -1,0 +1,47 @@
+<div fxLayout="column" *ngFor="let vs of violenceSituations">
+    <mat-list-item id="violence-situation-list">
+        <span fxFlex="15" class="situation-number" 
+            [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.SITUATION_NUMBER'"
+            [translateParams]="{id: vs.situationId}">
+        </span>
+        <div fxLayout="column" fxFlex="15">
+            <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.TYPE'"></span>
+            <div class="violence-types-modalities">
+                <span>{{vs.violenceTypes[0]}}</span>
+                <span *ngIf="vs.violenceTypes.length > 1">(+{{vs.violenceTypes.length - 1}})</span>
+            </div>
+        </div>
+        <div fxLayout="column" fxFlex="15">
+            <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.MODALITY'"></span>
+            <div class="violence-types-modalities">
+                <span>{{vs.violenceModalities[0]}}</span>
+                <span *ngIf="vs.violenceModalities.length > 1">(+{{vs.violenceModalities.length - 1}})</span>
+            </div>
+        </div>
+        <div fxLayout="column" fxFlex="15">
+            <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.RISK_LEVEL'"></span>
+            <span *ngIf="vs.riskLevel === LOW">Bajo</span>
+            <span *ngIf="vs.riskLevel === MEDIUM">Medio</span>
+            <span *ngIf="vs.riskLevel === HIGH">Alto</span>
+        </div>
+        <div fxLayout="column" fxFlex="15">
+            <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.INIT_DATE'"></span>
+            <span>{{vs.initialDate | viewDateDto: 'date' | dateFormat: 'date'}}</span>
+        </div>
+        <div fxLayout="column" fxFlex="15">
+            <span class="violence-situation-header" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.LAST_UPDATE'"></span>
+            <span>{{vs.lastModificationDate | viewDateDto: 'date' | dateFormat: 'date'}}</span>
+        </div>
+        <div>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="continue(vs.situationId)">
+                    <span [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.buttons.CONTINUE'"></span>
+                </button>
+            </mat-menu>
+        </div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+</div>

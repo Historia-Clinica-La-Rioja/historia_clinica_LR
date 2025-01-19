@@ -80,4 +80,44 @@ public final class CodingProfile {
         public static final String EXT_MATHER="http://hl7.org/fhir/StructureDefinition/humanname-mathers-family";
 
     }
+
+	@UtilityClass
+	public static class Practitioner {
+		public static final String RDI_URL="http://fhir.msal.gob.ar/RDI/StructureDefinition/datosPrescriptorAR";
+		public static final String BASEURL="http://hl7.org/fhir/StructureDefinition/Practitioner";
+		public static final String TYPE="Practitioner";
+	}
+
+	@UtilityClass
+	public static class Coverage {
+		public static final String RDI_URL="http://fhir.msal.gob.ar/RDI/StructureDefinition/datosCoberturaAR";
+		public static final String BASEURL="http://hl7.org/fhir/StructureDefinition/Coverage";
+		public static final String TYPE="Coverage";
+    }
+
+    @UtilityClass
+	public static class MedicationRequest {
+		public static final String URL="http://hl7.org/fhir/uv/ips/StructureDefinition-MedicationRequest-uv-ips";
+		public static final String BASEURL="http://hl7.org/fhir/StructureDefinition/MedicationRequest";
+		public static final String TYPE="MedicationRequest";
+        public static final String RDI_URL="http://fhir.msal.gob.ar/RDI/StructureDefinition/datosPrescripcionAR";
+	}
+
+	@UtilityClass
+	public static class Bundle {
+		public static final String RDI_URL="http://fhir.msal.gob.ar/RDI/StructureDefinition/recetaDigitalRegistroRecetaAR";
+	}
+
+	@UtilityClass
+	public static class Location {
+		public static final String BASEURL="http://hl7.org/fhir/StructureDefinition/Location";
+		public static final String RDI_URL="http://fhir.msal.gob.ar/RDI/StructureDefinition/datosLugarAR";
+	}
+
+	@UtilityClass
+	public static class ServiceRequest {
+		public static final String URL="http://hl7.org/fhir/uv/ips/StructureDefinition-ServiceRequest-uv-ips";
+		public static final String BASEURL="http://hl7.org/fhir/StructureDefinition/ServiceRequest";
+		public static final String TYPE="ServiceRequest";
+	}
 }

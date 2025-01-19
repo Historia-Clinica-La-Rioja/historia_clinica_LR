@@ -1,21 +1,21 @@
 package net.pladema.medicalconsultation.equipmentdiary.service.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.time.LocalDate;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class EquipmentDiaryBo {
 
     protected Integer id;
 
     protected Integer equipmentId;
-
 
     protected LocalDate startDate;
 
@@ -29,9 +29,8 @@ public class EquipmentDiaryBo {
 
     protected boolean active = true;
 
-    protected List<EquipmentDiaryOpeningHoursBo> equipmentDiaryOpeningHours;
+    protected List<EquipmentDiaryOpeningHoursBo> diaryOpeningHours;
     
     protected boolean deleted = false;
-
 
 }

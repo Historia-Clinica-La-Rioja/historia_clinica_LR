@@ -1,11 +1,26 @@
 package ar.lamansys.nursing.application;
 
-import java.time.LocalDate;
+import static ar.lamansys.nursing.domain.NursingConsultationInfoBo.newNursingConsultationInfoBo;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import ar.lamansys.nursing.domain.CreateNursingConsultationServiceRequestBo;
+
+import ar.lamansys.nursing.domain.NursingConsultationResponseBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.nursing.application.exceptions.NursingConsultationException;
 import ar.lamansys.nursing.application.exceptions.NursingConsultationExceptionEnum;
@@ -14,14 +29,11 @@ import ar.lamansys.nursing.application.port.NursingConsultationStorage;
 import ar.lamansys.nursing.application.port.NursingDoctorStorage;
 import ar.lamansys.nursing.application.port.NursingDocumentStorage;
 import ar.lamansys.nursing.domain.NursingConsultationBo;
-import ar.lamansys.nursing.domain.NursingConsultationInfoBo;
 import ar.lamansys.nursing.domain.doctor.DoctorInfoBo;
 import ar.lamansys.nursing.domain.document.NursingDocumentBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateNursingConsultation {
@@ -34,18 +46,31 @@ public class CreateNursingConsultation {
     private final NursingConsultationStorage nursingConsultationStorage;
     private final NursingDocumentStorage nursingDocumentStorage;
     private final NursingAppointmentStorage nursingAppointmentStorage;
+	private final SharedCreateConsultationServiceRequest sharedCreateConsultationServiceRequest;
 
-    public CreateNursingConsultation(SharedAppointmentPort sharedAppointmentPort, DateTimeProvider dateTimeProvider, NursingDoctorStorage nursingDoctorStorage, NursingConsultationStorage nursingConsultationStorage, NursingDocumentStorage nursingDocumentStorage, NursingAppointmentStorage nursingAppointmentStorage) {
+	private final SharedPatientPort sharedPatientPort;
+
+    public CreateNursingConsultation(SharedAppointmentPort sharedAppointmentPort, DateTimeProvider dateTimeProvider,
+    	NursingDoctorStorage nursingDoctorStorage, NursingConsultationStorage nursingConsultationStorage,
+    	NursingDocumentStorage nursingDocumentStorage, NursingAppointmentStorage nursingAppointmentStorage,
+		SharedCreateConsultationServiceRequest sharedCreateConsultationServiceRequest, SharedPatientPort sharedPatientPort
+	)
+	{
 		this.sharedAppointmentPort = sharedAppointmentPort;
 		this.dateTimeProvider = dateTimeProvider;
         this.nursingDoctorStorage = nursingDoctorStorage;
         this.nursingConsultationStorage = nursingConsultationStorage;
         this.nursingDocumentStorage = nursingDocumentStorage;
         this.nursingAppointmentStorage = nursingAppointmentStorage;
+        this.sharedCreateConsultationServiceRequest = sharedCreateConsultationServiceRequest;
+        this.sharedPatientPort = sharedPatientPort;
     }
 
     @Transactional
-    public void run(NursingConsultationBo nursingConsultationBo) {
+    public NursingConsultationResponseBo run(
+    	NursingConsultationBo nursingConsultationBo,
+    	List<CreateNursingConsultationServiceRequestBo> serviceRequestsToCreate)
+	{
         LOG.debug("Input parameters -> nursingConsultationBo {}", nursingConsultationBo);
 
         if (nursingConsultationBo == null)
@@ -58,26 +83,79 @@ public class CreateNursingConsultation {
 
         LocalDate now = dateTimeProvider.nowDate();
 
-		Integer medicalCoverageId = nursingConsultationBo.getPatientMedicalCoverageId();
-		if (medicalCoverageId == null)
-        	medicalCoverageId = nursingAppointmentStorage.getPatientMedicalCoverageId(nursingConsultationBo.getPatientId(), doctorInfoBo.getId());
+		setPatientMedicalCoverageIfEmpty(nursingConsultationBo, doctorInfoBo);
 
-        var encounterId = nursingConsultationStorage.save(
-                new NursingConsultationInfoBo(null,
+		var encounterId = nursingConsultationStorage.save(
+                newNursingConsultationInfoBo(
                         nursingConsultationBo,
-                        medicalCoverageId,
                         doctorInfoBo.getId(),
                         now,
-                        false,
-						nursingConsultationBo.getHierarchicalUnitId()));
+                        false
+				));
 
         Long documentId = nursingDocumentStorage.save(new NursingDocumentBo(null, nursingConsultationBo, encounterId, doctorInfoBo.getId(), now));
         Integer appointmentId = nursingAppointmentStorage.run(nursingConsultationBo.getPatientId(), doctorInfoBo.getId(), now);
 		if(appointmentId != null)
 			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
+
+		/**
+		 * Create a service request for each procedure
+		 */
+		BasicPatientDto patientDto = sharedPatientPort.getBasicDataFromPatient(nursingConsultationBo.getPatientId());
+		List<Integer> orderIds = createServiceRequest(
+				doctorInfoBo.getId(),
+				serviceRequestsToCreate,
+				nursingConsultationBo.getPatientMedicalCoverageId(),
+				patientDto,
+				nursingConsultationBo.getInstitutionId(),
+				encounterId);
+
+		return new NursingConsultationResponseBo(encounterId, orderIds);
     }
 
-    private void assertContextValid(NursingConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
+	private List<Integer> createServiceRequest(
+		Integer doctorId,
+		List<CreateNursingConsultationServiceRequestBo> procedures,
+		Integer medicalCoverageId,
+		BasicPatientDto patientDto,
+		Integer institutionId,
+		Integer newConsultationId
+	)
+	{
+		List<Integer> orderIds = new ArrayList<>();
+		for (int i = 0; i < procedures.size(); i++) {
+			var procedure = procedures.get(i);
+			if (procedure != null) {
+
+				String categoryId = procedure.getCategoryId();
+				String healthConditionSctid = procedure.getHealthConditionSctid();
+				String healthConditionPt = procedure.getHealthConditionPt();
+				SnomedDto snomed = new SnomedDto(procedure.getSnomedSctid(), procedure.getSnomedPt());
+				Boolean createWithStatusFinal = procedure.getCreationStatusIsFinal();
+				Optional<SharedAddObservationsCommandVo> addObservationsCommand = procedure.getObservations();
+
+				Integer patientId = patientDto.getId();
+				Short patientGenderId = patientDto.getPerson().getGender().getId();
+				Short patientAge = patientDto.getPerson().getAge();
+
+				Integer orderId = sharedCreateConsultationServiceRequest.createNursingServiceRequest(doctorId, categoryId, institutionId,
+						healthConditionSctid, healthConditionPt, medicalCoverageId, newConsultationId, snomed.getSctid(), snomed.getPt(),
+						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				orderIds.add(orderId);
+			}
+		}
+		return orderIds;
+	}
+
+	private void setPatientMedicalCoverageIfEmpty(NursingConsultationBo nursingConsultationBo, DoctorInfoBo doctorInfoBo) {
+		if (nursingConsultationBo.getPatientMedicalCoverageId() == null) {
+			nursingConsultationBo.setPatientMedicalCoverageId(
+					nursingAppointmentStorage.getPatientMedicalCoverageId(nursingConsultationBo.getPatientId(), doctorInfoBo.getId())
+			);
+		}
+	}
+
+	private void assertContextValid(NursingConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
         if (consultationBo.getInstitutionId() == null)
             throw new NursingConsultationException(NursingConsultationExceptionEnum.NULL_INSTITUTION_ID.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
         if (consultationBo.getPatientId() == null)

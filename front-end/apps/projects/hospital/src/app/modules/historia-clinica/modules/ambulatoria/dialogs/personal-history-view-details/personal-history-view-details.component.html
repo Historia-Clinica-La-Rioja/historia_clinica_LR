@@ -1,0 +1,39 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+	<h1 mat-dialog-title [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.PERSONAL_HISTORIES_DETAILS'"></h1>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<div mat-dialog-content>
+    <h2>{{ data.personalHistoryInfo.snomed.pt | titlecase}}</h2>
+
+    <div fxLayout="column" fxLayoutGap="10px">
+        <app-identifier-cases *ngIf="data.startDate" [identifierCase]="identiferCases.STARTDATE"
+            description="{{data.startDate | dateFormat: 'date'}}" [showLegend]="true" data-id="personal-history-start-date">
+        </app-identifier-cases>
+        <app-identifier-cases *ngIf="data.inactivationDate" [identifierCase]="identiferCases.ENDDATE"
+            description="{{data.inactivationDate | dateFormat: 'date'}}" [showLegend]="true" data-id="personal-history-end-date">
+        </app-identifier-cases>
+
+        <div *ngIf="data.personalHistoryInfo.note" fxLayout="column">
+            <span class="grey">Observaciones:</span>
+            <div><pre class="observations">{{ data.personalHistoryInfo.note }}</pre></div>
+        </div>
+        
+        <mat-divider></mat-divider>
+        
+        <div class="grey">
+            <span class="uppercase">{{ data.personalHistoryInfo.professionalName }}</span>
+            <div fxLayout="row" fxLayoutAlign="space-between">
+                <span fxFlex="60%">{{ data.personalHistoryInfo.institutionName }}</span>
+                <span>{{ data.personalHistoryInfo.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'date' }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-actions align="end">
+	<button mat-raised-button mat-dialog-close cdkFocusInitial color='primary' class="uppercase">
+        {{'buttons.CLOSE' | translate}}</button>
+</mat-dialog-actions>

@@ -4,6 +4,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.establishment.repository.domain.HierarchicalUnitVo;
 
 import java.util.List;
 
@@ -33,4 +34,6 @@ public class SectorSummaryDto {
     private String ageGroup;
 
     private List<ClinicalSpecialtyDto> clinicalSpecialties;
+
+	private List<HierarchicalUnitVo> hierarchicalUnit;
 }

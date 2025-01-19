@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+
+    <title>Anexo II en guardia (comprobante de atención médica)</title>
+
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            @top-center { content: ""; }
+            @bottom-center { content: ""; }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 210mm;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .title {
+            background-color: #c5cfc6;
+            border: 1px solid black;
+        }
+
+        .styled-hr {
+            width: 100%;
+            border: thin solid #bfbfbf;
+            margin: 5px 0;
+        }
+
+        .left-aligned-text {
+            text-align: left;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table + table {
+            margin-top: -1px;
+        }
+
+        th, td {
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .no-top-border {
+            border-top: none;
+        }
+
+        .no-bottom-border {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body th:fragment="annex_in_ece">
+    <div class="container">
+        <table class="full-width">
+            <tr>
+                <td style="width:75%">COMPROBANTE DE ATENCIÓN DE BENEFICIARIOS DE AGENTES DEL SEGURO DE SALUD</td>
+                <td>FECHA<hr class="styled-hr"></hr><span th:text="${attentionDate}">11/11/2011</span></td>
+            </tr>
+            <tr>
+                <td class="left-aligned-text">Denominación HPdGD<hr class="styled-hr"></hr><span th:text="${institutionName}">Hospital Vera Barros</span></td>
+                <td>Código HPdGPD-REFES<hr class="styled-hr"></hr><span th:text="${institutionSisaCode}">123456789</span></td>
+            </tr>
+        </table>
+        <table class="full-width no-top-border no-bottom-border">
+            <tr class="title no-top-border no-bottom-border" >
+                <td class="no-top-border no-bottom-border">Datos del beneficiario</td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border">
+                <td style="width: 50%;" class="left-aligned-text no-bottom-border">
+                    APELLIDO Y NOMBRE
+                    <hr class="styled-hr"></hr>
+                    <span th:if="${patientName != null}" th:text="${patientName}">Martín Miguel de Güemes</span>
+                    <span th:unless="${patientName != null}" style="color: gray;">Paciente no especificado</span>
+                </td>
+                <td class="left-aligned-text no-bottom-border">
+                    Tipo de documento
+                    <hr class="styled-hr"></hr>
+                    <span th:if="${identificationType != null}" th:text="${identificationType}">DNI</span>
+                    <span th:unless="${identificationType != null}" style="display: inline-block; width: 100%;">&nbsp;</span>
+                </td>
+                <td style="width: 25%;" class="left-aligned-text no-bottom-border">
+                    N° de documento
+                    <hr class="styled-hr"></hr>
+                    <span th:if="${identificationNumber != null}" th:text="${identificationNumber}">123456789</span>
+                    <span th:unless="${identificationNumber != null}" style="display: inline-block; width: 100%;">&nbsp;</span>
+                </td>
+            </tr>
+        </table>
+        <table class="full-width no-top-border">
+            <tr>
+                <td>Tipo de beneficiario</td>
+                <td style="width: 35%;">Parentesco</td>
+                <td style="width: 15%;">Sexo</td>
+                <td style="width: 10%;">Edad</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <span style="display: inline-block; width: 55px; text-align: center;">Titular</span>
+                    <span style="display: inline-block; width: 55px; text-align: center;">Familiar</span>
+                    <span style="display: inline-block; width: 55px; text-align: center;">Adherente</span>
+                    <span style="display: inline-block; width: 55px; text-align: center;">Otro</span>
+                </td>
+                <td style="width: 35%;">
+                    <span style="display: inline-block; width: 60px; text-align: center;">Cónyuge</span>
+                    <span style="display: inline-block; width: 60px; text-align: center;">Hijo/a</span>
+                    <span style="display: inline-block; width: 60px; text-align: center;">Otro</span>
+                </td>
+                <td style="width: 15%;"><span th:text="${gender}">Masculino</span></td>
+                <td style="width: 10%;"><span th:text="${patientAge}">69</span></td>
+            </tr>
+        </table>
+        <table class="full-width no-top-border no-bottom-border">
+            <tr class="title no-top-border no-bottom-border">
+                <td class="no-top-border no-bottom-border">⠀</td> <!-- Caracter invisible -->
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border">
+                <td class="no-bottom-border" style="width: 75%;">TIPO DE ATENCIÓN</td>
+                <td class="no-bottom-border">Fecha de prestación<hr class="styled-hr"></hr><span th:text="${attentionDate}">11/11/2011</span></td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border">
+                <td class="no-bottom-border left-aligned-text" style="width: 25%;">CONSULTA</td>
+                <td style="width: 5%;" class="no-bottom-border"></td>
+                <td class="no-bottom-border left-aligned-text">
+                    ESPECIALIDAD
+                    <hr class="styled-hr"></hr>
+                    <span th:if="${clinicalSpecialty != null}" th:text="${clinicalSpecialty}">Urólogo</span>
+                    <span th:unless="${clinicalSpecialty != null}" style="display: inline-block; width: 100%;">&nbsp;</span>
+                </td>
+                <td class="no-bottom-border left-aligned-text">DIAGNÓSTICOS
+                    <hr class="styled-hr"></hr>
+                    <span th:if="${diagnosis != null}" th:text="${diagnosis}">Fallo de riñón</span>
+                    <span th:unless="${diagnosis != null}" style="display: inline-block; width: 100%;">&nbsp;</span>
+                </td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border">
+                <td class="no-bottom-border left-aligned-text" style="width: 25%;">PRÁCTICA</td>
+                <td style="width: 5%;" class="no-bottom-border"></td>
+                <td class="no-bottom-border left-aligned-text">Códigos NHPdGD:</td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border">
+                <td class="no-bottom-border left-aligned-text" style="width: 25%;">INTERNACIÓN</td>
+                <td style="width: 5%;" class="no-bottom-border"></td>
+                <td class="no-bottom-border left-aligned-text">Diagnóstico de egreso CIE-10<br></br>&nbsp;<br></br></td>
+                <td class="no-bottom-border left-aligned-text">CÓDIGO PRINCIPAL:<br></br>&nbsp;<br></br></td>
+                <td class="no-bottom-border left-aligned-text">OTROS CÓDIGOS:<br></br>&nbsp;<br></br></td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border">
+                <td class="no-bottom-border left-aligned-text">NHPdGD: Nomenclador Hospitales Públicos de Gestión Descentralizada - CIE-10: Clasificación Internacional de Enfermedades</td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="no-bottom-border" style="height: 150px; vertical-align: top;">
+                <td class="no-bottom-border">Firma del médico y sello con n° de matrícula</td>
+                <td class="no-bottom-border">Último recibo de sueldo</td>
+                <td style="width: 13%;" class="no-bottom-border">MES<hr class="styled-hr"></hr></td>
+                <td style="width: 12%;" class="no-bottom-border">AÑO<hr class="styled-hr"></hr></td>
+            </tr>
+        </table>
+        <table class="full-width no-bottom-border">
+            <tr class="title">
+                <td style="width: 75%;" class="no-bottom-border">NOMBRE DE AGENTE DEL SEGURO DE SALUD</td>
+                <td class="no-bottom-border">RNOS</td>
+            </tr>
+            <tr class="no-bottom-border">
+                <td class="no-bottom-border">
+                    <span th:if="${medicalCoverageName != null}" th:text="${medicalCoverageName}">OSDE</span>
+                    <span th:unless="${medicalCoverageName != null}" style="color: gray;">Sin cobertura médica, añadir si correspondiese</span>
+                </td>
+                <td class="no-bottom-border"><span th:text="${medicalCoverageRnos}">123456789</span></td>
+            </tr>
+        </table>
+        <table class="full-width">
+            <tr style="height: 150px; vertical-align: top;">
+                <td style="width: 34%;">Firma del responsable administrativo/contable<hr class="styled-hr"></hr></td>
+                <td style="width: 33%;">Aclaración de firma<hr class="styled-hr"></hr></td>
+                <td>Firma del beneficiario<hr class="styled-hr"></hr></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

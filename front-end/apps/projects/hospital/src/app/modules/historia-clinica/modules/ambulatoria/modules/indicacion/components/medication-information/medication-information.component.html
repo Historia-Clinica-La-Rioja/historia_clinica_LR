@@ -1,0 +1,21 @@
+<div [formGroup]="prescriptionForm">
+    <div *ngIf="isHabilitarRecetaDigital">
+        <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}</h2>
+    </div>
+    <div *ngFor="let pharmacoDetail of pharmacosDetail" class="item-container">
+        <app-pharmaco-detail *ngIf="pharmacoDetail"
+			[pharmaco]="pharmacoDetail"
+			[showButtons]="true"
+			[disabled]="submitted"
+			(editEmitter)="editMedication($event)"
+			(deleteEmitter)="deleteMedication($event)">
+		</app-pharmaco-detail>
+        <mat-divider class="divider" *ngIf="prescriptionItems.length > 1"></mat-divider>
+    </div>
+
+    <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
+
+    <app-button id="download_study" [color]="'primary'" [isLoading]="isAddMedicationLoading" [text]="prescriptionData.addLabel" [disabled]="submitted"
+        [buttonType]="'mat-stroked-button'" (clicked)="openPharmacosFrequestDialog()" fxFlexFill.xs>
+    </app-button>
+</div>

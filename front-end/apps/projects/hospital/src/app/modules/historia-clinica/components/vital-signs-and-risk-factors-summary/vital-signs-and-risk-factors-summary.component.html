@@ -1,0 +1,37 @@
+<div data-id="vital-signs-and-risk-factor-section">
+    <app-iconed-titled-section icon="favorite_outlined"
+        title="internaciones.documents-summary.vital-signs-and-risk-factor.TITLE"></app-iconed-titled-section>
+    <div class="section-description">
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.heartRate"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.HEART_RATE"
+            [descriptionData]="vitalSignsAndRiskFactors.heartRate"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.respiratoryRate"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.RESPIRATORY_RATE"
+            [descriptionData]="vitalSignsAndRiskFactors.respiratoryRate"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.temperature"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.TEMPERATURE"
+            [descriptionData]="vitalSignsAndRiskFactors.temperature"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.bloodOxygenSaturation"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.BLOOD_OXYGEN_SATURATION"
+            [descriptionData]="vitalSignsAndRiskFactors.bloodOxygenSaturation"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.systolicBloodPressure"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.SYSTOLIC_BLOOD_PRESSURE"
+            [descriptionData]="vitalSignsAndRiskFactors.systolicBloodPressure"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.diastolicBloodPressure"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.DIASTOLIC_BLOOD_PRESSURE"
+            [descriptionData]="vitalSignsAndRiskFactors.diastolicBloodPressure"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.bloodGlucose"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.BLOOD_GLUCOSE"
+            [descriptionData]="vitalSignsAndRiskFactors.bloodGlucose"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.glycosylatedHemoglobin"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.GLYCOSYLATED_HEMOGLOBIN"
+            [descriptionData]="vitalSignsAndRiskFactors.glycosylatedHemoglobin"></app-title-description-list>
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.cardiovascularRisk"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.CARDIOVASCULAR_RISK"
+            [descriptionData]="vitalSignsAndRiskFactors.cardiovascularRisk"></app-title-description-list>        
+        <app-title-description-list class="list-item" *ngIf="vitalSignsAndRiskFactors.hematocrit"
+            title="internaciones.documents-summary.vital-signs-and-risk-factor.HEMATOCRIT"
+            [descriptionData]="vitalSignsAndRiskFactors.hematocrit"></app-title-description-list>
+    </div>
+</div>
+

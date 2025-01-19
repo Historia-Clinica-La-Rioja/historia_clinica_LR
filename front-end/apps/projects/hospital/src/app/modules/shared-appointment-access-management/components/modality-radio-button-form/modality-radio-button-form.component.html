@@ -1,0 +1,7 @@
+<div fxLayout="column" fxLayoutGap="16px">
+        <mat-label class="bold">{{'turnos.new-appointment.MODALITY_SELECT' | translate}}</mat-label>
+        <mat-radio-group [fxLayout]="layout" fxLayoutGap="16px" (change)="emitModalitySelected($event)">
+            <mat-radio-button *ngFor="let modality of modalitys" color="primary"
+                [value]="modality.value" [checked]="modality.value === MODALITY_ON_SITE_ATTENTION">{{modality.description | translate}}</mat-radio-button>
+        </mat-radio-group>
+</div>

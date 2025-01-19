@@ -1,0 +1,46 @@
+<form class="display">
+	<mat-form-field appearance="outline">
+		<mat-select [value]="selectedOption" (selectionChange)="setSelectedOption($event.value)" required>
+			<mat-select-trigger>
+				<app-colored-label [description]="selectedOptionColoredLabel.description | translate | uppercase"
+					[color]="selectedOptionColoredLabel.color" [icon]="selectedOptionColoredLabel.icon">
+				</app-colored-label>
+			</mat-select-trigger>
+			<div>
+				<mat-option *ngFor="let state of regulationStates" [value]="state">
+					<app-colored-label [description]="getOptionIconState(state).description| translate | uppercase"
+						[color]="getOptionIconState(state).color" [icon]="getOptionIconState(state).icon">
+					</app-colored-label>
+				</mat-option>
+			</div>
+		</mat-select>
+	</mat-form-field>
+</form>
+
+<div *ngIf="(selectedOption != isWaitingAudit) && (selectedOption != isWaitingAproval)" fxLayout="column" fxLayoutGap="8px">
+	<form [formGroup]="reason" *ngIf="showReasonArea">
+		<mat-form-field class="reasonTextArea" appearance="outline">
+			<textarea id="reason" matInput type="text" formControlName="reason"
+				placeholder="{{ selectedOptionData.placeholder | translate }}"></textarea>
+			<mat-error *ngIf="reason.hasError('required', 'reason')" [translate]="'forms.REQUIRED'"></mat-error>
+			<mat-error *ngIf="reason.hasError('pattern', 'reason')" [translate]="'forms.REQUIRED'"></mat-error>
+		</mat-form-field>
+		<div fxLayoutAlign="end" fxLayoutGap="8px">
+			<button mat-stroked-button color="primary" id="cancel-button" (click)="cancel()">
+				{{ 'buttons.CANCEL' | translate | uppercase}}
+			</button>
+			<button actions mat-raised-button color="primary" id="okButton-button" (click)="confirm()">
+				{{ 'buttons.CONFIRM' | translate | uppercase}}
+			</button>
+		</div>
+	</form>
+
+	<div *ngIf="!showReasonArea" fxLayoutAlign="end" fxLayoutGap="8px">
+		<button mat-stroked-button color="primary" id="cancel-button" (click)="cancel()">
+			{{ 'buttons.CANCEL' | translate | uppercase}}
+		</button>
+		<button actions mat-raised-button color="primary" id="okButton-button" (click)="confirm()">
+			{{ 'buttons.CONFIRM' | translate | uppercase}}
+		</button>
+	</div>
+</div>

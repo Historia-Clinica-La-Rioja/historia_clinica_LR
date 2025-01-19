@@ -12,6 +12,7 @@ import org.hl7.fhir.r4.model.DateType;
 import org.hl7.fhir.r4.model.Enumerations;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.HumanName;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,8 +48,8 @@ public class PatientResource extends ISingleResourceFhir {
         Patient resource = new Patient();
         resource.setId(id);
 
-        resource.addIdentifier(newIdentifier(resource, resource.getId()));
-        resource.addIdentifier(newIdentifier(CodingSystem.Patient.IDENTIFIER, patient.getIdentificationNumber()));
+        resource.addIdentifier(newIdentifier(resource, resource.getId()).setUse(Identifier.IdentifierUse.SECONDARY));
+        resource.addIdentifier(newIdentifier(CodingSystem.Patient.IDENTIFIER, patient.getIdentificationNumber()).setUse(Identifier.IdentifierUse.OFFICIAL));
 
         Extension fatherSurname = new Extension(CodingProfile.Patient.EXT_FATHER, new StringType(patient.getLastname()));
         resource.addName()
@@ -57,7 +59,7 @@ public class PatientResource extends ISingleResourceFhir {
                 .setText(patient.getFullName());
         resource.getName().get(0).getFamilyElement().addExtension(fatherSurname);
 
-        resource.addTelecom(newTelecom(patient.getPhoneNumber()));
+        //resource.addTelecom(newTelecom(patient.getPhoneNumber()));
 
         resource.setGender(Enumerations.AdministrativeGender.fromCode(patient.getGender()));
         resource.setActive(true);
@@ -76,8 +78,8 @@ public class PatientResource extends ISingleResourceFhir {
             resource.getName().get(0).getFamilyElement().addExtension(matherSurname);
         }
 
-        if(patient.hasAddressData())
-            resource.addAddress(newAddress(patient.getFullAddress()));
+        /*if(patient.hasAddressData())
+            resource.addAddress(newAddress(patient.getFullAddress()));*/
 
         if(patient.hasBirthDateData()) {
             DateType birthdate = new DateType();
@@ -90,7 +92,10 @@ public class PatientResource extends ISingleResourceFhir {
         PatientVo data = new PatientVo();
         Patient resource = (Patient) baseResource;
 
-        data.setId(resource.getId());
+        data.setId(resource.getIdElement().getIdPart());
+		Optional<Identifier> identifier = resource.getIdentifier().stream().filter(i -> i.getSystem().equals(CodingSystem.Patient.IDENTIFIER)).findAny();
+		identifier.ifPresent(value -> data.setIdentificationNumber(value.getValue()));
+
         if(resource.hasName()){
             HumanName humanName = resource.getName().get(0);
             List<StringType> names = humanName.getGiven();
@@ -98,7 +103,7 @@ public class PatientResource extends ISingleResourceFhir {
                 data.setFirstname(names.get(0).getValue());
                 data.setMiddlenames(names.get(1).getValue());
             }
-            catch (ArrayIndexOutOfBoundsException  ex){
+            catch (IndexOutOfBoundsException  ex){
                 //nothing to do
             }
             data.setLastname(humanName.getFamily());
@@ -113,7 +118,7 @@ public class PatientResource extends ISingleResourceFhir {
             }
         }
         if(resource.hasGender())
-            data.setGender(resource.getGender().getDisplay());
+            data.setGender(resource.getGender().getDisplay().toLowerCase());
         if(resource.hasBirthDate())
             data.setBirthdate(FhirDateMapper.toLocalDate(resource.getBirthDate()));
         if(resource.hasTelecom())

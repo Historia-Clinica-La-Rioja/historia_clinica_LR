@@ -1,6 +1,6 @@
 <div fxLayout="column" fxFlex="100%">
 	<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-		[internmentEpisodeProcess]="internmentEpisode"
+		[internmentEpisodeInProgress]="internmentEpisode?.inProgress"
 		[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 		<div header id="header" fxLayout="row" fxLayoutAlign="space-between center">
 			<app-patient-type-logo fxFlex="62%" [patientTypeData]="patientTypeData"

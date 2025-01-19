@@ -3,6 +3,8 @@ package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.CreateEvo
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.EvolutionNoteValidator;
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 
+@AllArgsConstructor
 @Service
 public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteService {
 
@@ -34,17 +37,6 @@ public class CreateEvolutionNoteServiceImpl implements CreateEvolutionNoteServic
 
 	private final EvolutionNoteValidator evolutionNoteValidator;
 
-    public CreateEvolutionNoteServiceImpl(DocumentFactory documentFactory,
-										  InternmentEpisodeService internmentEpisodeService,
-										  FetchHospitalizationHealthConditionState fetchHospitalizationHealthConditionState,
-										  DateTimeProvider dateTimeProvider,
-										  EvolutionNoteValidator evolutionNoteValidator) {
-        this.documentFactory = documentFactory;
-        this.internmentEpisodeService = internmentEpisodeService;
-        this.fetchHospitalizationHealthConditionState = fetchHospitalizationHealthConditionState;
-        this.dateTimeProvider = dateTimeProvider;
-		this.evolutionNoteValidator = evolutionNoteValidator;
-	}
 
     @Override
 	@Transactional

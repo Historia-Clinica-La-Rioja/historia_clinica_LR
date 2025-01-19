@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+
+    <app-titled-content-card *ngIf="!service.medicacionesNuevaConsultaService.isEmpty()"
+        title="{{ 'internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION' }}">
+        <app-medication-list [service]="service.medicacionesNuevaConsultaService"></app-medication-list>
+    </app-titled-content-card>
+
+    <div>
+        <button mat-button type="button" id="add-medication-button" color="primary" class="add-button"
+            (click)="addUsualMedication()">
+            {{ 'internaciones.anesthesic-report.usual-medication.ADD_USUAL_MEDICATION' | translate }}
+        </button>
+    </div>
+</div>

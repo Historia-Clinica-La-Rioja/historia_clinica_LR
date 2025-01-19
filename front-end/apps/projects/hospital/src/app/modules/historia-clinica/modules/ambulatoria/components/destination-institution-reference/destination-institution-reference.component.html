@@ -7,28 +7,44 @@
 		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.DEPARTMENT' | translate"
 		(selectionChange)="onDepartmentSelectionChange($event)">
 	</app-typeahead>
-	<mat-error class="error-message" *ngIf="!departmentId && submitForm" [translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
 <div class="typeahead-field">
 	<app-typeahead id="institutionDestination" [disabled]="institutionsDisable" [options]="institutions"
 		[externalSetValue]="defaultInstitution"
 		[titleInput]="'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_INSTITUTION' | translate"
-		(selectionChange)="onInstitutionSelectionChange($event)" [required]=true spellcheck="false">
+		(selectionChange)="onInstitutionSelectionChange($event)" spellcheck="false">
 	</app-typeahead>
-	<mat-error class="error-message" *ngIf="!institutionDestinationId && submitForm"
-		[translate]="'forms.REQUIRED'"></mat-error>
 </div>
 
-<ng-container *ngIf="institutionSelection && formReference.value.consultation">
-	<ng-container *ngIf="(appointment$ | async) > 0; else NOT_AVAILABLE_APPOINTMENT">
-		<span class="message" [innerHTML]="
-		'ambulatoria.paciente.nueva-consulta.reference-dialog.AVAILABLE_APPOINTMENT' |
-		translate: { appointment: appointment$ | async }"></span>
-	</ng-container>
+<ng-container *ngIf="institutionSelection">
+	<ul>
+		<ng-container *ngIf="careLineId">
+			<ng-container *ngIf="{ observableValue: protectedAppointment$ | async } as protectedAppointment">
+				<li class="message" [ngClass]="protectedAppointment.observableValue > 0? 'purple' : 'red'">
+					<ng-container *ngIf="protectedAppointment.observableValue > 0; else notAvailableProtectedAppointment">
+						<span class="message purple">{{protectedAppointment.observableValue}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.PROTECTED_APPOINTMENT' | translate}}</span>
+					</ng-container>
+				</li>
+			</ng-container>
+			<br>
+		</ng-container>
 
-	<ng-template #NOT_AVAILABLE_APPOINTMENT>
-		<span class="message-warning"
-			[innerHTML]="'ambulatoria.paciente.nueva-consulta.reference-dialog.NOT_AVAILABLE_APPOINTMENT' | translate"></span>
-	</ng-template>
+		<ng-container *ngIf="{ observableValue: appointment$ | async } as appointment">
+			<li class="message" [ngClass]="appointment.observableValue > 0? 'green' : 'red'">
+				<ng-container *ngIf="appointment.observableValue > 0; else notAvailableAppointment">
+					<span class="message green">{{appointment.observableValue}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
+				</ng-container>
+			</li>
+		</ng-container>
+
+
+		<ng-template #notAvailableProtectedAppointment>
+			<span class="message red">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.PROTECTED_APPOINTMENT' | translate}}</span>
+		</ng-template>
+
+		<ng-template #notAvailableAppointment>
+			<span class="message red">{{ZERO}} {{'ambulatoria.paciente.nueva-consulta.reference-dialog.APPOINTMENT' | translate}}</span>
+		</ng-template>
+	</ul>
 </ng-container>

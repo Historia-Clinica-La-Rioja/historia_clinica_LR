@@ -1,5 +1,20 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EReferableConcept;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.domain.ReferableConceptVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,21 +23,18 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import static java.util.Objects.nonNull;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Slf4j
 @ToString
 public class GeneralHealthConditionBo implements Serializable {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GeneralHealthConditionBo.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -30,40 +42,88 @@ public class GeneralHealthConditionBo implements Serializable {
 
     private List<DiagnosisBo> diagnosis = new ArrayList<>();
 
-    private List<HealthHistoryConditionBo> personalHistories = new ArrayList<>();
+    private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
-    private List<HealthHistoryConditionBo> familyHistories = new ArrayList<>();
+    private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
 	private List<ProblemBo> problems = new ArrayList<>();
 
 	private List<HealthConditionBo> otherProblems = new ArrayList<>();
 
-    public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
-        setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
-        setDiagnosis(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isSecondaryDiagnosis,
-                this::mapDiagnosis)
-        );
-        setPersonalHistories(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isPersonalHistory,
-                this::mapHealthHistoryConditionBo)
-        );
-        setFamilyHistories(buildGeneralState(
-                healthConditionVos,
-                HealthConditionVo::isFamilyHistory,
-                this::mapHealthHistoryConditionBo));
-		setProblems(buildGeneralState(
-				healthConditionVos,
+	private List<DiagnosisBo> preoperativeDiagnosis = new ArrayList<>();
+
+	private List<DiagnosisBo> postoperativeDiagnosis = new ArrayList<>();
+
+    private List<HealthConditionBo> otherHistories = new ArrayList<>();
+
+	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
+		setHealthConditions(healthConditionVos, new ArrayList<>());
+	}
+
+	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
+		setHealthConditions(healthConditionVos, referredConcepts);
+	}
+
+	/**
+	 * Exclude the nursing procedure (see the constant in the Snomed entity).
+	 * If there's no main diagnostic choose the first of the list (that's an actual diagnosis) as the main one.
+	 */
+	public static GeneralHealthConditionBo excludingNursingDiagnostic(List<HealthConditionVo> episodeRelatedDiagnoses) {
+		var withoutNursingProcedure = episodeRelatedDiagnoses
+			.stream()
+			.filter(diagnostic -> !diagnostic.isNursingProcedure())
+			.collect(Collectors.toList());
+		var mainDiagnosticExists = withoutNursingProcedure.stream().anyMatch(x -> x.isMain());
+
+		//Choose the main diagnosis
+		if (!withoutNursingProcedure.isEmpty() && !mainDiagnosticExists)
+			withoutNursingProcedure.stream()
+				.filter(x -> x.isDiagnosis())
+				.findFirst()
+				.ifPresent(found -> found.setMain(true));
+
+		return new GeneralHealthConditionBo(withoutNursingProcedure);
+	}
+
+	private void setHealthConditions(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
+		var mainDiagnosis = healthConditionVos.stream().filter(HealthConditionVo::isMain).findFirst();
+		healthConditionVos = healthConditionVos.stream().filter(hc -> !hc.equals(mainDiagnosis.orElse(new HealthConditionVo()))).collect(Collectors.toList());
+		setMainDiagnosis(buildMainDiagnosis(mainDiagnosis));
+		setDiagnosis(buildGeneralState(healthConditionVos,
+				HealthConditionVo::isDiagnosis,
+				this::mapDiagnosis)
+		);
+		setPersonalHistories(buildReferableGeneralState(healthConditionVos,
+				HealthConditionVo::isPersonalHistory,
+				this::mapPersonalHistoryBo, referredConcepts,
+				EReferableConcept.PERSONAL_HISTORY.getId())
+		);
+		setFamilyHistories(buildReferableGeneralState(healthConditionVos,
+				HealthConditionVo::isFamilyHistory,
+				this::mapFamilyHistoryBo,
+				referredConcepts,
+				EReferableConcept.FAMILY_HISTORY.getId()));
+		setProblems(buildGeneralState(healthConditionVos,
 				HealthConditionVo::isProblem,
 				this::buildProblem));
-		setOtherProblems(buildGeneralState(
-				healthConditionVos,
-				HealthConditionVo::isOtherProblem,
+		setOtherProblems(buildGeneralState(healthConditionVos,
+				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.OTHER),
 				this::mapToHealthConditionBo
 		));
-    }
+		setPreoperativeDiagnosis(buildGeneralState(healthConditionVos,
+				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS),
+				this::mapDiagnosis
+		));
+		setPostoperativeDiagnosis(buildGeneralState(healthConditionVos,
+				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS),
+				this::mapDiagnosis
+		));
+		setOtherHistories(buildGeneralState(healthConditionVos,
+				HealthConditionVo::isOtherHistory,
+				this::mapToHealthConditionBo
+		));
+	}
+
 	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
                                                                     Predicate<? super HealthConditionVo> filterFunction,
                                                                     Function<? super HealthConditionVo, ? extends T> mapFunction){
@@ -74,8 +134,22 @@ public class GeneralHealthConditionBo implements Serializable {
 
     }
 
+	private <T extends HealthConditionBo> ReferableItemBo<T> buildReferableGeneralState(List<HealthConditionVo> data,
+																						Predicate<? super HealthConditionVo> filterFunction,
+																						Function<? super HealthConditionVo, ? extends T> mapFunction,
+																						List<ReferableConceptVo> referredConcepts,
+																						Short referableConceptId) {
+		Optional<Boolean> isReferred = referredConcepts.stream().filter(referableConcept -> referableConcept.getReferableConceptId().equals(referableConceptId))
+				.map(ReferableConceptVo::isReferred).findFirst();
+		List<T> resultList = data.stream()
+				.filter(filterFunction)
+				.map(mapFunction)
+				.collect(Collectors.toList());
+		return new ReferableItemBo<>(resultList, isReferred.orElse(null));
+	}
+
     private DiagnosisBo mapDiagnosis(HealthConditionVo healthConditionVo){
-        LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+        log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
         DiagnosisBo result = new DiagnosisBo();
         result.setId(healthConditionVo.getId());
         result.setStatusId(healthConditionVo.getStatusId());
@@ -84,15 +158,35 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
-        result.setMain(healthConditionVo.isMain());
-        LOG.debug(OUTPUT, result);
+        result.setMain(false);
+		result.setType(ProblemTypeEnum.map(healthConditionVo.getProblemId()));
+        log.debug(OUTPUT, result);
         return result;
 
     }
 
-    private HealthHistoryConditionBo mapHealthHistoryConditionBo(HealthConditionVo healthConditionVo){
-        LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
-        HealthHistoryConditionBo result = new HealthHistoryConditionBo();
+    private PersonalHistoryBo mapPersonalHistoryBo(HealthConditionVo healthConditionVo){
+        log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+        PersonalHistoryBo result = new PersonalHistoryBo();
+        result.setId(healthConditionVo.getId());
+        result.setStatusId(healthConditionVo.getStatusId());
+        result.setStatus(healthConditionVo.getStatus());
+        result.setVerificationId(healthConditionVo.getVerificationId());
+        result.setVerification(healthConditionVo.getVerification());
+        result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
+        result.setStartDate(healthConditionVo.getStartDate());
+        result.setInactivationDate(healthConditionVo.getEndDate());
+        result.setNote(healthConditionVo.getNote());
+        result.setMain(healthConditionVo.isMain());
+        result.setType(nonNull(healthConditionVo.getSpecificType()) ? EPersonalHistoryType.map(healthConditionVo.getSpecificType()).getDescription() : null);
+        log.debug(OUTPUT, result);
+        return result;
+
+    }
+
+    private FamilyHistoryBo mapFamilyHistoryBo(HealthConditionVo healthConditionVo){
+        log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+        FamilyHistoryBo result = new FamilyHistoryBo();
         result.setId(healthConditionVo.getId());
         result.setStatusId(healthConditionVo.getStatusId());
         result.setStatus(healthConditionVo.getStatus());
@@ -101,13 +195,13 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setStartDate(healthConditionVo.getStartDate());
         result.setMain(healthConditionVo.isMain());
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
 
     }
 
     public HealthConditionBo buildMainDiagnosis(Optional<HealthConditionVo> optionalHealthConditionVo) {
-        LOG.debug("Input parameters -> optionalHealthConditionVo {}", optionalHealthConditionVo);
+        log.debug("Input parameters -> optionalHealthConditionVo {}", optionalHealthConditionVo);
         AtomicReference<HealthConditionBo> result = new AtomicReference<>(null);
         optionalHealthConditionVo.ifPresent(healthConditionVo -> {
             result.set(new HealthConditionBo());
@@ -119,12 +213,12 @@ public class GeneralHealthConditionBo implements Serializable {
             result.get().setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
             result.get().setMain(healthConditionVo.isMain());
         });
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result.get();
     }
 
 	public ProblemBo buildProblem(HealthConditionVo healthConditionVo) {
-		LOG.debug("Input parameters -> healthConditionVo {}", healthConditionVo);
+		log.debug("Input parameters -> healthConditionVo {}", healthConditionVo);
 		ProblemBo result = new ProblemBo();
 		result.setId(healthConditionVo.getId());
 		result.setStatusId(healthConditionVo.getStatusId());
@@ -134,13 +228,16 @@ public class GeneralHealthConditionBo implements Serializable {
 		result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
 		result.setMain(healthConditionVo.isMain());
 		result.setStartDate(healthConditionVo.getStartDate());
-		result.setChronic(healthConditionVo.isChronic());
-		LOG.debug(OUTPUT, result);
+		result.setChronic(healthConditionVo.isOfType(ProblemTypeEnum.CHRONIC));
+        result.setEndDate(healthConditionVo.getEndDate());
+        result.setErrorReason(nonNull(healthConditionVo.getErrorReasonId()) ? EProblemErrorReason.map(healthConditionVo.getErrorReasonId()).getDescription() : null);
+        result.setErrorObservations(healthConditionVo.getNote());
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	private HealthConditionBo mapToHealthConditionBo(HealthConditionVo healthConditionVo){
-		LOG.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
+		log.debug("Input parameters -> HealthConditionVo {}", healthConditionVo);
 		HealthHistoryConditionBo result = new HealthHistoryConditionBo();
 		result.setId(healthConditionVo.getId());
 		result.setStatusId(healthConditionVo.getStatusId());
@@ -149,8 +246,17 @@ public class GeneralHealthConditionBo implements Serializable {
 		result.setVerification(healthConditionVo.getVerification());
 		result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
 		result.setMain(healthConditionVo.isMain());
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
+	public boolean isDifferentFromMainDiagnosis(HealthConditionBo mainDiagnosis, HealthConditionVo diagnosis) {
+		return diagnosis.getProblemId().equals(ProblemType.DIAGNOSIS) && !mainDiagnosis.getSnomed().getSctid().equals(diagnosis.getSnomed().getSctid());
+	}
+
+	private DiagnosisBo setMainFalse(DiagnosisBo diagnosisBo){
+		if (diagnosisBo.isMain())
+			diagnosisBo.setMain(false);
+		return diagnosisBo;
+	}
 }

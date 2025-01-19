@@ -116,4 +116,13 @@ public class SnomedService {
         return snomedRepository.findLatestIdBySctid(sctidCode);
     }
 
+	public Integer getSnomedIdBySctidAndDescription(String sctid, String description) {
+		LOG.debug("Input parameters -> sctid {}, description {}", sctid, description);
+		Optional<Integer> result = snomedRepository.findIdBySctidAndPt(sctid, description);
+		if (result.isEmpty())
+			return createSnomedTerm(new SnomedBo(sctid, description));
+		LOG.debug("Output -> {}", result);
+		return result.get();
+	}
+
 }

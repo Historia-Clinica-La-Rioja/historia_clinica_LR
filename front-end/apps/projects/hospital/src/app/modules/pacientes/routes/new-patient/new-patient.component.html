@@ -211,7 +211,7 @@
 								{{country.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId" matSuffix
+						<button id="clear_address_country" type="button"  *ngIf="form.value.addressCountryId" matSuffix
 							color="warn" mat-icon-button (click)="clear(form.controls.addressCountryId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -225,7 +225,7 @@
 								{{province.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_province" type="button" mat-button *ngIf="form.value.addressProvinceId" matSuffix
+						<button id="clear_address_province" type="button"  *ngIf="form.value.addressProvinceId" matSuffix
 							color="warn" mat-icon-button (click)="clear(form.controls.addressProvinceId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -240,7 +240,7 @@
 								{{department.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartmentId" matSuffix
+						<button id="clear_address_departament" type="button"  *ngIf="form.value.addressDepartmentId" matSuffix
 							color="warn" mat-icon-button (click)="clear(form.controls.addressDepartmentId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -253,7 +253,7 @@
 								{{city.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId" matSuffix
+						<button id="clear_address_city" type="button"  *ngIf="form.value.addressCityId" matSuffix
 							color="warn" mat-icon-button (click)="clear(form.controls.addressCityId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -419,7 +419,7 @@
 								{{ethnicity.pt | titlecase}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId" matSuffix
+						<button id="clear_address_ethnicity" type="button"  *ngIf="form.value.ethnicityId" matSuffix
 							color="warn" mat-icon-button (click)="clear(form.controls.ethnicityId); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
 						</button>
@@ -440,7 +440,7 @@
 								{{occupation.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value"
+						<button id="clear-occupation" type="button"  *ngIf="form.controls.occupationId.value"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.occupationId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -462,7 +462,7 @@
 								{{educationLevel.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear-educationLevel" type="button" mat-button
+						<button id="clear-educationLevel" type="button" 
 							*ngIf="form.controls.educationLevelId.value" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.educationLevelId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -471,7 +471,7 @@
 				</div>
 			</div>
 
-			<div *appHasRole="['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" class="form-buttons">
+			<div *appHasRole="fromGuardModule ? ['ADMINISTRATIVO'] : ['ADMINISTRATIVO','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRATIVO_RED_DE_IMAGENES', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR', 'PRESCRIPTOR']" class="form-buttons">
 				<button mat-stroked-button type="button" (click)="goBack()">
 					<span [translate]="'buttons.BACK'"></span>
 				</button>
@@ -482,3 +482,4 @@
 		</form>
 	</section>
 </app-content>
+

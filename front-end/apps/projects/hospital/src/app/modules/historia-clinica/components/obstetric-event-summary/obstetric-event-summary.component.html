@@ -1,0 +1,17 @@
+<div data-id="obstetric-event-section">
+    <app-iconed-titled-section icon="event_available" title="internaciones.documents-summary.obstetric-event.TITLE"></app-iconed-titled-section>
+    <div fxLayout="column" fxLayoutGap="15px" class="section-description">
+        <ng-container *ngFor="let itemSummary of eventData.obstetricEvent">
+            <app-title-description-list *ngIf="itemSummary.descriptionData" data-id="{{itemSummary.dataId}}"
+                title="{{itemSummary.title}}" [descriptionData]="itemSummary.descriptionData"></app-title-description-list>
+        </ng-container>
+        <ng-container *ngFor="let newBorn of eventData.newBorns; index as i">
+            <span class="new-born">{{ 'internaciones.documents-summary.obstetric-event.new-born.NEWBORN' | translate }} #{{ i + 1 }}</span>
+            <ng-container *ngFor="let item of newBorn.newBornSummary">
+                <app-title-description-list *ngIf="item.descriptionData" data-id="{{ item.dataId }}"
+                    [title]="item.title" [descriptionData]="item.descriptionData">
+                </app-title-description-list>
+            </ng-container>
+        </ng-container>        
+    </div>
+</div>

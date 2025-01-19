@@ -17,6 +17,8 @@ import java.util.List;
 public class AppointmentSearchBo {
 
 	private List<Short> daysOfWeek;
+	private Integer clinicalSpecialtyId;
+	private Integer diaryId;
 	private String aliasOrSpecialtyName;
 	private LocalTime initialSearchTime;
 	private LocalTime endSearchTime;
@@ -26,13 +28,14 @@ public class AppointmentSearchBo {
 	private Integer practiceId;
 
 	public AppointmentSearchBo(List<Short> daysOfWeek, String aliasOrSpecialtyName, LocalTime initialSearchTime, LocalTime endSearchTime, LocalDate initialSearchDate,
-							   LocalDate endingSearchDate) {
+							   LocalDate endingSearchDate, Integer practiceSnomedId) {
 		this.daysOfWeek = daysOfWeek;
 		this.aliasOrSpecialtyName = aliasOrSpecialtyName;
 		this.initialSearchTime = initialSearchTime;
 		this.endSearchTime = endSearchTime;
 		this.initialSearchDate = initialSearchDate;
 		this.endingSearchDate = endingSearchDate;
+		this.practiceId = practiceSnomedId;
 	}
 
 }

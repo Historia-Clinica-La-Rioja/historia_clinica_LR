@@ -1,5 +1,6 @@
 package net.pladema.staff.controller.mapper;
 
+import ar.lamansys.sgx.shared.jsoup.utils.XHTMLUtils;
 import net.pladema.establishment.repository.EpisodeDocumentTypeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
@@ -20,8 +21,13 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	private final EpisodeDocumentTypeRepository repository;
 
-	public BackofficeEpisodeDocumentTypeStore(EpisodeDocumentTypeRepository repository) {
+	private final static Integer REGULAR_DOCUMENT = 1;
+
+	private final XHTMLUtils XHTMLUtils;
+
+	public BackofficeEpisodeDocumentTypeStore(EpisodeDocumentTypeRepository repository, XHTMLUtils XHTMLUtils) {
 		this.repository = repository;
+		this.XHTMLUtils = XHTMLUtils;
 	}
 
 	@Override
@@ -52,15 +58,11 @@ public class BackofficeEpisodeDocumentTypeStore implements BackofficeStore<Episo
 
 	@Override
 	public EpisodeDocumentType save(EpisodeDocumentType entity) {
-		if (entity.getConsentId() == null || entity.getConsentId() == 1) {
-			entity.setConsentId(1);
-			entity.setRichTextBody(null);
-		}
+		if (entity.getConsentId() == null)
+			entity.setConsentId(REGULAR_DOCUMENT);
 
-		if (entity.getConsentId() != 1
-			&& entity.getId() == null
-			&& repository.existsConsentDocumentById(entity.getConsentId()))
-			throw new BackofficeValidationException("Ya existe ese documento de consentimiento");
+		if (entity.getRichTextBody() != null)
+			entity.setRichTextBody(XHTMLUtils.toXHTML(entity.getRichTextBody(), true));
 		return repository.save(entity);
 	}
 

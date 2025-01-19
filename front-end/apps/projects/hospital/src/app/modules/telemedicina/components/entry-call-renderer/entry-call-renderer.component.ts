@@ -7,7 +7,7 @@ import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { Priority } from '@presentation/components/priority/priority.component';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
-import { CallDetails } from '@presentation/components/call-details/call-details.component';
+import { CallDetails } from '../../../telemedicina/components/call-details/call-details.component';
 
 @Component({
 	selector: 'app-entry-call-renderer',
@@ -34,7 +34,6 @@ export class EntryCallRendererComponent implements OnInit {
 	ngOnInit(): void {
 		this.showEntryCallService.$entryCall.subscribe(
 			(entryCall: VirtualConsultationNotificationDataDto) => {
-				console.log('Recibo valor');
 
 				if (entryCall) {
 					const data = toCallDetails(entryCall)
@@ -74,10 +73,7 @@ export const toCallDetails = (entryCall: VirtualConsultationNotificationDataDto)
 		createdOn: dateTimeDtotoLocalDate(entryCall.creationDateTime),
 		institutionName: entryCall.institutionName,
 		patient: {
-			firstName: entryCall.patientData.firstName,
-			lastName: entryCall.patientData.lastName,
-			id: null,
-			gender: null
+			fullName: `${entryCall.patientData.firstName} ${entryCall.patientData.lastName}`,
 		},
 		priority: mappedPriorities[entryCall.priority],
 		professionalFullName: `${entryCall.responsibleLastName} ${entryCall.responsibleFirstName}`,

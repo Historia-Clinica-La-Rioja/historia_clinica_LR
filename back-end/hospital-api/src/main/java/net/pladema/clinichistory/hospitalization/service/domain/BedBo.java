@@ -1,12 +1,14 @@
 package net.pladema.clinichistory.hospitalization.service.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
 
+@Builder
 @Getter
 @Setter
 @ToString
@@ -20,4 +22,8 @@ public class BedBo implements Serializable {
     private String bedNumber;
 
     private RoomBo room;
+
+	public String getRoomDescription() {
+		return room != null ? room.getDescription(): null;
+	}
 }

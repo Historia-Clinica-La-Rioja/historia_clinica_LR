@@ -1,0 +1,295 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_27
+
+    - changeSet:
+        id: addColumn-is_domain-parameterized_form
+        author: jvaldez
+        comment: Add is_domain column to parameterized_form table
+        changes:
+          - addColumn:
+              tableName: parameterized_form
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: is_domain
+                    type: boolean
+                    defaultValue: ${boolean.true}
+
+    - changeSet:
+        id: institutional_parameterized_form-createTable
+        comment: Create table institutional_parameterized_form
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: institutional_parameterized_form
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_parameterized_form
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: is_enabled
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                - column:
+                    name: parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: parameterized_form(id)
+                      foreignKeyName: FK_institutional_parameterized_form_parameterized_form_id
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institutional_parameterized_form_institution_id
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: create-table-institution_prescription
+        comment: Create table institution_prescription
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: institution_prescription
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institution_prescription
+                - column:
+                    name: sisa_code
+                    type: varchar(15)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: name
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: province_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      references: province(id)
+                      foreignKeyName: FK_institution_prescription_province_id
+                - column:
+                    name: dependency_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      references: dependency(id)
+                      foreignKeyName: FK_institution_prescription_dependency_id
+                - column:
+                    name: typology
+                    type: varchar(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: load-institution_prescription-data
+        comment: Fill table institution_prescription
+        author: efernandez
+        context: "!schema-only"
+        changes:
+          - sqlFile:
+              encoding: ASCII
+              path: data/load_institution_prescription.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
+    - changeSet:
+        id: replaceView-v_clinic_history_16
+        author: mromero
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/v_clinic_history/create_v_clinic_history_16.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
+    - changeSet:
+        id: delete-empty-rows-obstetric_event
+        comment: Borrado de registros sin información en obstetric_event
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM document_obstetric_event doe 
+                WHERE doe.obstetric_event_id IN (
+                  SELECT id FROM obstetric_event oe
+                  WHERE oe.previous_pregnancies IS NULL
+                  AND oe.current_pregnancy_end_date IS NULL
+                  AND oe.gestational_age IS NULL
+                  AND oe.pregnancy_termination_type IS NULL
+                  AND NOT EXISTS (SELECT 1 from newborn n where n.obstetric_event_id = oe.id)
+                );
+                DELETE FROM obstetric_event oe 
+                WHERE oe.previous_pregnancies IS NULL
+                AND oe.current_pregnancy_end_date IS NULL
+                AND oe.gestational_age IS NULL
+                AND oe.pregnancy_termination_type IS NULL
+                AND NOT EXISTS (SELECT 1 from newborn n where n.obstetric_event_id = oe.id);
+
+    - changeSet:
+        id: delete-empty-rows-external_cause
+        comment: Borrado de registros sin información en external_cause
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM document_external_cause dec 
+                WHERE dec.external_cause_id IN (
+                  SELECT id FROM external_cause ec
+                  WHERE ec.external_cause_type_id IS NULL
+                  AND ec.event_location IS NULL
+                  AND ec.snomed_id IS NULL
+                );
+                DELETE FROM external_cause ec 
+                WHERE ec.external_cause_type_id IS NULL
+                AND ec.event_location IS NULL
+                AND ec.snomed_id IS NULL;
+        
+    - changeSet:
+        id: create-table-geographically_located_patient
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: geographically_located_patient
+              columns:
+                - column:
+                    name: patient_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_geographically_located_patient
+                      nullable: false
+                - column:
+                    name: status_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: geographically_located_patient
+              constraintName: FK_geographically_located_patient_patient
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true
+
+    - changeSet:
+        id: insert-ausente-state-in-table-emergency_care_state
+        author: tomasbecher
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO emergency_care_state VALUES (5, 'Ausente');
+
+    - changeSet:
+        id: insert-llamado-state-in-table-emergency_care_state
+        author: tomasbecher
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO emergency_care_state VALUES (6, 'Llamado');
+
+    - changeSet:
+        id: historic_emergency_episode-addCallsColumn
+        comment: Create column calls in table historic_emergency_episode
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: calls
+                    type: smallint
+              tableName: historic_emergency_episode

@@ -4,13 +4,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.modality.controller.dto.ModalityDto;
-
 import net.pladema.modality.service.ModalityBOMapper;
 import net.pladema.modality.service.ModalityService;
-
 import net.pladema.modality.service.domain.ModalityBO;
-
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +28,7 @@ public class ModalityController {
 	private final ModalityBOMapper modalityBOMapper;
 	
 	@GetMapping(value = "/modality")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, TECNICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, TECNICO, INFORMADOR, INDEXADOR')")
 	public ResponseEntity<List<ModalityDto>> getAllModality(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("{}", "All modalities");

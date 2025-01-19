@@ -46,7 +46,7 @@ public class BasicDataPersonDto implements Serializable {
 
 	private String selfPerceivedGender;
 
-    private Short age;
+    private PersonAgeDto personAge;
 
     private LocalDate birthDate;
 
@@ -62,49 +62,44 @@ public class BasicDataPersonDto implements Serializable {
 
 	private String ethnicity;
 
-	/*public BasicDataPersonDto(Integer id, String firstName, String middleNames, String lastName, String otherLastNames, Short identificationTypeId, String identificationType, String identificationNumber, GenderDto gender, String selfPerceivedGender, Short age, LocalDate birthDate, String nameSelfDetermination, List<PersonFileDto> files) {
-		this.id = id;
-		this.firstName = firstName;
-		this.middleNames = middleNames;
-		this.lastName = lastName;
-		this.otherLastNames = otherLastNames;
-		this.identificationTypeId = identificationTypeId;
-		this.identificationType = identificationType;
-		this.identificationNumber = identificationNumber;
-		this.gender = gender;
-		this.selfPerceivedGender = selfPerceivedGender;
-		this.age = age;
-		this.birthDate = birthDate;
-		this.nameSelfDetermination = nameSelfDetermination;
-		this.files = files;
-	}*/
+	private String email;
 
-	public String completeName(){
+	public String completeName(boolean selfPerceivedFeatureFlag){
         if (lastName == null && firstName == null && middleNames == null && otherLastNames==null) {
             return null;
         }
-        String completeFirsName = (firstName != null && middleNames != null)
-                ? firstName + " " + middleNames
-                : firstName == null ?
-                middleNames
-                : middleNames == null ?
-                firstName :
-                null;
+		
+		String completeFirstName;
 
-        String completeLastName = (lastName != null && otherLastNames != null)
+		if (selfPerceivedFeatureFlag && nameSelfDetermination != null)
+			completeFirstName = nameSelfDetermination;
+		else {
+			completeFirstName = firstName != null && middleNames != null
+					? firstName + " " + middleNames
+					: firstName == null ?
+					middleNames
+					: firstName;
+		}
+
+		String completeLastName = lastName != null && otherLastNames != null
                 ? lastName + " " + otherLastNames
                 : lastName == null ?
                 otherLastNames
-                : otherLastNames == null ?
-                lastName :
-                null;
+                : lastName;
 
-        String result =  (completeLastName != null && completeFirsName != null) ?
-                completeLastName + ", " + completeFirsName
-                : completeFirsName == null ?
+        String result =  (completeLastName != null && completeFirstName != null) ?
+                completeLastName + ", " + completeFirstName
+                : completeFirstName == null ?
                 completeLastName :
-                completeFirsName;
+				completeFirstName;
         LOG.debug(OUTPUT, result);
         return result;
     }
+
+	public Short getGenderId() {
+		return gender != null ? gender.getId(): null;
+	}
+
+	public Short getAge() { return this.personAge != null ? this.personAge.getYears() : null; }
+
 }

@@ -28,6 +28,7 @@ public class DocumentStatus implements Serializable {
 	public static final String FINAL = "445665009";
 	public static final String FIXED = "445664008";
 	public static final String ERROR = "723510000";
+	public static final String DRAFT_DISCARDED = "260385009";
 
 	@Id
 	@Column(name = "id", length = 20)

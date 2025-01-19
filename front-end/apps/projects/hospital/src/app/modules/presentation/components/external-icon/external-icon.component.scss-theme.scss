@@ -1,0 +1,9 @@
+@mixin app-external-icon($theme) {
+	$primary: map-get($theme, primary);
+
+	.fill-color {
+		path {
+			fill: mat-color($primary);
+		}
+	}
+}

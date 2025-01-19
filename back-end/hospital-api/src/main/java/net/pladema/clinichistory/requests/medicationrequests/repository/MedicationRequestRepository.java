@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.medicationrequests.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,5 +33,11 @@ public interface MedicationRequestRepository extends SGXAuditableEntityJPAReposi
 			"FROM MedicationRequest mr " +
 			"WHERE mr.id = :id")
 	Optional<Integer> getMedicalCoverageId (@Param("id") Integer id);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT mr.uuid " +
+			"FROM MedicationRequest mr " +
+			"WHERE mr.id = :medicationRequestId")
+	UUID fetchUUIDById(@Param("medicationRequestId") Integer medicationRequestId);
 
 }

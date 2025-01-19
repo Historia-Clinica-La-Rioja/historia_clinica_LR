@@ -1,0 +1,17 @@
+.display-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.separation {
+    margin: 10px 0;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}

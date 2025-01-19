@@ -16,7 +16,7 @@
 					</button>
 				</div>
 				<em *ngIf="procedure?.performedDate" class="mat-caption gray-caption">
-					{{ procedure.performedDate | date: 'shortDate'}}
+					{{ procedure.performedDate | isoToDate| dateFormat: 'date'}}
 				</em>
 				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
 			</div>

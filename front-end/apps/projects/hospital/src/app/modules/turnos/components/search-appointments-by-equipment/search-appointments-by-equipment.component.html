@@ -20,8 +20,7 @@
 					<mat-option *ngFor="let diary of activeDiaries" [value]="diary"
 						(onSelectionChange)="changeDiarySelected($event, diary)">
 						<span class="mat-body">
-							{{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate |
-							date:dateFormats.SHORT_DATE}}
+							{{diary.startDate | dateFormat: 'date' }} - {{diary.endDate | dateFormat: 'date'}}
 						</span>
 					</mat-option>
 				</mat-optgroup>
@@ -30,23 +29,20 @@
 					<mat-option *ngFor="let diary of expiredDiaries" [value]="diary"
 						(onSelectionChange)="changeDiarySelected($event, diary)">
 						<span class="mat-body">
-							{{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate |
-							date:dateFormats.SHORT_DATE}}
+							{{diary.startDate | dateFormat: 'date' }} - {{diary.endDate | dateFormat: 'date'}}
 						</span>
 					</mat-option>
 				</mat-optgroup>
 			</mat-select>
-			<button id="clear_equipment_diary_selected" type="button" mat-button *ngIf="diarySelected" matSuffix
+			<button id="clear_equipment_diary_selected" type="button"  *ngIf="diarySelected" matSuffix
 				color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>
 
 		<div class="actions" *ngIf="diarySelected" fxLayoutGap="3px">
-			<button mat-flat-button color="primary" *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda"
-				name="edit_agenda" (click)="goToEditAgenda()">
-				<mat-icon>edit</mat-icon>
-			</button>
+			<app-button text='editar' *appHasRole="['ADMINISTRADOR_AGENDA']" id="edit_agenda" name="edit_agenda"
+				(clicked)="goToEditAgenda()"></app-button>
 		</div>
 	</div>
 	<ng-template #noEquipmentDiaries>
@@ -67,4 +63,4 @@
 	</ng-template>
 </div>
 
-<app-equipment-diary *ngIf="diarySelected" [diaryId]="diarySelected?.id"></app-equipment-diary>
+<app-equipment-diary *ngIf="diarySelected" [diaryId]="diarySelected?.diaryList.id"></app-equipment-diary>

@@ -166,6 +166,11 @@ public class HospitalUserStorageImpl implements HospitalUserStorage {
 				.collect(Collectors.toList()));
 	}
 
+	@Override
+	public Optional<String> getCuilByUserId(Integer userId) {
+		return userPersonRepository.getCuilByUserId(userId);
+	}
+
 	private PersonDataBo mapPersonDataBo(BasicDataPersonDto person, VHospitalUser user) {
         return person != null ? new PersonDataBo(
                 person.getFirstName(),

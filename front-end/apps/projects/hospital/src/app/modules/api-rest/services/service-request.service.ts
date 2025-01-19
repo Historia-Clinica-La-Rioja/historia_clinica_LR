@@ -4,20 +4,20 @@ import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import {
-	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
-	SnomedDto,
+	StudyOrderReportInfoDto,
+	StudyTranscribedOrderReportInfoDto,
 	StudyWithoutOrderReportInfoDto,
-	TranscribedDiagnosticReportInfoDto,
-	TranscribedOrderReportInfoDto,
-	TranscribedPrescriptionDto,
+	TranscribedServiceRequestDto,
+	TranscribedServiceRequestSummaryDto,
+	AddDiagnosticReportObservationsCommandDto,
+	GetDiagnosticReportObservationGroupDto,
 } from '@api-rest/api-model';
 
 import { switchMap } from 'rxjs/operators';
-import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
-import {DownloadService} from "@core/services/download.service";
+import { DownloadService } from '@core/services/download.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,16 +27,16 @@ export class ServiceRequestService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
-		private readonly viewPdfService: ViewPdfService,
 		private readonly downloadService: DownloadService,
 	) { }
 
-	getList(patientId: number, statusId?: string, study?: string, healthCondition?: string, categoryId?: string): Observable<DiagnosticReportInfoDto[]> {
+	getList(patientId: number, statusId?: string, study?: string, healthCondition?: string, categoryId?: string, categoriesToBeExcluded?: string): Observable<DiagnosticReportInfoDto[]> {
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = statusId ? queryParams.append('statusId', statusId) : queryParams;
 		queryParams = study ? queryParams.append('study', study) : queryParams;
 		queryParams = categoryId ? queryParams.append('category', categoryId) : queryParams;
 		queryParams = healthCondition ? queryParams.append('healthCondition', healthCondition) : queryParams;
+		queryParams = categoriesToBeExcluded ? queryParams.append('categoriesToBeExcluded', categoriesToBeExcluded) : queryParams;
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/`;
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
@@ -51,25 +51,15 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getStudyStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/existCheck`;
-		return this.http.get<AppointmentOrderImageExistCheckDto>(url);
-	}
 
 	create(patientId: number, prescriptionDto: PrescriptionDto): Observable<number[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests`;
 		return this.http.post<number[]>(url, prescriptionDto);
 	}
 
-	createTranscribedOrder(patientId: number, study: SnomedDto, healthCondition: SnomedDto, professional: string, institution: string){
-		let data: TranscribedPrescriptionDto = {
-			study,
-			healthCondition,
-			healthcareProfessionalName: professional,
-			institutionName: institution
-		}
+	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedServiceRequestDto){
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed`;
-		return this.http.post<number>(url, data)
+		return this.http.post<number>(url, transcribedInfo)
 	}
 
 	deleteTranscribedOrder(patientId: number, orderId: number): Observable<void>{
@@ -85,9 +75,9 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]>{
+	getTranscribedOrders(patientId: number): Observable<TranscribedServiceRequestSummaryDto[]>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribedOrders`;
-		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)
+		return this.http.get<TranscribedServiceRequestSummaryDto[]>(url)
 	}
 
 	saveAttachedFiles(patientId: number, serviceRequestId: number, selectedFiles: File[]): Observable<void> {
@@ -114,6 +104,11 @@ export class ServiceRequestService {
 			return this.http.put<void>(completeUrl, completeRequestDto);
 	}
 
+	addObservations(patientId: number, diagnosticReportId: number, diagnosticReport: AddDiagnosticReportObservationsCommandDto): Observable<void> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/observations`;
+		return this.http.put<void>(url, diagnosticReport);
+	}
+
 	completeByRdi(patientId: number, appointmentId: number): Observable<void> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${appointmentId}/completeByRDI`
 		return this.http.put<void>(url, {})
@@ -129,6 +124,11 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoWithFilesDto>(url);
 	}
 
+	getObservations(patientId: number, diagnosticReportId: number): Observable<GetDiagnosticReportObservationGroupDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${diagnosticReportId}/observations`;
+		return this.http.get<GetDiagnosticReportObservationGroupDto>(url);
+	}
+
 	download(patientId: number, fileId: number, fileName: string) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/download/${fileId}`;
 		this.downloadService.downloadPdf(
@@ -139,13 +139,18 @@ export class ServiceRequestService {
 
 	downloadPdf(patientId: number, serviceRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/download-pdf`;
-		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
+		this.downloadService.fetchFile(url, 'Orden ' + serviceRequestId);
 	}
 
-	getStudyTranscribedOrder(patientId: number): Observable<TranscribedOrderReportInfoDto[]>
+	downloadTranscribedOrderPdf(patientId: number, serviceRequestId: number, appointmentId: number) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed/${serviceRequestId}/download-pdf`;
+		this.downloadService.fetchFile(url, 'Orden ' + serviceRequestId, { appointmentId: appointmentId.toString() });
+	}
+
+	getStudyTranscribedOrder(patientId: number): Observable<StudyTranscribedOrderReportInfoDto[]>
 	{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyTranscribedOrder`;
-		return this.http.get<TranscribedOrderReportInfoDto[]>(url)
+		return this.http.get<StudyTranscribedOrderReportInfoDto[]>(url)
 	}
 
 	getStudyWithoutOrder(patientId: number): Observable<StudyWithoutOrderReportInfoDto[]>
@@ -154,4 +159,9 @@ export class ServiceRequestService {
 		return this.http.get<StudyWithoutOrderReportInfoDto[]>(url)
 	}
 
+	getListStudyOrder(patientId: number):Observable<StudyOrderReportInfoDto[]>
+	{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/studyOrder`;
+		return this.http.get<StudyOrderReportInfoDto[]>(url)
+	}
 }

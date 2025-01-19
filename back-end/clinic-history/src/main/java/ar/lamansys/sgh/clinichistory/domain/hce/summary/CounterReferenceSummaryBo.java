@@ -24,7 +24,7 @@ public class CounterReferenceSummaryBo {
 
     private LocalDate performedDate;
 
-    private CHPersonBo professional;
+    private String authorFullName;
 
     private List<ReferenceCounterReferenceFileBo> files;
 

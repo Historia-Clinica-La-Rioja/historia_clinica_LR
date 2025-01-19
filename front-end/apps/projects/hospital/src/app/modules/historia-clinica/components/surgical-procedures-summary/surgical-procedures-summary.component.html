@@ -1,0 +1,46 @@
+<div data-id="surgical-procedures-section">
+	<app-iconed-titled-section icon="library_add"
+		title="{{ surgicalProcedures.title }}"></app-iconed-titled-section>
+	<div class="surgical-procedures-container" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
+		<div *ngIf="surgicalProcedures.startAndEndSurgicalDateTime" class="section-description" fxLayout="column"
+			fxLayoutGap="8px">
+			<div data-id="surgical-start"
+				*ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartDate || surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartTime">
+				<app-title-description-list
+					title="historia-clinica.surgical-report.summary.SURGERY_START"></app-title-description-list>
+				<div>
+					<span *ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartDate">{{
+						surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartDate | dateFormat : 'date' }}</span>
+					<span
+						*ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartDate && surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartTime">
+						- </span>
+					<span *ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartTime">{{
+						surgicalProcedures.startAndEndSurgicalDateTime.surgicalStartTime | dateFormat : 'time' }}</span>
+				</div>
+			</div>
+			<div data-id="surgical-end"
+				*ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndDate || surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndTime">
+				<app-title-description-list
+					title="historia-clinica.surgical-report.summary.SURGERY_END"></app-title-description-list>
+				<div>
+					<span *ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndDate">{{
+						surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndDate | dateFormat : 'date' }}</span>
+					<span
+						*ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndDate && surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndTime">
+						- </span>
+					<span *ngIf="surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndTime">{{
+						surgicalProcedures.startAndEndSurgicalDateTime.surgicalEndTime | dateFormat : 'time' }}</span>
+				</div>
+			</div>
+		</div>
+
+		<app-title-description-list *ngIf="surgicalProcedures.procedures.length"
+			title="historia-clinica.surgical-report.summary.REGISTERED_PROCEDURES"
+			[descriptionData]="surgicalProcedures.procedures"></app-title-description-list>
+
+		<app-title-description-list *ngIf="surgicalProcedures.description.length"
+			title="historia-clinica.surgical-report.summary.DESCRIPTION"
+			[descriptionData]="surgicalProcedures.description"></app-title-description-list>
+
+	</div>
+</div>

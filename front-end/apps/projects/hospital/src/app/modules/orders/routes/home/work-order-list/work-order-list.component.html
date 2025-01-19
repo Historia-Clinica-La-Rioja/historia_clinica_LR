@@ -1,0 +1,42 @@
+<app-content>
+		<app-filter-combo fxFlex="25%">
+		</app-filter-combo>
+	<mat-card *ngIf="(allOrders$ | async) as orders">
+
+		<div *ngIf="totalElementsAmount > 0 else noInfo">
+			<div *ngFor="let order of orders.content; last as isLast">
+				<app-row-content>
+
+					<ng-container *ngIf="order.patientDto?.patientTypeId === EMERGENCY_CARE_TEMPORARY else patientSummary">
+						<app-temporary-patient class="temporary-patient" [patientDescription]="order.patientDto?.emergencyCareReason"></app-temporary-patient>
+					</ng-container>
+
+					<ng-template #patientSummary>
+						<app-patient-summary class="patient-summary text" [person]="order?.patientDto | patientSummary">
+						</app-patient-summary>
+					</ng-template>
+
+					<app-order-detail class="order-detail" [orderDetails]="order | studyOrderWorkListDtoToOrderDetails">
+					</app-order-detail>
+
+					<app-patient-location class="patient-location" [patientLocation]="order.patientLocation">
+					</app-patient-location>
+
+				</app-row-content>
+
+				<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
+			</div>
+
+			<mat-divider class="divider"></mat-divider>
+
+			<mat-paginator [length]="totalElementsAmount" [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize"
+				(page)="onPageChange($event)">
+			</mat-paginator>
+		</div>
+
+		<ng-template #noInfo>
+			<app-no-data></app-no-data>
+		</ng-template>
+
+	</mat-card>
+</app-content>

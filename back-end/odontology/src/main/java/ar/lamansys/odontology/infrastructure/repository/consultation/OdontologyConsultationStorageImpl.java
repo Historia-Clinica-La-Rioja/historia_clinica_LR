@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.infrastructure.repository.consultation;
 
-import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
+import ar.lamansys.odontology.application.odontogram.ports.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationReasonBo;
 import org.slf4j.Logger;
@@ -88,4 +88,9 @@ public class OdontologyConsultationStorageImpl implements OdontologyConsultation
 		return result;
 	}
 
+	@Override
+	public Optional<Long> getOdontologyDocumentId(Integer healthConditionId) {
+		LOG.debug("Input parameter -> healthConditionId {}", healthConditionId);
+		return odontologyConsultationRepository.getOdontologyDocumentId(healthConditionId);
+	}
 }

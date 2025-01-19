@@ -3,6 +3,7 @@ package ar.lamansys.sgh.shared.infrastructure.input.service;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -44,4 +45,11 @@ public class BasicPatientDto implements Serializable {
     }
 
     public String getIdentificationType() { return person != null ? person.getIdentificationType() : null; }
+
+	public GenderDto getGender() { return person != null ? person.getGenderId() != null ? person.getGender(): null: null; }
+
+	public LocalDate getBirthDate() { return person != null ? person.getBirthDate(): null; }
+
+	public String getCompletePersonName(boolean selfPerceivedFeatureFlag) { return person.completeName(selfPerceivedFeatureFlag); }
+
 }

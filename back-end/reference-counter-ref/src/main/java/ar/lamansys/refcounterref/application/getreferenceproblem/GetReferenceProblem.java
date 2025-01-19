@@ -15,8 +15,8 @@ public class GetReferenceProblem {
 
     private final ReferenceStorage referenceStorage;
 
-    public List<ReferenceProblemBo> run(Integer patientId) {
-        log.debug("Input parameters -> patientId {} ", patientId);
-        return referenceStorage.getReferencesProblems(patientId);
+    public List<ReferenceProblemBo> run(Integer patientId, List<Short> loggedUserRoleIds) {
+        log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
+        return referenceStorage.getReferencesProblems(patientId, loggedUserRoleIds);
     }
 }

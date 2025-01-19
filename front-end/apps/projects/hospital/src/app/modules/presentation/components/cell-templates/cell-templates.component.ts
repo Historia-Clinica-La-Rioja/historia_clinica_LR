@@ -6,7 +6,6 @@ import {
 	TemplateRef,
 	ViewChildren
 } from '@angular/core';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { CtrlTemplateDirective } from '@presentation/directives/ctrl-template.directive';
 
 @Component({
@@ -23,10 +22,6 @@ export class CellTemplatesComponent {
 
 	getTemplate(templateName: string): TemplateRef<any> {
 		return this.templateRefs.toArray().find(x => x.name.toLowerCase() === templateName.toLowerCase()).template;
-	}
-
-	formatDate(date): string {
-		return date ? momentFormat(date, DateFormat.VIEW_DATE) : '';
 	}
 }
 

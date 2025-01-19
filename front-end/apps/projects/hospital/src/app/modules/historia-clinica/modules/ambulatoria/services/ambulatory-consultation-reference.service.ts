@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CareLineDto, ClinicalSpecialtyDto, HCEPersonalHistoryDto, ReferenceDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, HCEHealthConditionDto, ReferenceDto } from '@api-rest/api-model';
 import { removeFrom } from '@core/utils/array.utils';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -16,7 +16,7 @@ export class AmbulatoryConsultationReferenceService {
 	outpatientReferences: ReferenceDto[] = [];
 	referencesInformation: ReferenceInformation[] = [];
 	references: Reference[] = [];
-	referenceProblems: HCEPersonalHistoryDto[] = [];
+	referenceProblems: HCEHealthConditionDto[] = [];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -59,7 +59,7 @@ export class AmbulatoryConsultationReferenceService {
 			consultation: reference.consultation,
 			procedure: reference.procedure,
 			careLine: reference.careLine ? reference.careLine : null,
-			clinicalSpecialty: reference.clinicalSpecialty ? reference.clinicalSpecialty : null,
+			clinicalSpecialties: reference.clinicalSpecialties,
 			note: reference.note,
 			index: index
 		})));
@@ -100,7 +100,7 @@ export class AmbulatoryConsultationReferenceService {
 	private mapToReferenceDto(reference: Reference): ReferenceDto {
 		return {
 			careLineId: reference.careLine ? reference.careLine.id : null,
-			clinicalSpecialtyId: reference.clinicalSpecialty?.id || null,
+			clinicalSpecialtyIds: reference.clinicalSpecialties?.map(specialty => specialty.id),
 			consultation: reference.consultation,
 			note: reference.note,
 			problems: reference.problems,

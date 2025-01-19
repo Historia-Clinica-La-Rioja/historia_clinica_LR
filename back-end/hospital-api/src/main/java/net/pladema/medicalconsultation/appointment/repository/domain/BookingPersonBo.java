@@ -20,4 +20,6 @@ public class BookingPersonBo {
 	private Short genderId;
 	private String idNumber;
 	private String lastName;
+	private String phonePrefix;
+	private String phoneNumber;
 }

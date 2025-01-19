@@ -23,4 +23,5 @@ public interface ReferenceCounterReferenceFileStorage {
 
     List<ReferenceCounterReferenceFileBo> getFilesByReferenceCounterReferenceIdAndType(Integer referenceCounterReferenceId, Integer type);
 
+	List<Integer> saveAll(Integer institutionId, Integer patientId, MultipartFile[] files, Integer type) throws IOException;
 }

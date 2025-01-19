@@ -1,17 +1,24 @@
-<div>
-    <div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between">
-        <div translate="image-network.appointments.FINISH_STUDY"></div>
-        <button id="cancel_button" name="cancel_button" mat-icon-button (click)="closeDialog()">
+<ng-container *ngIf ="detailOrderInfo$ | async as detailOrder">
+    <div fxLayout="row" fxLayoutAlign="end">
+        <button id="cancel_button" name="cancel_button" mat-icon-button mat-dialog-close>
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div class="inputs-container" fxLayout="column">
-        <mat-form-field appearance="outline">
-            <textarea class="observations-container" matInput [(ngModel)]="observations" type="text" id="observations" name="observations" placeholder="{{'turnos.appointment.observations.OBSERVATIONS' | translate}}"></textarea>
-        </mat-form-field>
-        <mat-checkbox (change)="changeReportRequirementStatus($event)" color="primary">{{'image-network.worklist.REPORT_NOT_REQUIRED' | translate}}</mat-checkbox>
-        <button class="complete-btn" mat-flat-button color="primary" (click)="confirm()">
-            <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>
-        </button>
-    </div>
-</div>
+    <mat-dialog-content fxLayout="column" fxLayoutGap="15px">
+        <app-order-image-detail [detailOrder]="detailOrder"></app-order-image-detail>
+        <div class="inputs-container" fxLayout="column">
+            <mat-form-field appearance="outline">
+                <textarea class="observations-container" matInput [(ngModel)]="observations" type="text" id="observations" name="observations" placeholder="{{'turnos.appointment.observations.OBSERVATIONS' | translate}}"></textarea>
+            </mat-form-field>
+            <mat-checkbox (change)="changeReportRequirementStatus($event)" color="primary">{{'image-network.worklist.REPORT_NOT_REQUIRED' | translate}}</mat-checkbox>
+<!--            <button class="complete-btn" mat-flat-button color="primary" (click)="confirmFinishStudy()">-->
+<!--                <span class="uppercase" [translate]="'image-network.appointments.CONFIRM'"></span>-->
+<!--            </button>-->
+            <app-button class="complete-btn" [buttonType]="ButtonType.RAISED" [text]="'image-network.appointments.CONFIRM'"
+                        [isLoading]="isLoading"
+                        (clicked)="confirmFinishStudy()">
+            </app-button>
+
+        </div>
+    </mat-dialog-content>
+</ng-container>

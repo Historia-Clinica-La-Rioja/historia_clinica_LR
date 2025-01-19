@@ -1,8 +1,13 @@
 package ar.lamansys.sgx.shared.dates.utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.exceptions.DateParseException;
@@ -29,5 +34,25 @@ public class DateUtils {
 		} catch (Exception e) {
 			throw new DateParseException(date, e);
 		}
+	}
+
+	public static Calendar getCurrentCalendarWithNoTime() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+
+	public static ZoneId getAppTimezone() {
+		return ZoneId.of(JacksonDateFormatConfig.ZONE_ID);
+	}
+
+	public static LocalDateTime fromUTCToZone(LocalDateTime from, ZoneId toZone){
+		ZonedDateTime zonedDateTime = from.atZone(ZoneOffset.UTC);
+		return zonedDateTime
+				.withZoneSameInstant(toZone)
+				.toLocalDateTime();
 	}
 }

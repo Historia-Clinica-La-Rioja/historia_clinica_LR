@@ -1,24 +1,18 @@
 package net.pladema.snowstorm.services.loadCsv;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.List;
 
-@Getter
-@Setter
+import lombok.AllArgsConstructor;
+
 @AllArgsConstructor
-@ToString
 public class UpdateConceptsResultBo {
 
-	private String eclKey;
+	public final Integer conceptsLoaded;
 
-	private Integer conceptsLoaded;
+	public final Integer erroneousConcepts;
 
-	private Integer erroneousConcepts;
+	public final List<String> errorMessages;
 
-	private List<String> errorMessages;
+	public final Integer missingMainConcepts;
 
 }

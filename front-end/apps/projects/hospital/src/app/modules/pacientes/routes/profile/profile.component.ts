@@ -24,7 +24,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PersonService } from '@api-rest/services/person.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { ContextService } from '@core/services/context.service';
@@ -57,9 +57,10 @@ import { combineLatest, Observable } from 'rxjs';
 import { EditLicenseComponent } from '@pacientes/dialogs/edit-license/edit-license.component';
 import { ProfessionalLicenseService } from '@api-rest/services/professional-license.service';
 import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { AuditablePatientInfo } from '../edit-patient/edit-patient.component';
-import { DatePipe } from '@angular/common';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
+import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 
 const ROUTE_NEW_INTERNMENT = 'internaciones/internacion/new';
 const ROUTE_EDIT_PATIENT = 'pacientes/edit';
@@ -91,6 +92,7 @@ export class ProfileComponent implements OnInit {
 	userRoles: string[] = [];
 	roles: RoleDto[] = [];
 	assignableRoles: RoleDto[] = [];
+	hasRoleToViewUserData = false;
 	userId: number = null;
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
@@ -140,6 +142,10 @@ export class ProfileComponent implements OnInit {
 	public auditablePatientInfo: AuditablePatientInfo;
 	private auditableFullDate: Date;
 
+	extensions$: Observable<WCParams[]>;
+
+	isHabilitarInternacionOn = false;
+
 	constructor(
 		private patientService: PatientService,
 		private mapperService: MapperService,
@@ -164,12 +170,14 @@ export class ProfileComponent implements OnInit {
 		private readonly permissionService: PermissionsService,
 		private readonly internmentService: InternacionService,
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
+		private readonly wcExtensionsService: WCExtensionsService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
 		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_CREACION_USUARIOS).subscribe(isOn => this.createUsersIsEnable = isOn);
 		this.featureFlagService.isActive(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP).subscribe(isOn => this.hideProfessions = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_INTERNACION).subscribe(isOn => this.isHabilitarInternacionOn = isOn);
 	}
 
 	ngOnInit(): void {
@@ -190,7 +198,7 @@ export class ProfileComponent implements OnInit {
 							this.auditablePatientInfo = {
 								message: completeData.auditablePatientInfo.message,
 								createdBy: completeData.auditablePatientInfo.createdBy,
-								createdOn: this.datePipe.transform(this.auditableFullDate, DatePipeFormat.SHORT),
+								createdOn: this.dateFormatPipe.transform(this.auditableFullDate, 'datetime'),
 								institutionName: completeData.auditablePatientInfo.institutionName
 							};
 						}
@@ -206,6 +214,7 @@ export class ProfileComponent implements OnInit {
 								});
 						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
 							if (hasRoleToViewUserData) {
+								this.hasRoleToViewUserData = true;
 								this.checkIfProfessional();
 								if (this.createUsersIsEnable) {
 									this.userService.getUserData(this.personId)
@@ -287,7 +296,7 @@ export class ProfileComponent implements OnInit {
 
 
 						this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA).subscribe(isOn => {
-							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 								.subscribe(emergencyCareEpisodeInProgressDto => {
 									this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 									this.episodeId = this.emergencyCareEpisodeInProgress?.id;
@@ -300,6 +309,8 @@ export class ProfileComponent implements OnInit {
 					.subscribe((personPhotoDto: PersonPhotoDto) => {
 						this.personPhoto = personPhotoDto;
 					});
+
+				this.extensions$ = this.wcExtensionsService.getPatientProfileComponents(this.patientId);
 			});
 
 		this.form = this.formBuilder.group({

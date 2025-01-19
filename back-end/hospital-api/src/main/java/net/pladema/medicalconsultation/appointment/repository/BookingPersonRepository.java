@@ -1,7 +1,10 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,8 +33,9 @@ public interface BookingPersonRepository extends JpaRepository<BookingPerson, In
     @Transactional(readOnly = true)
     @Query("SELECT bp " +
             "FROM BookingPerson bp " +
-            "WHERE bp.email LIKE :email")
-    Optional<BookingPerson> findByEmail(@Param("email") String email);
+            "WHERE bp.email LIKE :email " +
+			"ORDER BY bp.id DESC")
+	Page<BookingPerson> findByEmail(@Param("email") String email, Pageable pageable);
 
     @Transactional(readOnly = true)
     @Query("SELECT a.id " +
@@ -46,4 +50,13 @@ public interface BookingPersonRepository extends JpaRepository<BookingPerson, In
     "JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
     "WHERE ba.pk.uuid LIKE :uuid")
     Optional<BookingPerson> findPatientByUuid(@Param("uuid") String uuid);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT bp " +
+			"FROM BookingPerson bp " +
+			"WHERE bp.email LIKE :email " +
+			"AND bp.identificationNumber = :identificationNumber " +
+			"ORDER BY bp.id DESC")
+	List<BookingPerson> findByEmailAndIdentificationNumber(@Param("email") String email, @Param("identificationNumber") String identificationNumber);
+
 }

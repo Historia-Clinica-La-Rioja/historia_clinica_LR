@@ -3,8 +3,8 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entit
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCERiskFactorBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EObservationLab;
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EObservationLab;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -21,6 +21,7 @@ public class ServiceRequestStatus {
 	public static final String ACTIVE = "55561003";
 	public static final String ERROR = "723510000";
 	public static final String COMPLETED = "255594003";
+	public static final String CANCELLED = "89925002";
 
 	@Id
 	@Column(name = "id", length = 20)

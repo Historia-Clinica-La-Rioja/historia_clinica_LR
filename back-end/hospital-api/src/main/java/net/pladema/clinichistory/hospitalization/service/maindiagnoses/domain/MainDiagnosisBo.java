@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -44,6 +45,8 @@ public class MainDiagnosisBo extends SelfValidating<MainDiagnosisBo> implements 
 
     @Nullable
     private List<@Valid DiagnosisBo> diagnosis;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public Integer getPatientId() {

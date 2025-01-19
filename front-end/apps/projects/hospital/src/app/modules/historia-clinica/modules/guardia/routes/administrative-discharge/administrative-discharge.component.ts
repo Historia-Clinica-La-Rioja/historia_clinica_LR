@@ -11,16 +11,15 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { AMBULANCE } from '@core/constants/validation-constants';
 import { ContextService } from '@core/services/context.service';
 import { futureTimeValidation, hasError, beforeTimeValidation, TIME_PATTERN } from '@core/utils/form.utils';
-import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { ERole } from '@api-rest/api-model';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
+import { toHourMinute } from '@core/utils/date.utils';
+import { isSameDay } from 'date-fns';
 
 @Component({
 	selector: 'app-administrative-discharge',
@@ -37,7 +36,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 	form: UntypedFormGroup;
 	hospitalTransports$: Observable<MasterDataInterface<number>[]>;
 	administrativeDischarge$: Observable<VMedicalDischargeDto>;
-	medicalDischargeOn: Moment;
+	medicalDischargeOn: Date;
 	today = new Date();
 
 	private episodeId: number;
@@ -59,14 +58,19 @@ export class AdministrativeDischargeComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 	) { }
 
+
+	dateChanged(date: Date) {
+		this.form.controls.dateTime.get('date').setValue(date);
+	}
+
 	ngOnInit(): void {
 
 		this.hospitalTransports$ = this.emergencyCareMasterDataService.getEntranceType();
 
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [moment(), Validators.required],
-				time: [momentFormat(newMoment(), DateFormat.HOUR_MINUTE)],
+				date: [this.today, Validators.required],
+				time: [toHourMinute(this.today)],
 			}),
 			hospitalTransportId: [null],
 			ambulanceCompanyId: [null, Validators.maxLength(AMBULANCE.COMPANY_ID.max_length)]
@@ -78,7 +82,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 			this.emergencyCareEspisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
 				if (hasMedicalDischarge) {
 					this.administrativeDischarge$ = this.emergencyCareEspisodeMedicalDischargeService.getMedicalDischarge(this.episodeId);
-					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtotoLocalDate(s.medicalDischargeOn)), map(dateToMomentTimeZone));
+					const medicalDischargeOn$ = this.administrativeDischarge$.pipe(map(s => dateTimeDtotoLocalDate(s.medicalDischargeOn)));
 					medicalDischargeOn$.subscribe(medicalDischargeOn => {
 						this.medicalDischargeOn = medicalDischargeOn;
 						this.setDateTimeValidation(medicalDischargeOn);
@@ -136,20 +140,20 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 	}
 
-	private setDateTimeValidation(medicalDischargeOn: Moment): void {
+	private setDateTimeValidation(medicalDischargeOn: Date): void {
 		const dateControl: UntypedFormGroup = (this.form.controls.dateTime) as UntypedFormGroup;
 		const timeControl: AbstractControl = dateControl.controls.time;
 		timeControl.setValidators([Validators.required, beforeTimeValidation(medicalDischargeOn),
 			futureTimeValidation, Validators.pattern(TIME_PATTERN)]);
 
 		this.form.get('dateTime.date').valueChanges.subscribe(
-			(selectedDate: Moment) => {
+			(selectedDate: Date) => {
 				timeControl.clearValidators();
 				requiredAndPatternValidation();
-				if (newMoment().isSame(selectedDate, 'day')) {
+				if (isSameDay(selectedDate, this.today)) {
 					beforeTodayValidation();
 				}
-				if (medicalDischargeOn.isSame(selectedDate, 'day')) {
+				if (isSameDay(selectedDate, medicalDischargeOn)) {
 					afterEpisodeCreationValidation();
 				}
 
@@ -177,7 +181,7 @@ export class AdministrativeDischargeComponent implements OnInit {
 
 export class AdministrativeForm {
 	dateTime: {
-		date: Moment;
+		date: Date;
 		time: string;
 	};
 	hospitalTransportId: number;

@@ -30,6 +30,12 @@ public class EquipmentDiaryOpeningHoursDto implements Overlapping<EquipmentDiary
 
 	private Boolean protectedAppointmentsAllowed;
 
+	@Nullable
+	private Boolean onSiteAttentionAllowed = true;
+
+	@Nullable
+	private Boolean regulationProtectedAppointmentsAllowed;
+
     @Override
     public boolean overlap(EquipmentDiaryOpeningHoursDto other) {
         return !(this.medicalAttentionTypeId.equals(other.getMedicalAttentionTypeId())) &&

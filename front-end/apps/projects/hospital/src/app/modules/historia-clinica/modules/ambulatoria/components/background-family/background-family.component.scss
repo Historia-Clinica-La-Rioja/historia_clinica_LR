@@ -1,0 +1,389 @@
+.container {
+  max-width: 94%;
+  border: 1px solid #e0eef7;
+  box-shadow: 0px 3px 3px 0px rgb(179, 177, 179);
+  margin: auto;
+  padding: 1%;
+}
+
+.subtitle1 {
+  position: relative;
+  right: 10%;
+}
+
+.box1 {
+  margin-left: 13%;
+  position: relative;
+  left: 13%;
+}
+
+.titles-convivencia {
+  position: relative;
+  right: 27.1%;
+}
+
+.titles-convivencia2 {
+  position: relative;
+  right: 36%;
+}
+
+.titles-convivencia3 {
+  position: relative;
+  right: 27.1%;
+}
+
+
+.titlePrincipal {
+
+  margin: auto;
+  font-size: 20px;
+  background-color: #f6fafb;
+  text-align: center;
+  color: #2687c5;
+
+}
+
+mat-card {
+  overflow: hidden;
+}
+
+.title-inicial {
+  font-size: large;
+  position: relative;
+  right: 14px;
+  bottom: 5px;
+}
+
+.inHouse1 {
+  position: relative;
+  right: 26.8%;
+}
+
+.inHouse2 {
+  position: relative;
+  right: 26.5%;
+}
+
+.inHouse3 {
+  position: relative;
+  right: 44%;
+}
+
+//CHECKBOX AMARILLO PARA FAMILIA Y HOGAR
+
+.yellow-alert {
+  width: 20px;
+  position: relative;
+  margin: 20px auto;
+  right: 43%;
+  top: 11px;
+}
+
+.yellow-alert label {
+  width: 11px;
+  height: 11px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 4px;
+  background: linear-gradient(to bottom, #fff11c 0%, #fff11c 100%);
+  border-radius: 2px;
+  border: 1.3px solid rgb(159 152 152);
+
+}
+
+
+.yellow-alert label:after {
+  content: "";
+  width: 6px;
+  height: 3px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border: 2.5px solid rgba(0, 0, 0, 0.968627451);
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  transform: rotate(-45deg);
+  transition: opacity 0.3s;
+}
+
+.yellow-alert input[type=checkbox] {
+  visibility: hidden;
+}
+
+.yellow-alert input[type=checkbox]:checked+label:after {
+  opacity: 1;
+
+}
+
+.yellow-alertEDIT {
+
+  position: relative;
+  right: 60.6%;
+}
+
+//RADIO BUTTON AMARILLO PARA VIVIENDA
+
+
+input[type="radio"].yellow-alert-radio {
+  background-color: yellow;
+  width: 15px;
+  height: 15px;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1.3px solid rgb(159 152 152);
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+
+}
+
+input[type="radio"].yellow-alert-radio:checked::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background-color: black;
+  border-radius: 50%;
+  position: relative;
+  bottom: 4px;
+  left: 4.5px;
+  transform: scale(0);
+
+}
+
+input[type="radio"].yellow-alert-radio:checked::before {
+  transform: scale(1);
+}
+
+.middle {
+
+  position: relative;
+  left: 36%;
+
+}
+
+.title1 {
+  text-align: center;
+  background-color: #E0EEF7;
+  color: #2687c5;
+  font-family: "Roboto", "helvetica Neue", sans-serif;
+  font-size: 22px;
+
+}
+
+.inHouse {
+  position: relative;
+  display: flex;
+  position: relative;
+  left: 30%;
+  top: 10px;
+}
+
+.place-title {
+  position: relative;
+  right: 60.3%;
+}
+
+.place {
+  position: relative;
+  right: 60%;
+}
+
+th {
+  text-align: left;
+}
+
+td {
+  position: relative;
+  top: 7px;
+}
+
+table {
+  margin-top: 1%;
+}
+
+
+.section3 {
+  display: inline-grid;
+  justify-items: center;
+  margin-left: 15%;
+}
+
+.section4 {
+  display: inline-grid;
+  justify-items: center;
+  margin-left: 48%;
+}
+
+.section4-b {
+  display: flex;
+  position: relative;
+  right: 1%;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.color-hermanos {
+
+  background-color: #fff11c;
+  border: 1px solid rgb(48 53 57);
+  width: 16.2%;
+  max-width: none;
+}
+
+.hermanos-name {
+  position: relative;
+  right: 30%;
+}
+
+.title-section4 {
+
+  padding: 1%;
+}
+
+.text1 {
+  position: relative;
+  top: 25.5px;
+  display: grid;
+  align-content: space-evenly;
+}
+
+.checkPadres {
+
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 8px;
+  position: relative;
+  top: 17px;
+}
+
+.div1 {
+
+  display: grid;
+
+}
+
+.div3 {
+
+  background-color: red;
+}
+
+
+.section4b2 {
+
+  margin-top: 3%;
+  position: relative;
+  right: 18px;
+
+}
+
+.chart {
+
+  max-width: 33px;
+  border: 2px solid #2687c5d4;
+  border-radius: 3px;
+  margin-left: 6px;
+  margin-top: 10px;
+}
+
+.chart2 {
+
+  max-width: 33px;
+  border: 2px solid #2687c5d4;
+  border-radius: 3px;
+  margin-left: 6px;
+  margin-top: 10px;
+}
+
+.chart-title {
+
+  margin-top: 10px;
+}
+
+.chart-title2 {
+
+  margin-top: 10px;
+}
+
+.chart-vivienda {
+
+  border: 2px solid #101111d4;
+  border-radius: 3px;
+  position: relative;
+  right: 14px;
+}
+
+.Vivienda {
+
+  display: table-column;
+  margin-left: 27%;
+}
+
+.check-vivienda {
+  position: relative;
+  padding: 1%;
+  left: 34px;
+}
+
+.check-vivienda2 {
+  position: relative;
+  left: 51%;
+}
+
+.check-letrina {
+  position: relative;
+  left: 76.9%;
+}
+
+.vivienda-titles {
+  display: table-cell;
+  position: relative;
+  left: 78%;
+  top: 10px;
+}
+
+.vivienda-titles1 {
+  display: table-cell;
+  position: relative;
+  left: 81%;
+  top: 10px;
+}
+
+.vivienda-titles2 {
+  display: table-cell;
+  position: relative;
+  left: 78%;
+  top: 10px;
+}
+
+.line {
+  position: relative;
+  left: 36%;
+}
+
+.container-instruccion {
+  position: relative;
+  right: 15px;
+  display: flex;
+}
+
+.mat-raised-button {
+
+  display: block;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+
+
+input[type="radio"] {
+  min-height: 15px;
+
+}
+
+.radio-tamaño {
+  width: 15px;
+  height: 15px;
+
+}

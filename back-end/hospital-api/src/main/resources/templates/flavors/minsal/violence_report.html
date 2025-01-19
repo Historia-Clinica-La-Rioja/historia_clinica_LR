@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <th:block th:include="fragments/general.html :: headerfiles"></th:block>
+
+    <style>
+        .subtitle-color {
+            color: #909090;
+            font-size: 10px;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .title-2 {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .content {
+            font-size: 12px;
+        }
+
+        .free-text {
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .non-broken-content {
+            page-break-inside: avoid;
+        }
+
+        @page {
+            @bottom-right {
+                content: counter(page) " de " counter(pages);
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+    <div th:replace="fragments/general.html :: documentTypeTitle(title=${title}, subtitle='')"></div>
+    <span class="title">Información ampliada de la persona</span>
+    <div>
+        <span class="subtitle-color">Nombre</span>
+        <div>
+            <span class="content" th:text="${patientCompleteName}"></span>
+        </div>
+        <span class="subtitle-color">Teléfono</span>
+        <div>
+            <span class="content" th:text="${patientData.contactInfo.phone.getCompletePhone == null ? 'Sin información' : patientData.contactInfo.phone.getCompletePhone}"></span>
+        </div>
+        <span class="subtitle-color">Correo electrónico</span>
+        <div>
+            <span class="content" th:text="${patientData.contactInfo.email == null ? 'Sin información' : patientData.contactInfo.email}"></span>
+        </div>
+        <span class="subtitle-color">Dirección</span>
+        <div>
+            <span class="content" th:text="${patientData.contactInfo.address.getCompleteAddress == null ? 'Sin información' : patientData.contactInfo.address.getCompleteAddress}"></span>
+        </div>
+        <span class="subtitle-color">Identidad de género</span>
+        <div>
+            <span class="content" th:text="${patientData.selfPerceivedGender == null ? 'Sin información' : patientData.selfPerceivedGender}"></span>
+        </div>
+        <span class="subtitle-color">¿Sabe leer y escribir?</span>
+        <div>
+            <span class="content" th:text="${victimData.canReadAndWrite == null ? 'Sin información' : victimData.canReadAndWrite ? 'Si' : 'No' }"></span>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">¿Percibe ingresos?</span>
+        <div>
+            <span class="content" th:text="${victimData.incomeData.hasIncome == null ? 'Sin información' : victimData.incomeData.hasIncome ? 'Si' : 'No' }"></span>
+            <div th:if="${victimData.incomeData.hasIncome}">
+                <span class="subtitle-color">¿Trabaja en el sector formal?</span>
+                <div>
+                    <span class="content" th:text="${victimData.incomeData.worksAtFormalSector ? 'Si' : 'No' }"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">¿Percibe plan o asignación social?</span>
+        <div>
+            <span class="content" th:text="${victimData.hasSocialPlan == null ? 'Sin información' : victimData.hasSocialPlan ? 'Si' : 'No' }"></span>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">¿Tiene alguna discapacidad?</span>
+        <div>
+            <span class="content" th:text="${victimData.disabilityData.hasDisability == null ? 'Sin información' : victimData.disabilityData.hasDisability ? 'Si' : 'No' }"></span>
+            <div th:if="${victimData.disabilityData.hasDisability}">
+                <span class="subtitle-color">¿Tiene certificado de discapacidad?</span>
+                <div>
+                    <span class="content" th:text="${victimData.disabilityData.disabilityCertificateStatus.value}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">¿La persona se encuentra institucionalizada?</span>
+        <div>
+            <span class="content" th:text="${victimData.institutionalizedData.isInstitutionalized == null ? 'Sin información' : victimData.institutionalizedData.isInstitutionalized ? 'Si' : 'No' }"></span>
+            <div th:if="${victimData.institutionalizedData.isInstitutionalized}">
+                <span class="subtitle-color">¿En qué institución?</span>
+                <div>
+                    <span class="content" th:text="${victimData.institutionalizedData.institutionalizedDetails}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <span class="subtitle-color">¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que lo requiera?</span>
+        <div>
+            <span class="content" th:text="${victimData.lackOfLegalCapacity ? 'Si' : 'No' }"></span>
+            <div th:if="${victimData.lackOfLegalCapacity}">
+                <span class="title-2">Información de la persona referente de cuidado</span>
+                <div class="non-broken-content">
+                    <span class="subtitle-color">Apellido</span>
+                    <div>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.lastName}"></span>
+                    </div>
+                </div>
+                <div class="non-broken-content">
+                    <span class="subtitle-color">Nombre</span>
+                    <div>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.firstName}"></span>
+                    </div>
+                </div>
+                <div class="non-broken-content">
+                    <span class="subtitle-color">Edad</span>
+                    <div>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.age + ' años'}"></span>
+                    </div>
+                </div>
+                <div class="non-broken-content">
+                    <span class="subtitle-color">Domicilio</span>
+                    <div>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.address.homeAddress}"></span>
+                    </div>
+                </div>
+                <div class="non-broken-content">
+                    <span class="subtitle-color">Municipio de residencia</span>
+                    <div>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.address.municipality.description == null ? 'Sin información' : victimData.keeperData.actorPersonalData.address.municipality.description}"></span>
+                    </div>
+                </div>
+                <div class="non-broken-content">
+                    <span class="subtitle-color">Vínculo con la persona en situación de violencia</span>
+                    <div>
+                        <span class="content" th:text="${victimData.keeperData.relationshipWithVictim.value + (victimData.keeperData.relationshipWithVictim.id == 7 ? ': ' + victimData.keeperData.otherRelationshipWithVictim : '')}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="title">Nuevo episodio de violencia</span>
+    <div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Fecha del episodio</span>
+            <div>
+                <span class="content" th:text="${episodeData.episodeDate.day + '/' + episodeData.episodeDate.month + '/' + episodeData.episodeDate.year}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Tipo de violencia</span>
+            <div>
+                <span class="content" th:each="violenceType, iter: ${episodeData.violenceTypeSnomedList}" th:text="${violenceType.pt + (iter.index != episodeData.violenceTypeSnomedList.size - 1 ? ', ' : '')}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Modalidad de violencia</span>
+            <div>
+                <span class="content" th:each="violenceModality, iter: ${episodeData.violenceModalitySnomedList}" th:text="${violenceModality.pt + (iter.index != episodeData.violenceModalitySnomedList.size - 1 ? ', ' : '')}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">¿El episodio de violencia involucra niños, niñas y/o adolescentes?</span>
+            <div>
+                <span class="content" th:text="${episodeData.violenceTowardsUnderage.type.value}"></span>
+                <div th:if="${episodeData.violenceTowardsUnderage.type.id == 1 || episodeData.violenceTowardsUnderage.type.id == 2}">
+                    <span class="subtitle-color">¿La niña, niño o adolescente se encuentra escolarizada/o?</span>
+                    <div>
+                        <span class="content" th:text="${episodeData.violenceTowardsUnderage.schooled == null ? 'Sin información' : episodeData.violenceTowardsUnderage.schooled ? 'Si' : 'No'}"></span>
+                        <div th:if="${episodeData.violenceTowardsUnderage.schooled}">
+                            <span class="subtitle-color">Nivel de escolarización</span>
+                            <div>
+                                <span class="content" th:text="${episodeData.violenceTowardsUnderage.schoolLevel.value}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Evaluación de nivel de riesgo</span>
+            <div>
+                <span class="content" th:text="${episodeData.riskLevel.value}"></span>
+            </div>
+        </div>
+    </div>
+    <span class="title">Información sobre la persona/s que ejerce violencia</span>
+    <div th:each="aggressor, iter : ${aggressors}">
+        <span class="title-2" th:text="${'Agresor #' + (iter.index + 1)}"></span>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Apellido</span>
+            <div>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.lastName}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Nombre</span>
+            <div>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.firstName}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Edad</span>
+            <div>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.age + ' años'}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Domicilio</span>
+            <div>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.address.homeAddress}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Municipio de residencia</span>
+            <div>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.address.municipality.description == null ? 'Sin información' : aggressor.aggressorData.actorPersonalData.address.municipality.description}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Vínculo con la persona en situación de violencia</span>
+            <div>
+                <span class="content" th:text="${aggressor.aggressorData.relationshipWithVictim.value + (aggressor.aggressorData.relationshipWithVictim.id == 11 ? ': ' + aggressor.aggressorData.otherRelationshipWithVictim : '')}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">¿Posee armas de fuego?</span>
+            <div>
+                <span class="content" th:text="${aggressor.hasGuns == null ? 'Sin información' : aggressor.hasGuns ? 'Si' : 'No' }"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">¿Transita un abordaje por su ejercicio de violencia?</span>
+            <div>
+                <span class="content" th:text="${aggressor.hasBeenTreated == null ? 'Sin información' : aggressor.hasBeenTreated ? 'Si' : 'No' }"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">¿Pertenece a las fuerzas de seguridad o FFAA?</span>
+            <div>
+                <span class="content" th:text="${aggressor.securityForceRelatedData.belongsToSecurityForces == null ? 'Sin información' : aggressor.securityForceRelatedData.belongsToSecurityForces ? 'Si' : 'No' }"></span>
+                <div th:if="${aggressor.securityForceRelatedData.belongsToSecurityForces}">
+                    <span class="subtitle-color">Estado</span>
+                    <div>
+                        <span class="content" th:text="${aggressor.securityForceRelatedData.inDuty ? 'Activo' : 'Retirado' }"></span>
+                        <div th:if="${aggressor.securityForceRelatedData.inDuty}">
+                            <span class="subtitle-color">¿A cuál institución?</span>
+                            <div>
+                                <span class="content" th:text="${aggressor.securityForceRelatedData.securityForceTypes.value}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">¿Convive?</span>
+            <div>
+                <span class="content" th:text="${aggressor.livesWithVictim.value}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Antigüedad del vínculo</span>
+            <div>
+                <span class="content" th:text="${aggressor.relationshipLength.value}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">Frecuencia del maltrato</span>
+            <div>
+                <span class="content" th:text="${aggressor.violenceViolenceFrequency.value}"></span>
+            </div>
+        </div>
+        <div class="non-broken-content">
+            <span class="subtitle-color">¿Tiene antecedentes de incumplimiento de medidas de restricción?</span>
+            <div>
+                <span class="content" th:text="${aggressor.hasPreviousEpisodes.value}"></span>
+            </div>
+        </div>
+    </div>
+    <span class="title">Acciones implementadas</span>
+    <div>
+        <div th:if="${implementedActions.healthCoordination.coordinationInsideHealthSector != null}">
+            <span class="title-2">Articulación con otras áreas/organismos del sector salud</span>
+            <div class="non-broken-content">
+                <span class="subtitle-color">Articulación al interior del sistema de salud</span>
+                <div>
+                    <span class="content" th:text="${implementedActions.healthCoordination.coordinationInsideHealthSector.healthSystemOrganization.within ? 'Si' : 'No'}"></span>
+                    <div th:if="${implementedActions.healthCoordination.coordinationInsideHealthSector.healthSystemOrganization.within}">
+                        <span class="subtitle-color">¿Ante qué area/organismo?</span>
+                        <div>
+                            <span class="content" th:each="place, iter : ${implementedActions.healthCoordination.coordinationInsideHealthSector.healthSystemOrganization.organizations}" th:text="${place.value + (place.id == 11 ? ': ' + implementedActions.healthCoordination.coordinationInsideHealthSector.healthSystemOrganization.other : '') + (iter.index != implementedActions.healthCoordination.coordinationInsideHealthSector.healthSystemOrganization.organizations.size - 1 ? ', ' : '')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="non-broken-content">
+                <span class="subtitle-color">Articulación al interior del establecimiento de salud</span>
+                <div>
+                    <span class="content" th:text="${implementedActions.healthCoordination.coordinationInsideHealthSector.healthInstitutionOrganization.within ? 'Si' : 'No'}"></span>
+                    <div th:if="${implementedActions.healthCoordination.coordinationInsideHealthSector.healthInstitutionOrganization.within}">
+                        <span class="subtitle-color">Establecimiento</span>
+                        <div>
+                            <span class="content" th:each="place, iter : ${implementedActions.healthCoordination.coordinationInsideHealthSector.healthInstitutionOrganization.organizations}" th:text="${place.value + (place.id == 12 ? ': ' + implementedActions.healthCoordination.coordinationInsideHealthSector.healthInstitutionOrganization.other : '') + (iter.index != implementedActions.healthCoordination.coordinationInsideHealthSector.healthInstitutionOrganization.organizations.size - 1 ? ', ' : '')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="non-broken-content">
+                <span class="subtitle-color">¿Se indica internación?</span>
+                <div>
+                    <span class="content" th:text="${implementedActions.healthCoordination.coordinationInsideHealthSector.wereInternmentIndicated.value}"></span>
+                </div>
+            </div>
+        </div>
+        <div th:unless="${implementedActions.healthCoordination.coordinationInsideHealthSector != null}">
+            <span class="title-2">Articulación con otros organismos fuera del sector salud</span>
+            <div class="non-broken-content">
+                <span class="subtitle-color">Dispositivos estatales municipales</span>
+                <div>
+                    <span class="content" th:if="${implementedActions.healthCoordination.coordinationOutsideHealthSector.municipalGovernmentDevices.size == 0}" th:text="${'-'}"></span>
+                    <span class="content" th:unless="${implementedActions.healthCoordination.coordinationOutsideHealthSector.municipalGovernmentDevices.size == 0}" th:each="municipalDevice, iter : ${implementedActions.healthCoordination.coordinationOutsideHealthSector.municipalGovernmentDevices}" th:text="${municipalDevice.value + (iter.index != implementedActions.healthCoordination.coordinationOutsideHealthSector.municipalGovernmentDevices.size - 1 ? ', ' : '')}"></span>
+                </div>
+            </div>
+            <div class="non-broken-content">
+                <span class="subtitle-color">Dispositivos estatales provinciales</span>
+                <div>
+                    <span class="content" th:if="${implementedActions.healthCoordination.coordinationOutsideHealthSector.provincialGovernmentDevices.size == 0}" th:text="${'-'}"></span>
+                    <span class="content" th:unless="${implementedActions.healthCoordination.coordinationOutsideHealthSector.provincialGovernmentDevices.size == 0}" th:each="provincialDevice, iter : ${implementedActions.healthCoordination.coordinationOutsideHealthSector.provincialGovernmentDevices}" th:text="${provincialDevice.value + (iter.index != implementedActions.healthCoordination.coordinationOutsideHealthSector.provincialGovernmentDevices.size - 1 ? ', ' : '')}"></span>
+                </div>
+            </div>
+            <div class="non-broken-content">
+                <span class="subtitle-color">Dispositivos estatales nacionales</span>
+                <div>
+                    <span class="content" th:if="${implementedActions.healthCoordination.coordinationOutsideHealthSector.nationalGovernmentDevices.size == 0}" th:text="${'-'}"></span>
+                    <span class="content" th:unless="${implementedActions.healthCoordination.coordinationOutsideHealthSector.nationalGovernmentDevices.size == 0}" th:each="nationalDevice, iter : ${implementedActions.healthCoordination.coordinationOutsideHealthSector.nationalGovernmentDevices}" th:text="${nationalDevice.value + (iter.index != implementedActions.healthCoordination.coordinationOutsideHealthSector.nationalGovernmentDevices.size - 1 ? ', ' : '')}"></span>
+                </div>
+            </div>
+            <div class="non-broken-content">
+                <span class="subtitle-color">Organizaciones sociales y de la sociedad civil</span>
+                <div>
+                    <span class="content" th:text="${implementedActions.healthCoordination.coordinationOutsideHealthSector.withOtherSocialOrganizations ? 'Si' : 'No'}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">La persona en situación de violencia y/o la persona referente de cuidado, ¿realizó denuncias por esta u otras situaciones?</span>
+        <div>
+            <span class="content" th:text="${implementedActions.victimKeeperReport.werePreviousEpisodesWithVictimOrKeeper ? 'Si' : 'No'}"></span>
+            <div th:if="${implementedActions.victimKeeperReport.werePreviousEpisodesWithVictimOrKeeper}">
+                <span class="subtitle-color">¿Ante qué organismo?</span>
+                <div>
+                    <span class="content" th:each="place, iter : ${implementedActions.victimKeeperReport.reportPlaces}" th:text="${place.value + (iter.index != implementedActions.victimKeeperReport.reportPlaces.size - 1 ? ', ' : '')}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">¿Desde la institución de salud se realizó la denuncia ante la autoridad pertinente?</span>
+        <div>
+            <span class="content" th:text="${implementedActions.institutionReport.reportWasDoneByInstitution ? 'Si' : 'No'}"></span>
+            <div th:if="${implementedActions.institutionReport.reportWasDoneByInstitution}">
+                <span class="subtitle-color">Denuncia por</span>
+                <div>
+                    <span class="content" th:each="reason, iter : ${implementedActions.institutionReport.reportReasons}" th:text="${reason.value + (iter.index != implementedActions.institutionReport.reportReasons.size - 1 ? ', ' : '')}"></span>
+                </div>
+                <span class="subtitle-color">¿Ante qué autoridad/organismo?</span>
+                <div>
+                    <span class="content" th:each="place, iter : ${implementedActions.institutionReport.institutionReportPlaces}" th:text="${place.value + (place.id == 7 ? ': ' + implementedActions.institutionReport.otherInstitutionReportPlace : '') + (iter.index != implementedActions.institutionReport.institutionReportPlaces.size - 1 ? ', ' : '')}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="non-broken-content">
+        <span class="subtitle-color">¿Se registra Violencia Sexual?</span>
+        <div>
+            <span class="content" th:text="${implementedActions.sexualViolence.wasSexualViolence ? 'Si' : 'No'}"></span>
+            <div th:if="${implementedActions.sexualViolence.wasSexualViolence}">
+                <span class="subtitle-color">Acciones implementadas</span>
+                <div>
+                    <span class="content" th:each="action, iter : ${implementedActions.sexualViolence.implementedActions}" th:text="${action.value + (iter.index != implementedActions.sexualViolence.implementedActions.size - 1 ? ', ' : '')}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="title">Información relevante</span>
+    <div class="non-broken-content">
+        <span class="content free-text" th:text="${observations != null && observations != '' ? observations : 'Sin información'}"></span>
+    </div>
+</body>
+</html>
